@@ -4392,7 +4392,7 @@
      ]
     },
     "dist_to_bloc_floor": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4420,7 +4420,7 @@
      ]
     },
     "TEST_FIN_BLOC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4448,7 +4448,7 @@
      ]
     },
     "recale_position": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4532,14 +4532,14 @@
      ]
     },
     "blocs2_empty": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
      ]
     },
     "init_calcbloc_func": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"

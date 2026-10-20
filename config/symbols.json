@@ -6364,6 +6364,24 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "data.c //CF780; Android size 2; DOS word access"
+   },
+   "hand_btyp": {
+    "addr": "2:3fa7c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c true byte start; Android symbol .bss size 1; TEST_FIN_BLOC DOS byte comparisons at 1:15434/15441/1544e"
+   },
+   "hand_btypg": {
+    "addr": "2:3fa7f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c true byte start; Android symbol .bss size 1; TEST_FIN_BLOC DOS byte comparisons at 1:15434/15441/1544e"
+   },
+   "hand_btypd": {
+    "addr": "2:3fa80",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c true byte start; Android symbol .bss size 1; TEST_FIN_BLOC DOS byte comparisons at 1:15434/15441/1544e"
    }
   }
  }

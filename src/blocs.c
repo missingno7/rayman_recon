@@ -1,4 +1,4 @@
-/* blocs.c (1:14e90..1:15e60). Names RAYVERSE (blocs1_* helpers from Rayverse); seeded by tools/seed.py, worker tu_blocs. 13/23 STRICT; rest NEAR (see config/units.json). Watcom places switch jump tables in _TEXT before the function that uses them. */
+/* blocs.c (1:14e90..1:15e60). Names RAYVERSE (blocs1_* helpers from Rayverse); seeded by tools/seed.py, worker tu_blocs. finish pass fin_blocs; see config/units.json. Watcom places switch jump tables in _TEXT before the function that uses them. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -60,7 +60,7 @@ extern u8 button_released;
 #define flags1_0x10_move_x (1UL << 12)
 #define flags2_1_check_tile_type (1UL << 16)
 #define flags2_8_can_jump (1UL << 19)
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 u8 BTYP(s16 tile_x, s16 tile_y);
 u8 GET_SPRITE_POS(obj_t *obj, u8 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void IS_RAY_ON_LIANE(void);
@@ -75,23 +75,23 @@ void set_main_etat(obj_t* obj, u8 etat);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 u16 MURDUR(s16 x, s16 y);
-s16 dist_to_bloc_floor(s16 btyp, s16 x, s16 y);
- u8 bloc_floor(s16 btype, s16 x, s16 y);
+s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y);
+ s16 bloc_floor(s16 btype, s16 x, s16 y);
 u16 MURDUR(s16 x, s16 y)
 {
     return BTYP(x >> 4, y >> 4) == BTYP_SOLID;
 }
 
-s16 dist_to_bloc_floor(s16 btyp, s16 x, s16 y) {
-    s32 result = calcblocfloor[btyp](x, y) - y;
+s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y) {
+    s32 result = calcblocfloor[btyp](x, (s16)y) - y;
     return result;
 }
 
-u8 bloc_floor(s16 btype, s16 x, s16 y) {
-    if (dist_to_bloc_floor(btype, x, y) > 0) {
-        return 0;
-    } else {
+s16 bloc_floor(s16 btype, s16 x, s16 y) {
+    if (dist_to_bloc_floor(btype, x, y) <= 0) {
         return btype;
+    } else {
+        return 0;
     }
 }
 
@@ -253,13 +253,6 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
                 case BTYP_LIANE:
                     var_s0_1 += 1;
                     break;
-                case 9:
-                case 11:
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                case 17:
                 default:
                     var_s0_1 += 8;
                     break;
@@ -369,24 +362,21 @@ u8 calc_typ_travd(obj_t* obj, u8 a2) {
 }
 
 void TEST_FIN_BLOC(obj_t* obj) {
+    eta_t **eta;
     /* 6EC34 80193434 -O2 -msoft-float */
     if (!(block_flags[obj->btypes[0]] & 2))
     {
         switch (obj->type)
         {
             case TYPE_RAYMAN:
-                if (ray.main_etat == 1 && ray.sub_etat == 1) {
-                    set_main_and_sub_etat(obj, 2, 6);
-                } else if (ray.main_etat == 1 && ray.sub_etat == 6) {
-                    set_main_and_sub_etat(obj, 2, 23);
-                } else {
                     IS_RAY_ON_LIANE();
                     if (
                             !(hand_btyp == BTYP_LIANE || hand_btypd == BTYP_LIANE || hand_btypg == BTYP_LIANE ||
                               ray.main_etat == 5)
                             )
                     {
-                        if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)
+                        eta = ray.eta;
+                        if (eta[ray.main_etat][ray.sub_etat].flags & 0x40)
                         {
                             ray.speed_y = 0;
                             ray.y += 16;
@@ -403,9 +393,9 @@ void TEST_FIN_BLOC(obj_t* obj) {
                         else
                         {
                             if (ray.main_etat == 1 && (ray.sub_etat == 9 || ray.sub_etat == 11)) {
-                                ray.flags.flip_x ^= 1;
+                                ray.flags.flip_x = !ray.flags.flip_x;
                             }
-                            if (Abs(ray.speed_x) < 3)
+                            if (Abs(ray.speed_x) <= 2)
                             {
                                 Reset_air_speed(0);
                                 if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40))
@@ -425,7 +415,6 @@ void TEST_FIN_BLOC(obj_t* obj) {
                         else
                             ray.nb_cmd = 0;
                     }
-                }
                 break;
             case TYPE_LIDOLPINK:
                 set_main_and_sub_etat(obj, 2, 2);
@@ -648,18 +637,16 @@ void CALC_MOV_ON_BLOC(obj_t* obj) {
     }
 }
 
-void recale_position(obj_t *obj)
-{
-    s16 x = (obj->offset_bx + obj->x) & 0xf;
-    s16 y = (obj->offset_by + obj->y) & ~0xf;
-    s16 btyp = BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_by) >> 4);
-    s32 v5 = calcblocrecal[btyp](x, 0);
-
-    if (obj->type != TYPE_23_RAYMAN) {
-        obj->y = y + v5 - obj->offset_by;
-    } else {
-        obj->speed_y = y + v5 - obj->offset_by - obj->y;
-    }
+void recale_position(obj_t *obj) {
+    s16 full_x = obj->offset_bx + (u16)obj->x;
+    s16 full_y = obj->offset_by + (u16)obj->y;
+    s16 y = full_y & 0xfff0;
+    s16 x = full_x & 15;
+    s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0);
+    if (obj->type != TYPE_23_RAYMAN)
+        obj->y = y + z - obj->offset_by;
+    else
+        obj->speed_y = y + z - full_y;
 }
 
 s16 blocs1_empty(s32 x, s32 y) {
@@ -714,12 +701,14 @@ void init_calcbloc_func(void) {
     u8 i;
     for (i = 0; i < 64; ++i) {
         switch(i) {
-            default: {
+            case 0:
+            {
                 calcbloc1[i] = blocs1_empty;
                 calcbloc2[i] = blocs2_empty;
                 calcblocfloor[i] = blocs3_empty;
                 calcblocrecal[i] = blocs4_empty;
             } break;
+
             case 2:
             case 18: {
                 calcbloc1[i] = blocs1_right_45;
@@ -762,6 +751,12 @@ void init_calcbloc_func(void) {
                 calcblocfloor[i] = blocs1_left2_30;
                 calcblocrecal[i] = blocs1_left2_30;
             } break;
+            case 12: {
+                calcbloc1[i] = blocs1_liane;
+                calcbloc2[i] = blocs2_empty;
+                calcblocfloor[i] = blocs3_empty;
+                calcblocrecal[i] = blocs4_empty;
+            } break;
             case 9:
             case 14:
             case 15:
@@ -771,12 +766,13 @@ void init_calcbloc_func(void) {
                 calcblocfloor[i] = blocs1_hor;
                 calcblocrecal[i] = blocs1_hor;
             } break;
-            case 12: {
-                calcbloc1[i] = blocs1_liane;
+            default: {
+                calcbloc1[i] = blocs1_empty;
                 calcbloc2[i] = blocs2_empty;
                 calcblocfloor[i] = blocs3_empty;
                 calcblocrecal[i] = blocs4_empty;
-            }
+            } break;
+
         }
     }
 }
