@@ -127,7 +127,7 @@ typedef struct obj_t {
     u8 gravity_value_1;             /* 0x71 */
     u8 gravity_value_2;             /* 0x72 */
     u8 change_anim_mode;            /* 0x73 */
-    s8 offset_hy;                   /* 0x74 */
+    u8 offset_hy;                   /* 0x74 unsigned: DO_PYRANHA 1:5752d zero-extends it; PS1 u8 (Rayverse: s8) */
     u8 follow_sprite;               /* 0x75 */
     u8 hit_points;                  /* 0x76 */
     u8 init_hit_points;             /* 0x77 */

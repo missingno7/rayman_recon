@@ -741,6 +741,66 @@
     "addr": "1:1d5fc",
     "name": "RAYVERSE",
     "evidence": "DOS direct call from DO_POING at 1:56f84; Rayverse poing.c"
+   },
+   "DO_POISSON_VERT_CMD": {
+    "addr": "1:57100",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //67100; direct DOS entry"
+   },
+   "DO_POISSON_BLEU_CMD": {
+    "addr": "1:571f8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //671F8; direct DOS entry"
+   },
+   "DoPoissonBleuPoingCollision": {
+    "addr": "1:57380",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //67380; direct DOS entry"
+   },
+   "can_free_fish": {
+    "addr": "1:573b4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //673B4; direct DOS entry"
+   },
+   "DESACTIVE_FISH_COLLIS": {
+    "addr": "1:57410",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //67410; direct DOS entry"
+   },
+   "DO_PYRANHA": {
+    "addr": "1:574c8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //674C8; direct DOS entry"
+   },
+   "DoFishPoingCollision": {
+    "addr": "1:576ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //676EC; direct DOS entry"
+   },
+   "DoPoissonBleuRaymanZDD": {
+    "addr": "1:5773c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poisson.c //6773C; direct DOS entry"
+   },
+   "DO_ONE_CMD": {
+    "addr": "1:1f658",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call from DO_POISSON_VERT_CMD, DO_POISSON_BLEU_CMD, and DO_PYRANHA"
+   },
+   "DO_OBJ_COLLISIONS": {
+    "addr": "1:1ee20",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call from DO_POISSON_VERT_CMD"
+   },
+   "allocate_splash": {
+    "addr": "1:6ad20",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS calls from DO_PYRANHA"
+   },
+   "set_main_etat": {
+    "addr": "1:0d810",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call from DoPoissonBleuRaymanZDD"
    }
   },
   "data": {
