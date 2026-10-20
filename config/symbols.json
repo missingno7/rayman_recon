@@ -2731,6 +2731,256 @@
     "addr": "1:512c0",
     "name": "RAYVERSE",
     "evidence": "Rayverse objupdate.c //612C0; xref"
+   },
+   "DO_ECLAIR_COMMAND": {
+    "addr": "1:12eac",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BBMONT3_ATTER": {
+    "addr": "1:12d9c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BBMONT_ECLAIR": {
+    "addr": "1:10f38",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "CreateFirstBBL": {
+    "addr": "1:10b7c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BB2_MARCHE": {
+    "addr": "1:100b0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BBMONT_ETINCELLES": {
+    "addr": "1:11098",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BB_Atan": {
+    "addr": "1:114b8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PI_EXPLOSION2": {
+    "addr": "1:10620",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "Fin_BB_Attaque": {
+    "addr": "1:11400",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_TOTEM_TOUCHE": {
+    "addr": "1:100f0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "obj_init": {
+    "addr": "1:4e9bc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BB1_PLAT_CMD": {
+    "addr": "1:1300c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocateDog": {
+    "addr": "1:10748",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BBMONT4_COMMAND": {
+    "addr": "1:12dd0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BBL_REBOND": {
+    "addr": "1:10674",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BBMONT_TIRE": {
+    "addr": "1:112c4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_TOTBT_REBOND": {
+    "addr": "1:105c4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "Cree_BBL": {
+    "addr": "1:112d4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BBMONT_ATTER": {
+    "addr": "1:114f8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocateTir": {
+    "addr": "1:10868",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BBMONT_TOUCHE": {
+    "addr": "1:12050",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_TOTEM_COMMAND": {
+    "addr": "1:1018c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "INIT_BBMONT": {
+    "addr": "1:10c4c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBL_COMMAND": {
+    "addr": "1:10cf8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "BB_Attaque": {
+    "addr": "1:11300",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBMONT_COMMAND": {
+    "addr": "1:11568",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBMONT2_COMMAND": {
+    "addr": "1:12094",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBMONT2_MARCHE": {
+    "addr": "1:12a7c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBMONT2_ATTER": {
+    "addr": "1:12a98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "DO_BBMONT3_COMMAND": {
+    "addr": "1:12bac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bbmont.c // address annotation; DOS address is 0x10000 lower"
+   },
+   "blocs2_empty": {
+    "addr": "1:15bf8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_liane": {
+    "addr": "1:15bf0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_hor": {
+    "addr": "1:15bf4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_left2_30": {
+    "addr": "1:15be8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_right2_30": {
+    "addr": "1:15bd4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "MURDUR": {
+    "addr": "1:14e90",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "Reset_air_speed": {
+    "addr": "1:5caf8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs3_empty": {
+    "addr": "1:15bf0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_FIN_BLOC": {
+    "addr": "1:15388",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_left_45": {
+    "addr": "1:15bc0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs4_empty": {
+    "addr": "1:15bf4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_right_45": {
+    "addr": "1:15bb4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_empty": {
+    "addr": "1:15bb0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_right1_30": {
+    "addr": "1:15bc4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "IS_RAY_ON_LIANE": {
+    "addr": "1:5c138",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "blocs1_left1_30": {
+    "addr": "1:15be4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_IS_ON_RESSORT_BLOC": {
+    "addr": "1:156d4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blocs.c address; corroborated by DOS direct target or range disassembly"
+   },
+   "IS_ON_RESSORT_BLOC": {
+    "addr": "1:15708",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blocs.c address; corroborated by DOS direct target or range disassembly"
+   },
+   "init_calcbloc_func": {
+    "addr": "1:15c7c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blocs.c address; corroborated by DOS direct target or range disassembly"
+   },
+   "ray_jump": {
+    "addr": "1:5cd40",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call targets from IS_ON_RESSORT_BLOC and CALC_MOV_ON_BLOC"
    }
   },
   "data": {
@@ -5681,6 +5931,90 @@
     "name": "RAYVERSE",
     "type": "u8",
     "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "bb1": {
+    "addr": "2:3faa4",
+    "type": "bb_data_t",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 16; Rayverse data.c //CFAA4; field offsets from DOS references"
+   },
+   "IndAtak": {
+    "addr": "2:3fab4",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFAB4"
+   },
+   "YaDesChiens": {
+    "addr": "2:3fab6",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFAB6"
+   },
+   "horlogeDog": {
+    "addr": "2:3fab8",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFAB8"
+   },
+   "PierreDoitExploser": {
+    "addr": "2:3faba",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFABA"
+   },
+   "NextAtak": {
+    "addr": "2:3fabc",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFABC"
+   },
+   "IndSerie": {
+    "addr": "2:3fabe",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFABE"
+   },
+   "RMrepere": {
+    "addr": "2:3fac0",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFAC0"
+   },
+   "PosPierre": {
+    "addr": "2:3fac2",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 2; Rayverse data.c //CFAC2"
+   },
+   "screen_trembling2": {
+    "addr": "2:3f84e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF84E; DOS word store"
+   },
+   "calcblocrecal": {
+    "addr": "2:32748",
+    "type": "s32 (*[64])(s32,s32)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size and DOS accesses confirm type/extent"
+   },
+   "calcbloc1": {
+    "addr": "2:32848",
+    "type": "s32 (*[64])(s32,s32)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size and DOS accesses confirm type/extent"
+   },
+   "calcbloc2": {
+    "addr": "2:32948",
+    "type": "s32 (*[64])(s32,s32)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size and DOS accesses confirm type/extent"
+   },
+   "calcblocfloor": {
+    "addr": "2:32a48",
+    "type": "s32 (*[64])(s32,s32)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size and DOS accesses confirm type/extent"
    }
   }
  }

@@ -82,4 +82,10 @@ typedef struct finbosslevel_t {    /* src/basic.c, src/moskito.c */
     u8 crazy_drummer : 1; u8 helped_joe_1 : 1; u8 helped_joe_2 : 1; u8 helped_musician : 1;
 } finbosslevel_t;
 
+typedef struct bb_attack_entry_t {  /* SerieAtakBB 2:5ec6: [6][7] x 4 bytes (Android 168); src/bbmont.c */
+    s16 attack;
+    u8 wait_for_fin_atan;
+    u8 reserved;
+} bb_attack_entry_t;
+
 #endif

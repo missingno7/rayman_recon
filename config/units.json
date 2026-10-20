@@ -4168,6 +4168,384 @@
      ]
     }
    }
+  },
+  "bbmont": {
+   "source": "src/bbmont.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "BB2_MARCHE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TOTEM_TOUCHE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TOTEM_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TOTBT_REBOND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_PI_EXPLOSION2": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBL_REBOND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "allocateDog": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "allocateTir": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "CreateFirstBBL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "INIT_BBMONT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBL_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "BBMONT_ECLAIR": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "BBMONT_ETINCELLES": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "BBMONT_TIRE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "Cree_BBL": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "BB_Attaque": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "Fin_BB_Attaque": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "BB_Atan": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT_ATTER": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT_TOUCHE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT2_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT2_MARCHE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT2_ATTER": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT3_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT3_ATTER": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BBMONT4_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_ECLAIR_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BB1_PLAT_CMD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
+  },
+  "blocs": {
+   "source": "src/blocs.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "MURDUR": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "dist_to_bloc_floor": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "bloc_floor": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "calc_typ_trav": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "calc_typ_travd": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "TEST_FIN_BLOC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "TEST_IS_ON_RESSORT_BLOC": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "IS_ON_RESSORT_BLOC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "CALC_MOV_ON_BLOC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "recale_position": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_empty": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_right_45": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_left_45": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_right1_30": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_right2_30": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_left1_30": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_left2_30": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs3_empty": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_liane": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs1_hor": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs4_empty": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "blocs2_empty": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "init_calcbloc_func": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
   }
  }
 }

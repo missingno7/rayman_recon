@@ -1,12 +1,7 @@
 /* Part of the central data TU (GOG v1.21 obj2 _DATA). Block file and split INVENTED; values verified against the
    oracle by tools/verify.py (data segment check). From build/workers/data_rv (Rayverse data.c + DOS corrections). */
-#include "rtypes.h"
+#include "game.h"
 
-typedef struct bb_attack_entry_t {
-    s16 attack;
-    u8 wait_for_fin_atan;
-    u8 reserved;
-} bb_attack_entry_t;
 
 s16 niveau = 0; //95EC4
 
