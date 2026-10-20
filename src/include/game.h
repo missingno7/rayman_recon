@@ -43,4 +43,37 @@ typedef struct world_info_t {       /* src/cage.c */
     char *text;
 } world_info_t;
 
+typedef struct poing_t {            /* poing: 20 bytes (Android agrees); s16 fields per src/poing.c */
+    s32 y_16;
+    s16 field_4;
+    s16 speed_x;
+    s16 charge;
+    s16 field_A;
+    u8 sub_etat;
+    u8 is_returning;
+    u8 is_active;
+    u8 damage;
+    u8 is_charging;
+    u8 is_boum;
+    u8 field_12;
+    u8 field_13;
+} poing_t;
+
+typedef struct rayevts_t {          /* RayEvts: 2 bytes (Android agrees); src/poing.c */
+    u8 poing : 1;
+    u8 hang : 1;
+    u8 helico : 1;
+    u8 super_helico : 1;
+    u8 handstand_dash : 1;
+    u8 handstand : 1;
+    u8 magicseed : 1;
+    u8 grap : 1;
+    u8 run : 1;
+    u8 tiny : 1;
+    u8 firefly : 1;
+    u8 force_run : 2;
+    u8 reverse : 2;
+    u8 squashed : 1;
+} rayevts_t;
+
 #endif

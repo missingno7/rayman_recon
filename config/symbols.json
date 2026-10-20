@@ -671,6 +671,76 @@
     "addr": "1:06e8a",
     "name": "RAYVERSE",
     "evidence": "DOS direct call from blood routine at 1:13996; Rayverse lowlevel.c"
+   },
+   "fist_U_turn": {
+    "addr": "1:566a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //666A0; DOS switch jump table at object base 1:56670"
+   },
+   "CALC_FIST_POS": {
+    "addr": "1:56700",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66700; DOS object map and xref"
+   },
+   "RAY_THROW_FIST": {
+    "addr": "1:5676c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //6676C; DOS object map and xref"
+   },
+   "RAY_PREPARE_FIST": {
+    "addr": "1:56af0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66AF0; DOS object map and xref"
+   },
+   "RAY_GROW_FIST": {
+    "addr": "1:56bd0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66BD0; DOS object map and xref"
+   },
+   "fin_poing_follow": {
+    "addr": "1:56bf4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66BF4; DOS object map and xref"
+   },
+   "POING_FOLLOW": {
+    "addr": "1:56ca0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66CA0; DOS object map and xref"
+   },
+   "alter_fist_speed": {
+    "addr": "1:56cec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66CEC; DOS object map and xref"
+   },
+   "switch_off_fist": {
+    "addr": "1:56d54",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66D54; DOS object map and xref"
+   },
+   "DO_POING": {
+    "addr": "1:56da4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66DA4; DOS object map and xref"
+   },
+   "allocatePoingBoum": {
+    "addr": "1:56ff8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse poing.c //66FF8; DOS object map and xref"
+   },
+   "del_alwobj": {
+    "addr": "1:0f918",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from RAY_THROW_FIST at 1:5689e"
+   },
+   "RAY_STOP": {
+    "addr": "1:5d724",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from RAY_PREPARE_FIST at 1:56b98; Rayverse proto.h"
+   },
+   "DO_POING_COLLISION": {
+    "addr": "1:1d5fc",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from DO_POING at 1:56f84; Rayverse poing.c"
    }
   },
   "data": {
@@ -1442,6 +1512,42 @@
     "type": "s16[262]",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //92BA2; Android .data size 524"
+   },
+   "poing": {
+    "addr": "2:3e770",
+    "type": "poing_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE770; Android poing size 20 bytes; DOS accesses offsets 0..0x13"
+   },
+   "RayEvts": {
+    "addr": "2:3f81a",
+    "type": "rayevts_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF81A; Android RayEvts size 2 bytes; DOS tests super_helico bit 3"
+   },
+   "helico_time": {
+    "addr": "2:3f898",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF898; Android helico_time size 2 bytes; DOS word store"
+   },
+   "button_released": {
+    "addr": "2:3fa7d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA7D; Android button_released size 1 byte; DOS byte store"
+   },
+   "compteur_attente": {
+    "addr": "2:3f774",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF774; Android compteur_attente size 2 bytes; DOS word store"
+   },
+   "poing_obj_id": {
+    "addr": "2:3f88a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF88A; Android poing_obj_id size 2 bytes; DOS passes the id to del_alwobj"
    }
   }
  }
