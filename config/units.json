@@ -2142,7 +2142,7 @@
    "profile": "game",
    "functions": {
     "new_level_init": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2150,7 +2150,7 @@
      ]
     },
     "fix_numlevel": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2166,7 +2166,7 @@
      ]
     },
     "DO_BALLE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2198,7 +2198,7 @@
      ]
     },
     "DO_GROWING_PLATFORM": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2230,7 +2230,7 @@
      ]
     },
     "ANGLE_RAYMAN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2238,7 +2238,7 @@
      ]
     },
     "allocateNOVA": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2262,7 +2262,7 @@
      ]
     },
     "NOVA_STATUS_BAR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2270,7 +2270,7 @@
      ]
     },
     "DO_REDEYE_FIRE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2294,7 +2294,7 @@
      ]
     },
     "start_pix_gerbe": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2302,7 +2302,7 @@
      ]
     },
     "do_pix_gerbes": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2310,7 +2310,7 @@
      ]
     },
     "START_2_PARTS_CYMBAL_ACTION": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2334,7 +2334,7 @@
      ]
     },
     "DO_CORDE_CASSE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2342,7 +2342,7 @@
      ]
     },
     "DO_FUMEE_CORDE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2358,7 +2358,7 @@
      ]
     },
     "allocateSupHelico": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2366,7 +2366,7 @@
      ]
     },
     "allocatePaillette": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

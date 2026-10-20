@@ -2311,6 +2311,11 @@
     "addr": "1:42d10",
     "name": "RAYVERSE",
     "evidence": "Rayverse meredenis.c //52d10; DOS address is comment - 0x10000 = 1:42d10"
+   },
+   "DISPLAY_GAME_VIGNET": {
+    "addr": "1:254a4",
+    "name_origin": "RAYVERSE/Android",
+    "evidence": "DOS fix_numlevel calls at 1:6abad and 1:6ac97; tools/android.py DISPLAY_GAME_VIGNET confirms original function name (Android text size 114)."
    }
   },
   "data": {

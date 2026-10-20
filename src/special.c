@@ -1,19 +1,21 @@
 /*
  * Special level objects (GOG v1.21 object 1:6a340-1:6c3b0). File name invented (Rayverse special.c).
- * Names: Rayverse/Android. Status per function: config/units.json.
+ * Worker candidate: 21/30 STRICT; see NOTES.md and final.json.
+ * Names: Rayverse/Android; new arithmetic local names are INVENTED.
  */
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
 #include "map.h"
 #include <stddef.h>
+#include <stdlib.h>
 
 /* Rayverse's bool/enum aliases are adapted to Watcom C; constants retain DOS values. */
 typedef s32 bool;
 #define true 1
 #define false 0
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) abs(value)
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 
 #define TYPE_WIZARD1 5
@@ -59,6 +61,7 @@ extern s16 h_scroll_speed, v_scroll_speed, rayman_obj_id;
 extern s16 pierreAcorde_obj_id, eau_obj_id, id_Cling_1up, id_Cling_Pow;
 extern u8 Vignet_To_Display, You_Win, fin_du_jeu, fin_dark, NewMs, rayOnMsWasThere;
 extern u8 Nb_total_cages;
+extern s16 ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h;
 extern obj_t ray;
 extern obj_t *poing_obj;
 extern level_t level;
@@ -76,6 +79,7 @@ extern pix_gerbe_t pix_gerbe[8];
 extern s16 EauDy[14], DecEau[4];
 extern s16 *link_init;
 
+extern void DISPLAY_GAME_VIGNET(void);
 extern void make_active(obj_t *obj, s16 flags);
 extern void add_alwobj(obj_t *obj);
 extern void calc_obj_pos(obj_t *obj);
@@ -106,9 +110,12 @@ void new_level_init(void) {
 
 //7A474
 void fix_numlevel(obj_t* obj) {
-    bool handledLevelChoice = false;
+    s16 handledLevelChoice = false;
 
-    if (departlevel && (new_level_init(), obj->type != TYPE_WIZARD1))
+    if (departlevel)
+    {
+        new_level_init();
+        if (obj->type != TYPE_WIZARD1)
     {
         switch(num_world)
         {
@@ -124,7 +131,7 @@ void fix_numlevel(obj_t* obj) {
 
                 // Betilla: hang
                 if (num_level == 7 && (RayEvts.hang) != 0)
-                    new_world = 1;
+                    num_level = 8;
 
                 // Boss: Moskito chase
                 if (num_level == 13 && (finBosslevel.moskito) != 0)
@@ -151,7 +158,7 @@ void fix_numlevel(obj_t* obj) {
 
                 // Betilla: helico
                 if (num_level == 10 && (RayEvts.helico) != 0)
-                    new_world = 1;
+                    num_level = 11;
 
                 // Boss: Sax
                 if (num_level == 14 && (finBosslevel.mr_sax) != 0)
@@ -170,7 +177,7 @@ void fix_numlevel(obj_t* obj) {
 
                 // Betilla: run
                 if (num_level == 10 && (RayEvts.run) != 0)
-                    new_world = 1;
+                    num_level = 11;
                 break;
 
                 // Image
@@ -194,17 +201,18 @@ void fix_numlevel(obj_t* obj) {
                 // Cake
             case 6:
                 // Boss: Dark (unused)
-                if (num_level == 1 && (finBosslevel.mr_dark) != 0)
+                if (num_level == 3 && (finBosslevel.mr_dark) != 0)
                     new_world = 1;
                 break;
         }
     }
 
+    }
     switch(num_world)
     {
         // Jungle
         case 1:
-            switch(num_level)
+            switch((u16)num_level)
             {
                 // Bonus: Pink Plant Woods 2
                 case 2:
@@ -311,7 +319,7 @@ void fix_numlevel(obj_t* obj) {
 
             // Music
         case 2:
-            switch(num_level)
+            switch((u16)num_level)
             {
                 // Bonus: Bongo Hills 4
                 case 4:
@@ -389,7 +397,7 @@ void fix_numlevel(obj_t* obj) {
 
             // Mountain
         case 3:
-            switch(num_level)
+            switch((u16)num_level)
             {
                 // End: Twilight Gulch
                 case 2:
@@ -455,7 +463,7 @@ void fix_numlevel(obj_t* obj) {
 
             // Image
         case 4:
-            switch(num_level)
+            switch((u16)num_level)
             {
                 // Bonus: Eraser Plains 3
                 case 3:
@@ -500,11 +508,9 @@ void fix_numlevel(obj_t* obj) {
                     // Unlock Crystal Palace and save point
                     if ((t_world_info[14].state & 1) == 0)
                     {
+                        DISPLAY_GAME_VIGNET();
                         t_world_info[14].state |= 4;
                         t_world_info[22].state |= 4;
-
-                        // Show cutscene
-                        Vignet_To_Display = 1;
                     }
                     break;
 
@@ -524,7 +530,7 @@ void fix_numlevel(obj_t* obj) {
 
             // Cave
         case 5:
-            switch (num_level)
+            switch ((u16)num_level)
             {
                 // End & bonus: Crystal Palace 2
                 case 2:
@@ -540,8 +546,10 @@ void fix_numlevel(obj_t* obj) {
                         new_world = 1;
 
                         // Unlock Eat at Joe's
-                        if ((t_world_info[15].state & 1) == 0)
+                        if ((t_world_info[15].state & 1) == 0) {
                             t_world_info[15].state |= 4;
+                            t_world_info[22].state |= 4;
+                        }
                     }
                     break;
 
@@ -562,7 +570,7 @@ void fix_numlevel(obj_t* obj) {
                     new_world = 1;
 
                     // Show cutscene
-                    Vignet_To_Display = 1;
+                    DISPLAY_GAME_VIGNET();
                     break;
 
                     // End: Bonus 1
@@ -576,18 +584,21 @@ void fix_numlevel(obj_t* obj) {
             // Cake
         case 6:
             // End: Mr Dark's Dare
-            if (num_level == 4)
+            switch (num_level) {
+            case 4:
             {
                 new_world = 1;
                 You_Win = 1;
-                fin_du_jeu = 1;
                 fin_dark = 1;
+                fin_du_jeu = 1;
+                break;
+            }
             }
             break;
     }
 
     // Unlock Mr Dark's Dare
-    if ((t_world_info[17].state & 1) == 0 && Nb_total_cages > 101)
+    if ((t_world_info[17].state & 1) == 0 && Nb_total_cages >= 102)
         t_world_info[17].state |= 4;
 
     // If we're in the same world and the level choice has not already been
@@ -614,19 +625,20 @@ void allocate_splash(obj_t* obj) {
                 add_alwobj(cur_obj);
             }
             cur_obj->x = obj->x + obj->offset_bx - cur_obj->offset_bx;
-            if (obj->btypes[0] == BTYP_WATER) {
-                cur_obj->y = obj->offset_by + obj->y - cur_obj->offset_by;
-            } else {
-                s16 offset_by;
-                s16 height;
-                if (!(block_flags[obj->btypes[0]] & 2)) {
+            {
+                s32 y;
+                s32 offset_by;
+                if (obj->btypes[0] == BTYP_WATER) {
                     offset_by = cur_obj->offset_by;
-                    height = (*(u16 *) &mp.height - 1) * 16;
+                    y = obj->offset_by + obj->y;
+                } else if (!(block_flags[obj->btypes[0]] & 2)) {
+                    y = (mp.height - 1) * 16;
+                    offset_by = cur_obj->offset_by;
                 } else {
-                    height = (*(u16 *) &mp.height - 1) * 16;
-                    offset_by = cur_obj->offset_by - 10;
+                    offset_by = cur_obj->offset_by;
+                    y = (mp.height - 1) * 16 + 10;
                 }
-                cur_obj->y = height - offset_by;
+                cur_obj->y = y - offset_by;
             }
             calc_obj_pos(cur_obj);
             set_main_and_sub_etat(cur_obj, 0, 0);
@@ -645,7 +657,8 @@ void DO_BALLE(obj_t* obj) {
     if (obj->type == TYPE_15_BALLE2) {
         eta->speed_x_left = -1;
         eta->speed_x_right = 1;
-        eta->anim_speed = (eta->anim_speed & 0xF) | 0xA0; // TODO: change to bitfield?
+        eta->anim_speed &= 0xF;
+        eta->anim_speed |= 0xA0; // TODO: change to bitfield?
     } else if (obj->type == TYPE_13_BALLE1) {
         eta->speed_x_left = -2;
         eta->speed_x_right = 2;
@@ -655,117 +668,77 @@ void DO_BALLE(obj_t* obj) {
 
 //7AE78
 void DO_TIR(obj_t* obj) {
-    /* 38608 8015CE08 -O2 -msoft-float */
-    //TODO: non-matching, check
-    obj_t* cur_obj;
-    obj_t* var_s0;
-    s16 temp_a0;
-    s16 temp_a1;
-    s16 temp_v0_1;
-    s16 temp_v0_4;
-    s16 i;
-    s16 var_v0;
-    s32 temp_v0_2;
-    s32 temp_v0_3;
-    u32 temp_v1_3;
-    s32 temp_v1_4;
-    s32 temp_v1_5;
-    s32 temp_v1_6;
-    u16 var_v1;
-    s16 var_a2;
-    u8 temp_v1_1;
-    u8 var_a1;
-    s16 test_1;
-    s32 test_2;
-    u32 test_3;
-    u32 test_4;
+    obj_t *cur_obj;
+    s16 i, nb_objs;
+    s16 distance, speed_y;
+    s32 x, numerator;
 
-    if (obj->main_etat == 0) {
-        if (obj->sub_etat == 11) {
-            if (obj->link == 0) {
-                cur_obj = level.objects;
-                i = 0;
-                test_1 = level.nb_objects;
-                while (i < test_1) {
-                    if (((cur_obj->type == TYPE_13_BALLE1) || (cur_obj->type == TYPE_15_BALLE2)) && !cur_obj->is_active) {
-                        cur_obj->flags.flip_x = obj->flags.flip_x;
-                        cur_obj->flags.alive = 1;
-                        cur_obj->is_active = 1;
-                        add_alwobj(cur_obj);
-                        set_main_and_sub_etat(cur_obj, 2, 2);
-                        cur_obj->anim_frame = 0;
-                        cur_obj->anim_index = (u8) cur_obj->eta[2][2].anim_index;
-                        temp_v1_4 = (obj->x + obj->offset_bx) - cur_obj->offset_bx;
-                        if (cur_obj->flags.flip_x) {
-                            temp_v1_4 = temp_v1_4 + 64;
-                        } else {
-                            temp_v1_4 = temp_v1_4 - 64;
-                        }
-                        cur_obj->x = temp_v1_4;
-                        cur_obj->y = obj->y;
-                        cur_obj->init_x = cur_obj->x;
-                        cur_obj->init_y = cur_obj->y;
-                        calc_obj_pos(cur_obj);
-                        PlaySnd(24, cur_obj->id);
-                        if (cur_obj->flags.flip_x) {
-                            skipToLabel(cur_obj, 3, 1);
-                        } else {
-                            skipToLabel(cur_obj, 1, 1);
-                        }
-
-                        if (obj->type == TYPE_14_CHASSEUR2) {
-                            if (obj->x - ray.x < 0) {
-                                var_a2 = (ray.x - obj->x) >> 5;
-                            } else {
-                                var_a2 = (obj->x - ray.x) >> 5;
-                            }
-                            cur_obj->type = TYPE_15_BALLE2;
-                            temp_v1_6 = (ray.y - obj->y) * 2;
-                            test_3 = (s16) var_a2;
-                            temp_v0_2 = obj->x - ray.x;
-
-                            if (temp_v0_2 >= 0) {
-                                var_v0 = (temp_v1_6 / temp_v0_2) - test_3;
-                            } else {
-                                temp_v0_3 = ray.x - obj->x;
-                                var_v0 = (temp_v1_6 / temp_v0_3) - test_3;
-                            }
-                            cur_obj->speed_y = var_v0;
-                            cur_obj->gravity_value_2 = 10;
-                        } else {
-                            cur_obj->type = TYPE_13_BALLE1;
-                            cur_obj->speed_y = 0;
-                        }
-                        calc_obj_pos(cur_obj);
-                        break;
+    if (obj->main_etat == 0 && obj->sub_etat == 11) {
+        if (obj->link == 0) {
+            cur_obj = level.objects;
+            i = 0;
+            nb_objs = level.nb_objects;
+            while (i < nb_objs) {
+                if (((cur_obj->type == TYPE_13_BALLE1) || (cur_obj->type == TYPE_15_BALLE2)) && !cur_obj->is_active) {
+                    cur_obj->flags.flip_x = obj->flags.flip_x;
+                    cur_obj->flags.alive = 1;
+                    cur_obj->is_active = 1;
+                    add_alwobj(cur_obj);
+                    set_main_and_sub_etat(cur_obj, 2, 2);
+                    cur_obj->anim_frame = 0;
+                    cur_obj->anim_index = (u8) cur_obj->eta[2][2].anim_index;
+                    x = (obj->x + obj->offset_bx) - cur_obj->offset_bx;
+                    x += cur_obj->flags.flip_x ? 64 : -64;
+                    cur_obj->x = x;
+                    cur_obj->y = obj->y;
+                    cur_obj->init_x = cur_obj->x;
+                    cur_obj->init_y = cur_obj->y;
+                    calc_obj_pos(cur_obj);
+                    PlaySnd(24, cur_obj->id);
+                    if (cur_obj->flags.flip_x) {
+                        skipToLabel(cur_obj, 3, 1);
+                    } else {
+                        skipToLabel(cur_obj, 1, 1);
                     }
-                    cur_obj += 1;
-                    i = i + 1;
+
+                    if (obj->type == TYPE_14_CHASSEUR2) {
+                        distance = ((obj->x - ray.x) >= 0 ? (obj->x - ray.x) : -(obj->x - ray.x)) >> 5;
+                        cur_obj->type = TYPE_15_BALLE2;
+                        numerator = (ray.y - obj->y) * 2;
+
+                        speed_y = numerator / ((obj->x - ray.x) >= 0 ? (obj->x - ray.x) : -(obj->x - ray.x)) - (s16)distance;
+                        cur_obj->speed_y = speed_y;
+                        cur_obj->gravity_value_2 = 10;
+                    } else {
+                        cur_obj->type = TYPE_13_BALLE1;
+                        cur_obj->speed_y = 0;
+                    }
+                    calc_obj_pos(cur_obj);
+                    break;
                 }
-                obj->link = 1;
-                return;
+                cur_obj += 1;
+                i = i + 1;
             }
-        } else if (obj->sub_etat == 2) {
-            obj->link = 0;
+            obj->link = 1;
+            return;
         }
+    } else if (obj->main_etat == 0 && obj->sub_etat == 2) {
+        obj->link = 0;
     }
 }
 
 //7B060
 void DO_INTERACT_PLAT(obj_t* obj) {
-    if (link_init[obj->id] != obj->id) {
+    s16 linked_id = link_init[obj->id];
+    if (linked_id != obj->id) {
         obj_t* found_obj;
         s16 diff_y;
-        found_obj = level.objects + link_init[obj->id];
+        found_obj = level.objects + linked_id;
         found_obj->type = TYPE_24_INTERACTPLT;
         found_obj->flags.read_commands = 0;
 
-        diff_y = (found_obj->y + found_obj->offset_by) - obj->y - obj->offset_by;
-        if (diff_y < 1) {
-            found_obj->cmd = GO_DOWN;
-        } else {
-            found_obj->cmd = GO_UP;
-        }
+        diff_y = ((s16)found_obj->y + found_obj->offset_by) - (s16)obj->y - obj->offset_by;
+        found_obj->cmd = diff_y <= 0 ? GO_DOWN : GO_UP;
         found_obj->nb_cmd = Abs(diff_y);
     }
 }
@@ -818,11 +791,13 @@ obj_t* oldest_planted(void) {
 void DO_GROWING_PLATFORM(void) {
     obj_t* oldest_obj;
     u8 main_etat; u8 sub_etat;
+    s32 frames_count;
 
     if (dword_BD96C != true)
         dword_BD96C = false;
 
-    if (ray.anim_frame == ray.animations[ray.anim_index].frames_count - 1)
+    frames_count = ray.animations[ray.anim_index].frames_count;
+    if (ray.anim_frame == frames_count - 1)
     {
         if (dword_BD96C == false)
         {
@@ -839,7 +814,7 @@ void DO_GROWING_PLATFORM(void) {
             sub_etat = 38;
             set_main_and_sub_etat(oldest_obj, main_etat, sub_etat);
             oldest_obj->anim_frame = 0;
-            oldest_obj->anim_index = oldest_obj->eta[main_etat][sub_etat].anim_index;
+            oldest_obj->anim_index = oldest_obj->eta[0][38].anim_index;
             oldest_obj->x = (ray.x + ray.offset_bx) - oldest_obj->offset_bx;
             oldest_obj->y = (ray.y + ray.offset_by) - oldest_obj->offset_by;
             calc_obj_pos(oldest_obj);
@@ -852,10 +827,12 @@ void DO_GROWING_PLATFORM(void) {
 
 //7B29C
 obj_t* allocateExplosion(obj_t* obj) {
+    obj_t *result = NULL;
     {
-        s32 i;
-        for (i = 0; i < level.nb_objects; ++i) {
-        obj_t* cur_obj = level.objects + i;
+        s16 i = 0;
+        obj_t *cur_obj = level.objects;
+        s16 nb_objs = level.nb_objects;
+        while (i < nb_objs) {
         if (cur_obj->type == TYPE_83_EXPLOSION && !cur_obj->is_active) {
             set_main_and_sub_etat(cur_obj, 0, 0);
             cur_obj->flags.alive = 1;
@@ -867,11 +844,14 @@ obj_t* allocateExplosion(obj_t* obj) {
             cur_obj->anim_index = get_eta(cur_obj)->anim_index;
             cur_obj->anim_frame = 0;
             cur_obj->change_anim_mode = ANIMMODE_RESET;
-            return cur_obj;
+            result = cur_obj;
+            break;
         }
+        ++cur_obj;
+        ++i;
     }
     }
-    return NULL;
+    return result;
 }
 
 //7B370
@@ -920,13 +900,13 @@ s16 ANGLE_RAYMAN(obj_t* obj) {
     /* 3AC88 8015F488 -O2 -msoft-float */
     s16 x;
     s16 y;
-    u8 x_gt_0;
     u8 y_gt_0;
+    u8 x_gt_0;
     u8 tab_val;
     s16 res;
 
-    x = ray.offset_bx + (ray.x - obj->x - obj->offset_bx);
-    y = ray.offset_by + (ray.y - obj->y - obj->offset_by);
+    x = (ray.x - obj->x - obj->offset_bx) + ray.offset_bx;
+    y = (ray.y - obj->y - obj->offset_by) + ray.offset_by;
     x_gt_0 = x > 0;
     y_gt_0 = y > 0;
     if (!x_gt_0) {
@@ -948,7 +928,7 @@ s16 ANGLE_RAYMAN(obj_t* obj) {
             res = 128;
         }
     } else {
-        if (x < y) {
+        if (y > x) {
             tab_val = angletab[(s16) ((x * 64) / y)];
         } else {
             tab_val = 128 - angletab[(s16) ((y * 64) / x)];
@@ -972,38 +952,40 @@ s16 ANGLE_RAYMAN(obj_t* obj) {
 
 //7B56C
 obj_t* allocateNOVA(void) {
-    {
-        s32 i;
-        for (i = 0; i < level_alw.nb_objects; ++i) {
-        obj_t* obj = level.objects + level_alw.obj_ids[i];
+    obj_t *result = NULL;
+    s16 i = 0;
+    obj_t *obj = level.objects + level_alw.obj_ids[i];
+    while (i < level_alw.nb_objects) {
         if (obj->type == TYPE_143_NOVA2 && !obj->is_active) {
             set_main_and_sub_etat(obj, 5, 20);
             obj->flags.alive = 1;
             add_alwobj(obj);
             obj->anim_index = get_eta(obj)->anim_index;
             obj->anim_frame = 0;
-            return obj;
+            result = obj;
+            break;
         }
+        ++i;
+        obj = level.objects + level_alw.obj_ids[i];
     }
-    }
-    return NULL;
+    return result;
 }
 
 //7B628
 void DO_NOVA(obj_t* obj) {
+    s16 obj_x, obj_y, obj_w, obj_h;
+    s16 nova_x, nova_y, nova_w, nova_h;
     obj_t* nova = allocateNOVA();
     if (nova) {
-        s16 nova_x, nova_y, nova_w, nova_h;
-        s16 obj_x, obj_y, obj_w, obj_h;
         nova->x = obj->x;
         nova->y = obj->y;
         GET_ANIM_POS(nova, &nova_x, &nova_y, &nova_w, &nova_h);
         GET_ANIM_POS(obj, &obj_x, &obj_y, &obj_w, &obj_h);
         nova->is_active = 1;
-        nova->display_prio = 1;
-        nova->param = 0;
         nova->x += (obj_x + (obj_w >> 1)) - (nova_x + (nova_w >> 1));
         nova->y += (obj_y + (obj_h >> 1)) - (nova_y + (nova_h >> 1));
+        nova->display_prio = 1;
+        nova->param = 0;
         calc_obj_pos(nova);
     }
 }
@@ -1013,8 +995,7 @@ void DO_NOVA2(obj_t* obj) {
     /* 3B034 8015F834 -O2 -msoft-float */
     s16 i;
     obj_t* nova_obj;
-    s16 nova_x; s16 nova_y; s16 nova_w; s16 nova_h;
-    s16 in_x; s16 in_y; s16 in_w; s16 in_h;
+    s16 nova_w, in_y, in_x, in_w, in_h, nova_y, nova_h, nova_x;
     s16 new_x; s16 new_y;
 
     for (i = 0; i < 5; i++) {
@@ -1047,10 +1028,10 @@ void DO_NOVA2(obj_t* obj) {
                     new_y += in_h >> 1;
                     break;
             }
-            nova_obj->display_prio = 0;
-            nova_obj->param = i * 5;
             nova_obj->x += new_x;
             nova_obj->y += new_y;
+            nova_obj->display_prio = 0;
+            nova_obj->param = i * 5;
             calc_obj_pos(nova_obj);
         }
     }
@@ -1059,9 +1040,7 @@ void DO_NOVA2(obj_t* obj) {
 //7B838
 s16 NOVA_STATUS_BAR(void) {
     obj_t* obj = allocateNOVA();
-    if (!obj) {
-        return -1;
-    }
+    if (obj) {
     obj->display_prio = 0;
     obj->timer = 10;
     obj->param = 255;
@@ -1069,6 +1048,8 @@ s16 NOVA_STATUS_BAR(void) {
     obj->x = xmap + obj->offset_bx;
     obj->y = ymap + obj->offset_by;
     return obj->id;
+    }
+    return -1;
 }
 
 //7B920
@@ -1080,11 +1061,7 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
     while (i < nb_objs) {
         if (cur_obj->type == TYPE_FLASH && !(cur_obj->is_active)) {
             cur_obj->flags.flip_x = 0;
-            switch (a3) {
-                case 0:
-                    cur_obj->iframes_timer = 256;
-                    cur_obj->follow_id = 0;
-                    break;
+            switch (a3 % 36) {
                 case 1:
                     cur_obj->iframes_timer = 252;
                     cur_obj->follow_id = -44;
@@ -1225,8 +1202,12 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
                     cur_obj->iframes_timer = 0;
                     cur_obj->follow_id = 256;
                     break;
+                case 0:
                 default:
+                    cur_obj->iframes_timer = 256;
+                    cur_obj->follow_id = 0;
                     break;
+
             }
             cur_obj->hit_points = a3 % 36;
             cur_obj->x = x;
@@ -1253,16 +1234,15 @@ void calc_esquive_poing(obj_t* mit_obj, s16* out_diff_x, s16* out_diff_y, s16* o
     s16 unk_x; s16 unk_y;
 
     if (!poing_obj->is_active) {
-        unk_x = ray.x + ray.offset_bx;
-        unk_y = ray.y + ((ray.offset_by + ray.offset_hy) >> 1) - 10;
-        poing_obj->speed_x = 0;
+        unk_x = ray_zdc_x + (ray_zdc_w >> 1);
+        unk_y = ray_zdc_h + (ray_zdc_y >> 1);
     } else {
-        unk_x = poing_obj->x + poing_obj->offset_bx;
-        unk_y = poing_obj->y + poing_obj->offset_by;
+        unk_x = (s16)poing_obj->x + poing_obj->offset_bx;
+        unk_y = poing_obj->y + ((poing_obj->offset_by * 2) >> 1);
     }
 
-    *out_diff_x = unk_x - mit_obj->x - mit_obj->offset_bx;
-    *out_diff_y = Abs(mit_obj->y + mit_obj->offset_hy - unk_y);
+    *out_diff_x = unk_x - (s16)mit_obj->x - mit_obj->offset_bx;
+    *out_diff_y = Abs(mit_obj->y + ((mit_obj->offset_hy + mit_obj->offset_by) >> 1) - unk_y);
     *out_unk = mit_obj->detect_zone * 4;
 }
 
@@ -1287,19 +1267,19 @@ s16 allocate_gerbe(void) {
 void start_pix_gerbe(s16 x, s16 y) {
     /* 3CBE0 801613E0 -O2 -msoft-float */
     s16 *cur_data;
+    s16 spd_x;
     s16 i;
-    s16 spd_x; s16 spd_y;
-    s16 grb = allocate_gerbe();
+    s16 spd_y;
+    s16 grb;
+    grb = allocate_gerbe();
 
     if (grb != -1) {
         cur_data = (s16 *) &pix_gerbe[grb]; /* struct access instead??? */
         for (i = 0; i < (s16) LEN(pix_gerbe[grb].items) - grb * (s16) LEN(pix_gerbe); i++) {
             *cur_data++ = x << 6;
             *cur_data++ = y << 6;
-            spd_y = myRand((i << 2) + 128) - 256;
-            spd_y -= i << 1;
-            spd_x = myRand((i << 2) + 64) - 32;
-            spd_x -= i << 1;
+            spd_y = myRand((i << 2) + 128) - (256 + (i << 1));
+            spd_x = myRand((i << 2) + 64) - (32 + (i << 1));
             *cur_data++ = spd_x;
             *cur_data++ = spd_y;
             ((u8 *) cur_data)[0] = myRand(8) + 8; /* y_accel */
@@ -1316,13 +1296,10 @@ void do_pix_gerbes(void) {
     s16 new_active;
     pix_gerbe_item_t* cur_item;
     s16 j;
-    s16 h_speed = h_scroll_speed * 64;
-    s16 v_speed = v_scroll_speed * 64;
-
-    // added in PC/mobile versions:
-    s32 lim_W1 = Bloc_lim_W1_Aff << 6;
-    s32 lim_W2 = Bloc_lim_W2_Aff << 6;
-    s32 lim_H2 = Bloc_lim_H2_Aff << 6;
+    s16 v_speed;
+    s16 h_speed;
+    h_speed = h_scroll_speed * 64;
+    v_speed = v_scroll_speed * 64;
 
     i = 0;
     while (i < (s16) LEN(pix_gerbe)) {
@@ -1335,7 +1312,7 @@ void do_pix_gerbes(void) {
                     cur_item->x_pos += cur_item->speed_x - h_speed;
                     cur_item->y_pos += cur_item->speed_y - v_speed;
                     // NOTE: this check was changed in the PC version
-                    if (cur_item->x_pos > lim_W2 || cur_item->x_pos < lim_W1 || cur_item->y_pos > lim_H2) {
+                    if (cur_item->x_pos > (Bloc_lim_W2_Aff << 6) || cur_item->x_pos < (Bloc_lim_W1_Aff << 6) || cur_item->y_pos >= (Bloc_lim_H2_Aff << 6)) {
                         cur_item->unk_1 = 0;
                     } else {
                         new_active = true;
@@ -1356,11 +1333,13 @@ void do_pix_gerbes(void) {
 void START_2_PARTS_CYMBAL_ACTION(obj_t* obj) {
     /* 3CE78 80161678 -O2 */
     obj_t* linkedCymbal;
+    s16 linked_id;
 
     skipToLabel(obj, 4, true);
     obj->link = 1;
-    if (link_init[obj->id] != obj->id) {
-        linkedCymbal = &level.objects[link_init[obj->id]];
+    linked_id = link_init[obj->id];
+    if (linked_id != obj->id) {
+        linkedCymbal = &level.objects[linked_id];
         if (linkedCymbal->type == TYPE_168_CYMBAL1) {
             skipToLabel(linkedCymbal, 4, true);
             linkedCymbal->link = 1;
@@ -1387,7 +1366,7 @@ void DO_CORDE_CASSE(obj_t* obj) {
     /* 3EB50 80163350 -O2 -msoft-float */
     s16 i;
     obj_t *cur_obj;
-    u8 nb_objs;
+    s16 nb_objs;
 
     set_sub_etat(obj, 21);
     if (level.objects[pierreAcorde_obj_id].hit_points == 10) {
@@ -1421,7 +1400,7 @@ void DO_FUMEE_CORDE(s16 x, s16 y) {
     /* 3EC84 80163484 -O2 -msoft-float */
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
-    u8 nb_objs = level.nb_objects;
+    s16 nb_objs = level.nb_objects;
 
     while (i < nb_objs)
     {
@@ -1429,9 +1408,9 @@ void DO_FUMEE_CORDE(s16 x, s16 y) {
         {
             cur_obj->x = x - 142;
             cur_obj->y = y - 128;
-            cur_obj->flags.alive = 1;
             cur_obj->is_active = 1;
             add_alwobj(cur_obj);
+            cur_obj->flags.alive = 1;
             break;
         }
         cur_obj++;
@@ -1448,24 +1427,32 @@ s32 GetY(s16 x) {
     s16 unk_3;
     obj_t* unk_obj;
 
-    if (eau_obj_id == -1)
-        return 0;
+    s32 result;
+    s32 distance;
+    if (eau_obj_id == -1) {
+        result = 0;
+    } else {
 
     unk_1 = (x + 50) / 101;
-    unk_2 = unk_1 * 101;
     unk_obj_id = eau_obj_id + unk_1 % 5;
-    unk_3 = 51 - Abs(x - unk_2);
+    unk_2 = unk_1 * 101;
+    distance = x - unk_2;
+    if (distance < 0) distance = -distance;
+    unk_3 = 51 - distance;
     unk_obj = &level.objects[unk_obj_id];
 
-    return unk_obj->y - unk_3 * EauDy[(unk_obj->anim_frame + DecEau[unk_obj->anim_index]) % 14] / 50;
+    result = unk_obj->y - EauDy[(s16)((unk_obj->anim_frame + DecEau[unk_obj->anim_index]) % 14)] * unk_3 / 50;
+    }
+    return result;
 }
 
 //7C1C4
 void allocateSupHelico(obj_t* mus_obj) {
     {
-        s32 i;
-        for (i = 0; i < level.nb_objects; ++i) {
-        obj_t* cur_obj = level.objects + i;
+        s16 i = 0;
+        obj_t *cur_obj = level.objects;
+        s16 nb_objs = level.nb_objects;
+        while (i < nb_objs) {
         if (cur_obj->type == TYPE_133_SUPERHELICO && !cur_obj->is_active) {
             cur_obj->flags.alive = 1;
             cur_obj->is_active = 1;
@@ -1480,29 +1467,29 @@ void allocateSupHelico(obj_t* mus_obj) {
             calc_obj_pos(cur_obj);
             break;
         }
+        ++cur_obj;
+        ++i;
     }
     }
 }
 
 //7C274
 void allocatePaillette(obj_t* obj) {
-    obj_t* pailette_obj = NULL;
-    {
-        s32 i;
-        for (i = 0; i < level.nb_objects; ++i) {
-        obj_t* cur_obj = level.objects + i;
+    obj_t *pailette_obj = NULL;
+    s16 i = 0;
+    obj_t *cur_obj = level.objects;
+    s16 nb_objs = level.nb_objects;
+    while (i < nb_objs) {
         if (cur_obj->type == TYPE_75_PAILLETTE && !cur_obj->is_active) {
             pailette_obj = cur_obj;
             break;
         }
-        }
+        ++i;
+        ++cur_obj;
     }
-    if (pailette_obj) {
-        add_alwobj(pailette_obj);
-    } else {
+    if (!pailette_obj) {
         pailette_obj = findfirstObject(TYPE_75_PAILLETTE);
-        // NOTE: added the below just to be sure
-        del_alwobj(pailette_obj->id);
+    } else {
         add_alwobj(pailette_obj);
     }
     pailette_obj->is_active = 1;
@@ -1517,7 +1504,7 @@ void allocatePaillette(obj_t* obj) {
     pailette_obj->init_main_etat = 0;
     pailette_obj->init_sub_etat = 0;
     pailette_obj->sub_etat = 0;
-    calc_obj_pos(obj);
+    calc_obj_pos(pailette_obj);
 }
 
 //7C328
