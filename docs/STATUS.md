@@ -30,7 +30,7 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 | ufo | 3/5 | PS1 bodies (Rayverse stubs) STRICT unchanged |
 | moskito | 3/14 | |
 Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
-Verifier self-tests 10/10 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
+Verifier self-tests 9/9 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
