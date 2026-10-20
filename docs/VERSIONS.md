@@ -30,7 +30,7 @@ question (docs/COMPILER.md).
 | MakeMyRand | `RandArray[i] = rand();` (STRICT against v1.12 in scratch) | `rand() & 0xEFFF` | not compared | CONFIRMED_VARIANT (v1.12 vs v1.21) |
 
 The v1.12 rand object was verified STRICT with the same profile (`scratch/v112/`, overlay bindings) - one
-measurement that the v1.12 game code is reproducible by the 10.6 compiler too (10.5 compiler not yet runnable).
+measurement that the v1.12 game code is reproducible by the 10.6 compiler too (10.5 gives identical code).
 
 ## PS1
 `SLUS-000.05` (US, SHA-1 `4ac1789e…`) is the decomp's exact target. PS1 is GCC/MIPS; shared names come from the
