@@ -1,6 +1,6 @@
 /*
  * Mr Sax boss (GOG v1.21 object 1:65840-1:678f0). File name invented (Rayverse saxo.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: 19/25 STRICT; remaining evidence in NOTES.md.
  */
 #include "obj.h"
 #include "game.h"
@@ -75,6 +75,7 @@ extern map_data_t mp;
 extern block_flags_t block_flags[64];
 extern u8 WaitForAnim;
 extern u8 fin_boss;
+extern u8 boss_mort;
 extern finbosslevel_t finBosslevel;
 extern s16 screen_trembling3;
 extern s16 screen_trembling;
@@ -105,9 +106,9 @@ extern s16 calc_obj_dir(obj_t *obj);
 //75840
 u8 saxoCanAttak(void) {
     if (scrollLocked == 0) {
-        bool lock = false;
-        if (xmap >= bossScrollStartX - h_scroll_speed && xmap <= h_scroll_speed + bossScrollEndX) {
-            if (ymap >= bossScrollStartY - v_scroll_speed && ymap <= v_scroll_speed + bossScrollEndY)
+        s32 lock = false;
+        if ((xmap >= bossScrollStartX - h_scroll_speed && xmap <= h_scroll_speed + bossScrollEndX) ? 1 : 0) {
+            if ((ymap >= bossScrollStartY - v_scroll_speed && ymap <= v_scroll_speed + bossScrollEndY) ? 1 : 0)
                 lock = true;
         }
         scrollLocked = lock;
@@ -130,9 +131,9 @@ void INIT_SAXO(obj_t* sax_obj) {
     calc_obj_pos(sax_obj);
     sax_obj->is_active = 0;
     sax_obj->speed_x = 0;
-    Phase = 0;
     sax_obj->speed_y = 0;
     sax_obj->flags.alive = 1;
+    Phase = 0;
     IsBossThere = false;
     IndexSerie = 0;
     if (sax_obj->type == TYPE_74_SAXO) {
@@ -150,7 +151,6 @@ void allocateNote2(obj_t* note_obj, s16 a2) {
     obj_t* cur_obj;
     s16 i;
     s16 nb_objs;
-    u8 offs_half;
     s16 offs_x;
 
     if (note_obj->iframes_timer > 0) {
@@ -164,11 +164,10 @@ void allocateNote2(obj_t* note_obj, s16 a2) {
                     cur_obj->speed_y = 0;
                     cur_obj->speed_x = 0;
 
-                    offs_half = note_obj->offset_bx / 2;
-                    offs_x = offs_half;
+                    offs_x = note_obj->offset_bx >> 1;
                     if (a2 != 0)
-                        offs_x = -offs_half;
-                    cur_obj->x = offs_x + note_obj->x;
+                        offs_x = -offs_x;
+                    cur_obj->x = note_obj->x + offs_x;
                     cur_obj->y = note_obj->y;
 
                     cur_obj->main_etat = 0;
@@ -212,14 +211,13 @@ void DO_EXPLOSE_NOTE2(obj_t* obj) {
 void DO_NOTE_CMD(obj_t* obj) {
     /* 50F40 80175740 -O2 -msoft-float */
     s16 calc_x;
-    s32 offs_x;
+    u8 offs_x;
     u8 var_v1;
-    u8 temp_v0_2;
 
     switch (obj->type) {
         case TYPE_182_NOTE3:
             if (obj->speed_x == 0) {
-                calc_x = obj->offset_bx + obj->x - Sax.note_box_coll_x;
+                calc_x = obj->offset_bx + (s16)obj->x - Sax.note_box_coll_x;
                 if (calc_x < 20) {
                     set_main_and_sub_etat(obj, 2, 0);
                     obj->speed_x = 3;
@@ -228,14 +226,13 @@ void DO_NOTE_CMD(obj_t* obj) {
                 else if (calc_x < 200) {
                     /* vibrate back and forth the closer sax gets */
                     var_v1 = (calc_x >> 3) - 2;
-                    offs_x = 1;
+                    
                     if (var_v1 < 2)
                         var_v1 = 2;
-                    temp_v0_2 = var_v1;
-                    if (calc_x < 50)
-                        offs_x = 2;
+                    
+                    offs_x = calc_x < 50 ? 2 : 1;
 
-                    if (horloge[temp_v0_2] < (temp_v0_2 / 2))
+                    if (horloge[var_v1] < (var_v1 >> 1))
                         obj->x = obj->init_x + offs_x;
                     else
                         obj->x = obj->init_x;
@@ -267,7 +264,7 @@ void DO_NOTE_CMD(obj_t* obj) {
             }
             break;
         case TYPE_BONNE_NOTE:
-            if (inter_box(obj->x + obj->offset_bx - 8, obj->y + obj->offset_by - 8, 16, 16,
+            if (inter_box((s16)((s16)obj->x + obj->offset_bx - 8), (s16)((s16)obj->y + obj->offset_by - 24), 16, 16,
                           Sax.note_box_coll_x, Sax.note_box_coll_y, 20, 140)
             ) {
                 if (Sax.coup == 0)
@@ -285,44 +282,21 @@ void DO_NOTE_CMD(obj_t* obj) {
 //75D20
 void Cree_Eclat_Note(obj_t* bnote, obj_t* note1, s16 index) {
     /* 511C4 801759C4 -O2 -msoft-float */
-    obj_t *note_src = note1;
-    s16 bnote_type;
-    s16 speed_x;
 
-    bnote_type = bnote->type;
-    if (bnote_type == TYPE_102_BNOTE)
-    {
-        if (bnote->is_active)
-        {
-            do
-            {
-                bnote++;
-                bnote_type = bnote->type;
-                if (bnote_type != TYPE_102_BNOTE)
-                    return;
-            } while (bnote->is_active);
-        }
-    }
+    while (bnote->type == TYPE_102_BNOTE && bnote->is_active) bnote++;
 
     if (bnote->type == TYPE_102_BNOTE)
     {
         if (index < 4)
         {
-            bnote->flags.flip_x = (index % 2) & 1;
-            if (index < 2)
-                bnote->speed_y = -1;
-            else
-                bnote->speed_y = 1;
+            bnote->flags.flip_x = index % 2;
+            bnote->speed_y = index < 2 ? -1 : 1;
 
-            if (bnote->flags.flip_x)
-                speed_x = 1;
-            else
-                speed_x = -1;
-            bnote->speed_x = speed_x;
+            bnote->speed_x = bnote->flags.flip_x ? 1 : -1;
         }
         else
         {
-            bnote->flags.flip_x = (index % 2) & 1;
+            bnote->flags.flip_x = index % 2;
             switch (index)
             {
                 case 4:
@@ -343,8 +317,8 @@ void Cree_Eclat_Note(obj_t* bnote, obj_t* note1, s16 index) {
                     break;
             }
         }
-        bnote->x = note_src->x;
-        bnote->y = note_src->y;
+        bnote->x = note1->x;
+        bnote->y = note1->y;
         bnote->main_etat = 2;
         bnote->sub_etat = 5;
         skipToLabel(bnote, 1, true);
@@ -381,8 +355,8 @@ void DO_EXPLOSE_NOTE1(obj_t* obj) {
                 Cree_Eclat_Note(cur_obj++, obj, 3);
                 Cree_Eclat_Note(cur_obj++, obj, 4);
                 Cree_Eclat_Note(cur_obj++, obj, 5);
-                Cree_Eclat_Note(cur_obj++, obj, 6);
-                Cree_Eclat_Note(cur_obj, obj, 7);
+                Cree_Eclat_Note(cur_obj, obj, 6);
+                Cree_Eclat_Note(cur_obj + 1, obj, 7);
                 obj->flags.alive = 0;
                 obj->is_active = 0;
                 break;
@@ -414,9 +388,7 @@ void BonneNote(obj_t* orig_obj) {
                     cur_obj->gravity_value_2 = 10;
                     cur_obj->param = 2;
                 } else {
-                    speed_x = 4;
-                    if (poing_obj->speed_x < 0)
-                        speed_x = -4;
+                    speed_x = poing_obj->speed_x < 0 ? -4 : 4;
                     cur_obj->speed_x = speed_x;
                     if (speed_x < 0)
                         cur_obj->flags.flip_x = 0;
@@ -433,10 +405,10 @@ void BonneNote(obj_t* orig_obj) {
                 cur_obj->init_x = cur_obj->x;
                 skipToLabel(cur_obj, 1, true);
                 calc_obj_pos(cur_obj);
-                cur_obj->gravity_value_1 = 0;
                 cur_obj->flags.alive = 1;
                 cur_obj->is_active = 1;
                 add_alwobj(cur_obj);
+                cur_obj->gravity_value_1 = 0;
                 cur_obj->iframes_timer = 200;
                 orig_obj->is_active = 0;
                 orig_obj->flags.alive = 0;
@@ -471,7 +443,7 @@ void DO_NOTE_TOUCHEE(obj_t* obj, s16 sprite) {
 
 //76124
 void DO_NOTE_REBOND(obj_t* obj) {
-    /* 51774 80175F74 -O2 -msoft-float */
+    s32 speed;
     switch (obj->type) {
         case TYPE_92_NOTE2:
             DO_EXPLOSE_NOTE2(obj);
@@ -479,7 +451,9 @@ void DO_NOTE_REBOND(obj_t* obj) {
         case TYPE_90_NOTE0:
         case TYPE_182_NOTE3:
         case TYPE_93_BONNE_NOTE:
-            obj->speed_y = Abs(obj->speed_y);
+            speed = obj->speed_y;
+            if (speed < 0) speed = -speed;
+            obj->speed_y = speed;
             obj->speed_y = -obj->speed_y;
             if (obj->speed_y > -3)
                 obj->speed_y--;
@@ -575,7 +549,7 @@ void DO_SAXO_COUP(obj_t* obj) {
 
     if (Phase != 100) {
         obj->hit_points--;
-        if (obj->hit_points != 0) {
+        if (obj->hit_points > 0) {
             if (obj->main_etat != 2) {
                 Sax.field8_0xe = obj->main_etat;
                 Sax.field9_0xf = obj->sub_etat;
@@ -611,14 +585,14 @@ void DO_SAXO2_COUP(obj_t* obj) {
             Sax.coup = 2;
             break;
         case 2:
-            obj->hit_points--;
             Sax.coup = 0;
+            obj->hit_points--;
             break;
         case 3:
             set_main_and_sub_etat(obj, 0, 3);
-            obj->speed_x = 0;
             obj->hit_points--;
             FinAnim = false;
+            obj->speed_x = 0;
             Sax.coup = 2;
             break;
         default: break;
@@ -627,7 +601,7 @@ void DO_SAXO2_COUP(obj_t* obj) {
 
 //764F0
 void SetSaxoEventPos(obj_t* obj) {
-    s16 w = 0, h = 0;
+    s16 w, h;
     GET_SPRITE_POS(obj, 2, &Sax.sprite2_x, &Sax.sprite2_y, &w, &h);
     if (obj->flags.flip_x) {
         Sax.sprite2_x += w - 32;
@@ -663,7 +637,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
     s16 var_v1_3;
     s32 temp_lo_1;
     s32 temp_lo_2;
-    s32 prev_dir;
+    u8 prev_dir;
     s32 temp_v1_9;
     u16 temp_v0;
     u16 temp_v0_3;
@@ -687,14 +661,15 @@ void DO_SAXO_COMMAND(obj_t* obj) {
 //    Sax.x_pos = obj->x;
 //    Sax.y_pos = obj->y;
     SetSaxoCollNoteBox(obj);
-    if (obj->hit_points == 0 && Phase != 100) {
+    if (obj->hit_points < 1 && Phase != 100) {
         Sax.coup = 0;
-        if ((block_flags[mp.map[(((obj->x + obj->offset_bx) >> 4) + (mp.width * ((obj->y + obj->offset_by) >> 4)))].tile_type
-                 ].raw >> BLOCK_SOLID & 1)
+        if ((block_flags[mp.map[(s16)(((obj->x + obj->offset_bx) >> 4) + (mp.width * ((obj->y + obj->offset_by) >> 4)))].tile_type
+                 ].raw & 2)
         ) {
             obj->anim_frame = 255;
             set_main_and_sub_etat(obj, 0, 4);
             skipToLabel(obj, 0, 1);
+            boss_mort = 1;
             Phase = 100;
             Sax.field10_0x10 = 420;
             obj->speed_x = 0;
@@ -817,7 +792,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             }
 
             if (obj->main_etat == 0) {
-                if (!(obj->flags.flip_x) ? obj->x + obj->offset_bx < 0 : obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH) {
+                if ((!obj->flags.flip_x && obj->x + obj->offset_bx < 0) || (obj->flags.flip_x && obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH)) {
                     obj->speed_x = 0;
                 }
 
@@ -828,11 +803,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                             obj->gravity_value_1 = 0;
                             obj->speed_y = -6;
                             obj->y += obj->speed_y;
-                            new_speed_x = -1;
-                            if (obj->flags.flip_x) {
-                                new_speed_x = 1;
-                            }
-                            obj->speed_x = new_speed_x;
+                            obj->speed_x = obj->flags.flip_x ? 1 : -1;
                             break;
                         case 11:
                             if (--Sax.field10_0x10 > 0) {
@@ -848,11 +819,9 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             }
             else if (obj->main_etat == 1)
             {
-                block_666:
                 if (
-                        !(obj->flags.flip_x) ?
-                        (obj->x + 0x40) < 0 :
-                        (obj->x + 0xC0) > (xmapmax + 0x140)
+                        (!obj->flags.flip_x && obj->x + 0x40 < 0) ||
+                        (obj->flags.flip_x && obj->x + 0xC0 > xmapmax + 0x140)
                         )
                 {
                     obj->flags.flip_x = 1 - obj->flags.flip_x;
@@ -873,9 +842,8 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             if (obj->main_etat == 0)
             {
                 if (
-                        !(obj->flags.flip_x) ?
-                        obj->x + obj->offset_bx < 0 :
-                        obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH
+                        (!obj->flags.flip_x && obj->x + obj->offset_bx < 0) ||
+                        (obj->flags.flip_x && obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH)
                         )
                     obj->speed_x = 0;
 
@@ -902,14 +870,17 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             }
             else if (obj->main_etat == 1)
             {
-                if (Sax.field10_0x10 != 1)
-                {
-                    goto block_666;
-                }
-                if (--obj->iframes_timer <= 0)
-                {
-                    set_main_and_sub_etat(obj, 0, 10);
+                if (Sax.field10_0x10 == 1) {
+                    if (--obj->iframes_timer < 1) {
+                        set_main_and_sub_etat(obj, 0, 10);
+                        obj->speed_x = 0;
+                    }
+                } else if ((!obj->flags.flip_x && obj->x + 0x40 < 0) ||
+                           (obj->flags.flip_x && obj->x + 0xC0 > xmapmax + 0x140)) {
+                    obj->flags.flip_x = 1 - obj->flags.flip_x;
+                    set_main_and_sub_etat(obj, 0, 0);
                     obj->speed_x = 0;
+                    Phase = 1;
                 }
             }
             break;
@@ -924,9 +895,8 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             if (obj->main_etat == 0)
             {
                 if (
-                        !(obj->flags.flip_x) ?
-                        obj->x + obj->offset_bx < 0 :
-                        obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH
+                        (!obj->flags.flip_x && obj->x + obj->offset_bx < 0) ||
+                        (obj->flags.flip_x && obj->x + obj->offset_bx > xmapmax + SCREEN_WIDTH)
                         )
                     obj->speed_x = 0;
 
@@ -985,44 +955,19 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                             obj->speed_y = -obj->speed_y;
                             break;
                         case 11:
-                            if (!(obj->flags.flip_x))
-                            {
-                                goto block_140;
+                            if ((obj->flags.flip_x && obj->x + 48 < ray.x) ||
+                                (!obj->flags.flip_x && ray.x < obj->x + 48)) {
+                                set_main_and_sub_etat(obj, 0, 10);
+                            } else if ((!obj->flags.flip_x && obj->x + 64 < 0) ||
+                                       (obj->flags.flip_x && obj->x + 192 > xmapmax + 320)) {
+                                obj->flags.flip_x = 1 - obj->flags.flip_x;
+                                set_main_and_sub_etat(obj, 0, 0);
+                                obj->speed_x = 0;
+                                Phase = 1;
+                            } else {
+                                set_main_and_sub_etat(obj, 1, 0);
+                                obj->speed_x = obj->flags.flip_x ? 2 : -2;
                             }
-                            if ((obj->x + 0x30) < ray.x)
-                            {
-                                goto block_142;
-                            }
-                            goto block_145;
-                        block_140:
-                            if (ray.x < (obj->x + 0x30))
-                            {
-                                goto block_142;
-                            }
-                            goto block_143;
-                        block_142:
-                            set_main_and_sub_etat(obj, 0, 10);
-                            break;
-                        block_143:
-                            if ((obj->x + 0x40) < 0)
-                            {
-                                goto block_155;
-                            }
-                            goto block_147;
-                        block_145:
-                            if ((obj->x + 0xC0) > (xmapmax + 0x140))
-                            {
-                                goto block_155;
-                            }
-                            goto block_147;
-                        block_147:
-                            set_main_and_sub_etat(obj, 1, 0);
-                            var_v1_3 = -2;
-                            if (obj->flags.flip_x)
-                            {
-                                var_v1_3 = 2;
-                            }
-                            obj->speed_x = var_v1_3;
                             break;
                     }
                 }
@@ -1030,12 +975,10 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             else if (obj->main_etat == 1)
             {
                 if (
-                        !(obj->flags.flip_x) ?
-                        (obj->x + 0x40) < 0 :
-                        (obj->x + 0xC0) > (xmapmax + 0x140)
+                        (!obj->flags.flip_x && obj->x + 0x40 < 0) ||
+                        (obj->flags.flip_x && obj->x + 0xC0 > xmapmax + 0x140)
                         )
                 {
-                    block_155:
                     obj->flags.flip_x = 1 - obj->flags.flip_x;
                     set_main_and_sub_etat(obj, 0, 0);
                     obj->speed_x = 0;
@@ -1044,7 +987,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             }
             break;
         case 100:
-            if (--Sax.field10_0x10 <= 0)
+            if (--Sax.field10_0x10 < 1)
             {
                 Sax.field10_0x10 = 0x03E7;
                 fin_boss = 1;
@@ -1054,7 +997,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
     }
 
     temp_v1_9 = obj->x + obj->offset_bx + obj->speed_x;
-    if ((temp_v1_9 < 0) || ((xmapmax + 303) < temp_v1_9)) // NOTE: 319 changed to 303 in PC version
+    if (!((temp_v1_9 >= 0 && temp_v1_9 <= xmapmax + 303) ? 1 : 0)) // NOTE: 319 changed to 303 in PC version
     {
         obj->speed_x = 0;
     }
@@ -1081,10 +1024,11 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
     u16 temp_x;
     s16 x_pos;
     u8 anim_frame;
-    s32 main_etat;
-    s32 offs_x;
-    u8 should_dec;
+    
+    
+    
     s32 next_x;
+    s32 max_x, min_x;
 
     scrollLocked = true;
     SetSaxoEventPos(obj);
@@ -1106,7 +1050,7 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
         FinAnim = false;
 
     x_pos = obj->x;
-    if (xmapmax < ray.x + 150 && (mp.height * 16 - 110) < ray.y) {
+    if (ray.x + 150 > xmapmax && (mp.height * 16 - 110) < ray.y) {
         Sax.saved_hp = obj->hit_points;
     }
 
@@ -1119,8 +1063,8 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
 
             if (WaitForAnim && FinAnim) {
                 Phase = 1;
-                WaitForFinAtan = 2;
                 NiveauDansPhase = 0;
+                WaitForFinAtan = 2;
                 set_main_and_sub_etat(obj, 0, 1);
             }
             break;
@@ -1129,7 +1073,7 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                 case 1:
                     if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xF] == 0) {
                         anim_frame = obj->anim_frame;
-                        if (anim_frame == 24 || (anim_frame == 28 && NiveauDansPhase >= 2) || (anim_frame == 32 && NiveauDansPhase >= 4)) {
+                        if (anim_frame == 24 || (anim_frame == 28 && NiveauDansPhase > 1) || (obj->anim_frame == 32 && NiveauDansPhase > 3)) {
                             SAXO_TIRE(obj);
                             NiveauDansPhase++;
                         }
@@ -1137,7 +1081,7 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                     break;
                 case 2:
                     if (FinAnim) {
-                        if (WaitForFinAtan < 2)
+                        if (WaitForFinAtan <= 1)
                             set_sub_etat(obj, 1);
                         else
                             WaitForFinAtan--;
@@ -1163,14 +1107,14 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                         obj->gravity_value_1 = 0;
                         obj->speed_y = -6;
                         obj->speed_x = -1;
-                        obj->y -= 6;
                         Sax.field10_0x10 = 2;
+                        obj->y -= 6;
                     }
                     break;
                 case 11:
                     if (FinAnim)
                     {
-                        if (obj->x < ray.x - 50) {
+                        if (ray.x - 50 > obj->x) {
                             obj->flags.flip_x = 1 - obj->flags.flip_x;
                             set_sub_etat(obj, 0);
                             Phase = 3;
@@ -1182,74 +1126,50 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
             }
             break;
         case 3:
-            /* TODO: m2c output was switch */
-            main_etat = obj->main_etat;
-            if (main_etat != 1) {
-                if (main_etat < 2 && main_etat == 0 && FinAnim)
-                {
-                    switch (obj->sub_etat)
-                    {
-                        case 0:
-                        case 2:
-                        case 3:
-                        case 11:
-                            set_main_and_sub_etat(obj, 1, 0);
-                            obj->speed_x = Sax.field10_0x10;
-                            Sax.coup = 0;
-                            break;
-                        case 10:
-                            set_main_and_sub_etat(obj, 2, 1);
-                            obj->anim_frame = obj->gravity_value_2;
-                            obj->gravity_value_2 = 5;
-                            obj->gravity_value_1 = 0;
-                            obj->speed_y = -7;
-                            obj->speed_x = 2;
-                            obj->y -= 7;
-                            break;
+            switch (obj->main_etat) {
+                case 0:
+                    if (FinAnim) {
+                        switch (obj->sub_etat) {
+                            case 0: case 2: case 3: case 11:
+                                set_main_and_sub_etat(obj, 1, 0);
+                                obj->speed_x = Sax.field10_0x10;
+                                Sax.coup = 0;
+                                break;
+                            case 10:
+                                set_main_and_sub_etat(obj, 2, 1);
+                                obj->anim_frame = obj->gravity_value_2;
+                                obj->gravity_value_2 = 5;
+                                obj->gravity_value_1 = 0;
+                                obj->speed_y = -7;
+                                obj->speed_x = 2;
+                                obj->y -= 7;
+                                break;
+                        }
                     }
-                }
-            }
-            else
-            {
-                offs_x = obj->offset_bx + 50;
-                /* TODO: shifts/div? */
-                if (!(block_flags[mp.map[(((obj->x + offs_x) >> 4) + (mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type
-                          ].raw >> BLOCK_SOLID & 1)
-                ) {
-                    set_main_and_sub_etat(obj, 0, 0xA);
-                    obj->speed_x = 0;
-                }
-                else if (xmap < obj->x + 150)
-                {
-                    if (Sax.field10_0x10 == 2)
-                    {
-                        if (horloge[2] != 0)
-                        {
+                    break;
+                case 1:
+                    if (!(block_flags[mp.map[(s16)(((obj->x + 50 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))].tile_type].raw & 2)) {
+                        set_main_and_sub_etat(obj, 0, 10);
+                        obj->speed_x = 0;
+                    } else if (obj->x + 150 > xmap) {
+                        if (Sax.field10_0x10 == 2) {
+                            if (horloge[2] != 0) {
+                                obj->speed_x = 1;
+                                if (horloge[4] < 2) obj->anim_frame--;
+                            } else obj->speed_x = 2;
+                        } else {
                             obj->speed_x = 1;
-                            should_dec = horloge[4] < 2;
+                            if (horloge[2] != 0) obj->anim_frame--;
                         }
-                        else
-                        {
-                            obj->speed_x = 2;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        obj->speed_x = 1;
-                        should_dec = horloge[2];
-                    }
-
-                    if (should_dec != 0)
-                        obj->anim_frame--;
-                }
-                else
-                    obj->speed_x = 2;
-                break;
+                    } else obj->speed_x = 2;
+                    break;
             }
+            break;
     }
+    max_x = xmapmax + 303;
+    min_x = 0;
     next_x = obj->x + obj->offset_bx + obj->speed_x;
-    if (next_x < 0 || (xmapmax + SCREEN_WIDTH - 1) < next_x)
+    if (!((next_x >= min_x && next_x <= max_x) ? 1 : 0))
         obj->speed_x = 0;
 }
 
