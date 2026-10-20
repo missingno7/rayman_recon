@@ -1,0 +1,65 @@
+{
+ "note": "Curated cross-version evidence per v1.21 function (key = obj1 offset). Categories: CONFIRMED_SAME_LOGIC, CONFIRMED_VARIANT, PC_ONLY, PS1_ONLY, LIKELY_SHARED, UNKNOWN. Confidence: high = verified by STRICT match / compiled comparison; medium = read comparison; low = name only. Rows without an entry are UNKNOWN (name joins alone prove nothing).",
+ "functions": {
+  "1:5bf60": {
+   "name": "myRand",
+   "category": "CONFIRMED_VARIANT",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/rand.c): cyclic index into RandArray, result % (max+1). PS1 80147DE8 adds PS1_RandSum accumulation. v1.12 code identical to v1.21 (STRICT against v1.12 with same source)."
+  },
+  "1:5bf98": {
+   "name": "MakeMyRand",
+   "category": "PC_ONLY",
+   "confidence": "high",
+   "notes": "DOS STRICT. No PS1 counterpart by name. v1.21 masks rand() & 0xEFFF; v1.12 stores rand() unmasked (STRICT against v1.12 without the mask)."
+  },
+  "1:4def0": {
+   "name": "set2bits",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). PS1 bit_util.c C verbatim not STRICT (first diff +2); DOS needs separate clear/OR writes with precomputed mask"
+  },
+  "1:4df24": {
+   "name": "read2bits",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). DOS loads the value before computing the shift; otherwise same logic"
+  },
+  "1:4df58": {
+   "name": "setbit",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). DOS uses a signed 16-bit byte index local"
+  },
+  "1:4df74": {
+   "name": "clearbit",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). signed 16-bit index; mask written 0xff - bit"
+  },
+  "1:4df98": {
+   "name": "getbit",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). signed 16-bit index"
+  },
+  "1:4dfc0": {
+   "name": "cosinus",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). DOS has a direct body (PS1 calls sinus; not inlined on DOS)"
+  },
+  "1:4e000": {
+   "name": "sinus",
+   "category": "CONFIRMED_VARIANT",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). DOS masks to 9 bits; negative out-of-range behaviour differs from PS1 remainder logic"
+  },
+  "1:4e12c": {
+   "name": "abs_sinus_cosinus",
+   "category": "CONFIRMED_VARIANT",
+   "confidence": "high",
+   "notes": "DOS STRICT (src/mathutil.c). DOS uses a low-byte table lookup instead of PS1 quadrant cases"
+  }
+ }
+}

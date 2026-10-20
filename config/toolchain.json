@@ -1,0 +1,97 @@
+{
+ "note": "Pinned historical toolchain installs under RAYMAN_TOOLS (default C:/tools); never in git. tools/wcc.py checks every key file hash before each compile. 'tested' identity is the install we ran, not a claim about the developers' exact build; see docs/COMPILER.md and docs/TOOLCHAIN.md.",
+ "installs": {
+  "wc106": {
+   "product": "WATCOM C/C++ 10.6 (CD volume WATCOM_C106, 1996-03-13; compiler banner 'Version 10.6')",
+   "dir": "watcom-10.6",
+   "source": "https://archive.org/details/Watcom_C_10.6 file Watcom_C++_10.6.iso; local C:/tools/download/watcom/Watcom_C++_10.6.iso",
+   "archive_sha256": "18dd98ae9c8d883e2d680bf9e4eda1c4bf78376c5f05e071b55e57a6619aecf2",
+   "archive_sha1": "211f4e7acecf89cf8af26e12099e1aec5a255f65",
+   "archive_md5": "5a252e04e3a9fd5c802d1d3fd33f458e",
+   "derivation": "7-Zip 22.01 'x' of the ISO, tree verbatim, no setup program run",
+   "wcc386": {
+    "nt": "BINNT/WCC386.EXE",
+    "payload": "BINW/WCC386.EXE"
+   },
+   "key_files": {
+    "BINNT/WCC386.EXE": "b533dd0b4685cd6e1b32a4dcb2e83624a5bf36d61453af6d171527602c049d7e",
+    "BINW/WCC386.EXE": "a257b6a25a95f02b404c4571839297af0a8cd941479f4dd19149ea949fd88c42",
+    "BINNT/WLINK.EXE": "b552cbf3627c7f4228dd8769c766047cf1ecb1d290fd3708b34b0e0589753ea3",
+    "LIB386/DOS/CLIB3R.LIB": "ab66fffd9a3bc898d949921bab9f584e566fa13fd9eedb111df7b801f452ff38",
+    "LIB386/MATH387R.LIB": "52b07a575abdd7685d05cf0924697bdf3959486240a5a879cdb05e74ee8f5e71"
+   }
+  },
+  "wc105": {
+   "product": "WATCOM C/C++ 10.5 (CD volume WATCOM_C105, 1995-07-14), derived install",
+   "dir": "watcom-10.5-pck",
+   "source": "https://archive.org/details/Watcom_C_10.5 file Watcom_C++_10.5.iso; local C:/tools/download/watcom/Watcom_C++_10.5.iso",
+   "archive_sha256": "e7d8275b71f05c782b69918365c770716bde8f56a08fcdc62fe23dc43d808b9b",
+   "archive_sha1": "0722e7494647cd5e9a66bd106aa80a620f7ee999",
+   "archive_md5": "3200b70ba399c840775e9bfa2fe19875",
+   "derivation": "BINNT/BINW/H/LIB386 copied from the verbatim ISO extraction C:/tools/watcom-10.5; BINW/WCC386.EXE (truncated to 65536 bytes on the ISO) replaced by the CRC-checked copy from the ISO's DISKIMGS packed set (PCK00017, tools/wpack.py verify); see C:/tools/watcom-10.5-pck/PROVENANCE.txt",
+   "wcc386": {
+    "nt": "BINNT/WCC386.EXE",
+    "payload": "BINW/WCC386.EXE"
+   },
+   "key_files": {
+    "BINNT/WCC386.EXE": "115de0dd01c6513f53f12632be3956b43bf7360e46a5ae100ce33134df479469",
+    "BINW/WCC386.EXE": "1b97a68f7b8a3efd89b05f64ce99836b1e533f398699305f96dc423254939d6a",
+    "BINNT/WLINK.EXE": "545ed057ca6e7fa9b102c81cc9bba16aa0ec220b99e4328a9332f102ffe90b79",
+    "LIB386/DOS/CLIB3R.LIB": "151fc7d895b171145466f77b1624d27952fa631971b0fc33d479e02eda3bbcc8"
+   }
+  },
+  "wc100a": {
+   "product": "WATCOM C/C++32 10.0a (installed by kegg_recon from archive.org Watcom_C_10.0 ISO)",
+   "dir": "watcom-10.0a",
+   "wcc386": {
+    "nt": "BINNT/WCC386.EXE",
+    "payload": "BINB/WCC386.EXE"
+   },
+   "key_files": {
+    "BINNT/WCC386.EXE": "8fee7d6ab3f2c06a0a874135e3898386898679e7dd53993fcc508e296364767d",
+    "BINB/WCC386.EXE": "c3666de94f6fa6800f452dae8acf45505ecdb62f0ade2cc27cc86c2d9e8e2b6b",
+    "LIB386/DOS/CLIB3R.LIB": "ea6f73080f9ea18825258369989f6e1d0b7abc7c3df05e4bb8f17a31a5cbdee8"
+   }
+  },
+  "wc100": {
+   "product": "WATCOM C/C++32 10.0 GA (installed by kegg_recon; see its toolchain.json for provenance)",
+   "dir": "watcom-10.0",
+   "wcc386": {
+    "nt": "BINNT/WCC386.EXE",
+    "payload": "BINB/WCC386.EXE"
+   },
+   "key_files": {
+    "BINNT/WCC386.EXE": "6c35809c0fb39a44305894010c6cc0ab2010953b8221a89b8a0978b16cd4104b",
+    "BINB/WCC386.EXE": "a4f4da1b8b2cd4e38b2b041975fc6b1d131255ae5eb575828b02f927fbf9bf65",
+    "LIB386/DOS/CLIB3R.LIB": "6f250d0e791ba05c6857d57de1ac5e65b6a5db7cb390a7e8f48035e5a4bd4363"
+   }
+  },
+  "pmodew133": {
+   "product": "PMODE/W 1.33 binaries + source (MIT licence since 2023-07)",
+   "dir": "pmodew-1.33",
+   "source": "http://www.sid6581.net/pmodew/ (pmw133.zip, pmw133src.zip, license.txt); local C:/tools/download/pmodew/",
+   "archives": {
+    "pmw133.zip": "0f82245d1eef9081b5135f3f6a9efa3342e8600101aa62f26f41c12c6fb06bc7",
+    "pmw133src.zip": "27d8ea142f2c11f192255da4e252d17e41e9eccf811c96493c1c0107a548a736",
+    "license.txt": "e92f55c86f1638d48644c2e86714ea9e6ea996f332a097e637b593d9424cf183"
+   },
+   "use": "format reference only (DOCS/PMW1FMT.TXT, PMWLITE/PMW1.H, DECODE.ASM); nothing executed"
+  },
+  "wc105_iso": {
+   "product": "WATCOM C/C++ 10.5 verbatim ISO tree (compiler truncated; libraries/headers usable)",
+   "dir": "watcom-10.5"
+  }
+ },
+ "profiles": {
+  "game": {
+   "install": "wc106",
+   "flags": [
+    "-zq",
+    "-oaxt",
+    "-s",
+    "-5r"
+   ],
+   "status": "STRONG for -oa -ot -s -5r on GOG v1.21 rand TU (2 STRICT functions); -on/-oe undetermined (-oneatx/-otexan equally STRICT there); compiler release: 10.6 tested, 10.0/10.0a/10.6 code-identical on myRand probes; runtime libs = 10.6 (libscan). See docs/COMPILER.md."
+  }
+ }
+}

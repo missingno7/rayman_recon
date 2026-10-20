@@ -1,0 +1,336 @@
+{
+ "note": "Canonical symbol bindings per oracle: C name -> oracle address (obj:off). A binding is the claim tools/match.py tests; it never makes a function STRICT by itself. 'name' provenance: RAYVERSE (Rayverse/Android-derived name), PS1 (rayman-ps1-decomp name), INVENTED. Library bindings are generated separately (tools/libscan.py --symbols).",
+ "gog_v121_us": {
+  "functions": {
+   "myRand": {
+    "addr": "1:5bf60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse rand.c //6BF60; PS1 myRand 80147DE8"
+   },
+   "MakeMyRand": {
+    "addr": "1:5bf98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse rand.c //6BF98; calls time_/srand_/rand_ (library members)"
+   },
+   "SetCompteurTrameAudio": {
+    "addr": "1:0cee0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CEE0"
+   },
+   "DoCdCredits": {
+    "addr": "1:0ceec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CEEC"
+   },
+   "start_cd_credits": {
+    "addr": "1:0cf2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CF2C"
+   },
+   "start_cd_ubi_soft": {
+    "addr": "1:0cf54",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CF54"
+   },
+   "start_cd_gros_rayman": {
+    "addr": "1:0cf7c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CF7C"
+   },
+   "start_cd_perdu": {
+    "addr": "1:0cf80",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CF80"
+   },
+   "DoCdRap": {
+    "addr": "1:0cf94",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CF94"
+   },
+   "start_cd_bbdead": {
+    "addr": "1:0cfd4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CFD4"
+   },
+   "start_cd_gameover": {
+    "addr": "1:0cffc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1CFFC"
+   },
+   "stop_cd": {
+    "addr": "1:0d028",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1D028"
+   },
+   "cd_playing": {
+    "addr": "1:0d050",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse audiocd.c //1D050"
+   },
+   "AudioTrackCommand": {
+    "addr": "1:1a710",
+    "name": "INVENTED",
+    "evidence": "Direct call target from CD start routines; receives track value in EAX."
+   },
+   "AudioStatusByte": {
+    "addr": "1:193b0",
+    "name": "INVENTED",
+    "evidence": "Direct call target from stop_cd and cd_playing; returns status byte in AL."
+   },
+   "AudioStopCommand": {
+    "addr": "1:1a908",
+    "name": "INVENTED",
+    "evidence": "Direct call target from stop_cd after AudioStatusByte; receives status value in EAX."
+   },
+   "AudioStatusCheck": {
+    "addr": "1:19564",
+    "name": "INVENTED",
+    "evidence": "Tail-jump target from cd_playing after AudioStatusByte; returns status in AL."
+   },
+   "PlayTchatchVignette": {
+    "addr": "1:6319c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse sound.c //7319C; direct tail-jump target from start_cd_perdu."
+   },
+   "set2bits": {
+    "addr": "1:4def0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DEF0; PS1 bit_util.c 80146530"
+   },
+   "read2bits": {
+    "addr": "1:4df24",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DF24; PS1 bit_util.c 80146564"
+   },
+   "setbit": {
+    "addr": "1:4df58",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DF58; PS1 bit_util.c 80146C2C"
+   },
+   "clearbit": {
+    "addr": "1:4df74",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DF74; PS1 bit_util.c 80146C54"
+   },
+   "getbit": {
+    "addr": "1:4df98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DF98; PS1 bit_util.c 80146C80"
+   },
+   "reflexion": {
+    "addr": "1:4dfb8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DFB8"
+   },
+   "cosinus": {
+    "addr": "1:4dfc0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5DFC0; PS1 bit_util.c 80146CA4"
+   },
+   "sinus": {
+    "addr": "1:4e000",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5E000; PS1 bit_util.c 80146CD0"
+   },
+   "sinus_cosinus": {
+    "addr": "1:4e03c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5E03C"
+   },
+   "abs_sinus": {
+    "addr": "1:4e0f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5E0F0"
+   },
+   "abs_cosinus": {
+    "addr": "1:4e10c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5E10C"
+   },
+   "abs_sinus_cosinus": {
+    "addr": "1:4e12c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mathutil.c //5E12C; PS1 ray_5D190.c 80186070"
+   },
+   "DO_BAT_FLASH": {
+    "addr": "1:0fa40",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary; Rayverse bat.c function at //1FA40"
+   },
+   "DO_BAT_LEFT_FLASH": {
+    "addr": "1:0fbc0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //1FBC0"
+   },
+   "DO_BAT_RIGHT_FLASH": {
+    "addr": "1:0fc18",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //1FC18"
+   },
+   "DO_BAT_LEFT_RIGHT_FLASH": {
+    "addr": "1:0fc70",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //1FC70"
+   },
+   "bat_dir": {
+    "addr": "1:0fd14",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //1FD14"
+   },
+   "DO_BAT_COMMAND": {
+    "addr": "1:0fd9c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //1FD9C"
+   },
+   "BAT_ray_in_zone": {
+    "addr": "1:10058",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //20058"
+   },
+   "DO_BAT_POING_COLLISION": {
+    "addr": "1:10088",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; empty in GOG PC and Rayverse"
+   },
+   "bat_get_eject_sens": {
+    "addr": "1:1008c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py and xref.py; Rayverse bat.c //2008C"
+   },
+   "DO_REDEYE_FIRE": {
+    "addr": "1:6b920",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from DO_BAT_FLASH"
+   },
+   "GET_SPRITE_POS": {
+    "addr": "1:0dbb4",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from the three flash wrappers"
+   },
+   "skipToLabel": {
+    "addr": "1:51220",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from DO_BAT_COMMAND and BAT_ray_in_zone"
+   },
+   "set_sub_etat": {
+    "addr": "1:0d808",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from DO_BAT_COMMAND"
+   },
+   "test_allowed": {
+    "addr": "1:1f1e0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from DO_BAT_COMMAND"
+   },
+   "on_block_chdir": {
+    "addr": "1:0dac8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py call target from DO_BAT_COMMAND"
+   }
+  },
+  "data": {
+   "RandArray": {
+    "addr": "2:7344",
+    "type": "short[256]",
+    "name": "PS1",
+    "evidence": "MakeMyRand stores word [edx+2:7342] for edx=2..0x200 -> element 0 at 2:7344"
+   },
+   "RandomIndex": {
+    "addr": "2:5548c",
+    "type": "int",
+    "name": "RAYVERSE",
+    "evidence": "myRand/MakeMyRand load/store dword 2:5548c"
+   },
+   "CompteurTrameAudio": {
+    "addr": "2:3faa0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFAA0; referenced as a dword by this object.",
+    "type": "s32"
+   },
+   "MusicCdActive": {
+    "addr": "2:3fa50",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA50; referenced as a byte by this object.",
+    "type": "u8"
+   },
+   "JeuCracker": {
+    "addr": "2:3fa2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA2C; referenced as a byte by this object.",
+    "type": "u8"
+   },
+   "CarteSonAutorisee": {
+    "addr": "2:3fa17",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA17; referenced as a byte by this object.",
+    "type": "u8"
+   },
+   "cdTime": {
+    "addr": "2:3d85c",
+    "name": "RAYVERSE",
+    "evidence": "stop_cd writes dword 0 to 2:3d85c; Rayverse data.c declares 's32 cdTime; //CD85C' (its port uses a separate is_ogg_playing flag)",
+    "type": "s32"
+   },
+   "costab": {
+    "addr": "2:6fe0",
+    "type": "s16[257]",
+    "name": "RAYVERSE",
+    "evidence": "Every trigonometric routine indexes the table via off32 fixups; target 2:6fe0"
+   },
+   "ray": {
+    "addr": "2:3e650",
+    "type": "obj_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE650; byte offsets in binary verify ray.x at +0x28 and iframes_timer at +0x56"
+   },
+   "horloge": {
+    "addr": "2:3f9f5",
+    "type": "u8[25]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF9F5; direct index table reference in DO_BAT_COMMAND"
+   },
+   "bat_nb_frap": {
+    "addr": "2:3f812",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF812; direct word accesses in DO_BAT_COMMAND and BAT_ray_in_zone"
+   },
+   "N_anim": {
+    "addr": "2:4a9c",
+    "type": "u8[256]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //94A9C; direct table lookup in DO_BAT_FLASH"
+   },
+   "ray_zdc_x": {
+    "addr": "2:3f860",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c 'ray_zdc_x' at this address; referenced by bat object"
+   },
+   "ray_zdc_w": {
+    "addr": "2:3f864",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c 'ray_zdc_w' at this address; referenced by bat object"
+   },
+   "ray_zdc_h": {
+    "addr": "2:3f862",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c 'ray_zdc_h' at this address; referenced by bat object"
+   },
+   "ray_zdc_y": {
+    "addr": "2:3f876",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c 'ray_zdc_y' at this address; referenced by bat object"
+   },
+   "byte_CFA14": {
+    "addr": "2:3fa14",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c 'byte_CFA14' at this address; referenced by bat object"
+   }
+  }
+ }
+}

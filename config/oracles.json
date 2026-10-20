@@ -1,0 +1,125 @@
+{
+ "note": "Pinned original oracles. Every tool that reads an oracle checks these hashes and refuses on mismatch. Paths are relative to the repository root; assets/ is user-supplied, ignored and read-only. Facts here are measured; interpretations live in docs/ORIGINALS.md and docs/VERSIONS.md. Object 'sha256' values are of the PMW1-decoded object images (tools/extract.py).",
+ "primary": "gog_v121_us",
+ "oracles": {
+  "gog_v121_us": {
+   "role": "PRIMARY matching oracle",
+   "description": "GOG RAYMAN.EXE, banner 'RAYMAN (US) v1.21' / '(C) 1994-1995 UBI STUDIOS, FRANCE' (copy-protected build); PMODE/W 1.22 stub + compressed PMW1 image. Same file as rayman_disasm 'gog'; the version Rayverse annotates (Rayverse address = obj1 offset + 0x10000).",
+   "source": {
+    "kind": "file",
+    "path": "assets/GOG/RAYMAN.EXE"
+   },
+   "size": 428743,
+   "sha256": "599b1df2bda0aea8364161c0526d28c2ed70e881d57a4b52eebd7992ea009eb6",
+   "pmw1": {
+    "offset": 10032,
+    "version": "1.22",
+    "flags": 1,
+    "entry": "1:7013c",
+    "stack": "2:59960"
+   },
+   "objects": {
+    "1": {
+     "role": "code (_TEXT)",
+     "virtual_size": 513218,
+     "decoded_size": 513218,
+     "flags": "0x2045",
+     "sha256": "8519260fc88bfb4b44b41cbaad09fe8c79e9d956c6d275a3092597b3db41ac24",
+     "fixups": 20461
+    },
+    "2": {
+     "role": "data (DGROUP) + BSS + stack",
+     "virtual_size": 366944,
+     "decoded_size": 205194,
+     "flags": "0x2043",
+     "sha256": "b8bfdc1dc7233a499bcd9a92bdc0a47b5f17d3a580250447a17275525bc27c9e",
+     "fixups": 1897
+    }
+   },
+   "runtime_libs": [
+    "watcom-10.6/LIB386/DOS/CLIB3R.LIB",
+    "watcom-10.6/LIB386/MATH387R.LIB"
+   ]
+  },
+  "dos_v112_us": {
+   "role": "SECONDARY DOS oracle (earlier revision; future cross-check target)",
+   "description": "CD/installed RAYMAN.EXE, banner 'RAYMAN (US) v1.12' / '(C) 1994-1995 UBI STUDIOS (UNPROTECTED), FRANCE'; PMODE/W 1.21 stub + compressed PMW1 image",
+   "source": {
+    "kind": "file",
+    "path": "assets/DOS/RAYMAN.EXE"
+   },
+   "size": 424549,
+   "sha256": "913a8d174a95ced8bf1a6b19475d1e23220fa02d4efc8ef6a38f8d1b6c54f6d6",
+   "also_at": [
+    {
+     "image": "assets/DOS_CD/RAYMAN.bin",
+     "path": "RAYMAN/RAYMAN.EXE",
+     "lba": 55278
+    }
+   ],
+   "pmw1": {
+    "offset": 9808,
+    "version": "1.21",
+    "flags": 1,
+    "entry": "1:6f6a8",
+    "stack": "2:58bf0"
+   },
+   "objects": {
+    "1": {
+     "role": "code (_TEXT)",
+     "virtual_size": 508206,
+     "decoded_size": 508206,
+     "flags": "0x2045",
+     "sha256": "2bd824a8d5daf7153ca7bd5cad1442377ed04a96a05254dbd6f9d9104a9c2186",
+     "fixups": 20229
+    },
+    "2": {
+     "role": "data (DGROUP) + BSS + stack",
+     "virtual_size": 363504,
+     "decoded_size": 204326,
+     "flags": "0x2043",
+     "sha256": "c5f5e68e30ceec5afc3922d102420a5a4e40a502cdd5b7fb8994d9b9a79abd79",
+     "fixups": 1896
+    }
+   },
+   "runtime_libs": [
+    "watcom-10.5/LIB386/DOS/CLIB3R.LIB",
+    "watcom-10.5/LIB386/MATH387R.LIB"
+   ]
+  },
+  "dos_cd_image": {
+   "role": "container of dos_v112_us (identical RAYMAN/ subtree)",
+   "source": {
+    "kind": "file",
+    "path": "assets/DOS_CD/RAYMAN.bin"
+   },
+   "size": 734207376,
+   "sha256": "bc49bfb56f918db57abc6b5b6c770af01a5c5af4a6f55dd61f1513a431027743",
+   "cue_sha256": "d6479b81f1144336b5127d105e59609bed35d06ec99c59b7e83c3e50030e8f1f",
+   "iso9660": {
+    "mode": "MODE1/2352",
+    "volume_id": "RAYMAN",
+    "created": "1998-03-04 14:01:27",
+    "audio_tracks": 25
+   }
+  },
+  "ps1_slus_00005": {
+   "role": "SUPPORTING reference (target of rayman-ps1-decomp)",
+   "source": {
+    "kind": "iso",
+    "image": "assets/PS1/Rayman (Track 01).bin",
+    "path": "SLUS-000.05",
+    "mode": "mode2"
+   },
+   "size": 700416,
+   "sha256": "36080c745f3d935000b8630952aa0a4e63fcdb53971887a638205a9fba805d66",
+   "sha1": "4ac1789e118933762cd0ebcb9a970f63dfe2c72f",
+   "track01_sha256": "3e75b2d15e352c4f6b63769d0fffadc52a90a3d652a9087da455ce2867f14dfe",
+   "iso9660": {
+    "system_id": "PLAYSTATION",
+    "created": "1995-04-19 21:06:35",
+    "boot": "cdrom:\\SLUS-000.05;1"
+   }
+  }
+ }
+}
