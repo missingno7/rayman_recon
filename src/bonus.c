@@ -9,12 +9,6 @@
 
 /* Memory block descriptor: 12-byte DOS layout evidenced by this unit (init_memory/free_main_mem callers);
    Rayverse's mem_t is a port-specific variant. Local until a second unit confirms it. */
-typedef struct mem_t {
-    u32 align;
-    u8 *data;
-    u32 capacity;
-} mem_t;
-
 extern s16 allowed_time[192];
 extern u8 bonus_perfect[24];
 extern s16 num_world;

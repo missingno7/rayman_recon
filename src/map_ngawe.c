@@ -6,12 +6,6 @@
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
-typedef struct mem_t {
-    u32 align;
-    u8 *data;
-    u32 capacity;
-} mem_t;
-
 typedef struct display_map_t {
     s16 x;
     s16 y;

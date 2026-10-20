@@ -6313,6 +6313,247 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "display": {
+   "source": "src/display.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "display_inter_anim": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "continue_fonction": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_CONTINUE": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "saisie_nom_prg": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "selection_save_option_prg": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SAVE_CHOICE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AFFICHE_ECRAN_SAVE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "select_level_prg": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SELECT_LEVEL": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "CLEAR_STAGE_NAMES": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_STAGE_NAMES": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "WORLD_CHOICE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_WORLD_MAP": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_TXT_VIGNET": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "display_vignet_prg": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_GAME_VIGNET": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_TXT_CREDITS": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "display_credits_prg": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "display_anim_victoire": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_CREDITS": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_CREDITS_MENU": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_PROTOON_BACK": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_ANIM_VICTOIRE": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_VICTOIRE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "InitDemoJeu": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "FinDemoJeu": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "loader_anim_prg": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "START_LOADER_ANIM": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "END_LOADER_ANIM": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_GROS_RAYMAN": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "START_LEVEL_ANIM": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PouvoirsParMap": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

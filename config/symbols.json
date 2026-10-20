@@ -4270,6 +4270,371 @@
     "addr": "1:33670",
     "name": "ANDROID",
     "evidence": "DOS stores JumellePosX/Y and PositionJumelleX16/Y16 then falls through ChangeJumelleVariable; Android symbol between YWithLimit and ZoomAmp, checked in android.load()"
+   },
+   "display_inter_anim": {
+    "addr": "1:24108",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "test_EXIT": {
+    "addr": "1:26bc4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in display_inter_anim"
+   },
+   "DISPLAY_TXT_CREDITS": {
+    "addr": "1:255bc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "loader_anim_prg": {
+    "addr": "1:25c64",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address; DOS body reconstructed from 1:25C64-1:25CC0"
+   },
+   "START_LEVEL_ANIM": {
+    "addr": "1:25d74",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address; DOS body matched against 1:25D74-1:25DB3"
+   },
+   "PouvoirsParMap": {
+    "addr": "1:25db4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address; body reconstructed from DOS bit/condition tests at 1:25DB4-1:25F48"
+   },
+   "align_mem_desc": {
+    "addr": "1:6fba4",
+    "name": "INVENTED",
+    "evidence": "DOS helper: reads mem descriptor +4 and writes (pointer & 3) at +0"
+   },
+   "LOAD_CONTINUE_SCREEN": {
+    "addr": "1:26610",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_CONTINUE at 1:241E0"
+   },
+   "StartButPressed": {
+    "addr": "1:271a4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in loader_anim_prg at 1:25C72"
+   },
+   "LOAD_BIG_RAYMAN": {
+    "addr": "1:27150",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in START_LOADER_ANIM at 1:25CD7"
+   },
+   "LOAD_SAVE_SCREEN": {
+    "addr": "1:265e0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in START_LOADER_ANIM at 1:25CE6"
+   },
+   "DrawSpriteNormal": {
+    "addr": "1:06a24",
+    "name": "RAYVERSE",
+    "evidence": "DOS function pointer constant loaded at 1:25CE1"
+   },
+   "DrawSpriteFlipNormal": {
+    "addr": "1:06b08",
+    "name": "RAYVERSE",
+    "evidence": "DOS function pointer constant loaded at 1:25CF0"
+   },
+   "DrawSpriteNormal256": {
+    "addr": "1:06a9d",
+    "name": "RAYVERSE",
+    "evidence": "DOS function pointer constant loaded at 1:25CCD"
+   },
+   "DrawSpriteFlipNormal256": {
+    "addr": "1:06b88",
+    "name": "RAYVERSE",
+    "evidence": "DOS function pointer constant loaded at 1:25CD2"
+   },
+   "continue_fonction": {
+    "addr": "1:24174",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DISPLAY_STAGE_NAMES": {
+    "addr": "1:24d2c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "select_level_prg": {
+    "addr": "1:24a80",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "START_LOADER_ANIM": {
+    "addr": "1:25cc4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "CLRSCR": {
+    "addr": "1:0ad00",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DISPLAY_CONTINUE_SPR": {
+    "addr": "1:0b79c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "CLEAR_STAGE_NAMES": {
+    "addr": "1:24c00",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "END_LOADER_ANIM": {
+    "addr": "1:25d30",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_FADE": {
+    "addr": "1:2ca64",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DISPLAY_FOND_CONTINUE": {
+    "addr": "1:26644",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "WORLD_CHOICE": {
+    "addr": "1:25028",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_GROS_RAYMAN": {
+    "addr": "1:25d3c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "saisie_nom_prg": {
+    "addr": "1:24240",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c function; DOS public at 1:24240"
+   },
+   "selection_save_option_prg": {
+    "addr": "1:24334",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c function; DOS public at 1:24334"
+   },
+   "DO_SAVE_CHOICE": {
+    "addr": "1:24490",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c function; DOS public at 1:24490"
+   },
+   "AFFICHE_ECRAN_SAVE": {
+    "addr": "1:2452c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c function; DOS public at 1:2452C"
+   },
+   "SELECT_LEVEL": {
+    "addr": "1:24bb4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c function; DOS public at 1:24BB4"
+   },
+   "DISPLAY_FOND_SELECT": {
+    "addr": "1:26ce8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call from select_level_prg at 1:24A9B; Android semantic function name"
+   },
+   "InitPlasma": {
+    "addr": "1:13fdc",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target from saisie_nom_prg at 1:24284 and save flow at 1:244B3"
+   },
+   "LoadPlan2InVignet": {
+    "addr": "1:37d3c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in SELECT_LEVEL at 1:24BCE"
+   },
+   "LOAD_ALL_FIX": {
+    "addr": "1:364bc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c identifies LOAD_ALL_FIX; DOS call target in DO_GROS_RAYMAN at 1:25D68"
+   },
+   "display_credits_prg": {
+    "addr": "1:2561c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_CONTINUE": {
+    "addr": "1:241b0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_WORLD_MAP": {
+    "addr": "1:2514c",
+    "name": "RAYVERSE",
+    "evidence": "DOS public from disasm at 1:2514C"
+   },
+   "DISPLAY_TXT_VIGNET": {
+    "addr": "1:25370",
+    "name": "RAYVERSE",
+    "evidence": "DOS public from disasm at 1:25370"
+   },
+   "display_vignet_prg": {
+    "addr": "1:253c8",
+    "name": "RAYVERSE",
+    "evidence": "DOS public from disasm at 1:253C8"
+   },
+   "display_anim_victoire": {
+    "addr": "1:25680",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:25680"
+   },
+   "DISPLAY_CREDITS": {
+    "addr": "1:256b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:256B8"
+   },
+   "PC_do_cheats_in_world_map": {
+    "addr": "1:27528",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c call; DOS call target in WORLD_CHOICE at 1:2502F"
+   },
+   "test_Keyb_on_wldmap": {
+    "addr": "1:26bf8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in WORLD_CHOICE at 1:250E8; Android symbol exists"
+   },
+   "wait_until": {
+    "addr": "1:06f5d",
+    "name": "RAYVERSE",
+    "evidence": "DOS helper disassembly at 1:06F5D; Android symbol exists"
+   },
+   "DISPLAY_CREDITS_MENU": {
+    "addr": "1:2572c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:2572C"
+   },
+   "DISPLAY_PROTOON_BACK": {
+    "addr": "1:257e4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:257E4"
+   },
+   "DO_ANIM_VICTOIRE": {
+    "addr": "1:25850",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:25850"
+   },
+   "DO_VICTOIRE": {
+    "addr": "1:25878",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:25878"
+   },
+   "InitDemoJeu": {
+    "addr": "1:25908",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:25908"
+   },
+   "sub_5bbe8": {
+    "addr": "1:5bbe8",
+    "name": "INVENTED",
+    "evidence": "One-byte RET target called at the start of DO_WORLD_MAP at 1:2514F"
+   },
+   "PC_clear_text_input_buffer": {
+    "addr": "1:272f8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cheat.c function; DOS call target in DO_WORLD_MAP at 1:25154"
+   },
+   "InitPcSoundCard": {
+    "addr": "1:26150",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c comment and Android symbol name; DOS call target in DO_WORLD_MAP at 1:25234"
+   },
+   "FinDemoJeu": {
+    "addr": "1:25b78",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse display.c public; DOS disasm at 1:25B78"
+   },
+   "SAVE_PLAN3": {
+    "addr": "1:2cd88",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DISPLAY_CREDITS at 1:256E3"
+   },
+   "RESTORE_PLAN3": {
+    "addr": "1:2cdd8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DISPLAY_CREDITS at 1:2570F"
+   },
+   "LOAD_CREDITS_VIGNET": {
+    "addr": "1:2681c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DISPLAY_PROTOON_BACK at 1:25838"
+   },
+   "block_free": {
+    "addr": "1:6fb90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse sysutils.c; DOS call target in DO_VICTOIRE at 1:258E1"
+   },
+   "INIT_HORLOGES": {
+    "addr": "1:45480",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in InitDemoJeu at 1:25B6A"
+   },
+   "playVideo": {
+    "addr": "1:2b4a8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_VICTOIRE at 1:258B5"
+   },
+   "speaker_enable": {
+    "addr": "1:06f78",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DISPLAY_CREDITS_MENU at 1:25768"
+   },
+   "clock_ticks": {
+    "addr": "1:06efd",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DISPLAY_CREDITS_MENU at 1:2577F"
+   },
+   "display_box_text": {
+    "addr": "1:0abe0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call at 1:253AC; function entry verified by disassembly at 1:0ABE0"
+   },
+   "INIT_RAY": {
+    "addr": "1:49948",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in FinDemoJeu at 1:25BC6"
+   },
+   "endsynchro": {
+    "addr": "1:06e9a",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:2436A; helper entry verified at 1:06E9A"
+   },
+   "SWAP_BUFFERS": {
+    "addr": "1:2b4d0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in selection_save_option_prg at 1:24383"
+   },
+   "display_box_text_plasma": {
+    "addr": "1:3f800",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:24728"
+   },
+   "display_deform_text": {
+    "addr": "1:0a68c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:249B3; function entry verified at 1:0A68C"
+   },
+   "DISPLAY_SAVE_SPRITES": {
+    "addr": "1:0b0e0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:24A15"
+   },
+   "DISPLAY_SAVE_POING": {
+    "addr": "1:0b424",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:24A71"
+   },
+   "mute_snd": {
+    "addr": "1:63138",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:254AB"
+   },
+   "get_sprite_clipping": {
+    "addr": "1:061bd",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:254D8"
    }
   },
   "data": {
@@ -8429,6 +8794,126 @@
     "type": "u8[20]",
     "name": "ANDROID",
     "evidence": "PS1 name (rayman-ps1-decomp include/obj/scorpion.h), Android symbol size 20; DOS address from aligned global-reference events of the compiled PS1 body vs DOS DO_SOL_ENFONCE (scratch/ps1sym.py); DOS access width byte"
+   },
+   "credits": {
+    "addr": "2:3d140",
+    "type": "credit_entry_t[1722]",
+    "name": "PS1",
+    "evidence": "Android symbol size 20664 bytes; DOS base inferred from stride 12 and field accesses in DISPLAY_TXT_CREDITS at 1:255D6-1:25602"
+   },
+   "DrawSpriteNormalEtX": {
+    "addr": "2:3d10c",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CD10C; DOS stores/restores at 1:25D0E and 1:25D1F"
+   },
+   "DrawSpriteFlipNormalEtX": {
+    "addr": "2:3d118",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CD118; DOS stores/restores at 1:25D14 and 1:25D25"
+   },
+   "main_mem_level": {
+    "addr": "2:3d84c",
+    "type": "mem_t",
+    "name": "RAYVERSE",
+    "evidence": "DOS passes descriptor address at 1:241D1/1:24226; Android object size 12"
+   },
+   "save_ray_copy": {
+    "addr": "2:3d794",
+    "type": "char[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CD794; Android symbol size 4; DOS byte copy source at 1:242F1"
+   },
+   "ButtonReleasedSav1": {
+    "addr": "2:4f757",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c DF757; Android symbol size 1; DOS byte save at 1:24340"
+   },
+   "ButtonReleasedSav2": {
+    "addr": "2:4f756",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c DF756; Android symbol size 1; DOS byte save at 1:24394"
+   },
+   "RunTimeDemo": {
+    "addr": "2:3f768",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CF768; Android size 2; DOS short load at 1:2442B"
+   },
+   "level_select": {
+    "addr": "2:4f750",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c DF750; Android size 2; DOS short stores/loads in select_level_prg and SELECT_LEVEL"
+   },
+   "inter_select": {
+    "addr": "2:3f8f4",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CF8F4; Android size 2; DOS short updates in select_level_prg"
+   },
+   "colour": {
+    "addr": "2:3fa48",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA48; Android size 1; DOS byte load in select_level_prg at 1:24AA7"
+   },
+   "NumDemo": {
+    "addr": "2:3f76a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CF76A; DOS short increment and array index in InitDemoJeu/FinDemoJeu"
+   },
+   "SauveRayEvtsDemo": {
+    "addr": "2:3f762",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Android size 2; DOS word copy of RayEvts at 1:25986 and restore at 1:25C0F"
+   },
+   "options_jeu_save": {
+    "addr": "2:32f58",
+    "type": "options_jeu_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c C2F58; Android size 32; DOS copies eight dwords at 1:25A57"
+   },
+   "rvb_Vig": {
+    "addr": "2:35568",
+    "type": "rgb_palette_t[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c C5568; DOS indexes palettes with 0x300 stride at 1:256CC"
+   },
+   "star_ray_dev": {
+    "addr": "2:3e6d4",
+    "type": "obj_t *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CE6D4; DOS clears dword at 1:25889"
+   },
+   "star_ray_der": {
+    "addr": "2:3e6d8",
+    "type": "obj_t *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CE6D8; DOS clears dword at 1:25883"
+   },
+   "main_mem_world": {
+    "addr": "2:3d880",
+    "type": "mem_t",
+    "name": "RAYVERSE",
+    "evidence": "Android object size 12; DOS descriptor passed at 1:258E1 and 1:2582E"
+   },
+   "demo_video_mem": {
+    "addr": "2:3cfdc",
+    "type": "mem_t",
+    "name": "INVENTED",
+    "evidence": "DOS passes descriptor address to playVideo at 1:258B5"
+   },
+   "word_CF7EE": {
+    "addr": "2:3f7ee",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7EE; DOS word load in WORLD_CHOICE at 1:2503F"
    }
   }
  }

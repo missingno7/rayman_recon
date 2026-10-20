@@ -170,6 +170,7 @@ typedef struct credit_t {
     u8 font;
     u8 cmd;
     u8 color;
+    u8 unknown_b;                  /* DOS stride 12: DISPLAY_TXT_CREDITS indexes (4i - i) * 4 */
 } credit_t;
 
 typedef struct record_t {        /* demo record (record 24 bytes); src/input.c, src/fee.c */
@@ -185,5 +186,11 @@ typedef struct record_t {        /* demo record (record 24 bytes); src/input.c, 
 } record_t;
 
 typedef s16 (scene_func_t)(u32 arg);   /* SYNCHRO_LOOP scene callback (Rayverse types.h) */
+
+typedef struct mem_t {             /* block allocator arena (sysutils block_malloc) */
+    u32 align;
+    u8 *data;
+    u32 capacity;
+} mem_t;
 
 #endif
