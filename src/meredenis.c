@@ -1,6 +1,7 @@
 /*
  * Viking Mama boss (GOG v1.21 object 1:40b60-1:42d30). File name invented (Rayverse meredenis.c).
- * Names: Rayverse/Android. Status per function: config/units.json.
+ * Names: Rayverse/Android. Worker results and remaining differences: NOTES.md.
+ * Accepted baseline is recorded separately in config/units.json.
  */
 #include "obj.h"
 #include "game.h"
@@ -25,6 +26,8 @@
 #define GO_WAIT 2
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
+/* DOS stores the TYPE_203 weapon index at 2:54d90 (mereDenis_weapon_id) and the TYPE_112 washing-machine index
+ * at 2:54d8c (machine_obj_id); Rayverse had these two names swapped. */
 //50B60
 void findMereDenisWeapon(void) {
     s16 i;
@@ -51,73 +54,58 @@ void findMereDenisWeapon(void) {
 
 
 //50BB8
-u8 mereDenisCanAttak(obj_t* obj) {
-    if (scrollLocked) {
-        if (obj->timer) {
-            if (horloge[2]) {
-                if (scroll_start_y >= ymap)
-                    return 0;
-            } else {
-                obj->timer--;
-                if (scroll_start_y >= ymap)
-                    goto LABEL_6;
-            }
-        } else if (scroll_start_y >= ymap) {
-            return 1;
+u8 mereDenisCanAttak(obj_t *obj) {
+    if (!scrollLocked) {
+        scrollLocked =
+            xmap >= bossScrollStartX - h_scroll_speed && xmap <= bossScrollEndX + h_scroll_speed &&
+            ymap >= bossScrollStartY - v_scroll_speed && ymap <= bossScrollEndY + v_scroll_speed;
+        if (scrollLocked) {
+            scroll_end_x = xmap;
+            scroll_start_x = xmap;
+            scroll_start_y = bossScrollStartY;
+            scroll_end_y = bossScrollEndY;
         }
-        scroll_start_y = ymap;
     } else {
-        if ((xmap < bossScrollStartX - h_scroll_speed) ||
-            (xmap > bossScrollEndX + h_scroll_speed) ||
-            (ymap < bossScrollStartY - v_scroll_speed) ||
-            (ymap > bossScrollEndY + v_scroll_speed)) {
-            scrollLocked = 0;
-            return 0;
-        }
-        scrollLocked = 1;
-        scroll_end_x = xmap;
-        scroll_start_x = xmap;
-        scroll_start_y = bossScrollStartY;
-        scroll_end_y = bossScrollEndY;
+        if (obj->timer && !horloge[2]) obj->timer--;
+        if (scroll_start_y < ymap) scroll_start_y = ymap;
     }
-
-LABEL_6:
-    if (obj->timer)
-        return 0;
-    return 1;
+    return scrollLocked && !obj->timer;
 }
 
 //50CC8
-void setMereDenisAtScrollBorder(obj_t* obj, u8 flip_x) {
-    if (flip_x > 0) {
-        if (flip_x == 1) {
+s16 setMereDenisAtScrollBorder(obj_t *obj, u8 flip_x) {
+    s16 delta;
+    switch (flip_x) {
+    case 0:
+        obj->x = scroll_start_x - obj->offset_bx;
+        delta = -1;
+        obj->flags.flip_x = 1;
+        break;
+    case 1:
+        obj->x = scroll_end_x + 304 - obj->offset_bx;
+        delta = 1;
+        obj->flags.flip_x = 0;
+        break;
+    default:
+        delta = obj->x + obj->offset_bx - (scroll_start_x + scroll_end_x + 320) / 2;
+        if (delta > 0) {
             obj->x = scroll_end_x + 304 - obj->offset_bx;
             obj->flags.flip_x = 0;
         } else {
-            s32 center = (scroll_start_x + scroll_end_x + 320) / 2;
-            s32 obj_center = obj->x + obj->offset_bx;
-            if (obj_center - center <= 0) {
-                obj->x = scroll_start_x - obj->offset_bx;
-                obj->flags.flip_x = 1;
-            } else {
-                obj->x = scroll_end_x + 304 - obj->offset_bx;
-                obj->flags.flip_x = 0;
-            }
+            obj->x = scroll_start_x - obj->offset_bx;
+            obj->flags.flip_x = 1;
         }
-    } else {
-        obj->x = scroll_start_x - obj->offset_bx;
-        obj->flags.flip_x = 1;
+        break;
     }
+    return delta;
 }
 
 //50DA4
-void setCirclePointToReach(obj_t* obj) {
+void setCirclePointToReach(void) {
     bossXToReach = circle_x + (sinus(circle_index) * 100) / 512;
     bossYToReach = circle_y + (cosinus(circle_index) * 60) / 512;
     circle_index += 4;
-    if (circle_index < 512) {circle_index += 4;
-    } else {
-    circle_index = -32000; }
+    if (circle_index > 512) circle_index = -32000;
 }
 
 //50E5C
@@ -127,63 +115,55 @@ void allocateMereDenisBombChips(obj_t* obj) {
     s16 nb_objs;
     u8 i;
     u8 unk_1;
-    u8 se1;
-    u8 se2;
+    u8 sub_etat_2;
+    u8 sub_etat_1;
 
     for (i = 0; i <= 2; i += 2) {
         cur = level.objects;
+        j = 0;
         nb_objs = level.nb_objects;
-        if (nb_objs > 0) {
+        while (j < nb_objs) {
             unk_1 = 0;
             switch (obj->sub_etat) {
-                case 0:
                 case 1:
-                    se1 = 0;
-                    se2 = 1;
+                    sub_etat_1 = 0;
+                    sub_etat_2 = 1;
                     break;
-                case 2:
                 case 3:
-                case 4:
                 case 5:
                     if (obj->flags.flip_x) {
-                        se1 = 4;
-                        se2 = 5;
+                        sub_etat_1 = 4;
+                        sub_etat_2 = 5;
                     } else {
-                        se1 = 2;
-                        se2 = 3;
+                        sub_etat_1 = 2;
+                        sub_etat_2 = 3;
                     }
                     break;
-                case 6:
                 case 7:
                     if (obj->flags.flip_x)
                         unk_1 = 1;
-                    se1 = 6;
-                    se2 = 7;
-                    break;
-                default:
-                    if (obj->sub_etat == 1) { se1 = 0; se2 = 1; }
-                    else { se1 = 2; se2 = 3; }
+                    sub_etat_1 = 6;
+                    sub_etat_2 = 7;
                     break;
             }
 
-            for (j = 0; j < nb_objs; ++j) {
                 if (cur->type == TYPE_194_SMA_BOMB_CHIP &&
                     !cur->is_active &&
-                    (cur->sub_etat == se1 || cur->sub_etat == se2))
+                    (cur->sub_etat == sub_etat_1 || cur->sub_etat == sub_etat_2))
                 {
                     cur->flags.flip_x = obj->flags.flip_x;
-                    cur->flags.alive = 1;
                     cur->is_active = 1;
+                    cur->flags.alive = 1;
+                    add_alwobj(cur);
                     cur->x = obj->x;
                     cur->y = obj->y;
-                    add_alwobj(cur);
-                    set_main_and_sub_etat(cur, 1, (i == 0 ? se1 : se2));
+                    set_main_and_sub_etat(cur, 1, (i != 0 ? sub_etat_2 : sub_etat_1));
                     calc_obj_pos(cur);
                     skipToLabel(cur, (unk_1 ? i == 0 : i != 0), true);
                     break;
                 }
                 ++cur;
-            }
+                ++j;
         }
     }
 
@@ -194,15 +174,15 @@ void allocateMereDenisBombChips(obj_t* obj) {
 }
 
 //51010
-void mereDenisExplodeBombs(obj_t* obj) {
+void mereDenisExplodeBombs(void) {
     s16 v;
     s16 t;
     for (t = 0; t < 8; t++) {
         for (v = 0; v < 8; v++) {
-            s32 id = droppedBombIds[v + t * 8];
-            if (id != -1) {
+            u32 id = droppedBombIds[t][v];
+            if (id != (u32)-1) {
                 level.objects[id].timer = 70;
-                droppedBombIds[v + t * 8] = -1;
+                droppedBombIds[t][v] = -1;
             }
         }
     }
@@ -222,7 +202,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
     if (currentBombSequence == 0xfe && lastDroppedBombXCenterPos == -32000)
     {
         ray_x = ray.x + ray.offset_bx;
-        smama_x_1 = smama_obj->x + smama_obj->offset_bx;
+        smama_x_1 = smama_obj->offset_bx + smama_obj->x;
         if ((ray_x >= smama_x_1 - 8) && (ray_x <= smama_x_1 + 8))
         {
             cur_obj = level.objects; 
@@ -232,18 +212,18 @@ void mereDenisDropBomb(obj_t *smama_obj)
             {
                 if (cur_obj->type == TYPE_193_SMA_BOMB && cur_obj->is_active == 0)
                 {
-                    cur_obj->sub_etat = 0;
                     cur_obj->flags.flip_x = 0;
+                    cur_obj->sub_etat = 0;
                     cur_obj->x = smama_x_1 - cur_obj->offset_bx;
 #ifdef PC
                     cur_obj->y = smama_obj->y + smama_obj->offset_by - cur_obj->offset_by - 3 * ((Bloc_lim_H2 - Bloc_lim_H1) / 18);
 #else
                     cur_obj->y = smama_obj->y + smama_obj->offset_by - cur_obj->offset_by - 3 * 11;
 #endif
-                    cur_obj->timer = 50;
-                    cur_obj->flags.alive = 1;
                     cur_obj->is_active = 1;
+                    cur_obj->flags.alive = 1;
                     add_alwobj(cur_obj);
+                    cur_obj->timer = 50;
                     break;
                 }
                 cur_obj++;
@@ -267,11 +247,11 @@ void mereDenisDropBomb(obj_t *smama_obj)
                 smama_x_2 = smama_obj->x + smama_obj->offset_bx;
                 if (i == 0) {
 #ifdef PC
-                    if (Abs(smama_x_2 - lastDroppedBombXCenterPos) < (Bloc_lim_W2 - Bloc_lim_W1) / 9) {
+                    if (abs(smama_x_2 - lastDroppedBombXCenterPos) < (Bloc_lim_W2 - Bloc_lim_W1) / 9) {
                         return;
                     }
 #else
-                    if (Abs(smama_x_2 - lastDroppedBombXCenterPos) < 0x25) {
+                    if (abs(smama_x_2 - lastDroppedBombXCenterPos) < 0x25) {
                         return;
                     }
 #endif
@@ -304,7 +284,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
                     break;
                 case 8:
                     smama_x_2 = 0;
-                    droppedBombIds[i * 8 + lastDroppedBombIdInSequence[i]] = -1;
+                    droppedBombIds[i][lastDroppedBombIdInSequence[i]] = -1;
                     break;
                 default:
                     break;
@@ -321,7 +301,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
                         {
                             cur_obj->sub_etat = new_sub_etat;
                             cur_obj->flags.flip_x = new_flip_x;
-                            droppedBombIds[i * 8 + lastDroppedBombIdInSequence[i]] = j;
+                            droppedBombIds[i][lastDroppedBombIdInSequence[i]] = j;
                             cur_obj->anim_frame = 0;
                             cur_obj->x = smama_x_2 - cur_obj->offset_bx;
 #ifdef PC
@@ -329,8 +309,8 @@ void mereDenisDropBomb(obj_t *smama_obj)
 #else
                             cur_obj->y = (smama_obj->y + smama_obj->offset_by - cur_obj->offset_by) + (i - 6) * 11;
 #endif
-                            cur_obj->flags.alive = 1;
                             cur_obj->is_active = 1;
+                            cur_obj->flags.alive = 1;
                             add_alwobj(cur_obj);
                             break;
                         }
@@ -338,7 +318,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
                         j++;
                     }
                     if (j >= nb_objs)
-                        droppedBombIds[i * 8 + lastDroppedBombIdInSequence[i]] = -1;
+                        droppedBombIds[i][lastDroppedBombIdInSequence[i]] = -1;
                 }
                 lastDroppedBombXCenterPos = smama_obj->x + smama_obj->offset_bx;
             }
@@ -352,7 +332,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
 void swapWeaponAnimState(obj_t* obj, u8 new_sub_etat) {
         set_main_and_sub_etat(obj, 0, new_sub_etat);
         obj->anim_frame = 0;
-        obj->anim_index = obj->eta[obj->main_etat][obj->sub_etat].anim_index;
+        obj->anim_index = obj->eta[0][new_sub_etat].anim_index;
     
 }
 
@@ -369,11 +349,11 @@ void swapMereDenisCollZones(obj_t* obj, u8 smama2) {
 
 void prepareNewMereDenisAttack(obj_t* smama_obj) {
     u8 cur_act = 0xFF;
-    obj_t* wep_obj = (mereDenis_weapon_id != -1) ? &level.objects[mereDenis_weapon_id] : NULL;
-    obj_t* mach_obj = (machine_obj_id != -1) ? &level.objects[machine_obj_id] : NULL;
-    obj_t* poing_obj;
+    obj_t* wep_obj = &level.objects[mereDenis_weapon_id];
+    obj_t* mach_obj = &level.objects[machine_obj_id];
     u8 old_flip_x;
     s16 i;
+    eta_t *state_row;
 
     if (circle_index == -32000) 
     {
@@ -384,23 +364,25 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
             case 0:
                 bossEncounter++;
             case 1:
-                currentBossAction = 0;
                 currentBossActionIsOver = 1;
+                currentBossAction = 0;
                 break;
 
             case 2:
-                currentBossAction = saveCurrentBossAction;
                 bossEncounter = saveBossEncounter;
+                currentBossAction = saveCurrentBossAction;
                 if (currentBossAction == 0xFF)
-                    currentBossAction = saveCurrentBossAction + 1;
+                    currentBossAction++;
                 currentBossActionIsOver = 1;
                 saveBossEncounter = 0xFF;
                 break;
 
             case 46:
                 remoteRayXToReach = -32000;
+                set_main_and_sub_etat(&ray, 3, 7);
                 fin_boss = true;
-                smama_obj->nb_cmd = vblToEOA(smama_obj, 1) - 4;
+                finBosslevel.space_mama = true;
+                smama_obj->nb_cmd = vblToEOA(&ray, 1) - 3;
                 currentBossActionIsOver = 0;
                 break;
 
@@ -409,12 +391,11 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                 remoteRayXToReach = ray.x;
                 skipToLabel(smama_obj, 0, true);
                 smama_obj->nb_cmd = 0;
-                fin_boss = true;
                 currentBossActionIsOver = 1;
                 break;
 
             case 44:
-                if (mach_obj) {
+                {
                     switch (mach_obj->sub_etat) {
                     case 37:
                     case 38:
@@ -423,7 +404,7 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                     case 41:
                         set_main_and_sub_etat(smama_obj, 0, 16);
                         swapWeaponAnimState(wep_obj, 43);
-                        set_main_and_sub_etat(mach_obj, mach_obj->main_etat, mach_obj->sub_etat + 1);
+                        set_sub_etat(mach_obj, mach_obj->sub_etat + 1);
                         skipToLabel(smama_obj, 0, true);
                         mach_obj->x = smama_obj->x;
                         mach_obj->y = smama_obj->y;
@@ -434,8 +415,8 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                     case 42:
                         wep_obj->flags.alive = 0;
                         currentBossAction = 0;
-                        bossEncounter = 6;
                         currentBossActionIsOver = 1;
+                        bossEncounter = 6;
                         
                         break;
                     }
@@ -444,12 +425,12 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                 break;
 
             case 40:
-                    poing_obj = &level.objects[poing_obj_id];
                     set_main_and_sub_etat(smama_obj, 0, 2);
                     bossYToReach = smama_obj->y;
                     if (poing_obj->speed_x != 0) {
                         skipToLabel(smama_obj, 0, true);
-                        bossXToReach = smama_obj->eta[0][2].speed_x_right * smama_obj->nb_cmd / 16;
+                        state_row = smama_obj->eta[0];
+                        bossXToReach = smama_obj->nb_cmd * state_row[2].speed_x_right / 16;
                         if (poing_obj->speed_x < 0)
                             bossXToReach = smama_obj->x + bossXToReach;
                         else if (poing_obj->speed_x > 0)
@@ -470,8 +451,8 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
             case 5:
                 fix_numlevel(smama_obj);
                 new_level = true;
-                currentBossActionIsOver = 0;
                 finBosslevel.space_mama = true;
+                currentBossActionIsOver = 0;
                 break;
 
             case 41:
@@ -511,7 +492,7 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                 circle_index = 4;
                 circle_x = smama_obj->x;
                 circle_y = smama_obj->y - 60;
-                setCirclePointToReach(smama_obj);
+                setCirclePointToReach();
                 setBossReachingSpeeds(smama_obj, 1, 0xFF, 0xFF);
                 bossReachingTimer = 1;
                 bossReachingAccuracyX = 0xFF;
@@ -558,10 +539,9 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
 
             case 14:
                 swapMereDenisCollZones(smama_obj, 0);
-                if (mach_obj) {
+                {
                     set_main_and_sub_etat(mach_obj, 0, 37);
                     mach_obj->flags.alive = 1;
-                    mach_obj->is_active = 1;
 #ifdef PC
                     add_alwobj(mach_obj);
 #endif
@@ -572,21 +552,19 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
 
             case 36: 
                 swapMereDenisCollZones(smama_obj, 1);
-                if (mach_obj) {
+                {
                     if (!mach_obj->flags.alive)
                         add_alwobj(mach_obj);
                     mach_obj->flags.alive = 1;
-                    mach_obj->is_active = 1;
                 }
                 smama_obj->display_prio = 6;
-                if (wep_obj) {
+                {
                     if (!wep_obj->flags.alive)
                         add_alwobj(wep_obj);
                     wep_obj->flags.alive = 1;
-                    wep_obj->is_active = 1;
-                    swapWeaponAnimState(wep_obj, 36);
                 }
                 set_main_and_sub_etat(smama_obj, 0, 19);
+                swapWeaponAnimState(wep_obj, 36);
                 skipToLabel(smama_obj, 0, true);
                 currentBossActionIsOver = 0;
                 break;
@@ -607,7 +585,8 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                 set_main_and_sub_etat(smama_obj, 1, 1);
                 skipToLabel(smama_obj, 0, true);
                 bossYToReach = smama_obj->y;
-                bossXToReach = smama_obj->eta[1][1].speed_x_right * smama_obj->nb_cmd / 16;
+                state_row = smama_obj->eta[1];
+                bossXToReach = smama_obj->nb_cmd * state_row[1].speed_x_right / 16;
                 if (smama_obj->flags.flip_x)
                     bossXToReach = smama_obj->x + bossXToReach;
                 else
@@ -639,15 +618,15 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
             case 34:
                 switch (smama_obj->sub_etat) {
                 case 34:
-                    set_main_and_sub_etat(smama_obj, smama_obj->main_etat, 31);
-                    if (wep_obj)
+                    set_sub_etat(smama_obj, 31);
+
                         swapWeaponAnimState(wep_obj, 33);
                     break;
                 case 21:
                 case 31:
                 case 19:
-                    set_main_and_sub_etat(smama_obj, smama_obj->main_etat, 24);
-                    if (wep_obj)
+                    set_sub_etat(smama_obj, 24);
+
                         swapWeaponAnimState(wep_obj, 25);
                     break;
                 }
@@ -656,21 +635,21 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
             case 35:
                 switch (smama_obj->sub_etat) {
                 case 22:
-                    set_main_and_sub_etat(smama_obj, smama_obj->main_etat, 23);
-                    if (wep_obj)
+                    set_sub_etat(smama_obj, 23);
+
                         swapWeaponAnimState(wep_obj, 26);
                     break;
                 case 21:
                 case 23:
                 case 19:
-                    set_main_and_sub_etat(smama_obj, smama_obj->main_etat, 30);
-                    if (wep_obj)
+                    set_sub_etat(smama_obj, 30);
+
                         swapWeaponAnimState(wep_obj, 32);
                     break;
                 }
 block_123:
                 swapMereDenisCollZones(smama_obj, 1);
-                if (wep_obj)
+
                     wep_obj->flags.alive = 1;
                 skipToLabel(smama_obj, 0, true);
                 currentBossActionIsOver = 0;
@@ -685,21 +664,21 @@ block_123:
                 switch (cur_act) {
                 case 33:
                     set_main_and_sub_etat(smama_obj, 0, 22);
-                    if (wep_obj)
+
                         swapWeaponAnimState(wep_obj, 18);
                     break;
                 case 32:
                     set_main_and_sub_etat(smama_obj, 0, 21);
-                    if (wep_obj)
+
                         swapWeaponAnimState(wep_obj, 17);
                     break;
                 case 43:
                     set_main_and_sub_etat(smama_obj, 0, 34);
-                    if (wep_obj)
+
                         swapWeaponAnimState(wep_obj, 35);
                     break;
                 }
-                if (wep_obj)
+
                     wep_obj->flags.alive = 1;
                 skipToLabel(smama_obj, 0, true);
                 currentBossActionIsOver = 0;
@@ -722,14 +701,14 @@ block_123:
             case 39:
                 swapMereDenisCollZones(smama_obj, 0);
                 mach_obj->flags.alive = 1;
-                mach_obj->is_active = 1;
 #ifdef PC
                 add_alwobj(mach_obj);
 #endif
                 smama_obj->display_prio = 3;
                 mach_obj->speed_y = -6;
                 set_main_and_sub_etat(mach_obj, 2, 1);
-                mach_obj->speed_x = mach_obj->eta[mach_obj->main_etat][mach_obj->sub_etat].speed_x_left;
+                mach_obj->speed_x = mach_obj->eta[mach_obj->main_etat][mach_obj->sub_etat].speed_x_right;
+                mach_obj->speed_x = -mach_obj->speed_x;
                 set_main_and_sub_etat(smama_obj, 0, 14);
                 smama_obj->x += 100;
                 goto block_90;
@@ -755,12 +734,12 @@ block_90:
                 break;
 
             case 30:
-                smama_obj->flags.flip_x ^= 1;
+                smama_obj->flags.flip_x = !smama_obj->flags.flip_x;
                 goto block_98;
-            case 23:
             case 25:
                 smama_obj->flags.flip_x = 1;
                 goto block_98;
+            case 23:
             case 45:
 block_98:
                 mere_denis_wait_time = 60;
@@ -786,6 +765,9 @@ block_98:
                     else
                     {
                         bossXToReach = smama_obj->x - 160;
+                        /* DOS 1:42213 retains this redundant fallback predicate. */
+                        if (cur_act == 25)
+                            bossXToReach += 112;
                         smama_obj->x = bossXToReach - 80;
                     }
                 }
@@ -810,9 +792,9 @@ block_98:
 
             case 37:
                 swapMereDenisCollZones(smama_obj, 1);
-                if (wep_obj)
+
                     wep_obj->flags.alive = 0;
-                if (mach_obj)
+
                     mach_obj->flags.alive = 0;
                 set_main_and_sub_etat(smama_obj, 0, 6);
                 skipToLabel(smama_obj, 0, true);
@@ -822,7 +804,7 @@ block_98:
             case 31:
                 swapMereDenisCollZones(smama_obj, 1);
                 smama_obj->x -= 100;
-                if (mach_obj)
+
                     mach_obj->flags.alive = 0;
                 set_main_and_sub_etat(smama_obj, 0, 20);
                 skipToLabel(smama_obj, 0, true);
@@ -845,11 +827,11 @@ block_98:
 
             case 28:
                 swapMereDenisCollZones(smama_obj, 0);
-                setMereDenisAtScrollBorder(smama_obj, (smama_obj->flags.flip_x ^ 1) & 1);
+                setMereDenisAtScrollBorder(smama_obj, !smama_obj->flags.flip_x);
 #ifdef PC
                 if (smama_obj->flags.flip_x) {
                     smama_obj->x -= 144 - Bloc_lim_H1;
-                    bossXToReach = scroll_end_x - smama_obj->offset_bx + SCREEN_WIDTH + 144;
+                    bossXToReach = scroll_end_x + SCREEN_WIDTH - smama_obj->offset_bx + 144;
                 } else {
                     smama_obj->x += 136;
                     bossXToReach = scroll_start_x - smama_obj->offset_bx - 144;
@@ -857,15 +839,13 @@ block_98:
 #else
                 if (smama_obj->flags.flip_x) {
                     smama_obj->x -= 144;
-                    bossXToReach = scroll_end_x - smama_obj->offset_bx + SCREEN_WIDTH + 144;
+                    bossXToReach = scroll_end_x + SCREEN_WIDTH - smama_obj->offset_bx + 144;
                 } else {
                     smama_obj->x += 144;
                     bossXToReach = scroll_start_x - smama_obj->offset_bx - 144;
                 }
 #endif
-                smama_obj->y =
-                    floorLine - smama_obj->offset_by -
-                    (mereDenisActionSequences[bossEncounter][currentBossAction++] + 32);
+                smama_obj->y = floorLine - smama_obj->offset_by - 32 - mereDenisActionSequences[bossEncounter][currentBossAction++];
                 bossYToReach = smama_obj->y;
                 set_main_and_sub_etat(smama_obj, 0, 15);
                 bossReachingAccuracyX = 0xFF;
@@ -896,7 +876,7 @@ block_98:
                 smama_obj->flags.flip_x = !smama_obj->flags.flip_x;
                 set_main_and_sub_etat(smama_obj, 0, 0);
                 skipToLabel(smama_obj, 0, true);
-                mereDenisExplodeBombs(smama_obj);
+                mereDenisExplodeBombs();
                 currentBossActionIsOver = 0;
                 break;
             }
@@ -912,33 +892,32 @@ void snapLaserToWeapon(obj_t *laser_obj, u8 param_2)
     u8 sub_etat;
     eta_t *eta;
 
-    GET_SPRITE_POS(unk_obj, laser_obj->follow_sprite, &x, &y, &w, &h);
+    GET_SPRITE_POS(unk_obj, laser_obj->link, &x, &y, &w, &h);
     if (param_2)
     {
-        sub_etat = unk_obj->sub_etat;
-        eta = &unk_obj->eta[unk_obj->main_etat][sub_etat];
-        switch (sub_etat)
+        eta = &unk_obj->eta[unk_obj->main_etat][unk_obj->sub_etat];
+        switch (unk_obj->sub_etat)
         {
         case 17:
             eta->anim_index = 47;
             break;
-        case 18:
-            eta->anim_index = 46;
-            break;
         case 35:
             eta->anim_index = 48;
+            break;
+        case 18:
+            eta->anim_index = 46;
             break;
         }
         unk_obj->anim_index = eta->anim_index;
         laser_obj->x = x - laser_obj->offset_bx;
         if (unk_obj->flags.flip_x)
         {
-            laser_obj->cmd = GO_LEFT; //for some reason it's inverted compared to the PS1 decomp? 
+            laser_obj->cmd = GO_RIGHT; //for some reason it's inverted compared to the PS1 decomp? 
             laser_obj->x += w - 5;
         }
         else
         {
-            laser_obj->cmd = GO_RIGHT;
+            laser_obj->cmd = GO_LEFT;
             laser_obj->x += 5;
         }
     }
@@ -947,45 +926,35 @@ void snapLaserToWeapon(obj_t *laser_obj, u8 param_2)
 }
 
 //52718
-void allocateSpaceMamaLaser(obj_t* smama_obj)
-{
+void allocateSpaceMamaLaser(obj_t *smama_obj) {
+    obj_t *cur_obj;
     s16 i;
-    u8 sub_etat = 0;
-    u16 obj_type = 0;
-    
+    s16 nb_objs;
+    u8 sub_etat;
+    u8 obj_type;
     switch (currentLaserSize) {
     case 1: sub_etat = 3; obj_type = TYPE_192_SMA_GRAND_LASER; break;
     case 2: sub_etat = 4; obj_type = TYPE_192_SMA_GRAND_LASER; break;
     case 3: sub_etat = 2; obj_type = TYPE_192_SMA_GRAND_LASER; break;
     case 4: sub_etat = 4; obj_type = TYPE_244_SMA_PETIT_LASER; break;
-            default:
-            laserSourceSprNumInAnim = -1;
-            currentLaserSize = 0;
-            return;
     }
-
-    for (i = 0; i < level.nb_objects; ++i) {
-        obj_t* cur_obj = level.objects + i;
+    cur_obj = level.objects;
+    nb_objs = level.nb_objects;
+    for (i = 0; i < nb_objs; ++i, ++cur_obj) {
         if (cur_obj->type == obj_type && cur_obj->is_active == 0) {
-            obj_t* source = smama_obj;
-            if (smama_obj->type == TYPE_213_SPACE_MAMA2 && mereDenis_weapon_id != -1) {
-                source = &level.objects[mereDenis_weapon_id];
-            }
-
-            cur_obj->follow_id = source->id;
-            cur_obj->follow_sprite = laserSourceSprNumInAnim;
+            if (smama_obj->type == TYPE_213_SPACE_MAMA2)
+                smama_obj = &level.objects[mereDenis_weapon_id];
+            cur_obj->follow_id = smama_obj->id;
+            cur_obj->link = laserSourceSprNumInAnim;
             cur_obj->flags.read_commands = 0;
-            cur_obj->flags.flip_x = source->flags.flip_x;
-            
+            cur_obj->flags.flip_x = smama_obj->flags.flip_x;
             cur_obj->anim_frame = 0;
             cur_obj->sub_etat = sub_etat;
-            source->follow_id = cur_obj->id; 
-            
-            snapLaserToWeapon(cur_obj, 1); 
-            
+            smama_obj->follow_id = cur_obj->id;
+            snapLaserToWeapon(cur_obj, 1);
             cur_obj->flags.alive = 1;
             cur_obj->is_active = 1;
-            add_alwobj(cur_obj); 
+            add_alwobj(cur_obj);
             calc_obj_pos(cur_obj);
             break;
         }
@@ -1003,19 +972,21 @@ void doMereDenisCommand(obj_t* obj) {
             if (bossSafeTimer != 0) bossSafeTimer--;
             
             if (!(obj->flags.hurtbyfist)) { 
-                 if (obj->cmd == GO_WAIT) {
-                     if (laserSourceSprNumInAnim != -1) {
+                 switch (obj->cmd) {
+                 case GO_WAIT:
+                     if (laserSourceSprNumInAnim != 0xFF) {
                          allocateSpaceMamaLaser(obj);
                      }
+                     obj->speed_x = 0;
+                     obj->speed_y = 0;
                      bossXToReach = -32000;
                      bossYToReach = -32000;
                      circle_index = -32000;
-                     obj->speed_x = 0;
-                     obj->speed_y = 0;
-                } else {
+                    break;
+                default:
                     laserSourceSprNumInAnim = -1;
                     if (circle_index != -32000) {
-                        setCirclePointToReach(obj);
+                        setCirclePointToReach();
                     } else if (timerBeforeFirstBomb == 0 && currentBombSequence != 0xFF &&
                                obj->main_etat == 0 && obj->sub_etat == 15) {
                         mereDenisDropBomb(obj);
@@ -1023,6 +994,7 @@ void doMereDenisCommand(obj_t* obj) {
                         timerBeforeFirstBomb--;
                     }
                     setBossReachingSpeeds(obj, bossReachingTimer, bossReachingAccuracyX, bossReachingAccuracyY);
+                    break;
                 }
                 testActionEnd(obj);
             }
@@ -1033,7 +1005,7 @@ void doMereDenisCommand(obj_t* obj) {
 }
 
 //529A8
-void changeMereDenisPhase(obj_t* obj) {
+void changeMereDenisPhase(void) {
    u8 old_encounter;
     u8 *encounter;
     u8 *action;
@@ -1078,88 +1050,30 @@ void changeMereDenisPhase(obj_t* obj) {
 }
 
 //52A28
-void fitSaveCurrentAction(obj_t* obj)
-{
-    u8 enc  = (u8)bossEncounter;
-    u8 act  = (u8)currentBossAction;
-    const u8* seq = (const u8*)mereDenisActionSequences[enc];
-    u8 code = seq[act];
-
-    for (;;)
-    {
-        switch (code)
-        {
-            case 0:
-                ++enc;
-                currentBossAction = 0;
-                bossEncounter = enc;
-
-                seq = (const u8*)mereDenisActionSequences[enc];
-                act = 0;             
-                code = seq[0];         
-                continue;
-
-            case 1:
-                currentBossAction = 0;
-                act = 0;
-                code = seq[0];        
-                continue;
-
-            case 0x0F:
-            case 0x12:
-            case 0x13:
-            case 0x18:
-            case 0x1A:
-            case 0x22:
-            case 0x23:
-            case 0x24:
-                goto LABEL_4;
-
-            case 0x16:
-                if (act == 0)
-                    goto LABEL_5;
-                currentBossAction = --act;
-                code = seq[act];
-                continue;
-
-            case 0x1C:
-                act += 2;
-                currentBossAction = act;
-                code = seq[act];
-                continue;
-
-            case 0x1D:
-                continue;
-
-            case 0x21:
-            case 0x2B:
-                ++act;
-
-LABEL_4:
-                currentBossAction = ++act;
-                code = seq[act];
-                if (code > 0x2B)
-                    goto LABEL_5;
-                continue;
-
-            default:
-LABEL_5:
-                saveCurrentBossAction = act;
-                saveBossEncounter = enc;
-                return;
+void fitSaveCurrentAction(void) {
+    u8 again;
+    do {
+        again = 0;
+        switch (mereDenisActionSequences[bossEncounter][currentBossAction]) {
+        case 1: currentBossAction = 0; again = 1; break;
+        case 0: currentBossAction = 0; bossEncounter++; again = 1; break;
+        case 33:
+        case 43: currentBossAction++;
+        case 15: case 18: case 19: case 24: case 26: case 34: case 35: case 36:
+            currentBossAction++; again = 1; break;
+        case 28: currentBossAction += 2;
+        case 29: again = 1; break;
+        case 22:
+            if (currentBossAction) { currentBossAction--; again = 1; }
+            break;
         }
-    }
+    } while (again);
+    saveCurrentBossAction = currentBossAction;
+    saveBossEncounter = bossEncounter;
 }
-
 
 //52AF4
 void doMereDenisHit(obj_t* obj, s16 sprite) {
-    if (!(obj->eta[obj->main_etat][obj->sub_etat].flags & 1))
-        return;
-
-    if (bossSafeTimer != 0)
-        return;
-
     if ((obj->eta[obj->main_etat][obj->sub_etat].flags & 1) && bossSafeTimer == 0) {
         s16 unk_1;
         switch (obj->main_etat * 0x100 + obj->sub_etat) {
@@ -1189,18 +1103,18 @@ void doMereDenisHit(obj_t* obj, s16 sprite) {
             }
         if (unk_1 == sprite)
         {
-            if (unk_1 == 1)
+            if (sprite == 1)
                 {
                     poing.damage = 1;
                     obj_hurt(obj);
                     currentPhaseHitCounter++;
-                    changeMereDenisPhase(obj); 
+                    changeMereDenisPhase(); 
                 }
             if (obj->hit_points != 0)
             {
                 if (!(bossEncounter == 8 || bossEncounter == 9))
                 {
-                    fitSaveCurrentAction(obj);
+                    fitSaveCurrentAction();
                     if (obj->type == TYPE_98_SPACE_MAMA)
                         bossEncounter = 8;
                     else
@@ -1214,11 +1128,9 @@ void doMereDenisHit(obj_t* obj, s16 sprite) {
             }
 
             currentBossAction = 0;
-            obj->flags.hurtbyfist = 1;
             bossSafeTimer = 0xFF;
             currentBossActionIsOver = true;
-            laserSourceSprNumInAnim = -1;
-            currentLaserSize = 0;
+            obj->flags.hurtbyfist = 1;
         
         }
 

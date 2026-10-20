@@ -7542,16 +7542,16 @@
     "evidence": "Rayverse data.c //E4D8E; DOS address 2:54d8e"
    },
    "machine_obj_id": {
-    "addr": "2:54d90",
-    "type": "s16",
-    "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //E4D90; DOS address 2:54d90"
-   },
-   "mereDenis_weapon_id": {
     "addr": "2:54d8c",
     "type": "s16",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //E4D8C; DOS address 2:54d8c"
+    "evidence": "DOS findMereDenisWeapon stores the TYPE_WASHING_MACHINE (112) scan index here (1:40ba3/1:40baa); Rayverse had the two names swapped (gfin_meredenis); Android size 2"
+   },
+   "mereDenis_weapon_id": {
+    "addr": "2:54d90",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS findMereDenisWeapon stores the TYPE_SMA_WEAPON (203) scan index here (1:40ba3/1:40baa); Rayverse had the two names swapped (gfin_meredenis); Android size 2"
    },
    "mere_denis_wait_time": {
     "addr": "2:54d88",
