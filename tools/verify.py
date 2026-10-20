@@ -61,7 +61,8 @@ def main(argv):
     accept = "--accept" in argv
     names = [a for a in argv[1:] if not a.startswith("--")] or list(units["units"])
     import promote
-    bad = promote.overlaps(load_json(CONFIG / "symbols.json"))
+    canon = load_json(CONFIG / "symbols.json")
+    bad = promote.overlaps(canon) + promote.android_mismatches(canon)
     for b in bad:
         print(f"BINDING ERROR {b}")
     images = {}

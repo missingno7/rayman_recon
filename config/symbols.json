@@ -463,9 +463,9 @@
    },
    "costab": {
     "addr": "2:6fe0",
-    "type": "s16[257]",
+    "type": "s16[129]",
     "name": "RAYVERSE",
-    "evidence": "Every trigonometric routine indexes the table via off32 fixups; target 2:6fe0"
+    "evidence": "Every trigonometric routine indexes the table via off32 fixups; target 2:6fe0; Android .data size 0x102 = s16[129]"
    },
    "ray": {
     "addr": "2:3e650",
@@ -643,9 +643,9 @@
    },
    "language_txt": {
     "addr": "2:32b48",
-    "type": "char*[304]",
+    "type": "char*[300]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c declares language_txt[304] at 0xC2B48; indices 157 and 158 match DOS pointer loads"
+    "evidence": "Rayverse data.c declares language_txt[304] at 0xC2B48; indices 157 and 158 match DOS pointer loads; Android .bss size 0x4b0 = 300 pointers"
    },
    "rvb_plan3": {
     "addr": "2:37c88",

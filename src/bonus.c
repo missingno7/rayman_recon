@@ -37,7 +37,7 @@ extern status_bar_t status_bar;
 extern obj_t ray;
 extern obj_t *dword_D0028;
 extern char bonus_time_display_text[20];
-extern char *language_txt[304];
+extern char *language_txt[300];
 extern rgb_palette_t rvb_plan3;
 
 #define MODE_X 1

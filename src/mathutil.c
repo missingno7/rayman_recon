@@ -5,7 +5,7 @@
  */
 #include "rtypes.h"
 
-extern s16 costab[257];
+extern s16 costab[129];
 
 void set2bits(u32 *x, u8 index, u32 value)
 {

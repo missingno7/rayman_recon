@@ -3,6 +3,7 @@
 Sources (read-only):
   external/rayverse/src/*.c     `//XXXXX` comment before a definition = PC v1.21 address (obj1 offset + 0x10000)
   external/rayman-ps1-decomp    funcs-u.txt (name = 0x80...), definitions in src/**/*.c, INCLUDE_ASM stubs
+  external/rayman-from-scratch  Android libSparkApp.so symbol table (original names; tools/android.py)
   config/xref_evidence.json     curated, committed evidence per DOS function (category/confidence/notes)
 
     python tools/xref.py                write build/xref/xref.json + xref.tsv, print summary
@@ -74,6 +75,11 @@ def ps1_functions():
 def build():
     rv = rayverse_functions()
     ps1 = ps1_functions()
+    try:
+        import android
+        andro = android.load()
+    except FileNotFoundError:
+        andro = {}
     ev = load_json(CONFIG / "xref_evidence.json")["functions"] if (CONFIG / "xref_evidence.json").exists() else {}
     rows = []
     for r in rv:
@@ -86,6 +92,7 @@ def build():
             "rayverse": f"{r['file']}:{r['line']}", "rayverse_note": r["note"], "rayverse_stub": r["stub"],
             "ps1_addr": f"{p['addr']:08X}" if p else (r["ps1_addrs"][0] if r["ps1_addrs"] else ""),
             "ps1_file": (p or {}).get("file") or "", "ps1_state": (p or {}).get("state", ""),
+            "android": "yes" if r["name"] in andro else "",
             "category": e.get("category", "UNKNOWN"), "confidence": e.get("confidence", ""),
             "evidence": e.get("notes", ""),
         })
@@ -97,7 +104,7 @@ def main(argv):
     rows = build()
     out = BUILD / "xref"
     dump_json(out / "xref.json", rows)
-    cols = ["dos", "ida", "name", "rayverse", "ps1_addr", "ps1_file", "ps1_state", "category", "confidence"]
+    cols = ["dos", "ida", "name", "rayverse", "ps1_addr", "ps1_file", "ps1_state", "android", "category", "confidence"]
     with open(out / "xref.tsv", "w", encoding="utf-8", newline="\n") as f:
         f.write("\t".join(cols) + "\n")
         for r in rows:
@@ -110,7 +117,8 @@ def main(argv):
         return 0
     named = sum(1 for r in rows if r["ps1_addr"])
     print(f"rayverse-annotated PC v1.21 functions: {len(rows)}; with PS1 name/address link: {named}; "
-          f"rayverse stubs: {sum(r['rayverse_stub'] for r in rows)}")
+          f"name in Android symbols: {sum(1 for r in rows if r['android'])}; "
+          f"rayverse sub_XXXXX placeholders: {sum(1 for r in rows if r['name'].startswith('sub_'))}")
     cats = {}
     for r in rows:
         cats[r["category"]] = cats.get(r["category"], 0) + 1

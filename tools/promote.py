@@ -60,6 +60,25 @@ def norm(addr):
     return f"{o}:{a:05x}" if o == 1 else f"{o}:{a:04x}"
 
 
+def android_mismatches(canon):
+    """Data bindings whose simple type size disagrees with the Android symbol size of the same name."""
+    import android
+    try:
+        A = android.load()
+    except FileNotFoundError:
+        return []
+    bad = []
+    for oracle, secs in canon.items():
+        if not isinstance(secs, dict):
+            continue
+        for name, ent in secs.get("data", {}).items():
+            ts = type_size(ent.get("type"))
+            a = A.get(name)
+            if ts is not None and a and a["kind"] == "O" and a["size"] != ts:
+                bad.append(f"{oracle}: {name} type {ent.get('type')} = {ts} bytes, Android size {a['size']}")
+    return bad
+
+
 def merge_symbols(overlay, renames):
     canon = load_json(CONFIG / "symbols.json")
     ov = load_json(overlay)
@@ -80,9 +99,9 @@ def merge_symbols(overlay, renames):
                     raise SystemExit(f"conflict: {ent['addr']} already bound as {by_addr[ent['addr']]}, overlay {name}")
                 have[name] = ent
                 added += 1
-    bad = overlaps(canon)
+    bad = overlaps(canon) + android_mismatches(canon)
     if bad:
-        raise SystemExit("refusing: overlapping data bindings:\n  " + "\n  ".join(bad))
+        raise SystemExit("refusing: overlapping or wrongly sized data bindings:\n  " + "\n  ".join(bad))
     dump_json(CONFIG / "symbols.json", canon)
     print(f"merged {added} bindings into config/symbols.json")
 

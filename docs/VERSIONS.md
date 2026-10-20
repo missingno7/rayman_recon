@@ -36,3 +36,21 @@ measurement that the v1.12 game code is reproducible by the 10.6 compiler too (1
 `SLUS-000.05` (US, SHA-1 `4ac1789e…`) is the decomp's exact target. PS1 is GCC/MIPS; shared names come from the
 Android symbols used by both Rayverse and the PS1 decomp. `tools/xref.py` joins by name (816 of 1,462 Rayverse
 functions have a PS1 address); a name join is a candidate link, not evidence of identical logic.
+
+## Android Rayman Classic symbols (external/rayman-from-scratch, `tools/android.py`)
+`objdump -TC libSparkApp.so` of two x86 Android releases: 7,564 named functions and ~2,600 named data objects with
+sizes and sections (`.data` initialised, `.bss` uninitialised, `.rodata`). The Android port is built from the DOS
+source (names) but with a different compiler and replaced platform layers. Measured uses:
+- Names: 1,336 of 1,462 Rayverse-annotated functions occur verbatim (Rayverse names are these symbols); the rest
+  are 51 `sub_XXXXX` placeholders and Rayverse-invented or DOS-only names. Android names are the preferred source
+  for unnamed DOS functions and globals.
+- Data sizes = true C types: every data binding with a simple type is checked against the Android size by
+  `tools/promote.py` and `tools/verify.py`. Corrections so far: costab s16[129] (not 257), language_txt char*[300]
+  (not 304); confirmations: main_mem_tmp 12 bytes (DOS mem_t, not Rayverse's port struct), status_bar 10, ray 0x84,
+  rvb_plan3 0x300.
+- File grouping: Android keeps a source file's functions together in .text (e.g. all audiocd functions, the bit
+  utilities, rand, bat each form one block), so it is evidence for TU membership; the order inside a file differs
+  from DOS (not usable for function order).
+- NOT usable: Android `.bss` address order does not reflect the DOS declaration order (pairwise agreement with the
+  DOS BSS order at chance level: 8,446/15,942) [negative result, `tools/probes/bss_android_order.py`].
+- The DOS CD-audio driver layer is absent on Android (our INVENTED AudioTrackCommand & co. have no Android name).
