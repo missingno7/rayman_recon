@@ -37,6 +37,7 @@ Hard rules
 Commands (all run from the repo root with `python`, stdlib + capstone):
 `tools/inventory.py --compare`, `tools/extract.py --all`, `tools/libscan.py`, `tools/xref.py [Q]`,
 `tools/tumap.py --list`, `tools/seed.py draft START END` (seeded starting point for a new object),
+`tools/census.py [--brief UNIT]` (structural NEAR diagnosis; docs/CENSUS.md),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`.
 
 Worker final answer: first line `STATUS: done | partial | blocked | failed`, then <=15 lines: unit/range, hypotheses

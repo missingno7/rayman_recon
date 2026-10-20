@@ -1,44 +1,67 @@
 # Status (Phase 2 continued - systematic DOS matching, 2026-10-20)
 
 Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record).
+NEAR diagnosis: `python tools/census.py` (docs/CENSUS.md).
 
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **208 functions, 25,473 code bytes** (bootstrap end: 34 / 1,900) in 23 code units |
-| whole-object code closure | rand (1:5bf60; + its _BSS), mathutil (1:4def0), bonus (1:13a00; + CONST), audiocd (1:0cee0; recovered empty start_cd_continue), clown (1:1a940) - every function STRICT, one contiguous `_TEXT` |
-| data closure | **25,532 bytes VERIFIED** (49 `_DATA` units + CONST of bonus and basic); mapped (named+sized bindings, not reconstruction): 89.7% of game `_DATA` |
-| BSS | order rule PROVEN; layout VERIFIED 6,919 bytes (rand, moskito, central-block palette prefix); ~26 BSS objects delimited |
+| function-level STRICT | **503 of 780 recorded functions, 70,689 code bytes** (~15.4% of game code 1:00000-1:6fbe6) in 39 code units; 277 NEAR_MATCH |
+| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1 - every function STRICT |
+| data closure | **25,741 bytes VERIFIED** (`_DATA` units + CONST of bonus, basic, input, jumelle, worldmap); mapped (named+sized bindings): 89.7% of game `_DATA` |
+| BSS | order rule PROVEN; layout VERIFIED 6,919 bytes (rand, moskito, central-block palette prefix) |
 | linked binary / packed EXE | not started (by design) |
+
+Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc` (software FP proven by jumelle).
+Bindings: 933 functions, 732 data. Tests: `python -m unittest discover -s tests` (15).
+
+## NEAR_MATCH (277) by structural class (tools/census.py)
+SHAPE / same structure 128 (logic right, Watcom shape left), REFS_LAYOUT 23 (bytes equal; follows object layout),
+DIFF pointers 126 (calls/globals/fields/constants differ - logic, binding or prototype gaps, ~60% real).
 
 ## Code units (GOG v1.21)
 | unit | STRICT | notes |
 |---|---|---|
-| rand | 2/2 | whole object |
+| rand | 2/2 | whole object ; _BSS VERIFIED |
+| audiocd | 12/12 | whole object |
 | mathutil | 12/12 | whole object |
-| bonus | 8/8 | whole object, CONST VERIFIED |
-| basic (core engine, 1:0d070) | 36/58 | object starts with deter_num_let's initialiser; CONST VERIFIED |
-| stoneman | 21/24 | |
-| cage | 9/10 | contiguous layout |
-| audiocd | 12/12 | whole object; the mov eax,eax was a missing empty function |
 | bat | 7/9 | |
-| poisson | 7/8 | contiguous |
-| mite | 5/11 | |
+| bonus | 8/8 | whole object ; CONST VERIFIED |
+| trumpet | 3/6 | |
+| ufo | 3/5 | |
+| cage | 9/10 | |
 | blacktoon | 4/8 | |
 | poing | 4/11 | |
-| trumpet | 3/6 | |
-| ufo | 3/5 | PS1 bodies (Rayverse stubs) STRICT unchanged |
-| moskito | 3/14 | |
-| luciole | 4/10 | Rayverse stubs; PS1 + binary |
+| poisson | 7/8 | |
+| basic | 36/58 | ; CONST VERIFIED |
+| mite | 5/11 | |
+| moskito | 3/14 | ; _BSS VERIFIED |
+| stoneman | 21/24 | |
+| luciole | 4/10 | |
+| special | 21/30 | |
 | clown | 12/12 | whole object |
-| special | 6/30 | |
+| fee | 1/8 | |
 | dark | 16/22 | |
 | saxo | 19/25 | |
-| pmama | 11/28 | |
+| pmama | 19/28 | |
 | meredenis | 3/18 | |
-| fee | 1/8 | 3 functions genuinely differ from Rayverse/PS1 |
-Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
-Verifier self-tests 9/9 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
+| collision1 | 24/37 | |
+| collision2 | 12/36 | |
+| objupdate1 | 46/46 | whole object |
+| bbmont | 19/29 | |
+| blocs | 18/23 | |
+| objupdate2 | 34/51 | |
+| map | 5/13 | |
+| map_ngawe | 5/11 | |
+| objupdate3 | 1/3 | |
+| objupdate4 | 1/2 | |
+| objinit | 1/7 | |
+| breakout | 19/39 | |
+| jumelle | 6/19 | ; CONST VERIFIED |
+| input | 21/31 | ; CONST VERIFIED |
+| worldmap | 46/50 | ; CONST VERIFIED |
+| display | 14/32 | |
+Not integrated: cymbal (3 large functions), blood (DoEffectBloodOut); untouched objects: tumap --list.
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
