@@ -1,6 +1,7 @@
 /*
  * Fish enemies (GOG v1.21 object 1:57100-1:57860). File name invented (Rayverse poisson.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: 7/8 STRICT, contiguous _TEXT at 1:57100. See NOTES.md.
+ * Accepted repository status remains in config/units.json.
  */
 #include "obj.h"
 #include "map.h"
@@ -155,8 +156,6 @@ void DESACTIVE_FISH_COLLIS(obj_t *fish)
 void DO_PYRANHA(obj_t *in_obj)
 {
     u8 can_free;
-    s32 in_y;
-    s32 in_y_pos;
     obj_t *cur_obj;
     s16 i;
     s16 nb_obj;
@@ -169,22 +168,21 @@ void DO_PYRANHA(obj_t *in_obj)
         if (in_obj->sub_etat == 3)
             in_obj->speed_y = 0;
         else if (in_obj->sub_etat == 9) {
-            in_y_pos = in_obj->y;
-            in_y = in_y_pos + in_obj->offset_hy;
             in_obj->speed_y = 6;
-            if (ymap + SCREEN_HEIGHT < in_y ||
-                in_y_pos + in_obj->offset_by + 14 > mp.height * 16) {
-                if (in_y_pos + in_obj->offset_by + 14 > mp.height * 16)
+            if (in_obj->y + in_obj->offset_hy > ymap + SCREEN_HEIGHT ||
+                in_obj->y + in_obj->offset_by + 14 > mp.height * 16) {
+                s32 bottom = in_obj->y + in_obj->offset_by + 14;
+                if (bottom > mp.height * 16)
                     allocate_splash(in_obj);
-                in_obj->timer = 0;
-                in_obj->is_active = 0;
                 in_obj->y = ymap + SCREEN_HEIGHT;
+                in_obj->is_active = 0;
+                in_obj->timer = 0;
                 in_obj->flags.alive = 0;
                 can_free = can_free_fish(in_obj);
             }
         } else if (in_obj->y + in_obj->offset_by < ymap) {
-            in_obj->is_active = 0;
             in_obj->y = ymap + SCREEN_HEIGHT;
+            in_obj->is_active = 0;
             in_obj->flags.alive = 0;
             can_free = can_free_fish(in_obj);
         }
@@ -197,8 +195,8 @@ void DO_PYRANHA(obj_t *in_obj)
         for (i = 0; i < nb_obj; i++) {
             if (cur_obj->type == TYPE_FISH && cur_obj->init_x == in_obj->init_x &&
                 !(cur_obj->is_active)) {
-                cur_obj->flags.alive = 1;
                 cur_obj->is_active = 1;
+                cur_obj->flags.alive = 1;
                 cur_obj->y = ymap + SCREEN_HEIGHT;
                 cur_obj->x = in_obj->init_x;
                 if (cur_obj->y + cur_obj->offset_by > ((mp.height - 1) << 4)) {
