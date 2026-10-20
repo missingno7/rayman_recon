@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -42,7 +43,14 @@ def dump_json(path, obj):
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
         json.dump(obj, f, indent=1, sort_keys=False)
         f.write("\n")
-    os.replace(tmp, path)
+    for attempt in range(20):          # Windows: a concurrent reader can hold the target open briefly
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if attempt == 19:
+                raise
+            time.sleep(0.25)
 
 
 def oracle(name):

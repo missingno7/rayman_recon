@@ -125,4 +125,20 @@ typedef struct save_state_t {
     u8 field_25b;          /* unknown; size 604 = save2 - save1 (2:3eae8 - 2:3e88c) = Android */
 } save_state_t;
 
+typedef struct display_item_t {   /* 216 bytes; text_to_display 2:3c4a0 is [11] (next global level_alw 2:3cde8) */
+    char text[200];
+    s16 centered_x_pos;
+    s16 centered_y_pos;
+    s16 width;
+    s16 height;
+    s16 xpos;
+    s16 ypos;
+    u8 font_size;
+    u8 field_D5;
+    u8 is_fond;
+    s8 color;
+} display_item_t;
+
+extern display_item_t text_to_display[11];
+
 #endif

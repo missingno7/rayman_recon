@@ -77,19 +77,6 @@ typedef unsigned char bool;
 #define eta_flags_0x10_anim_reverse 0x10
 #define flags1_0x10_move_x 0x1000
 #define flags1_0x20_move_y 0x2000
-typedef struct display_item_t {
-    char text[200];
-    s16 centered_x_pos;
-    s16 centered_y_pos;
-    s16 width;
-    s16 height;
-    s16 xpos;
-    s16 ypos;
-    u8 font_size;
-    u8 field_D5;
-    u8 is_fond;
-    s8 color;
-} display_item_t;
 extern u8 horloge[25];
 extern level_t level;
 extern u32 saveobj[16];

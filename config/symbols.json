@@ -4540,9 +4540,10 @@
    },
    "text_to_display": {
     "addr": "2:3c4a0",
-    "type": "display_item_t[10]",
+    "type": "display_item_t[11]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+    "evidence": "DOS: 11 x 216 bytes up to level_alw 2:3cde8; INIT_TEXT_TO_DISPLAY writes [1..10], menu code writes [0] (mov edi,2:3c4a0), worldmap writes [1] (2:3c578). Rayverse declares [10] (its loop overflows).",
+    "dos_size_evidence": "2376 bytes = 2:3cde8 - 2:3c4a0; Android 4160 (different struct packing/count)"
    },
    "finBosslevel": {
     "addr": "2:3f81e",

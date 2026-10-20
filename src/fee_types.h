@@ -4,19 +4,6 @@
 #include "rtypes.h"
 
 /* Local DOS layouts used by fee.c; the shared obj_t/game_t layouts stay in src/include. */
-typedef struct fee_display_item_t {
-    char text[200];
-    s16 centered_x_pos;
-    s16 centered_y_pos;
-    s16 width;
-    s16 height;
-    s16 xpos;
-    s16 ypos;
-    u8 font_size;
-    u8 field_D5;
-    u8 is_fond;
-    s8 color;
-} fee_display_item_t;
 
 typedef struct fee_options_jeu_t {
     s32 (*test_fire1)(void);

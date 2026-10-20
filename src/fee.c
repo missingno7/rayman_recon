@@ -22,7 +22,7 @@ extern u8 ModeDemo;
 extern fee_record_t record;
 extern char *language_txt[300];
 extern fee_options_jeu_t options_jeu;
-extern fee_display_item_t text_to_display[11];
+extern display_item_t text_to_display[11];
 extern rayevts_t RayEvts;
 extern s16 png_or_fee_id;
 extern s16 decalage_en_cours;
@@ -37,7 +37,7 @@ extern u8 display_txt_fee;
 extern u8 ray_in_fee_zone;
 
 void INIT_TEXT_TO_DISPLAY(void);
-void INIT_TXT_BOX(fee_display_item_t *box);
+void INIT_TXT_BOX(display_item_t *box);
 void Deter_Option_Caract(char *text, s16 key, s16 offset);
 void add_alwobj(obj_t *obj);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
@@ -48,7 +48,7 @@ u8 EOA(obj_t *obj);
 //39210
 void INIT_TXT_FEE(void) {
     s16 i;
-    fee_display_item_t *item;
+    display_item_t *item;
 
     for (i = 0; i <= 9; ++i) {
         item = &text_to_display[i + 1];
