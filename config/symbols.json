@@ -2486,6 +2486,221 @@
     "addr": "1:1ed74",
     "name": "RAYVERSE",
     "evidence": "Rayverse collision.c; DOS entry at 1:1ed74"
+   },
+   "obj_jump": {
+    "addr": "1:1f224",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_MOVING_PLATFORM_COMMAND": {
+    "addr": "1:1f2fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DoPTGRAPPINPoingCollision": {
+    "addr": "1:1f378",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_ONE_CMD_WAIT": {
+    "addr": "1:1f44c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_ONE_CMD_LR_ATTENTE": {
+    "addr": "1:1f488",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_ONE_CMD_UPDOWN": {
+    "addr": "1:1f594",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "special_pour_liv": {
+    "addr": "1:1f63c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_ROLL_EYES": {
+    "addr": "1:1f714",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DoKillingEyesPoingCollision": {
+    "addr": "1:1f978",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "YaUnBloc": {
+    "addr": "1:1f9b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_BAG1_COMMAND": {
+    "addr": "1:1fbf4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DoRaymanBag1Collision": {
+    "addr": "1:1fc64",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "MarCoince": {
+    "addr": "1:1fcb0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_MOVE_MARACAS_COMMAND": {
+    "addr": "1:1ffdc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_FLASH_COMMAND": {
+    "addr": "1:201a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_WLKNOT_COMMAND": {
+    "addr": "1:20260",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "ACTIVE_L_EAU": {
+    "addr": "1:20318",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_EAU_QUI_MONTE": {
+    "addr": "1:20490",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "allocateOtherPosts": {
+    "addr": "1:2076c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "doHerseCommand": {
+    "addr": "1:2088c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "doBlackRaymanCommand": {
+    "addr": "1:20908",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "doBlKRayRaymanCollision": {
+    "addr": "1:20be4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_POELLE_COMMAND": {
+    "addr": "1:20bf8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_CORDE_COMMAND": {
+    "addr": "1:20ea8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_PAC_COMMAND": {
+    "addr": "1:21060",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_CFUMEE_COMMAND": {
+    "addr": "1:210f8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_NOVA2_COMMAND": {
+    "addr": "1:21190",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "doShipCommand": {
+    "addr": "1:21208",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_DROP_COMMAND": {
+    "addr": "1:21400",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "move_fruit_in_water": {
+    "addr": "1:214a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_FALLING_OBJ_CMD": {
+    "addr": "1:215f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DoFallingObjPoingCollision": {
+    "addr": "1:2167c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_BLKTOON_EYES_CMD": {
+    "addr": "1:2171c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "DO_RAY_POS_CMD": {
+    "addr": "1:21768",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c body; tools/xref.py and tools/tumap.py object order"
+   },
+   "SET_RAY_BALANCE": {
+    "addr": "1:5f29c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref collision call; DOS target verified by tools/xref.py"
+   },
+   "Ray_RayEcrase": {
+    "addr": "1:4b378",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "RAY_DEAD": {
+    "addr": "1:601a8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "skipOneCommand": {
+    "addr": "1:51180",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "guetteurFollowsShip": {
+    "addr": "1:2db68",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "ngaweTriesToGrabShip": {
+    "addr": "1:4d670",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "suppressFromLinkList": {
+    "addr": "1:497fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "MOVE_OBJECT": {
+    "addr": "1:48084",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "REINIT_OBJECT": {
+    "addr": "1:50288",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref call; DOS target from tools/xref.py"
    }
   },
   "data": {
@@ -5400,6 +5615,42 @@
     "name": "RAYVERSE",
     "type": "s16",
     "evidence": "Rayverse data.c //CF8A4; Android .bss size 2"
+   },
+   "rayStack": {
+    "addr": "2:3f026",
+    "name": "RAYVERSE",
+    "type": "ray_stack_t[101]",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "SauveRayEvts": {
+    "addr": "2:3f818",
+    "name": "RAYVERSE",
+    "type": "rayevts_t",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "id_obj_grapped": {
+    "addr": "2:3f842",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "scroll_y": {
+    "addr": "2:3f8ba",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "black_fist_obj_id": {
+    "addr": "2:3f8be",
+    "name": "RAYVERSE",
+    "type": "u16",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+   },
+   "ray_on_poelle": {
+    "addr": "2:3fa54",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked"
    }
   }
  }
