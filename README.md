@@ -44,6 +44,8 @@ python -m unittest discover -s tests     # verifier self-tests
 python tools/status.py                   # progress derived from config/units.json + last verify report
 python tools/promote.py OVERLAY.json [OLD=NEW]      # integrator: merge worker bindings (refuses conflicts/overlaps)
 python tools/promote.py --unit NAME src/X.c         # integrator: register a unit with freshly measured statuses
+python tools/seed.py draft 14e90 15e60      # seed an untouched object from PS1/Rayverse C into a draft unit (docs/SEEDING.md)
+python tools/seed.py try NAME           # seed one function, compile in context, diagnose against the oracle
 python tools/wpack.py verify             # one-off: unpack the Watcom 10.5 CD install set (provisioning, docs/TOOLCHAIN.md)
 ```
 `--oracle dos_v112_us` selects the secondary oracle for `libscan`, `disasm`, `tumap`, `match`.
