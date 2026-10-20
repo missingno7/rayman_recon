@@ -3676,6 +3676,111 @@
     "addr": "1:31cb0",
     "name": "ANDROID",
     "evidence": "Android symbol TOUCHE; DOS call at 1:187de"
+   },
+   "ChangeJumelleVariable": {
+    "addr": "1:3368c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "plot2linejumelle": {
+    "addr": "1:32930",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaZoomAmpJumelle": {
+    "addr": "1:33730",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaSizeJumelle": {
+    "addr": "1:330fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "DefaultJumelleVariable": {
+    "addr": "1:33038",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaPosYJumelleWithoutLimit": {
+    "addr": "1:33300",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "MoveRayInWorldMap": {
+    "addr": "1:34524",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "PrepareJumelleZoom": {
+    "addr": "1:337fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "CalculVitesseJumelle": {
+    "addr": "1:3314c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaPosXJumelleWithoutLimit": {
+    "addr": "1:33230",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "CalcObjPosInWorldMap": {
+    "addr": "1:344d4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "DisplayJumellesNormal": {
+    "addr": "1:32e1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "InitMatriceJumelle": {
+    "addr": "1:32ec4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaPosXJumelleWithLimit": {
+    "addr": "1:333d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "ChangeDeltaPosYJumelleWithLimit": {
+    "addr": "1:33520",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "RecaleRayPosInJumelle": {
+    "addr": "1:33a50",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "DisplayJumellesFondNormal": {
+    "addr": "1:33dbc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "DoScrollInWorldMap": {
+    "addr": "1:33e3c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse jumelle.c address annotation; called targets re-used from config/symbols.json"
+   },
+   "DisplayAnyPictureNormal": {
+    "addr": "1:04c19",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target from disasm_DisplayJumellesFondNormal.txt; Rayverse call site and name"
+   },
+   "JumelleCalloc": {
+    "addr": "1:6fbbc",
+    "name": "INVENTED",
+    "evidence": "DOS helper disassembly at 1:6fbbc swaps count and size registers before calling the allocator"
+   },
+   "JumelleFreeArray": {
+    "addr": "1:6fbcc",
+    "name": "INVENTED",
+    "evidence": "DOS helper disassembly at 1:6fbcc frees the pointed-to allocation and clears the pointer"
    }
   },
   "data": {
@@ -6981,6 +7086,204 @@
     "type": "u8",
     "name": "INVENTED",
     "evidence": "DOS byte comparison at 1:17cac and 1:17f06; Android name query and Rayverse data.c lookup returned no symbol"
+   },
+   "ChangeJumelleSizeOK": {
+    "addr": "2:3fa2f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "HauteurJumelle": {
+    "addr": "2:3d0ac",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleEffetAutorise": {
+    "addr": "2:3fa32",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumellePosX": {
+    "addr": "2:3d0c4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumellePosY": {
+    "addr": "2:3d0c0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleXMin": {
+    "addr": "2:3d0e4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleYMin": {
+    "addr": "2:3d0dc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleZoomActif": {
+    "addr": "2:3fa30",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleZoomAmp": {
+    "addr": "2:3d0b4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "LargeurJumelle": {
+    "addr": "2:3d0b0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ModeAutoJumelle": {
+    "addr": "2:3fa2e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ModeAutoJumelleZoomAmp": {
+    "addr": "2:50cfc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ParamZoomChange": {
+    "addr": "2:3fa31",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PositionJumelleDemandeX": {
+    "addr": "2:50ce0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PositionJumelleDemandeY": {
+    "addr": "2:50cdc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PositionJumelleX16": {
+    "addr": "2:50ce8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PositionJumelleY16": {
+    "addr": "2:50ce4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PositionStageNameCalcule": {
+    "addr": "2:3fa2d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "RayonJumelle": {
+    "addr": "2:3d0ec",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "Xmap16": {
+    "addr": "2:50cec",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "Ymap16": {
+    "addr": "2:50cf0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "DistPointX": {
+    "addr": "2:50d08",
+    "type": "s32 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "DistPointY": {
+    "addr": "2:50d04",
+    "type": "s32 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ExpPoint": {
+    "addr": "2:50d10",
+    "type": "s32 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "JumelleZoomDef": {
+    "addr": "2:3d0c8",
+    "type": "s32 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "WidthNworld": {
+    "addr": "2:3f760",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "HeightNworld": {
+    "addr": "2:3f75e",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "CompteurJumelle": {
+    "addr": "2:50d0c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ModeAutoRayonJumelle": {
+    "addr": "2:50d00",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ModeAutoPosXJumelle": {
+    "addr": "2:50cf4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "ModeAutoPosYJumelle": {
+    "addr": "2:50cf8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "EffetBufferNormal": {
+    "addr": "2:3d130",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
+   },
+   "PLAN2BIT": {
+    "addr": "2:3d828",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; Android size checked; DOS references in jumelle.c confirm address/width"
    }
   }
  }
