@@ -77,6 +77,9 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   "extra `mov eax,eax`" was the alignment no-op before the `ret` of a missing empty function, start_cd_continue
   (1:0d024; DOS caller MAIN_CONTINUE_PRG 1:5a7ea; name from Android + PS1). Watcom falls through to the shared `ret`.
   Lesson: an unexplained no-op before `ret` can mean a missing (empty) function, not a codegen quirk.
+- **Identical adjacent function bodies are merged** [PROVEN, objupdate1]: `u8 readNoArg(obj_t*){return 0;}` followed
+  by an identical `skipNoArg` compile to one `xor al,al; ret` at 1:50afc; wcc386 emits readNoArg as a size-0 public at
+  the same offset. Two C functions, one address - the binding is a compiler alias, not a duplicate symbol.
 
 ## Negative results (keep)
 - Before start_cd_continue was found, ~40 variants of start_cd_gameover itself failed (return types, conventions,

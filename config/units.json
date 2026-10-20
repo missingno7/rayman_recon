@@ -3839,6 +3839,335 @@
      ]
     }
    }
+  },
+  "objupdate1": {
+   "source": "src/objupdate1.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "popCmdContext": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "char2short": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readNoArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipNoArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readOneArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readTestArgs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readGoXYargs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readSpeedArgs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readInvalidArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipOneArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipTestArgs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipGoXYArgs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipSpeedArgs": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_SELF_HANDLED": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipInvalidArg": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_11_GO_LABEL": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_19_GO_WAITSTATE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_25_RESERVED_GO_GOSUB": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_26_RESERVED_GO_BRANCHTRUE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_27_RESERVED_GO_BRANCHFALSE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_28_RESERVED_GO_SKIPTRUE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_29_RESERVED_GO_SKIPFALSE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_21_GO_X": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_22_GO_Y": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_12_GO_GOTO": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_8_GO_STATE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_5_GO_SUBSTATE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_6_GO_SKIP": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_9_GO_PREPARELOOP": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_13_GO_GOSUB": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_14_GO_RETURN": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_10_GO_DOLOOP": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_33_INVALID_CMD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_15_GO_BRANCHTRUE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_16_GO_BRANCHFALSE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_31_GO_SKIPTRUE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_32_GO_SKIPFALSE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_18_GO_SETTEST": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "handle_17_GO_TEST": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "readOneCommand": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipOneCommand": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "GET_OBJ_CMD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "pushCmdContext": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "skipToLabel": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "pushToLabel": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
   }
  }
 }

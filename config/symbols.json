@@ -2701,6 +2701,36 @@
     "addr": "1:50288",
     "name": "RAYVERSE",
     "evidence": "Rayverse xref call; DOS target from tools/xref.py"
+   },
+   "popCmdContext": {
+    "addr": "1:50ad0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //60AD0; DOS boundary"
+   },
+   "char2short": {
+    "addr": "1:50ae4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //60AE4; DOS boundary"
+   },
+   "readOneCommand": {
+    "addr": "1:51154",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //61154; xref and indirect dispatch table"
+   },
+   "GET_OBJ_CMD": {
+    "addr": "1:511ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //611AC; xref and indirect dispatch table"
+   },
+   "pushCmdContext": {
+    "addr": "1:511f4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //611F4; call targets in object"
+   },
+   "pushToLabel": {
+    "addr": "1:512c0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c //612C0; xref"
    }
   },
   "data": {
