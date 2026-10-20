@@ -62,6 +62,10 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   changes the saved-register set and turns `movsx ecx,ax; ...; add ecx,0x100` into `cwde; lea ecx,[eax+0x100]`.
   Rayverse/PS1/Android widen return types; only the DOS code decides. When a function's first difference is in the
   register-save prologue or a sign extension, test narrower return/parameter types first.
+- **Comparison operands are evaluated in source order** [PROVEN, basic obj_hurt]: the original loads
+  `target->hit_points` first, i.e. `if (target->hit_points < poing.damage)`; Rayverse's equivalent
+  `poing.damage > target->hit_points` swaps the loads and the branch (`jbe` vs `jae`). Read the operand order and the
+  branch condition off the binary.
 - **Index operand order affects register allocation** [PROVEN, bonus calc_left_time]: `index = level_index +
   world_index` vs the reverse selects ESI vs EDI at entry.
 

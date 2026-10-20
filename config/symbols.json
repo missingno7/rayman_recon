@@ -801,6 +801,291 @@
     "addr": "1:0d810",
     "name": "RAYVERSE",
     "evidence": "Direct DOS call from DoPoissonBleuRaymanZDD"
+   },
+   "save_objects_flags": {
+    "addr": "1:0d0ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //20; PS1 src/collision/bit_util.c"
+   },
+   "restore_objects_flags": {
+    "addr": "1:0d15c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //28; PS1 src/collision/bit_util.c"
+   },
+   "snapToSprite": {
+    "addr": "1:0d204",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //42; PS1 src/collision/bit_util.c"
+   },
+   "findfirstInactiveObject": {
+    "addr": "1:0d4f4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //145; PS1 src/collision/bit_util.c"
+   },
+   "set_proj_center": {
+    "addr": "1:0d560",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //161; PS1 src/collision/proj.c"
+   },
+   "get_proj_dist": {
+    "addr": "1:0d570",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //167; PS1 src/collision/proj.c"
+   },
+   "get_proj_dist2": {
+    "addr": "1:0d5b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //178; PS1 src/collision/proj.c"
+   },
+   "get_proj_x": {
+    "addr": "1:0d5d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //183; PS1 src/collision/proj.c"
+   },
+   "get_proj_y": {
+    "addr": "1:0d614",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //190; PS1 src/collision/proj.c"
+   },
+   "set_zoom_mode": {
+    "addr": "1:0d650",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //197; PS1 src/collision/proj.c"
+   },
+   "inverse_proj_x": {
+    "addr": "1:0d658",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //202; PS1 src/collision/proj.c"
+   },
+   "inverse_proj_y": {
+    "addr": "1:0d690",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //207; PS1 src/collision/proj.c"
+   },
+   "vblToEOA": {
+    "addr": "1:0d6c8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //212; PS1 src/collision/etat.c"
+   },
+   "add_actobj": {
+    "addr": "1:0d7d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //235; PS1 src/collision/etat.c"
+   },
+   "CALC_FOLLOW_SPRITE_SPEED": {
+    "addr": "1:0db04",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //428; PS1 src/collision/block_22C84.c"
+   },
+   "GET_RAY_ZDC": {
+    "addr": "1:0dcfc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //483; PS1 src/collision/block_22C84.c"
+   },
+   "GET_BB1_ZDCs": {
+    "addr": "1:0dec0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //542; PS1 src/collision/block_22C84.c"
+   },
+   "OBJ_IN_ZONE": {
+    "addr": "1:0dff4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //573; PS1 src/collision/block_22C84.c"
+   },
+   "makeUturn": {
+    "addr": "1:0e05c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //593; PS1 src/collision/block_22C84.c"
+   },
+   "BTYP": {
+    "addr": "1:0e588",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //812; PS1 src/collision/etat.c"
+   },
+   "calc_btyp_square": {
+    "addr": "1:0e608",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //821; PS1 src/collision/block_22C84.c"
+   },
+   "DO_OBJ_REBOND_EN_X": {
+    "addr": "1:0e76c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //851; PS1 src/collision/block_22C84.c"
+   },
+   "calc_btyp": {
+    "addr": "1:0e790",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //858; PS1 src/collision/block_22C84.c"
+   },
+   "init_obj_in_the_air": {
+    "addr": "1:0eaa8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //979; PS1 src/obj_util.c"
+   },
+   "make_my_fruit_go_down": {
+    "addr": "1:0eab4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //985; PS1 src/obj_util.c"
+   },
+   "Projectil_to_RM": {
+    "addr": "1:0eba0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1032; PS1 src/obj_util.c"
+   },
+   "del_actobj": {
+    "addr": "1:0ee18",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1106; PS1 src/obj_util.c"
+   },
+   "calc_let_Width": {
+    "addr": "1:0eeb8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1111; PS1 src/draw/text_18118.c"
+   },
+   "calc_let_Width2": {
+    "addr": "1:0ef1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1140; PS1 no PS1 C body"
+   },
+   "INIT_TEXT_TO_DISPLAY": {
+    "addr": "1:0ef80",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1167; PS1 src/text_24E10.c"
+   },
+   "deter_num_let": {
+    "addr": "1:0efb4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1176; PS1 src/text_24E10.c"
+   },
+   "calc_num_let_spr": {
+    "addr": "1:0f194",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1223; PS1 src/text_24E10.c"
+   },
+   "calc_largmax_text": {
+    "addr": "1:0f1b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1228; PS1 src/text_24E10.c"
+   },
+   "INIT_TXT_BOX": {
+    "addr": "1:0f21c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1252; PS1 src/text_24E10.c"
+   },
+   "Deter_Option_Caract": {
+    "addr": "1:0f4a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1331; PS1 src/unknown/2539C.c"
+   },
+   "SwapAB": {
+    "addr": "1:0f50c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1361; PS1 src/unknown/2539C.c"
+   },
+   "Bresenham": {
+    "addr": "1:0f520",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1369; PS1 src/unknown/2539C.c"
+   },
+   "init_finBossLevel": {
+    "addr": "1:0f880",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1593; PS1 src/unknown/2539C.c"
+   },
+   "Change_Wait_Anim": {
+    "addr": "1:0f8a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1598; PS1 src/unknown/2539C.c"
+   },
+   "FatalError": {
+    "addr": "1:0f988",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1640; PS1 no PS1 C body"
+   },
+   "sprite_of_ref": {
+    "addr": "1:0fa00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse basic.c //1650; PS1 no PS1 C body"
+   },
+   "InitTextMode": {
+    "addr": "1:2d9d4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse frame.c:602; xref entry 1:2d9d4"
+   },
+   "bloc_floor": {
+    "addr": "1:14ec8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blocs.c:15; xref entry 1:14ec8"
+   },
+   "instantSpeed": {
+    "addr": "1:45e60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moteur.c:190; xref entry 1:45e60"
+   },
+   "exit": {
+    "addr": "1:70512",
+    "name": "INVENTED",
+    "evidence": "FatalError DOS sequence loads EAX=-1 then calls 1:70512; Watcom register exit(int) call target inferred from the terminating call sequence."
+   },
+   "mite_esquive_poing": {
+    "addr": "1:42d30",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //52D30; xref entry 1:42d30"
+   },
+   "HAS_MIT_JUMP": {
+    "addr": "1:42e64",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //52E64; xref entry 1:42e64"
+   },
+   "ray_over_mit": {
+    "addr": "1:42ed0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //52ED0; xref entry 1:42ed0"
+   },
+   "fix_mit_Xspeed": {
+    "addr": "1:42ef4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //52EF4; xref entry 1:42ef4"
+   },
+   "DO_MIT_ATTAK": {
+    "addr": "1:43068",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //53068; xref entry 1:43068"
+   },
+   "IS_MIT_PAF": {
+    "addr": "1:43320",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //53320; xref entry 1:43320"
+   },
+   "DO_MIT_COMMAND": {
+    "addr": "1:4342c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //5342C; xref entry 1:4342c"
+   },
+   "DoMitePoingCollision": {
+    "addr": "1:43838",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //53838; xref entry 1:43838"
+   },
+   "DO_MITE2_COMMAND": {
+    "addr": "1:4387c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //5387C; xref entry 1:4387c"
+   },
+   "DoMite2PoingCollision": {
+    "addr": "1:43a04",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //53A04; xref entry 1:43a04"
+   },
+   "DO_MITE2_ESQUIVE": {
+    "addr": "1:43a68",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse mite.c //53A68; xref entry 1:43a68"
+   },
+   "calc_esquive_poing": {
+    "addr": "1:6bc60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse special.c; direct DOS call target in this unit"
    }
   },
   "data": {
@@ -1608,6 +1893,84 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CF88A; Android poing_obj_id size 2 bytes; DOS passes the id to del_alwobj"
+   },
+   "saveobj": {
+    "addr": "2:3ce08",
+    "type": "u32[16]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "PROJ_CENTER_X": {
+    "addr": "2:3f838",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "PROJ_CENTER_Y": {
+    "addr": "2:3f836",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "zoom_mode": {
+    "addr": "2:3fa63",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "ray_last_ground_btyp": {
+    "addr": "2:3fa72",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "ray_mode": {
+    "addr": "2:3f868",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "alpha_numbers": {
+    "addr": "2:3e644",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "alpha": {
+    "addr": "2:3e6e0",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "alpha2": {
+    "addr": "2:3edc8",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "text_to_display": {
+    "addr": "2:3c4a0",
+    "type": "display_item_t[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+   },
+   "finBosslevel": {
+    "addr": "2:3f81e",
+    "type": "finbosslevel_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c finBosslevel; DOS access is to the same object at 2:3f81e"
+   },
+   "first_boss_meet": {
+    "addr": "2:3fa71",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c first_boss_meet; DOS access is to the same object at 2:3fa71"
+   },
+   "level_obj": {
+    "addr": "2:3cdf8",
+    "type": "level_obj_t",
+    "name": "RAYVERSE",
+    "evidence": "DOS add_alwobj reads obj_ids pointer at 2:3cdf8 and count at 2:3cdfc; local Rayverse level_obj_t layout places them at +0/+4 (data.c //CCDFC points at the count field)."
    }
   }
  }
