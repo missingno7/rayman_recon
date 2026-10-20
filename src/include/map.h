@@ -27,7 +27,9 @@ typedef struct map_data_t {
 typedef union block_flags_t {
     u8 raw;
     struct {
-        u8 unused0 : 5;
+        u8 unused0 : 1;
+        u8 solid : 1;                  /* bit 1 - STRONG: basic calc_btyp extracts it with shl 6 / shr 7 */
+        u8 unused2 : 3;
         u8 chdir : 1;
         u8 unused1 : 2;
     } bits;

@@ -83,6 +83,11 @@ belong to code objects in `_TEXT` link order - e.g. RandomIndex (2:5548c) is alo
 src/rand.c, whose `_BSS` now VERIFIES. BSS verification is layout-only (contents are zero): every public bound, one
 implied base, and no other bound global inside the span (tests/test_match.py BssLayoutTests).
 
+- **Header declarations count for the BSS order** [PROVEN, 2026-10-20]: adding one `extern` (flags) or one typedef
+  (font_t) to game.h moved bss_palettes' 25-declaration index groups and broke its VERIFIED `_BSS` layout; the
+  palette unit now includes only `palette.h`. The original data TU's header contents therefore shape its BSS order -
+  reconstructing the central BSS block needs the original declaration count/order, not just the data definitions.
+
 ## Open
 - Central data TU(s): reconstruct declaration order (index groups) from the BSS layout + names; flag globals whose
   hash breaks an ascending run as candidates for wrong names.

@@ -461,7 +461,7 @@ void DO_STAGE_NAMES(void) {
                     VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + myRand(32) - 16;
                 } while (!VitesseXStageNameLevel[i]);
                 VitesseYStageNameLevel[i] = -16 - myRand(32);
-                x += sprite_level->sprite_pos + (sprite_level->flags & 15) - spacing;
+                x += sprite_level->sprite_pos.raw + (sprite_level->flags & 15) - spacing;
             }
         }
         item_world = &text_to_display[3];
@@ -492,7 +492,7 @@ void DO_STAGE_NAMES(void) {
                     VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + myRand(32) - 16;
                 } while (!VitesseXStageNameWorld[i]);
                 VitesseYStageNameWorld[i] = -16 - myRand(32);
-                x += sprite_world->sprite_pos + (sprite_world->flags & 15) - spacing;
+                x += sprite_world->sprite_pos.raw + (sprite_world->flags & 15) - spacing;
             }
         }
         PositionStageNameCalcule = 1;

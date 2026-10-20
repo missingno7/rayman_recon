@@ -4956,7 +4956,8 @@
     "addr": "2:257c",
     "size": 1048,
     "name": "ANDROID",
-    "evidence": "Android x86 .data/.rodata object 'flags' (1048 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+    "evidence": "Android x86 .data/.rodata object 'flags' (1048 bytes) found once in DOS initialised data by content (tools/androiddata.py)",
+    "type": "obj_type_flags_t[262]"
    },
    "zonediffx": {
     "addr": "2:2996",
@@ -5543,21 +5544,24 @@
    },
    "alpha_numbers": {
     "addr": "2:3e644",
-    "type": "obj_t*",
+    "type": "font_t",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation",
+    "dos_size_evidence": "10 bytes packed: sprites +0, img_buffer +4, s16 nb_sprites +8 (LOAD_ALL_FIX 1:36b77..1:36bde, display_text); Android 12 (natural alignment)"
    },
    "alpha": {
     "addr": "2:3e6e0",
-    "type": "obj_t*",
+    "type": "font_t",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation",
+    "dos_size_evidence": "10 bytes packed: sprites +0, img_buffer +4, s16 nb_sprites +8 (LOAD_ALL_FIX 1:36b77..1:36bde, display_text); Android 12 (natural alignment)"
    },
    "alpha2": {
     "addr": "2:3edc8",
-    "type": "obj_t*",
+    "type": "font_t",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation"
+    "evidence": "Rayverse data.c address/type; DOS reference pending exact-width confirmation",
+    "dos_size_evidence": "10 bytes packed: sprites +0, img_buffer +4, s16 nb_sprites +8 (LOAD_ALL_FIX 1:36b77..1:36bde, display_text); Android 12 (natural alignment)"
    },
    "text_to_display": {
     "addr": "2:3c4a0",

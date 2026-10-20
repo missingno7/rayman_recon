@@ -33,7 +33,10 @@ typedef struct sprite_t {
     u8 outer_height;
     u8 inner_width;
     u8 inner_height;
-    u8 sprite_pos;
+    union {                            /* low nibble x, high nibble y offset (calc_let_Width2: bitfield read) */
+        u8 raw;
+        struct { u8 x : 4; u8 y : 4; } bits;
+    } sprite_pos;
     u8 color;
     u8 flags;
 } sprite_t;

@@ -1,6 +1,7 @@
 /* blocs.c (1:14e90..1:15e60). Names RAYVERSE (blocs1_* helpers from Rayverse); seeded by tools/seed.py, worker tu_blocs. finish pass fin_blocs; see config/units.json. Watcom places switch jump tables in _TEXT before the function that uses them. */
 #include "obj.h"
 #include "game.h"
+extern obj_type_flags_t flags[262];
 #include "map.h"
 #ifndef ashr16
 #define ashr16(v, b) ((v) >> (b))
@@ -40,7 +41,6 @@
 #define TYPE_STONEDOG2 122
 #define TYPE_STONEWOMAN 172
 extern u8 block_flags[64];
-extern u32 flags[262];
 extern u8 hand_btyp;
 extern u8 hand_btypd;
 extern u8 hand_btypg;
@@ -337,7 +337,7 @@ u8 calc_typ_travd(obj_t* obj, u8 a2) {
         if (!a2)
         {
             x_offs_2 = obj->speed_x;
-            if (flags[obj->type] & flags1_0x10_move_x)
+            if (flags[obj->type].raw & flags1_0x10_move_x)
                 x_offs_2 /= 16;
             obj->x -= x_offs_2;
         }
@@ -464,7 +464,7 @@ u8 TEST_IS_ON_RESSORT_BLOC(obj_t* obj) {
     if (obj->btypes[0] == BTYP_RESSORT && obj->speed_y >= 0) {
         if (obj->type == TYPE_23_RAYMAN) {
             result = 1;
-        } else if (flags[obj->type] & flags2_8_can_jump) {
+        } else if (flags[obj->type].raw & flags2_8_can_jump) {
             result = 1;
         }
     }
@@ -484,7 +484,7 @@ u8 IS_ON_RESSORT_BLOC(obj_t* obj) {
             ray.speed_y -= 3;
             jump_time = 12;
             allocatePaillette(&ray);
-        } else if ((flags[obj->type] & flags2_8_can_jump) != 0) {
+        } else if ((flags[obj->type].raw & flags2_8_can_jump) != 0) {
             result = 1;
             obj_jump(obj);
         }
@@ -518,8 +518,8 @@ void CALC_MOV_ON_BLOC(obj_t* obj) {
 
     /*var_s2_1 = saved_reg_s2;*/
     temp_a0 = obj->type * 4;
-    if ((flags[obj->type] & flags2_1_check_tile_type) || obj->type == TYPE_23_RAYMAN) {
-        if ((flags[obj->type] & flags1_0x10_move_x) && obj->type != TYPE_23_RAYMAN) {
+    if ((flags[obj->type].raw & flags2_1_check_tile_type) || obj->type == TYPE_23_RAYMAN) {
+        if ((flags[obj->type].raw & flags1_0x10_move_x) && obj->type != TYPE_23_RAYMAN) {
             speed_x = instantSpeed(obj->speed_x);
         } else {
             speed_x = obj->speed_x;

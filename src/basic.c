@@ -1,7 +1,7 @@
 /*
  * Core object/engine helpers (GOG v1.21 object 1:0d070-1:0fa40). File name invented (Rayverse basic.c).
  * The object starts with the 4-byte initialiser constant of deter_num_let's local array (1:0d070); EOA is at 1:0d074.
- * Names: Rayverse/Android. Status per function: config/units.json. Several Rayverse return types were widened in the
+ * Names: Rayverse/Android. Worker statuses: NOTES.md and final.json. Several Rayverse return types were widened in the
  * port (e.g. s16 get_proj_x); DOS widths are used here where the binary proves them.
  */
 #include "obj.h"
@@ -111,8 +111,8 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     }
 
     {
-        switch (((flags[obj_1->type] >> 12) & 1) +
-                ((flags[obj_2->type] >> 12) & 1) * 2
+        switch (flags[obj_1->type].move_x +
+                flags[obj_2->type].move_x * 2
         ) {
             case 0:
                 new_spd_x += obj_2->speed_x;
@@ -130,8 +130,8 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     }
 
     {
-        switch (((flags[obj_1->type] >> 13) & 1) +
-                ((flags[obj_2->type] >> 13) & 1) * 2
+        switch (flags[obj_1->type].move_y +
+                flags[obj_2->type].move_y * 2
         ) {
             case 0:
                 new_spd_y += obj_2->speed_y;
@@ -248,24 +248,28 @@ s16 inverse_proj_y(s16 scale, s16 a2) {
 //1D6C8
 s32 vblToEOA(obj_t* obj, u8 a2) {
     eta_t* eta = get_eta(obj);
-    s32 anim_speed = eta->anim_speed & 15;
-    s32 result = obj->animations[eta->anim_index].frames_count * anim_speed * a2 - horloge[anim_speed] + 1;
-    return (result <= 0) ? 1 : result;
+    s16 anim_speed = eta->anim_speed & 15;
+    s16 duration = anim_speed;
+    s16 result;
+    duration *= obj->animations[eta->anim_index].frames_count;
+    result = duration * a2 - horloge[anim_speed] + 1;
+    if (result > 0) return result;
+    else return 1;
 }
 
 //1D738
 void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h) {
     ASSERT(obj->anim_index != 255);
-    anim_t* anim = obj->animations + obj->anim_index;
-    anim_frame_t* frame = anim->frames + obj->anim_frame;
+    anim_frame_t* frame = obj->animations[obj->anim_index].frames;
+    frame += obj->anim_frame;
     *w = frame->width;
     *h = frame->height;
     if (!obj->flags.flip_x) {
         *x = obj->x + frame->x;
     } else {
-        *x = 2 * obj->offset_bx + obj->x - frame->x - *w;
+        *x = (s16)obj->x + 2 * obj->offset_bx - frame->x - *w;
     }
-    *y = frame->y + obj->y;
+    *y = obj->y + frame->y;
 }
 
 //1D7D8
@@ -301,9 +305,6 @@ s16 get_center_x(obj_t* obj) {
     s16 res;
 
     switch (obj->type) {
-        case TYPE_MOVE_MARTEAU:
-            res = 70;
-            break;
         case TYPE_MOVE_PLAT:
             switch (num_world) {
                 case 1:
@@ -334,6 +335,9 @@ s16 get_center_x(obj_t* obj) {
             break;
         case TYPE_MOVE_RUBIS:
             res = 18;
+            break;
+        case TYPE_MOVE_MARTEAU:
+            res = 70;
             break;
         case TYPE_MOVE_START_PLAT:
             res = 128;
@@ -378,12 +382,6 @@ s16 get_center_y(obj_t* obj) {
     s16 res;
 
     switch (obj->type) {
-        case TYPE_SPIDER_PLAFOND:
-            res = 90;
-            break;
-        case TYPE_MOVE_MARTEAU:
-            res = 40;
-            break;
         case TYPE_MOVE_PLAT:
             /* TODO: ... why does this work? */
             switch (num_world) {
@@ -416,6 +414,9 @@ s16 get_center_y(obj_t* obj) {
         case TYPE_MOVE_RUBIS:
             res = 18;
             break;
+        case TYPE_MOVE_MARTEAU:
+            res = 40;
+            break;
         case TYPE_MOVE_START_PLAT:
             res = 64;
             break;
@@ -433,15 +434,9 @@ s16 get_center_y(obj_t* obj) {
                     break;
                 default:
                     /* TODO: ??? */
-                    res = 40; // NOTE: added to prevent returning an uninitialized value
+                    /* DOS leaves the return value unassigned for other follow sprites. */
                     break;
             }
-            break;
-        case TYPE_PIRATE_P_45:
-        case TYPE_PIRATE_P_D_45:
-        case TYPE_PIRATE_POELLE:
-        case TYPE_PIRATE_POELLE_D:
-            res = 96;
             break;
         case TYPE_ROULETTE:
         case TYPE_ROULETTE2:
@@ -450,6 +445,15 @@ s16 get_center_y(obj_t* obj) {
             break;
         case TYPE_PT_GRAPPIN:
             res = 32;
+            break;
+        case TYPE_PIRATE_P_45:
+        case TYPE_PIRATE_P_D_45:
+        case TYPE_PIRATE_POELLE:
+        case TYPE_PIRATE_POELLE_D:
+            res = 96;
+            break;
+        case TYPE_SPIDER_PLAFOND:
+            res = 90;
             break;
         default:
             res = 40;
@@ -470,23 +474,21 @@ void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 an
     s32 unk_1;
     s32 x_1;
     s32 x_2;
-    s32 unk_2;
     u8 foll_spr = obj->follow_sprite;
     anim_layer_t* layer_1 = &anim_1->layers[(anim_1->layers_per_frame & 0x3FFF) * obj->anim_frame];
     anim_layer_t* layer_2 = &anim_2->layers[(anim_2->layers_per_frame & 0x3FFF) * anim_frame_2];
 
     width_1 = obj->sprites[layer_1[foll_spr].sprite_index].outer_width;
     if (obj->flags.flip_x) {
-        unk_1 = (u16) obj->x + (obj->offset_bx * 2) - width_1;
+        unk_1 = (obj->offset_bx * 2) - width_1;
         x_2 = unk_1 - layer_2[foll_spr].x;
         x_1 = unk_1 - layer_1[foll_spr].x;
     } else {
-        unk_2 = (u16) obj->x;
-        x_1 = unk_2 + layer_1[foll_spr].x;
-        x_2 = unk_2 + layer_2[foll_spr].x;
+        x_1 = layer_1[foll_spr].x;
+        x_2 = layer_2[foll_spr].x;
     }
-    obj->follow_y = (layer_1[foll_spr].y + obj->y) - (layer_2[foll_spr].y + obj->y);
     obj->follow_x = x_1 - x_2;
+    obj->follow_y = layer_1[foll_spr].y - layer_2[foll_spr].y;
 }
 
 //1DBB4
@@ -507,11 +509,11 @@ s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h) {
         *w = sprite->inner_width;
         *h = sprite->inner_height;
         if (obj->flags.flip_x != ((sprite->flags & 4) != 0)) {
-            *x = obj->x + (obj->offset_bx * 2 - (layer->x + (sprite->sprite_pos & 0xF)) - sprite->outer_width);
+            *x = obj->x + (obj->offset_bx * 2 - (layer->x + (sprite->sprite_pos.raw & 0xF)) - sprite->outer_width);
         } else {
-            *x = obj->x + layer->x + (sprite->sprite_pos & 0xF);
+            *x = obj->x + layer->x + (sprite->sprite_pos.raw & 0xF);
         }
-        *y = layer->y + (sprite->sprite_pos >> 4) + obj->y;
+        *y = layer->y + (sprite->sprite_pos.raw >> 4) + obj->y;
         res = true;
     }
     else
@@ -522,30 +524,28 @@ s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h) {
 //1DCFC
 void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h) {
     /* 23204 80147A04 -O2 -msoft-float */
-    u8 main_etat = obj->main_etat;
-    s32 frame;
+    s16 frame;
 
-    if (obj->eta[main_etat][obj->sub_etat].flags & 0x40)
+    if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x40)
     {
         *x = obj->x + 72;
         *y = obj->y + 64;
         *w = 16;
         *h = 14;
     }
-    else if (main_etat == 5)
+    else if (obj->main_etat == 5)
     {
         *x = obj->x + 72;
         *y = obj->y + 40;
         *w = 16;
         *h = 46;
     }
-    else if (main_etat == 7)
+    else if (obj->main_etat == 7)
     {
         frame = obj->anim_frame;
         if (frame > 32)
             frame -= 32;
-        frame -= 10;
-        if ((s16) frame < 13U)
+        if (frame > 9 && frame < 23)
         {
             *x = obj->x + 64;
             *y = obj->y + 54;
@@ -636,8 +636,7 @@ void makeUturn(obj_t* obj) {
     switch (obj->type)
     {
         case TYPE_BLACKTOON1:
-            foll_spr = obj->follow_sprite;
-            if (foll_spr == 1 || foll_spr == 2 || obj->follow_sprite == 4 || obj->follow_sprite == 7)
+            if (obj->follow_sprite == 1 || obj->follow_sprite == 2 || obj->follow_sprite == 4 || obj->follow_sprite == 7)
             {
                 if (obj->cmd == GO_LEFT)
                 {
@@ -651,18 +650,11 @@ void makeUturn(obj_t* obj) {
                 }
             }
             break;
-        case TYPE_MITE:
-            if (!(obj->main_etat == 0 && obj->sub_etat == 3))
-            {
-                label = 3;
-                obj->follow_id = 0;
-            }
-            break;
         case TYPE_BADGUY1:
             if (
                     !(obj->main_etat == 0 &&
-                      (obj->sub_etat == 3 || obj->sub_etat == 1 || obj->sub_etat == 4 ||
-                       obj->sub_etat == 5 || obj->sub_etat == 6))
+                      (obj->sub_etat == 3 || obj->sub_etat == 1 || obj->sub_etat == 5 ||
+                       obj->sub_etat == 4 || obj->sub_etat == 6))
                     )
             {
                 if (obj->cmd == GO_LEFT)
@@ -774,13 +766,13 @@ void makeUturn(obj_t* obj) {
         case TYPE_SPIDER:
             if (obj->cmd == GO_LEFT)
             {
-                label = 2;
                 obj->flags.flip_x = 1;
+                label = 2;
             }
             else
             {
-                label = 0;
                 obj->flags.flip_x = 0;
+                label = 0;
             }
             break;
         case TYPE_MITE2:
@@ -789,6 +781,7 @@ void makeUturn(obj_t* obj) {
             else
                 obj->flags.flip_x = 0;
 
+        case TYPE_MITE:
             if (!(obj->main_etat == 0 && obj->sub_etat == 3))
             {
                 label = 3;
@@ -824,19 +817,21 @@ void makeUturn(obj_t* obj) {
             }
             break;
         case TYPE_SPIDER_PLAFOND:
-            if (!(obj->main_etat == 0 && (obj->sub_etat == 24 || obj->sub_etat == 18 || obj->sub_etat == 19)))
+            if (obj->main_etat == 0 && obj->sub_etat == 24) break;
+            if (obj->main_etat == 0 && obj->sub_etat == 18) break;
+            if (obj->main_etat == 0 && obj->sub_etat == 19) break;
             {
                 set_main_and_sub_etat(obj, 0, 24);
-                obj->speed_y = 0;
-                obj->speed_x = 0;
                 obj->flags.flip_x = 1 - obj->flags.flip_x;
+                obj->speed_y = 0;
+                obj->speed_x = obj->speed_y;
             }
             break;
     }
 
     if (label != 255) {
         // NOTE: difference with PS1 version
-        if (((flags[obj->type] >> 12) & 1)) {
+        if (flags[obj->type].move_x) {
             obj->x -= instantSpeed(obj->speed_x);
         } else {
             obj->x -= obj->speed_x;
@@ -857,7 +852,7 @@ u8 BTYP(s16 tile_x, s16 tile_y) {
 
 //1E608
 void calc_btyp_square(obj_t* obj) {
-    s16 x_offset;
+    u8 x_offset;
     s16 x;
     s16 y;
     s16 tile_x;
@@ -882,7 +877,7 @@ void calc_btyp_square(obj_t* obj) {
 
     // center
     if (obj->main_etat == 2) {
-        obj->btypes[0] = bloc_floor(BTYP(tile_x, tile_y), x % 16, y % 16);
+        obj->btypes[0] = bloc_floor(BTYP(tile_x, tile_y), x & 15, y & 15);
     } else {
         obj->btypes[0] = BTYP(tile_x, tile_y);
     }
@@ -903,12 +898,12 @@ u8 calc_btyp(obj_t* obj) {
     /* 23F80 80148780 -O2 -msoft-float */
     u8 btyp;
     u8 btypes_1_2_solid;
-    s32 ray_x; s32 ray_y;
-    u8* ray_btypes;
-    u8* new_btyp;
+    s16 x, y;
     u8 foll_spr;
 
     calc_btyp_square(obj);
+    x = obj->offset_bx + (s16)obj->x;
+    y = obj->offset_by + (s16)obj->y;
 
     if (obj->type == TYPE_RAYMAN)
     {
@@ -945,17 +940,17 @@ u8 calc_btyp(obj_t* obj) {
         if (obj->type == TYPE_RAYMAN) {
             btyp = mp.map[ray.ray_dist].tile_type;
         } else {
-            btyp = BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_by) >> 4);
+            btyp = BTYP(x >> 4, y >> 4);
         }
 
         if (obj->main_etat == 2 && !(block_flags[btyp].raw & 2)) {
-            btyp = BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_by + 16) >> 4);
+            btyp = BTYP(x >> 4, (y + 16) >> 4);
         }
 
         if (!(block_flags[btyp].raw & 2)) {
-            btypes_1_2_solid = ((block_flags[obj->btypes[1]].raw & 2) != 0) | (block_flags[obj->btypes[2]].raw & 2);
+            btypes_1_2_solid = block_flags[obj->btypes[1]].bits.solid + 2 * block_flags[obj->btypes[2]].bits.solid;
             if (btypes_1_2_solid == 3) /* both 1 and 2 have solid flag */ {
-                if (((obj->offset_bx + (u16) obj->x) & 0xF) < 8)
+                if (((s16)(x & 0xF)) < 8)
                     btypes_1_2_solid = 1;
                 else
                     btypes_1_2_solid = 2;
@@ -965,13 +960,11 @@ u8 calc_btyp(obj_t* obj) {
                 btypes_1_2_solid--;
                 if (obj->type == TYPE_RAYMAN) {
                     if (ray_last_ground_btyp == true) {
-                        ray_x = ray.x + ray.offset_bx;
                         if (btypes_1_2_solid)
-                            ray_x += 16;
+                            x += 16;
                         else
-                            ray_x -= 16;
-                        ray_y = ray.y + ray.offset_by - 16;
-                        if (!(block_flags[(u8) BTYP(ray_x >> 4, ray_y >> 4)].raw & 2)) {
+                            x -= 16;
+                        if (!(block_flags[(u8) BTYP(x >> 4, (y - 16) >> 4)].raw & 2)) {
                             if (ray.main_etat != 2) {
                                 /* ??? don't understand */
                                 if (btypes_1_2_solid != (ray.flags.flip_x))
@@ -980,12 +973,7 @@ u8 calc_btyp(obj_t* obj) {
                                     obj->param = 1;
                             }
 
-                            ray_btypes = ray.btypes;
-                            if (btypes_1_2_solid)
-                                new_btyp = &ray_btypes[2];
-                            else
-                                new_btyp = &ray_btypes[1];
-                            ray_btypes[0] = *new_btyp;
+                            ray.btypes[0] = ray.btypes[1 + (btypes_1_2_solid != 0)];
                         }
                     }
                 } else {
@@ -1148,33 +1136,37 @@ void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, 
 
 //1EE18
 void del_actobj(obj_t* obj) {
-    s32 i;
+    s16 j;
+    
+    s16 i;
+    obj_t* active;
     obj->is_active = 0;
-    for (i = 0; i < actobj.num_active_objects; ++i) {
-        if (level.objects[actobj.objects[i]].id == obj->id)
-            break;
+    i = 0;
+    active = &level.objects[actobj.objects[i]];
+    while (i < actobj.num_active_objects) {
+        if (active->id == obj->id) break;
+        ++i;
+        active = level.objects + actobj.objects[i];
     }
-    if (i <= actobj.num_active_objects) {
-        for (; i <= actobj.num_active_objects; ++i)
-            actobj.objects[i - 1] = actobj.objects[i];
-        actobj.num_active_objects--;
-    }
+    for (j = i; j <= actobj.num_active_objects; ++j)
+        actobj.objects[j - 1] = actobj.objects[j];
+    actobj.num_active_objects--;
 }
 
 //1EEB8
-s32 calc_let_Width(u8 font_size, u32 num_let) {
+s16 calc_let_Width(u8 font_size, u32 num_let) {
     sprite_t* sprite;
     if (num_let >= 1000) {
-        sprite = alpha_numbers + (num_let - 1000);
+        sprite = alpha_numbers.sprites + (num_let - 1000);
     } else {
         switch (font_size) {
             case 0:
             case 1:
                 if (font_size == 1) num_let += 41;
-                sprite = alpha2 + num_let;
-                return sprite->outer_width;
+                sprite = alpha2.sprites + num_let;
+                break;
             case 2:
-                sprite = alpha + num_let;
+                sprite = alpha.sprites + num_let;
                 break;
         }
     }
@@ -1182,23 +1174,23 @@ s32 calc_let_Width(u8 font_size, u32 num_let) {
 }
 
 //1EF1C
-s32 calc_let_Width2(u8 font_size, u32 num_let) {
+s16 calc_let_Width2(u8 font_size, u32 num_let) {
     sprite_t* sprite;
     if (num_let >= 1000) {
-        sprite = alpha_numbers + (num_let - 1000);
+        sprite = alpha_numbers.sprites + (num_let - 1000);
     } else {
         switch (font_size) {
             case 0:
             case 1:
                 if (font_size == 1) num_let += 41;
-                sprite = alpha2 + num_let;
+                sprite = alpha2.sprites + num_let;
                 break;
             case 2:
-                sprite = alpha + num_let;
+                sprite = alpha.sprites + num_let;
                 break;
         }
     }
-    return (u8)(sprite->sprite_pos & 15) + sprite->inner_width;
+    return sprite->inner_width + sprite->sprite_pos.bits.x;
 }
 
 //1EF80
@@ -1403,226 +1395,110 @@ void SwapAB(s16* a, s16* b) {
     *a = temp;
 }
 
-// Taken from the PS1 decomp for now (reconstructing this doesn't look fun)
+/* DOS-derived Bresenham control flow. Endpoint fraction has denominator 128.
+   The original redundant shift-helper branches are still not reproduced by C. */
 //1F520
-void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s16 param_6, s16 percent)
-{
-    s16 sp10;
-    s16 sp12;
-    s16 sp14;
-    s16 sp16;
-    void (*sp18)(s16, s16);
-    s16 sp20;
-    s32 var_s0_2;
-    s16 var_s0_3;
-    s16 var_s0_4;
-    s16 var_s0_5;
-    s32 var_s1_1;
-    s16 var_s1_2;
-    s16 var_s1_3;
-    s16 var_s1_4;
-    s16 var_s3;
-    s32 temp_a0;
-    s32 temp_a3;
-    s32 temp_lo_1;
-    s32 temp_lo_2;
-    s32 temp_lo_3;
-    s32 temp_lo_4;
-    s32 temp_s6_1;
-    s32 temp_s6_2;
-    s32 temp_s6_3;
-    s32 temp_s6_4;
-    s16 var_s0_1;
-    s32 var_s2_1;
-    s32 var_s2_2;
-    s32 var_s4;
-    s32 var_s5;
-    s32 var_s7_1;
-    s32 var_s7_2;
-    s32 var_v0;
-    s32 test_1;
-    s32 test_2;
+void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
+               s16 dest_x, s16 dest_y, s16 param_6, s16 percent) {
+    s32 dx = dest_x - origin_x;
+    s32 dy = dest_y - origin_y;
+    s16 reversed = 0;
+    s16 counter;
+    s16 gap = param_6;
+    s16 x_straight, x_diagonal, y_straight, y_diagonal;
+    s32 step_x, step_y;
+    s32 error, x, y, end;
 
-    /*sp18 = param_1;*/
-    sp10 = origin_x;
-    sp14 = origin_y;
-    sp12 = dest_x;
-    var_s0_1 = 0;
-    var_s5 = dest_x - origin_x;
-    sp16 = dest_y;
-    var_s4 = dest_y - origin_y;
-    test_1 = param_6;
-    sp20 = test_1;
-    temp_s6_1 = percent;
-    if (var_s5 == 0)
-    {
-        var_s3 = 0;
-    }
-    else
-    {
-        var_s3 = Abs(var_s4 / var_s5) < 1;
-    }
-    if (var_s3 == 1)
-    {
-        if (var_s5 < 0)
-        {
-            var_s0_1 = 1;
-            SwapAB(&sp10, &sp12);
-            SwapAB(&sp14, &sp16);
-            var_s5 = -var_s5;
-            var_s4 = -var_s4;
+    if (dx != 0 && Abs(dy / dx) < 1) counter = 1;
+    else counter = 0;
+    if (counter == 1) {
+        if (dx < 0) {
+            reversed = 1;
+            SwapAB(&origin_x, &dest_x);
+            SwapAB(&origin_y, &dest_y);
+            dx = -dx;
+            dy = -dy;
+        } else if (dx == 0 && dy < 0) {
+            reversed = 1;
+            SwapAB(&origin_y, &dest_y);
+            dy = -dy;
         }
-        else if ((var_s5 == 0) && (var_s4 < 0))
-        {
-            var_s0_1 = 1;
-            SwapAB(&sp14, &sp16);
-            var_s4 = -var_s4;
-        }
-
-        if (var_s4 <= 0)
-        {
-            var_s7_1 = var_s4 >> 0x1F;
-        }
-        else
-            var_s7_1 = 1;
-
-        var_s4 = Abs(var_s4);
-        var_s2_1 = (var_s4 * 2) - var_s5;
-        temp_a3 = var_s4 - var_s5;
-        if (var_s0_1 != 0)
-        {
-            var_s0_2 = sp12;
-            temp_s6_1 = var_s0_2 + ((sp10 - var_s0_2) * (s16) temp_s6_1 / 100);
-            var_s0_2++;
-            var_s1_1 = sp16;
-
-            var_s7_1 = -var_s7_1;
-            while (var_s0_2 >= temp_s6_1)
-            {
-                var_s3 += 1;
-                if (var_s2_1 > 0)
-                {
-                    var_s1_1 += var_s7_1;
-                    var_s2_1 += (s16) (temp_a3 * 2);
-                }
-                else
-                {
-                    var_s2_1 += (s16) (var_s4 * 2);
-                }
-
-                if (sp20 < var_s3)
-                {
-                    func(var_s0_2, var_s1_1);
-                    var_s3 = 0;
-                }
-                var_s0_2 -= 1;
+        if (dy > 0) step_y = 1;
+        else if (dy < 0) step_y = -1;
+        else step_y = 0;
+        dy = Abs(dy);
+        error = 2 * dy - dx;
+        x_straight = 2 * dy;
+        x_diagonal = 2 * (dy - dx);
+        if (reversed) {
+            x = dest_x;
+            end = x + (((origin_x - x) * percent) >> 7);
+            ++x;
+            y = dest_y;
+            step_y = -step_y;
+            while (x >= end) {
+                ++counter;
+                if (error > 0) { y += step_y; error += x_diagonal; }
+                else error += x_straight;
+                if (gap < counter) { func(x, y); counter = 0; }
+                --x;
+            }
+        } else {
+            x = origin_x;
+            end = x + (((dest_x - x) * percent) >> 7);
+            ++x;
+            y = origin_y;
+            while (x <= end) {
+                ++counter;
+                if (error > 0) { y += step_y; error += x_diagonal; }
+                else error += x_straight;
+                if (gap < counter) { func(x, y); counter = 0; }
+                ++x;
             }
         }
-        else
-        {
-            var_s0_2 = sp10;
-            temp_s6_1 = var_s0_2 + ((sp12 - var_s0_2) * (s16) temp_s6_1 / 100);
-            var_s0_2 = var_s0_2 + 1;
-            var_s1_1 = sp14;
-
-            while (var_s0_2 <= temp_s6_1)
-            {
-                var_s3 += 1;
-                if (var_s2_1 > 0)
-                {
-                    var_s1_1 += var_s7_1;
-                    var_s2_1 += (s16) (temp_a3 * 2);
-                }
-                else
-                {
-                    var_s2_1 += (s16) (var_s4 * 2);
-                }
-                if (sp20 < var_s3)
-                {
-                    func(var_s0_2, var_s1_1);
-                    var_s3 = 0;
-                }
-                var_s0_2 += 1;
+    } else {
+        if (dy < 0) {
+            reversed = 1;
+            SwapAB(&origin_x, &dest_x);
+            SwapAB(&origin_y, &dest_y);
+            dx = -dx;
+            dy = -dy;
+        } else if (dy == 0 && dx < 0) {
+            reversed = 1;
+            SwapAB(&origin_x, &dest_x);
+            dx = -dx;
+        }
+        if (dx > 0) step_x = 1;
+        else if (dx < 0) step_x = -1;
+        else step_x = 0;
+        dx = Abs(dx);
+        error = 2 * dx - dy;
+        y_straight = 2 * dx;
+        y_diagonal = 2 * (dx - dy);
+        if (reversed) {
+            y = dest_y;
+            end = y + (((origin_y - y) * percent) >> 7);
+            ++y;
+            x = dest_x;
+            step_x = -step_x;
+            while (y >= end) {
+                ++counter;
+                if (error > 0) { x += step_x; error += y_diagonal; }
+                else error += y_straight;
+                if (gap < counter) { func(x, y); counter = 0; }
+                --y;
             }
-        }
-    }
-    else
-    {
-        if (var_s4 < 0)
-        {
-            var_s0_1 = 1;
-            SwapAB(&sp10, &sp12);
-            SwapAB(&sp14, &sp16);
-            var_s5 = -var_s5;
-            var_s4 = -var_s4;
-        }
-        else if ((var_s4 == 0) && (var_s5 < 0))
-        {
-            var_s0_1 = 1;
-            SwapAB(&sp10, &sp12);
-            var_s5 = -var_s5;
-        }
-
-        if (var_s5 <= 0)
-        {
-            var_s7_1 = var_s5 >> 0x1F;
-        }
-        else
-            var_s7_1 = 1;
-        var_s5 = Abs(var_s5);
-        var_s2_1 = (var_s5 * 2) - var_s4;
-        temp_a0 = var_s5 - var_s4;
-        if (var_s0_1 != 0)
-        {
-            var_s0_2 = sp16;
-            temp_s6_1 = var_s0_2 + ((sp14 - var_s0_2) * (s16) temp_s6_1 / 100);
-            var_s0_2++;
-            var_s1_1 = sp12;
-            var_s7_1 = -var_s7_1;
-            while (var_s0_2 >= temp_s6_1)
-            {
-                var_s3 += 1;
-                if (var_s2_1 > 0)
-                {
-                    var_s1_1 += var_s7_1;
-                    var_s2_1 += (s16) (temp_a0 * 2);
-                }
-                else
-                {
-                    var_s2_1 += (s16) (var_s5 * 2);
-                }
-                if (sp20 < var_s3)
-                {
-                    func(var_s1_1, var_s0_2);
-                    var_s3 = 0;
-                }
-                var_s0_2 -= 1;
-            }
-        }
-        else
-        {
-            var_s0_2 = sp14;
-            temp_s6_1 = var_s0_2 + ((sp16 - var_s0_2) * (s16) temp_s6_1 / 100);
-            var_s0_2++;
-            var_s1_1 = sp10;
-            while (var_s0_2 <= temp_s6_1)
-            {
-                var_s3 += 1;
-                if (var_s2_1 > 0)
-                {
-                    var_s1_1 += var_s7_1;
-                    var_s2_1 += (s16) (temp_a0 * 2);
-                }
-                else
-                {
-                    var_s2_1 += (s16) (var_s5 * 2);
-                }
-                if (sp20 < var_s3)
-                {
-                    func(var_s1_1, var_s0_2);
-                    var_s3 = 0;
-                }
-                var_s0_2 += 1;
+        } else {
+            y = origin_y;
+            end = y + (((dest_y - y) * percent) >> 7);
+            ++y;
+            x = origin_x;
+            while (y <= end) {
+                ++counter;
+                if (error > 0) { x += step_x; error += y_diagonal; }
+                else error += y_straight;
+                if (gap < counter) { func(x, y); counter = 0; }
+                ++y;
             }
         }
     }

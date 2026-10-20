@@ -6,15 +6,7 @@
 
 #include "rtypes.h"
 
-typedef struct rgb_t {
-    u8 r;
-    u8 g;
-    u8 b;
-} rgb_t;
-
-typedef struct rgb_palette_t {
-    rgb_t colors[256];
-} rgb_palette_t;
+#include "palette.h"
 
 typedef struct status_bar_t {       /* src/bonus.c */
     s16 lives;
@@ -192,5 +184,26 @@ typedef struct mem_t {             /* block allocator arena (sysutils block_mall
     u8 *data;
     u32 capacity;
 } mem_t;
+
+typedef union obj_type_flags_t {   /* flags[262] at 2:257c: one u32 per object type (Android 1048 bytes) */
+    u32 raw;
+    struct {
+        u8 flags0;
+        u8 flags1_lo : 4;
+        u8 move_x : 1;                 /* byte 1 bit 4: DOS makeUturn tests [flags+type*4+1] & 0x10 */
+        u8 move_y : 1;                 /* byte 1 bit 5 */
+        u8 flags1_hi : 2;
+        u8 flags2;
+        u8 flags3;
+    };
+} obj_type_flags_t;
+
+
+typedef struct font_t {             /* alpha 2:3e6e0, alpha2 2:3edc8, alpha_numbers: 10 bytes (Android 12, natural
+                                      alignment); copied from obj_t sprites/img_buffer/nb_sprites in LOAD_ALL_FIX. Name INVENTED */
+    struct sprite_t *sprites;
+    u8 *img_buffer;
+    s16 nb_sprites;
+} font_t;
 
 #endif

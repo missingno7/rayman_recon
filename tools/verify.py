@@ -74,7 +74,9 @@ def main(argv):
         out, err = verify_unit(name, unit, images)
         if err:
             print(f"[{name}] {err}")
-            regressions += len(unit["functions"])
+            # every recorded function and every recorded VERIFIED segment is lost (data-only units have no functions)
+            lost = len(unit["functions"]) + sum(1 for v in unit.get("segments", {}).values() if v == "VERIFIED")
+            regressions += max(lost, 1)
             continue
         results, segs = out
         seg_now = {g["segment"]: g for g in segs}

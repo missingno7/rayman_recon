@@ -3,7 +3,7 @@
  * The equal hash of rvb_pres/rvb_save requires rvb_save's later declaration
  * when the two first declarations are in the same index group.
  */
-#include "game.h"
+#include "palette.h"
 
 rgb_palette_t rvb_pres;
 rgb_palette_t rvb_save;

@@ -1,4 +1,4 @@
-/* Local declarations of src/basic.c (from build/workers/tu_basic). Macros/constants follow Rayverse; shared
+/* Worker-local declarations for basic.c. Macros/constants follow Rayverse; shared
    constants (BTYP_*, GO_*) should move to a common header when other units need them. */
 /* Local Rayverse compatibility types/constants for this candidate TU. */
 #ifndef BASIC_WORKER_H
@@ -12,7 +12,7 @@ typedef unsigned char bool;
 #define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #define COUNT(x) (sizeof(x) / sizeof((x)[0]))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
-#define ashr16(value, bits) ((value) >> (bits))
+#define ashr16(value, bits) ((s16)(value) < 0 ? -(((s16)-(s16)(value)) >> (bits)) : ((s16)(value) >> (bits)))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define ANIMMODE_RESET_IF_NEW 1
 #define BTYP_CHDIR 1
@@ -82,7 +82,7 @@ extern level_t level;
 extern u32 saveobj[16];
 #include "map.h"
 #include "game.h"
-extern u32 flags[262];
+extern obj_type_flags_t flags[262];
 extern block_flags_t block_flags[64];
 extern s16 PROJ_CENTER_X;
 extern s16 PROJ_CENTER_Y;
@@ -101,9 +101,9 @@ extern finbosslevel_t finBosslevel;
 extern u8 first_boss_meet;
 extern s16 ray_mode;
 extern poing_t poing;
-extern sprite_t *alpha_numbers;
-extern sprite_t *alpha2;
-extern sprite_t *alpha;
+extern font_t alpha_numbers;
+extern font_t alpha2;
+extern font_t alpha;
 extern display_item_t text_to_display[11];
 
 bool EOA(obj_t* obj);
@@ -148,8 +148,8 @@ void switchOff(obj_t* obj);
 void obj_hurt(obj_t* target);
 void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, s16 new_spd_y);
 void del_actobj(obj_t* obj);
-s32 calc_let_Width(u8 font_size, u32 num_let);
-s32 calc_let_Width2(u8 font_size, u32 num_let);
+s16 calc_let_Width(u8 font_size, u32 num_let);
+s16 calc_let_Width2(u8 font_size, u32 num_let);
 void INIT_TEXT_TO_DISPLAY(void);
 s32 deter_num_let(u8 c, const char* next_chars);
 void calc_num_let_spr(u8 a1, u8* a2);
@@ -169,10 +169,11 @@ void set2bits(u32 *x, u8 index, u32 value);
 void read2bits(s32 *value, u8 pos, s32 *b1, s32 *b0);
 void InitTextMode(void);
 void PrintMemInfo(void);
-u8 bloc_floor(s16 btype, s16 x, s16 y);
-s32 instantSpeed(s16 speed);
+s16 bloc_floor(s16 btype, s16 x, s16 y);
+s16 instantSpeed(s16 speed);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 s16 sinus(s16 x);
 void stop_cd(void);
 void print_once(const char *message);
 #endif
+

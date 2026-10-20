@@ -1,6 +1,7 @@
 /* objinit.c (1:4e160..1:50350). Names RAYVERSE; seeded by tools/seed.py, worker tu_objupd3. */
 #include "obj.h"
 #include "game.h"
+extern obj_type_flags_t flags[262];
 #include "map.h"
 #include <string.h>
 
@@ -220,7 +221,6 @@ typedef unsigned char bool;
 #define TYPE_98_SPACE_MAMA 98
 #define TYPE_9_BADGUY2 9
 extern s16 bateau_obj_id;
-extern u32 flags[262];
 extern s16 num_level;
 extern level_t level;
 extern level_obj_t level_alw;
@@ -430,7 +430,7 @@ u8 Prio(obj_t* obj) {
 
 void first_obj_init(obj_t* obj) {
     s16 type = obj->type;
-    if ((flags[type] & 1) != 0 || ((type == TYPE_9_BADGUY2 || type == TYPE_0_BADGUY1 ) && obj->x < 0)) {
+    if ((flags[type].raw & 1) != 0 || ((type == TYPE_9_BADGUY2 || type == TYPE_0_BADGUY1 ) && obj->x < 0)) {
         obj->x = -32000;
         obj->y = -32000;
     }
@@ -800,8 +800,8 @@ void init_struct_level(void) {
     obj_t* obj;
     for (i = 0; i < level.nb_objects; ++i) {
         obj = level.objects + i;
-        if (bonus_map || (flags[obj->type] & flags1_2_is_collectible) == 0 || !bonus_taken(obj->id)) {
-            if (flags[obj->type] & flags0_1_always) {
+        if (bonus_map || (flags[obj->type].raw & flags1_2_is_collectible) == 0 || !bonus_taken(obj->id)) {
+            if (flags[obj->type].raw & flags0_1_always) {
                 level_alw.obj_ids[level_alw.nb_objects++] = i;
             } else {
                 level_obj.obj_ids[level_obj.nb_objects++] = i;
@@ -857,7 +857,7 @@ void INIT_OBJECTS(u8 a1) {
             obj->sub_etat = obj->init_sub_etat;
         }
         obj_init(obj);
-        if (flags[obj->type] & flags0_1_always) {
+        if (flags[obj->type].raw & flags0_1_always) {
             obj->x = -32000;
             obj->y = -32000;
             obj->flags.alive = 0;
@@ -1245,7 +1245,7 @@ void INIT_OBJECTS(u8 a1) {
         }
 
         // Disable bonuses (collectibles) that were already taken
-        if (!bonus_map && (flags[obj->type] & flags1_2_is_collectible) && bonus_taken(obj->id)) {
+        if (!bonus_map && (flags[obj->type].raw & flags1_2_is_collectible) && bonus_taken(obj->id)) {
             obj->flags.alive = 0;
             obj->is_active = 0;
         }
@@ -1291,9 +1291,9 @@ void special_flags_init(void) {
         }
         if (i == TYPE_17_LIFTPLAT || i == TYPE_16_FALLPLAT || i == TYPE_24_INTERACTPLT) {
             if (num_world == world_1_jungle) {
-                flags[i] |= flags1_8_ray_dist_multispr_cantchange;
+                flags[i].raw |= flags1_8_ray_dist_multispr_cantchange;
             } else {
-                flags[i] &= ~flags1_8_ray_dist_multispr_cantchange;
+                flags[i].raw &= ~flags1_8_ray_dist_multispr_cantchange;
             }
         }
     }

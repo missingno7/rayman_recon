@@ -5,6 +5,7 @@
  */
 #include "obj.h"
 #include "game.h"
+extern obj_type_flags_t flags[262];
 #include <stdlib.h>
 #include <stdlib.h>
 
@@ -23,17 +24,11 @@ typedef struct vitraux_info_t {
     u16 value;
 } vitraux_info_t;
 
-typedef struct obj_type_flags_t {
-    u8 flags0;
-    u8 rest[3];
-} obj_type_flags_t;
-
 extern obj_t ray;
 extern obj_t *poing_obj;
 extern level_t level;
 extern rayevts_t RayEvts;
 extern finbosslevel_t finBosslevel;
-extern obj_type_flags_t flags[262];
 extern u8 horloge[25];
 
 extern s16 xmapmax;

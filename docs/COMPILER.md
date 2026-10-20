@@ -66,6 +66,10 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   matching source) and a local flag do not. No source evidence for that form (a macro/helper is possible) -> kept
   NEAR rather than forcing bytes.
 
+- **Bitfield views of packed bytes** [PROVEN, basic]: `sprite_t.sprite_pos` low/high nibbles (calc_let_Width2) and
+  `flags[type]` byte-1 bits 4/5 move_x/move_y (makeUturn, 1324 bytes) only match as bitfield reads - mask arithmetic
+  on the raw byte compiles differently (same lesson as block_flags). Shared as unions with a `raw` view.
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`: no accepted unit discriminates them yet (jumelle: -or/-om/-ol/-on/-oi/-oe=1 code-equal
   on its snapshot). Need loops (`-ol`) and intrinsic candidates (`-oi`: memcpy/strcpy/abs inline forms).

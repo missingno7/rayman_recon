@@ -1,5 +1,5 @@
 /* display: original object 1:240f0..1:25f49. Worker gfin_display; see NOTES.md for measured status.
- * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_resource_t are INVENTED. */
+ * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_t are INVENTED. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"

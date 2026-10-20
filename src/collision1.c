@@ -5,6 +5,7 @@
  */
 #include "obj.h"
 #include "game.h"
+extern obj_type_flags_t flags[262];
 #include "map.h"
 #include "collision1_local.h"
 #include <string.h>
@@ -68,7 +69,6 @@ extern s16 ray_zdc_y;
 extern s16 pente[16];
 extern s16 num_world;
 extern u8 block_flags[64];
-extern u32 flags[262];
 extern zdc_t zdc_tab[200];
 extern s16 bagDy[20];
 extern s16 bagW[20];
@@ -1075,7 +1075,7 @@ void SET_RAY_DIST(obj_t* obj) {
     /* 1D798 80141F98 -O2 -msoft-float */
     s16 x; s16 y; s16 w; s16 h;
 
-    if (flags[obj->type] & flags1_8_ray_dist_multispr_cantchange) {
+    if (flags[obj->type].raw & flags1_8_ray_dist_multispr_cantchange) {
         SET_RAY_DIST_MULTISPR_CANTCHANGE(obj);
     } else {
         if (obj->type == TYPE_PI || obj->type == TYPE_BBL)
@@ -1151,8 +1151,8 @@ void DO_POING_COLLISION(void) {
                     if (!(unk_1 == 11 || unk_1 == 10)) {
                         obj->gravity_value_2 = 0;
                     }
-                    if (obj->hit_points == old_hp && (flags[obj->type] & flags3_1_poing_collision_snd)) {
-                        PlaySnd(214, (flags[obj->type] & 0x80) ? poing_obj_id : obj->id);
+                    if (obj->hit_points == old_hp && (flags[obj->type].raw & flags3_1_poing_collision_snd)) {
+                        PlaySnd(214, (flags[obj->type].raw & 0x80) ? poing_obj_id : obj->id);
                     }
                     break;
                 }
@@ -1314,7 +1314,7 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
                         eject_sens = xspeed_delta > 0 ? 1 : -1;
                     }
                 }
-                if (flags[obj->type] & flags1_4_fast_bump) {
+                if (flags[obj->type].raw & flags1_4_fast_bump) {
                     bump_speed = 5;
                 } else if (obj->type == TYPE_180_SAXO2) {
                     bump_speed = 4;
@@ -1646,7 +1646,7 @@ void unleashMonsterHost(obj_t* obj) {
     if (first_id != obj->id) {
         do {
             linked_obj = &level.objects[linked_id];
-            if (!((flags[linked_obj->type] & flags1_2_is_collectible) && (bonus_taken(linked_obj->id)))) {
+            if (!((flags[linked_obj->type].raw & flags1_2_is_collectible) && (bonus_taken(linked_obj->id)))) {
                 obj_init(linked_obj);
                 linked_obj->flags.alive = 1;
                 make_active(linked_obj, true);
@@ -1666,7 +1666,7 @@ void SHOW_COLLISIONS_ZONES(void) {
     i = 0;
     obj = &level.objects[actobj.objects[i]];
     while (i < actobj.num_active_objects) {
-        if (!(flags[obj->type] & flags0_4_no_collision) && (get_eta(obj)->flags & 0x20)) {
+        if (!(flags[obj->type].raw & flags0_4_no_collision) && (get_eta(obj)->flags & 0x20)) {
             CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, obj);
         }
         ++i;
@@ -1686,9 +1686,9 @@ void DO_COLLISIONS(void) {
         }
 
         if (get_eta(obj)->flags & 0x20)  {
-            if (!(flags[obj->type] & flags2_0x10_do_not_check_ray_collision)) {
+            if (!(flags[obj->type].raw & flags2_0x10_do_not_check_ray_collision)) {
                 if (ray.config == 0 && ray.iframes_timer == -1) {
-                if ((get_eta(&ray)->flags & 8) && !(flags[obj->type] & flags0_4_no_collision)) {
+                if ((get_eta(&ray)->flags & 8) && !(flags[obj->type].raw & flags0_4_no_collision)) {
                     s16 collision;
                     if (obj->type == TYPE_170_RAYON && (obj->anim_frame > 3 || obj->anim_frame == 0)) {
                         collision = -1;
@@ -1699,7 +1699,7 @@ void DO_COLLISIONS(void) {
                     }
                     if (collision != -1) {
                         ObjectsFonctions[obj->type].rayman_collision(obj);
-                        if ((flags[obj->type] & flags0_8_hurts_rayman) && ray.iframes_timer == -1 &&
+                        if ((flags[obj->type].raw & flags0_8_hurts_rayman) && ray.iframes_timer == -1 &&
                                 !(ray.main_etat == 3 && ray.sub_etat  == 32)
                         ) {
                             RAY_HIT(1, obj);
@@ -1736,7 +1736,7 @@ void DO_COLLISIONS(void) {
 //2ED74
 void DoRaymanCollisionDefault(obj_t* obj) {
     // NOTE(Falcury): PS1 implementation is located in PS1_DoRaymanCollision(). Seems to be functionally identical.
-    if ((flags[obj->type] & flags2_0x10_do_not_check_ray_collision) && get_eta(obj)->flags & 0x20) {
+    if ((flags[obj->type].raw & flags2_0x10_do_not_check_ray_collision) && get_eta(obj)->flags & 0x20) {
         if (((ray.main_etat != 3 || ray.sub_etat != 32)) != 0) {
             s16 ray_iframes = ray.iframes_timer;
             if (ray_iframes >= 60) {
