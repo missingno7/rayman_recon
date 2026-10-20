@@ -1,8 +1,12 @@
-/* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_objupd. 34/51 STRICT; rest NEAR (see config/units.json). */
+/* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
+ * Worker gfin_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
+ * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include <stdlib.h>
+
+#define iabs(x) ((s32)(x) < 0 ? -(s32)(x) : (s32)(x))
 
 #define GO_LEFT 0
 #define GO_NOP 30
@@ -101,11 +105,14 @@ void restoreGameState(save_state_t *state);
 void restore_gendoor_link(void);
 void saveGameState(obj_t *obj, save_state_t *state);
 void save_objects_flags(void);
-void start_cd_gagne(void);
+void start_cd_gros_rayman(void);
+u8 SelectButPressed(void);
+extern u8 NBRE_SAVE;
 void stop_all_snd(void);
 void test_fin_cling(void);
 s16 OBJ_IN_ZONE(obj_t *obj);
-s16 inter_box(s16 x, s16 y, s16 w, s16 h, s16 x2, s16 y2, s16 w2, s16 h2);
+s16 inter_box(s32 x, s32 y, s32 w, s32 h, s16 x2, s16 y2, s32 w2, s32 h2);
+void DO_INTERACT_PLAT(obj_t *obj);
 void manage_snd_event(void);
 void obj_hurt(obj_t* target);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
@@ -120,7 +127,7 @@ s16 get_next_bonus_level(u8 lvl);
 void TEST_WIZARD(obj_t* obj);
 void DO_TARZAN(obj_t* tz_obj);
 void DoTarzanPoingCollision(obj_t* obj, s16 sprite);
-void allocate_badguy(obj_t *obj, s16 which_enemy, s32 xspeed, s32 yspeed);
+void allocate_badguy(obj_t *obj, s16 which_enemy, s16 xspeed, s16 yspeed);
 void DO_PTI_ESQUIVE(obj_t *bg3_obj);
 void DoPrisePoingCollision(obj_t *obj, s16 sprite);
 void DO_PETIT_COUTEAU_COMMAND(obj_t *obj);
@@ -266,19 +273,19 @@ s16 get_next_bonus_level(u8 lvl)
 
 void TEST_WIZARD(obj_t* obj) {
     /* 375BC 8015BDBC -O2 -msoft-float */
-    u8 obj_sub_etat;
-    s16 obj_x; s16 obj_y; s16 obj_w; s16 obj_h;
-    s16 x_diff_1;
+
+    s16 obj_y; s16 obj_h; s16 obj_w; s16 obj_x;
+    s32 x_diff_1;
     s16 x_diff_2;
     s16 x_diff_3;
     s32 y_diff_1;
 
-    if (RayEvts.tiny || !(ray.flags.hurtbyfist || ((ray.main_etat == 0 || ray.main_etat == 3) && nb_wiz_collected == 0))) {
+    if (RayEvts.tiny || (!ray.flags.hurtbyfist && (!(ray.main_etat == 0 || ray.main_etat == 3) || nb_wiz_collected != 0))) {
         obj->detect_zone_flag = 0;
     }
 
-    obj_sub_etat = obj->sub_etat;
-    if (obj_sub_etat == 0) {
+
+    if (obj->sub_etat == 0) {
         if (ray.flags.hurtbyfist) {
             if (status_bar.num_wiz + nb_wiz_collected >= 10) {
                 fixontemp = 300; // NOTE: aaded in PC version
@@ -289,25 +296,25 @@ void TEST_WIZARD(obj_t* obj) {
                 ray.flags.hurtbyfist = 0;
             }
         } else {
-            if (obj->detect_zone_flag != 0) {
-                if (obj->anim_frame < 20) {
-                    if (status_bar.num_wiz >= 10) {
-                        obj->anim_frame = 20;
-                    } else {
-                        fixontemp = 150; // NOTE: aaded in PC version
-                        set_sub_etat(obj, 10);
-                        obj->flags.flip_x = 0;
-                    }
+            if (obj->detect_zone_flag >= 1 && obj->anim_frame < 20) {
+                if (status_bar.num_wiz >= 10) {
+                    obj->anim_frame = 20;
+                } else {
+                    fixontemp = 150;
+                    set_sub_etat(obj, 10);
+                    obj->flags.flip_x = 0;
                 }
             }
             // NOTE: small change here in PC version
             else if (obj->detect_zone_flag == 0 && obj->anim_frame == 19) {
                 obj->anim_frame = 0;
-                ray.flags.hurtbyfist = 0;
+                /* DOS +0x100 retests the assigned frame before clearing the flag. */
+                if (obj->anim_frame == 0)
+                    ray.flags.hurtbyfist = 0;
             }
         }
-    } else if (!(obj_sub_etat == 0 || obj->detect_zone_flag == 0)) {
-        if (ray.flags.hurtbyfist && obj_sub_etat == 11) {
+    } else if (obj->detect_zone_flag != 0) {
+        if (ray.flags.hurtbyfist && obj->sub_etat == 11) {
             obj->timer--;
             if (obj->timer == 0) {
                 ray.flags.hurtbyfist = 0;
@@ -321,14 +328,13 @@ void TEST_WIZARD(obj_t* obj) {
                 x_diff_1 = obj->x + obj->offset_bx - ray.x - ray.offset_bx;
                 x_diff_2 = x_diff_1 - (obj_w >> 1);
                 x_diff_3 = x_diff_1 + (obj_w >> 1);
-                y_diff_1 = (ray.y + ray.offset_by) - obj_y;
-                /* TODO: still not great? */
-                if (y_diff_1 - obj_h >= 0 ? y_diff_1 - obj_h < 9 : obj_h - y_diff_1 < 9) {
-                    if ((Abs(x_diff_2) <= 16 && ray.flags.flip_x) || (Abs(x_diff_3) <= 16 && !(ray.flags.flip_x))) {
-                        if (Abs(x_diff_2) <= 16 && ray.flags.flip_x) {
+                y_diff_1 = (ray.y + ray.offset_by) - obj_y - obj_h;
+                if (iabs(y_diff_1) <= 8) {
+                    if ((iabs(x_diff_2) <= 16 && ray.flags.flip_x) || (iabs(x_diff_3) <= 16 && !(ray.flags.flip_x))) {
+                        if (iabs(x_diff_2) <= 16 && ray.flags.flip_x) {
                             obj->flags.flip_x = 0;
                             ray.x = obj->x + obj->offset_bx - ray.offset_bx - (obj_w >> 1) - 12;
-                        } else if (Abs(x_diff_3) <= 16 && !(ray.flags.flip_x)) {
+                        } else if (iabs(x_diff_3) <= 16 && !(ray.flags.flip_x)) {
                             obj->flags.flip_x = 1;
                             ray.x = obj->x + obj->offset_bx - ray.offset_bx + (obj_w >> 1) + 12;
                         }
@@ -344,7 +350,7 @@ void TEST_WIZARD(obj_t* obj) {
         } else {
             DO_WIZARD(obj);
         }
-    } else if (!(obj_sub_etat == 10 || ray.main_etat == 3 || obj_sub_etat == 1)) {
+    } else if (!(obj->sub_etat == 10 || obj->detect_zone_flag != 0 || ray.main_etat == 3 || obj->sub_etat == 1)) {
         set_sub_etat(obj, 1);
     }
 }
@@ -389,15 +395,15 @@ void DoTarzanPoingCollision(obj_t* obj, s16 sprite) {
     obj->cmd = GO_LEFT;
 }
 
-void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s32 xspeed, s32 yspeed)
+void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s16 xspeed, s16 yspeed)
 {
     s16 event_index = 0;
     obj_t *spawned = level.objects;
     s16 nb_objects = level.nb_objects;
 
     while (event_index < nb_objects) {
-        if (((which_enemy == 1 && spawned->type == TYPE_0_BADGUY1) ||
-             (which_enemy == 2 && spawned->type == TYPE_9_BADGUY2)) &&
+        if (((spawned->type == TYPE_0_BADGUY1 && which_enemy == 1) ||
+             (spawned->type == TYPE_9_BADGUY2 && which_enemy == 2)) &&
             spawned->init_x <= 0 && spawned->is_active == 0) {
             spawned->flags.alive = 0;
             spawned->flags.flag_0x40 = 0;
@@ -406,11 +412,16 @@ void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s32 xspeed, s32 yspee
             spawned->active_timer = 0;
             set_main_and_sub_etat(spawned, 2, 2);
             spawned->active_flag = 1;
-            spawned->x = tentacle_obj->x + tentacle_obj->offset_bx - spawned->offset_bx;
-            spawned->y = tentacle_obj->y - (spawned->offset_by / 4);
+            spawned->x = tentacle_obj->offset_bx + (tentacle_obj->x - spawned->offset_bx);
+            spawned->y = tentacle_obj->y - (spawned->offset_by >> 2);
             calc_obj_dir(spawned);
             spawned->speed_y = yspeed;
-            spawned->speed_x = spawned->flags.flip_x ? xspeed : -xspeed;
+            if (spawned->flags.flip_x) {
+                spawned->speed_x = xspeed;
+            } else {
+                spawned->speed_x = xspeed;
+                spawned->speed_x = -spawned->speed_x;
+            }
             calc_obj_pos(spawned);
             spawned->flags.read_commands = 0;
             break;
@@ -422,20 +433,17 @@ void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s32 xspeed, s32 yspee
 
 void DO_PTI_ESQUIVE(obj_t *bg3_obj)
 {
-    s16 diff_x; s16 diff_y; s16 unk_1;
-    obj_t *poing_obj;
-    u8 label;
+    s16 unk_1; s16 diff_y; s16 diff_x;
 
     DO_ONE_CMD(bg3_obj);
     if (poing.is_active || poing.is_charging)
     {
-        poing_obj = &level.objects[poing_obj_id];
         calc_esquive_poing(bg3_obj, &diff_x, &diff_y, &unk_1);
-        if (abs(diff_x) <= unk_1 && diff_y < 15)
+        if (iabs(diff_x) <= unk_1 && diff_y < 15)
         {
             if (
                 (
-                    (bg3_obj->main_etat == 0 && (bg3_obj->sub_etat == 0 || bg3_obj->sub_etat == 2)) ||
+                    ((bg3_obj->main_etat == 0 && bg3_obj->sub_etat == 0) || (bg3_obj->main_etat == 0 && bg3_obj->sub_etat == 2)) ||
                     bg3_obj->main_etat == 1
                 ) && (poing_obj->flags.flip_x) != (bg3_obj->flags.flip_x)
             )
@@ -445,18 +453,14 @@ void DO_PTI_ESQUIVE(obj_t *bg3_obj)
                 set_main_and_sub_etat(bg3_obj, 0, 15);
                 bg3_obj->flags.read_commands = 0;
 
-                if (bg3_obj->flags.flip_x)
-                    label = 3;
-                else
-                    label = 2;
-                skipToLabel(bg3_obj, label, 1);
+                skipToLabel(bg3_obj, bg3_obj->flags.flip_x ? 3 : 2, 1);
             }
-            return; /* TODO: different control flow?? */
+        } else if (bg3_obj->main_etat == 0 && bg3_obj->sub_etat == 16) {
+            set_sub_etat(bg3_obj, 17);
         }
-    }
-
-    if (bg3_obj->main_etat == 0 && bg3_obj->sub_etat == 16)
+    } else if (bg3_obj->main_etat == 0 && bg3_obj->sub_etat == 16) {
         set_sub_etat(bg3_obj, 17);
+    }
 }
 
 void DoPrisePoingCollision(obj_t *obj, s16 sprite)
@@ -515,22 +519,17 @@ void DoOneUpRaymanCollision(obj_t* obj) {
 }
 
 void DoMorningStarPoingCollision(obj_t* obj, s16 sprite) {
-    s16 sub_etat;
-
     if (sprite == 4 && obj->sub_etat == 5) {
         if (poing_obj->speed_x >= 0) {
-            if (poing_obj->speed_x <= 0) {
-                if (poing_obj->flags.flip_x)
-                    sub_etat = 9;
-                else
-                    sub_etat = 6;
-            } else {
-                sub_etat = 9;
-            }
+            if (poing_obj->speed_x > 0)
+                set_sub_etat(obj, 9);
+            else if (poing_obj->flags.flip_x)
+                set_sub_etat(obj, 9);
+            else
+                set_sub_etat(obj, 6);
         } else {
-            sub_etat = 6;
+            set_sub_etat(obj, 6);
         }
-        set_sub_etat(obj, sub_etat);
     }
 }
 
@@ -543,27 +542,27 @@ void DoGrapBonusRaymanCollision(obj_t* obj) {
 void DoPoingPowerupRaymanCollision(obj_t *obj)
 {
     if (obj->sub_etat == 7) {
-        if (RayEvts.poing) {
+        if (!RayEvts.poing) {
+            poing_obj->init_sub_etat = 8;
+        } else {
             switch (poing_obj->init_sub_etat) {
             case 1: poing_obj->init_sub_etat = 8; break;
             case 3: poing_obj->init_sub_etat = 10; break;
             case 5: poing_obj->init_sub_etat = 12; break;
             }
-        } else {
-            poing_obj->init_sub_etat = 8;
         }
     } else if (obj->sub_etat == 14) {
-        if (RayEvts.poing) {
+        if (!RayEvts.poing) {
+            poing_obj->init_sub_etat = 1;
+        } else {
             switch (poing_obj->init_sub_etat) {
             case 1: poing_obj->init_sub_etat = 3; break;
-            case 3:
+            case 3: poing_obj->init_sub_etat = 5; break;
             case 5: poing_obj->init_sub_etat = 5; break;
             case 8: poing_obj->init_sub_etat = 10; break;
-            case 10:
+            case 10: poing_obj->init_sub_etat = 12; break;
             case 12: poing_obj->init_sub_etat = 12; break;
             }
-        } else {
-            poing_obj->init_sub_etat = 1;
         }
     }
     DO_NOVA(obj);
@@ -692,15 +691,9 @@ void TEST_SIGNPOST(void)
         no_ray_landing_smoke = 1;
         ray.speed_x = 0;
         decalage_en_cours = 0;
-        if (ray.speed_y <= -1)
+        if (ray.speed_y < 0)
             ray.speed_y = 0;
-        if (gele != 0) {
-            h_scroll_speed = 0;
-            xmap = xmap_old;
-            v_scroll_speed = 0;
-            ymap = ymap_old;
-        }
-    } else if (ray.main_etat < 2 && ray.iframes_timer == -1 && gele == 0) {
+    } else if ((ray.main_etat == 0 || ray.main_etat == 1) && ray.iframes_timer == -1 && gele == 0) {
         stop_all_snd();
         if (fin_boss) {
             set_main_and_sub_etat(&ray, 3, 7);
@@ -709,26 +702,38 @@ void TEST_SIGNPOST(void)
             ray.anim_frame = 0;
         }
         if (poing.is_active) {
-            poing.is_active = 0;
             poing_obj->flags.alive = 0;
+            poing.is_active = 0;
             DO_NOVA(poing_obj);
             fin_poing_follow(0);
         }
         test_fin_cling();
-        if (ray_on_poelle) {
+        if (ray_on_poelle == 1) {
             RayEvts = SauveRayEvts;
             decalage_en_cours = 0;
             Reset_air_speed(0);
             Reset_air_speed(1);
             ray_on_poelle = 0;
         }
+        if (id_Cling_1up != -1) {
+            id_Cling_1up = -1;
+            Add_One_RAY_lives();
+            level.objects[id_Cling_1up].flags.alive = 0;
+        }
+        if (id_Cling_Pow != -1) {
+            id_Cling_Pow = -1;
+            ray.hit_points = 4;
+            status_bar.max_hitp = 4;
+            level.objects[id_Cling_Pow].flags.alive = 0;
+        }
         decalage_en_cours = 0;
         ray.speed_x = 0;
         if (!fin_boss && !ray_on_poelle && num_world != 6)
             gele = 2;
-        start_cd_gagne();
-    } else if (ray.main_etat == 3 && (ray.sub_etat == 23 || ray.sub_etat == 7)) {
-        if (EOA(&ray)) {
+        start_cd_gros_rayman();
+    } else if ((ray.main_etat == 3 && ray.sub_etat == 23) || (ray.main_etat == 3 && ray.sub_etat == 7)) {
+        if ((EOA(&ray) && !(fin_boss && num_world == 6)) ||
+            (fin_boss && num_world == 6 && (SelectButPressed() || (NBRE_SAVE != 0 && EOA(&ray))))) {
             DO_FADE_OUT();
             ChangeLevel();
             gele = 0;
@@ -746,9 +751,9 @@ void TEST_SIGNPOST(void)
         }
     } else if (ray.main_etat == 6) {
         if (ray.sub_etat != 14) {
-            start_cd_gagne();
             set_sub_etat(&ray, 14);
             ray.anim_frame = 0;
+            start_cd_gros_rayman();
         }
         gele = 2;
         decalage_en_cours = 0;
@@ -760,6 +765,12 @@ void TEST_SIGNPOST(void)
             gele = 0;
         }
     }
+    if (gele != 0) {
+        h_scroll_speed = 0;
+        xmap = xmap_old;
+        v_scroll_speed = 0;
+        ymap = ymap_old;
+    }
 }
 
 void DoPancarteRaymanCollision(obj_t *obj)
@@ -768,11 +779,11 @@ void DoPancarteRaymanCollision(obj_t *obj)
         status_bar.num_wiz = nb_wiz_save;
         nb_wiz_save = 0;
         departlevel = 0;
-        fix_numlevel(obj);
+        fix_numlevel(&ray);
         stop_all_snd();
         DO_FADE_OUT();
-    } else if (!(ray.main_etat == 2 && ray.sub_etat == 8) &&
-                (s8)ray.hit_points != -1 && gele == 0) {
+    } else if ((ray.main_etat != 2 || ray.sub_etat != 8) &&
+                ray.hit_points != 255 && gele == 0) {
         stop_all_snd();
         DO_FADE_OUT();
         restoreGameState(&save2);
@@ -842,7 +853,7 @@ void DO_TEN_COMMAND(obj_t *obj)
             obj->timer++;
             while (i < 4)
             {
-                unk_2 = (i & 1) + 1;
+                unk_2 = (i % 2) + 1;
                 allocate_badguy(obj, 3 - unk_2, unk_1, -unk_2);
 
                 unk_1++;
@@ -857,14 +868,16 @@ void DO_TEN_COMMAND(obj_t *obj)
     else if (obj->main_etat == 0 && obj->sub_etat == 3)
     {
         obj->timer++;
-        if (obj->config != 3 && obj->timer > 252)
+        if (obj->config != 3 && obj->timer >= 253) {
+            DO_INTERACT_PLAT(obj);
             obj->config = 3;
+        }
 
         obj->speed_x = 0;
         obj->speed_y = 0;
         if (obj->anim_frame > 12)
             obj->anim_frame = 3;
-        else if (obj->anim_frame < 2)
+        else if (obj->anim_frame <= 1)
             obj->timer = 0;
     }
     else if (obj->main_etat == 1)
@@ -872,7 +885,7 @@ void DO_TEN_COMMAND(obj_t *obj)
         if (obj->link != 0)
             obj->timer++;
 
-        if (obj->timer > 253)
+        if (obj->timer >= 254)
             skipToLabel(obj, 2, 1);
 
         SET_X_SPEED(obj);
@@ -881,13 +894,13 @@ void DO_TEN_COMMAND(obj_t *obj)
 }
 
 void DoGeneBadGuyPoingCollision(obj_t* obj, s16 sprite) {
-    if (sprite == 0) {
+    if (sprite == 0 && !(obj->main_etat == 0 && obj->sub_etat == 1)) {
         poing.damage = 1;
         obj_hurt(obj);
-        if (obj->hit_points == 0)
-            skipToLabel(obj, 4, 1);
-        else
+        if (obj->hit_points != 0)
             skipToLabel(obj, 3, 1);
+        else
+            skipToLabel(obj, 4, 1);
     }
     else {
         skipToLabel(obj, 2, 1);
@@ -909,7 +922,10 @@ void DoChasseurPoingCollision(obj_t *obj, s16 sprite)
         } else {
             set_main_and_sub_etat(obj, 0, 3);
         }
-        obj->cmd = obj->flags.flip_x ? GO_RIGHT : GO_LEFT;
+        if (!obj->flags.flip_x)
+            obj->cmd = GO_LEFT;
+        else
+            obj->cmd = GO_RIGHT;
     }
 }
 
@@ -921,7 +937,10 @@ void DoChasseurRaymanZDD(obj_t* obj) {
             set_main_and_sub_etat(obj, 0, 2);
             obj->flags.read_commands = 0;
             calc_obj_dir(obj);
-            obj->cmd = obj->flags.flip_x ? GO_RIGHT : GO_LEFT;
+            if (obj->flags.flip_x)
+                obj->cmd = GO_RIGHT;
+            else
+                obj->cmd = GO_LEFT;
         }
     }
 }
@@ -995,13 +1014,16 @@ void DoBadGuy1PoingCollision(obj_t *obj, s16 sprite)
 }
 
 void DoBadGuy1RaymanZDD(obj_t* obj) {
-    if (obj->flags.flip_x != ray.flags.flip_x) {
+    if (ray.flags.flip_x != obj->flags.flip_x) {
         if ((obj->main_etat == 1 && obj->sub_etat == 0) || (obj->main_etat == 0 && obj->sub_etat == 0)) {
             if (ray.main_etat == 0 && ray.sub_etat == 18 /* stick out tongue */) {
                 obj->speed_x = 0;
                 obj->speed_y = 0;
                 set_main_and_sub_etat(obj, 0, 2);
-                skipToLabel(obj, obj->flags.flip_x ? 8 : 7, 1);
+                if (obj->flags.flip_x)
+                    skipToLabel(obj, 8, 1);
+                else
+                    skipToLabel(obj, 7, 1);
             }
         }
     }
@@ -1015,9 +1037,8 @@ void DO_CCL_COMMAND(obj_t* obj) {
             SET_X_SPEED(obj);
             CALC_MOV_ON_BLOC(obj);
             if (obj->main_etat == 0 && obj->sub_etat == 2) {
-                u8 hp = obj->hit_points;
-                if (hp != obj->flags.flip_x) {
-                    obj->flags.flip_x = (hp & 1);
+                if (obj->flags.flip_x != obj->hit_points) {
+                    obj->flags.flip_x = (obj->hit_points & 1) ? 1 : 0;
                 }
             }
             break;
@@ -1105,7 +1126,6 @@ void DO_JOE_COMMAND(obj_t* obj) {
         }
         if (obj->main_etat == 0 && obj->sub_etat == 1) {
             if (vignet_joe_affichee) {
-                Vignet_To_Display = 1;
                 vignet_joe_affichee = 0;
                 finBosslevel.helped_joe_1 = 1;
                 obj->timer = 0;
@@ -1161,6 +1181,7 @@ void DO_BOUEE_JOE_COMMAND(obj_t *obj)
 void DO_PHOTOGRAPHE_CMD(obj_t *obj)
 {
     u8 anim_spd;
+    s16 px, py;
 
     DO_ONE_CMD(obj);
     anim_spd = obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f;
@@ -1180,13 +1201,16 @@ void DO_PHOTOGRAPHE_CMD(obj_t *obj)
         obj->timer = 0;
     } else if (!RayEvts.tiny && !obj->flags.hurtbyfist && OBJ_IN_ZONE(obj) &&
                ray.follow_id == -1 && !decalage_en_cours &&
-               ray.main_etat == 0 && ray.sub_etat == 0 &&
-               inter_box(obj->x + 42, obj->y + 48, 5, 15,
-                         ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h)) {
-        obj->flags.hurtbyfist = 1;
-        ray.speed_x = 0;
-        ray.is_active = 0;
-        skipToLabel(obj, 0, 1);
+               ray.main_etat == 0 && ray.sub_etat == 0) {
+        px = obj->x + 42;
+        py = obj->y + 48;
+        if (inter_box(px, py, 5, 15,
+                      ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y)) {
+            obj->flags.hurtbyfist = 1;
+            ray.speed_x = 0;
+            ray.is_active = 0;
+            skipToLabel(obj, 0, 1);
+        }
     }
 }
 
@@ -1196,40 +1220,34 @@ void DoAudioStartRaymanCollision(obj_t* obj) {
 
 void DO_SLOPEY_PLAT_CMD(obj_t *obj)
 {
-    s16 sign;
     s16 sprite_x;
+    s16 sprite_h;
     s16 sprite_y;
     s16 sprite_w;
-    s16 sprite_h;
+    s16 sign;
     s16 dist;
-    s16 shift;
-    s16 change;
+    u8 shift;
+    s32 value;
 
-    sign = (s8)obj->hit_points;
-    if (sign > 0)
-        sign = 1;
-    else if (sign < 0)
-        sign = -1;
-
+    value = (s8)obj->hit_points;
+    sign = value > 0 ? 1 : (value < 0 ? -1 : 0);
     if (obj->id != ray.follow_id) {
         if (horloge[10] == 0 && obj->hit_points != 0)
             obj->hit_points -= sign;
-        return;
+    } else if (horloge[8] == 0) {
+        GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h);
+        sprite_y += obj->offset_hy;
+        dist = ray.x + ray.offset_bx - (sprite_x + (sprite_w >> 1));
+        shift = 3;
+        if (dist >= 0)
+            dist >>= shift;
+        else {
+            dist = -dist;
+            dist >>= shift;
+            dist = -dist;
+        }
+        obj->hit_points -= dist;
+        if (iabs((s8)obj->hit_points) >= 16)
+            obj->hit_points = sign * 15;
     }
-    if (horloge[8] != 0)
-        return;
-
-    GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h);
-    dist = (s16)((s32)ray.x + ray.offset_bx -
-                 (sprite_x + obj->offset_hy + (sprite_w >> 1)));
-    shift = 3;
-    if (dist < 0)
-        dist = -((-dist) >> shift);
-    else
-        dist >>= shift;
-    obj->hit_points -= (u8)dist;
-
-    change = (s8)obj->hit_points;
-    if ((change < 0 ? -change : change) >= 16)
-        obj->hit_points = sign * 15;
 }

@@ -59,6 +59,13 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   `#pragma aux ... parm [esi] [edi] [eax] [ebx] [ecx] [edx]`.
 - Release check on jumelle: 10.0, 10.5, 10.6 identical; **10.0a differs** in four bodies (none of them STRICT-relevant).
 
+- **Grouped case labels vs duplicated case bodies** [PROVEN, objupdate2 DoPoingPowerupRaymanCollision]: identical
+  C semantics, different Watcom code (grouped labels reload pointers and share stores across switches).
+- OPEN, not accepted: objupdate2 TEST_SIGNPOST is reproduced only by a materialised boolean inside `&&`
+  (`ray.main_etat == 2 && (ray.sub_etat != 8 ? 1 : 0)` or `(u8)(ray.sub_etat != 8)`); the plain form (as in the PS1
+  matching source) and a local flag do not. No source evidence for that form (a macro/helper is possible) -> kept
+  NEAR rather than forcing bytes.
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`: no accepted unit discriminates them yet (jumelle: -or/-om/-ol/-on/-oi/-oe=1 code-equal
   on its snapshot). Need loops (`-ol`) and intrinsic candidates (`-oi`: memcpy/strcpy/abs inline forms).

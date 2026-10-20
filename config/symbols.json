@@ -4677,6 +4677,26 @@
     "addr": "1:0c0c0",
     "name": "RAYVERSE",
     "evidence": "DOS GET_OBJ_ZDC TYPE_SPIDER_PLAFOND calls 1:c0c0; Android symbol exists"
+   },
+   "restore_gendoor_link": {
+    "addr": "1:4a7dc",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS DO_PHOTOGRAPHE_CMD +9d call; Android original symbol exists"
+   },
+   "saveGameState": {
+    "addr": "1:63b8c",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS DO_PHOTOGRAPHE_CMD +a4 call; Android original symbol exists"
+   },
+   "correct_gendoor_link": {
+    "addr": "1:496c0",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS DO_PHOTOGRAPHE_CMD +ab call; Android original symbol exists"
+   },
+   "restoreGameState": {
+    "addr": "1:63dc4",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS DoPancarteRaymanCollision +7b call; Android original symbol exists"
    }
   },
   "data": {
