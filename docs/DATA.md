@@ -61,6 +61,19 @@ initialisers. Those values can only come from the oracle (or Android/PS1 where i
 reconstruction (the original source contained these literals), but it must be expressed as typed initialisers with
 symbolic pointers, verified by the data-segment check - never as raw byte blobs.
 
+## Reconstructed `_DATA` (src/data_coll.c, src/data/blk_*.c) [VERIFIED]
+49 data units, 25,489 bytes of game `_DATA` VERIFIED (plus 43 bytes of verified CONST in code units): typed tables and
+structures from Rayverse data.c corrected against the oracle (build/workers/data_rv/NOTES.md lists every change).
+Pointer initialisers (e.g. cptr_tab: 38 command-handler functions, sequence tables) are verified as relocations.
+Kept external as assets (not reconstructed): PalPlasma 2:05f70 (48 B), PalFire 2:05fb2 (48 B), Def_Bande
+2:080fc..2:2b37c (144,000 B level band table). Open: ObjectsFonctions pointer table 2:035fa..2:04a74 and
+t_world_info (pointer targets unbound), smaller unclassified gaps.
+DOS-vs-Rayverse value differences found: timeCd (87 of 132 entries; Rayverse's CD timing table is a port change),
+PC_TingsToGet_Col/ColAdd = 1 on DOS (Rayverse 0), cheat code table bytes 0xb1 at 4 indices (Rayverse's `_()` macro
+yields 0x27), mapCd is 132 bytes (Rayverse 128, so its timeCd address comment is 4 bytes early), effect_speed is
+u16 (Rayverse u8). Rayverse declarations wider than DOS (Android sizes + byte accesses in DOS code):
+nb_levels_in_world u8[7], LastTouched u8, speed_ball_level u8.
+
 ## Open
 - Central data TU(s): reconstruct declaration order (index groups) from the BSS layout + names; flag globals whose
   hash breaks an ascending run as candidates for wrong names.

@@ -1181,6 +1181,211 @@
     "addr": "1:6f410",
     "name": "RAYVERSE",
     "evidence": "FatalError reconstructed system-info path calls this function; its DOS body prints memory statistics. Android name exists (stub)."
+   },
+   "TestKeyWeapon": {
+    "addr": "1:31ca8",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py TestKeyWeapon: 1:31ca8; Rayverse input.c:82"
+   },
+   "TestKeyJump": {
+    "addr": "1:31cbc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py TestKeyJump: 1:31cbc; Rayverse input.c:93"
+   },
+   "TestKeyAction": {
+    "addr": "1:31cd0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py TestKeyAction: 1:31cd0; Rayverse input.c:98"
+   },
+   "handle_10_GO_DOLOOP": {
+    "addr": "1:50e90",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_10_GO_DOLOOP to 1:50e90; Rayverse objupdate.c:232"
+   },
+   "handle_11_GO_LABEL": {
+    "addr": "1:50c6c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_11_GO_LABEL to 1:50c6c; Rayverse objupdate.c:113"
+   },
+   "handle_12_GO_GOTO": {
+    "addr": "1:50dd4",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_12_GO_GOTO to 1:50dd4; Rayverse objupdate.c:183"
+   },
+   "handle_13_GO_GOSUB": {
+    "addr": "1:50e60",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_13_GO_GOSUB to 1:50e60; Rayverse objupdate.c:219"
+   },
+   "handle_14_GO_RETURN": {
+    "addr": "1:50e88",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_14_GO_RETURN to 1:50e88; Rayverse objupdate.c:226"
+   },
+   "handle_15_GO_BRANCHTRUE": {
+    "addr": "1:50ed0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_15_GO_BRANCHTRUE to 1:50ed0; Rayverse objupdate.c:252"
+   },
+   "handle_16_GO_BRANCHFALSE": {
+    "addr": "1:50ef4",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_16_GO_BRANCHFALSE to 1:50ef4; Rayverse objupdate.c:262"
+   },
+   "handle_17_GO_TEST": {
+    "addr": "1:50f98",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_17_GO_TEST to 1:50f98; Rayverse objupdate.c:299"
+   },
+   "handle_18_GO_SETTEST": {
+    "addr": "1:50f70",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_18_GO_SETTEST to 1:50f70; Rayverse objupdate.c:292"
+   },
+   "handle_19_GO_WAITSTATE": {
+    "addr": "1:50c70",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_19_GO_WAITSTATE to 1:50c70; Rayverse objupdate.c:118"
+   },
+   "handle_21_GO_X": {
+    "addr": "1:50d7c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_21_GO_X to 1:50d7c; Rayverse objupdate.c:171"
+   },
+   "handle_22_GO_Y": {
+    "addr": "1:50da8",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_22_GO_Y to 1:50da8; Rayverse objupdate.c:177"
+   },
+   "handle_25_RESERVED_GO_GOSUB": {
+    "addr": "1:50c90",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_25_RESERVED_GO_GOSUB to 1:50c90; Rayverse objupdate.c:126"
+   },
+   "handle_26_RESERVED_GO_BRANCHTRUE": {
+    "addr": "1:50cdc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_26_RESERVED_GO_BRANCHTRUE to 1:50cdc; Rayverse objupdate.c:139"
+   },
+   "handle_27_RESERVED_GO_BRANCHFALSE": {
+    "addr": "1:50d04",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_27_RESERVED_GO_BRANCHFALSE to 1:50d04; Rayverse objupdate.c:147"
+   },
+   "handle_28_RESERVED_GO_SKIPTRUE": {
+    "addr": "1:50d2c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_28_RESERVED_GO_SKIPTRUE to 1:50d2c; Rayverse objupdate.c:155"
+   },
+   "handle_29_RESERVED_GO_SKIPFALSE": {
+    "addr": "1:50d54",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_29_RESERVED_GO_SKIPFALSE to 1:50d54; Rayverse objupdate.c:163"
+   },
+   "handle_31_GO_SKIPTRUE": {
+    "addr": "1:50f18",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_31_GO_SKIPTRUE to 1:50f18; Rayverse objupdate.c:272"
+   },
+   "handle_32_GO_SKIPFALSE": {
+    "addr": "1:50f44",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_32_GO_SKIPFALSE to 1:50f44; Rayverse objupdate.c:282"
+   },
+   "handle_33_INVALID_CMD": {
+    "addr": "1:50ec4",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_33_INVALID_CMD to 1:50ec4; Rayverse objupdate.c:246"
+   },
+   "handle_5_GO_SUBSTATE": {
+    "addr": "1:50e0c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_5_GO_SUBSTATE to 1:50e0c; Rayverse objupdate.c:197"
+   },
+   "handle_6_GO_SKIP": {
+    "addr": "1:50e2c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_6_GO_SKIP to 1:50e2c; Rayverse objupdate.c:205"
+   },
+   "handle_8_GO_STATE": {
+    "addr": "1:50dec",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_8_GO_STATE to 1:50dec; Rayverse objupdate.c:189"
+   },
+   "handle_9_GO_PREPARELOOP": {
+    "addr": "1:50e50",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_9_GO_PREPARELOOP to 1:50e50; Rayverse objupdate.c:213"
+   },
+   "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO": {
+    "addr": "1:50cbc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO to 1:50cbc; Rayverse objupdate.c:133"
+   },
+   "handle_SELF_HANDLED": {
+    "addr": "1:50c5c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps handle_SELF_HANDLED to 1:50c5c; Rayverse objupdate.c:102"
+   },
+   "readGoXYargs": {
+    "addr": "1:50b5c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readGoXYargs to 1:50b5c; Rayverse objupdate.c:45"
+   },
+   "readInvalidArg": {
+    "addr": "1:50c14",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readInvalidArg to 1:50c14; Rayverse objupdate.c:68"
+   },
+   "readNoArg": {
+    "addr": "1:50afc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readNoArg to 1:50afc; Rayverse objupdate.c:17"
+   },
+   "readOneArg": {
+    "addr": "1:50b00",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readOneArg to 1:50b00; Rayverse objupdate.c:27"
+   },
+   "readSpeedArgs": {
+    "addr": "1:50ba8",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readSpeedArgs to 1:50ba8; Rayverse objupdate.c:55"
+   },
+   "readTestArgs": {
+    "addr": "1:50b20",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps readTestArgs to 1:50b20; Rayverse objupdate.c:34"
+   },
+   "skipGoXYArgs": {
+    "addr": "1:50c4c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipGoXYArgs to 1:50c4c; Rayverse objupdate.c:90"
+   },
+   "skipInvalidArg": {
+    "addr": "1:50c60",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipInvalidArg to 1:50c60; Rayverse objupdate.c:107"
+   },
+   "skipNoArg": {
+    "addr": "1:50afc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipNoArg to 1:50afc; Rayverse objupdate.c:22"
+   },
+   "skipOneArg": {
+    "addr": "1:50c24",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipOneArg to 1:50c24; Rayverse objupdate.c:75"
+   },
+   "skipSpeedArgs": {
+    "addr": "1:50c54",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipSpeedArgs to 1:50c54; Rayverse objupdate.c:96"
+   },
+   "skipTestArgs": {
+    "addr": "1:50c2c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py maps skipTestArgs to 1:50c2c; Rayverse objupdate.c:81"
    }
   },
   "data": {
@@ -2283,6 +2488,996 @@
     "size": 1,
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c CFA51; Android symbol input_mode is a 1-byte BSS object; DOS FatalError compares this byte to 1."
+   },
+   "saved_sprite_color": {
+    "addr": "2:2140",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s32"
+   },
+   "saved_sprite_width": {
+    "addr": "2:2144",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s32"
+   },
+   "HeaderFilevignet": {
+    "addr": "2:215c",
+    "type": "archive_header_t[75]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[75]"
+   },
+   "language_infos": {
+    "addr": "2:24e0",
+    "type": "archive_header_t[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[5]"
+   },
+   "nb_des": {
+    "addr": "2:251c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s16"
+   },
+   "nb_fix_des": {
+    "addr": "2:251e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s16"
+   },
+   "dhspeed": {
+    "addr": "2:2520",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s16"
+   },
+   "dvspeed": {
+    "addr": "2:2522",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; data declaration type s16"
+   },
+   "nb_levels_in_world": {
+    "addr": "2:4a74",
+    "type": "u8[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; declaration type u8[8]; size per Android, DOS code accesses bytes (Rayverse declaration was wider; extra byte is alignment padding)"
+   },
+   "DecEau": {
+    "addr": "2:4d10",
+    "type": "s16[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; declaration type s16[4]"
+   },
+   "DemoRecordSize": {
+    "addr": "2:5e04",
+    "type": "s16[6]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s16[6]"
+   },
+   "DemoRecordWorld": {
+    "addr": "2:5e10",
+    "type": "s16[6]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s16[6]"
+   },
+   "DemoRecordMap": {
+    "addr": "2:5e1c",
+    "type": "s16[6]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s16[6]"
+   },
+   "GameModeVideo": {
+    "addr": "2:5e2d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "JumAmpDefMul": {
+    "addr": "2:5e30",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s32"
+   },
+   "JumAmpDefPlus": {
+    "addr": "2:5e34",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s32"
+   },
+   "key_right": {
+    "addr": "2:5e38",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_up": {
+    "addr": "2:5e39",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_left": {
+    "addr": "2:5e3a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_down": {
+    "addr": "2:5e3b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_fist": {
+    "addr": "2:5e3c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_jump": {
+    "addr": "2:5e3d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "key_action": {
+    "addr": "2:5e3e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "tab_key": {
+    "addr": "2:5e40",
+    "type": "u8*[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8*[7]"
+   },
+   "tab_key_sav": {
+    "addr": "2:5e5c",
+    "type": "u8[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8[7]"
+   },
+   "OptionGame": {
+    "addr": "2:5e63",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "GoMenu": {
+    "addr": "2:5e64",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "fixon": {
+    "addr": "2:5e66",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16"
+   },
+   "fixontemp": {
+    "addr": "2:5e68",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16"
+   },
+   "SizeScreen": {
+    "addr": "2:5e6a",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16"
+   },
+   "Frequence": {
+    "addr": "2:5e6c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "BackgroundOptionOn": {
+    "addr": "2:5e6d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "BackgroundOn": {
+    "addr": "2:5e6e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "tRefRam2VramNormalFix": {
+    "addr": "2:5e70",
+    "type": "u16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[8]"
+   },
+   "tRefRam2VramNormal": {
+    "addr": "2:5e80",
+    "type": "u16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[8]"
+   },
+   "tRefTransFondNormal": {
+    "addr": "2:5e90",
+    "type": "u16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[8]"
+   },
+   "tRefSpriteNormal": {
+    "addr": "2:5ea0",
+    "type": "u16[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[2]"
+   },
+   "tRefRam2VramX": {
+    "addr": "2:5ea4",
+    "type": "u16[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[2]"
+   },
+   "tRefVram2VramX": {
+    "addr": "2:5ea8",
+    "type": "u16[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[2]"
+   },
+   "tRefSpriteX": {
+    "addr": "2:5eac",
+    "type": "u16[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u16[2]"
+   },
+   "ExitMenu": {
+    "addr": "2:5eb0",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "ReInitPlasma": {
+    "addr": "2:5eb1",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "Main_Control": {
+    "addr": "2:5eb2",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "During_The_Menu": {
+    "addr": "2:5eb4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type s16"
+   },
+   "OptionMusicCdActive": {
+    "addr": "2:5eb6",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "text_input_buffer": {
+    "addr": "2:5eb7",
+    "type": "u8[9]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8[9]"
+   },
+   "PC_TingsToGet_Col": {
+    "addr": "2:5ec0",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "PC_TingsToGet_ColAdd": {
+    "addr": "2:5ec1",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; true C type u8"
+   },
+   "niveau": {
+    "addr": "2:5ec4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FA0": {
+    "addr": "2:5fa0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FA2": {
+    "addr": "2:5fa2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FA4": {
+    "addr": "2:5fa4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FA6": {
+    "addr": "2:5fa6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FA8": {
+    "addr": "2:5fa8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FAA": {
+    "addr": "2:5faa",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FAC": {
+    "addr": "2:5fac",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FAE": {
+    "addr": "2:5fae",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "word_95FB0": {
+    "addr": "2:5fb0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "no_sound": {
+    "addr": "2:5fe4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "InvadersMode": {
+    "addr": "2:5fe6",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "BonusMode": {
+    "addr": "2:5fe7",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "BonusBrik": {
+    "addr": "2:5fe8",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "BonusBrikType": {
+    "addr": "2:5fe9",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "NbClassicBrik": {
+    "addr": "2:5fea",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "NbBrikTouched": {
+    "addr": "2:5feb",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "CasseBriqueOffsetX": {
+    "addr": "2:5fec",
+    "type": "s16[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16[7]"
+   },
+   "CasseBriqueOffsetY": {
+    "addr": "2:5ffa",
+    "type": "s16[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16[7]"
+   },
+   "LastTouched": {
+    "addr": "2:6008",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16; size per Android, DOS code accesses bytes (Rayverse declaration was wider; extra byte is alignment padding)"
+   },
+   "NoCB": {
+    "addr": "2:600a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "NoCBInit": {
+    "addr": "2:600c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "tempo": {
+    "addr": "2:600e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "CBoffsetX": {
+    "addr": "2:6010",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "CBoffsetY": {
+    "addr": "2:6012",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "Xdir": {
+    "addr": "2:6014",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "Ydir": {
+    "addr": "2:6016",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "speed_ball_angle": {
+    "addr": "2:629e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "speed_ball_level": {
+    "addr": "2:62a0",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16; size per Android, DOS code accesses bytes (Rayverse declaration was wider; extra byte is alignment padding)"
+   },
+   "speed_ball_x": {
+    "addr": "2:62a2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "speed_ball_y": {
+    "addr": "2:62a4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s16"
+   },
+   "ball_x": {
+    "addr": "2:62a8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s32"
+   },
+   "ball_y": {
+    "addr": "2:62ac",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type s32"
+   },
+   "dist2": {
+    "addr": "2:62b0",
+    "type": "s32",
+    "name": "ANDROID",
+    "evidence": "Android x86 .data object dist2 at this address; Rayverse calls it dword_962B0"
+   },
+   "nb_max_collis": {
+    "addr": "2:62b4",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "cbout": {
+    "addr": "2:62b5",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "undestroy": {
+    "addr": "2:62b6",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "upscreen": {
+    "addr": "2:62b7",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "casse_brique_active": {
+    "addr": "2:62b8",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "CasseBriqueON": {
+    "addr": "2:62b9",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "dark_attaque": {
+    "addr": "2:637d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "type_dark_attaque": {
+    "addr": "2:637e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "ButtonReleasedSav3": {
+    "addr": "2:6380",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; type u8"
+   },
+   "cheat_codes": {
+    "addr": "2:6384",
+    "type": "u8[325]",
+    "name": "RAYVERSE",
+    "evidence": "DOS bytes at 2:06384; Rayverse table overdeclares by two bytes and four encoded scan-code entries differ"
+   },
+   "effect_choice": {
+    "addr": "2:64c9",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte at 2:064c9"
+   },
+   "byte_964CA": {
+    "addr": "2:64ca",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte at 2:064ca"
+   },
+   "effect_speed": {
+    "addr": "2:64cc",
+    "type": "u16",
+    "name": "ANDROID",
+    "evidence": "Android object size 2; DOS value at 2:064cc"
+   },
+   "effect_pause_bloque": {
+    "addr": "2:64ce",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse and Android object size 1"
+   },
+   "prev_Bloc_lim_W1": {
+    "addr": "2:654c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s32"
+   },
+   "snd8b_header_infos": {
+    "addr": "2:6550",
+    "type": "archive_header_t[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; archive_header_t[7]"
+   },
+   "snd8b_data_infos": {
+    "addr": "2:65a4",
+    "type": "archive_header_t[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; archive_header_t[7]"
+   },
+   "sndvig_infos": {
+    "addr": "2:65f8",
+    "type": "archive_header_t[9]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; archive_header_t[9]"
+   },
+   "bnkDataFixe": {
+    "addr": "2:66b0",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8*"
+   },
+   "bnkDataWorld": {
+    "addr": "2:66b4",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8*"
+   },
+   "ptrTchatch": {
+    "addr": "2:67b8",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8*"
+   },
+   "TEST_KEY_BUTTON0": {
+    "addr": "2:67bc",
+    "type": "u8 (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+   },
+   "TEST_KEY_BUTTON1": {
+    "addr": "2:67c0",
+    "type": "u8 (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+   },
+   "TEST_KEY_BUTTON2": {
+    "addr": "2:67c4",
+    "type": "u8 (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+   },
+   "TEST_KEY_BUTTON3": {
+    "addr": "2:67c8",
+    "type": "u8 (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+   },
+   "byte_967CC": {
+    "addr": "2:67cc",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8"
+   },
+   "XSpeedJumelle": {
+    "addr": "2:67d0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s32"
+   },
+   "YSpeedJumelle": {
+    "addr": "2:67d4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s32"
+   },
+   "TabW1": {
+    "addr": "2:684c",
+    "type": "s16[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[4]"
+   },
+   "TabW2": {
+    "addr": "2:6854",
+    "type": "s16[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[4]"
+   },
+   "TabH1": {
+    "addr": "2:685c",
+    "type": "s16[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[4]"
+   },
+   "TabH2": {
+    "addr": "2:6864",
+    "type": "s16[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[4]"
+   },
+   "msg_box_being_displayed": {
+    "addr": "2:6880",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "first_option": {
+    "addr": "2:6881",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "yesno_finished": {
+    "addr": "2:6882",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "byte_96883": {
+    "addr": "2:6883",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "byte_96884": {
+    "addr": "2:6884",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment"
+   },
+   "droppedBombLine0": {
+    "addr": "2:6c88",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLine2": {
+    "addr": "2:6ca8",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLine5": {
+    "addr": "2:6cd8",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLine6": {
+    "addr": "2:6ce8",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLine9": {
+    "addr": "2:6d18",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLineA": {
+    "addr": "2:6d28",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombLineB": {
+    "addr": "2:6d38",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16[8]"
+   },
+   "droppedBombSequence1": {
+    "addr": "2:6d48",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence2": {
+    "addr": "2:6d68",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence3": {
+    "addr": "2:6d88",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence4": {
+    "addr": "2:6da8",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence5": {
+    "addr": "2:6dc8",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence6": {
+    "addr": "2:6de8",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "droppedBombSequence7": {
+    "addr": "2:6e08",
+    "type": "s16*[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "bombSequences": {
+    "addr": "2:6e28",
+    "type": "s16**[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+   },
+   "mereDenisDyingSequence": {
+    "addr": "2:6e44",
+    "type": "u8[3]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[3]"
+   },
+   "mereDenisMachineHitSequence": {
+    "addr": "2:6e47",
+    "type": "u8[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[2]"
+   },
+   "mereDenisHitSequence": {
+    "addr": "2:6e49",
+    "type": "u8[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[2]"
+   },
+   "mereDenisArrivalSequence": {
+    "addr": "2:6e4b",
+    "type": "u8[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[7]"
+   },
+   "mereDenisEncounter1": {
+    "addr": "2:6e52",
+    "type": "u8[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[8]"
+   },
+   "mereDenisEncounter2": {
+    "addr": "2:6e5a",
+    "type": "u8[9]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[9]"
+   },
+   "mereDenisGoBehindMachine": {
+    "addr": "2:6e9b",
+    "type": "u8[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[5]"
+   },
+   "mereDenisMachineFlies": {
+    "addr": "2:6eda",
+    "type": "u8[3]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[3]"
+   },
+   "mereDenisActionSequences": {
+    "addr": "2:6ef8",
+    "type": "u8*[11]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8*[11]; internal sequence pointers verified by match.py"
+   },
+   "dyingSequence": {
+    "addr": "2:6f24",
+    "type": "u8[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[5]"
+   },
+   "hitSequence": {
+    "addr": "2:6f29",
+    "type": "u8[6]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[6]"
+   },
+   "arrivalSequence": {
+    "addr": "2:6f2f",
+    "type": "u8[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[4]"
+   },
+   "secondEncounterSequence1": {
+    "addr": "2:6f5b",
+    "type": "u8[13]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[13]; internal/external sequence targets verified"
+   },
+   "secondEncounterSequenceSuite": {
+    "addr": "2:6f68",
+    "type": "u8[12]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[12]; internal/external sequence targets verified"
+   },
+   "cptr_tab": {
+    "addr": "2:70e4",
+    "type": "cptr_t[34]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; 34 packed 12-byte entries verified"
+   },
+   "pma_couteaux": {
+    "addr": "2:727c",
+    "type": "u8[6]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[6]"
+   },
+   "pma_sequence": {
+    "addr": "2:7282",
+    "type": "u8[4][2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[4][2]"
+   },
+   "place_sequence": {
+    "addr": "2:728a",
+    "type": "u8[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[5]"
+   },
+   "frame_snd": {
+    "addr": "2:7644",
+    "type": "u8[256]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[256] sound-effect lookup table"
+   },
+   "voice_is_working": {
+    "addr": "2:7f44",
+    "type": "u8[32]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[32]"
+   },
+   "Volume_Snd": {
+    "addr": "2:7f64",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16"
+   },
+   "not_snd_wiz": {
+    "addr": "2:7f6e",
+    "type": "u8[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8[8]"
+   },
+   "was_in_freeze": {
+    "addr": "2:7f76",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; s16"
+   },
+   "flagCDPlay": {
+    "addr": "2:7f78",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8"
+   },
+   "phaseCd": {
+    "addr": "2:7f79",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; u8"
+   },
+   "data_22d948": {
+    "addr": "2:2d948",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "INVENTED: DOS accesses this location as a byte; the following three zero bytes are an open padding/gap before the s16 table at 2:2d94c"
+   },
+   "data_22d94c": {
+    "addr": "2:2d94c",
+    "type": "s16[16]",
+    "name": "INVENTED",
+    "evidence": "INVENTED: sixteen s16 values; DOS loads adjacent pairs using index*2 at 2:2d94c and 2:2d95c"
+   },
+   "dword_BD96C": {
+    "addr": "2:2d96c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment BD96C; zero value read from DOS"
+   },
+   "data_22d970": {
+    "addr": "2:2d970",
+    "type": "s16[20]",
+    "name": "INVENTED",
+    "evidence": "INVENTED: twenty zero s16 entries inferred from DOS indexed dword accesses at 2-byte offsets"
+   },
+   "let_shadow": {
+    "addr": "2:51d0",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment and declaration; byte read/write width; oracle zero."
+   },
+   "playing_intro_video": {
+    "addr": "2:64dd",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment and declaration; byte width; oracle zero."
    }
   }
  }
