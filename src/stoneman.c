@@ -19,6 +19,7 @@
 #define TYPE_STONECHIP 79
 #define TYPE_PI_BOUM 110
 #define ANIMMODE_RESET 2
+#define ABS(v) ((v) >= 0 ? (v) : -(v))
 
 extern obj_t ray;
 extern level_t level;
@@ -40,8 +41,8 @@ void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 u8 calc_typ_travd(obj_t *obj, u8 a2);
 void obj_hurt(obj_t *obj);
 void set_sub_etat(obj_t *obj, u8 sub_etat);
-u8 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
-u8 test_allowed(obj_t *obj, s16 center_x, s16 center_y);
+s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
+s16 test_allowed(obj_t *obj, s16 center_x, s16 center_y);
 u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void calc_obj_dir(obj_t *obj);
 void Projectil_to_RM(obj_t *obj, s16 *out_spd_x, s16 *out_spd_y, s16 new_spd_x, s16 new_spd_y);
@@ -219,9 +220,10 @@ u8 IS_STONEWOMAN_WAIT(obj_t* obj) {
 void DO_STONEWOMAN_COMMAND(obj_t* obj) {
     /* 4E820 80173020 -O2 -msoft-float */
     s32 prev_flip_x;
-    s16 diff_x; s16 diff_y;
+    s16 diff_x;
     s32 diff_value;
-    s16 unk_1; // The DOS path may read this before assignment in states 1 and 2.
+    s16 diff_y;
+    s16 unk_1;
 
     if (IS_STONEWOMAN_WAIT(obj)) {
         obj->speed_x = 0;
@@ -231,22 +233,13 @@ void DO_STONEWOMAN_COMMAND(obj_t* obj) {
             skipToLabel(obj, 11, false);
     }
 
-    /* TODO: closest to a "proof" that this was macro? */
     diff_value = ray.offset_bx;
     diff_value += ray.x;
     diff_value -= obj->x;
     diff_value -= obj->offset_bx;
-    if (diff_value < 0)
-        diff_value = -diff_value;
+    if (diff_value < 0) diff_value = -diff_value;
     diff_x = diff_value;
-
-    diff_value = ray.offset_by;
-    diff_value += ray.y;
-    diff_value -= obj->y;
-    diff_value -= obj->offset_by;
-    if (diff_value < 0)
-        diff_value = -diff_value;
-    diff_y = diff_value;
+    diff_y = ABS(ray.offset_by + ray.y - obj->y - obj->offset_by);
 
     if (obj->main_etat == 2)
     {}
@@ -298,12 +291,9 @@ void DO_STONEWOMAN_COMMAND(obj_t* obj) {
             skipToLabel(obj, 14, true);
         else
         {
-            if (
-                    !((
-                              !(block_flags[calc_typ_travd(obj, 0)] & 1) &&
-                              obj->x + obj->offset_bx >= 32 && obj->x + obj->offset_bx <= xmapmax + 268
-                      ) || obj->main_etat == 2)
-                    )
+            if ((block_flags[calc_typ_travd(obj, 0)] & 1 ||
+                 obj->x + obj->offset_bx < 32 || obj->x + obj->offset_bx > xmapmax + 268)
+                 && (u8)(obj->main_etat != 2))
             {
                 obj->x -= obj->speed_x;
                 if (obj->detect_zone_flag != 0)
@@ -407,27 +397,27 @@ void setStoneChipPos(obj_t* obj1, obj_t* obj2, u8* param_3) {
         obj2->y = (obj1->y + obj1->offset_by) - obj2->offset_by;
         switch (obj2->sub_etat) {
             case 9:
-                obj2->x -= (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x -= (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y -= obj2->offset_by + obj2->offset_by / 3;
                 break;
             case 10:
-                obj2->x += (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x += (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y -= obj2->offset_by + obj2->offset_by / 3;
                 break;
             case 11:
-                obj2->x -= (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x -= (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y -= obj2->offset_by;
                 break;
             case 12:
-                obj2->x += (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x += (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y -= obj2->offset_by;
                 break;
             case 13:
-                obj2->x -= (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x -= (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y += obj2->offset_by / 3 - obj2->offset_by;
                 break;
             case 14:
-                obj2->x += (obj2->offset_bx >> 1) - obj2->offset_bx;
+                obj2->x += (obj2->offset_bx / 2) - obj2->offset_bx;
                 obj2->y += obj2->offset_by / 3 - obj2->offset_by;
                 break;
         }
@@ -442,25 +432,23 @@ void setStoneChipPos(obj_t* obj1, obj_t* obj2, u8* param_3) {
 
 //7D37C
 void allocateStoneChips(obj_t* obj) {
+    u8 unk_par_1;
+    u8 unk_par_2;
+    u8 unk_par_3;
+    u8 se_3;
     u8 se_1;
     u8 se_2;
-    u8 se_3;
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    u8 sub_etat;
-    u8 unk_par_3 = false;
-    u8 unk_par_2 = false;
-    u8 unk_par_1 = false;
 
-    if (obj->speed_x > 0) {
-        se_1 = 9;
-        se_2 = 11;
-        se_3 = 13;
-    } else {
-        se_1 = 10;
-        se_2 = 12;
-        se_3 = 14;
+    unk_par_3 = false;
+    unk_par_2 = false;
+    unk_par_1 = false;
+
+    switch ((u8)(obj->speed_x > 0)) {
+        case 0: se_1 = 10; se_2 = 12; se_3 = 14; break;
+        case 1: se_1 = 9; se_2 = 11; se_3 = 13; break;
     }
 
     i = 0;
@@ -468,12 +456,11 @@ void allocateStoneChips(obj_t* obj) {
     nb_objs = level.nb_objects;
     while (i < nb_objs) {
         if (cur_obj->type == TYPE_STONECHIP && !(cur_obj->is_active)) {
-            sub_etat = cur_obj->sub_etat;
-            if (sub_etat == se_1)
+            if (cur_obj->sub_etat == se_1)
                 setStoneChipPos(obj, cur_obj, &unk_par_1);
-            else if (sub_etat == se_2)
+            else if (cur_obj->sub_etat == se_2)
                 setStoneChipPos(obj, cur_obj, &unk_par_2);
-            else if (sub_etat == se_3)
+            else if (cur_obj->sub_etat == se_3)
                 setStoneChipPos(obj, cur_obj, &unk_par_3);
         }
         cur_obj++;
@@ -518,6 +505,7 @@ void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
     obj_t *cur_obj;
     s16 nb_objs;
     u8 stmn_frame;
+    s16 speed;
     s16 stmn_spr;
     s16 stmn_x; s16 stmn_y; s16 stmn_w; s16 stmn_h;
 
@@ -526,23 +514,21 @@ void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
         cur_obj = &level.objects[i];
         nb_objs = level.nb_objects;
         while (i < nb_objs) {
-            cur_obj->timer = 200;
             if (cur_obj->type == TYPE_36_STONEBOMB && !cur_obj->is_active) {
+                cur_obj->timer = 200;
                 if (param_3)
                     cur_obj->flags.flip_x = stmn_obj->flags.flip_x;
                 else
-                    cur_obj->flags.flip_x = stmn_obj->flags.flip_x ^ 1;
+                    cur_obj->flags.flip_x = !stmn_obj->flags.flip_x;
 
                 cur_obj->speed_y = param_2;
-                if (!(cur_obj->flags.flip_x))
-                    cur_obj->speed_x = cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_left;
-                else
-                    cur_obj->speed_x = cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                cur_obj->speed_x = cur_obj->flags.flip_x ? speed : -speed;
 
                 stmn_frame = stmn_obj->anim_frame;
-                if (stmn_frame >= 53 && stmn_frame <= 122)
+                if (((s32)stmn_frame >= 53 && (s32)stmn_frame <= 122) ? 1 : 0)
                     stmn_spr = 3;
-                else if (stmn_frame >= 123 && stmn_frame <= 144)
+                else if (((s32)stmn_frame >= 123 && (s32)stmn_frame <= 144) ? 1 : 0)
                     stmn_spr = 0;
                 else
                     stmn_spr = -1;
@@ -580,13 +566,11 @@ void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
                 if (param_3)
                     cur_obj->flags.flip_x = stmn_obj->flags.flip_x;
                 else
-                    cur_obj->flags.flip_x = stmn_obj->flags.flip_x ^ 1;
+                    cur_obj->flags.flip_x = !stmn_obj->flags.flip_x;
 
                 cur_obj->speed_y = param_2;
-                if (!(cur_obj->flags.flip_x))
-                    cur_obj->speed_x = cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_left;
-                else
-                    cur_obj->speed_x = cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                cur_obj->speed_x = cur_obj->flags.flip_x ? speed : -speed;
 
                 GET_SPRITE_POS(stmn_obj, 7, &stmn_x, &stmn_y, &stmn_w, &stmn_h);
                 cur_obj->x = stmn_x + stmn_w - cur_obj->offset_bx;
@@ -651,13 +635,13 @@ void DO_STONEMAN2_TIR(obj_t* obj) {
                 else
                     skipToLabel(obj, 8, true);
             }
+        }
 
-            if ((obj->sub_etat == 6) && (obj->link == 0)) {
-                unk_1 = obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf;
-                if (horloge[unk_1] == unk_1 - 1) {
-                    allocateStonemanStone(obj, 0, true);
-                    obj->link = 1;
-                }
+        if ((obj->sub_etat == 6) && (obj->link == 0)) {
+            unk_1 = obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf;
+            if (horloge[unk_1] == unk_1 - 1) {
+                allocateStonemanStone(obj, 0, true);
+                obj->link = 1;
             }
         }
     } else {
@@ -667,7 +651,8 @@ void DO_STONEMAN2_TIR(obj_t* obj) {
 
 //7D9C0
 void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
-    /* 3907C 8015D87C -O2 -msoft-float */s16 sprite;
+    /* 3907C 8015D87C -O2 -msoft-float */
+    s16 sprite;
     s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
     s16 spd_x; s16 spd_y;
     s16 i = 0;
@@ -680,17 +665,15 @@ void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
             if (param_2)
                 cur_obj->flags.flip_x = stwmn_obj->flags.flip_x;
             else
-                cur_obj->flags.flip_x = stwmn_obj->flags.flip_x ^ 1;
+                cur_obj->flags.flip_x = !stwmn_obj->flags.flip_x;
 
             sprite = -1;
-            if (stwmn_obj->main_etat == 0) {
-                if (stwmn_obj->sub_etat == 13) {
-                    if (stwmn_obj->anim_frame - 52 < 50U)
-                        sprite = 3;
-                } else if (stwmn_obj->sub_etat == 9) {
-                    if (stwmn_obj->anim_frame - 16 < 40U)
-                        sprite = 3;
-                }
+            if (stwmn_obj->main_etat == 0 && stwmn_obj->sub_etat == 13) {
+                if (((s32)stwmn_obj->anim_frame >= 52 && (s32)stwmn_obj->anim_frame <= 101) ? 1 : 0)
+                    sprite = 3;
+            } else if (stwmn_obj->main_etat == 0 && stwmn_obj->sub_etat == 9) {
+                if (((s32)stwmn_obj->anim_frame >= 16 && (s32)stwmn_obj->anim_frame <= 55) ? 1 : 0)
+                    sprite = 3;
             }
 
             if (sprite != -1) {
@@ -718,10 +701,8 @@ void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
                 cur_obj->init_x = cur_obj->x;
                 cur_obj->init_y = cur_obj->y;
                 if (param_2 != 2) {
-                    if (!(cur_obj->flags.flip_x))
-                        spd_x = (s16) cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_left;
-                    else
-                        spd_x = (s16) cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                    spd_x = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                    spd_x = cur_obj->flags.flip_x ? spd_x : -spd_x;
                     SET_X_SPEED(cur_obj);
                     set_sub_etat(cur_obj, 0);
                 } else {
@@ -837,7 +818,7 @@ void DO_PI_EXPLOSION(obj_t* obj) {
     obj_t* after_pi_b;
     s16 j;
     obj_t* cur_pi_b;
-    s16 pi_x; s16 pi_y; s16 pi_w; s16 pi_h;
+    s16 pi_h; s16 pi_y; s16 pi_w; s16 pi_x;
 
     PlaySnd_old(84);
     i = 0;
@@ -864,15 +845,8 @@ void DO_PI_EXPLOSION(obj_t* obj) {
         while (j < 5)
         {
             cur_pi_b = first_pi_b;
-            if (cur_pi_b <= after_pi_b)
-            {
-                while (cur_pi_b <= after_pi_b) /* almost off-by-one error, if it weren't for the j loop? */
-                {
-                    if (!cur_pi_b->is_active)
-                        break;
-
-                    cur_pi_b++;
-                }
+            while (cur_pi_b <= after_pi_b && cur_pi_b->is_active)
+                cur_pi_b++;
 
                 if (cur_pi_b <= after_pi_b)
                 {
@@ -911,7 +885,7 @@ void DO_PI_EXPLOSION(obj_t* obj) {
                     cur_pi_b->is_active = 1;
                     add_alwobj(cur_pi_b);
                 }
-            }
+
             j++;
         }
     }
