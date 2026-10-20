@@ -1,78 +1,9 @@
 /*
  * Bat enemy (GOG v1.21 object 1:0fa40-1:100b0). File name invented (Rayverse bat.c). Names: Rayverse/Android.
- * obj_t/eta_t are partial layouts (padding for unknown fields) until a shared, verified header exists.
+ * Uses the shared src/include/obj.h layout.
  * Status per function: config/units.json (DO_BAT_FLASH, bat_dir, DO_BAT_COMMAND not yet STRICT).
  */
-typedef signed char s8;
-typedef unsigned char u8;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef signed long s32;
-
-typedef struct eta_t {
-    s8 speed_x_right;
-    s8 speed_x_left;
-    u8 anim_index;
-    u8 next_main_etat;
-    u8 next_sub_etat;
-    u8 anim_speed;
-    u8 sound_index;
-    u8 flags;
-} eta_t;
-
-typedef struct obj_flags_t {
-    unsigned char hurtbyfist : 1;
-    unsigned char command_test : 1;
-    unsigned char alive : 1;
-    unsigned char flip_x : 1;
-    unsigned char read_commands : 1;
-    unsigned char follow_enabled : 1;
-    unsigned char flag_0x40 : 1;
-    unsigned char anim_changed : 1;
-} obj_flags_t;
-
-typedef struct obj_t {
-    u8 _00[0x0c];
-    eta_t **eta;
-    u8 _10[0x18];
-    s32 x;
-    s32 y;
-    u8 _30[0x10];
-    s16 speed_x;
-    s16 speed_y;
-    u8 _44[6];
-    s16 follow_id;
-    u8 _4c[8];
-    s16 ray_dist;
-    s16 iframes_timer;
-    u8 _58[0x10];
-    u8 offset_bx;
-    u8 offset_by;
-    u8 anim_index;
-    u8 anim_frame;
-    u8 sub_etat;
-    u8 main_etat;
-    u8 init_sub_etat;
-    u8 init_main_etat;
-    u8 cmd;
-    u8 gravity_value_1;
-    u8 gravity_value_2;
-    u8 change_anim_mode;
-    s8 offset_hy;
-    u8 follow_sprite;
-    u8 hit_points;
-    u8 init_hit_points;
-    u8 init_flag;
-    u8 hit_sprite;
-    u8 detect_zone;
-    u8 detect_zone_flag;
-    s8 cmd_context_depth;
-    u8 config;
-    u8 display_prio;
-    u8 timer;
-    u8 anim_count;
-    obj_flags_t flags;
-} obj_t;
+#include "obj.h"
 
 extern obj_t ray;
 extern u8 horloge[25];

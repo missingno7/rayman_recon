@@ -3,112 +3,16 @@
  * Names: Rayverse/Android. Partial struct layouts until shared headers exist.
  * Status per function: config/units.json (calc_left_time, do_perfect_bonus not yet STRICT).
  */
-typedef signed char s8;
-typedef unsigned char u8;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef signed int s32;
-typedef unsigned int u32;
+#include "obj.h"
+#include "game.h"
+
+/* Memory block descriptor: 12-byte DOS layout evidenced by this unit (init_memory/free_main_mem callers);
+   Rayverse's mem_t is a port-specific variant. Local until a second unit confirms it. */
 typedef struct mem_t {
     u32 align;
     u8 *data;
     u32 capacity;
 } mem_t;
-typedef struct sprite_t sprite_t;
-typedef struct anim_t anim_t;
-typedef struct eta_t eta_t;
-
-typedef struct cmd_context_t {
-    s16 cmd_offset;
-    s16 count;
-} cmd_context_t;
-
-typedef struct obj_t {
-    sprite_t *sprites;
-    anim_t *animations;
-    u8 *img_buffer;
-    eta_t **eta;
-    u8 *cmds;
-    s16 *cmd_labels;
-    cmd_context_t cmd_contexts[1];
-    u32 field_1C;
-    u32 link_has_gendoor;
-    s32 is_active;
-    s32 x;
-    s32 y;
-    s32 active_flag;
-    s16 id;
-    s16 screen_x;
-    s16 screen_y;
-    s16 sub_speed;
-    s16 init_x;
-    s16 init_y;
-    s16 speed_x;
-    s16 speed_y;
-    s16 nb_sprites;
-    s16 cmd_offset;
-    s16 nb_cmd;
-    s16 follow_id;
-    s16 follow_y;
-    s16 follow_x;
-    s16 param;
-    s16 link;
-    s16 ray_dist;
-    s16 iframes_timer;
-    u16 test_block_index;
-    u16 scale;
-    u16 zdc;
-    u16 active_timer;
-    u16 type;
-    u8 btypes[5];
-    u8 unused_padding;
-    u8 offset_bx;
-    u8 offset_by;
-    u8 anim_index;
-    u8 anim_frame;
-    u8 sub_etat;
-    u8 main_etat;
-    u8 init_sub_etat;
-    u8 init_main_etat;
-    u8 cmd;
-    u8 gravity_value_1;
-    u8 gravity_value_2;
-    u8 change_anim_mode;
-    s8 offset_hy;
-    u8 follow_sprite;
-    u8 hit_points;
-    u8 init_hit_points;
-    u8 init_flag;
-    u8 hit_sprite;
-    u8 detect_zone;
-    u8 detect_zone_flag;
-    s8 cmd_context_depth;
-    u8 config;
-    u8 display_prio;
-    u8 timer;
-    u8 anim_count;
-    u16 flags;
-    u8 field_83;
-} obj_t;
-
-typedef struct status_bar_t {
-    s16 lives;
-    u8 lives_digits[2];
-    u8 hp_sprites[2];
-    u8 num_wiz;
-    u8 wiz_digits[2];
-    u8 max_hitp;
-} status_bar_t;
-
-typedef struct rgb_t {
-    u8 r;
-    u8 g;
-    u8 b;
-} rgb_t;
-
-typedef struct rgb_palette_t {
-    rgb_t colors[256];
-} rgb_palette_t;
 
 extern s16 allowed_time[192];
 extern u8 bonus_perfect[24];

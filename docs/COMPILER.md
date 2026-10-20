@@ -19,6 +19,10 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   - `-s` (no stack checks): no `__CHK` calls anywhere in game code.
 - **Object layout** [PROVEN on rand and mathutil (whole objects contiguous); 83 decode-validated boundaries]: `_TEXT` paragraph aligned (OMF align 3);
   functions inside 4-aligned with nop padding (90, 8bc0, 8d4000); WLINK pads between objects with 00.
+- **Structure packing 1 by default** [PROVEN, wcc386 10.6 probe]: `struct {char a; int b;}` -> b at +1, size 5;
+  no `-zp` flag or pragma is needed for the packed game structures (src/include/obj.h).
+- **Bitfields allocate LSB-first in `unsigned char` units** [PROVEN]: BAT_ray_in_zone (STRICT) clears `flip_x`
+  (4th field) with `and byte ptr [obj+0x81],0xf7`.
 - **Data reference encoding**: wcc386 keeps the addend in the fixup field (`RandArray-2` -> field -2); PMW1 stores
   absolute object offsets, so `match.py` checks bound address + field.
 
@@ -33,7 +37,7 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - Compiler release for v1.21 game code: 10.0, 10.0a, 10.5 and 10.6 give identical code on everything tested
   (only the 10.6 libraries match the v1.21 runtime). The 10.5 compiler was recovered from the CD's packed
   `DISKIMGS` set (`C:\tools\watcom-10.5-pck`, docs/TOOLCHAIN.md).
-- `-zp` structure packing, `-ei` enums, `-j` char signedness: first struct-heavy matches will tell.
+- `-ei` enums, `-j` char signedness: not yet discriminated.
 - Linker: WLINK version/options, object order, `_DATA`/`_BSS` order not studied yet.
 - v1.12 rand variant is STRICT with the 10.6 compiler against v1.12 (scratch), although its runtime is 10.5.
 
