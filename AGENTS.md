@@ -20,6 +20,8 @@ Hard rules
   if a check looks wrong, prove it with independent evidence and report it.
 - No inline asm, `#pragma aux` byte tricks, `_emit`, copied bytes, artificial dead code or volatile hacks to force
   bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first).
+  Allowed: `#pragma aux NAME parm [...] value [...] modify [...]` that only declares the register ABI of an external
+  hand-written assembly routine (e.g. DisplayAnyPictureNormal, proven from its DOS callers) - no code in pragmas.
 - Bind every global at its true start with its true type (one address = one symbol). wcc386 -5 loads a `short`
   as `mov r,[x-2]; sar r,16` (fixup field -2) by itself; never declare a wider type or a shifted alias to get bytes.
 - Zero regression: `python tools/verify.py` must stay at 0 regressions; `python -m unittest discover -s tests` must

@@ -5582,14 +5582,14 @@
      ]
     },
     "InitMatriceJumelle": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "DefaultJumelleVariable": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -5665,7 +5665,7 @@
      ]
     },
     "DisplayJumellesFondNormal": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -5691,7 +5691,16 @@
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
+    },
+    "ChangeRealPosJumelle": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   },
   "input": {

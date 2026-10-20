@@ -4261,6 +4261,15 @@
     "addr": "1:649c8",
     "name": "RAYVERSE",
     "evidence": "called target: xref/DOS"
+   },
+   "IF@DEXP": {
+    "addr": "1:75735",
+    "evidence": "LIBRARY_MEMBER C:/tools/watcom-10.6/LIB386/MATH3R.LIB:exp"
+   },
+   "ChangeRealPosJumelle": {
+    "addr": "1:33670",
+    "name": "ANDROID",
+    "evidence": "DOS stores JumellePosX/Y and PositionJumelleX16/Y16 then falls through ChangeJumelleVariable; Android symbol between YWithLimit and ZoomAmp, checked in android.load()"
    }
   },
   "data": {

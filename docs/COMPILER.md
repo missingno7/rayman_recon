@@ -45,9 +45,25 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - **Watcom 10.5 and 10.6 compilers give identical code** on all accepted units (rand 2/2, audiocd 8/11,
   mathutil 12/12 with both) [non-discriminating so far].
 
+- **Floating point is software (`-fpc`)** [PROVEN, jumelle InitMatriceJumelle 372 bytes STRICT]: the original calls
+  the CLIB3R helpers `__I4FD`, `__FDN`, `__FDM`, `__FDI4` and MATH3R `exp` (IF@DEXP, not MATH387R) in double
+  precision: `ExpPoint[i] = (s32)(exp(-(double)i / 1024.0) * 65536.0)`. `-fpi` (default) / `-fpi87` emit x87 code
+  plus a `__CHP` call (absent from the image). With `-fpc`, `-fp3`/`-fp5` and `-on` are non-discriminating.
+  `-fpc` is now part of the game profile; all previously accepted units are unchanged by it (verify: 0 regressions).
+- **Adjacent-function fallthrough** [PROVEN, jumelle]: ChangeRealPosJumelle compiles to a 28-byte prefix that falls
+  through into ChangeJumelleVariable (1:33670), without `-oe`.
+- **Empty same-TU callees vanish from callers** [PROVEN, jumelle]: an empty PrepareJumelleZoom body removes its call
+  from DefaultJumelleVariable (which then regresses) - reconstruct non-empty callees before judging callers.
+- **Hand-written drawing ABI** [PROVEN, jumelle DisplayJumellesFondNormal]: DisplayAnyPictureNormal takes ESI src,
+  EDI dst, EAX/EBX src x/y, ECX/EDX dst x/y plus three callee-popped stack args; declared with an ABI-only
+  `#pragma aux ... parm [esi] [edi] [eax] [ebx] [ecx] [edx]`.
+- Release check on jumelle: 10.0, 10.5, 10.6 identical; **10.0a differs** in four bodies (none of them STRICT-relevant).
+
 ## Undetermined / next discriminators
-- `-on` (fast FP), `-oi`, `-ol`/`-ol+`, `-om`: no accepted unit discriminates them yet. Need FP code (`-on`,
-  `-fp3/-fp5`, `-fpi87`), loops (`-ol`), intrinsic candidates (`-oi`: memcpy/strcpy/abs inline forms).
+- `-oi`, `-ol`/`-ol+`, `-om`: no accepted unit discriminates them yet (jumelle: -or/-om/-ol/-on/-oi/-oe=1 code-equal
+  on its snapshot). Need loops (`-ol`) and intrinsic candidates (`-oi`: memcpy/strcpy/abs inline forms).
+- OPEN: the DOS `CLD; REP MOVSB` + dword copy sequence in jumelle is not produced by Watcom 10.6 inline memcpy (F2
+  strings) - a different helper or source idiom.
 - Compiler release for v1.21 game code: 10.0, 10.0a, 10.5 and 10.6 give identical code on everything tested
   (only the 10.6 libraries match the v1.21 runtime). The 10.5 compiler was recovered from the CD's packed
   `DISKIMGS` set (`C:\tools\watcom-10.5-pck`, docs/TOOLCHAIN.md).

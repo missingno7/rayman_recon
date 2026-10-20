@@ -89,9 +89,10 @@
     "-zq",
     "-oaxt",
     "-s",
-    "-5r"
+    "-5r",
+    "-fpc"
    ],
-   "status": "STRONG for -oa -ot -s -5r on GOG v1.21 rand TU (2 STRICT functions); -on/-oe undetermined (-oneatx/-otexan equally STRICT there); compiler release: 10.6 tested, 10.0/10.0a/10.6 code-identical on myRand probes; runtime libs = 10.6 (libscan). See docs/COMPILER.md."
+   "status": "STRONG for -oa -ot -s -5r on GOG v1.21 rand TU (2 STRICT functions); -on/-oe undetermined (-oneatx/-otexan equally STRICT there); compiler release: 10.6 tested, 10.0/10.0a/10.6 code-identical on myRand probes; runtime libs = 10.6 (libscan). See docs/COMPILER.md. -fpc PROVEN by jumelle InitMatriceJumelle (software FP, CLIB3R __FD* helpers + MATH3R exp); neutral for all integer units."
   }
  }
 }

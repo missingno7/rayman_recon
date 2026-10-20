@@ -1,4 +1,10 @@
-/* jumelle.c (1:32930..1:34580, binoculars/world-map zoom; floating point). Names RAYVERSE; worker tu_jumelle first pass. See config/units.json for statuses. */
+/* jumelle.c (1:32930..1:34580, binoculars/world-map zoom; software floating point, -fpc). Names RAYVERSE/ANDROID; workers tu_jumelle + fin_jumelle. #pragma aux lines below only declare the register ABI of external hand-written assembly routines (no code). */
+/* jumelle.c -- DOS v1.21 candidate, 1:32930..1:34571.
+ * Compile wc106 -zq -oaxt -s -5r -fpc; overlay symbols.json.
+ * Partial reconstruction: see NOTES.md and final.json for strict results.
+ * Function/global names RAYVERSE except ChangeRealPosJumelle (ANDROID).
+ * Descriptive locals INVENTED. No shared types changed.
+ */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -11,10 +17,6 @@ typedef int bool;
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define Abs(x) ((x) >= 0 ? (x) : -(x))
-#define sgn(x) ((x) < 0 ? -1 : ((x) > 0))
-#ifndef ashl16
-#define ashl16(v, b) ((v) << (b))
-#endif
 #ifndef ashr16
 #define ashr16(v, b) ((v) >> (b))
 #endif
@@ -75,6 +77,10 @@ extern u8 *PLAN2BIT;
 void sprite_clipping(s32 xmin, s32 xmax, s32 ymin, s32 ymax);
 void DisplayAnyPictureNormal(u8 *source_buffer, u8 *dest_buffer, s32 source_x, s32 source_y,
                              s32 dest_x, s32 dest_y, s32 stride, s32 width, s32 height);
+/* DOS 1:04c19: ESI source, EDI destination; three stack arguments, RET 12.
+   Register-only ABI declaration; the external assembly body is not reproduced here. */
+#pragma aux DisplayAnyPictureNormal parm [esi] [edi] [eax] [ebx] [ecx] [edx] modify [eax ebx ecx edx esi edi]
+#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx]
 void FatalError(char *message);
 void *JumelleCalloc(s32 count, s32 size);
 void JumelleFreeArray(s32 **array);
@@ -95,7 +101,53 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
     s32 v56 = jumelle_x - 112;
     s32 v7 = jumelle_x - plot_x - circle2_offset;
     s32 v53 = jumelle_y - 64;
-    if (plot_x <= circle2_offset) {
+    if (plot_x > circle2_offset) {
+        // Draw middle part of both circles
+        s32 v58 = 2 * (plot_x + circle2_offset);
+        if (v7 < 0) {
+            v58 += v7;
+            v7 = 0;
+        }
+        if (v7 + v58 >= SCREEN_WIDTH) {
+            v58 = SCREEN_WIDTH - v7 - 1;
+        }
+        if (v58 > 0) {
+            s32 v9 = jumelle_y - plot_y;
+            s32 v16;
+            if (v9 >= 0 && v9 < SCREEN_HEIGHT) {
+                u8* v10 = draw_buf + SCREEN_WIDTH * v9 + v7;
+                u8* v11 = effet_buf + SCREEN_WIDTH * v9 + v7 - v55;
+                if (JumelleZoomActif) {
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v9 - v53)) / 2 + (v7 - v56));
+                    s32 count = v58;
+                    do {
+                        *v10++ = v11[*zoom++];
+                        ++v11;
+                    } while (--count);
+                } else {
+                    memcpy(v10, v11, v58);
+                }
+            }
+
+            v16 = jumelle_y + plot_y;
+            if (v16 >= 0 && v16 < SCREEN_HEIGHT) {
+                u8* v10 = draw_buf + SCREEN_WIDTH * v16 + v7;
+                u8* v11 = effet_buf + SCREEN_WIDTH * v16 + v7 - v55;
+                if (JumelleZoomActif) {
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v16 - v53)) / 2 + (v7 - v56));
+                    s32 count = v58;
+                    do {
+                        *v10++ = v11[*zoom++];
+                        ++v11;
+                    } while (--count);
+                } else {
+                    memcpy(v10, v11, v58);
+                }
+            }
+        }
+        } else {
         s32 v60 = 2 * plot_x;
         s32 v25;
         s32 v59;
@@ -133,7 +185,13 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                 u8* v29 = draw_buf + v27;
                 u8* v30 = effet_buf + v28;
                 if (JumelleZoomActif) {
-                    /* DOS zoom mapping is reconstructed from the binary below. */
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v26 - v53)) / 2 + (v7 - v56));
+                    s32 count = v60;
+                    do {
+                        *v29++ = v30[*zoom++];
+                        ++v30;
+                    } while (--count);
                 } else {
                     memcpy(v29, v30, v60);
                 }
@@ -144,7 +202,13 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                 u8* v35 = effet_buf + SCREEN_WIDTH * v54 + v57 - v55;
                 u8* v36 = draw_buf + SCREEN_WIDTH * v54 + v57;
                 if (JumelleZoomActif) {
-                    //stub
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v54 - v53)) / 2 + (v57 - v56));
+                    s32 count = v59;
+                    do {
+                        *v36++ = v35[*zoom++];
+                        ++v35;
+                    } while (--count);
                 } else {
                     memcpy(v36, v35, v59);
                 }
@@ -160,7 +224,13 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                 u8* v41 = draw_buf + SCREEN_WIDTH * v52 + v7;
                 u8* v42 = effet_buf + SCREEN_WIDTH * v52 + v7 - v55;
                 if (JumelleZoomActif) {
-                    //stub
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v52 - v53)) / 2 + (v7 - v56));
+                    s32 count = v60;
+                    do {
+                        *v41++ = v42[*zoom++];
+                        ++v42;
+                    } while (--count);
                 } else {
                     memcpy(v41, v42, v60);
                 }
@@ -170,68 +240,38 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                 u8* v18 = draw_buf + SCREEN_WIDTH * v52 + v57;
                 u8* v24 = effet_buf + SCREEN_WIDTH * v52 + v57 - v55;
                 if (JumelleZoomActif) {
-                    //stub
+                    /* DOS zoom lookup; local names INVENTED. */
+                    s32 *zoom = JumelleZoomDef + ((448 * (v52 - v53)) / 2 + (v57 - v56));
+                    s32 count = v59;
+                    do {
+                        *v18++ = v24[*zoom++];
+                        ++v24;
+                    } while (--count);
                 } else {
                     memcpy(v18, v24, v59);
                 }
             }
         }
-    } else {
-        // Draw middle part of both circles
-        s32 v58 = 2 * (plot_x + circle2_offset);
-        if (v7 < 0) {
-            v58 += v7;
-            v7 = 0;
         }
-        if (v7 + v58 >= SCREEN_WIDTH) {
-            v58 = SCREEN_WIDTH - v7 - 1;
-        }
-        if (v58 > 0) {
-            s32 v9 = jumelle_y - plot_y;
-            s32 v16;
-            if (v9 >= 0 && v9 < SCREEN_HEIGHT) {
-                u8* v10 = draw_buf + SCREEN_WIDTH * v9 + v7;
-                u8* v11 = effet_buf + SCREEN_WIDTH * v9 + v7 - v55;
-                if (JumelleZoomActif) {
-                    //stub
-                } else {
-                    memcpy(v10, v11, v58);
-                }
-            }
-
-            v16 = jumelle_y + plot_y;
-            if (v16 >= 0 && v16 < SCREEN_HEIGHT) {
-                u8* v10 = draw_buf + SCREEN_WIDTH * v16 + v7;
-                u8* v11 = effet_buf + SCREEN_WIDTH * v16 + v7 - v55;
-                if (JumelleZoomActif) {
-                    //stub
-                } else {
-                    memcpy(v10, v11, v58);
-                }
-            }
-        }
-    }
 
 }
 
 
 void DisplayJumellesNormal(s32 x, s32 y, s32 rayon, s32 a4, u8* effet_buf, u8* draw_buf) {
-    s32 v6 = 0;
     s32 v7 = 0;
+    s32 v6 = 0;
     s32 v8 = rayon;
-    while (v8 >= v7) {
+    while (v7 <= v8) {
         plot2linejumelle(x, y, v7, v8, a4, effet_buf, draw_buf);
         plot2linejumelle(x, y, v8, v7, a4, effet_buf, draw_buf);
-        v6 = v6 + 2 * v7 + 1;
+        v6 += 2 * v7 + 1;
         ++v7;
         if (v6 >= v8) {
-            v6 = v6 - 2 * v8 + 1;
+            v6 -= 2 * v8 - 1;
             --v8;
         }
     }
-    if (ParamZoomChange) {
-        PrepareJumelleZoom();
-    }
+    if (ParamZoomChange) PrepareJumelleZoom();
 }
 
 
@@ -241,20 +281,7 @@ void InitMatriceJumelle(void) {
         DistPointY = (s32*)JumelleCalloc(65, sizeof(s32));
         ExpPoint = (s32*)JumelleCalloc(5120, sizeof(s32));
         JumelleZoomDef = (s32*)JumelleCalloc(29025, sizeof(s32));
-        if (DistPointX && DistPointY && ExpPoint && JumelleZoomDef) {
-            s32 y;
-            s32 x;
-            s32 i;
-            for (y = 0; y < 65; ++y) {
-                DistPointY[y] = y * y;
-                for (x = 0; x < 161; ++x) {
-                    DistPointX[x] = x * x;
-                }
-            }
-            for (i = 0; i < 5120; ++i) {
-                ExpPoint[i] = (s32)(exp((double)(-i) / 1024.0) * 65536.0);
-            }
-        } else {
+        if (!DistPointX || !DistPointY || !ExpPoint || !JumelleZoomDef) {
             if (DistPointX) {
                 JumelleFreeArray(&DistPointX);
             }
@@ -269,6 +296,19 @@ void InitMatriceJumelle(void) {
             }
             JumelleEffetAutorise = 0;
             FatalError("Pas de Jumelle");
+        } else {
+            s32 y;
+            s32 x;
+            s32 i;
+            for (y = 0; y <= 64; ++y) {
+                DistPointY[y] = y * y;
+                for (x = 0; x <= 160; ++x) {
+                    DistPointX[x] = x * x;
+                }
+            }
+            for (i = 0; i < 5120; ++i) {
+                ExpPoint[i] = (s32)(exp(-(double)i / 1024.0) * 65536.0);
+            }
         }
     }
     DefaultJumelleVariable();
@@ -280,7 +320,7 @@ void DefaultJumelleVariable(void) {
         JumelleZoomActif = 1;
         ChangeJumelleSizeOK = 3;
     } else {
-        JumelleZoomActif = JumelleEffetAutorise;
+        JumelleZoomActif = 0;
         ChangeJumelleSizeOK = 3;
     }
     RayonJumelle = 25;
@@ -294,33 +334,51 @@ void DefaultJumelleVariable(void) {
     PositionStageNameCalcule = 0;
     ChangeJumelleVariable();
     if (JumelleEffetAutorise) {
-        JumelleZoomAmp = -26 * RayonJumelle + 32150;
+        JumelleZoomAmp = 26 * -RayonJumelle + 32150;
         PrepareJumelleZoom();
     }
 }
 
 void ChangeDeltaSizeJumelle(s32 delta_size) {
-    RayonJumelle += delta_size;
-    if (64 < RayonJumelle)
-        RayonJumelle = 64;
-    if (RayonJumelle < 25)
-        RayonJumelle = 25;
+    s32 radius = RayonJumelle + delta_size, bound = 64;
+    if (bound > radius)
+        bound = radius;
+    radius = bound;
+    bound = 25;
+    if (bound < radius)
+        bound = radius;
+    RayonJumelle = bound;
     ChangeJumelleVariable();
-    if (JumelleZoomActif) {
-        ChangeDeltaZoomAmpJumelle(delta_size <= 0 ? 65 : -65);
-    }
+    if (JumelleZoomActif)
+        ChangeDeltaZoomAmpJumelle(delta_size > 0 ? -65 : 65);
 }
 
 void CalculVitesseJumelle(void) {
-    s16 delta_x = (s16)PositionJumelleDemandeX - (s16)JumellePosX;
-    s16 delta_y = (s16)PositionJumelleDemandeY - (s16)JumellePosY;
-    s16 dist = Abs(delta_y) + Abs(delta_x);
+    s16 delta_x = PositionJumelleDemandeX - JumellePosX;
+    s16 delta_y = PositionJumelleDemandeY - JumellePosY;
+    s32 absolute_x = delta_x;
+    s32 absolute_y = delta_y;
+    s16 dist;
+    s32 dx, dy;
+    if (absolute_x < 0) absolute_x = -absolute_x;
+    if (absolute_y < 0) absolute_y = -absolute_y;
+    dist = absolute_x + absolute_y;
     if (dist > 0) {
-        delta_x = ashl16(delta_x, 6) / dist;
-        delta_y = ashl16(delta_y, 6) / dist;
+        delta_x = (delta_x << 6) / dist;
+        delta_y = (delta_y << 6) / dist;
     }
-    XSpeedJumelle = MAX(MIN(XSpeedJumelle + sgn(delta_x - XSpeedJumelle), 16), -16);
-    YSpeedJumelle = MAX(MIN(YSpeedJumelle + sgn(delta_y - YSpeedJumelle), 16), -16);
+    dx = delta_x - XSpeedJumelle;
+    if (dx) dx = dx > 0 ? 1 : -1;
+    dx += XSpeedJumelle;
+    if (dx > 16) dx = 16;
+    if (dx < -16) dx = -16;
+    XSpeedJumelle = dx;
+    dy = delta_y - YSpeedJumelle;
+    if (dy) dy = dy > 0 ? 1 : -1;
+    dy += YSpeedJumelle;
+    if (dy > 16) dy = 16;
+    if (dy < -16) dy = -16;
+    YSpeedJumelle = dy;
 }
 
 void ChangeDeltaPosXJumelleWithoutLimit(s32 delta_pos_x) {
@@ -403,7 +461,7 @@ s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
     if (((ymap != scroll_start_y && ymap != scroll_end_y) ||
          (ymap == scroll_start_y && delta_pos_y > 0) ||
          (ymap == scroll_end_y && delta_pos_y < 0)) &&
-        JumellePosY > RayonJumelle / 3 && JumellePosY < 320 - RayonJumelle / 3
+        JumellePosY > RayonJumelle / 3 && JumellePosY < 200 - RayonJumelle / 3
             ) {
         if (ModeAutoJumelle & 1) {
             Ymap16 = (PositionJumelleY16 & 0xF) | (Ymap16 & ~0xF);
@@ -423,6 +481,15 @@ s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
 }
 
 
+/* Name ANDROID; recovered DOS entry 1:33670. */
+void ChangeRealPosJumelle(s32 x, s32 y) {
+    JumellePosX = x;
+    JumellePosY = y;
+    PositionJumelleX16 = x << 4;
+    PositionJumelleY16 = y << 4;
+    ChangeJumelleVariable();
+}
+
 void ChangeJumelleVariable(void) {
     s32 half_width;
     s32 height;
@@ -430,26 +497,34 @@ void ChangeJumelleVariable(void) {
     LargeurJumelle = (7 * RayonJumelle) / 2;
     half_width = LargeurJumelle / 2;
     height = 2 * RayonJumelle;
-    half_height = height / 2;
     JumelleXMin = JumellePosX - half_width;
+    half_height = height / 2;
     JumelleYMin = JumellePosY - half_height;
-    scroll_start_x = (s16)(half_width + 2);
-    scroll_start_y = (s16)(half_height + 2);
-    scroll_end_x = (s16)(WidthNworld - half_width - 4);
-    scroll_end_y = (s16)(HeightNworld - half_height - 4);
+    scroll_start_x = half_width + 2;
+    scroll_start_y = half_height + 2;
+    scroll_end_x = WidthNworld - half_width - 4;
+    scroll_end_y = HeightNworld - half_height - 4;
     HauteurJumelle = height;
 
-//    scroll_start_x = (half_width + 2);
-//    scroll_start_y = (half_height + 2);
-//    scroll_end_x = WidthNworld - SCREEN_WIDTH + 32;
-//    scroll_end_y = HeightNworld - SCREEN_HEIGHT + 32;
 }
 
 
 void ChangeDeltaZoomAmpJumelle(s32 a1) {
-    if ((JumAmpDefPlus + JumAmpDefMul * -RayonJumelle == JumelleZoomAmp &&
-        (!(ModeAutoJumelle & 2) || JumelleZoomAmp == ModeAutoJumelleZoomAmp)) || !JumelleEffetAutorise
-    ) {
+    if ((-RayonJumelle * JumAmpDefMul + JumAmpDefPlus != JumelleZoomAmp ||
+         ((ModeAutoJumelle & 2) && JumelleZoomAmp != ModeAutoJumelleZoomAmp)) && JumelleEffetAutorise) {
+        s32 amplitude = a1 + JumelleZoomAmp;
+        s32 bound = 26 * -RayonJumelle + 32150;
+        if (bound > amplitude)
+            bound = amplitude;
+        amplitude = bound;
+        bound = 0;
+        if (bound < amplitude)
+            bound = amplitude;
+        JumelleZoomAmp = bound;
+        JumelleZoomActif = 1;
+        ParamZoomChange = 1;
+        ChangeJumelleVariable();
+    } else {
         if (JumelleZoomAmp != 0 && JumelleEffetAutorise) {
             JumelleZoomActif = 1;
             ParamZoomChange = 0;
@@ -457,24 +532,52 @@ void ChangeDeltaZoomAmpJumelle(s32 a1) {
             JumelleZoomActif = 0;
             ParamZoomChange = 0;
         }
-    } else {
-        JumelleZoomAmp = MAX(0, MIN(-26 * RayonJumelle + 32150, a1 + JumelleZoomAmp));
-        JumelleZoomActif = 1;
-        ParamZoomChange = 1;
-        ChangeJumelleVariable();
     }
 }
 
 void PrepareJumelleZoom(void) {
+    s32 scale = 0x200000 / (RayonJumelle * RayonJumelle);
+    s32 margin = (3 * (64 - RayonJumelle)) >> 2;
+    s32 *left = JumelleZoomDef + 14400 + margin;
+    s32 *right = JumelleZoomDef + 14272 + 223 - margin;
+    u32 x, y;
+    u32 distance, factor, dx, dy;
     if (JumelleEffetAutorise) {
-
+        ParamZoomChange = 0;
+        memset(JumelleZoomDef, 0, 29025 * sizeof(s32));
+        for (y = 0; y <= (u32)RayonJumelle; y++) {
+            for (x = 0; x < (u32)(LargeurJumelle - RayonJumelle); x++) {
+                distance = (DistPointX[x] + DistPointY[y]) * scale;
+                if (distance < 0x500000) {
+                    factor = ((u32)JumelleZoomAmp * (u32)ExpPoint[distance >> 10]) >> 16;
+                    dx = (x * factor + 0x8000) >> 16;
+                    dy = 320 * ((y * factor + 0x8000) >> 16);
+                    if (x) {
+                        left[x - y * 224] += dy - dx;
+                        right[y * 224 - x] += dx - dy;
+                    }
+                    if (y) {
+                        left[y * 224 + x] += -dx - dy;
+                        right[-y * 224 - x] += dx + dy;
+                    }
+                    if (x <= (u32)RayonJumelle) {
+                        if (y) {
+                            left[-y * 224 - x] += dx + dy;
+                            right[y * 224 + x] += -dx - dy;
+                        }
+                        if (x) {
+                            left[y * 224 - x] += dx - dy;
+                            right[-y * 224 + x] += dy - dx;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 
 void RecaleRayPosInJumelle(void) {
-    // NOTE: in the PS1 version this is identical to recale_ray_pos()
-    //recale_ray_pos(); return;
     if (scroll_y == -1) {
         s32 v13 = ((3 * HauteurJumelle) >> 2) - ray.offset_by;
         if (v_scroll_speed != 255 || decalage_en_cours != 0) {
@@ -565,23 +668,29 @@ void RecaleRayPosInJumelle(void) {
 void DisplayJumellesFondNormal(void) {
     s32 width = LargeurJumelle;
     s32 height = HauteurJumelle;
-    height += 2;
     width += 2;
-    sprite_clipping(0, height, width, 0);
-//    DisplayAnyPictureNormal(PLAN2BIT, EffetBufferNormal, xmap - LargeurJumelle/2, ymap - HauteurJumelle/2, 0, 0, WidthNworld, 320, 200);
+    height += 2;
+    sprite_clipping(0, width, 0, height);
     DisplayAnyPictureNormal(PLAN2BIT, EffetBufferNormal, xmap - LargeurJumelle/2, ymap - HauteurJumelle/2, 0, 0, WidthNworld, width, height);
 }
 
 
 void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
-    bool need_scroll_xmap = 1;
-    bool need_scroll_ymap = 1;
+    u8 need_scroll_xmap = 1;
+    u8 need_scroll_ymap = 1;
     s32 delta_pos_x = 0;
     s32 delta_pos_y = 0;
     if (ChangeJumelleSizeOK != 4) {
         s16 scroll_limit_x;
         s16 scroll_limit_y;
-        if (ray.speed_x != 0 || ray.speed_y != 0) {
+        if (ray.speed_x == 0 && ray.speed_y == 0) {
+            PositionJumelleDemandeY = SCREEN_HEIGHT / 2;
+            PositionJumelleDemandeX = SCREEN_WIDTH / 2;
+            delta_pos_x = 16 * (PositionJumelleDemandeX - JumellePosX);
+            ChangeDeltaPosXJumelleWithoutLimit(delta_pos_x);
+            delta_pos_y = 16 * (PositionJumelleDemandeY - JumellePosY);
+            ChangeDeltaPosYJumelleWithoutLimit(delta_pos_y);
+        } else {
             s32 ray_x = ray.offset_bx + ray.x;
             s32 ray_y;
             if (ray_x > scroll_start_x && ray_x < scroll_end_x) {
@@ -604,13 +713,6 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
                 delta_pos_y = 16 * (SCREEN_HEIGHT / 2 - JumellePosY);
                 ChangeDeltaPosYJumelleWithoutLimit(delta_pos_y);
             }
-        } else {
-            PositionJumelleDemandeY = SCREEN_HEIGHT / 2;
-            PositionJumelleDemandeX = SCREEN_WIDTH / 2;
-            delta_pos_x = 16 * (PositionJumelleDemandeX - JumellePosX);
-            delta_pos_y = 16 * (PositionJumelleDemandeY - JumellePosY);
-            ChangeDeltaPosXJumelleWithoutLimit(delta_pos_x);
-            ChangeDeltaPosYJumelleWithoutLimit(delta_pos_y);
         }
 
         if (need_scroll_xmap) {
@@ -675,13 +777,13 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
             ModeAutoJumelle |= ChangeJumelleSizeOK;
         } else if (CompteurJumelle == 1800) {
             ModeAutoJumelle |= 2;
-            ModeAutoJumelleZoomAmp = -26 * RayonJumelle + 32150;
+            ModeAutoJumelleZoomAmp = 26 * -RayonJumelle + 32150;
         } else if (ModeAutoJumelle != 0) {
             if (!(ModeAutoJumelle & 1) && RayonJumelle == 25) {
-                if (JumelleZoomAmp == 31500) {
+                if (26 * -RayonJumelle + 32150 == JumelleZoomAmp) {
                     ModeAutoJumelle |= 1;
                     RayonJumelle = 25;
-                    ModeAutoPosXJumelle = myRand(SCREEN_WIDTH) + 8;
+                    ModeAutoPosXJumelle = myRand(SCREEN_WIDTH) + RayonJumelle / 3;
                     ModeAutoPosYJumelle = myRand(SCREEN_HEIGHT) + RayonJumelle / 3;
                     PositionJumelleDemandeX = ModeAutoPosXJumelle;
                     PositionJumelleDemandeY = ModeAutoPosYJumelle;
@@ -692,44 +794,44 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
                 }
             }
         }
-    }
 
-    if (ModeAutoJumelle & 1) {
-        CalculVitesseJumelle();
-        ChangeDeltaPosXJumelleWithoutLimit(XSpeedJumelle);
-        ChangeDeltaPosYJumelleWithoutLimit(YSpeedJumelle);
-        if (JumellePosX == ModeAutoPosXJumelle && JumellePosY == ModeAutoPosYJumelle) {
-            ModeAutoPosXJumelle = myRand(SCREEN_WIDTH) + RayonJumelle / 3;
-            ModeAutoPosYJumelle = myRand(SCREEN_HEIGHT) + RayonJumelle / 3;
-            PositionJumelleDemandeX = ModeAutoPosXJumelle;
-            PositionJumelleDemandeY = ModeAutoPosYJumelle;
-        }
-    }
-
-    if (ModeAutoJumelle & 2) {
-        if (JumelleZoomAmp < ModeAutoJumelleZoomAmp) {
-            ChangeDeltaZoomAmpJumelle(300);
-            if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
-                JumelleZoomAmp = ModeAutoJumelleZoomAmp;
+        if (ModeAutoJumelle & 1) {
+            CalculVitesseJumelle();
+            ChangeDeltaPosXJumelleWithoutLimit(XSpeedJumelle);
+            ChangeDeltaPosYJumelleWithoutLimit(YSpeedJumelle);
+            if (JumellePosX == ModeAutoPosXJumelle && JumellePosY == ModeAutoPosYJumelle) {
+                ModeAutoPosXJumelle = myRand(SCREEN_WIDTH) + RayonJumelle / 3;
+                ModeAutoPosYJumelle = myRand(SCREEN_HEIGHT) + RayonJumelle / 3;
+                PositionJumelleDemandeX = ModeAutoPosXJumelle;
+                PositionJumelleDemandeY = ModeAutoPosYJumelle;
             }
-        } else if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
-            ChangeDeltaZoomAmpJumelle(-300);
+        }
+
+        if (ModeAutoJumelle & 2) {
             if (JumelleZoomAmp < ModeAutoJumelleZoomAmp) {
-                JumelleZoomAmp = ModeAutoJumelleZoomAmp;
+                ChangeDeltaZoomAmpJumelle(300);
+                if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
+                    JumelleZoomAmp = ModeAutoJumelleZoomAmp;
+                }
+            } else if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
+                ChangeDeltaZoomAmpJumelle(-300);
+                if (JumelleZoomAmp < ModeAutoJumelleZoomAmp) {
+                    JumelleZoomAmp = ModeAutoJumelleZoomAmp;
+                }
             }
         }
-    }
 
-    if (ModeAutoJumelle & 4) {
-        if (RayonJumelle < ModeAutoRayonJumelle) {
-            ChangeDeltaSizeJumelle(1);
-            ModeAutoJumelleZoomAmp = -26 * RayonJumelle + 32150;
-        } else if (RayonJumelle > ModeAutoRayonJumelle) {
-            ChangeDeltaSizeJumelle(-1);
-            ModeAutoJumelleZoomAmp = -26 * RayonJumelle + 32150;
+        if (ModeAutoJumelle & 4) {
+            if (RayonJumelle < ModeAutoRayonJumelle) {
+                ChangeDeltaSizeJumelle(1);
+                ModeAutoJumelleZoomAmp = 26 * -RayonJumelle + 32150;
+            } else if (RayonJumelle > ModeAutoRayonJumelle) {
+                ChangeDeltaSizeJumelle(-1);
+                ModeAutoJumelleZoomAmp = 26 * -RayonJumelle + 32150;
+            }
         }
-    }
 
+    }
 }
 
 
