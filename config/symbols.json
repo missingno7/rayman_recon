@@ -3246,6 +3246,161 @@
     "addr": "1:53244",
     "name": "RAYVERSE",
     "evidence": "Rayverse stub name; DOS disassembly"
+   },
+   "deter_vide_plein_panach": {
+    "addr": "1:4c4a0",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c4a0; Rayverse map.c name"
+   },
+   "deter_nb_blocks": {
+    "addr": "1:4c4dc",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c4dc; Rayverse map.c name"
+   },
+   "Copy_Blocks": {
+    "addr": "1:4c564",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c564; Rayverse map.c stub name"
+   },
+   "construct_MAP": {
+    "addr": "1:4c82c",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c82c; Rayverse map.c name"
+   },
+   "init_build_map": {
+    "addr": "1:4c8fc",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c8fc; Rayverse map.c name"
+   },
+   "update_display_map": {
+    "addr": "1:4c914",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4c914; Rayverse map.c name"
+   },
+   "set_default_Bloc_clipping": {
+    "addr": "1:4c9f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5C9F0; DOS tumap boundary"
+   },
+   "set_xymapini": {
+    "addr": "1:4ca24",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5CA24; DOS tumap boundary"
+   },
+   "set_xymap": {
+    "addr": "1:4cad0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5CAD0; DOS tumap boundary"
+   },
+   "set_whmap": {
+    "addr": "1:4cb40",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4cb40; Rayverse map.c stub name"
+   },
+   "recaleRaysurlesBords": {
+    "addr": "1:4cd64",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5CD64; DOS tumap boundary"
+   },
+   "set_xywhmap": {
+    "addr": "1:4ce08",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5CE08; DOS tumap boundary"
+   },
+   "MaskScrollDiffSprites": {
+    "addr": "1:4d144",
+    "name": "RAYVERSE",
+    "evidence": "tools/tumap.py boundary and DOS entry 1:4d144; Rayverse map.c name"
+   },
+   "DRAW_MAP": {
+    "addr": "1:4d230",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5D230; DOS tumap boundary"
+   },
+   "INIT_GAME_MODE_NORMAL": {
+    "addr": "1:4d5b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5D5B0; DOS tumap boundary"
+   },
+   "FIN_GAME_MODE_NORMAL": {
+    "addr": "1:4d620",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse map.c comment 5D620; DOS tumap boundary"
+   },
+   "ngaweFollowsShip": {
+    "addr": "1:4d630",
+    "name": "PS1",
+    "evidence": "DOS entry 1:4d630; Rayverse ngawe.c and PS1 src/obj/pirate_ngawe.c"
+   },
+   "allocatePirateNgaweRing": {
+    "addr": "1:4d714",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ngawe.c comment 5D714; DOS tumap boundary"
+   },
+   "DO_NGW_TIR": {
+    "addr": "1:4d8cc",
+    "name": "PS1",
+    "evidence": "DOS entry 1:4d8cc; PS1 source seeded verbatim"
+   },
+   "NGW_REACT_TO_RAY_IN_ZONE": {
+    "addr": "1:4d934",
+    "name": "PS1",
+    "evidence": "DOS entry 1:4d934; PS1 source seeded verbatim"
+   },
+   "DO_ONE_NGW_COMMAND": {
+    "addr": "1:4d964",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ngawe.c comment 5D964; DOS tumap boundary"
+   },
+   "DO_NGW_POING_COLLISION": {
+    "addr": "1:4dc90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ngawe.c comment 5DC90; DOS tumap boundary"
+   },
+   "DO_ONE_NGW_RING_COMMAND": {
+    "addr": "1:4dd58",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ngawe.c comment 5DD58; DOS tumap boundary"
+   },
+   "block_malloc": {
+    "addr": "1:6f5b0",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target 1:6f5b0"
+   },
+   "Display_Bloc_Plein_Clippe": {
+    "addr": "1:0555e",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target and tools/xref.py"
+   },
+   "Display_Bloc_Clippe": {
+    "addr": "1:053c6",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target and tools/xref.py"
+   },
+   "Display_Bloc_Plein": {
+    "addr": "1:05041",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target and tools/xref.py"
+   },
+   "Display_Bloc": {
+    "addr": "1:04e64",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target and tools/xref.py"
+   },
+   "N_CLRSCR": {
+    "addr": "1:04c8e",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target and tools/xref.py"
+   },
+   "Copy_Plan0Diff_To_Buf": {
+    "addr": "1:04cfa",
+    "name": "RAYVERSE",
+    "evidence": "DOS data initializer target at 1:4d5d5; tools/xref.py"
+   },
+   "clear_memory": {
+    "addr": "1:70420",
+    "name": "INVENTED",
+    "evidence": "DOS direct call target at 1:4d60a; disassembly takes destination, byte value, and length then calls the fill routine"
    }
   },
   "data": {
@@ -6382,6 +6537,78 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c true byte start; Android symbol .bss size 1; TEST_FIN_BLOC DOS byte comparisons at 1:15434/15441/1544e"
+   },
+   "BIG_MAP": {
+    "addr": "2:321d8",
+    "type": "big_map_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C21D8; Android reports 32 bytes; DOS field references in construct_MAP and DRAW_MAP"
+   },
+   "Scroll_Masque": {
+    "addr": "2:321f8",
+    "type": "u8*[20]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C21F8; Android reports 80 bytes; DOS pointer stores in MaskScrollDiffSprites"
+   },
+   "block_add": {
+    "addr": "2:34268",
+    "type": "s32[1200]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C4268; Android reports 4800 bytes; DOS indexed dword stores/loads"
+   },
+   "nb_blocks_plein": {
+    "addr": "2:3d054",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD054; Android reports 4 bytes; DOS dword accesses"
+   },
+   "BufferNormalDeplt": {
+    "addr": "2:3d0fc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD0FC; Android reports 4 bytes; DOS dword store"
+   },
+   "Copy_Plan0_To_Buf": {
+    "addr": "2:3d124",
+    "type": "void (*)(u8*,u8*,s32,s32,s32)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD124; Android reports 4 bytes; DOS function pointer store"
+   },
+   "DrawBufferNormalIni": {
+    "addr": "2:3d128",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD128; Android reports 4 bytes; DOS pointer loads/stores"
+   },
+   "xmapmaxini": {
+    "addr": "2:3f758",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF758; DOS word loads in set_xymapini and set_whmap"
+   },
+   "ymapmaxini": {
+    "addr": "2:3f75c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF75C; DOS word loads in set_xymapini and set_whmap"
+   },
+   "ScrollDiffSprites": {
+    "addr": "2:3e634",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE634; Android reports 4 bytes; DOS sprite object reads"
+   },
+   "draw_buffer": {
+    "addr": "2:3d7b8",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD7B8; Android reports 4 bytes; DOS pointer store in FIN_GAME_MODE_NORMAL"
+   },
+   "DisplayBufferNormal": {
+    "addr": "2:5e28",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //95E28; DOS dword pointer load in INIT_GAME_MODE_NORMAL"
    }
   }
  }

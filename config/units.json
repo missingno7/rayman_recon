@@ -4910,6 +4910,188 @@
      ]
     }
    }
+  },
+  "map": {
+   "source": "src/map.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "deter_vide_plein_panach": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "deter_nb_blocks": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "Copy_Blocks": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "construct_MAP": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "init_build_map": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "update_display_map": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "set_default_Bloc_clipping": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "set_xymapini": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "set_xymap": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "set_whmap": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "recaleRaysurlesBords": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "set_xywhmap": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "MaskScrollDiffSprites": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
+  },
+  "map_ngawe": {
+   "source": "src/map_ngawe.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DRAW_MAP": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "INIT_GAME_MODE_NORMAL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "FIN_GAME_MODE_NORMAL": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "ngaweFollowsShip": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "ngaweTriesToGrabShip": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "allocatePirateNgaweRing": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_NGW_TIR": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "NGW_REACT_TO_RAY_IN_ZONE": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_ONE_NGW_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_NGW_POING_COLLISION": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_ONE_NGW_RING_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
   }
  }
 }
