@@ -20,7 +20,7 @@ extern obj_t ray;
 extern s16 id_obj_grapped;
 extern poing_t poing;
 extern obj_t *poing_obj;
-#define get_eta(obj) ((obj)->eta[(obj)->main_etat])
+#define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 typedef struct ray_stack_t {
     s16 x_pos; s16 y_pos; s16 poing_x_pos; s16 poing_y_pos;
     u8 main_etat; u8 sub_etat; u8 anim_index; u8 anim_frame; u8 flip_x;
@@ -81,7 +81,7 @@ extern s16 pierreAcorde_obj_id;
 extern s16 xmap;
 extern s16 ymap;
 extern s16 scroll_y;
-extern u16 black_fist_obj_id;
+extern s16 black_fist_obj_id;
 extern s16 scroll_x;
 extern u8 horloge[25];
 extern u8 ray_on_poelle;

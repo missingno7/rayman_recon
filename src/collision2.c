@@ -8,12 +8,11 @@
 //2F1E0
 s16 test_allowed(obj_t* obj, s16 center_x, s16 center_y) {
     /* 487A4 8016CFA4 -O2 -msoft-float */
-    s16 map_index =
-            ((center_y + obj->y) >> 4) * mp.width +
-            ((center_x + obj->x) >> 4);
     s16 res = false;
-
-    if (map_index != obj->test_block_index) {
+    s16 map_index =
+            ((center_x + obj->x) >> 4) +
+            ((center_y + obj->y) >> 4) * mp.width;
+    if (map_index != (s16)obj->test_block_index) {
         obj->test_block_index = map_index;
         res = true;
     }
@@ -80,25 +79,18 @@ void DO_MOVING_PLATFORM_COMMAND(obj_t* obj) {
 
 //2F378
 void DoPTGRAPPINPoingCollision(obj_t* obj, s16 sprite) {
-    s16 angle;
+    s32 angle;
+    extern s16 ANGLE_RAYMAN(obj_t *);
     if (RayEvts.grap && ray_mode != MODE_3_MORT_DE_RAYMAN) {
-        if (Abs((ray.y + ray.offset_by) - obj->y + obj->offset_by) < 250) {
+        if (Abs((ray.offset_by + ray.y) - obj->y - obj->offset_by) < 250) {
             SET_RAY_BALANCE();
             id_obj_grapped = obj->id;
             angle = ANGLE_RAYMAN(obj);
             obj->follow_x = angle;
-            if (angle > 256) {
+            if (angle > 256 || (angle == 256 && !ray.flags.flip_x))
                 obj->link = -1;
-            } else if (angle <= 256) {
-                if (angle == 256 && !(ray.flags.flip_x)) {
-                    obj->link = -1;
-                } else {
-                    obj->link = 1;
-                }
-            }
-            else /* TODO: ??? */ {
+            else
                 obj->link = 1;
-            }
 
             if (obj->main_etat == 0 && obj->sub_etat == 0) {
                 skipToLabel(obj, 0, true);
@@ -106,8 +98,8 @@ void DoPTGRAPPINPoingCollision(obj_t* obj, s16 sprite) {
 
             poing.is_active = false;
             poing.is_returning = false;
-            poing_obj->flags.alive = 0;
             poing_obj->is_active = 0;
+            poing_obj->flags.alive = 0;
             fin_poing_follow(false);
         }
     }
@@ -246,7 +238,7 @@ void DO_ONE_CMD(obj_t* obj) {
 void DO_ROLL_EYES(obj_t* obj) {
     /* 4BC40 80170440 -O2 -msoft-float */
     // TODO: fix? (PS1 decomp is non-matching)
-    s32 temp_a0_3;
+    s16 temp_a0_3;
     s16 temp_v0_1;
     s16 temp_v0_2;
     s16 temp_v0_3;
@@ -266,32 +258,26 @@ void DO_ROLL_EYES(obj_t* obj) {
     u16 temp_v1_2;
     u8 temp_v1_1;
     s16 fire_par_3;
+    s16 shifted;
+    u8 half_shift;
+    extern void DO_REDEYE_FIRE(s16, s16, s16);
     u8 y_gt_0;
     u8 x_gt_0;
 
     if (obj->type == TYPE_145_KILLING_EYES) {
         switch (obj->sub_etat) {
-            case 0:
-                if (--obj->iframes_timer == 0) {
-                    obj->sub_etat = 3;
-                    obj->iframes_timer = 30;
-                }
-                break;
-            case 1:
-                if (--obj->iframes_timer == 0) {
-                    obj->sub_etat = 2;
-                    obj->iframes_timer = 5;
-                }
-                break;
-            case 2:
-            case 5:
-                if (--obj->iframes_timer == 0)
-                {
-                    obj->iframes_timer = obj->param;
-                    obj->sub_etat = 0;
-                    obj->param = 100;
-                }
-                break;
+        case 0:
+            if (--obj->iframes_timer == 0) { obj->sub_etat = 3; obj->iframes_timer = 30; }
+            break;
+        case 2:
+            if (--obj->iframes_timer == 0) { obj->sub_etat = 0; obj->iframes_timer = obj->param; obj->param = 100; }
+            break;
+        case 1:
+            if (--obj->iframes_timer == 0) { obj->sub_etat = 2; obj->iframes_timer = 5; }
+            break;
+        case 5:
+            if (--obj->iframes_timer == 0) { obj->sub_etat = 0; obj->iframes_timer = obj->param; obj->param = 100; }
+            break;
         }
         obj->change_anim_mode = ANIMMODE_NONE;
     }
@@ -301,8 +287,8 @@ void DO_ROLL_EYES(obj_t* obj) {
     unk_y_1 = diff_y + 0x19;
     if (obj->type == TYPE_145_KILLING_EYES)
     {
-        unk_x_1 = diff_x + 0x34;
-        unk_y_1 = diff_y + 0x23;
+        unk_x_1 += 20;
+        unk_y_1 += 10;
     }
     x_gt_0 = unk_x_1 > 0;
     y_gt_0 = (unk_y_1 > 0);
@@ -314,10 +300,18 @@ void DO_ROLL_EYES(obj_t* obj) {
     {
         unk_y_1 = -unk_y_1;
     }
-    if (unk_x_1 >= 0xC9)
+    if (unk_x_1 > 200)
     {
-        unk_x_1 = ashr16(unk_x_1, 1U);
-        unk_y_1 = ashr16(unk_y_1, 1U);
+        half_shift = 1;
+        shifted = unk_x_1;
+        if (shifted >= 0) shifted >>= half_shift;
+        else { shifted = -shifted; shifted >>= half_shift; shifted = -shifted; }
+        unk_x_1 = shifted;
+        half_shift = 1;
+        shifted = unk_y_1;
+        if (shifted >= 0) shifted >>= half_shift;
+        else { shifted = -shifted; shifted >>= half_shift; shifted = -shifted; }
+        unk_y_1 = shifted;
     }
 
     if (unk_y_1 == 0)
@@ -343,7 +337,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         {
             if (y_gt_0)
             {
-                if (temp_lo >= (s16) LEN(N_anim))
+                if (temp_lo > 255)
                 {
                     fire_par_3 = 0x1B;
                 }
@@ -355,7 +349,7 @@ void DO_ROLL_EYES(obj_t* obj) {
             else
             {
                 fire_par_3 = 0;
-                if (temp_lo < (s16) LEN(N_anim))
+                if (temp_lo <= 255)
                 {
                     fire_par_3 = N_anim[temp_lo];
                 }
@@ -364,7 +358,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         else if (y_gt_0)
         {
             fire_par_3 = 0x12;
-            if (temp_lo < (s16) LEN(N_anim))
+            if (temp_lo <= 255)
             {
                 fire_par_3 = N_anim[temp_lo] + 0x12;
             }
@@ -372,7 +366,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         else
         {
             fire_par_3 = 9;
-            if (temp_lo < (s16) LEN(N_anim))
+            if (temp_lo <= 255)
             {
                 fire_par_3 = N_anim[temp_lo] + 9;
             }
@@ -388,8 +382,8 @@ void DO_ROLL_EYES(obj_t* obj) {
             obj->sub_etat = 1;
             obj->iframes_timer = 60;
             if (
-                    (temp_a0_3 >= -0x33) && (temp_s2 >= -0x23) &&
-                    (temp_a0_3 < 0x131) && (temp_s2 < 0xEB)
+                    (temp_a0_3 > -52) && (temp_s2 > -36) &&
+                    (temp_a0_3 < 0x131) && (temp_s2 < 195)
                     )
             {
                 DO_REDEYE_FIRE(obj->x, obj->y, fire_par_3);
@@ -418,28 +412,28 @@ void DoKillingEyesPoingCollision(obj_t* obj, s16 sprite) {
 
 //2F9B8
 s32 YaUnBloc(obj_t *obj, s16 dir) {
-    s16 unk_y;
     s16 i;
+    s16 unk_y;
     s32 res = false;
 
     switch (dir) {
         case 2:
-            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
+            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + (obj->y >> 4) * mp.width].tile_type] & 1)
                 res = true;
-            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
+            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + (obj->y >> 4) * mp.width].tile_type] & 1)
                 res = true;
             break;
         case 3:
-            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + mp.width * ((obj->y + 154) >> 4)].tile_type] & 1)
+            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + ((obj->y + 154) >> 4) * mp.width].tile_type] & 1)
                 res = true;
-            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
+            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + (obj->y >> 4) * mp.width].tile_type] & 1)
                 res = true;
             break;
         case 0:
             unk_y = 6;
             i = 0;
             while (i < 10) {
-                if (block_flags[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (block_flags[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + ((obj->y + unk_y) >> 4) * mp.width].tile_type] & 1)
                     res = true;
                 unk_y += 16;
                 i++;
@@ -449,7 +443,7 @@ s32 YaUnBloc(obj_t *obj, s16 dir) {
             unk_y = 6;
             i = 0;
             while (i < 10) {
-                if (block_flags[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (block_flags[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + ((obj->y + unk_y) >> 4) * mp.width].tile_type] & 1)
                     res = true;
                 unk_y += 16;
                 i++;
@@ -487,14 +481,16 @@ s16 MarCoince(obj_t* obj, s16 dir) {
     s32 map_ind;
     s32 pos_to_check;
     s16 res = false;
-    s16 x = obj->x + obj->offset_bx - 25;
-    s16 y = obj->y + obj->offset_hy;
+    s16 y;
+    s16 x;
+    x = obj->x + obj->offset_bx - 25;
+    y = obj->y + obj->offset_hy;
 
     switch (dir)
     {
         case 2:
-            pos_to_check = y - (y / 16 * 16);
-            if ((s16) pos_to_check < 3)
+            pos_to_check = y % 16;
+            if (pos_to_check < 3)
             {
                 map_ind = (x >> 4) + mp.width * (y >> 4);
                 if (block_flags[mp.map[map_ind].tile_type] & 2)
@@ -506,8 +502,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 3:
-            pos_to_check = y - (y / 16 * 16);
-            if ((s16) pos_to_check > 12)
+            pos_to_check = y % 16;
+            if (pos_to_check > 12)
             {
                 map_ind = (x >> 4) + mp.width * ((y + 16 * 3) >> 4);
                 if (block_flags[mp.map[map_ind].tile_type] & 2)
@@ -519,8 +515,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 0:
-            pos_to_check = x - (x / 16 * 16);
-            if ((s16) pos_to_check < 3)
+            pos_to_check = x % 16;
+            if (pos_to_check < 3)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) - 1;
                 if (block_flags[mp.map[map_ind].tile_type] & 2)
@@ -532,8 +528,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 1:
-            pos_to_check = x - (x / 16 * 16);
-            if ((s16) pos_to_check > 12)
+            pos_to_check = x % 16;
+            if (pos_to_check > 12)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) + 3;
                 if (block_flags[mp.map[map_ind].tile_type] & 2)
@@ -557,7 +553,7 @@ void DO_MOVE_MARACAS_COMMAND(obj_t* obj) {
     s16 speed_x;
     s16 diff_x;
     s16 diff_x_inv;
-    s32 diff_x_less;
+    u8 diff_x_less;
 
     if (obj->main_etat == 0 && obj->sub_etat == 0x0C)
     {
@@ -567,37 +563,35 @@ void DO_MOVE_MARACAS_COMMAND(obj_t* obj) {
             skipToLabel(obj, 99, true);
 
         obj->flags.flip_x = 0;
-        speed_x = 0;
         if (obj->cmd == 0x14)
             obj->speed_y = obj->follow_id;
 
+        speed_x = 0;
         if (ray.follow_id == obj->id)
         {
             diff_x = (ray.offset_bx + ray.x) - (obj->offset_bx + obj->x);
             if (diff_x > 0)
             {
-                if (diff_x >= 11)
+                if (diff_x > 10)
                     speed_x = 1;
-                if (diff_x >= 16)
+                if (diff_x > 15)
                     speed_x += 1;
-                if (diff_x >= 19)
+                if (diff_x > 18)
                     speed_x += 1;
-                diff_x_less = diff_x < 43;
+                if (diff_x > 42) speed_x = 0;
             }
             else
             {
-                diff_x_inv = -1;
-                diff_x_inv = diff_x * diff_x_inv;
-                if (diff_x_inv >= 11)
+                diff_x_inv = -diff_x;
+                if (diff_x_inv > 10)
                     speed_x = -1;
-                if (diff_x_inv >= 16)
+                if (diff_x_inv > 15)
                     speed_x -= 1;
-                if (diff_x_inv >= 19)
+                if (diff_x_inv > 18)
                     speed_x -= 1;
-                diff_x_less = diff_x_inv < 42;
+                if (diff_x_inv > 41) speed_x = 0;
             }
-            if (!diff_x_less)
-                speed_x = 0;
+
         }
         obj->speed_x = speed_x;
         if (obj->speed_y < 0)
@@ -606,7 +600,7 @@ void DO_MOVE_MARACAS_COMMAND(obj_t* obj) {
             {
                 obj->speed_y = 0;
                 obj->param++;
-                if (obj->param >= 241)
+                if (obj->param > 240)
                 {
                     obj->y -= 80;
                     allocateExplosion(obj);
@@ -707,9 +701,9 @@ void ACTIVE_L_EAU(obj_t* eau_obj) {
     obj_t *cur_obj;
     s16 nb_objs;
 
-    eau_obj->param = 130;
     eau_obj->y = ymapmax + (SCREEN_HEIGHT - 10);
     eau_obj->x = xmap - eau_obj->offset_bx;
+    eau_obj->param = 130;
     i = 0;
     cur_obj = level.objects;
     nb_objs = level.nb_objects;
@@ -721,9 +715,9 @@ void ACTIVE_L_EAU(obj_t* eau_obj) {
             cur_obj->x = eau_obj->x + 101 * 1;
             cur_obj->y = eau_obj->y;
             calc_obj_pos(cur_obj);
-            cur_obj->param = 130;
-            cur_obj->flags.alive = 1;
             cur_obj->is_active = 1;
+    cur_obj->param = 130;
+    cur_obj->flags.alive = 1;
             cur_obj->sub_etat = 1;
             break;
         }
@@ -737,9 +731,9 @@ void ACTIVE_L_EAU(obj_t* eau_obj) {
     cur_obj->x = eau_obj->x + 101 * 2;
     cur_obj->y = eau_obj->y;
     calc_obj_pos(cur_obj);
+    cur_obj->is_active = 1;
     cur_obj->param = 130;
     cur_obj->flags.alive = 1;
-    cur_obj->is_active = 1;
     cur_obj->sub_etat = 2;
 
     cur_obj++;
@@ -749,9 +743,9 @@ void ACTIVE_L_EAU(obj_t* eau_obj) {
     cur_obj->x = eau_obj->x + 101 * 3;
     cur_obj->y = eau_obj->y;
     calc_obj_pos(cur_obj);
+    cur_obj->is_active = 1;
     cur_obj->param = 130;
     cur_obj->flags.alive = 1;
-    cur_obj->is_active = 1;
     cur_obj->sub_etat = 3;
 }
 
@@ -769,12 +763,13 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
     u8 temp_v0_6;
     u8 temp_v0_7;
     s16 other_1;
+    s32 stone_id;
 
     if ((ray.flags.alive) && !(ray.main_etat == 3 && ray.sub_etat == 23)) {
         switch (num_world)
         {
             case 1:
-                if (obj->hit_points != 0) {
+                if (obj->hit_points > 0) {
                     if (obj->hit_points == 1) {
                         obj->hit_points = 0;
                         ACTIVE_L_EAU(obj);
@@ -782,7 +777,7 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
                         obj->hit_points--;
                     }
                 } else if (obj->param > 40 || level.objects[eau_obj_id].iframes_timer == 1) {
-                    if (horloge[2] != 0 && obj->y >= (SCREEN_HEIGHT - 80)) {
+                    if (horloge[2] != 0 && ray.flags.alive && obj->y > (SCREEN_HEIGHT - 80)) {
                         obj->speed_y = -1;
                     } else {
                         obj->speed_y = 0;
@@ -795,8 +790,9 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
                 }
                 break;
             case 3:
-                if (pierreAcorde_obj_id == -1) {
-                    if (scroll_y != pierreAcorde_obj_id) {
+                stone_id = pierreAcorde_obj_id;
+                if (stone_id == -1) {
+                    if (scroll_y != stone_id) {
                         obj->init_y = ymap + (SCREEN_HEIGHT - 80);
                         if (obj->y - 100 > obj->init_y) {
                             obj->y -= 3;
@@ -808,47 +804,41 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
                         obj->iframes_timer = 1;
                     } else {
                         if (obj->iframes_timer == 1) {
-                            obj->init_y = (ray.offset_by + ray.y) - 30;
+                            obj->init_y = (ray.offset_by + (s16)ray.y) - 30;
                             obj->iframes_timer = 0;
                         }
                         if (obj->init_y < obj->y) {
                             obj->y--;
                         }
                     }
-                } else if ((level.objects[pierreAcorde_obj_id].hit_points != 0) && (obj->y < (ymapmax + (SCREEN_HEIGHT - 80)))) {
+                } else if ((level.objects[stone_id].hit_points > 0) && (obj->y < (ymapmax + (SCREEN_HEIGHT - 80)))) {
                     obj->sub_speed += 14;
                     if (obj->sub_speed > 16) {
                         obj->sub_speed -= 16;
                         ++obj->y;
                     }
                 }
-                scroll_end_y = obj->y - (Bloc_lim_H2 - 80);
+                scroll_end_y = obj->y - 120;
             case 4:
             case 5:
                 if (obj->screen_x < -166) {
                     obj->x += 505;
-                    if (++obj->sub_etat >= 4)
+                    if (++obj->sub_etat > 3)
                         obj->sub_etat = 0;
                     if (num_level == 8 && num_world == 5) {
-                        var_v0_2 = obj->init_y - 5;
-                        goto block_53;
+                        obj->init_y -= num_world;
+                        obj->y = obj->init_y;
                     }
                 } else if (obj->screen_x > 366) {
                     obj->x -= 505;
-                    if (--obj->sub_etat >= 4)
-                        obj->sub_etat = 3;
+                    if (--obj->sub_etat > 3) obj->sub_etat = 3;
                     if (num_level == 8 && num_world == 5) {
-                        var_v0_2 = obj->init_y + 5;
-                        block_53:
-                        obj->y =
-                        obj->init_y =
-                                var_v0_2;
-                        if (obj->y < (ymapmax + (Bloc_lim_H2 - 80)))
-                        {
-                            obj->y = ymapmax + (Bloc_lim_H2 - 80);
-                        }
+                        obj->init_y += num_world;
+                        obj->y = obj->init_y;
                     }
                 }
+                if (num_level == 8 && num_world == 5)
+                    obj->y = ymapmax + (Bloc_lim_H2 - 80);
                 break;
         }
     } else {
@@ -864,24 +854,30 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
 void allocateOtherPosts(obj_t* her_bh_obj) {
     obj_t *cur_obj;
     s32 unk_1;
+    s32 x_offset;
     s16 cur_id = link_init[her_bh_obj->id];
     u8 her_bh_frames = her_bh_obj->animations[get_eta(her_bh_obj)->anim_index].frames_count;
     s16 i = 0;
 
-    while (cur_id != her_bh_obj->id) {
+    if (cur_id != her_bh_obj->id) {
+      x_offset = 0;
+      unk_1 = 0;
+      do {
+        x_offset += 32;
         i++;
         cur_obj = &level.objects[cur_id];
         cur_obj->flags.alive = 1;
         cur_obj->is_active = 1;
         cur_obj->anim_frame = (her_bh_obj->anim_frame + i) % her_bh_frames;
-        cur_obj->init_x = her_bh_obj->init_x + i * ((her_bh_obj->hit_points - 2) << 5);
+        cur_obj->init_x = her_bh_obj->init_x + x_offset * (her_bh_obj->hit_points - 2);
         cur_obj->init_y = her_bh_obj->init_y;
-        unk_1 = i << 8;
+        unk_1 += 256;
         cur_obj->param = her_bh_obj->param - unk_1;
         cur_obj->x = cur_obj->init_x;
         cur_obj->y = cur_obj->init_y;
         calc_obj_pos(her_bh_obj);
         cur_id = link_init[cur_id];
+      } while (cur_id != her_bh_obj->id);
     }
 }
 
@@ -889,7 +885,7 @@ void allocateOtherPosts(obj_t* her_bh_obj) {
 void doHerseCommand(obj_t* obj) {
     /* 4EF0C 8017370C -O2 -msoft-float */
     if ((obj->type == TYPE_178_HERSE_BAS || obj->type == TYPE_HERSE_HAUT) && obj->link == 0) {
-        obj->anim_frame = myRand(obj->animations[obj->anim_index].frames_count - 1);
+        obj->anim_frame = myRand((s16)(obj->animations[obj->anim_index].frames_count - 1));
         obj->param = 0x1000;
         allocateOtherPosts(obj);
         obj->link = 1;
@@ -901,6 +897,8 @@ void doHerseCommand(obj_t* obj) {
 
 //30908
 void doBlackRaymanCommand(obj_t* br_obj) {
+    extern s16 firstFloorBelow(obj_t *);
+    s32 scale;
     obj_t *fist_obj;
     ray_stack_t *br_stack;
 
@@ -955,7 +953,8 @@ void doBlackRaymanCommand(obj_t* br_obj) {
             br_obj->anim_index = br_stack->anim_index;
             br_obj->anim_frame = br_stack->anim_frame;
             br_obj->flags.flip_x = br_stack->flip_x;
-            br_obj->scale = br_stack->scale;
+            scale = br_stack->scale;
+            br_obj->scale = scale;
             br_obj->speed_x = 0;
             br_obj->speed_y = 0;
             if (br_obj->display_prio == 0) {
@@ -999,27 +998,27 @@ void doBlKRayRaymanCollision(obj_t* obj) {
 //30BF8
 void DO_POELLE_COMMAND(obj_t* po_obj) {
     /* 4F818 80174018 -O2 -msoft-float */
+    extern u8 RAY_DEAD(void);
     s32 abs_ray_spd_x;
-    s16 po_x; s16 po_y; s16 po_w; s16 po_h;
+    s16 po_y; s16 po_x; s16 po_h; s16 po_w;
     s32 sub_etat;
 
     po_obj->flags.flip_x = 1;
     if (ray_on_poelle == true) {
         po_obj->flags.follow_enabled = 0;
         if ((ray.speed_x > 0 && ray.flags.flip_x) || (ray.speed_x < 0 && !ray.flags.flip_x)) {
-            abs_ray_spd_x = Abs(ray.speed_x);
-            if (abs_ray_spd_x < 2)
+            if (Abs((s32)ray.speed_x) < 2)
                 po_obj->param = ray.speed_x > 0 ? 2 : -2;
-            else if (abs_ray_spd_x >= 7)
+            else if (Abs((s32)ray.speed_x) >= 7)
                 po_obj->param = ray.speed_x > 0 ? 7 : -7;
             else
                 po_obj->param = ray.speed_x;
         }
         if (po_obj->iframes_timer == 0)
         {
-            if (Abs(ray.speed_y) <= 0) /* ray.speed_y == 0 */
+            if (Abs((s32)ray.speed_y) <= 0) /* ray.speed_y == 0 */
             {
-                if (Abs(ray.speed_x) > 2)
+                if (Abs((s32)ray.speed_x) > 2)
                     po_obj->anim_frame = 1;
             }
             else if (ray.speed_y > 0)
@@ -1050,7 +1049,7 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
         po_y = (po_y + po_obj->offset_hy) - (po_obj->y + po_obj->offset_by);
         po_obj->x = (ray.offset_bx + ray.x) - po_obj->offset_bx;
         po_obj->y = (ray.offset_by + ray.y) - po_obj->offset_by - po_y;
-        if ((ray.main_etat == 3 && ((sub_etat = ray.sub_etat, sub_etat == 23) || sub_etat == 22)) || !RAY_DEAD()) {
+        if (((ray.main_etat == 3 && ray.sub_etat == 23) || (ray.main_etat == 3 && ray.sub_etat == 22)) || !RAY_DEAD()) {
             RayEvts = SauveRayEvts;
             ray_on_poelle = false;
         }
@@ -1061,8 +1060,9 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
         if (ray.main_etat == 3 && ray.sub_etat == 22)
             po_obj->speed_x = po_obj->param;
         else if (
-                ray.main_etat == 2 &&
-                ((sub_etat = ray.sub_etat, sub_etat == 1) || sub_etat == 2 || sub_etat == 6)
+                (ray.main_etat == 2 && ray.sub_etat == 1) ||
+                (ray.main_etat == 2 && ray.sub_etat == 2) ||
+                (ray.main_etat == 2 && ray.sub_etat == 6)
                 )
             ray.speed_x = 0;
         else
@@ -1073,8 +1073,11 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
 //30EA8
 void DO_CORDE_COMMAND(obj_t* obj) {
     /* 4FB58 80174358 -O2 -msoft-float */
+    extern s16 inter_box(s16, s16, s16, s16, s16, s16, s16, s16);
+    extern void DO_FUMEE_CORDE(s16, s16);
+    extern s32 set_sub_etat(obj_t *, u8);
     s32 pa_id;
-    s32 bVar2;
+    s16 bVar2;
     s16 obj_x_pos;
     s16 obj_y_pos;
     s16 ray_x_pos;
@@ -1099,7 +1102,6 @@ void DO_CORDE_COMMAND(obj_t* obj) {
         if (ray.main_etat == 2 && ray.sub_etat == 15)
         {
             /* TODO: ... */
-            ray_y_pos = obj->y;
 
             obj_x_pos = obj->x;
             obj_y_pos = obj->y;
@@ -1131,7 +1133,7 @@ void DO_CORDE_COMMAND(obj_t* obj) {
                     break;
             }
             if (bVar2 && inter_box(ray_x_pos + 57, ray_y_pos + 26, 46, 4, obj_x_pos + 126, obj_y_pos + obj_y_offs, 4, obj_h)) {
-                if (--obj->hit_points == 0)
+                if (--obj->hit_points < 1)
                 {
                     obj->hit_points = obj->init_hit_points;
                     if (obj->sub_etat < 19)
@@ -1219,7 +1221,7 @@ void DO_NOVA2_COMMAND(obj_t* obj) {
 void doShipCommand(obj_t* obj) {
     // NOTE(Falcury): PS1 non-matching function - needs checking!
     obj_t *temp_s0_2;
-    s16 temp_a0_1;
+    s32 temp_a0_1;
     s16 temp_v1_2;
     s32 temp_s0_1;
     u8 var_s2;
@@ -1229,14 +1231,13 @@ void doShipCommand(obj_t* obj) {
     u8 *var_v0_3;
     u8 temp_a0_2;
     u8 temp_v1;
-    s32 temp_v1_3;
-    u8 var_s3;
+    u16 temp_v1_3;
+    u16 var_s3;
     obj_t *test_1;
 //    LevelData *test_2;
-    u8 test_3;
+    s16 test_3;
     u32 test_4;
 
-#ifdef PC
     scroll_end_y = ymapmax;
     scroll_start_y = ymapmax;
     ymap = ymapmax;
@@ -1244,15 +1245,13 @@ void doShipCommand(obj_t* obj) {
         scroll_start_x = scroll_end_x;
         xmap = scroll_end_x;
     }
-#endif
 
     /*var_s3 = saved_reg_s3;*/
     temp_v1 = obj->cmd;
     switch (temp_v1)
     {
         case 2:
-            obj->speed_y = 0;
-            obj->speed_x = 0;
+            obj->speed_x = obj->speed_y = 0;
             return;
         case 20:
             obj->speed_x = obj->iframes_timer;
@@ -1264,8 +1263,8 @@ void doShipCommand(obj_t* obj) {
                 var_v1 = 1;
                 if (temp_a0_1 != -1)
                 {
-                    test_4 = level.objects[temp_a0_1].is_active;
-                    var_v1 = !test_4;
+                    if (level.objects[temp_a0_1].is_active)
+                        var_v1 = 0;
                 }
                 if ((var_v1) && (obj->timer != 0) && (horloge[2] != 0))
                 {
@@ -1310,16 +1309,15 @@ void doShipCommand(obj_t* obj) {
                             {
                                 test_3 = link_init[test_3];
                                 temp_s0_2 = &level.objects[test_3];
-                                temp_v1_3 = temp_s0_2->type;
-                                if (temp_v1_3 == var_s3)
+                                if (var_s3 == temp_s0_2->type)
                                 {
                                     break;
                                 }
-                            } while (temp_v1_3 != obj->type);
+                            } while (temp_s0_2->type != obj->type);
 
-                            if (temp_v1_3 != obj->type)
+                            if (temp_s0_2->type != obj->type)
                             {
-                                switch (temp_v1_3) {
+                                switch (temp_s0_2->type) {
                                     case TYPE_77_PIRATE_GUETTEUR:
                                         guetteurFollowsShip(temp_s0_2);
                                         break;
@@ -1354,10 +1352,9 @@ void DO_DROP_COMMAND(obj_t* obj) {
         set_main_and_sub_etat(obj, 2, 1);
 
     if (Abs((s32)obj->speed_x) > 1 && !(obj->main_etat == 2 && obj->sub_etat == 0)) {
-        u8 flip_x = obj->flags.flip_x;
-        if (flip_x)
+        if (obj->flags.flip_x)
             obj->speed_x--;
-        if (!flip_x)
+        else if (!obj->flags.flip_x)
             obj->speed_x++;
     }
 
@@ -1371,6 +1368,7 @@ void DO_DROP_COMMAND(obj_t* obj) {
 
 //314A4
 void move_fruit_in_water(obj_t* obj) {
+    extern u8 BTYP(s16, s16);
     s16 btyp;
     s16 x;
     s16 y;
@@ -1379,9 +1377,8 @@ void move_fruit_in_water(obj_t* obj) {
     s32 x2;
 
     u8 obj_flip_x = obj->flags.flip_x;
-    if (obj->main_etat == 0)
     {
-        if (obj->sub_etat == 13 && ray.follow_id == obj->id)
+        if (obj->main_etat == 0 && obj->sub_etat == 13 && ray.follow_id == obj->id)
             set_main_and_sub_etat(obj, 0, 15);
 
         if (obj->main_etat == 0 && obj->sub_etat == 15)
@@ -1404,7 +1401,7 @@ void move_fruit_in_water(obj_t* obj) {
                 x2 = x;
                 if (obj->speed_x > -1)
                     x2 += w;
-                btyp = BTYP(x2 >> 4, (y + 16) >> 4);
+                btyp = BTYP((x + (obj->speed_x < 0 ? 0 : w)) >> 4, (y + 16) >> 4);
                 if (block_flags[btyp] & 2) {
                     set_main_and_sub_etat(obj, 0, 13);
                     obj->speed_x = 0;
@@ -1466,7 +1463,7 @@ void DoFallingObjPoingCollision(obj_t* obj, s16 sprite) {
     if (poing_obj->speed_x < 0)
         fall_x_accel = -fall_x_accel;
 
-    make_my_fruit_go_down(obj, fall_x_accel);
+    make_my_fruit_go_down(obj, (s16)fall_x_accel);
 }
 
 //3171C
@@ -1476,30 +1473,30 @@ void DO_BLKTOON_EYES_CMD(obj_t* obj) {
 
     SET_X_SPEED(obj);
     if (prev_spd_x * obj->speed_x < 0) {
+        obj->flags.flip_x = !obj->flags.flip_x;
         obj->speed_x = prev_spd_x;
-        obj->flags.flip_x ^= 1;
     }
 }
 
 //31768
-void DO_RAY_POS_CMD(obj_t* obj) {
+void DO_RAY_POS_CMD(obj_t *obj) {
     if (obj->timer != 255) {
         if (obj->timer == 0) {
-            if (obj->main_etat != 0) {
-                if (obj->main_etat == 5) {
-                    ray.is_active = 1;
-                    ray.flags.alive = 1;
+            switch (obj->main_etat) {
+                case 0:
+                    ray.flags.alive = ray.is_active = 1;
+                    obj->flags.alive = 0;
+                    break;
+                case 5:
+                    ray.flags.alive = ray.is_active = 1;
                     set_main_and_sub_etat(&ray, 3, 40);
-                }
-            } else {
-                ray.is_active = 1;
-                ray.flags.alive = 1;
+                    break;
             }
             obj->flags.alive = 0;
             del_alwobj(obj->id);
-            dead_time = 64;
             ray.x = obj->x + obj->offset_bx - ray.offset_bx;
-            ray.y = obj->y + obj->offset_by - ray.offset_by;
+            ray.y = obj->offset_by + obj->y - ray.offset_by;
+            dead_time = 64;
         }
         --obj->timer;
     }

@@ -257,7 +257,7 @@ extern s16 rayman_obj_id;
 extern s16 Mus_obj_id;
 extern s16 xmap;
 extern s16 black_ray_obj_id;
-extern u16 black_fist_obj_id;
+extern s16 black_fist_obj_id;
 extern s16 moskitomama_gauche_obj_id;
 extern s16 rideau_obj_id;
 extern s16 corde_dark_obj_id;

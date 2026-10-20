@@ -7620,8 +7620,8 @@
    "black_fist_obj_id": {
     "addr": "2:3f8be",
     "name": "RAYVERSE",
-    "type": "u16",
-    "evidence": "Rayverse data.c declaration/comment; Android size checked"
+    "type": "s16",
+    "evidence": "Rayverse data.c declaration/comment; Android size checked; signed: DOS -5 load + sar (collision2 gfin pass)"
    },
    "ray_on_poelle": {
     "addr": "2:3fa54",
