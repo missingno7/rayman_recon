@@ -1,9 +1,51 @@
-/* worldmap.c (1:57860..1:5ba70). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_worldmap. text_to_display items are [1..10] here (Rayverse [0..9] is a port difference). See config/units.json for statuses. */
+/* worldmap.c (1:57860..1:5ba70). Names RAYVERSE/ANDROID; seeded by tools/seed.py, workers tu_worldmap + gfin_worldmap (census-guided finish pass, 20 -> 46/50). text_to_display items are [1..10] here (Rayverse [0..9] is a port difference). See config/units.json for statuses. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include <string.h>
 #include <stdlib.h>
+extern u8 JeuCracker;
+extern char save_ray_copy[4];
+extern obj_t clockobj;
+extern save_state_t save2;
+extern obj_t rms;
+extern u8 byte_CFA3E;
+extern u8 NewMs;
+extern s16 ray_mode;
+u8 ValidButPressed(void);
+u8 StartButPressed(void);
+u16 rightjoy(void);
+u16 leftjoy(void);
+u16 upjoy(void);
+u16 downjoy(void);
+u8 confirmation_msg(u8 message);
+void SaveGameOnDisk(u8 slot);
+void LoadGameOnDisk(u8 slot);
+void LoadInfoGame(u8 slot);
+void calc_obj_pos(obj_t *obj);
+void MAIN_NO_MORE_CONTINUE_PRG(void);
+void *unidentified_record_allocator(s32 size);
+void release_record(void *ptr);
+void check_cd_for_save(void); /* INVENTED: DOS 1:5bc40 */
+s32 deter_num_let(u8 c, const char *next_chars);
+s16 calc_largmax_text(const char *text, s16 char_index, s16 space_width, s16 spacing, u8 font_size);
+s16 myRand(s16 max);
+extern sprite_t *alpha, *alpha2;
+extern char TexteStageNameLevel[], TexteStageNameWorld[];
+extern s32 VitesseYStageNameLevel[30];
+extern s32 VitesseXStageNameWorld[30];
+extern s32 VitesseXStageNameLevel[30];
+extern s32 PositionYStageNameWorld[50];
+extern s32 VitesseYStageNameWorld[30];
+extern s32 PositionXStageNameLevel[50];
+extern s32 PositionXStageNameWorld[50];
+extern s32 PositionYStageNameLevel[50];
+extern s32 TailleStageNameLevel;
+extern s32 CouleurStageNameLevel;
+extern s32 TailleStageNameWorld;
+extern s32 CouleurStageNameWorld;
+extern s32 LongueurStageNameWorld;
+extern s32 LongueurStageNameLevel;
 void Deter_Option_Caract(char *text, s16 key, s16 offset);
 #define bool u8
 #ifndef COUNT
@@ -22,6 +64,7 @@ void Deter_Option_Caract(char *text, s16 key, s16 offset);
 #define GO_LEFT 0
 #define world_5_cave 5
 #define world_6_cake 6
+extern s32 LargeurJumelle, HauteurJumelle;
 extern u8 ModeDemo;
 extern u8 NBRE_SAVE;
 extern u8 PROC_EXIT;
@@ -32,9 +75,8 @@ extern s32 TempsDemo;
 extern u8 You_Win;
 extern s16 action;
 extern obj_t mapobj[25];
-extern obj_t clock_obj;
 extern display_item_t menu_to_display[10];
-extern credit_t credits[];
+extern credit_t credits[], credits_init[];
 extern options_jeu_t options_jeu;
 extern u8 ALL_WORLD, new_txt_fee, MenuCredits, fade;
 extern u8 horloge[25];
@@ -54,7 +96,8 @@ extern u8 save_zone[2592];
 extern loadinforay_t LoadInfoRay[3];
 extern u8 bonus_perfect[24];
 extern s16 rotationtxt, ktxtenx, ktxteny, coeffktxt, nbre_options;
-extern s16 positionx2, positiony2, button_released, compteur, max_compteur;
+extern u8 button_released;
+extern s16 positionx2, positiony2, compteur, max_compteur;
 extern s16 delai_repetition, repetition, basex, sortie_save;
 extern s16 debut_sortie, ecartx, ecarty, ecart_options;
 extern s16 loop_nb_trames, loop_timing;
@@ -119,7 +162,7 @@ void INIT_FADE_IN(void);
 void MoveRayInWorldMap(void);
 void RecaleRayPosInJumelle(void);
 void enter_casse_brique(void);
-void horloges(u8 ticks);
+void horloges(s32 ticks);
 void set_proj_center(s16 x, s16 y);
 void TEST_DISPLAY_PTS_WAY(s16 world, s16 connected_world, s16 xpos, s16 ypos);
 void INIT_LITTLE_RAY(void);
@@ -140,103 +183,90 @@ void SPECIAL_INIT(void);
 void FIN_LEVEL_ANIM(void);
 
 void TEST_DISPLAY_PTS_WAY(s16 world, s16 connected_world, s16 xpos, s16 ypos) {
-    if (world != connected_world) {
-        world_info_t* connected_world_info = t_world_info + connected_world;
-        if ((connected_world_info->state & 2) == 0) {
-            if (connected_world_info->state & 1) {
-                DISPLAY_PTS_TO_PLAN2(xpos, ypos, connected_world_info->xpos, connected_world_info->ypos, 128);
-            } else if (connected_world_info->state & 4) {
-                DISPLAY_PTS_TO_PLAN2(xpos, ypos, connected_world_info->xpos, connected_world_info->ypos, chemin_percent);
+    if (connected_world != world) {
+        if ((t_world_info[connected_world].state & 2) == 0) {
+            if (t_world_info[connected_world].state & 1) {
+                DISPLAY_PTS_TO_PLAN2(xpos, ypos, t_world_info[connected_world].xpos, t_world_info[connected_world].ypos, 128);
+            } else if (t_world_info[connected_world].state & 4) {
+                DISPLAY_PTS_TO_PLAN2(xpos, ypos, t_world_info[connected_world].xpos, t_world_info[connected_world].ypos, chemin_percent);
             }
         }
     }
 }
 
 void DISPLAY_PTS_WAY(void) {
-    s16 i;
-    for (i = 0; i < 24; ++i) {
-        world_info_t* world_info = t_world_info + i;
-        world_info->state &= ~2;
-    }
-    for (i = 0; i < 24; ++i) {
-        world_info_t* world_info = t_world_info + i;
-        if (world_info->state & 1) {
-            TEST_DISPLAY_PTS_WAY(i, world_info->index_up, world_info->xpos, world_info->ypos);
-            TEST_DISPLAY_PTS_WAY(i, world_info->index_down, world_info->xpos, world_info->ypos);
-            TEST_DISPLAY_PTS_WAY(i, world_info->index_left, world_info->xpos, world_info->ypos);
-            TEST_DISPLAY_PTS_WAY(i, world_info->index_right, world_info->xpos, world_info->ypos);
-            world_info->state |= 2;
+    s16 i, x, y;
+    world_info_t *wi = t_world_info;
+    for (i = 0; i < 24; ++i, ++wi) wi->state &= ~2;
+    wi = t_world_info;
+    for (i = 0; i < 24; ++i, ++wi) {
+        x = wi->xpos;
+        y = wi->ypos;
+        if (wi->state & 1) {
+            TEST_DISPLAY_PTS_WAY(i, wi->index_up, x, y);
+            TEST_DISPLAY_PTS_WAY(i, wi->index_down, x, y);
+            TEST_DISPLAY_PTS_WAY(i, wi->index_right, x, y);
+            TEST_DISPLAY_PTS_WAY(i, wi->index_left, x, y);
+            wi->state |= 2;
         }
     }
 }
 
 void DISPLAY_PLAT_WAY(void) {
-    s32 i;
-    for (i = 0; i < 24; ++i) {
-        world_info_t* world_info = t_world_info + i;
-        obj_t* obj = mapobj + i;
-        if ((world_info->state & 1) || i == 17) {
-
-            display2(obj); // seems to be DISPLAY_PLATEAU() inlined
-
-            // NOTE: disabling clipping for now
-            /*s32 x = obj->screen_x + obj->offset_bx + 8;
+    s16 i;
+    world_info_t *wi = t_world_info;
+    obj_t *obj = mapobj;
+    for (i = 0; i < 24; ++i, ++wi, ++obj) {
+        if ((wi->state & 1) || i == 17) {
+            s32 x = obj->screen_x + obj->offset_bx + 8;
             if (x > -8 && x < LargeurJumelle + 14) {
                 s32 y = obj->screen_y + obj->offset_by;
-                if (y > -10 && y < HauteurJumelle + 12) {
-                    display2(obj); // seems to be DISPLAY_PLATEAU() inlined
-                }
-            }*/
+                if (y > -10 && y < HauteurJumelle + 12) display2(obj);
+            }
             if (chemin_percent != 0 && i != 17) {
-                world_info_t* wi_up = t_world_info + world_info->index_up;
-                world_info_t* wi_down = t_world_info + world_info->index_down;
-                world_info_t* wi_left = t_world_info + world_info->index_left;
-                world_info_t* wi_right = t_world_info + world_info->index_right;
-                if (wi_up->state & 4) {
-                    DISPLAY_PTS_TO_PLAN2(world_info->xpos, world_info->ypos, wi_up->xpos, wi_up->ypos, chemin_percent);
-                }
-                if (wi_down->state & 4) {
-                    DISPLAY_PTS_TO_PLAN2(world_info->xpos, world_info->ypos, wi_down->xpos, wi_down->ypos, chemin_percent);
-                }
-                if (wi_left->state & 4) {
-                    DISPLAY_PTS_TO_PLAN2(world_info->xpos, world_info->ypos, wi_left->xpos, wi_left->ypos, chemin_percent);
-                }
-                if (wi_right->state & 4) {
-                    DISPLAY_PTS_TO_PLAN2(world_info->xpos, world_info->ypos, wi_right->xpos, wi_right->ypos, chemin_percent);
-                }
+                if (t_world_info[wi->index_up].state & 4)
+                    DISPLAY_PTS_TO_PLAN2(wi->xpos, wi->ypos, t_world_info[wi->index_up].xpos, t_world_info[wi->index_up].ypos, chemin_percent);
+                if (t_world_info[wi->index_down].state & 4)
+                    DISPLAY_PTS_TO_PLAN2(wi->xpos, wi->ypos, t_world_info[wi->index_down].xpos, t_world_info[wi->index_down].ypos, chemin_percent);
+                if (t_world_info[wi->index_left].state & 4)
+                    DISPLAY_PTS_TO_PLAN2(wi->xpos, wi->ypos, t_world_info[wi->index_left].xpos, t_world_info[wi->index_left].ypos, chemin_percent);
+                if (t_world_info[wi->index_right].state & 4)
+                    DISPLAY_PTS_TO_PLAN2(wi->xpos, wi->ypos, t_world_info[wi->index_right].xpos, t_world_info[wi->index_right].ypos, chemin_percent);
             }
         }
     }
 }
 
 void DO_MEDAILLONS(void) {
-    s32 i;
+    s16 i;
     bool unlocked = 0;
     if (chemin_percent < 128 && (horloge[2] != 0 || ALL_WORLD)) {
         ++chemin_percent;
     }
-    for (i = 0; i < COUNT(t_world_info); ++i) {
-        world_info_t* world_info = t_world_info + i;
-        obj_t* obj = mapobj + i;
+    {
+    obj_t *obj = mapobj;
+    world_info_t *world_info = t_world_info;
+    for (i = 0; i < 24; ++obj, ++i, ++world_info) {
         if ((world_info->state & 4) || (world_info->state & 2)) {
             CalcObjPosInWorldMap(obj);
 
             if (chemin_percent == 128 && (world_info->state & 4) &&
-                ((t_world_info[world_info->index_right].state & 2) ||
-                (t_world_info[world_info->index_left].state & 2) ||
+                ((t_world_info[world_info->index_left].state & 2) ||
+                (t_world_info[world_info->index_right].state & 2) ||
                 (t_world_info[world_info->index_up].state & 2) ||
                 (t_world_info[world_info->index_down].state & 2))
             ) {
                 // set unlocked
-                world_info->state = (world_info->state & ~7) | 1;
+                world_info->state |= 1;
+                world_info->state &= ~6;
                 set_sub_etat(obj, 46);
                 unlocked = 1;
             }
 
-            if (i == 17 && !(obj->sub_etat == 59 || obj->sub_etat == 46) && (world_info->state & 1)) {
+            if (i == 17 && (obj->sub_etat != 59 && obj->sub_etat != 46) && (world_info->state & 1)) {
                 set_sub_etat(obj, 59);
             } else if ((i == 18 || i == 19 || i == 20 || i == 21 || i == 22 || i == 23) &&
-                    !(obj->sub_etat == 58 || obj->sub_etat == 46) &&
+                    (obj->sub_etat != 58 && obj->sub_etat != 46) &&
                     (world_info->state & 1)
             ) {
                 set_sub_etat(obj, 58);
@@ -258,11 +288,13 @@ void DO_MEDAILLONS(void) {
             DO_ANIM(obj);
         }
     }
+    }
     if (unlocked) {
+        world_info_t *world_info;
         chemin_percent = 0;
-        for (i = 0; i < COUNT(t_world_info); ++i) {
-            world_info_t* world_info = t_world_info + i;
-            if (!(world_info->state & 2) && (world_info->state & 1)) {
+        world_info = t_world_info;
+        for (i = 0; i < 24; ++i, ++world_info) {
+            if (!(world_info->state & 2) && (world_info->state & 1) == 1) {
                 world_info->state |= 2;
             }
         }
@@ -284,8 +316,36 @@ void INIT_LEVEL_STAGE_NAME(void) {
 }
 
 void INIT_WORLD_STAGE_NAME(void) {
-    s8 new_color = 0;
+    char *name = (char *)unidentified_record_allocator(75);
+    s8 new_color;
     switch (t_world_info[num_world_choice].world) {
+        case 7: {
+            new_color = t_world_info[num_world_choice].color;
+            switch(fichier_selectionne) {
+                case 0: {
+                    strcpy(text_to_display[3].text, language_txt[161]); // /password/
+                } break;
+                case 1: {
+                    strcpy(name, "/");
+                    strcat(name, save_ray[0]);
+                    strcat(name, "/");
+                    memcpy(text_to_display[3].text, name, 48);
+                } break;
+                case 2: {
+                    strcpy(name, "/");
+                    strcat(name, save_ray[1]);
+                    strcat(name, "/");
+                    memcpy(text_to_display[3].text, name, 48);
+                } break;
+                case 3: {
+                    strcpy(name, "/");
+                    strcat(name, save_ray[2]);
+                    strcat(name, "/");
+                    memcpy(text_to_display[3].text, name, 48);
+                } break;
+                default: break;
+            }
+        } break;
         case 1: {
             strcpy(text_to_display[3].text, language_txt[24]); // /the dream forest/
             new_color = 5;
@@ -310,35 +370,18 @@ void INIT_WORLD_STAGE_NAME(void) {
             strcpy(text_to_display[3].text, language_txt[29]); // /candy chateau/
             new_color = 1;
         } break;
-        case 7: {
-            new_color = t_world_info[num_world_choice].color;
-            switch(fichier_selectionne) {
-                case 0: {
-                    strcpy(text_to_display[3].text, language_txt[161]); // /password/
-                } break;
-                case 1: {
-                    memcpy(text_to_display[3].text, save_ray[0], 4);
-                } break;
-                case 2: {
-                    memcpy(text_to_display[3].text, save_ray[1], 4);
-                } break;
-                case 3: {
-                    memcpy(text_to_display[3].text, save_ray[2], 4);
-                } break;
-                default: break;
-            }
-        } break;
         default: break;
     }
-    text_to_display[3].color = new_color;
     text_to_display[3].font_size = 1;
     text_to_display[3].xpos = 450;
     text_to_display[3].ypos = 30;
+    text_to_display[3].color = new_color;
     text_to_display[3].is_fond = 0;
     text_to_display[3].field_D5 = 0;
     INIT_TXT_BOX(&text_to_display[3]);
     text_to_display[3].width += 10;
     text_to_display[3].height += 2;
+    release_record(name);
 }
 
 void INIT_STAGE_NAME(void) {
@@ -365,10 +408,14 @@ void CHANGE_STAGE_NAMES(void) {
 }
 
 void DO_STAGE_NAMES(void) {
-    if (ModeAutoJumelle) {
-        // World map idle animation with letters bouncing everywhere
-        //stub
-    } else {
+    s32 i, letter, x, speed, distance, rand_speed;
+    s16 spacing, space_width;
+    u8 finished;
+    display_item_t *item_level, *item_world;
+    sprite_t *sprite_level, *sprite_world;
+    char *text_level, *next_level, *text_world, *next_world;
+    s32 start_level_x, start_world_x;
+    if (!ModeAutoJumelle) {
         if (text_to_display[1].xpos > 160) {
             text_to_display[1].xpos -= 6;
             text_to_display[1].centered_x_pos -= 6;
@@ -385,16 +432,168 @@ void DO_STAGE_NAMES(void) {
             text_to_display[4].ypos -= 2;
             text_to_display[4].centered_y_pos -= 2;
         }
+    } else if (!PositionStageNameCalcule) {
+        item_level = &text_to_display[1];
+        strcpy(TexteStageNameLevel, item_level->text);
+        CouleurStageNameLevel = (u8)item_level->color;
+        TailleStageNameLevel = item_level->font_size;
+        spacing = 1;
+        space_width = 8;
+        LongueurStageNameLevel = strlen(item_level->text);
+        start_level_x = item_level->xpos;
+        text_level = item_level->text;
+        next_level = text_level + 1;
+        for (i = 0; i < LongueurStageNameLevel; ++i, ++text_level, ++next_level) {
+            letter = deter_num_let(*text_level, next_level);
+            if (*text_level == '/') {
+                x = start_level_x - (calc_largmax_text(item_level->text, i, space_width, spacing, item_level->font_size) >> 1);
+                letter = 0;
+            } else if (*text_level == ' ') {
+                x += space_width;
+                letter = 0;
+            }
+            if (letter) {
+                sprite_level = &alpha[letter];
+                PositionXStageNameLevel[i] = x << 4;
+                PositionYStageNameLevel[i] = item_level->ypos << 4;
+                VitesseXStageNameLevel[i] = 0;
+                do {
+                    VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + myRand(32) - 16;
+                } while (!VitesseXStageNameLevel[i]);
+                VitesseYStageNameLevel[i] = -16 - myRand(32);
+                x += sprite_level->sprite_pos + (sprite_level->flags & 15) - spacing;
+            }
+        }
+        item_world = &text_to_display[3];
+        strcpy(TexteStageNameWorld, item_world->text);
+        CouleurStageNameWorld = (u8)item_world->color;
+        TailleStageNameWorld = item_world->font_size;
+        spacing = 3;
+        space_width = 10;
+        LongueurStageNameWorld = strlen(item_world->text);
+        start_world_x = item_world->xpos;
+        text_world = item_world->text;
+        next_world = text_world + 1;
+        for (i = 0; i < LongueurStageNameWorld; ++i, ++text_world, ++next_world) {
+            letter = deter_num_let(*text_world, next_world);
+            if (*text_world == '/') {
+                x = start_world_x - (calc_largmax_text(item_world->text, i, space_width, spacing, item_world->font_size) >> 1);
+                letter = 0;
+            } else if (*text_world == ' ') {
+                x += space_width;
+                letter = 0;
+            }
+            if (letter) {
+                sprite_world = &alpha2[letter + 41];
+                PositionXStageNameWorld[i] = x << 4;
+                PositionYStageNameWorld[i] = item_world->ypos << 4;
+                VitesseXStageNameWorld[i] = 0;
+                do {
+                    VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + myRand(32) - 16;
+                } while (!VitesseXStageNameWorld[i]);
+                VitesseYStageNameWorld[i] = -16 - myRand(32);
+                x += sprite_world->sprite_pos + (sprite_world->flags & 15) - spacing;
+            }
+        }
+        PositionStageNameCalcule = 1;
+        strcpy(text_to_display[4].text, text_to_display[3].text);
+        text_to_display[4].color = text_to_display[3].color;
+        text_to_display[3].ypos = 30;
+        text_to_display[3].xpos = 450;
+        strcpy(text_to_display[2].text, text_to_display[1].text);
+        text_to_display[1].xpos = 450;
+        text_to_display[1].ypos = 193;
+        text_to_display[2].color = text_to_display[1].color;
     }
-
-    switch(PositionStageNameCalcule) {
-        case 1: {
-            //stub
-        } break;
-
+    if (PositionStageNameCalcule == 1) {
+        finished = 1;
+        for (i = 0; i < LongueurStageNameWorld; ++i) {
+            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
+                PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
+                if (PositionYStageNameWorld[i] >= 3200) {
+                    PositionYStageNameWorld[i] = 3200;
+                    speed = VitesseYStageNameWorld[i];
+                    if (speed < 0) speed = -speed;
+                    if (speed < 8) VitesseYStageNameWorld[i] = -64 - myRand(32);
+                    else VitesseYStageNameWorld[i] = -VitesseYStageNameWorld[i];
+                }
+                VitesseYStageNameWorld[i]++;
+                PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
+                if (PositionStageNameCalcule == 1 && (PositionXStageNameWorld[i] <= 0 || PositionXStageNameWorld[i] >= 4880))
+                    VitesseXStageNameWorld[i] = -VitesseXStageNameWorld[i];
+                else if (PositionXStageNameWorld[i] > -320 && PositionXStageNameWorld[i] < 5120) finished = 0;
+            }
+        }
+        for (i = 0; i < LongueurStageNameLevel; ++i) {
+            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
+                PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
+                if (PositionYStageNameLevel[i] >= 3200) {
+                    PositionYStageNameLevel[i] = 3200;
+                    speed = VitesseYStageNameLevel[i];
+                    if (speed < 0) speed = -speed;
+                    if (speed < 8) VitesseYStageNameLevel[i] = -64 - myRand(32);
+                    else VitesseYStageNameLevel[i] = -VitesseYStageNameLevel[i];
+                }
+                VitesseYStageNameLevel[i]++;
+                PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
+                if (PositionStageNameCalcule == 1 && (PositionXStageNameLevel[i] <= 0 || PositionXStageNameLevel[i] >= 4960))
+                    VitesseXStageNameLevel[i] = -VitesseXStageNameLevel[i];
+                else if (PositionXStageNameLevel[i] > -320 && PositionXStageNameLevel[i] < 5120) finished = 0;
+            }
+        }
+        if (finished) PositionStageNameCalcule = 0;
+    } else if (PositionStageNameCalcule == 2) {
+        for (i = 0; i < LongueurStageNameWorld; ++i) {
+            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
+                distance = PositionYStageNameWorld[i] - 1600;
+                if (distance < 0) distance = -distance;
+                speed = PositionXStageNameWorld[i] - 2560;
+                if (speed < 0) speed = -speed;
+                if (distance > speed) speed = PositionYStageNameWorld[i] - 1600;
+                else speed = PositionXStageNameWorld[i] - 2560;
+                if (speed < 0) speed = -speed;
+                distance = speed;
+                rand_speed = myRand(64) + 32;
+                VitesseXStageNameWorld[i] = (PositionXStageNameWorld[i] - 2560) * rand_speed / distance;
+                VitesseYStageNameWorld[i] = (PositionYStageNameWorld[i] - 1600) * rand_speed / distance;
+            }
+        }
+        for (i = 0; i < LongueurStageNameLevel; ++i) {
+            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
+                distance = PositionYStageNameLevel[i] - 1600;
+                if (distance < 0) distance = -distance;
+                speed = PositionXStageNameLevel[i] - 2560;
+                if (speed < 0) speed = -speed;
+                if (distance > speed) speed = PositionYStageNameLevel[i] - 1600;
+                else speed = PositionXStageNameLevel[i] - 2560;
+                if (speed < 0) speed = -speed;
+                distance = speed;
+                rand_speed = myRand(64) + 32;
+                VitesseXStageNameLevel[i] = (PositionXStageNameLevel[i] - 2560) * rand_speed / distance;
+                VitesseYStageNameLevel[i] = (PositionYStageNameLevel[i] - 1600) * rand_speed / distance;
+            }
+        }
+        PositionStageNameCalcule = 3;
+    } else if (PositionStageNameCalcule == 3) {
+        finished = 1;
+        for (i = 0; i < LongueurStageNameWorld; ++i) {
+            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
+                PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
+                PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
+                if (PositionXStageNameWorld[i] > -320 && PositionXStageNameWorld[i] < 5120 &&
+                    PositionYStageNameWorld[i] > -320 && PositionYStageNameWorld[i] < 3200) finished = 0;
+            }
+        }
+        for (i = 0; i < LongueurStageNameLevel; ++i) {
+            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
+                PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
+                PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
+                if (PositionXStageNameLevel[i] > -320 && PositionXStageNameLevel[i] < 5120 &&
+                    PositionYStageNameLevel[i] > -320 && PositionYStageNameLevel[i] < 3200) finished = 0;
+            }
+        }
+        if (finished) PositionStageNameCalcule = 0;
     }
-
-    
 }
 
 void INIT_WORLD_INFO(void) {
@@ -433,8 +632,9 @@ void RESTORE_RAY(void)
 }
 
 void INIT_CHEMIN(void) {
-    s32 i;
-    world_info_t *initial_world_info;
+    s16 i;
+    u8 world_ind;
+    obj_t *medaillon;
     PROC_EXIT = 0;
     dans_la_map_monde = 1;
     gele = 0;
@@ -445,28 +645,28 @@ void INIT_CHEMIN(void) {
     old_num_world = num_world_choice;
     INIT_LITTLE_RAY();
     set_main_and_sub_etat(&ray, 0, 0);
-    initial_world_info = t_world_info + num_world_choice;
-    ray.x = initial_world_info->xpos - ray.offset_bx + 4;
-    ray.y = initial_world_info->ypos - ray.offset_by + 8;
+    ray.x = t_world_info[num_world_choice].xpos - ray.offset_bx + 4;
+    ray.y = t_world_info[num_world_choice].ypos - ray.offset_by + 8;
     ray.speed_x = 0;
     ray.speed_y = 0;
     set_zoom_mode(0);
     chemin_percent = 0;
+    world_ind = 0;
     Nb_total_cages = 0;
-    for (i = 0; i < 24; ++i) {
-        obj_t* medaillon = mapobj + i;
-        world_info_t* world_info = t_world_info + i;
+    {
+    i = 0;
+    medaillon = &mapobj[world_ind];
+    while (i < 24) {
         medaillon->type = 54;
-        medaillon->init_x = world_info->xpos - 78;
-        medaillon->init_y = world_info->ypos - 64;
+        medaillon->init_x = t_world_info[world_ind].xpos - 78;
+        medaillon->init_y = t_world_info[world_ind].ypos - 64;
         medaillon->init_main_etat = 5;
-        if (world_info->state & 4) {
+        if (t_world_info[world_ind].state & 4) {
             medaillon->init_sub_etat = 46;
         } else {
-            s32 cages = world_info->nb_cages;
-            if (cages != 0) {
-                Nb_total_cages += cages;
-                if (cages == 6) {
+            if (t_world_info[world_ind].nb_cages != 0) {
+                Nb_total_cages += t_world_info[world_ind].nb_cages;
+                if (t_world_info[world_ind].nb_cages == 6) {
                     medaillon->init_sub_etat = 52;
                 } else {
                     medaillon->init_sub_etat = 47;
@@ -484,8 +684,13 @@ void INIT_CHEMIN(void) {
         obj_init(medaillon);
         CalcObjPosInWorldMap(medaillon);
         medaillon->anim_frame = i % medaillon->animations[medaillon->eta[medaillon->main_etat][medaillon->sub_etat].anim_index].frames_count;
+        world_ind++;
+        if (world_ind > 24) world_ind = 24;
+        ++medaillon;
+        ++i;
     }
 
+    }
     // unlock Mr Dark's Dare
     if ((t_world_info[17].state & 1) == 0 && Nb_total_cages >= 102) {
         t_world_info[17].state |= 4;
@@ -496,10 +701,10 @@ void INIT_CHEMIN(void) {
     xmap = xwldmapsave;
     ymap = ywldmapsave;
     ChangeJumelleVariable();
-    special_ray_mov_win_x_left = 30;
-    special_ray_mov_win_x_right = 30;
     scroll_x = -1;
     scroll_y = -1;
+    special_ray_mov_win_x_left = 30;
+    special_ray_mov_win_x_right = 30;
     ray.flags.flip_x = dir_on_wldmap & 1;
 
     // If it's a new game, create the new save file on disk
@@ -513,10 +718,6 @@ void INIT_CHEMIN(void) {
     INIT_PASTILLES_SAUVE();
     INIT_STAGE_NAME();
 
-    // Added: unlock first world if flag is set incorrectly
-    if (!(t_world_info[17].state & 1)) {
-        t_world_info[17].state |= 1;
-    }
 }
 
 void RESPOND_TO_UP(void)
@@ -622,8 +823,8 @@ void DO_RAYMAN_IN_WLD_MAP(void) {
         }
         ++ray.timer;
 
-        ray.speed_x = t_world_info[old_num_world].xpos + xspeed * SGN(diff_x) - ray.offset_bx - ray.x;
-        ray.speed_y = t_world_info[old_num_world].ypos + yspeed * SGN(diff_y) - ray.offset_by - (ray.y - 8);
+        ray.speed_x = t_world_info[old_num_world].xpos + xspeed * SGN(diff_x) - ray.offset_bx - (s16)ray.x;
+        ray.speed_y = t_world_info[old_num_world].ypos + yspeed * SGN(diff_y) - ray.offset_by - (s16)(ray.y - 8);
 
         if (abs(xspeed) >= abs(diff_x) && abs(yspeed) >= abs(diff_y)) {
             // arrived at new location
@@ -644,7 +845,11 @@ void DO_CHEMIN(void) {
     RecaleRayPosInJumelle();
     DoScrollInWorldMap(h_scroll_speed, v_scroll_speed);
     MoveRayInWorldMap();
-    set_proj_center(ray.screen_x + ray.offset_bx, ray.screen_y + ray.offset_by);
+    /* PROVEN DOS 1:594aa: both facing branches set the projection center. */
+    if (ray.flags.flip_x)
+        set_proj_center(ray.screen_x + ray.offset_bx, ray.screen_y + ray.offset_by);
+    else
+        set_proj_center(ray.screen_x + ray.offset_bx, ray.screen_y + ray.offset_by);
     DO_ANIM(&ray);
     DO_MEDAILLONS();
 }
@@ -701,39 +906,31 @@ void DETER_WORLD_AND_LEVEL(void) {
 }
 
 void INIT_NEW_GAME(void) {
-    s32 i;
-    u8 first_world_is_accessible_flag;
-    s32 save_index;
-    loadinforay_t *loadinfo;
+    s16 i;
     new_level = 1;
     new_world = 1;
     status_bar.lives = 3;
     ray.hit_points = 2;
-    fin_du_jeu = 0;
-    nb_continue = 9;
     ray.flags.hurtbyfist = 0;
     poing.sub_etat = 1;
     departlevel = 1;
+    fin_du_jeu = 0;
+    nb_continue = 9;
     memset(wi_save_zone, 0, sizeof(wi_save_zone));
     memset(save_zone, 0, sizeof(save_zone));
-    memset(&RayEvts, 0, sizeof(RayEvts)); // added; TODO: figure out why RayEvts doesn't 'leak' into a new game?
     INIT_RAY_BEGIN();
-    first_world_is_accessible_flag = (t_world_info[0].state | 1);
-    for (i = 0; i < 24; ++i) {
-        world_info_t* world_info = t_world_info + 1;
-        world_info->nb_cages = 0;
-        world_info->state &= ~7;
+    t_world_info[0].state |= 1;
+    t_world_info[0].state &= ~6;
+    t_world_info[0].nb_cages = 0;
+    for (i = 1; i < 24; ++i) {
+        t_world_info[i].state &= ~7;
+        t_world_info[i].nb_cages = 0;
     }
-    t_world_info[0].state |= first_world_is_accessible_flag;
-    save_index = positiony - 1;
-    loadinfo = LoadInfoRay + save_index;
-    loadinfo->lives = 3;
-    loadinfo->tings = 0;
-    loadinfo->cages = 0;
-    loadinfo->continues = 0;
-    for (i = 0; i < 23; ++i) { // NOTE: the loop only goes up to 23 here, not 24
-        bonus_perfect[i] = 0;
-    }
+    LoadInfoRay[positiony - 1].lives = 3;
+    LoadInfoRay[positiony - 1].tings = 0;
+    LoadInfoRay[positiony - 1].cages = 0;
+    LoadInfoRay[positiony - 1].continues = 9;
+    for (i = 0; i < 23; ++i) bonus_perfect[i] = 0;
     init_finBossLevel();
     INIT_WORLD_INFO();
 }
@@ -748,7 +945,8 @@ void DO_NOT_SAVE_CHOICE(void) {
 }
 
 void INIT_SAVE_CHOICE(void) {
-    s32 i;
+    s16 i;
+    if (!JeuCracker) check_cd_for_save();
     rotationtxt = 0;
     ktxtenx = 4096;
     ktxteny = 4096;
@@ -761,11 +959,11 @@ void INIT_SAVE_CHOICE(void) {
     compteur = 0;
     max_compteur = 100;
     nouvelle_partie = 0;
-    delai_repetition = 100;
-    repetition = 50;
+    delai_repetition = 12;
+    repetition = 6;
     basex = 40;
     sortie_save = 0;
-    for (i = 0; i < NBRE_SAVE; ++i) {
+    if (NBRE_SAVE) for (i = 0; i < NBRE_SAVE; ++i) {
         LoadInfoGame(i + 1);
     }
 }
@@ -784,34 +982,36 @@ void INIT_SAVE_CONTINUE(void) {
 }
 
 void DO_COMMANDE_SAVE(void) {
-    if (rightjoy() && !upjoy() && !downjoy() && !fichier_a_copier && (button_released || (delai_repetition < compteur && (compteur % repetition == 0)))) {
-        positionx2 = (positionx2 == 3) ? 1 : positionx2 + 1;
+    if (rightjoy() && !upjoy() && !downjoy() && !fichier_a_copier && (button_released || (compteur > delai_repetition && (compteur % repetition == 0)))) {
+        if (positionx2 == 3) positionx2 = 1;
+        else positionx2++;
         TempsDemo = 0;
         PlaySnd_old(68);
     }
-    if (leftjoy() && !upjoy() && !downjoy() && !fichier_a_copier && (button_released || (delai_repetition < compteur && (compteur % repetition == 0)))) {
-        positionx2 = (positionx2 == 1) ? 3 : positionx2 - 1;
-        TempsDemo = 0;
-        PlaySnd_old(68);
-    }
-
-    if (upjoy() && !leftjoy() && !rightjoy() && !fichier_a_copier && (button_released || (delai_repetition < compteur && (compteur % repetition == 0)))) {
-        positiony = (positiony <= 1) ? NBRE_SAVE : positiony - 1;
-        TempsDemo = 0;
-        PlaySnd_old(68);
-    }
-    if (downjoy() && !leftjoy() && !rightjoy() && !fichier_a_copier && (button_released || (delai_repetition < compteur && (compteur % repetition == 0)))) {
-        positiony = (positiony == NBRE_SAVE) ? 1 : positiony + 1;
+    if (leftjoy() && !upjoy() && !downjoy() && !fichier_a_copier && (button_released || (compteur > delai_repetition && (compteur % repetition == 0)))) {
+        if (positionx2 == 1) positionx2 = 3;
+        else positionx2--;
         TempsDemo = 0;
         PlaySnd_old(68);
     }
 
-    if (rightjoy() || leftjoy() || downjoy() || upjoy()) {
-        button_released = 0;
-    } else {
+    if (upjoy() && !leftjoy() && !rightjoy() && (button_released || (compteur > delai_repetition && (compteur % repetition == 0)))) {
+        if (positiony <= 1) positiony = NBRE_SAVE;
+        else positiony--;
+        TempsDemo = 0;
+        PlaySnd_old(68);
+    }
+    if (downjoy() && !leftjoy() && !rightjoy() && (button_released || (compteur > delai_repetition && (compteur % repetition == 0)))) {
+        if (NBRE_SAVE == positiony) positiony = 1;
+        else positiony++;
+        TempsDemo = 0;
+        PlaySnd_old(68);
+    }
+
+    if (!rightjoy() && !leftjoy() && !downjoy() && !upjoy()) {
         compteur = 0;
         button_released = 1;
-    }
+    } else button_released = 0;
 
     if (SelectButPressed() && button_released) {
         MENU_RETURN = 1;
@@ -822,17 +1022,19 @@ void DO_COMMANDE_SAVE(void) {
 void SELECTION_SAVE_OPTION(void) {
     TestCompteur();
     if (positionx2 == 1 && ValidButPressed()) {
-        if (button_released || (delai_repetition < compteur && compteur % repetition == 0)) {
+        if (button_released || (compteur > delai_repetition && compteur % repetition == 0)) {
             action = 1;
             PlaySnd_old(69);
         }
-    } else if (positionx2 == 2 && ValidButPressed()) {
-        if (button_released || (delai_repetition < compteur && compteur % repetition == 0)) {
+    }
+    if (positionx2 == 2 && ValidButPressed()) {
+        if (button_released || (compteur > delai_repetition && compteur % repetition == 0)) {
             action = 2;
             PlaySnd_old(69);
         }
-    } else if (positionx2 == 3 && ValidButPressed()) {
-        if (button_released || (delai_repetition < compteur && compteur % repetition == 0)) {
+    }
+    if (positionx2 == 3 && ValidButPressed()) {
+        if (button_released || (compteur > delai_repetition && compteur % repetition == 0)) {
             action = 3;
             PlaySnd_old(69);
             WaitNSynchro(20);
@@ -859,7 +1061,7 @@ void INIT_AFFICHE_ECRAN_SAVE(void) {
 void SAISIE_NOM(void) {
     TestCompteur();
     if (!fichier_existant && action != 1) {
-        memcpy(save_ray[positiony - 1], "aaa", 4);
+        strcpy(save_ray[positiony - 1], "aaa");
         fichier_existant = 1;
     }
     if (affiche_bon_ecran) {
@@ -867,19 +1069,18 @@ void SAISIE_NOM(void) {
     }
 
     if (ValidButPressed() && button_released) {
-        char* pos = save_ray[fichier_selectionne - 1] + positionx - 1;
-        if (*pos == '~') {
+        if (save_ray[positiony - 1][positionx - 1] == '~') {
             if (positionx != 1) {
-                *pos = 'a';
+                save_ray[positiony - 1][positionx - 1] = 'a';
                 --positionx;
                 PlaySnd_old(68);
             }
-        } else if (positionx >= 3) {
-            PlaySnd_old(68);
-            affiche_bon_ecran = 1;
-        } else {
+        } else if (positionx < 3) {
             ++positionx;
             PlaySnd_old(68);
+        } else {
+            PlaySnd_old(68);
+            affiche_bon_ecran = 1;
         }
         rotationtxt = 0;
         ktxtenx = 4096;
@@ -888,21 +1089,10 @@ void SAISIE_NOM(void) {
     }
 
     if (upjoy() && !rightjoy() && !leftjoy() && (button_released || (compteur % 5 == 0))) {
-        char* pos = save_ray[fichier_selectionne - 1] + positionx - 1;
-        switch (*pos) {
-            case 'z': {
-                *pos = ' ';
-            } break;
-            case ' ': {
-                *pos = '~';
-            } break;
-            case '~': {
-                *pos  = 'a';
-            } break;
-            default: {
-                *pos += 1;
-            } break;
-        }
+        if (save_ray[positiony - 1][positionx - 1] == 'z') save_ray[positiony - 1][positionx - 1] = ' ';
+        else if (save_ray[positiony - 1][positionx - 1] == ' ') save_ray[positiony - 1][positionx - 1] = '~';
+        else if (save_ray[positiony - 1][positionx - 1] == '~') save_ray[positiony - 1][positionx - 1] = 'a';
+        else save_ray[positiony - 1][positionx - 1]++;
         rotationtxt = 0;
         ktxtenx = 4096;
         ktxteny = 4096;
@@ -911,21 +1101,10 @@ void SAISIE_NOM(void) {
     }
 
     if (downjoy() && !rightjoy() && !leftjoy() && (button_released || (compteur % 5 == 0))) {
-        char* pos = save_ray[fichier_selectionne - 1] + positionx - 1;
-        switch (*pos) {
-            case 'a': {
-                *pos = '~';
-            } break;
-            case '~': {
-                *pos = ' ';
-            } break;
-            case ' ': {
-                *pos  = 'z';
-            } break;
-            default: {
-                *pos -= 1;
-            } break;
-        }
+        if (save_ray[positiony - 1][positionx - 1] == 'a') save_ray[positiony - 1][positionx - 1] = '~';
+        else if (save_ray[positiony - 1][positionx - 1] == '~') save_ray[positiony - 1][positionx - 1] = ' ';
+        else if (save_ray[positiony - 1][positionx - 1] == ' ') save_ray[positiony - 1][positionx - 1] = 'z';
+        else save_ray[positiony - 1][positionx - 1]--;
         rotationtxt = 0;
         ktxtenx = 4096;
         ktxteny = 4096;
@@ -945,13 +1124,27 @@ void SAISIE_NOM(void) {
 }
 
 void REALISATION_ACTION(void) {
+    u8 do_copy = 0;
     switch(action) {
         default: break;
         case 1: {
             // Copy
-            if (!fichier_a_copier) {
-                
-            }
+            if (fichier_a_copier) {
+                if (strcmp(save_ray[fichier_a_copier - 1], "") != 0) {
+                    if (strcmp(save_ray[positiony - 1], "") == 0 || confirmation_msg(2)) do_copy = 1;
+                }
+                if (do_copy) {
+                    fichier_selectionne = positiony;
+                    strcpy(save_ray_copy, save_ray[fichier_selectionne - 1]);
+                    strcpy(save_ray[fichier_selectionne - 1], save_ray[fichier_a_copier - 1]);
+                    LoadInfoRay[fichier_selectionne - 1].lives = LoadInfoRay[fichier_a_copier - 1].lives;
+                    LoadInfoRay[fichier_selectionne - 1].tings = LoadInfoRay[fichier_a_copier - 1].tings;
+                    LoadInfoRay[fichier_selectionne - 1].cages = LoadInfoRay[fichier_a_copier - 1].cages;
+                    LoadInfoRay[fichier_selectionne - 1].continues = LoadInfoRay[fichier_a_copier - 1].continues;
+                    LoadGameOnDisk(fichier_a_copier);
+                    realisation_effectuee = 1;
+                } else realisation_effectuee = 1;
+            } else if (strcmp(save_ray[positiony - 1], "") != 0) fichier_a_copier = positiony;
         } break;
         case 2: {
             // Erase
@@ -961,14 +1154,14 @@ void REALISATION_ACTION(void) {
             if (confirmation_msg(1)) {
                 fichier_selectionne = positiony;
                 REMOVE_FICHIER();
-                save_ray[fichier_selectionne-1][0] = '\0';
+                save_ray[fichier_selectionne-1][0] = ""[0];
             }
             realisation_effectuee = 1;
         } break;
         case 3: {
             // Start
             fichier_selectionne = positiony;
-            if (strcmp(save_ray[fichier_selectionne-1], "") == 0) {
+            if (strcmp("", save_ray[fichier_selectionne-1]) == 0) {
                 fichier_existant = 0;
                 nouvelle_partie = 1;
                 INIT_NEW_GAME();
@@ -984,30 +1177,30 @@ void REALISATION_ACTION(void) {
 
 void DISPLAY_SYMBOLE(s16 button, s16 x, s16 y, u8 font_size, u8 unused)
 {
-    const char *text;
-    s8 text_color;
     switch (button) {
-    case 0: text = "a"; text_color = 2; break;
-    case 1: text = "b"; text_color = 1; break;
-    case 2: text = "d"; text_color = 5; break;
-    case 3: text = "c"; text_color = 1; break;
-    default: return;
+    case 0: display_text("a", x, y, font_size, 2); break;
+    case 1: display_text("b", x, y, font_size, 1); break;
+    case 2: display_text("d", x, y, font_size, 5); break;
+    case 3: display_text("c", x, y, font_size, 1); break;
     }
-    display_text(text, x, y, font_size, text_color);
 }
 
 void INIT_CONTINUE(void)
 {
     obj_t *mapobj_1;
-    obj_t *mapobj_2;
-    obj_t *mapobj_3;
 
     loop_nb_trames = 0;
     loop_timing = 10;
     fin_continue = 0;
     compteur = 0;
     joy_done = 0;
-    Etape_History = 0;
+    byte_CFA3E = 0;
+    if (ray_mode == 4 || RayEvts.tiny) {
+        ray = rms;
+        NewMs = 1;
+        ray_mode = 1;
+        RayEvts.tiny = 0;
+    }
     ray.y = 135 - ray.offset_by;
     ray.anim_frame = 0;
     if (nb_continue != 0)
@@ -1020,28 +1213,26 @@ void INIT_CONTINUE(void)
         ray.x = 80 - ray.offset_bx;
         set_main_etat(&ray, 3);
         loop_timing = 0xff;
-        if (horloge[20] >= 11)
-            set_sub_etat(&ray, 51);
+        if (horloge[20] > 10)
+            set_sub_etat(&ray, 52);
         else
-            set_sub_etat(&ray, 50);
+            set_sub_etat(&ray, 51);
     }
 
     ray.flags.flip_x = 0;
     ray.speed_x = 0;
     ray.speed_y = 0;
     set_zoom_mode(0);
-    clock_obj.x = 80;
-    clock_obj.y = 130;
-    set_main_and_sub_etat(&clock_obj, 0, 0);
+    clockobj.x = 80;
+    clockobj.y = 130;
+    set_main_and_sub_etat(&clockobj, 0, 0);
     mapobj_1 = mapobj;
-    mapobj_1->offset_bx = 80;
     mapobj_1->screen_x = 120;
     mapobj_1->screen_y = 110;
-    mapobj_2 = mapobj;
-    mapobj_2->offset_by = 64;
-    mapobj_3 = mapobj;
-    mapobj_3->timer = 0;
-    mapobj_3->flags.alive = 0;
+    mapobj->offset_bx = 80;
+    mapobj->offset_by = 64;
+    mapobj->flags.alive = 0;
+    mapobj->timer = 0;
     set_main_and_sub_etat(mapobj, 5, 20);
     xmapinit = xmap;
     ymapinit = ymap;
@@ -1052,55 +1243,32 @@ void INIT_CONTINUE(void)
 
 void CHEAT_MODE_CONTINUE(void)
 {
-    if (joy_done == 0 && ++compteur >= 6)
-        compteur = 0;
-
-    if (compteur == 0)
-    {
-        if (upjoy(0))
-            joy_done = 1;
-        else if (downjoy(0))
-            joy_done = 2;
-        else if (rightjoy(0))
-            joy_done = 3;
-        else if (leftjoy(0))
-            joy_done = 4;
-    }
-
-    switch (Etape_History)
-    {
+    compteur = 1;
+    if (upjoy() && joy_done != 1) joy_done += 1;
+    else if (downjoy() && joy_done != 3) joy_done += 2;
+    else if (rightjoy() && joy_done != 7) joy_done += 4;
+    else if (leftjoy() && joy_done != 15) joy_done += 8;
+    else compteur = 0;
+    switch (byte_CFA3E) {
     case 0:
-        if (joy_done == 1 && nb_continue < 4)
-        {
-            joy_done = 0;
-            Etape_History++;
-        }
-        else if (joy_done != 0)
-            Etape_History = 0;
+        if (joy_done == 1 && nb_continue <= 3) byte_CFA3E++;
+        else if (compteur) { byte_CFA3E = 0; joy_done = 0; }
         break;
     case 1:
-        if (joy_done == 2)
-        {
-            joy_done = 0;
-            Etape_History++;
-        }
-        else if (joy_done != 0)
-            Etape_History = 0;
+        if (joy_done == 3) { byte_CFA3E++; joy_done = 3; }
+        else if (compteur) { byte_CFA3E = 0; joy_done = 0; }
         break;
     case 2:
-        if (joy_done == 3)
-        {
-            joy_done = 0;
-            Etape_History++;
-        }
-        else if (joy_done != 0)
-            Etape_History = 0;
+        if (joy_done == 7) { byte_CFA3E++; joy_done = 7; }
+        else if (compteur) { byte_CFA3E = 0; joy_done = 0; }
         break;
     case 3:
-        if (joy_done == 4)
+        if (joy_done == 15) {
+            mapobj->flags.alive = 1;
+            joy_done = 0;
+            mapobj->timer = 128;
             nb_continue = 10;
-        else if (joy_done != 0)
-            Etape_History = 0;
+        } else if (compteur) { byte_CFA3E = 0; joy_done = 0; }
         break;
     }
 }
@@ -1110,8 +1278,7 @@ void MAIN_CONTINUE_PRG(void)
     u8 flag_set;
 
     horloges(1);
-    manage_snd();
-    if (but0pressed__CROSS() || but1pressed__START() || but2pressed__SELECT())
+    if (ValidButPressed() || StartButPressed() || SelectButPressed())
     {
         if (ray.sub_etat == 25 || ray.sub_etat == 26 || ray.sub_etat == 27)
         {
@@ -1127,7 +1294,7 @@ void MAIN_CONTINUE_PRG(void)
                 ray.flags.flip_x = 1;
             }
             ray.anim_frame = 0;
-            set_main_and_sub_etat(&clock_obj, 0, 1);
+            set_main_and_sub_etat(&clockobj, 0, 1);
         }
     }
     SET_X_SPEED(&ray);
@@ -1142,7 +1309,7 @@ void MAIN_CONTINUE_PRG(void)
         }
         break;
     case 26:
-        if (ray.anim_frame >= 7)
+        if (ray.anim_frame > 6)
             ray.speed_x = 0;
         break;
     case 27:
@@ -1153,7 +1320,7 @@ void MAIN_CONTINUE_PRG(void)
         }
         break;
     case 31:
-        if (EOA(&ray) && horloge[2] != 0)
+        if (EOA(&ray))
             ray.flags.flip_x = 1;
         break;
     case 29:
@@ -1177,8 +1344,10 @@ void MAIN_CONTINUE_PRG(void)
         }
         break;
     case 28:
-        if (ray.anim_frame > 40)
+        if (ray.anim_frame > 40) {
             fin_continue = 1;
+            save1.save_obj_y_pos = -1;
+        }
         if (ray.anim_frame > 16)
             ray.speed_x = 0;
         break;
@@ -1186,15 +1355,15 @@ void MAIN_CONTINUE_PRG(void)
         break;
     }
 
-    if (horloge[2] == 0)
+    if (horloge[2] != 0 || ray.sub_etat != 25)
     {
         ray.x = ray.x + ray.speed_x;
-        calc_obj_pos_map(&ray);
+        calc_obj_pos(&ray);
         DO_ANIM(&ray);
     }
 
-    calc_obj_pos_map(&clock_obj);
-    DO_ANIM(&clock_obj);
+    calc_obj_pos(&clockobj);
+    DO_ANIM(&clockobj);
     if (mapobj->flags.alive)
     {
         DO_ANIM(mapobj);
@@ -1215,6 +1384,7 @@ void FIN_CONTINUE_PRG(void)
 {
     if (loop_timing == 0xff)
     {
+        fin_continue = 0;
         fin_du_jeu = 1;
         menuEtape = 0;
     }
@@ -1224,7 +1394,6 @@ void FIN_CONTINUE_PRG(void)
         ray.hit_points = 2;
         status_bar.max_hitp = 2;
         fin_du_jeu = 0;
-        LOAD_VIGNET_GAME();
     }
     else
         menuEtape = 0;
@@ -1287,7 +1456,7 @@ void INIT_VIGNET(void) {
             Deter_Option_Caract(text_to_display[4].text, options_jeu.jump, 255);
         } break;
         case 4: {
-            start_cd_suspence();
+            start_cd_gros_rayman();
             strcpy(text_to_display[1].text, language_txt[38]); // /mr dark kidnaps betilla the fairy!/
         } break;
         case 5: {
@@ -1296,21 +1465,25 @@ void INIT_VIGNET(void) {
                 strcpy(text_to_display[2].text, language_txt[40]); // /to light up the dark/
                 strcpy(text_to_display[3].text, language_txt[41]); // (empty string)
                 strcpy(text_to_display[4].text, language_txt[42]); // (empty string)
-            } else if (num_level == 11) {
+            }
+            if (num_level == 11) {
                 strcpy(text_to_display[1].text, language_txt[43]); // /rayman please help me! hurry!/
             }
         } break;
         default: break;
     }
 
-      for (i = 1; i != 11; i += 2) {
-        text_to_display[i].xpos = SCREEN_WIDTH / 2;
-        text_to_display[i].ypos = ((SCREEN_HEIGHT / 4) * 3) + 23;
-        text_to_display[i].font_size = 2;
-
-        text_to_display[i+1].xpos = SCREEN_WIDTH / 2;
-        text_to_display[i+1].ypos = ((SCREEN_HEIGHT / 4) * 3) + 38;
-        text_to_display[i+1].font_size = 2;
+      for (i = 0; i != 10; i += 2) {
+        if ((&text_to_display[1])[i].text[0]) {
+          (&text_to_display[1])[i].xpos = 160;
+          (&text_to_display[1])[i].ypos = 173;
+          (&text_to_display[1])[i].font_size = 2;
+        }
+        if ((&text_to_display[1])[i+1].text[0]) {
+          (&text_to_display[1])[i+1].xpos = 160;
+          (&text_to_display[1])[i+1].ypos = 188;
+          (&text_to_display[1])[i+1].font_size = 2;
+        }
       }
     }
 }
@@ -1320,7 +1493,7 @@ void INIT_CREDITS(void)
     s16 i = -1;
 
     dans_la_map_monde = 0;
-    SaveGameOnDisk(fichier_selectionne);
+    if (!MenuCredits) SaveGameOnDisk(fichier_selectionne);
     first_credit = 0;
     last_credit = 0;
     nb_credits_lines = 0;
@@ -1330,25 +1503,28 @@ void INIT_CREDITS(void)
     do
     {
         i++;
-        credits[i].y_pos = 260;
+        memcpy(&credits[i], &credits_init[i], sizeof(credit_t));
+        if (credits[i].y_pos != 0) credits[i].text = language_txt[credits[i].y_pos];
+        credits[i].y_pos = 220;
     } while (credits[i].cmd != 0xff);
 }
 
 void DO_CREDITS(void)
 {
     s32 i;
+    s32 scroll_step = 1;
     s16 last_cmd;
     s16 unk_1;
 
     if (You_Win)
     {
-        horloges(1);
+        horloges(scroll_step);
         if (horloge[2] == 0)
         {
             for (i = first_credit; i <= last_credit; i++)
-                credits[i].y_pos--;
+                credits[i].y_pos -= scroll_step;
 
-            nb_credits_lines++;
+            nb_credits_lines += scroll_step;
             last_cmd = credits[last_credit].cmd;
             if (last_cmd == 0)
             {
@@ -1372,16 +1548,17 @@ void DO_CREDITS(void)
             else
                 unk_1 = last_cmd * 15;
 
-            if (nb_credits_lines >= unk_1)
+            if (unk_1 <= nb_credits_lines)
             {
                 nb_credits_lines = 0;
-                if (last_cmd == 0xFF || (last_credit++, last_credit % 19 == 0))
-                    INIT_FADE_OUT();
+                if (last_cmd == 0xFF) PROC_EXIT = 1;
+                else {
+                    last_credit = last_credit + 1;
+                    if (last_credit % 15 == 0) PROC_EXIT = 1;
+                }
             }
             if (credits[first_credit].y_pos < -4)
                 first_credit++;
-            if (MenuCredits == 1 && fade == 0)
-                PROC_EXIT = 1;
         }
     }
 }
@@ -1406,29 +1583,29 @@ void INIT_LOADER_ANIM(void)
     bigray.offset_by = 240;
     bigray.screen_x = 120;
     bigray.screen_y = -72;
+    bigray.flags.flip_x = 0;
     bigray.main_etat = 1;
     bigray.sub_etat = 0;
-    bigray.flags.flip_x = 0;
     bigray.cmd = 0;
 }
 
 void DO_LOADER_ANIM(void) {
-    eta_t* eta = &bigray.eta[bigray.main_etat][bigray.sub_etat];
+    u8 anim_speed = bigray.eta[bigray.main_etat][bigray.sub_etat].anim_speed & 15;
     bigray.speed_x = 0;
-    if ((eta->anim_speed & 15) != 0 && (horloge[eta->anim_speed] == 0)) {
+    if (anim_speed != 0 && horloge[anim_speed] == 0) {
         SET_X_SPEED(&bigray);
     }
     bigray.screen_x += bigray.speed_x;
     if (PROC_EXIT == 1) {
-        PROC_EXIT = 0;
         bigray.cmd = 5;
         set_main_and_sub_etat(&bigray, 0, 2);
         bigray.timer = 2;
         bigray.flags.flip_x = 0;
+        PROC_EXIT = 0;
         bigray.screen_x = 160 - bigray.offset_bx - 16;
     }
 
-    if (bigray.cmd <= 5) {
+    {
         switch(bigray.cmd) {
             default: break;
             case 0: {
@@ -1437,9 +1614,6 @@ void DO_LOADER_ANIM(void) {
                     set_main_and_sub_etat(&bigray, 1, 1);
                     bigray.screen_x = (-bigray.offset_bx) - 60;
                     bigray.flags.flip_x = 1;
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
             case 1: {
@@ -1447,19 +1621,13 @@ void DO_LOADER_ANIM(void) {
                     ++bigray.cmd;
                     set_main_and_sub_etat(&bigray, 1, 2);
                     bigray.anim_frame = 0;
-                    bigray.screen_x = 350 - bigray.offset_bx;
+                    bigray.screen_x = -bigray.offset_bx + 350;
                     bigray.flags.flip_x = 0;
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
             case 2: {
                 if (bigray.main_etat == 0 && bigray.sub_etat == 0) {
                     ++bigray.cmd;
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
             case 3: {
@@ -1468,9 +1636,6 @@ void DO_LOADER_ANIM(void) {
                     set_main_and_sub_etat(&bigray, 1, 3);
                     bigray.screen_x = -60 - bigray.offset_bx;
                     bigray.flags.flip_x = 1;
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
             case 4: {
@@ -1479,9 +1644,6 @@ void DO_LOADER_ANIM(void) {
                     set_main_and_sub_etat(&bigray, 0, 1);
                     bigray.screen_x = 160 - bigray.offset_bx - 16;
                     bigray.flags.flip_x = 0;
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
             case 5: {
@@ -1491,13 +1653,11 @@ void DO_LOADER_ANIM(void) {
                     } else {
                         --bigray.timer;
                     }
-                    DO_ANIM(&bigray);
-                } else {
-                    DO_ANIM(&bigray);
                 }
             } break;
         }
     }
+    DO_ANIM(&bigray);
 }
 
 void SPECIAL_INIT(void) {
@@ -1548,43 +1708,48 @@ void INIT_LEVEL_ANIM(void) {
         default: break;
     }
     PROC_EXIT = 0;
-    if (anim_sequence && !fin_du_jeu) {
-        raytmp = ray;
-        ray.cmd = GO_LEFT;
-        ray.speed_x = 0;
-        ray.screen_y = 168 - ray.offset_by;
-        anim_func = DO_LEVEL_ANIM;
-    } else {
+    if (!anim_sequence || fin_du_jeu) {
         PROC_EXIT = 1;
+    } else {
+        memcpy(&raytmp, &ray, sizeof(obj_t));
+        ray.cmd = GO_LEFT;
+        ray.screen_y = 168 - ray.offset_by;
+        ray.speed_x = 0;
+        anim_func = DO_LEVEL_ANIM;
     }
 }
 
 void DO_LEVEL_ANIM(void) {
-    u8 prev_cmd;
-    eta_t *eta;
+    s16 prev_cmd, current_cmd;
+    eta_t **eta_table = ray.eta;
     u8 horloge_index;
-    s32 dx;
+    s16 dx;
     do {
         prev_cmd = ray.cmd;
         switch(anim_sequence[ray.cmd]) {
-            case 0: {
-                ray.flags.flip_x = 0;
-                ++ray.cmd;
-            } break;
             case 1: {
                 ray.flags.flip_x = 1;
+                ++ray.cmd;
+            } break;
+            case 0: {
+                ray.flags.flip_x = 0;
                 ++ray.cmd;
             } break;
             case 8: {
                 set_main_etat(&ray, anim_sequence[++ray.cmd]);
                 set_sub_etat(&ray, anim_sequence[++ray.cmd]);
-                eta = &ray.eta[ray.main_etat][ray.sub_etat];
-                ray.speed_x = ray.flags.flip_x ? eta->speed_x_right : eta->speed_x_left;
+                if (ray.flags.flip_x) ray.speed_x = eta_table[ray.main_etat][ray.sub_etat].speed_x_right;
+                else ray.speed_x = eta_table[ray.main_etat][ray.sub_etat].speed_x_left;
                 ++ray.cmd;
             } break;
-            case 14: {
-                set_main_etat(&ray, 0);
-                set_sub_etat(&ray, 0);
+            case 21: {
+                ray.screen_x = anim_sequence[++ray.cmd];
+                ++ray.cmd;
+            } break;
+            case 19: {
+                if (EOA(&ray) && ray.anim_index == ray.eta[ray.main_etat][ray.sub_etat].anim_index) {
+                    ++ray.cmd;
+                }
             } break;
             case 17: {
                 if (ray.anim_frame == anim_sequence[ray.cmd + 1]) {
@@ -1598,22 +1763,18 @@ void DO_LEVEL_ANIM(void) {
                     ray.cmd += 2;
                 }
             } break;
-            case 19: {
-                if (EOA(&ray) && ray.anim_index == ray.eta[ray.main_etat][ray.sub_etat].anim_index) {
-                    ++ray.cmd;
-                }
-            } break;
             case 20: {
                 ray.speed_x = anim_sequence[++ray.cmd];
                 ++ray.cmd;
             } break;
-            case 21: {
-                ray.screen_x = anim_sequence[++ray.cmd];
-                ++ray.cmd;
+            case 14: {
+                set_main_etat(&ray, 0);
+                set_sub_etat(&ray, 0);
             } break;
             default: break;
         }
-    } while (prev_cmd != ray.cmd);
+        current_cmd = ray.cmd;
+    } while (prev_cmd != current_cmd);
 
     horloge_index = ((ray.animations[ray.anim_index].layers_per_frame & 0xC000) >> 14) + 1;
     dx = instantSpeed(ray.speed_x);
@@ -1631,5 +1792,9 @@ void FIN_LEVEL_ANIM(void) {
     DO_FADE_OUT();
     INIT_FADE_IN();
 }
+
+
+
+
 
 

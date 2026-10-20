@@ -4635,6 +4635,16 @@
     "addr": "1:061bd",
     "name": "RAYVERSE",
     "evidence": "DOS call target at 1:254D8"
+   },
+   "check_cd_for_save": {
+    "addr": "1:5bc40",
+    "name": "INVENTED",
+    "evidence": "DOS INIT_SAVE_CHOICE call guarded by !JeuCracker; body checks CD"
+   },
+   "release_record": {
+    "addr": "1:6fa70",
+    "name": "INVENTED",
+    "evidence": "DOS INIT_WORLD_STAGE_NAME allocation counterpart at epilogue (allocator 1:6f8d8)"
    }
   },
   "data": {
@@ -8914,6 +8924,126 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CF7EE; DOS word load in WORLD_CHOICE at 1:2503F"
+   },
+   "credits_init": {
+    "addr": "2:51d4",
+    "type": "credit_t[]",
+    "name": "INVENTED",
+    "evidence": "INIT_CREDITS memcpy source,12-byte stride"
+   },
+   "clockobj": {
+    "addr": "2:3ed44",
+    "type": "obj_t",
+    "name": "RAYVERSE",
+    "evidence": "DOS INIT_CONTINUE and MAIN_CONTINUE_PRG object argument; candidate clock_obj unbound"
+   },
+   "rms": {
+    "addr": "2:3edd4",
+    "type": "obj_t",
+    "name": "RAYVERSE",
+    "evidence": "data.c CEDD4; DOS INIT_CONTINUE struct copy source"
+   },
+   "byte_CFA3E": {
+    "addr": "2:3fa3e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c CFA3E; DOS continue-cheat state byte"
+   },
+   "VitesseYStageNameLevel": {
+    "addr": "2:32248",
+    "type": "s32[30]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "VitesseXStageNameWorld": {
+    "addr": "2:322c0",
+    "type": "s32[30]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "VitesseXStageNameLevel": {
+    "addr": "2:32338",
+    "type": "s32[30]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "PositionYStageNameWorld": {
+    "addr": "2:323b0",
+    "type": "s32[50]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "VitesseYStageNameWorld": {
+    "addr": "2:32478",
+    "type": "s32[30]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "PositionXStageNameLevel": {
+    "addr": "2:324f0",
+    "type": "s32[50]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "PositionXStageNameWorld": {
+    "addr": "2:325b8",
+    "type": "s32[50]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "PositionYStageNameLevel": {
+    "addr": "2:32680",
+    "type": "s32[50]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; Android same size; DOS DO_STAGE_NAMES dword indexed accesses"
+   },
+   "TailleStageNameLevel": {
+    "addr": "2:3d08c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "CouleurStageNameLevel": {
+    "addr": "2:3d090",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "TailleStageNameWorld": {
+    "addr": "2:3d094",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "CouleurStageNameWorld": {
+    "addr": "2:3d0a8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "LongueurStageNameWorld": {
+    "addr": "2:3d0cc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "LongueurStageNameLevel": {
+    "addr": "2:3d0d0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c offset; DOS DO_STAGE_NAMES dword access"
+   },
+   "TexteStageNameWorld": {
+    "addr": "2:3eef8",
+    "type": "char[]",
+    "name": "ANDROID",
+    "evidence": "DOS DO_STAGE_NAMES strcpy destination and indexed byte accesses; name from Android, extent OPEN"
+   },
+   "TexteStageNameLevel": {
+    "addr": "2:3ef16",
+    "type": "char[]",
+    "name": "ANDROID",
+    "evidence": "DOS DO_STAGE_NAMES strcpy destination and indexed byte accesses; name from Android, extent OPEN"
    }
   }
  }
