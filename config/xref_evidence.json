@@ -60,6 +60,72 @@
    "category": "CONFIRMED_VARIANT",
    "confidence": "high",
    "notes": "DOS STRICT (src/mathutil.c). DOS uses a low-byte table lookup instead of PS1 quadrant cases"
+  },
+  "1:6e420": {
+   "name": "DO_TRP_COMMAND",
+   "category": "LIKELY_SHARED",
+   "confidence": "medium",
+   "notes": "NEAR: Rayverse and adapted PS1 bodies both NEAR (+0x1e); dispatch shape differs"
+  },
+  "1:6e4c8": {
+   "name": "trompetteWind",
+   "category": "LIKELY_SHARED",
+   "confidence": "medium",
+   "notes": "NEAR: temp slot/order, signed shift lowering"
+  },
+  "1:6e650": {
+   "name": "DO_TRP_ATTAK",
+   "category": "LIKELY_SHARED",
+   "confidence": "medium",
+   "notes": "NEAR: local lifetime/register allocation"
+  },
+  "1:6e69c": {
+   "name": "trompetteAtter",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with Rayverse body; adapted PS1 body also STRICT"
+  },
+  "1:6e6bc": {
+   "name": "DoTrumpetPoingCollision",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "STRICT after reversing hit-point branch order vs Rayverse; no PS1 body"
+  },
+  "1:6e72c": {
+   "name": "DoTrompetteRaymanZDD",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with Rayverse body unchanged; no PS1 body"
+  },
+  "1:6e760": {
+   "name": "test_block_chdir",
+   "category": "CONFIRMED_VARIANT",
+   "confidence": "medium",
+   "notes": "NEAR: DOS tests a tile byte where PS1 uses a mask representation"
+  },
+  "1:6e838": {
+   "name": "DO_MOVING_WITH_INDICATOR_COMMAND",
+   "category": "LIKELY_SHARED",
+   "confidence": "medium",
+   "notes": "NEAR: tile test and frame/register allocation"
+  },
+  "1:6eb84": {
+   "name": "DO_IDC_COMMAND",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with adapted PS1 body (Rayverse: stub)"
+  },
+  "1:6ebb8": {
+   "name": "DO_LEV_POING_COLLISION",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with adapted PS1 body + 2-argument PlaySnd (Rayverse: stub)"
+  },
+  "1:6ec50": {
+   "name": "START_UFO",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with adapted PS1 body (Rayverse: stub)"
   }
  }
 }

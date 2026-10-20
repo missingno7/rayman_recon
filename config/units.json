@@ -345,6 +345,97 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "trumpet": {
+   "source": "src/trumpet.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DO_TRP_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "trompetteWind": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_TRP_ATTAK": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "trompetteAtter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoTrumpetPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoTrompetteRaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "ufo": {
+   "source": "src/ufo.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "test_block_chdir": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MOVING_WITH_INDICATOR_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_IDC_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_LEV_POING_COLLISION": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "START_UFO": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

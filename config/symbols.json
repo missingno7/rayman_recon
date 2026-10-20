@@ -416,6 +416,101 @@
     "addr": "1:6fadc",
     "name": "INVENTED",
     "evidence": "Internal object-free call target at 1:6fadc from DO_PERFECT_BONUS_MAP; no xref name"
+   },
+   "DO_TRP_COMMAND": {
+    "addr": "1:6e420",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E420; disassembly entry"
+   },
+   "trompetteWind": {
+    "addr": "1:6e4c8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E4C8; disassembly entry"
+   },
+   "DO_TRP_ATTAK": {
+    "addr": "1:6e650",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E650; disassembly entry"
+   },
+   "trompetteAtter": {
+    "addr": "1:6e69c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E69C; disassembly entry"
+   },
+   "DoTrumpetPoingCollision": {
+    "addr": "1:6e6bc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E6BC; disassembly entry"
+   },
+   "DoTrompetteRaymanZDD": {
+    "addr": "1:6e72c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse trumpet.c //7E72C; disassembly entry"
+   },
+   "test_block_chdir": {
+    "addr": "1:6e760",
+    "name": "PS1",
+    "evidence": "PS1 ufo_idc.c 80199154; disassembly entry"
+   },
+   "DO_MOVING_WITH_INDICATOR_COMMAND": {
+    "addr": "1:6e838",
+    "name": "PS1",
+    "evidence": "PS1 ufo_idc.c 80199230; disassembly entry"
+   },
+   "DO_IDC_COMMAND": {
+    "addr": "1:6eb84",
+    "name": "PS1",
+    "evidence": "PS1 ufo_idc.c 80199640; disassembly entry"
+   },
+   "DO_LEV_POING_COLLISION": {
+    "addr": "1:6ebb8",
+    "name": "PS1",
+    "evidence": "PS1 ufo_idc.c 80199680; disassembly entry"
+   },
+   "START_UFO": {
+    "addr": "1:6ec50",
+    "name": "PS1",
+    "evidence": "PS1 ufo_idc.c 80199798; disassembly entry"
+   },
+   "set_main_and_sub_etat": {
+    "addr": "1:0d818",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call targets from trumpet.c and ufo.c"
+   },
+   "SET_X_SPEED": {
+    "addr": "1:45ee4",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from DO_TRP_COMMAND"
+   },
+   "CALC_MOV_ON_BLOC": {
+    "addr": "1:15820",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from DO_TRP_COMMAND"
+   },
+   "GET_ANIM_POS": {
+    "addr": "1:0d738",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from trompetteWind"
+   },
+   "inter_box": {
+    "addr": "1:1b430",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from trompetteWind"
+   },
+   "recale_position": {
+    "addr": "1:15b30",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from trompetteAtter"
+   },
+   "obj_hurt": {
+    "addr": "1:0eb80",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from DoTrumpetPoingCollision"
+   },
+   "PlaySnd": {
+    "addr": "1:6228c",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from DO_LEV_POING_COLLISION"
    }
   },
   "data": {
@@ -1000,6 +1095,48 @@
     "size": 16,
     "name": "ANDROID",
     "evidence": "Android x86 .data/.rodata object 'SinTabFeu' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "poing_obj": {
+    "addr": "2:3e6dc",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE6DC; direct pointer load in DoTrumpetPoingCollision"
+   },
+   "ray_wind_force": {
+    "addr": "2:3f870",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF870; word read/write in trompetteWind"
+   },
+   "decalage_en_cours": {
+    "addr": "2:3f866",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF866; word write in trompetteWind"
+   },
+   "mp": {
+    "addr": "2:3e638",
+    "type": "map_data_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE638; DOS uses width at +0 and map pointer at +8"
+   },
+   "level": {
+    "addr": "2:3cdf0",
+    "type": "level_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CCDF0; DOS loads level.objects from base"
+   },
+   "actobj": {
+    "addr": "2:3ef5c",
+    "type": "active_objects_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CEF5C; objects[100] then count at +0xc8, as DOS accesses 2:3ef5a and 2:3f024"
+   },
+   "link_init": {
+    "addr": "2:3ee58",
+    "type": "s16*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CEE58; DOS pointer load in DO_LEV_POING_COLLISION"
    }
   }
  }
