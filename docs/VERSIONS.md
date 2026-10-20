@@ -48,6 +48,10 @@ source (names) but with a different compiler and replaced platform layers. Measu
   `tools/promote.py` and `tools/verify.py`. Corrections so far: costab s16[129] (not 257), language_txt char*[300]
   (not 304); confirmations: main_mem_tmp 12 bytes (DOS mem_t, not Rayverse's port struct), status_bar 10, ray 0x84,
   rvb_plan3 0x300.
+- Android widened a few globals: world_index, first_credit, last_credit, ray_inertie are 2 bytes on Android but
+  lie inside an unbroken run of 1-byte BSS globals on DOS (2:3fa0e..2:3fa9c), which the proven size-rank _BSS order
+  only allows for 1-byte objects. Such bindings carry an explicit `dos_size_evidence` that overrides the Android size.
+- Android struct sizes use natural alignment (e.g. level 8 bytes vs DOS packed 6); only simple types are compared.
 - File grouping: Android keeps a source file's functions together in .text (e.g. all audiocd functions, the bit
   utilities, rand, bat each form one block), so it is evidence for TU membership; the order inside a file differs
   from DOS (not usable for function order).

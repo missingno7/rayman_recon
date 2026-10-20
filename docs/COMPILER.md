@@ -29,6 +29,14 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - **`_BSS` order rule = kegg_recon's Watcom 10.0 rule** [PROVEN for 10.6 and 10.5]: 30 random TUs (2,457
   uninitialised globals, mixed sizes/arrays/names) laid out exactly as predicted (size rank, declaration-index group
   of 25, hashpjw(name) % 241, later declaration first). Probe: `tools/probes/bss_rule.py` (uses kegg's bssorder.py).
+- **Intrinsics are on (part of `-ox`/`-oaxt`)** [PROVEN]: with `#include <string.h>`, `memcpy(dst, src, 3)` compiles
+  to Watcom's inline copy `push edi; mov eax,ecx; shr ecx,2; repne movsd; mov cl,al; and cl,3; repne movsb; pop edi`
+  (note the `f2` prefix), exactly as in the original deter_num_let (1:0efb4). Adding `-oi` changes nothing.
+  The runtime has no memcpy_/strlen_/strncpy_ members: such calls in Rayverse/PS1 bodies must become the intrinsic
+  form (include the Watcom headers; do not hand-declare memcpy/strlen, which disables the intrinsic).
+- **Local aggregate initialisers live in `_TEXT` at the start of the object** [PROVEN]: `char t[4] = {0};` puts a
+  4-byte constant at `_TEXT` offset 0 (loaded `mov eax,[const]; mov [esp],eax`). The basic.c object therefore starts
+  at 1:0d070 with that constant, and EOA is at 1:0d074 (probe scratch/oi/p.c reproduces the prologue and copy).
 - **No `-oe`** [STRONG]: with `-oe` (alone or inside `-oneatx`/`-otexan`) `DoCdRap` inlines `cd_playing` from the
   same object, while the original calls it; audiocd drops from 8 to 7 STRICT. rand and mathutil are unaffected.
 - **Watcom 10.5 and 10.6 compilers give identical code** on all accepted units (rand 2/2, audiocd 8/11,

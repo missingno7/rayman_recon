@@ -126,6 +126,48 @@
    "category": "CONFIRMED_SAME_LOGIC",
    "confidence": "high",
    "notes": "STRICT with adapted PS1 body (Rayverse: stub)"
+  },
+  "1:18b40": {
+   "name": "DO_CAGE2",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with Rayverse body; PS1 body also STRICT verbatim"
+  },
+  "1:18b50": {
+   "name": "DO_CAGE",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with Rayverse body; PS1 body also STRICT verbatim"
+  },
+  "1:18ba4": {
+   "name": "DoCagePoingCollision",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT after testing zero hit points first (branch order); no PS1 body"
+  },
+  "1:18c2c": {
+   "name": "DO_MEDAILLON_TOON",
+   "category": "CONFIRMED_SAME_LOGIC",
+   "confidence": "high",
+   "notes": "STRICT with Rayverse body; PS1 body STRICT with flag-field adaptation"
+  },
+  "1:18ca0": {
+   "name": "DO_MEDAILLON_TOON_GELE",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "STRICT after DOS traversal shape; PC map restore and clock call (platform additions)"
+  },
+  "1:18dd4": {
+   "name": "ALLOCATE_MEDAILLON_TOON",
+   "category": "LIKELY_SHARED",
+   "confidence": "medium",
+   "notes": "NEAR: pointer loop, coordinate expression, map resets"
+  },
+  "1:18f14": {
+   "name": "allocate_toons",
+   "category": "LIKELY_SHARED",
+   "confidence": "high",
+   "notes": "STRICT after removing Rayverse count clamp (port safety code), DOS index/field order"
   }
  }
 }

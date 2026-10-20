@@ -61,7 +61,9 @@ def norm(addr):
 
 
 def android_mismatches(canon):
-    """Data bindings whose simple type size disagrees with the Android symbol size of the same name."""
+    """Data bindings whose simple type size disagrees with the Android symbol size of the same name.
+    A binding may override Android only with an explicit "dos_size_evidence" (the Android port widened some
+    globals; e.g. world_index, proven 1 byte on DOS by the BSS size-rank layout)."""
     import android
     try:
         A = android.load()
@@ -74,7 +76,7 @@ def android_mismatches(canon):
         for name, ent in secs.get("data", {}).items():
             ts = type_size(ent.get("type"))
             a = A.get(name)
-            if ts is not None and a and a["kind"] == "O" and a["size"] != ts:
+            if ts is not None and a and a["kind"] == "O" and a["size"] != ts and not ent.get("dos_size_evidence"):
                 bad.append(f"{oracle}: {name} type {ent.get('type')} = {ts} bytes, Android size {a['size']}")
     return bad
 

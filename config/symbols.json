@@ -511,6 +511,96 @@
     "addr": "1:6228c",
     "name": "RAYVERSE",
     "evidence": "DOS direct call target from DO_LEV_POING_COLLISION"
+   },
+   "DO_CAGE2": {
+    "addr": "1:18b40",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28B40; DOS range entry"
+   },
+   "DO_CAGE": {
+    "addr": "1:18b50",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28B50; DOS range entry"
+   },
+   "DoCagePoingCollision": {
+    "addr": "1:18ba4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28BA4; DOS range entry"
+   },
+   "DO_MEDAILLON_TOON": {
+    "addr": "1:18c2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28C2C; DOS range entry"
+   },
+   "DO_MEDAILLON_TOON_GELE": {
+    "addr": "1:18ca0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28CA0; DOS range entry"
+   },
+   "ALLOCATE_MEDAILLON_TOON": {
+    "addr": "1:18dd4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28DD4; DOS range entry"
+   },
+   "allocate_toons": {
+    "addr": "1:18f14",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //28F14; DOS range entry"
+   },
+   "allocateGrille": {
+    "addr": "1:1912c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //2912C; DOS range entry"
+   },
+   "DO_ONE_PINK_CMD": {
+    "addr": "1:191b4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //291B4; DOS range entry"
+   },
+   "DoLidolPinkRaymanZDD": {
+    "addr": "1:1937c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse cage.c //2937C; DOS range entry"
+   },
+   "take_bonus": {
+    "addr": "1:64270",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from DoCagePoingCollision"
+   },
+   "mute_snd_bouclant": {
+    "addr": "1:630dc",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from DO_MEDAILLON_TOON_GELE"
+   },
+   "findfirstObject": {
+    "addr": "1:0d4c4",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from allocate_toons"
+   },
+   "add_alwobj": {
+    "addr": "1:0f8e8",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from medal, toon and cage allocation"
+   },
+   "calc_obj_pos": {
+    "addr": "1:0e030",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from allocate_toons"
+   },
+   "EOA": {
+    "addr": "1:0d074",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from DO_ONE_PINK_CMD"
+   },
+   "calc_typ_travd": {
+    "addr": "1:151f8",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from DO_ONE_PINK_CMD"
+   },
+   "calc_typ_trav": {
+    "addr": "1:14f60",
+    "name": "RAYVERSE",
+    "evidence": "Direct DOS call target from DO_ONE_PINK_CMD"
    }
   },
   "data": {
@@ -1137,6 +1227,103 @@
     "type": "s16*",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CEE58; DOS pointer load in DO_LEV_POING_COLLISION"
+   },
+   "Nb_total_cages": {
+    "addr": "2:3fa5b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA5B; DOS byte load/increment/store"
+   },
+   "lidol_to_allocate": {
+    "addr": "2:3fa66",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA66; DOS byte store"
+   },
+   "lidol_source_obj": {
+    "addr": "2:3d8c8",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD8C8; DOS pointer store"
+   },
+   "snd_flag_medaillon": {
+    "addr": "2:3f766",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF766; DOS word compare/store"
+   },
+   "xmap": {
+    "addr": "2:3f89e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF89E; DOS word load/store"
+   },
+   "ymap": {
+    "addr": "2:3f8a6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8A6; DOS word load/store"
+   },
+   "xmap_old": {
+    "addr": "2:3f8b0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8B0; DOS word load/store"
+   },
+   "ymap_old": {
+    "addr": "2:3f8ac",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8AC; DOS word load/store"
+   },
+   "world_index": {
+    "addr": "2:3fa60",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA60; DOS byte index read",
+    "dos_size_evidence": "2:3fa60 lies inside an unbroken run of 1-byte BSS globals 2:3fa0e..2:3fa9c (ALL_WORLD at 2:3fa61); Watcom's size-rank _BSS order places 2-byte objects in a separate block, so the DOS object is 1 byte. Android widened it (also first_credit, last_credit, ray_inertie in the same run)."
+   },
+   "t_world_info": {
+    "addr": "2:4d5c",
+    "type": "world_info_t[24]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //94D5C; DOS stride 20 and nb_cages byte at +9"
+   },
+   "gele": {
+    "addr": "2:3fa62",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA62; DOS byte store"
+   },
+   "h_scroll_speed": {
+    "addr": "2:3f8b2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8B2; DOS word store"
+   },
+   "v_scroll_speed": {
+    "addr": "2:3f8b4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8B4; DOS word store"
+   },
+   "Toon_Speeds_x": {
+    "addr": "2:62bc",
+    "type": "s16[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //962BC; DOS word indexed loads"
+   },
+   "Toon_Speeds_y": {
+    "addr": "2:62ca",
+    "type": "s16[7]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //962CA; DOS word indexed loads"
+   },
+   "gerbe": {
+    "addr": "2:3fa70",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA70; DOS byte comparison"
    }
   }
  }

@@ -25,4 +25,22 @@ typedef struct status_bar_t {       /* src/bonus.c */
     u8 max_hitp;
 } status_bar_t;
 
+typedef struct world_info_t {       /* src/cage.c */
+    s16 xpos;
+    s16 ypos;
+    u8 index_up;
+    u8 index_down;
+    u8 index_left;
+    u8 index_right;
+    u8 state;
+    u8 nb_cages;
+    u8 world;
+    u8 level;
+    s8 color;
+    u8 field_D;
+    u8 field_E;
+    u8 field_F;
+    char *text;
+} world_info_t;
+
 #endif
