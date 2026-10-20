@@ -4697,6 +4697,266 @@
     "addr": "1:63dc4",
     "name": "RAYVERSE/ANDROID",
     "evidence": "DOS DoPancarteRaymanCollision +7b call; Android original symbol exists"
+   },
+   "RayEstIlBloque": {
+    "addr": "1:60598",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PIEDS_RAYMAN": {
+    "addr": "1:60ae4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "determineRayAirInertia": {
+    "addr": "1:5cce0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocateRayLandingSmoke": {
+    "addr": "1:5bfd0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SURF_CHANGE_HAIRS": {
+    "addr": "1:60a8c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_SURF": {
+    "addr": "1:60964",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_BALANCE_ANIM": {
+    "addr": "1:5f24c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_FIN_BALANCE": {
+    "addr": "1:5f7d0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "MUR": {
+    "addr": "1:5dc4c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "calc_bhand_typ": {
+    "addr": "1:5c088",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_HELICO": {
+    "addr": "1:5d7d4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RayTestBlocSH": {
+    "addr": "1:5f870",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "remoteControlRay": {
+    "addr": "1:5f95c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_ALL_DIRS": {
+    "addr": "1:60e14",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_NOTHING": {
+    "addr": "1:5eb40",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "set_air_speed": {
+    "addr": "1:5ca70",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_FIRE1": {
+    "addr": "1:5f208",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "STOPPE_RAY_CONTRE_PAROIS": {
+    "addr": "1:5f9e0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "ray_inertia_speed": {
+    "addr": "1:5d020",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_SWIP": {
+    "addr": "1:5d2e8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RepousseRay": {
+    "addr": "1:604b0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_BALANCE": {
+    "addr": "1:5f500",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "AIR": {
+    "addr": "1:5dc24",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_DOWN": {
+    "addr": "1:5e030",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "recale_ray_on_liane": {
+    "addr": "1:5c004",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_UP": {
+    "addr": "1:5e370",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_DIR": {
+    "addr": "1:5e548",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_FIRE0": {
+    "addr": "1:5f1c8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "snifRayIsDead": {
+    "addr": "1:600a4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_FIN_FOLLOW": {
+    "addr": "1:60c20",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_GOING_BALANCE": {
+    "addr": "1:5f328",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_RESPOND_TO_BUTTON3": {
+    "addr": "1:5f0b0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "rayfallsinwater": {
+    "addr": "1:6010c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "terminateFistWhenRayDies": {
+    "addr": "1:6008c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RAY_IN_THE_AIR": {
+    "addr": "1:5fa44",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "DO_MORT_DE_RAY": {
+    "addr": "1:60ae8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "RAY_TO_THE_RIGHT": {
+    "addr": "1:49418",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "DO_PESANTEUR": {
+    "addr": "1:465d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "freezeAnim": {
+    "addr": "1:46734",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "Make_Ray_Hang": {
+    "addr": "1:5db1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "RAY_TO_THE_LEFT": {
+    "addr": "1:4949c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "move_up_ray": {
+    "addr": "1:48de8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "move_down_ray": {
+    "addr": "1:48ec8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "stackRay": {
+    "addr": "1:6089c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "RAY_FOLLOW": {
+    "addr": "1:60d58",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "DO_RAYMAN": {
+    "addr": "1:6133c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "CAN_RAY_HANG_BLOC": {
+    "addr": "1:5dc78",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "STOPPE_RAY_EN_XY": {
+    "addr": "1:49d18",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "rayMayLandOnAnObject": {
+    "addr": "1:5c224",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "setvol": {
+    "addr": "1:62a1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "DO_RAY_ON_MS": {
+    "addr": "1:60ff8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse DOS address annotation; Android symbol checked separately"
+   },
+   "INIT_PC": {
+    "addr": "1:61920",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse/xref next-object boundary annotation; census extent anchor only, no body in this candidate"
    }
   },
   "data": {
@@ -9148,6 +9408,62 @@
     "type": "s16",
     "name": "RAYVERSE/ANDROID",
     "evidence": "Android fee_obj_id object size 2; Rayverse CF888; DOS INIT_OBJECTS writes word at 1:4f332 and 1:4fda7; do_record 1:324d7 reads dword at 2:3f886 then SAR 16, i.e. true short at 2:3f888."
+   },
+   "animation_attente": {
+    "addr": "2:3f76c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 2 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "ray_Suphelico_bis": {
+    "addr": "2:3fa75",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 1 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "ray_between_clic": {
+    "addr": "2:3f848",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 2 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "ray_clic": {
+    "addr": "2:3f840",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CF840; Android name exists (port size 1)",
+    "dos_size_evidence": "1:5d8b1: mov word ptr [2:3f840],ax; DOS RAY_HELICO uses s16, Android narrows to 1 byte"
+   },
+   "ray_inertie": {
+    "addr": "2:3fa5e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA5E; Android name exists (port size 2)",
+    "dos_size_evidence": "1:5d897: mov byte ptr [2:3fa5e],cl; DOS RAY_HELICO uses u8, Android widens to 2 bytes"
+   },
+   "ray_se_noie": {
+    "addr": "2:3fa7b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 1 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "LEFT_MAP_BORDER": {
+    "addr": "2:3f756",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 2 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "RIGHT_MAP_BORDER": {
+    "addr": "2:3f75a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 2 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "pos_stack": {
+    "addr": "2:3e5b8",
+    "type": "s16[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android 20 bytes .bss; DOS fixup/access audit in binding_audit.json"
    }
   }
  }
