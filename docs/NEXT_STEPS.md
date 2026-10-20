@@ -1,22 +1,19 @@
 # Next steps (ordered by value)
 
-1. **Scale TU matching with workers** (highest value). `python tools/tumap.py --list` gives 83 candidate objects
-   with their Rayverse functions; brief one worker per object (template: build/workers/tu_bat/PROMPT.md, rules in
-   AGENTS.md), review every result for byte-forcing declarations before `tools/promote.py`. Prefer engine/gameplay
-   objects with PS1 C counterparts (cross-platform evidence) and small objects first: basic.c (1:0d070), blood
-   (1:13800), blacktoon (1:13030), cage (1:18b40), cymbal (1:21f00), ngawe region (1:4d630.., inside a larger
-   candidate object). Integrate in small batches; `tools/verify.py` must stay at 0 regressions.
-2. **Shared headers**: build `src/include/` types (obj_t, eta_t, anim_t, ...) from Rayverse types.h + PS1 include/,
-   validating every field offset against STRICT code; replace per-unit partial structs. Settles `-zp` too.
-3. **Open discriminators** (docs/COMPILER.md): match one FP-using function (`-on`, `-fp*`), one with intrinsic
-   candidates (`-oi`), loop-heavy code (`-ol`); try 10.5 vs 10.6 on each new unit.
-4. **Data verification**: extend match.py (or a datacmp tool) to compare a TU's `_DATA`/`CONST` against obj2 and to
-   order `_BSS` (kegg_recon docs/compiler-notes.md has the Watcom 10 `_BSS` hash-order rule; re-prove it for 10.6).
-5. **Hard leftovers** for a stronger model (gpt-6.1-sol): `start_cd_gameover` `mov eax,eax`; DO_BAT_COMMAND frame.
-6. **Hand-written assembly**: classify non-Watcom code regions (no cstrt-style prologues, self-modifying code at
-   1:00010...), decide ORIGINAL_ASM reconstruction with WASM/TASM once evidence of the original assembler exists.
-7. **Link stage**: WLINK 10.6 experiments (object order = tumap order, `_TEXT` alignment, stub), then PMWLITE
-   recompression round trip (PMODE/W 1.22 is not available; 1.33 PMWLITE behaviour must be compared first).
-8. **v1.12**: rerun units against `dos_v112_us` (bindings overlay per oracle) to classify each function as
-   CONFIRMED_SAME_LOGIC / CONFIRMED_VARIANT between versions; consider version conditionals in src/ later.
-9. Dynamic analysis only when needed: MS-DOS Player first, DOSBox-X when the PMODE/W program needs it.
+1. **Keep scaling TU matching** with the brief in build/workers/TEMPLATE_P2.md (it carries every proven lesson).
+   Remaining candidate objects: `python tools/tumap.py --list`. Prefer gameplay objects with PS1 bodies; integrate in
+   batches with `tools/promote.py` (+ review for byte-forcing declarations and duplicated shared types).
+2. **Finish whole objects**: cage (1 NEAR), poisson (2), bat (3), audiocd (3) - closing the last functions makes the
+   layout contiguous, which also verifies intra-object references (jump tables, function pointers). A strong model
+   (gpt-6.1-sol) pass per object worked well for basic (19 -> 36).
+3. **Data**: (a) bind the ObjectsFonctions/t_world_info pointer targets (function addresses from Rayverse/Android
+   names + code matches) and reconstruct those tables; (b) start the central BSS: declare named globals in an order
+   that reproduces the oracle BSS addresses under the proven rule (tools/bssrule.py), verified by a new BSS-placement
+   check in match.py (BSS segment publics bound -> layout must equal); (c) consolidate duplicated block-local struct
+   types (archive_header_t) into shared headers.
+4. **Systematise the return-width/operand-order rules** in a small helper (try narrower return types and swapped
+   comparison operands automatically for NEAR functions whose first difference is in the prologue) - cheap, many hits.
+5. **Undetermined compiler options**: `-on` (needs FP code), `-ol`; Watcom 10.5 vs 10.6 still non-discriminating.
+6. **Hand-written assembly** (1:00000.. low-level drawing, self-modifying code) - classify, then ORIGINAL_ASM units.
+7. **Link stage** (later): WLINK 10.6 object order = tumap order; PMWLITE round trip after enough coverage.
+8. **v1.12**: rerun accepted units against `dos_v112_us` to classify cross-version changes.

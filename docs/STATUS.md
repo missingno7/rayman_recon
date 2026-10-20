@@ -1,56 +1,67 @@
-# Status (bootstrap, 2026-10-20)
+# Status (Phase 2 - systematic DOS matching, 2026-10-20)
 
-Live numbers: `python tools/verify.py && python tools/status.py`. This file records what is established and what is
-not; it is not the counter of record (config/units.json + the verifier are).
+Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record).
 
-## Verified facts
-- **Oracles** (config/oracles.json, docs/ORIGINALS.md): primary GOG v1.21 `599b1df2…09eb6`; secondary CD/installed
-  v1.12 `913a8d17…6f6d6` (installed tree == CD `RAYMAN/` subtree, 100/100 files); PS1 `SLUS-000.05` SHA-1
-  `4ac1789e…` == rayman-ps1-decomp target.
-- **Container** (docs/EXECUTABLE.md): PMODE/W stub + PMW1 (v1.22 / v1.21), 2 objects, LZ-compressed, 32-bit offset
-  fixups only. Decoder ported from the official PMODE/W 1.33 source; 17 streams per build decode to exact sizes;
-  all 22,358 / 22,125 fixup sites hold exactly the independently compressed relocation targets.
-- **Runtime**: Watcom CLIB3R/MATH387R, 10.6 for v1.21, 10.5 for v1.12 (exact library members with fixup-site
-  agreement; release-specific members discriminate). Entry = `_cstart_`.
-- **Game compiler profile**: `wcc386 -oaxt -s -5r` (10.6; 10.5 identical so far). `-5`, `-oa`+`-ot`, `-s`, register
-  convention proven by STRICT matches; `-oe` excluded [STRONG]; `-on` open (docs/COMPILER.md).
-- **Object structure**: paragraph-aligned `_TEXT` per object, nop padding inside, 00 between objects; 83
-  decode-validated object boundaries; whole objects reproduced contiguously: rand (1:5bf60), mathutil (1:4def0).
-- **Cross-reference**: 1,462 Rayverse-annotated v1.21 functions (address convention verified), 816 linked by name to
-  PS1 addresses/files (`tools/xref.py`); curated categories in config/xref_evidence.json.
+## Closure levels (kept separate)
+| level | state |
+|---|---|
+| function-level STRICT | **123 functions, 11,982 code bytes** (bootstrap end: 34 / 1,900) in 15 code units; 74 NEAR_MATCH recorded |
+| whole-object code closure | rand (1:5bf60), mathutil (1:4def0), bonus (1:13a00; incl. its CONST) - every function STRICT and one contiguous `_TEXT` |
+| data closure | **25,532 bytes VERIFIED** (49 `_DATA` units + CONST of bonus and basic); mapped (named+sized bindings, not reconstruction): 89.7% of game `_DATA` |
+| BSS | order rule PROVEN for Watcom 10.5/10.6; names largely original; no BSS unit reconstructed yet |
+| linked binary / packed EXE | not started (by design) |
 
-## Matching results (GOG v1.21, `python tools/verify.py`)
-| unit | source | STRICT | other |
-|---|---|---|---|
-| rand | src/rand.c | 2/2 (whole object) | - |
-| mathutil | src/mathutil.c | 12/12 (whole object) | - |
-| audiocd | src/audiocd.c | 8/11 | start_cd_gameover NEAR (unexplained `mov eax,eax` before ret); DoCdCredits, DoCdRap NEAR only through the resulting 4-byte shift |
-| bat | src/bat.c | 6/9 | DO_BAT_FLASH, bat_dir, DO_BAT_COMMAND NEAR |
-| bonus | src/bonus.c | 6/8 | calc_left_time (register choice at +2), do_perfect_bonus (4 bytes short) NEAR |
-| **total** | | **34 functions, 1,900 code bytes STRICT** | 8 NEAR_MATCH |
+## Code units (GOG v1.21)
+| unit | STRICT | notes |
+|---|---|---|
+| rand | 2/2 | whole object |
+| mathutil | 12/12 | whole object |
+| bonus | 8/8 | whole object, CONST VERIFIED |
+| basic (core engine, 1:0d070) | 36/58 | object starts with deter_num_let's initialiser; CONST VERIFIED |
+| stoneman | 14/24 | |
+| cage | 9/10 | contiguous layout |
+| audiocd | 8/11 | start_cd_gameover `mov eax,eax` OPEN (~40 falsified variants) |
+| bat | 6/9 | |
+| poisson | 6/8 | |
+| mite | 5/11 | |
+| blacktoon | 4/8 | |
+| poing | 4/11 | |
+| trumpet | 3/6 | |
+| ufo | 3/5 | PS1 bodies (Rayverse stubs) STRICT unchanged |
+| moskito | 3/14 | |
+Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
+Verifier self-tests 10/10 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
 
-Additionally verified outside src/: the v1.12 rand object (without the v1.21 `& 0xEFFF` mask) is STRICT against the
-v1.12 oracle (scratch/v112/) - one cross-version confirmation. Verifier self-tests: 7/7 pass (6 negative controls).
+## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
+- Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
+- Intrinsics via Watcom `<string.h>` are part of `-oaxt` (inline memcpy); local aggregate initialisers live at `_TEXT`
+  offset 0; `_BSS` order rule (size rank, 25-declaration groups, name hash) holds for 10.5/10.6.
+- Source-shape rules that convert Rayverse/PS1 bodies: narrow return widths (s16 get_proj_x), comparison operand order
+  is source order (obj_hurt), callee prototype widths change callers, branch/predicate/switch order, bitfield reads
+  differ from mask arithmetic (block_flags), declaration order.
+- obj2 layout: game `_DATA` 2:00000..2:2d998, runtime `_DATA`, game `CONST` in `_TEXT` link order, `CONST2`, `DATA32`,
+  BSS 2:3218a. String literals belong to the referencing object's CONST.
 
-STRICT here means function-level: bytes at the bound address, identical fixup-site sets, every reference target
-verified. It says nothing yet about data/BSS layout, object order, or the linked executable.
+## Shared types (src/include)
+obj.h (obj_t 0x84, eta_t, anim/sprite, zdc_t, level_t, level_obj_t, active_objects_t), game.h (status_bar_t, rgb,
+world_info_t, poing_t, rayevts_t, finbosslevel_t), map.h (map_tile_t, map_data_t, block_flags_t). Offsets pinned by
+tests/test_layout.py (PROVEN vs RAYVERSE marked). Corrections vs Rayverse: offset_hy u8 (two units), block_flags
+bitfield union. PS1's Obj layout is different (not used).
 
-## Tooling that runs
-inventory, extract (PMW1), libscan (identification / --compare / --symbols), xref, tumap, disasm, wcc (pinned
-compiler runner), match (strict verifier), verify (clean rebuild + zero-regression gate), promote (integration),
-status, wpack (Watcom installer unpacker). See README.md for the commands.
+## Cross-platform transferability (worker records, ~170 functions)
+CONFIRMED_SAME_LOGIC ~52, LIKELY_SHARED (source-shape changes only) ~83, CONFIRMED_VARIANT ~20, PC_ONLY ~12.
+Typical conversions: return widths, operand/branch order, Rayverse port adaptations (strncpy for memcpy, safety
+clamps, widened globals, ogg/CD replacements). Curated rows: config/xref_evidence.json.
+
+## Other references added
+Android Rayman Classic/Anniversary symbols and APK: original names, true data sizes (gate), initialised-data
+content matches (61 bindings), x86 code by name (semantic reference). Android widened a few globals and uses
+natural struct alignment; DOS evidence overrides (dos_size_evidence).
 
 ## Unresolved
-- `start_cd_gameover` extra `mov eax,eax` (OPEN; 9 source forms and -oe/-on tested).
-- bat: DO_BAT_COMMAND frame (`push ebp` vs `sub esp,4`), bat_dir jump-table target offset, DO_BAT_FLASH.
-- bonus: calc_left_time (`push esi` vs `push edi`), do_perfect_bonus (`mov ebx,0x3c` vs a map_time load at +0x22).
-  The first worker result for this object was rejected (a short global mis-declared as a shifted int to force the
-  `-5` load idiom); the accepted version declares the true `s16` globals.
-- `-on`, `-oi`, `-ol` undetermined; struct packing (`-zp`) only implicitly consistent so far.
-- No data (`_DATA`/`CONST`/`_BSS`) verification yet; no WLINK experiments; no PMWLITE recompression round trip.
-- Runtime linear addresses under PMODE/W unknown (no dynamic analysis done).
-- v1.21 game data files differ from v1.12 (not analysed). Other CD executables (CONFIG.EXE etc.) not analysed.
-
-## Not accomplished in the bootstrap
-Complete TU reconstruction beyond the two whole objects; data/BSS layout; hand-written assembly classification
-(e.g. the 1:00010 sprite/polygon routines that use self-modifying code); link/relink; any SDL3 work (by design).
+- basic 22 NEAR (register/stack allocation, range-helper shapes, layout drift); moskito/poing/mite frame and
+  register allocation; cymbal (large functions, frame layout); blood; start_cd_gameover; bat_dir jump-table offset.
+- Whole-object layout conflicts block intra-object reference verification in several units.
+- Data: ObjectsFonctions pointer table (2:035fa..2:04a74) and t_world_info pointers unbound; BSS not reconstructed;
+  `_DATA` object boundaries unknown (blocks are invented splits); hand-written low-level code/data at 1:00000/2:00000.
+- No WLINK / PMWLITE experiments yet.

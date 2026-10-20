@@ -49,11 +49,17 @@ def main():
     print(f"data: reconstructed (VERIFIED segments, last verify) {data_b} bytes; mapped game _DATA (named+sized "
           f"bindings) {mapped} of {GAME_DATA_END} bytes ({100.0 * mapped / GAME_DATA_END:.1f}%)")
     print(f"bindings: {len(sym.get('functions', {}))} functions, {len(sym.get('data', {}))} data")
+    data_units = [n for n, u in units.items() if not u["functions"]]
     for name, u in units.items():
+        if not u["functions"]:
+            continue
         st = {}
         for ent in u["functions"].values():
             st[ent["status"]] = st.get(ent["status"], 0) + 1
-        print(f"  {name:10s} {u['source']:18s} " + " ".join(f"{k}={v}" for k, v in sorted(st.items())))
+        segs = " ".join(f"{k}:{v}" for k, v in u.get("segments", {}).items())
+        print(f"  {name:10s} {u['source']:18s} " + " ".join(f"{k}={v}" for k, v in sorted(st.items()))
+              + (f"  [{segs}]" if segs else ""))
+    print(f"  + {len(data_units)} data-only units (src/data_coll.c, src/data/*.c)")
     return 0
 
 
