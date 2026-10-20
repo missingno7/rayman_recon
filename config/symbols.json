@@ -2076,6 +2076,151 @@
     "addr": "1:45d78",
     "name": "RAYVERSE",
     "evidence": "DOS call target at 1:6716d"
+   },
+   "pmamaFollowsShip": {
+    "addr": "1:543f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //643F0; DOS public at 1:543f0"
+   },
+   "init_couteaux": {
+    "addr": "1:54440",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64440; DOS public at 1:54440"
+   },
+   "reset_couteaux": {
+    "addr": "1:54500",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64500; DOS public at 1:54500"
+   },
+   "check_couteaux": {
+    "addr": "1:5451c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //6451C; DOS public at 1:5451c"
+   },
+   "find_couteau": {
+    "addr": "1:54568",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64568; DOS public at 1:54568"
+   },
+   "x_pos": {
+    "addr": "1:54574",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64574; DOS public at 1:54574"
+   },
+   "y_pos": {
+    "addr": "1:545cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //645CC; DOS public at 1:545cc"
+   },
+   "y_floor": {
+    "addr": "1:545e0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //645E0; DOS public at 1:545e0"
+   },
+   "init_move_couteau": {
+    "addr": "1:54650",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64650; DOS public at 1:54650"
+   },
+   "init_lance_couteau": {
+    "addr": "1:547cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //647CC; DOS public at 1:547cc"
+   },
+   "couteau_frame": {
+    "addr": "1:54a80",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64A80; DOS public at 1:54a80"
+   },
+   "update_couteau": {
+    "addr": "1:54b14",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64B14; DOS public at 1:54b14"
+   },
+   "get_cou_zdc": {
+    "addr": "1:54b70",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64B70; DOS public at 1:54b70"
+   },
+   "pma_attaque_suivante": {
+    "addr": "1:54ea4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64EA4; DOS public at 1:54ea4"
+   },
+   "convertspeed": {
+    "addr": "1:54ff8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //64FF8; DOS public at 1:54ff8"
+   },
+   "lance_couteau_parabolique": {
+    "addr": "1:55000",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //65000; DOS public at 1:55000"
+   },
+   "lance_couteau_droit": {
+    "addr": "1:55120",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //65120; DOS public at 1:55120"
+   },
+   "retour_couteau": {
+    "addr": "1:552ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //652EC; DOS public at 1:552ec"
+   },
+   "lance_couteau_lineaire": {
+    "addr": "1:554f8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //654F8; DOS public at 1:554f8"
+   },
+   "DO_COU_COMMAND": {
+    "addr": "1:55b10",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //65B10; DOS public at 1:55b10"
+   },
+   "calc_pma_dir": {
+    "addr": "1:55d00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //65D00; DOS public at 1:55d00"
+   },
+   "DO_PMA_COMMAND": {
+    "addr": "1:55d90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //65D90; DOS public at 1:55d90"
+   },
+   "init_mama_pirate": {
+    "addr": "1:56170",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //66170; DOS public at 1:56170"
+   },
+   "PMA_SORT_DU_CANON": {
+    "addr": "1:56218",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //66218; DOS public at 1:56218"
+   },
+   "DO_PMA_POING_COLLISION": {
+    "addr": "1:56244",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //66244; DOS public at 1:56244"
+   },
+   "pma_get_eject_sens": {
+    "addr": "1:5628c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //6628C; DOS public at 1:5628c"
+   },
+   "DO_COU_ATTER": {
+    "addr": "1:562a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //662A0; DOS public at 1:562a0"
+   },
+   "DO_PMA_ATTER": {
+    "addr": "1:563b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse pmama.c //663B0; DOS public at 1:563b0"
+   },
+   "dist_to_bloc_floor": {
+    "addr": "1:14eac",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call target from y_floor at 1:5462b; xref blocs.c"
    }
   },
   "data": {
@@ -4774,6 +4919,90 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CFA90; Android size 1"
+   },
+   "CouteauxInfos": {
+    "addr": "2:54dac",
+    "type": "couteaux_info_t[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DAC; Android size 100; DOS 0x14 record index scale"
+   },
+   "bateau_obj_id": {
+    "addr": "2:3f808",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF808; Android size 2"
+   },
+   "mama_pirate_obj_id": {
+    "addr": "2:3f80c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF80C; Android size 2"
+   },
+   "cou_tempo": {
+    "addr": "2:54e10",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E10; Android size 2"
+   },
+   "pma_tempo": {
+    "addr": "2:54e12",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E12; Android size 2"
+   },
+   "pma_touched": {
+    "addr": "2:54e14",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E14; Android size 1"
+   },
+   "pma_nb_couteau": {
+    "addr": "2:54e15",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E15; Android size 1"
+   },
+   "pma_phase": {
+    "addr": "2:54e16",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E16; Android size 1"
+   },
+   "pma_attaque": {
+    "addr": "2:54e17",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E17; Android size 1"
+   },
+   "cou_place": {
+    "addr": "2:54e18",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E18; Android size 1"
+   },
+   "pma_groupe": {
+    "addr": "2:54e19",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E19; Android size 1"
+   },
+   "pma_type_attaque": {
+    "addr": "2:54e1a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4E1A; Android size 1"
+   },
+   "ymapmax": {
+    "addr": "2:3f884",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF884; Android size 2"
+   },
+   "boss_mort": {
+    "addr": "2:3fa78",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA78; DOS byte store in lance_couteau_lineaire"
    }
   }
  }
