@@ -52,7 +52,16 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - Linker: WLINK version/options, object order, `_DATA`/`_BSS` order not studied yet.
 - v1.12 rand variant is STRICT with the 10.6 compiler against v1.12 (scratch), although its runtime is 10.5.
 
+- **Prototype return width shapes the caller** [PROVEN, bonus do_perfect_bonus]: declaring `but0pressed()..but3pressed()`
+  as returning `short` instead of `int` changes the caller's test sequence (4 bytes) and is required for STRICT.
+- **Index operand order affects register allocation** [PROVEN, bonus calc_left_time]: `index = level_index +
+  world_index` vs the reverse selects ESI vs EDI at entry.
+
 ## Negative results (keep)
+- start_cd_gameover's extra `mov eax,eax` before `ret` (also present in v1.12 at 1:0cd2c): ~40 controlled variants
+  fail - callee return types (all integer/pointer/float widths), unused/assigned/cast call results, cdecl/pascal/
+  stdcall/syscall/fortran conventions, -d1/-d2/-d3, -oc/-of/-oi/-ol/-ol+/-om/-op/-or, Watcom 10.0/10.0a/10.5/10.6
+  (build/workers/near_leftovers/NOTES.md). OPEN; deliberately left NEAR rather than forced.
 - `-ox`, `-oxa`, `-os`, `-ot`, `-oil`, `-or`, `-otr`, `-olr`, `-omr`, `-oir`, `-oxe`, `-oxn`, `-oxl+`, `-ox -oe=100`:
   myRand not STRICT. `-ob*` is not a 10.6 option.
 - `myRand` with a local index (Rayverse shape) is never STRICT: 3-10 byte diffs (store/return order).

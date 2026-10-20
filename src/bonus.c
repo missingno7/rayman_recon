@@ -1,7 +1,8 @@
 /*
  * Bonus levels and timing (GOG v1.21 object 1:13a00-1:13f30). File name invented (Rayverse bonus.c).
- * Names: Rayverse/Android. Partial struct layouts until shared headers exist.
- * Status per function: config/units.json (calc_left_time, do_perfect_bonus not yet STRICT).
+ * Names: Rayverse/Android.
+ * All eight functions STRICT (calc_left_time, do_perfect_bonus solved by build/workers/near_leftovers).
+ * Note: the DOS ending test is `loop_time == 500` (Rayverse writes `> 500`).
  */
 #include "obj.h"
 #include "game.h"
@@ -58,10 +59,10 @@ extern obj_t *allocateNOVA(void);
 extern void DO_ANIM(obj_t *obj);
 extern void switchOff(obj_t *obj);
 extern void display2(obj_t *obj);
-extern s32 but0pressed(void);
-extern s32 but1pressed(void);
-extern s32 but2pressed(void);
-extern s32 but3pressed(void);
+extern s16 but0pressed(void);
+extern s16 but1pressed(void);
+extern s16 but2pressed(void);
+extern s16 but3pressed(void);
 extern s16 InitModeNormalWithFrequency(u8 frequency);
 extern s16 InitModeXWithFrequency(u8 frequency);
 extern void init_memory(mem_t *mem, s32 size);
@@ -95,32 +96,25 @@ void calc_left_time(void)
     if (bonus_map) {
         s32 world_index;
         s32 level_index;
-        s16 allowed_time_in_seconds;
-
+        s32 index;
         world_index = num_world;
         level_index = num_level;
         world_index = (world_index << 5) - 32;
         --level_index;
-        allowed_time_in_seconds = allowed_time[world_index + level_index];
-
+        index = level_index + world_index;
         if (map_time == 1) {
-            if (allowed_time_in_seconds == -2) {
-                left_time = -2;
-            } else {
-                left_time = allowed_time_in_seconds * 60;
-            }
-        } else if (allowed_time_in_seconds != -2 && map_time > 120) {
-            if (left_time != 0) {
-                ray.is_active = 1;
-                left_time = 60 * allowed_time_in_seconds - map_time + 120;
-                if (left_time == 0) {
-                    if (nb_wiz != 0) {
-                        status_bar.num_wiz = (u8)nb_wiz_save;
-                        departlevel = 0;
-                        fix_numlevel(&ray);
-                        DO_FADE_OUT();
-                    }
-                }
+            left_time = allowed_time[index];
+            if (left_time != -2)
+                left_time *= 60;
+        }
+        if (allowed_time[index] != -2 && left_time != 0 && map_time > 120) {
+            ray.is_active = 1;
+            left_time = 60 * allowed_time[index] - (map_time - 120);
+            if (left_time == 0 && nb_wiz != 0) {
+                status_bar.num_wiz = (u8)nb_wiz_save;
+                departlevel = 0;
+                fix_numlevel(&ray);
+                DO_FADE_OUT();
             }
         }
     }
@@ -170,13 +164,10 @@ s16 do_perfect_bonus(u32 a1)
     readinput();
 
     if (loop_time == 0) {
-        s32 minutes;
-        s32 seconds;
-
+        s16 index;
         INIT_FADE_IN();
-        seconds = (map_time - 120) % 60;
-        minutes = allowed_time[(s16)(((num_world - 1) * 32) + (num_level - 1))] - ((left_time / 60) + 1);
-        sprintf(bonus_time_display_text, "/%2d : %02d/", minutes, seconds);
+        index = (s16)(((num_world - 1) * 32) + (num_level - 1));
+        sprintf(bonus_time_display_text, "/%2d : %02d/", allowed_time[index] - 1 - left_time / 60, (map_time - 120) % 60);
     }
 
     if (get_bonus_map_complete(num_world, num_level)) {
@@ -212,7 +203,7 @@ s16 do_perfect_bonus(u32 a1)
     }
 
     done = 0;
-    if (loop_time > 500 || ((but0pressed() || but1pressed() || but2pressed() || but3pressed()) && loop_time > 50)) {
+    if (loop_time == 500 || ((but0pressed() || but1pressed() || but2pressed() || but3pressed()) && loop_time > 50)) {
         done = 1;
         fix_numlevel(&ray);
     }
