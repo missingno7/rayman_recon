@@ -53,6 +53,13 @@ def overlaps(canon):
     return bad
 
 
+def norm(addr):
+    """Canonical 'obj:offset' text (offset lower-case hex, 5 digits for code, 4+ for data)."""
+    from image import parse_addr
+    o, a = parse_addr(addr)
+    return f"{o}:{a:05x}" if o == 1 else f"{o}:{a:04x}"
+
+
 def merge_symbols(overlay, renames):
     canon = load_json(CONFIG / "symbols.json")
     ov = load_json(overlay)
@@ -61,11 +68,12 @@ def merge_symbols(overlay, renames):
         dst = canon.setdefault(oracle, {"functions": {}, "data": {}})
         for sec in ("functions", "data"):
             have = dst.setdefault(sec, {})
-            by_addr = {v["addr"]: k for k, v in have.items()}
+            by_addr = {norm(v["addr"]): k for k, v in have.items()}
             for name, ent in secs.get(sec, {}).items():
                 name = renames.get(name, name)
+                ent = dict(ent, addr=norm(ent["addr"]))
                 if name in have:
-                    if have[name]["addr"] != ent["addr"]:
+                    if norm(have[name]["addr"]) != ent["addr"]:
                         raise SystemExit(f"conflict: {name} bound to {have[name]['addr']}, overlay {ent['addr']}")
                     continue
                 if ent["addr"] in by_addr:

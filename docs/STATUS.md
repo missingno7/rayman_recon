@@ -26,7 +26,8 @@ not; it is not the counter of record (config/units.json + the verifier are).
 | mathutil | src/mathutil.c | 12/12 (whole object) | - |
 | audiocd | src/audiocd.c | 8/11 | start_cd_gameover NEAR (unexplained `mov eax,eax` before ret); DoCdCredits, DoCdRap NEAR only through the resulting 4-byte shift |
 | bat | src/bat.c | 6/9 | DO_BAT_FLASH, bat_dir, DO_BAT_COMMAND NEAR |
-| **total** | | **28 functions, 1,377 code bytes STRICT** | 6 NEAR_MATCH |
+| bonus | src/bonus.c | 6/8 | calc_left_time (register choice at +2), do_perfect_bonus (4 bytes short) NEAR |
+| **total** | | **34 functions, 1,900 code bytes STRICT** | 8 NEAR_MATCH |
 
 Additionally verified outside src/: the v1.12 rand object (without the v1.21 `& 0xEFFF` mask) is STRICT against the
 v1.12 oracle (scratch/v112/) - one cross-version confirmation. Verifier self-tests: 7/7 pass (6 negative controls).
@@ -42,8 +43,9 @@ status, wpack (Watcom installer unpacker). See README.md for the commands.
 ## Unresolved
 - `start_cd_gameover` extra `mov eax,eax` (OPEN; 9 source forms and -oe/-on tested).
 - bat: DO_BAT_COMMAND frame (`push ebp` vs `sub esp,4`), bat_dir jump-table target offset, DO_BAT_FLASH.
-- bonus object (1:13a00-1:13f30): first worker result rejected (global mis-declared to force the `-5` short-load
-  idiom); a corrected run was in progress at the end of the session (build/workers/tu_bonus).
+- bonus: calc_left_time (`push esi` vs `push edi`), do_perfect_bonus (`mov ebx,0x3c` vs a map_time load at +0x22).
+  The first worker result for this object was rejected (a short global mis-declared as a shifted int to force the
+  `-5` load idiom); the accepted version declares the true `s16` globals.
 - `-on`, `-oi`, `-ol` undetermined; struct packing (`-zp`) only implicitly consistent so far.
 - No data (`_DATA`/`CONST`/`_BSS`) verification yet; no WLINK experiments; no PMWLITE recompression round trip.
 - Runtime linear addresses under PMODE/W unknown (no dynamic analysis done).

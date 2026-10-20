@@ -226,6 +226,196 @@
     "addr": "1:0dac8",
     "name": "RAYVERSE",
     "evidence": "tools/disasm.py call target from DO_BAT_COMMAND"
+   },
+   "get_allowed_time": {
+    "addr": "1:13a00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13a00"
+   },
+   "calc_left_time": {
+    "addr": "1:13a28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13a28"
+   },
+   "get_bonus_map_complete": {
+    "addr": "1:13af8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13af8"
+   },
+   "set_bonus_map_complete": {
+    "addr": "1:13b10",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13b10"
+   },
+   "DO_WIZ_AFTER_BONUS_MAP": {
+    "addr": "1:13b28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13b28"
+   },
+   "init_bonus_perfect": {
+    "addr": "1:13b8c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13b8c"
+   },
+   "do_perfect_bonus": {
+    "addr": "1:13ba0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13ba0"
+   },
+   "DO_PERFECT_BONUS_MAP": {
+    "addr": "1:13df0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse bonus.c; entry xref 1:13df0"
+   },
+   "fix_numlevel": {
+    "addr": "1:6a474",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in calc_left_time and do_perfect_bonus"
+   },
+   "DO_FADE_OUT": {
+    "addr": "1:2cadc",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in calc_left_time and DO_PERFECT_BONUS_MAP"
+   },
+   "NOVA_STATUS_BAR": {
+    "addr": "1:6b838",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_WIZ_AFTER_BONUS_MAP"
+   },
+   "Add_One_RAY_lives": {
+    "addr": "1:48644",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_WIZ_AFTER_BONUS_MAP and do_perfect_bonus"
+   },
+   "horloges": {
+    "addr": "1:45498",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "readinput": {
+    "addr": "1:32134",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "INIT_FADE_IN": {
+    "addr": "1:2ca8c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "cyclage_palette": {
+    "addr": "1:2c770",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "DISPLAY_FOND3": {
+    "addr": "1:2cdf8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "display_text": {
+    "addr": "1:0a3f0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "allocateNOVA": {
+    "addr": "1:6b56c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "DO_ANIM": {
+    "addr": "1:467ac",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "switchOff": {
+    "addr": "1:0eb18",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "display2": {
+    "addr": "1:08ce8",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "but0pressed": {
+    "addr": "1:31ea4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "but1pressed": {
+    "addr": "1:31f30",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "but2pressed": {
+    "addr": "1:31fbc",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "but3pressed": {
+    "addr": "1:32048",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in do_perfect_bonus"
+   },
+   "InitModeNormalWithFrequency": {
+    "addr": "1:2d9e4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "InitModeXWithFrequency": {
+    "addr": "1:2d8ac",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "init_memory": {
+    "addr": "1:6f7d0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "LOAD_PERFTIME_SCREEN": {
+    "addr": "1:265f0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "LOAD_PERFECT_SCREEN": {
+    "addr": "1:26600",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "SAVE_PALETTE": {
+    "addr": "1:2cce4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "EFFACE_VIDEO": {
+    "addr": "1:2cb04",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "stop_all_snd": {
+    "addr": "1:61c10",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "SYNCHRO_LOOP": {
+    "addr": "1:2cb54",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "FreeTchatchVignette": {
+    "addr": "1:2efa4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "RESTORE_PALETTE": {
+    "addr": "1:2cd58",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in DO_PERFECT_BONUS_MAP"
+   },
+   "free_main_mem": {
+    "addr": "1:6fadc",
+    "name": "INVENTED",
+    "evidence": "Internal object-free call target at 1:6fadc from DO_PERFECT_BONUS_MAP; no xref name"
    }
   },
   "data": {
@@ -330,6 +520,144 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c 'byte_CFA14' at this address; referenced by bat object"
+   },
+   "allowed_time": {
+    "addr": "2:3b9c0",
+    "type": "s16[192]",
+    "name": "RAYVERSE",
+    "evidence": "DOS indexed word loads at 2:3b9be/3b9c0; Rayverse data.c declares allowed_time[192]"
+   },
+   "bonus_perfect": {
+    "addr": "2:3bb40",
+    "type": "u8[24]",
+    "name": "RAYVERSE",
+    "evidence": "DOS getbit/setbit base and init byte stores at 2:3bb40"
+   },
+   "num_world": {
+    "addr": "2:3f88c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declares s16 num_world at 0xCF88C; DOS word field at 2:3f88c"
+   },
+   "num_level": {
+    "addr": "2:3f87c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declares s16 num_level at 0xCF87C; DOS word field at 2:3f87c"
+   },
+   "bonus_map": {
+    "addr": "2:3f806",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS word compare at 2:3f806"
+   },
+   "map_time": {
+    "addr": "2:3d8c0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "DOS dword loads/stores at 2:3d8c0"
+   },
+   "left_time": {
+    "addr": "2:3d8c4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "DOS dword loads/stores at 2:3d8c4"
+   },
+   "nb_wiz_save": {
+    "addr": "2:3d8ac",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "DOS dword load/store at 2:3d8ac"
+   },
+   "nb_wiz": {
+    "addr": "2:3fa56",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte compare at 2:3fa56"
+   },
+   "nb_wiz_collected": {
+    "addr": "2:3fa55",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte load/decrement/store at 2:3fa55"
+   },
+   "departlevel": {
+    "addr": "2:3f8a0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS word store at 2:3f8a0"
+   },
+   "loop_time": {
+    "addr": "2:3f810",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS word reads/writes at 2:3f810"
+   },
+   "id_Cling_1up": {
+    "addr": "2:3f82c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS word store at 2:3f82c"
+   },
+   "nb_fade": {
+    "addr": "2:3f8da",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "DOS word comparisons at 2:3f8da"
+   },
+   "ModeVideoActuel": {
+    "addr": "2:5e2c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte load at 2:5e2c"
+   },
+   "VGA_FREQ": {
+    "addr": "2:3fa4c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "DOS byte load at 2:3fa4c"
+   },
+   "main_mem_tmp": {
+    "addr": "2:3d8a0",
+    "type": "mem_t",
+    "name": "RAYVERSE",
+    "evidence": "DOS init_memory writes descriptor fields at +0,+4,+8 and nb_wiz_save starts at +0xc; calls pass the descriptor address. Rayverse data.c labels the DOS object as mem_t*"
+   },
+   "status_bar": {
+    "addr": "2:3ef52",
+    "type": "status_bar_t",
+    "name": "RAYVERSE",
+    "evidence": "num_wiz byte at base+6=2:3ef58"
+   },
+   "dword_D0028": {
+    "addr": "2:40028",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "DOS pointer load/store at 2:40028"
+   },
+   "bonus_time_display_text": {
+    "addr": "2:40014",
+    "type": "char[20]",
+    "name": "RAYVERSE",
+    "evidence": "DOS sprintf destination immediate at 2:40014"
+   },
+   "bonus_time_format": {
+    "addr": "2:30a18",
+    "type": "char[]",
+    "name": "RAYVERSE",
+    "evidence": "DOS sprintf format immediate; bytes read as '/%2d : %02d/'"
+   },
+   "language_txt": {
+    "addr": "2:32b48",
+    "type": "char*[304]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declares language_txt[304] at 0xC2B48; indices 157 and 158 match DOS pointer loads"
+   },
+   "rvb_plan3": {
+    "addr": "2:37c88",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "DOS address passed to SAVE_PALETTE"
    }
   }
  }
