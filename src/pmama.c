@@ -1,6 +1,7 @@
 /*
  * Space Mama boss and knives (GOG v1.21 object 1:543f0-1:56460). File name invented (Rayverse pmama.c).
- * Names: Rayverse/Android. Status per function: config/units.json.
+ * Worker candidate; measurements and unresolved differences: NOTES.md.
+ * Function/global names: Rayverse/Android. Descriptive added locals: INVENTED.
  */
 #define PC 1
 #include <string.h>
@@ -13,7 +14,7 @@
 #define false 0
 #endif
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) < 0 ? -(s32)(value) : (s32)(value))
 #define ashr16(value, amount) ((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount)))
 #define ashl16(value, amount) ((s32)(s16)(value) << (amount))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -32,7 +33,7 @@ typedef struct couteaux_info_t {
     s16 field5_0xa;
     s16 field6_0xc;
     s16 field7_0xe;
-    u8 record_flag;
+    u8 record_flag;  /* DOS +0x10: saved animation frame (placeholder name INVENTED). */
     u8 active;
     u8 field9_0x12;
     u8 dos_tail;
@@ -196,29 +197,29 @@ s16 y_pos(s16 param_1, s16 param_2) {
 }
 
 //645E0
-s32 y_floor(s16 x, s16 y) {
-    u8 btyp = BTYP((s16)(x >> 4), (s16)(y >> 4));
-
+s16 y_floor(s16 x, s16 y) {
+    u8 btyp;
+    s16 tx = (s16)x >> 4;
+    s32 ty = (s16)y >> 4;
+    btyp = BTYP((s16)tx, (s16)ty);
     while (!block_flags[btyp].bits.solid) {
         y += 16;
-        btyp = BTYP((s16)(x >> 4), (s16)(y >> 4));
+        btyp = BTYP((s16)(x >> 4), (s16)((s16)y >> 4));
     }
-
-    return dist_to_bloc_floor(btyp, x & 0xf, 0) + (y & ~0xf);
+    return (y & ~0xf) + dist_to_bloc_floor(btyp, x & 0xf, 0);
 }
 
 //64650
 void init_move_couteau(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical at first glance.
     u8 cout_ind;
-    obj_t cout_obj;
     s16 x;
     s16 y;
     u8 test_1;
 
     cout_ind = (u8)find_couteau(obj);
     if (cout_ind != (u8)-1) {
-        memcpy(&cout_obj, &level.objects[CouteauxInfos[cout_ind].field7_0xe], sizeof(obj_t));
+        obj_t cout_obj = level.objects[CouteauxInfos[cout_ind].field7_0xe];
         x = cout_obj.x + cout_obj.offset_bx;
         y = cout_obj.y + cout_obj.offset_by;
         CouteauxInfos[cout_ind].active = false;
@@ -236,11 +237,10 @@ void init_move_couteau(obj_t* obj) {
                 break;
             case 3:
             case 4:
-                test_1 = (pma_type_attaque == 3) * 4; /* TODO: this/x_pos param is what? */
-                if (cout_ind == 1)
-                    CouteauxInfos[cout_ind].x_pos = x_pos(test_1, 6);
-                else
-                    CouteauxInfos[cout_ind].x_pos = x_pos(4 - test_1, 6);
+                if (pma_type_attaque == 3) test_1 = 4; else test_1 = 0;
+                if (cout_ind != 1)
+                    test_1 = 4 - test_1;
+                CouteauxInfos[cout_ind].x_pos = x_pos(test_1, 6);
 #ifdef PC
                 CouteauxInfos[cout_ind].y_pos = y_pos(9 - cout_ind, 1) + 8;
 #else
@@ -261,7 +261,6 @@ void init_move_couteau(obj_t* obj) {
 void init_lance_couteau(u8 index) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical at first glance.
     obj_t *obj;
-    u8 main_etat; u8 sub_etat;
     s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
 
     if (index < pma_nb_couteau && index < LEN(CouteauxInfos)) {
@@ -275,10 +274,8 @@ void init_lance_couteau(u8 index) {
 #endif
             CouteauxInfos[index].active = false;
             if (pma_type_attaque == 0 || pma_type_attaque == 3 || pma_type_attaque == 4) {
-                main_etat = 2;
-                sub_etat = 10;
-                set_main_and_sub_etat(obj, main_etat, sub_etat);
-                obj->anim_index = obj->eta[main_etat][sub_etat].anim_index;
+                set_main_and_sub_etat(obj, 2, 10);
+                obj->anim_index = obj->eta[2][10].anim_index;
                 CouteauxInfos[index].field9_0x12 = 4;
                 CouteauxInfos[index].x_pos = x_pos(index, pma_nb_couteau);
                 CouteauxInfos[index].y_pos =
@@ -286,20 +283,16 @@ void init_lance_couteau(u8 index) {
                         level.objects[mama_pirate_obj_id].screen_y -
                         obj->offset_by;
                 CouteauxInfos[index].field2_0x4 = 1;
-                obj->anim_frame = 0;
             } else {
-                main_etat = 2;
-                sub_etat = 11;
-                set_main_and_sub_etat(obj, main_etat, sub_etat);
-                obj->anim_index = obj->eta[main_etat][sub_etat].anim_index;
+                set_main_and_sub_etat(obj, 2, 11);
+                obj->anim_index = obj->eta[2][11].anim_index;
                 if (pma_type_attaque == 5) {
                     CouteauxInfos[index].x_pos = x_pos(index, pma_nb_couteau);
                     CouteauxInfos[index].y_pos = y_pos(0, 0);
                     CouteauxInfos[index].field9_0x12 = 1;
                     CouteauxInfos[index].field2_0x4 = cou_tempo;
-                    obj->anim_frame = 0;
                 } else {
-                    if (place_sequence[cou_place] <= index) {
+                    if (index >= place_sequence[cou_place]) {
                         CouteauxInfos[index].x_pos = x_pos(index + 1, pma_nb_couteau + 1);
                     } else {
                         CouteauxInfos[index].x_pos = x_pos(index, pma_nb_couteau + 1);
@@ -313,10 +306,10 @@ void init_lance_couteau(u8 index) {
                     } else {
                         CouteauxInfos[index].field2_0x4 = 1;
                     }
-                    obj->anim_frame = 0;
                 }
             }
 
+            obj->anim_frame = 0;
             GET_SPRITE_POS(&level.objects[mama_pirate_obj_id], 6, &spr_x, &spr_y, &spr_w, &spr_h);
             if (level.objects[mama_pirate_obj_id].flags.flip_x) {
                 spr_x += spr_w;
@@ -330,49 +323,39 @@ void init_lance_couteau(u8 index) {
 }
 
 //64A80
-s32 couteau_frame(s16 spd_x, s16 spd_y) {
-    u8 frame;
+u8 couteau_frame(s16 spd_x, s16 spd_y) {
+    s32 frame;
     s16 diff;
-    s32 abs_x;
-    s32 abs_y;
-
+    s32 value;
     if (spd_x == 0) {
-        if (spd_y >= 0)
-            return 0;
-        return 8;
-    }
-    if (spd_y == 0) {
-        if (spd_x == 0)
-            return 0;
-        if (spd_x > 0)
-            return 4;
-        return 12;
-    }
-
-    abs_x = spd_x;
-    if (abs_x < 0)
-        abs_x = -abs_x;
-    abs_y = spd_y;
-    if (abs_y < 0)
-        abs_y = -abs_y;
-    diff = (s16)(abs_x - abs_y);
-    if (diff != 0) {
-        if (diff >= 0)
+        if (spd_y >= 0) frame = 0; else frame = 8;
+    } else if (spd_y == 0) {
+        if (spd_x == 0) frame = 0;
+        else if (spd_x > 0) frame = 4; else frame = 12;
+    } else {
+        value = spd_x;
+        if (value < 0) value = -value;
+        diff = value;
+        value = spd_y;
+        if (value < 0) value = -value;
+        diff -= value;
+        if (diff == 0) {
+            frame = 6;
+        } else if (diff >= 0) {
             frame = 5;
-        else
+        } else {
             frame = 7;
-    } else {
-        frame = 6;
-    }
+        }
 
-    if (spd_x > 0) {
-        if (spd_y > 0)
-            frame = 8 - frame;
-    } else {
-        if (spd_y < 0)
-            frame = 16 - frame;
-        else
-            frame = 8 + frame;
+        if (spd_x > 0) {
+            if (spd_y > 0)
+                return 8 - frame;
+        } else {
+            if (spd_y < 0)
+                return 16 - frame;
+            else
+                return 8 + frame;
+        }
     }
     return frame;
 }
@@ -386,84 +369,75 @@ void update_couteau(obj_t* obj) {
 //64B70
 void get_cou_zdc(obj_t* obj, s16 *x, s16 *y, s16 *w, s16 *h) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical at first glance.
-    s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
-    u8 sub_etat;
+    s16 spr_x; s16 spr_w; s16 spr_y; s16 spr_h;
 
     GET_SPRITE_POS(obj, 0, &spr_x, &spr_y, &spr_w, &spr_h);
     *w = 6;
     *h = 6;
-    if (obj->main_etat == 2) {
-        sub_etat = obj->sub_etat;
-        if (sub_etat - 10 <= 1U) {
-            switch (obj->anim_frame) {
-                case 0:
-                    *x = spr_x + ((spr_w - *w) >> 1);
-                    *y = spr_y + spr_h - *h;
-                    return;
-                case 1:
-                case 2:
-                case 3:
-                    *x = spr_x + spr_w - *w;
-                    *y = spr_y + spr_h - *h;
-                    return;
-                case 4:
-                    *w = spr_w;
-                    *x = spr_x + spr_w - *w;
-                    *y = spr_y + ((spr_h - *h) >> 1);
-                    return;
-                case 5:
-                case 6:
-                case 7:
-                    *x = spr_x + spr_w - *w;
-                    *y = spr_y;
-                    return;
-                case 8:
-                    *x = spr_x + ((spr_w - *w) >> 1);
-                    *y = spr_y;
-                    return;
-                case 9:
-                case 10:
-                case 11:
-                    *x = spr_x;
-                    *y = spr_y;
-                    return;
-                case 12:
-                    *w = spr_w;
-                    *x = spr_x;
-                    *y = spr_y + ((spr_h - *h) >> 1);
-                    return;
-                case 13:
-                case 14:
-                case 15:
-                    *x = spr_x;
-                    *y = spr_y + spr_h - *h;
-                    return;
-                default:
-                    *x = spr_x + ((spr_w - *w) >> 1);
-                    *y = spr_y + spr_h - *h;
-                    return;
-            }
-        } else {
-            if (obj->sub_etat == 14 && !(obj->eta[2][obj->sub_etat].anim_speed & 0xf)) {
-                *h = spr_h;
+    if (obj->main_etat == 2 && (obj->sub_etat == 10 || obj->sub_etat == 11)) {
+        switch (obj->anim_frame) {
+            case 0:
+                *x = spr_x + ((spr_w - *w) >> 1);
+                *y = spr_y + spr_h - *h;
+                return;
+            case 1:
+            case 2:
+            case 3:
+                *x = spr_x + spr_w - *w;
+                *y = spr_y + spr_h - *h;
+                return;
+            case 4:
+                *w = spr_w;
+                *x = spr_x + spr_w - *w;
+                *y = spr_y + ((spr_h - *h) >> 1);
+                return;
+            case 5:
+            case 6:
+            case 7:
+                *x = spr_x + spr_w - *w;
+                *y = spr_y;
+                return;
+            case 9:
+            case 10:
+            case 11:
+                *x = spr_x;
+                *y = spr_y;
+                return;
+            case 12:
+                *w = spr_w;
+                *x = spr_x;
+                *y = spr_y + ((spr_h - *h) >> 1);
+                return;
+            case 13:
+            case 14:
+            case 15:
+                *x = spr_x;
+                *y = spr_y + spr_h - *h;
+                return;
+            default:
+                *x = spr_x + ((spr_w - *w) >> 1);
+                *y = spr_y + spr_h - *h;
+                return;
+            case 8:
                 *x = spr_x + ((spr_w - *w) >> 1);
                 *y = spr_y;
                 return;
-            }
-            if (obj->main_etat == 2) {
-                if ((obj->sub_etat == 13) ||
-                    (obj->sub_etat == 14 && obj->eta[2][obj->sub_etat].anim_speed & 0xf)
-                ) {
-                    *x = -((*w >> 1) + -0x80) + obj->x;
-                    *y = -((*h >> 1) + -0x60) + obj->y;
-                    return;
-                } if (obj->main_etat == 2 && obj->sub_etat == 12) {
-                    *x = spr_x + ((spr_w - *w) >> 1);
-                    *y = spr_y + spr_h - *h;
-                    return;
-                }
-            }
         }
+    } else if (obj->main_etat == 2 && obj->sub_etat == 14 && !(obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf)) {
+        *h = spr_h;
+        *x = spr_x + ((spr_w - *w) >> 1);
+        *y = spr_y;
+        return;
+    } else if ((obj->main_etat == 2 && obj->sub_etat == 13) ||
+               (obj->main_etat == 2 && obj->sub_etat == 14 &&
+                (obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf))) {
+        *x = obj->x + 128 - (*w >> 1);
+        *y = obj->y + 96 - (*h >> 1);
+        return;
+    } else if (obj->main_etat == 2 && obj->sub_etat == 12) {
+        *x = spr_x + ((spr_w - *w) >> 1);
+        *y = spr_y + spr_h - *h;
+        return;
     }
     *x = -*w;
     *y = -*h;
@@ -478,13 +452,23 @@ void pma_attaque_suivante(void) {
         cou_place = 0;
     }
 
-    if (pma_touched || (pma_attaque++, pma_attaque == 2)) {
+    if (!pma_touched) {
+        if (++pma_attaque == 2) {
+            pma_attaque = 0;
+            pma_groupe++;
+            if (pma_groupe == 4) {
+                pma_groupe = 0;
+                pma_tempo -= 10;
+                cou_tempo -= 10;
+            }
+        }
+    } else {
         pma_groupe++;
         pma_attaque = 0;
         if (pma_groupe == 4) {
+            pma_groupe = 0;
             pma_tempo -= 10;
             cou_tempo -= 10;
-            pma_groupe = 0;
         }
     }
     if (pma_tempo < 100) {
@@ -506,7 +490,8 @@ void pma_attaque_suivante(void) {
 
 //64FF8
 s16 convertspeed(s16 x) {
-    return ashl16(x, 4);
+    s32 result = ashl16(x, 4);
+    return result;
 }
 
 //65000
@@ -514,12 +499,13 @@ void lance_couteau_parabolique(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 diff_x; s16 diff_y;
     s16 spd_x; s16 spd_y;
+    s32 motion;
     u8 cout_ind = find_couteau(obj);
 
     if (cout_ind != 0xFF) {
         diff_x = (xmap + CouteauxInfos[cout_ind].x_pos) - (obj->x + obj->offset_bx);
         diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->y + obj->offset_by);
-        if (CouteauxInfos[cout_ind].field2_0x4 != 0) {
+        if (CouteauxInfos[cout_ind].field2_0x4) {
             CouteauxInfos[cout_ind].field2_0x4 = 0;
             if (diff_x == 0) {
                 obj->speed_x = convertspeed(0);
@@ -530,7 +516,7 @@ void lance_couteau_parabolique(obj_t* obj) {
                 else
                     spd_x = -2;
                 spd_y =
-                    -(((diff_y * (spd_x << 4)) << 3) +
+                    -((((diff_y << 4) * spd_x) << 3) +
                             diff_x * (diff_x << 3)
                     ) /
                     ((diff_x * spd_x) << 3);
@@ -540,8 +526,9 @@ void lance_couteau_parabolique(obj_t* obj) {
             update_couteau(obj);
             obj->display_prio = 3;
         } else {
+            motion = diff_x * obj->speed_x;
             obj->speed_y += 4;
-            if (obj->speed_x * diff_x < 0) {
+            if (motion < 0) {
                 obj->speed_x = 0;
             }
             update_couteau(obj);
@@ -607,7 +594,7 @@ void retour_couteau(obj_t* obj) {
     s32 divisor;
 
     cout_ind = find_couteau(obj);
-    if (cout_ind != 0xFF && (cout_ind == 0 || CouteauxInfos[cout_ind - 1].field3_0x6 == 0)) {
+    if (cout_ind != 0xFF && (cout_ind == 0 || (cout_ind != 0 && CouteauxInfos[cout_ind - 1].field3_0x6 == 0))) {
         if (CouteauxInfos[cout_ind].field3_0x6 == 0) {
             diff_x = 0;
             diff_y = 0;
@@ -653,7 +640,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
     s16 cout_x; s16 cout_y;
     s16 unk_2;
     s16 diff_x; s16 diff_y;
-    u8 unk_sub_etat;
+    s16 unk_sub_etat;
     s32 unk_3;
     s16 unk_4;
     s16 unk_x_1; s16 unk_y_1;
@@ -664,7 +651,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
     eta_t *unk_state_3;
     u8 cout_ind = find_couteau(in_obj);
 
-    if (cout_ind != 0xFF && (cout_ind == 0 || CouteauxInfos[cout_ind - 1].field2_0x4 == 0)) {
+    if (cout_ind != 0xFF && (cout_ind == 0 || (cout_ind != 0 && CouteauxInfos[cout_ind - 1].field2_0x4 == 0))) {
         unk_1 = CouteauxInfos[cout_ind].field2_0x4;
         if (unk_1 == 0) {
             if (!CouteauxInfos[cout_ind].active) {
@@ -733,7 +720,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                     in_obj->anim_frame = unk_anim_frame;
                     unk_state_1 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
                     unk_state_1->anim_speed &= 0xF0;
-                    CouteauxInfos[cout_ind].field7_0xe = unk_anim_frame;
+                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
                     CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
                     CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
                     CouteauxInfos[cout_ind].field4_0x8--;
@@ -743,14 +730,15 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                     CouteauxInfos[cout_ind].field2_0x4 = 0;
                     CouteauxInfos[cout_ind].active = false;
                     unk_state_2 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
-                    unk_state_2->anim_speed = (unk_state_2->anim_speed & 0xF0) | 2;
+                    unk_state_2->anim_speed &= 0xF0;
+                    unk_state_2->anim_speed |= 2;
                     in_obj->gravity_value_1 = 0;
                     in_obj->gravity_value_2 = 8;
                 } else if (unk_5 == 3) {
                     in_obj->sub_etat = unk_sub_etat;
                     in_obj->anim_frame = unk_anim_frame;
                     CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
-                    CouteauxInfos[cout_ind].field7_0xe = unk_anim_frame;
+                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
                     CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
                     CouteauxInfos[cout_ind].field4_0x8--;
                     in_obj->speed_x = CouteauxInfos[cout_ind].field5_0xa;
@@ -761,7 +749,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 } else if (in_obj->anim_frame == unk_anim_frame) {
                     in_obj->sub_etat = unk_sub_etat;
                     in_obj->anim_frame = unk_anim_frame;
-                    CouteauxInfos[cout_ind].field7_0xe = unk_anim_frame;
+                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
                     CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
                     CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
                     CouteauxInfos[cout_ind].field4_0x8--;
@@ -771,7 +759,8 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 in_obj->speed_y = (s16) CouteauxInfos[cout_ind].field6_0xc;
                 if (CouteauxInfos[cout_ind].field9_0x12 == 2) {
                     unk_state_3 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
-                    unk_state_3->anim_speed = (unk_state_3->anim_speed & 0xF0) | 2;
+                    unk_state_3->anim_speed &= 0xF0;
+                    unk_state_3->anim_speed |= 2;
                     in_obj->gravity_value_1 = 0;
                     in_obj->gravity_value_2 = 8;
                 }
@@ -781,7 +770,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
             } else {
                 in_obj->speed_x = 0;
                 in_obj->speed_y = 0;
-                in_obj->anim_frame = CouteauxInfos[cout_ind].field7_0xe;
+                in_obj->anim_frame = CouteauxInfos[cout_ind].record_flag;
                 /* duplication */
                 if (CouteauxInfos[cout_ind].field4_0x8 & 1)
                     in_obj->y += 2;
@@ -812,6 +801,7 @@ void DO_COU_COMMAND(obj_t* obj) {
                 obj->speed_x = ashr16(obj->speed_x, 1);
                 CALC_MOV_ON_BLOC(obj);
                 if (screen_trembling == 1 || pma_phase == 2) {
+                    screen_trembling = 0;
                     if (pma_phase != 2) {
                         pma_phase = 2;
                         reset_couteaux();
@@ -840,7 +830,7 @@ void DO_COU_COMMAND(obj_t* obj) {
                     else if (pma_phase == 0)
                         lance_couteau_droit(obj);
 
-                    if (obj->speed_y >= 0 && obj->anim_frame == couteau_frame(0, -1))
+                    if (obj->speed_y >= 0 && couteau_frame(0, -1) == obj->anim_frame)
                         obj->eta[obj->main_etat][obj->sub_etat].anim_speed &= 0xF0;
                     break;
                 case 13:
@@ -853,7 +843,7 @@ void DO_COU_COMMAND(obj_t* obj) {
                     obj->speed_x = convertspeed(0);
                     obj->speed_y = convertspeed(-1);
                     if (EOA(obj)) {
-                        if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xF] == 0) {
+
                             obj->speed_y = convertspeed(0);
                             if (pma_phase == 2) {
                                 init_move_couteau(obj);
@@ -861,7 +851,6 @@ void DO_COU_COMMAND(obj_t* obj) {
                             } else {
                                 set_main_and_sub_etat(obj, 0, 9);
                             }
-                        }
                     }
                     break;
             }
@@ -887,8 +876,10 @@ void DO_PMA_COMMAND(obj_t* obj) {
     s16 sub_etat;
     s16 i;
     s16 y;
+    s16 x;
 
     scrollLocked = true;
+    ymap = scroll_start_y = scroll_end_y = ymapmax;
     main_etat = obj->main_etat;
     sub_etat = obj->sub_etat;
     switch (main_etat) {
@@ -898,7 +889,7 @@ void DO_PMA_COMMAND(obj_t* obj) {
                     obj->speed_x = 1;
                     obj->speed_y = 0;
                     CALC_MOV_ON_BLOC(obj);
-                    if ((obj->x + obj->offset_bx) > (xmap +
+                    if ((obj->offset_bx + obj->x) > (xmap +
 #ifdef PC
                             256
 #else
@@ -923,17 +914,16 @@ void DO_PMA_COMMAND(obj_t* obj) {
                     break;
                 case 1:
                     CALC_MOV_ON_BLOC(obj);
-                    if (EOA(obj) && pma_phase == 0)
-                        set_main_and_sub_etat(obj, 0, 5);
+                    if (EOA(obj))
+                        switch (pma_phase) { case 0: set_main_and_sub_etat(obj, 0, 5); break; }
                     break;
                 case 5:
                     CALC_MOV_ON_BLOC(obj);
                     if (obj->anim_frame == 35 && (horloge[obj->eta[main_etat][sub_etat].anim_speed & 0xF] == 0)) {
                         PlaySnd(153, obj->id);
                         i = 0;
-                        while (i < pma_nb_couteau && i < 5) {
+                        for (; i < pma_nb_couteau && i < 5; i++) {
                             init_lance_couteau(i);
-                            i++;
                         }
                     } else {
                         if (EOA(obj)) {
@@ -945,7 +935,6 @@ void DO_PMA_COMMAND(obj_t* obj) {
                     obj->speed_x = 0;
                     obj->speed_y = -2;
                     if (EOA(obj)) {
-                        if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xF] == 0) {
                             obj->is_active = 0;
                             obj->flags.alive = 0;
                             for (i = 0; i < 5; i++) {
@@ -956,7 +945,6 @@ void DO_PMA_COMMAND(obj_t* obj) {
                             }
                             pma_phase = 2;
                             return;
-                        }
                     }
                     break;
             }
@@ -1012,7 +1000,8 @@ void DO_PMA_COMMAND(obj_t* obj) {
                     break;
                 case 4:
                     y = obj->offset_by + obj->y;
-                    if ((y_floor((s16) (xmap + (SCREEN_WIDTH / 2)), y) - y) < 5) {
+                    x = xmap + SCREEN_WIDTH / 2;
+                    if ((y_floor(x, y) - y) < 5) {
                         obj->speed_y = 1;
                         obj->param = 0;
                         set_main_and_sub_etat(obj, 2, 5);
@@ -1086,64 +1075,56 @@ s32 pma_get_eject_sens(obj_t* obj) {
 
 //662A0
 void DO_COU_ATTER(obj_t* obj) {
-    // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    u8 sub_etat;
     eta_t *eta;
-
-    if (obj->main_etat == 2) {
-        sub_etat = obj->sub_etat;
-        if (sub_etat == 10) {
-            recale_position(obj);
+    if (obj->main_etat == 2 && obj->sub_etat == 10) {
+        recale_position(obj);
+        CouteauxInfos[obj->param].active = true;
+        set_main_and_sub_etat(obj, 0, 9);
+        obj->speed_x = 0;
+        obj->speed_y = 0;
+    } else if (obj->main_etat == 2 && obj->sub_etat == 11) {
+        if (pma_type_attaque == 1 || pma_type_attaque == 2) {
             CouteauxInfos[obj->param].active = true;
+            if (check_couteaux())
+                pma_phase = 1;
+            recale_position(obj);
             set_main_and_sub_etat(obj, 0, 9);
             obj->speed_x = 0;
             obj->speed_y = 0;
-        } else if (sub_etat == 11) {
-            if ((pma_type_attaque - 1) < 2U) {
-                CouteauxInfos[obj->param].active = true;
-                if (check_couteaux())
-                    pma_phase = 1;
-                recale_position(obj);
-                set_main_and_sub_etat(obj, 0, 9);
-                obj->speed_x = 0;
-                obj->speed_y = 0;
-            }
-        } else if (sub_etat == 14) {
-            obj->speed_y = -obj->speed_y;
-            obj->gravity_value_1 = obj->gravity_value_2 - obj->gravity_value_1;
-            eta = &obj->eta[obj->main_etat][obj->sub_etat];
-            eta->anim_speed = (eta->anim_speed & 0xf0) | 2;
-            recale_position(obj);
         }
+    } else if (obj->main_etat == 2 && obj->sub_etat == 14) {
+        obj->speed_y = -obj->speed_y;
+        obj->gravity_value_1 = obj->gravity_value_2 - obj->gravity_value_1;
+        eta = &obj->eta[obj->main_etat][obj->sub_etat];
+        eta->anim_speed &= 0xf0;
+        eta->anim_speed |= 2;
+        recale_position(obj);
     }
 }
 
 //663B0
+/* DOS: no first-landing shake; sound 62 accompanies the later landing smoke. */
 void DO_PMA_ATTER(obj_t* obj) {
-    // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    if (obj->main_etat == 2) {
-        if (obj->sub_etat == 7) {
-            obj->speed_x = 0;
-            obj->speed_y = 0;
-            recale_position(obj);
-            if (screen_trembling == 0)
-                screen_trembling = 1;
-            set_main_and_sub_etat(obj, 2, 8);
-        } else if (obj->sub_etat == 5) {
-            obj->speed_x = 0;
-            obj->speed_y = 0;
-            if (screen_trembling == 0) {
-                if (obj->param == 0) {
-                    recale_position(obj);
-                    allocateLandingSmoke(obj);
-                    obj->param = 1;
-                }
-                screen_trembling = 1;
+    if (obj->main_etat == 2 && obj->sub_etat == 7) {
+        obj->speed_x = 0;
+        obj->speed_y = 0;
+        recale_position(obj);
+        set_main_and_sub_etat(obj, 2, 8);
+    } else if (obj->main_etat == 2 && obj->sub_etat == 5) {
+        obj->speed_x = 0;
+        obj->speed_y = 0;
+        if (screen_trembling == 0) {
+            if (obj->param == 0) {
+                recale_position(obj);
+                allocateLandingSmoke(obj);
+                PlaySnd(62, obj->id);
+                obj->param = 1;
             }
-            if (pma_phase == 1) {
-                pma_phase = 2;
-                reset_couteaux();
-            }
+            screen_trembling = 1;
+        }
+        if (pma_phase == 1) {
+            pma_phase = 2;
+            reset_couteaux();
         }
     }
 }
