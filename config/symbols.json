@@ -1796,6 +1796,151 @@
     "addr": "1:2a118",
     "name": "RAYVERSE",
     "evidence": "Rayverse fee.c //3A118; DOS disassembly"
+   },
+   "PlaceDarkPhase1et2": {
+    "addr": "1:22a70",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:3; PS1 src/obj/dark_729F0.c 801971F0"
+   },
+   "dark_attaque_suivante": {
+    "addr": "1:22aa8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:8; PS1 src/obj/dark_729F0.c 80197238"
+   },
+   "init_vitraux": {
+    "addr": "1:22ad8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:13; PS1 src/obj/dark_729F0.c 80197288"
+   },
+   "poing_face_obj": {
+    "addr": "1:22b90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:18; PS1 src/obj/dark_729F0.c 8019739C"
+   },
+   "DARK_phase1": {
+    "addr": "1:22bd4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:23; PS1 src/obj/dark_729F0.c 80197414"
+   },
+   "DARK_phase3": {
+    "addr": "1:22fac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:28; PS1 src/obj/dark_729F0.c 80197AE8"
+   },
+   "DO_DARK_COMMAND": {
+    "addr": "1:231fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:33; PS1 src/obj/dark_729F0.c 80197DF8"
+   },
+   "DO_DARK_POING_COLLISION": {
+    "addr": "1:23630",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:152; PS1 src/obj/dark_729F0.c 80198438"
+   },
+   "DO_DARK_REACT": {
+    "addr": "1:23670",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:163; PS1 src/obj/dark_729F0.c 801984B0"
+   },
+   "DO_DARK_SORT_COMMAND": {
+    "addr": "1:236c8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:178; PS1 src/obj/dark_729F0.c 80198544"
+   },
+   "DO_DARK_SORT_COLLISION": {
+    "addr": "1:23980",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:248; PS1 src/obj/dark_729F0.c 801988D4"
+   },
+   "allocate_DARK_SORT": {
+    "addr": "1:23a18",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:274; PS1 src/obj/dark_729F0.c 801989FC"
+   },
+   "DoAnnuleDarkSortRaymanCollision": {
+    "addr": "1:23b4c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:333"
+   },
+   "corde_en_bas": {
+    "addr": "1:23bbc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:349; PS1 src/obj/dark_729F0.c 80198B9C"
+   },
+   "corde_en_haut": {
+    "addr": "1:23c00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:354; PS1 src/obj/dark_729F0.c 80198BEC"
+   },
+   "init_corde": {
+    "addr": "1:23cb4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:359; PS1 src/obj/dark_729F0.c 80198CCC"
+   },
+   "goto_phase1": {
+    "addr": "1:23d28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:364; PS1 src/obj/dark_729F0.c 80198D44"
+   },
+   "goto_phase2": {
+    "addr": "1:23dd8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:369; PS1 src/obj/dark_729F0.c 80198E48"
+   },
+   "goto_phase3": {
+    "addr": "1:23e5c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:374; PS1 src/obj/dark_729F0.c 80198F08"
+   },
+   "goto_phase5": {
+    "addr": "1:23f28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:379; PS1 src/obj/dark_729F0.c 80199014"
+   },
+   "DO_VITRAIL_COMMAND": {
+    "addr": "1:24024",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:384; PS1 src/obj/vitrail.c 8019914C"
+   },
+   "allume_vitraux": {
+    "addr": "1:24094",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse dark.c:389; PS1 src/draw/fond_10B3C.c 80138338"
+   },
+   "firstFloorBelow": {
+    "addr": "1:08ad0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name firstFloorBelow"
+   },
+   "allocateSTOSKO": {
+    "addr": "1:2f040",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name allocateSTOSKO"
+   },
+   "allocateMOSKITOMAMA": {
+    "addr": "1:2f0f4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name allocateMOSKITOMAMA"
+   },
+   "allocateMOSKITOSAXO": {
+    "addr": "1:2f2a0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name allocateMOSKITOSAXO"
+   },
+   "RAY_REVERSE_COMMANDS": {
+    "addr": "1:4b0a4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name RAY_REVERSE_COMMANDS"
+   },
+   "RAY_DEMIRAY": {
+    "addr": "1:4b154",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name RAY_DEMIRAY"
+   },
+   "AllocateDarkPhase2": {
+    "addr": "1:302c0",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in the dark object; Rayverse/xref name AllocateDarkPhase2"
    }
   },
   "data": {
@@ -4284,6 +4429,138 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CFA77; Android size 1; DOS byte accesses"
+   },
+   "dark_sequence": {
+    "addr": "2:6366",
+    "type": "u8[3]",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 3; DOS byte-indexed reads at 2:6366 from dark_attaque_suivante and goto_phase3."
+   },
+   "VitrauxInfos": {
+    "addr": "2:4f710",
+    "type": "vitraux_info_t[5]",
+    "name": "ANDROID",
+    "evidence": "Android symbol size 50; Rayverse data.c VitrauxInfos; DOS layout uses 10-byte entries from 2:4f710."
+   },
+   "dark_rayon_dy": {
+    "addr": "2:4f742",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF742; Android size 2."
+   },
+   "dark_rayon_dx": {
+    "addr": "2:4f744",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF744; Android size 2."
+   },
+   "corde_x": {
+    "addr": "2:4f746",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF746; Android size 2."
+   },
+   "corde_y_haut": {
+    "addr": "2:4f748",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF748; Android size 2."
+   },
+   "corde_y_bas": {
+    "addr": "2:4f74a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF74A; Android size 2."
+   },
+   "byte_DF74C": {
+    "addr": "2:4f74c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DF74C; DOS byte store at 2:4f74c; no Android name."
+   },
+   "corde_dark_obj_id": {
+    "addr": "2:3f8ce",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8CE; Android size 2."
+   },
+   "black_ray_obj_id": {
+    "addr": "2:3f8bc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8BC; Android size 2."
+   },
+   "moskitomama_gauche_obj_id": {
+    "addr": "2:3f8c8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8C8; Android size 2."
+   },
+   "stosko_obj_id": {
+    "addr": "2:3f8d0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8D0; Android size 2."
+   },
+   "moskitosaxo_obj_id": {
+    "addr": "2:3f8d6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8D6; Android size 2."
+   },
+   "moskitomama_droite_obj_id": {
+    "addr": "2:3f8d8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8D8; Android size 2."
+   },
+   "ray_stack_is_full": {
+    "addr": "2:3fa88",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA88; Android size 1; DOS byte access."
+   },
+   "black_pos_in_stack": {
+    "addr": "2:3fa8a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA8A; Android size 1; DOS byte access."
+   },
+   "ray_pos_in_stack": {
+    "addr": "2:3fa8b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA8B; Android size 1; DOS byte access."
+   },
+   "dark_phase": {
+    "addr": "2:3fa8d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA8D; Android size 1; DOS byte access."
+   },
+   "final_pass_n": {
+    "addr": "2:3f8c0",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8C0; DOS goto_phase5 zeroes this word; no Android name."
+   },
+   "final_pass_a": {
+    "addr": "2:3f8c2",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8C2; DOS goto_phase5 zeroes this word; no Android name."
+   },
+   "final_pass_f": {
+    "addr": "2:3f8c6",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8C6; DOS goto_phase5 zeroes this word; no Android name."
+   },
+   "final_pass_x": {
+    "addr": "2:3f8ca",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8CA; DOS goto_phase5 stores -60; no Android name."
    }
   }
  }
