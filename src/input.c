@@ -21,17 +21,6 @@ typedef void (*input_fn)(void);
 typedef s32 (*swap_func_t)(u8 *source_buf, u8 *dest_buf, s32 width, s32 height);
 
 
-typedef struct record_t {
-    s32 current_offset;
-    s32 repeat_length;
-    s32 repeat_index;
-    s32 length;
-    u8 *data;
-    u8 is_recording;
-    u8 is_playing;
-    u8 is_finished;
-    u8 unknown_17;
-} record_t;
 
 typedef void (__interrupt __far *keyboard_handler_fn)(void);
 

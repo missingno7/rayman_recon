@@ -22,17 +22,6 @@ typedef enum ObjType {
     TYPE_MST_COPAIN = 171
 } ObjType;
 
-typedef struct record_t {
-    s32 current_offset;
-    s32 repeat_length;
-    s32 repeat_index;
-    s32 length;
-    u8 *data;
-    u8 is_recording;
-    u8 is_playing;
-    u8 is_finished;
-} record_t;
-
 /* These three one-byte states form the MOSKITO object's natural _BSS block. */
 u8 curAct;
 u8 fistAvoided;

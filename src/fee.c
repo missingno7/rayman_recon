@@ -19,7 +19,7 @@ extern level_t level;
 extern s16 num_world;
 extern s16 num_level;
 extern u8 ModeDemo;
-extern fee_record_t record;
+extern record_t record;
 extern char *language_txt[300];
 extern options_jeu_t options_jeu;
 extern display_item_t text_to_display[11];

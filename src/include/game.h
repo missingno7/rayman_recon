@@ -172,4 +172,18 @@ typedef struct credit_t {
     u8 color;
 } credit_t;
 
+typedef struct record_t {        /* demo record (record 24 bytes); src/input.c, src/fee.c */
+    s32 current_offset;
+    s32 repeat_length;
+    s32 repeat_index;
+    s32 length;
+    u8 *data;
+    u8 is_recording;
+    u8 is_playing;
+    u8 is_finished;
+    u8 unknown_17;
+} record_t;
+
+typedef s16 (scene_func_t)(u32 arg);   /* SYNCHRO_LOOP scene callback (Rayverse types.h) */
+
 #endif
