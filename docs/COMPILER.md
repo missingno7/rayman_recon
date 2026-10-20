@@ -26,6 +26,9 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - **Data reference encoding**: wcc386 keeps the addend in the fixup field (`RandArray-2` -> field -2); PMW1 stores
   absolute object offsets, so `match.py` checks bound address + field.
 
+- **`_BSS` order rule = kegg_recon's Watcom 10.0 rule** [PROVEN for 10.6 and 10.5]: 30 random TUs (2,457
+  uninitialised globals, mixed sizes/arrays/names) laid out exactly as predicted (size rank, declaration-index group
+  of 25, hashpjw(name) % 241, later declaration first). Probe: `tools/probes/bss_rule.py` (uses kegg's bssorder.py).
 - **No `-oe`** [STRONG]: with `-oe` (alone or inside `-oneatx`/`-otexan`) `DoCdRap` inlines `cd_playing` from the
   same object, while the original calls it; audiocd drops from 8 to 7 STRICT. rand and mathutil are unaffected.
 - **Watcom 10.5 and 10.6 compilers give identical code** on all accepted units (rand 2/2, audiocd 8/11,

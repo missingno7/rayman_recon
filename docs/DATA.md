@@ -38,9 +38,19 @@ Found while mapping: the bonus worker had declared this literal as an external a
 lies inside bonus's own CONST run, so the original source used a literal. Lesson for workers: a referenced
 address inside the object's CONST run is a string literal, not a global.
 
+## BSS order and original names [STRONG]
+The Watcom `_BSS` rule (docs/COMPILER.md, PROVEN for 10.5/10.6) sorts uninitialised globals by size rank, then
+declaration-index group (groups of 25, later groups first), then hashpjw(name) % 241 ascending. Applied to the 640
+BSS globals that Rayverse data.c names with address and simple type: among 530 pairs adjacent in memory with the
+same size rank, 425 have ascending name hashes and 105 descending (random names: ~50/50). The descents match the
+expected number of group resets (~25 groups x size ranks). Hence (a) the Android-derived names are, by and large,
+the original identifiers, and (b) the BSS is mostly one large central data TU (~640+ declarations). This makes a
+verified reconstruction of the central BSS feasible: the rule turns names + declaration order into addresses.
+Probe: `tools/probes/bss_names.py`.
+
 ## Open
-- `_BSS`: order of uninitialised globals inside the central data TU(s). kegg_recon proved a Watcom 10.0 rule
-  (size rank, symbol-table index group, identifier hash); re-prove it for 10.6 with probes before using it.
+- Central data TU(s): reconstruct declaration order (index groups) from the BSS layout + names; flag globals whose
+  hash breaks an ascending run as candidates for wrong names.
 - `_DATA` object boundaries and order; pointer tables in `_DATA` (relocations inside data) need verification of
   data fixups (match.py currently marks such segments MISMATCH rather than claiming them).
 - CONST alignment/padding between objects (bonus 13 bytes + pad -> next literal at 2:30a28: consistent with 4-byte
