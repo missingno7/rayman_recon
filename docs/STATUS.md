@@ -5,8 +5,8 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **149 functions, 15,348 code bytes** (bootstrap end: 34 / 1,900) in 18 code units |
-| whole-object code closure | rand (1:5bf60; + its _BSS), mathutil (1:4def0), bonus (1:13a00; + CONST), audiocd (1:0cee0; recovered empty start_cd_continue) - every function STRICT, one contiguous `_TEXT` |
+| function-level STRICT | **178 functions, 20,705 code bytes** (bootstrap end: 34 / 1,900) in 21 code units |
+| whole-object code closure | rand (1:5bf60; + its _BSS), mathutil (1:4def0), bonus (1:13a00; + CONST), audiocd (1:0cee0; recovered empty start_cd_continue), clown (1:1a940) - every function STRICT, one contiguous `_TEXT` |
 | data closure | **25,532 bytes VERIFIED** (49 `_DATA` units + CONST of bonus and basic); mapped (named+sized bindings, not reconstruction): 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED 6,919 bytes (rand, moskito, central-block palette prefix); ~26 BSS objects delimited |
 | linked binary / packed EXE | not started (by design) |
@@ -18,7 +18,7 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 | mathutil | 12/12 | whole object |
 | bonus | 8/8 | whole object, CONST VERIFIED |
 | basic (core engine, 1:0d070) | 36/58 | object starts with deter_num_let's initialiser; CONST VERIFIED |
-| stoneman | 14/24 | |
+| stoneman | 21/24 | |
 | cage | 9/10 | contiguous layout |
 | audiocd | 12/12 | whole object; the mov eax,eax was a missing empty function |
 | bat | 7/9 | |
@@ -30,8 +30,11 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 | ufo | 3/5 | PS1 bodies (Rayverse stubs) STRICT unchanged |
 | moskito | 3/14 | |
 | luciole | 4/10 | Rayverse stubs; PS1 + binary |
-| clown | 10/12 | |
+| clown | 12/12 | whole object |
 | special | 6/30 | |
+| dark | 9/22 | |
+| saxo | 10/25 | |
+| fee | 1/8 | 3 functions genuinely differ from Rayverse/PS1 |
 Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
 Verifier self-tests 9/9 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
 
