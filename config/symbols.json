@@ -1581,6 +1581,121 @@
     "addr": "1:0d024",
     "evidence": "DOS call 1:5a7ea in MAIN_CONTINUE_PRG targets the ret at 1:0d024; Android symbol start_cd_continue exists and Android MAIN_CONTINUE_PRG calls it at the corresponding point; PS1 src/menu/menu_6A3BC.c:312 agrees. Empty DOS entry shares the aligned return of start_cd_gameover.",
     "name": "RAYVERSE"
+   },
+   "new_level_init": {
+    "addr": "1:6a340",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7A340; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_BALLE": {
+    "addr": "1:6ae1c",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7AE1C; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_TIR": {
+    "addr": "1:6ae78",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7AE78; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_INTERACT_PLAT": {
+    "addr": "1:6b060",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B060; DOS range 1:6a340..1:6c3b0"
+   },
+   "oldest_planted": {
+    "addr": "1:6b0e0",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B0E0; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_GROWING_PLATFORM": {
+    "addr": "1:6b1a0",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B1A0; DOS range 1:6a340..1:6c3b0"
+   },
+   "BombExplosion": {
+    "addr": "1:6b370",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B370; DOS range 1:6a340..1:6c3b0"
+   },
+   "MARACAS_GO": {
+    "addr": "1:6b390",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B390; DOS range 1:6a340..1:6c3b0"
+   },
+   "ANGLE_RAYMAN": {
+    "addr": "1:6b470",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B470; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_NOVA": {
+    "addr": "1:6b628",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B628; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_NOVA2": {
+    "addr": "1:6b708",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7B708; DOS range 1:6a340..1:6c3b0"
+   },
+   "allocate_gerbe": {
+    "addr": "1:6bd04",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BD04; DOS range 1:6a340..1:6c3b0"
+   },
+   "start_pix_gerbe": {
+    "addr": "1:6bd40",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BD40; DOS range 1:6a340..1:6c3b0"
+   },
+   "do_pix_gerbes": {
+    "addr": "1:6be44",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BE44; DOS range 1:6a340..1:6c3b0"
+   },
+   "START_2_PARTS_CYMBAL_ACTION": {
+    "addr": "1:6bf40",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BF40; DOS range 1:6a340..1:6c3b0"
+   },
+   "init_moustique": {
+    "addr": "1:6bfcc",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BFCC; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_CORDE_CASSE": {
+    "addr": "1:6bff4",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7BFF4; DOS range 1:6a340..1:6c3b0"
+   },
+   "DO_FUMEE_CORDE": {
+    "addr": "1:6c0a4",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7C0A4; DOS range 1:6a340..1:6c3b0"
+   },
+   "GetY": {
+    "addr": "1:6c10c",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7C10C; DOS range 1:6a340..1:6c3b0"
+   },
+   "allocateSupHelico": {
+    "addr": "1:6c1c4",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7C1C4; DOS range 1:6a340..1:6c3b0"
+   },
+   "allocatePaillette": {
+    "addr": "1:6c274",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7C274; DOS range 1:6a340..1:6c3b0"
+   },
+   "test_fin_cling": {
+    "addr": "1:6c328",
+    "name": "RAYVERSE",
+    "evidence": "external/rayverse/src/special.c //7C328; DOS range 1:6a340..1:6c3b0"
+   },
+   "make_active": {
+    "addr": "1:45fbc",
+    "name": "RAYVERSE",
+    "evidence": "DOS call at 1:6ad67; python tools/xref.py and tools/android.py confirm make_active at 1:45fbc (Android size 77)"
    }
   },
   "data": {
@@ -3913,6 +4028,114 @@
     "name": "RAYVERSE",
     "type": "rgb_palette_t[3]",
     "evidence": "Rayverse data.c:2526; contiguous palette subrange; sizes independently agree with Android"
+   },
+   "ray_X_main_pos_init": {
+    "addr": "2:3f8aa",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF8AA; DOS word store at 2:3f8aa"
+   },
+   "ray_Y_main_pos_init": {
+    "addr": "2:3f8a2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF8A2; DOS word store at 2:3f8a2"
+   },
+   "xmapsave": {
+    "addr": "2:3f8b6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF8B6; DOS word store at 2:3f8b6"
+   },
+   "ymapsave": {
+    "addr": "2:3f8b8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF8B8; DOS word store at 2:3f8b8"
+   },
+   "num_level_choice": {
+    "addr": "2:3f82e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF82E; DOS word increments/stores at 2:3f82e"
+   },
+   "new_world": {
+    "addr": "2:3f892",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF892; DOS word writes at 2:3f892"
+   },
+   "Vignet_To_Display": {
+    "addr": "2:3fa44",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA44; Android size 1; DOS byte store at 2:3fa44"
+   },
+   "You_Win": {
+    "addr": "2:3fa46",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA46; Android size 1; DOS byte store at 2:3fa46"
+   },
+   "fin_du_jeu": {
+    "addr": "2:3fa7a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA7A; Android size 1; DOS byte test at 2:3fa7a"
+   },
+   "fin_dark": {
+    "addr": "2:3fa3c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA3C; Android size 1; DOS byte store at 2:3fa3c"
+   },
+   "new_level": {
+    "addr": "2:3f880",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF880; DOS word store at 2:3f880"
+   },
+   "pix_gerbe": {
+    "addr": "2:39a80",
+    "type": "pix_gerbe_t[8]",
+    "name": "RAYVERSE",
+    "evidence": "data.c //C9A80; Android size 5136; local layout is 642 bytes x 8"
+   },
+   "rayman_obj_id": {
+    "addr": "2:3f894",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF894; DOS word compare at 2:3f894"
+   },
+   "pierreAcorde_obj_id": {
+    "addr": "2:3f88e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF88E; DOS word index at 2:3f88e"
+   },
+   "eau_obj_id": {
+    "addr": "2:3f882",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF882; DOS word test at 2:3f882"
+   },
+   "NewMs": {
+    "addr": "2:3fa86",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA86; Android size 1; DOS byte store at 2:3fa86"
+   },
+   "rayOnMsWasThere": {
+    "addr": "2:3fa49",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA49; Android size 1; DOS byte store at 2:3fa49"
+   },
+   "id_Cling_Pow": {
+    "addr": "2:3f846",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF846; Android size 2; DOS word accesses at 2:3f846"
    }
   }
  }
