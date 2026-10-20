@@ -1086,6 +1086,91 @@
     "addr": "1:6bc60",
     "name": "RAYVERSE",
     "evidence": "Rayverse special.c; direct DOS call target in this unit"
+   },
+   "ChangeLevel": {
+    "addr": "1:6bfb0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "DO_MST_CHANGE_COMMAND": {
+    "addr": "1:453e0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "DO_MST_SCROLL_COMMAND": {
+    "addr": "1:45230",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "DoMstShakyFruitRaymanZDD": {
+    "addr": "1:4544c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "allocateMoskitoFruit": {
+    "addr": "1:44aec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "changeMoskitoPhase": {
+    "addr": "1:450d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "closeEnoughToSting": {
+    "addr": "1:43c2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "doMoskitoCommand": {
+    "addr": "1:44e1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "doMoskitoHit": {
+    "addr": "1:45144",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "getIdealStingCoords": {
+    "addr": "1:43bc0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "moskitoCanAttak": {
+    "addr": "1:43cac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "moskitoDropFruitOnRay": {
+    "addr": "1:44c9c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "prepareNewMoskitoAttack": {
+    "addr": "1:43f04",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "setBossReachingSpeeds": {
+    "addr": "1:08890",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "setMoskitoAtScrollBorder": {
+    "addr": "1:43dc4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "tellNextMoskitoAction": {
+    "addr": "1:45054",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "testActionEnd": {
+    "addr": "1:08a64",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
    }
   },
   "data": {
@@ -1971,6 +2056,216 @@
     "type": "level_obj_t",
     "name": "RAYVERSE",
     "evidence": "DOS add_alwobj reads obj_ids pointer at 2:3cdf8 and count at 2:3cdfc; local Rayverse level_obj_t layout places them at +0/+4 (data.c //CCDFC points at the count field)."
+   },
+   "scroll_start_x": {
+    "addr": "2:3f86e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF86E; declaration type, checked against Android symbol or DOS access"
+   },
+   "scroll_end_x": {
+    "addr": "2:3f872",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF872; declaration type, checked against Android symbol or DOS access"
+   },
+   "scroll_start_y": {
+    "addr": "2:3f854",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF854; declaration type, checked against Android symbol or DOS access"
+   },
+   "scroll_end_y": {
+    "addr": "2:3f85e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF85E; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossScrollStartX": {
+    "addr": "2:3f858",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF858; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossScrollEndX": {
+    "addr": "2:3f85a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF85A; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossScrollStartY": {
+    "addr": "2:3f856",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF856; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossScrollEndY": {
+    "addr": "2:3f85c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF85C; declaration type, checked against Android symbol or DOS access"
+   },
+   "scrollLocked": {
+    "addr": "2:3fa68",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA68; declaration type, checked against Android symbol or DOS access"
+   },
+   "moskitoActionSequences": {
+    "addr": "2:6fb4",
+    "type": "u8 *[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //96FB4; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossEncounter": {
+    "addr": "2:3fa6e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6E; declaration type, checked against Android symbol or DOS access"
+   },
+   "currentBossAction": {
+    "addr": "2:3fa6f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6F; declaration type, checked against Android symbol or DOS access"
+   },
+   "currentBossActionIsOver": {
+    "addr": "2:3fa6c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6C; declaration type, checked against Android symbol or DOS access"
+   },
+   "curAct": {
+    "addr": "2:54da0",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DA0; declaration type, checked against Android symbol or DOS access"
+   },
+   "saveBossEncounter": {
+    "addr": "2:3fa69",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA69; declaration type, checked against Android symbol or DOS access"
+   },
+   "saveCurrentBossAction": {
+    "addr": "2:3fa67",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA67; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossReachingAccuracyX": {
+    "addr": "2:3fa64",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA64; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossReachingAccuracyY": {
+    "addr": "2:3fa65",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA65; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossReachingTimer": {
+    "addr": "2:3fa6a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6A; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossSafeTimer": {
+    "addr": "2:3fa6b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6B; declaration type, checked against Android symbol or DOS access"
+   },
+   "mstMustLeaveScreenToProceed": {
+    "addr": "2:54da2",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DA2; declaration type, checked against Android symbol or DOS access"
+   },
+   "fin_boss": {
+    "addr": "2:3fa76",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA76; declaration type, checked against Android symbol or DOS access"
+   },
+   "fistAvoided": {
+    "addr": "2:54da1",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DA1; declaration type, checked against Android symbol or DOS access"
+   },
+   "MsAnimIndex": {
+    "addr": "2:6fdc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //96FDC; declaration type, checked against Android symbol or DOS access"
+   },
+   "remoteRayXToReach": {
+    "addr": "2:3f86a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF86A; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossXToReach": {
+    "addr": "2:3f850",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF850; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossYToReach": {
+    "addr": "2:3f84a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF84A; declaration type, checked against Android symbol or DOS access"
+   },
+   "floorLine": {
+    "addr": "2:3f820",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF820; declaration type, checked against Android symbol or DOS access"
+   },
+   "mst_scroll_obj_id": {
+    "addr": "2:3f878",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF878; declaration type, checked against Android symbol or DOS access"
+   },
+   "Bloc_lim_H1": {
+    "addr": "2:3d0a4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD0A4; declaration type, checked against Android symbol or DOS access"
+   },
+   "alternateBossSpeedFactor": {
+    "addr": "2:3e5b4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE5B4; declaration type, checked against Android symbol or DOS access"
+   },
+   "bossSpeedFactor": {
+    "addr": "2:3e5b0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE5B0; declaration type, checked against Android symbol or DOS access"
+   },
+   "scroll_x": {
+    "addr": "2:3f8d2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8D2; declaration type, checked against Android symbol or DOS access"
+   },
+   "ModeDemo": {
+    "addr": "2:3fa36",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA36; declaration type, checked against Android symbol or DOS access"
+   },
+   "record": {
+    "addr": "2:3af50",
+    "type": "record_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAF50; declaration type, checked against Android symbol or DOS access"
    }
   }
  }
