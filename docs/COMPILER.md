@@ -54,6 +54,11 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 
 - **Prototype return width shapes the caller** [PROVEN, bonus do_perfect_bonus]: declaring `but0pressed()..but3pressed()`
   as returning `short` instead of `int` changes the caller's test sequence (4 bytes) and is required for STRICT.
+- **Return width is visible in the callee's own prologue** [PROVEN, basic get_proj_x]: `s16 get_proj_x(s16, s16)` is
+  STRICT; Rayverse's `s32` return (also in the PS1 headers and the Android x86 build) is not - the narrower return
+  changes the saved-register set and turns `movsx ecx,ax; ...; add ecx,0x100` into `cwde; lea ecx,[eax+0x100]`.
+  Rayverse/PS1/Android widen return types; only the DOS code decides. When a function's first difference is in the
+  register-save prologue or a sign extension, test narrower return/parameter types first.
 - **Index operand order affects register allocation** [PROVEN, bonus calc_left_time]: `index = level_index +
   world_index` vs the reverse selects ESI vs EDI at entry.
 
