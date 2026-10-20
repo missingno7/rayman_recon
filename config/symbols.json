@@ -4957,6 +4957,146 @@
     "addr": "1:61920",
     "name": "RAYVERSE",
     "evidence": "Rayverse/xref next-object boundary annotation; census extent anchor only, no body in this candidate"
+   },
+   "Init_Bande": {
+    "addr": "1:678f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:678f0"
+   },
+   "Display_Back_Screen": {
+    "addr": "1:67ba0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:67ba0"
+   },
+   "Display_Sprite_On_Front": {
+    "addr": "1:684a8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:684a8"
+   },
+   "Calcul_Deplacement_Bande": {
+    "addr": "1:687e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:687e8"
+   },
+   "Init_Effet_Chaleur": {
+    "addr": "1:68c14",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:68c14"
+   },
+   "Do_Effet_Chaleur": {
+    "addr": "1:68ca8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm 1:68ca8"
+   },
+   "swap": {
+    "addr": "1:68db0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse skops.c start annotation; DOS disasm 1:68db0"
+   },
+   "set_rubis_list": {
+    "addr": "1:68dd0",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:68dd0"
+   },
+   "allocate_rayon": {
+    "addr": "1:68f94",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:68f94"
+   },
+   "allocate_8_petits_rayons": {
+    "addr": "1:6903c",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:6903c"
+   },
+   "do_sko_rayon": {
+    "addr": "1:69114",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69114"
+   },
+   "do_sko_rayon2": {
+    "addr": "1:692ac",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:692ac"
+   },
+   "start_sko_rayon": {
+    "addr": "1:694d4",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:694d4"
+   },
+   "start_sko_rayon2": {
+    "addr": "1:695a0",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:695a0"
+   },
+   "lance_pince": {
+    "addr": "1:69638",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69638"
+   },
+   "DO_SOL_ENFONCE": {
+    "addr": "1:6969c",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:6969c"
+   },
+   "DO_SKO_PHASE_0": {
+    "addr": "1:69904",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69904"
+   },
+   "DO_SKO_PHASE_1": {
+    "addr": "1:69a90",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69a90"
+   },
+   "DO_SKO_PHASE_2": {
+    "addr": "1:69b5c",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69b5c"
+   },
+   "DO_SKO_PHASE_3": {
+    "addr": "1:69c98",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69c98"
+   },
+   "DO_SKO_PINCE": {
+    "addr": "1:69d48",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69d48"
+   },
+   "DO_SCORPION_COLLISION": {
+    "addr": "1:69e18",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69e18"
+   },
+   "DO_SCORPION_MORT": {
+    "addr": "1:69f24",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69f24"
+   },
+   "DO_SKO": {
+    "addr": "1:69f64",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:69f64"
+   },
+   "SKO_ray_in_zone": {
+    "addr": "1:6a1dc",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:6a1dc"
+   },
+   "DO_SKO_HIT": {
+    "addr": "1:6a264",
+    "name": "PS1",
+    "evidence": "PS1 include/obj/scorpion.h; DOS disasm 1:6a264"
+   },
+   "Get_PosLave_Y": {
+    "addr": "1:6a338",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse screen.c start annotation; DOS disasm is a word load from 2:57454 and RET"
+   },
+   "DrawSpriteDiffNormal": {
+    "addr": "1:06e0d",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct calls from Display_Back_Screen at 1:67f3d, 1:67f8a, 1:6826e, 1:682b6, 1:685ec, 1:6864b"
    }
   },
   "data": {
@@ -7024,12 +7164,6 @@
     "type": "u8",
     "name": "INVENTED",
     "evidence": "INVENTED: DOS accesses this location as a byte; the following three zero bytes are an open padding/gap before the s16 table at 2:2d94c"
-   },
-   "data_22d94c": {
-    "addr": "2:2d94c",
-    "type": "s16[16]",
-    "name": "INVENTED",
-    "evidence": "INVENTED: sixteen s16 values; DOS loads adjacent pairs using index*2 at 2:2d94c and 2:2d95c"
    },
    "dword_BD96C": {
     "addr": "2:2d96c",
@@ -9464,6 +9598,186 @@
     "type": "s16[10]",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c address; Android 20 bytes .bss; DOS fixup/access audit in binding_audit.json"
+   },
+   "rayon_speed_x": {
+    "addr": "2:2d94c",
+    "type": "s16[8]",
+    "name": "INVENTED",
+    "evidence": "PS1 scorpion.h D_801C83A4 s16[8]; DOS allocate_8_petits_rayons reads speed_x[i] from 2:2d94c (separate base from 2:2d95c)"
+   },
+   "rayon_speed_y": {
+    "addr": "2:2d95c",
+    "type": "s16[8]",
+    "name": "INVENTED",
+    "evidence": "PS1 scorpion.h D_801C83B4 s16[8]; DOS word indexed reads at 1:690f8"
+   },
+   "ecroule_plat_index": {
+    "addr": "2:3fa91",
+    "name": "ANDROID",
+    "type": "u8",
+    "evidence": "Android symbol size 1 in .bss; DOS byte accesses at 1:68e94-68edc"
+   },
+   "ecroule_rubis_list": {
+    "addr": "2:3ce00",
+    "name": "ANDROID",
+    "type": "u8[8]",
+    "evidence": "PS1 scorpion.h name; Android size 8; DOS byte-indexed accesses in swap at 1:68db2-68dc4"
+   },
+   "rubis_list_calculated": {
+    "addr": "2:3f8ec",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word store at 1:68de4 and word test at 1:69fe0"
+   },
+   "sko_pince_obj_id": {
+    "addr": "2:3f8e4",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word store at 1:68e1d for object type 0xf8"
+   },
+   "sko_nb_lave": {
+    "addr": "2:3fa96",
+    "name": "ANDROID",
+    "type": "u8",
+    "evidence": "PS1 scorpion.h name; Android size 1; DOS byte count loads/stores at 1:68deb-68e3d"
+   },
+   "sko_nb_frap": {
+    "addr": "2:3f80e",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word increments/comparisons at 1:69974-69d0e"
+   },
+   "sko_nb_hit": {
+    "addr": "2:3f80a",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word increment at 1:6a31b"
+   },
+   "sko_phase": {
+    "addr": "2:3f816",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word switches/updates at 1:69a04-6a10e"
+   },
+   "sko_enfonce_enable": {
+    "addr": "2:3fa8f",
+    "name": "ANDROID",
+    "type": "u8",
+    "evidence": "PS1 scorpion.h name; Android size 1; DOS byte tests/stores at 1:696ef-698e2"
+   },
+   "sko_last_action": {
+    "addr": "2:3f8dc",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word comparisons/stores at 1:69a3b-6a1c9"
+   },
+   "sko_rayon_on": {
+    "addr": "2:3f8de",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word comparisons/stores at 1:6911a-69526"
+   },
+   "sko_rayon_x": {
+    "addr": "2:3f8ee",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word stores and args at 1:694d4-69e32"
+   },
+   "sko_rayon_y": {
+    "addr": "2:3f8f0",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word stores and args at 1:694d4-69e32"
+   },
+   "sko_rayon_dy": {
+    "addr": "2:3f8ea",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS word stores at 1:69504-69624"
+   },
+   "sko_final_x": {
+    "addr": "2:3f8e0",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS endpoint calculations in 1:694d4-69619"
+   },
+   "sko_final_y": {
+    "addr": "2:3f8e2",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; Android size 2; DOS endpoint calculations in 1:694d4-69613"
+   },
+   "D_801E4E10": {
+    "addr": "2:3f8e6",
+    "name": "PS1",
+    "type": "s16",
+    "evidence": "PS1 scorpion.h name; DOS word accesses at 1:6914f-69454"
+   },
+   "sko_ecran_tremble": {
+    "addr": "2:57450",
+    "name": "ANDROID",
+    "type": "s32",
+    "evidence": "PS1 scorpion.h name; Android size 4; DOS dword stores/loads at 1:68f1c and 1:696b0"
+   },
+   "pixels_enfonce": {
+    "addr": "2:3eef4",
+    "name": "ANDROID",
+    "type": "s32",
+    "evidence": "PS1 scorpion.h name; Android size 4; DOS dword comparisons/stores at 1:6971d-698dc"
+   },
+   "Bande": {
+    "addr": "2:55784",
+    "name": "ANDROID",
+    "type": "bande_t[300]",
+    "evidence": "Android size 7200; DOS band stride 0x18 and field offsets 0,2,4,6,8,9,0xc,0x10,0x14"
+   },
+   "Sprite": {
+    "addr": "2:573a4",
+    "name": "ANDROID",
+    "type": "def_sprite_t[20]",
+    "evidence": "Android size 160; DOS sprite-record stride 8 and field offsets 0,2,4"
+   },
+   "Val_Div_Scroll_Y": {
+    "addr": "2:57444",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word loads/stores at 1:67930-6795b"
+   },
+   "NbSprite": {
+    "addr": "2:57446",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word loads/stores at 1:67b2a-68c97"
+   },
+   "Val_Add_Scroll_Y": {
+    "addr": "2:57448",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word store/load at 1:67995 and 1:67d1e"
+   },
+   "NbBande": {
+    "addr": "2:5744a",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word stores/loads at 1:679f7, 1:68c24"
+   },
+   "Num_Fond": {
+    "addr": "2:5744c",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word stores/loads at 1:67900 and 1:679e3"
+   },
+   "PosLave_Y": {
+    "addr": "2:57454",
+    "name": "ANDROID",
+    "type": "s16",
+    "evidence": "Android size 2; DOS word load at Get_PosLave_Y 1:6a338"
+   },
+   "data_23af64": {
+    "addr": "2:3af64",
+    "name": "INVENTED",
+    "type": "u8",
+    "evidence": "DOS byte comparison at 1:68ea1; semantic identity OPEN"
    }
   }
  }

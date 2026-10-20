@@ -2,5 +2,6 @@
    oracle by tools/verify.py (data segment check). From build/workers/data_rv (Rayverse data.c + DOS corrections). */
 #include "rtypes.h"
 
-// Sixteen signed words read in adjacent pairs by the DOS code.
-s16 data_22d94c[16] = {4, 2, 0, -2, -4, 2, 0, -2, 0, 2, 4, 2, 0, -2, -4, -2};
+// Two s16[8] tables (DOS reads them through separate bases 2:2d94c / 2:2d95c; PS1 declares two arrays).
+s16 rayon_speed_x[8] = {4, 2, 0, -2, -4, 2, 0, -2};    /* INVENTED name (PS1 D_801C83A4): skops rayon speed_x */
+s16 rayon_speed_y[8] = {0, 2, 4, 2, 0, -2, -4, -2};   /* INVENTED name (PS1 D_801C83B4): skops rayon speed_y */
