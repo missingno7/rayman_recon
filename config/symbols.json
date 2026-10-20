@@ -1756,6 +1756,46 @@
     "addr": "1:1b2a0",
     "name": "RAYVERSE",
     "evidence": "Rayverse clown.c //2B2A0; DOS disassembly"
+   },
+   "INIT_TXT_FEE": {
+    "addr": "1:29210",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //39210; DOS range start"
+   },
+   "allocate_poing_or_free": {
+    "addr": "1:292ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //392AC; DOS disassembly"
+   },
+   "init_fee": {
+    "addr": "1:2932c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //3932C; DOS disassembly"
+   },
+   "wait_for_dialogue_fee": {
+    "addr": "1:29bd0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //39BD0; DOS disassembly"
+   },
+   "DO_FEE_ETAPE": {
+    "addr": "1:29c04",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //39C04; DOS disassembly"
+   },
+   "fee_gives_super_evts": {
+    "addr": "1:29d20",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //39D20; DOS disassembly"
+   },
+   "DO_FEE": {
+    "addr": "1:29db0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //39DB0; DOS disassembly"
+   },
+   "DoFeeRaymanZDD": {
+    "addr": "1:2a118",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse fee.c //3A118; DOS disassembly"
    }
   },
   "data": {
@@ -4202,6 +4242,48 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CF852; DOS word store at 1:1ad49; Android symbol size 2 in .bss"
+   },
+   "options_jeu": {
+    "addr": "2:32f78",
+    "type": "options_jeu_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C2F78; Android object size 32; DOS reads option words"
+   },
+   "png_or_fee_id": {
+    "addr": "2:3f822",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF822; Android size 2; DOS word index"
+   },
+   "is_fee": {
+    "addr": "2:3fa57",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA57; Android size 1; DOS byte accesses"
+   },
+   "new_txt_fee": {
+    "addr": "2:3fa58",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA58; Android size 1; DOS byte accesses"
+   },
+   "old_txt_fee": {
+    "addr": "2:3fa59",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA59; Android size 1; DOS byte accesses"
+   },
+   "display_txt_fee": {
+    "addr": "2:3fa5d",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA5D; Android size 1; DOS byte accesses"
+   },
+   "ray_in_fee_zone": {
+    "addr": "2:3fa77",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA77; Android size 1; DOS byte accesses"
    }
   }
  }

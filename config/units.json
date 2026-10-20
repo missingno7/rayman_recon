@@ -2473,6 +2473,45 @@
      ]
     }
    }
+  },
+  "fee": {
+   "source": "src/fee.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "INIT_TXT_FEE": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "allocate_poing_or_free": {
+     "status": "STRICT",
+     "provenance": []
+    },
+    "init_fee": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "wait_for_dialogue_fee": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "DO_FEE_ETAPE": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "fee_gives_super_evts": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "DO_FEE": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    },
+    "DoFeeRaymanZDD": {
+     "status": "NEAR_MATCH",
+     "provenance": []
+    }
+   }
   }
  }
 }
