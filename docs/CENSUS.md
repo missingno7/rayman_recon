@@ -59,6 +59,10 @@ Shared root causes found and fixed:
 | 8 earlier unguided passes (special, saxo, dark, blocs, pmama, basic, bbmont, jumelle) | 4-17 each, **mean 46%** |
 | census-guided worldmap (22 min) | **26 of 30 (87%)**, 20 -> 46/50 |
 | census-guided collision1 (33 min) | **13 of 26 (50%)**, 11 -> 24/37 |
+| census-guided collision2 (19 min) | **16 of 24 (67%)**, 12 -> 28/36 |
+| census-guided objupdate2 (23 min) | **13 of 17 (76%)**, 34 -> 47/51 (one more rejected: forced boolean form) |
+| census-guided breakout (27 min) | **3 of 20 (15%)**, 19 -> 22/39 - C written from disassembly (no PS1, Rayverse stubs) |
+| **guided total** | **71 of 117 (61%)** vs 46% unguided; weakest where no reference C exists |
 The worldmap pass shows the upper end: the brief told it which functions were logic gaps (missing calls/guards/
 globals) and which were pure shape, so it did not search shape on logic gaps or vice versa.
 
