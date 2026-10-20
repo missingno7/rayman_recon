@@ -168,4 +168,11 @@ typedef struct active_objects_t {  /* actobj: 202 bytes (Android agrees); src/uf
     s16 num_active_objects;
 } active_objects_t;
 
+typedef u8 (*cmd_fn_t)(obj_t *obj);
+typedef struct cptr_t {            /* cptr_tab 2:70e4: 34 x 12 bytes (Android 408); src/objupdate1.c */
+    cmd_fn_t read;
+    cmd_fn_t skip;
+    cmd_fn_t handle;
+} cptr_t;
+
 #endif

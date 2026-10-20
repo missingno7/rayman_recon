@@ -4,12 +4,6 @@
 #include "game.h"
 #include "map.h"
 
-typedef u8 (*cmd_fn_t)(obj_t *obj);
-typedef struct cptr_t {
-    cmd_fn_t read;
-    cmd_fn_t skip;
-    cmd_fn_t handle;
-} cptr_t;
 extern cptr_t cptr_tab[34];
 
 #define ANIMMODE_RESET_IF_NEW 1

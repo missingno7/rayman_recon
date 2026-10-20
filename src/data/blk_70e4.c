@@ -2,11 +2,6 @@
    oracle by tools/verify.py (data segment check). From build/workers/data_rv (Rayverse data.c + DOS corrections). */
 #include "obj.h"
 
-typedef struct cptr_t {
-    u8 (*read)(obj_t*);
-    u8 (*skip)(obj_t*);
-    u8 (*handle)(obj_t*);
-} cptr_t;
 
 extern u8 handle_10_GO_DOLOOP(obj_t*);
 extern u8 handle_11_GO_LABEL(obj_t*);
