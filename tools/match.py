@@ -101,7 +101,46 @@ def side_by_side(cand, orig, start, base, n=10):
     return out
 
 
-def verify_object(img, mod, only=None):
+def segment_report(img, mod, seg_base, binds):
+    """Status of the object's data segments: VERIFIED (whole contents equal the oracle at one consistent base),
+    MISMATCH, UNPLACED (no reference or binding fixes a base), BSS (contents not checkable here)."""
+    out = []
+    for si, seg in enumerate(mod.segments):
+        if not seg or seg.cls.upper() == "CODE" or seg.size == 0 or seg.name.startswith("$$"):
+            continue
+        ent = {"segment": seg.name, "class": seg.cls, "size": seg.size}
+        bases = set()
+        if si in seg_base:
+            bases.add(seg_base[si])
+        for n, s2, o, _ in mod.publics:          # defined data bound in config/symbols.json
+            if s2 == si:
+                a, _src = binds.lookup(n)
+                if a:
+                    bases.add((a[0], a[1] - o))
+        if seg.cls.upper() == "BSS":
+            ent["status"] = "BSS"
+        elif not bases:
+            ent["status"] = "UNPLACED"
+        elif len(bases) > 1:
+            ent["status"] = "MISMATCH"
+            ent["problem"] = "inconsistent bases " + ", ".join(f"{o}:{b:x}" for o, b in sorted(bases))
+        else:
+            o, b = next(iter(bases))
+            ent["oracle"] = f"{o}:{b:05x}"
+            seg_fx = [f for f in mod.fixups if f.seg == si]
+            covered = bytes(seg.covered) == b"" * seg.size
+            equal = img.obj[o][b:b + seg.size] == bytes(seg.data)
+            ent["status"] = "VERIFIED" if covered and equal and not seg_fx else "MISMATCH"
+            if seg_fx:
+                ent["problem"] = f"{len(seg_fx)} fixups inside the segment (data relocations not verified yet)"
+            elif not equal:
+                diff = next(i for i in range(seg.size) if img.obj[o][b + i] != seg.data[i])
+                ent["problem"] = f"first byte difference at +{diff:x}"
+        out.append(ent)
+    return out
+
+
+def verify_object(img, mod, only=None, seg_report=None):
     binds = Bindings(img)
     code_si = [i for i, s in enumerate(mod.segments) if s and s.cls.upper() == "CODE"]
     results = []
@@ -213,6 +252,7 @@ def verify_object(img, mod, only=None):
                         else:
                             res["unverified"].append(f"+{rel:x} -> segment {cseg.name}+{addend:x} "
                                                      f"(oracle {tobj}:{toff:x}; contents not verified)")
+                        res["references"].append(ref)
                         continue
                     if taddr is None:
                         res["unverified"].append(f"+{rel:x} -> {tname}+{addend:x} (unbound; oracle {tobj}:{toff:x})")
@@ -244,6 +284,8 @@ def verify_object(img, mod, only=None):
             else:
                 res["status"] = "STRICT"
             res["verified_bytes"] = len(cand) if res["status"] == "STRICT" else 0
+    if seg_report is not None:
+        seg_report.extend(segment_report(img, mod, seg_base, binds))
     return results
 
 
@@ -300,9 +342,13 @@ def main(argv):
     if "--obj" not in opts:
         Path(obj).unlink()
     results = []
+    segs = []
     for m in mods:
-        results += verify_object(img, m, set(only) if only else None)
+        results += verify_object(img, m, set(only) if only else None, segs)
     report(results)
+    for g in segs:
+        print(f"# data segment {g['segment']:7s} {g['size']:5d} bytes: {g['status']}"
+              + (f" at {g['oracle']}" if g.get("oracle") else "") + (f" ({g['problem']})" if g.get("problem") else ""))
     strict = [r for r in results if r["status"] == "STRICT"]
     print(f"# STRICT {len(strict)}/{len(results)} functions, {sum(r['verified_bytes'] for r in strict)} bytes")
     if "--json" in opts:

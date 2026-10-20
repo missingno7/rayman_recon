@@ -50,9 +50,10 @@ def verify_unit(name, unit, images):
         ensure_prerequisites(unit["oracle"])
     img = images.setdefault(unit["oracle"], Image(unit["oracle"]))
     results = []
+    segs = []
     for m in omf.load(obj):
-        results += match.verify_object(img, m)
-    return results, None
+        results += match.verify_object(img, m, None, segs)
+    return (results, segs), None
 
 
 def main(argv):
@@ -66,16 +67,31 @@ def main(argv):
     images = {}
     report = {}
     regressions = len(bad)
-    strict_f = strict_b = 0
+    strict_f = strict_b = data_b = 0
     for name in names:
         unit = units["units"][name]
-        results, err = verify_unit(name, unit, images)
+        out, err = verify_unit(name, unit, images)
         if err:
             print(f"[{name}] {err}")
             regressions += len(unit["functions"])
             continue
+        results, segs = out
+        seg_now = {g["segment"]: g for g in segs}
+        for sname, want in unit.get("segments", {}).items():
+            got_s = seg_now.get(sname, {}).get("status", "MISSING")
+            if want == "VERIFIED" and got_s != "VERIFIED":
+                regressions += 1
+                print(f"[{name}] REGRESSION data segment {sname}: VERIFIED -> {got_s} {seg_now.get(sname, {}).get('problem', '')}")
+        for sname, g in seg_now.items():
+            if g["status"] == "VERIFIED":
+                data_b += g["size"]
+                if unit.get("segments", {}).get(sname) != "VERIFIED":
+                    print(f"[{name}] data segment {sname} VERIFIED" + (" (recorded)" if accept else " (not recorded)"))
+                    if accept:
+                        unit.setdefault("segments", {})[sname] = "VERIFIED"
         got = {r["function"]: r for r in results}
         report[name] = results
+        report.setdefault("_segments", {})[name] = segs
         for fn, ent in unit["functions"].items():
             r = got.get(fn)
             st = r["status"] if r else "NOT_RECONSTRUCTED"
@@ -104,7 +120,8 @@ def main(argv):
             from common import dump_json as dj
             dj(CONFIG / "units.json", units)
             print("accepted statuses written to config/units.json")
-    print(f"# STRICT functions {strict_f}, STRICT code bytes {strict_b}; regressions {regressions}")
+    print(f"# STRICT functions {strict_f}, STRICT code bytes {strict_b}; VERIFIED data bytes {data_b}; "
+          f"regressions {regressions}")
     return 1 if regressions else 0
 
 

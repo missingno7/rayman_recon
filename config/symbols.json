@@ -641,12 +641,6 @@
     "name": "RAYVERSE",
     "evidence": "DOS sprintf destination immediate at 2:40014"
    },
-   "bonus_time_format": {
-    "addr": "2:30a18",
-    "type": "char[]",
-    "name": "RAYVERSE",
-    "evidence": "DOS sprintf format immediate; bytes read as '/%2d : %02d/'"
-   },
    "language_txt": {
     "addr": "2:32b48",
     "type": "char*[304]",

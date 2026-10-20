@@ -37,7 +37,6 @@ extern status_bar_t status_bar;
 extern obj_t ray;
 extern obj_t *dword_D0028;
 extern char bonus_time_display_text[20];
-extern char bonus_time_format[];
 extern char *language_txt[304];
 extern rgb_palette_t rvb_plan3;
 
@@ -177,7 +176,7 @@ s16 do_perfect_bonus(u32 a1)
         INIT_FADE_IN();
         seconds = (map_time - 120) % 60;
         minutes = allowed_time[(s16)(((num_world - 1) * 32) + (num_level - 1))] - ((left_time / 60) + 1);
-        sprintf(bonus_time_display_text, bonus_time_format, minutes, seconds);
+        sprintf(bonus_time_display_text, "/%2d : %02d/", minutes, seconds);
     }
 
     if (get_bonus_map_complete(num_world, num_level)) {

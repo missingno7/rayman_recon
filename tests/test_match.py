@@ -98,5 +98,26 @@ class MatchTests(unittest.TestCase):
         self.assertEqual(r["myRand"]["status"], "NEAR_MATCH")
 
 
+class DataSegmentTests(unittest.TestCase):
+    """The bonus object's CONST (one string literal) is VERIFIED; a changed literal must not be."""
+
+    def segs(self, text):
+        img = Image("gog_v121_us")
+        p = BUILD / "tests" / "bonus_variant.c"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text)
+        mod = compile_src(p, "bonus_variant")
+        out = []
+        match.verify_object(img, mod, None, out)
+        return {g["segment"]: g for g in out}
+
+    def test_const_verified_and_tamper_detected(self):
+        src = (ROOT / "src" / "bonus.c").read_text()
+        self.assertEqual(self.segs(src)["CONST"]["status"], "VERIFIED")
+        bad = src.replace('"/%2d : %02d/"', '"/%2d : %02d!"')
+        self.assertNotEqual(bad, src)
+        self.assertEqual(self.segs(bad)["CONST"]["status"], "MISMATCH")
+
+
 if __name__ == "__main__":
     unittest.main()
