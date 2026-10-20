@@ -1,6 +1,6 @@
 /*
  * Moskito boss (GOG v1.21 object 1:43bc0-1:45480). File name invented (Rayverse moskito.c). Names: Rayverse/Android.
- * finbosslevel_t/record_t are local until another unit needs them. Status per function: config/units.json.
+ * record_t is local until another unit needs it. Status per function: config/units.json.
  */
 #include <stddef.h>
 #include "obj.h"
@@ -21,21 +21,6 @@ typedef enum ObjType {
     TYPE_MST_FRUIT2 = 52,
     TYPE_MST_COPAIN = 171
 } ObjType;
-
-typedef struct finbosslevel_t {
-    u8 bzzit : 1;
-    u8 moskito : 1;
-    u8 mr_sax : 1;
-    u8 mr_stone : 1;
-    u8 viking_mama : 1;
-    u8 space_mama : 1;
-    u8 mr_skops : 1;
-    u8 mr_dark : 1;
-    u8 crazy_drummer : 1;
-    u8 helped_joe_1 : 1;
-    u8 helped_joe_2 : 1;
-    u8 helped_musician : 1;
-} finbosslevel_t;
 
 typedef struct record_t {
     s32 current_offset;

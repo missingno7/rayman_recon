@@ -11,11 +11,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include <conio.h>
 
 //1D074
 bool EOA(obj_t* obj) {
+    s32 on_last_frame;
     eta_t* eta = get_eta(obj);
-    bool on_last_frame;
     if (eta->flags & eta_flags_0x10_anim_reverse) {
         on_last_frame = (obj->anim_frame == 0);
     } else {
@@ -50,7 +52,9 @@ void restore_objects_flags(void) {
     obj_t* obj = &level.objects[0];
     while (i < nb_objects) {
         if (obj->type != TYPE_58_CAGE) {
-            read2bits(&saveobj[i >> 4], i & 0xF, &high_bit, &low_bit);
+            s32 word_index = i >> 4;
+            s32 bit_index = i & 0xF;
+            read2bits((s32*)&saveobj[word_index], bit_index, &high_bit, &low_bit);
             obj->is_active = high_bit;
             obj->flags.alive = low_bit;
         }
@@ -64,19 +68,19 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     u8 obj_2_frames_count;
     eta_t *obj_2_eta_2;
-    u8 prev_frame;
-    u8 prev_index;
+    s16 prev_frame;
+    s16 prev_index;
     s16 obj_2_x; s16 obj_2_y; s16 obj_2_w; s16 obj_2_h;
     s16 new_spd_x; s16 new_spd_y;
-    s16 obj_2_anim_frame = obj_2->anim_frame;
     eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];
-    u8 obj_2_anim_index = obj_2_eta_1->anim_index;
+    s16 obj_2_anim_index = obj_2_eta_1->anim_index;
+    s16 obj_2_anim_frame = obj_2->anim_frame;
 
     if (horloge[obj_2_eta_1->anim_speed & 0xF] == 0)
     {
         obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
         obj_2_anim_frame += (obj_2_eta_1->flags & 0x10) ? -1 : 1; /* requires ternary to match? */
-        if (obj_2_anim_frame < 0 || obj_2_anim_frame > obj_2_frames_count - 1)
+        if (!(obj_2_anim_frame >= 0 && obj_2_anim_frame <= obj_2_frames_count - 1))
         {
             obj_2_eta_2 = &obj_2->eta[obj_2_eta_1->next_main_etat][obj_2_eta_1->next_sub_etat];
             obj_2_anim_index = obj_2_eta_2->anim_index;
@@ -93,23 +97,22 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     obj_2->anim_frame = prev_frame;
 
     new_spd_x = x_offs + obj_2_x - obj_1->x;
-    while (Abs(new_spd_x) >= 16)
+    while (abs(new_spd_x) >= 16)
     {
         obj_1->x += SGN(new_spd_x) * 16;
         new_spd_x += SGN(new_spd_x) * -16;
     }
 
     new_spd_y = y_offs + obj_2_y - obj_1->y;
-    while (Abs(new_spd_y) >= 16)
+    while (abs(new_spd_y) >= 16)
     {
         obj_1->y += SGN(new_spd_y) * 16;
         new_spd_y += SGN(new_spd_y) * -16;
     }
 
-    if (new_spd_x != 0)
     {
-        switch (((flags[obj_1->type] & flags1_0x10_move_x) != 0) +
-                ((flags[obj_2->type] & flags1_0x10_move_x) != 0) * 2
+        switch (((flags[obj_1->type] >> 12) & 1) +
+                ((flags[obj_2->type] >> 12) & 1) * 2
         ) {
             case 0:
                 new_spd_x += obj_2->speed_x;
@@ -126,10 +129,9 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
         }
     }
 
-    if (new_spd_y != 0)
     {
-        switch (((flags[obj_1->type] & flags1_0x20_move_y) != 0) +
-                ((flags[obj_2->type] & flags1_0x20_move_y) != 0) * 2
+        switch (((flags[obj_1->type] >> 13) & 1) +
+                ((flags[obj_2->type] >> 13) & 1) * 2
         ) {
             case 0:
                 new_spd_y += obj_2->speed_y;
@@ -180,14 +182,14 @@ obj_t* findfirstInactiveObject(u16 obj_type) {
 }
 
 //1D528
-s32 sinYspeed(obj_t* obj, s16 a2, s16 a3, s16* a4) {
+s16 sinYspeed(obj_t* obj, s16 a2, s16 a3, s16* a4) {
     /* 225B8 80146DB8 -O2 -msoft-float */
     s16 unk_1 = (*a4 + a2) & 0xFFF;
     s16 diff_y = obj->y - obj->init_y;
-    s32 unk_2 = sinus(unk_1 >> 3) * a3;
+    s32 unk_2 = (sinus(unk_1 >> 3) * a3) >> 9;
 
     *a4 = unk_1;
-    return (unk_2 >> 9) - diff_y;
+    return unk_2 - diff_y;
 }
 
 //1D560
@@ -232,13 +234,15 @@ void set_zoom_mode(u8 mode) {
 }
 
 //1D658
-s32 inverse_proj_x(s16 scale, s16 a2) {
-    return PROJ_CENTER_X + ((a2 - PROJ_CENTER_X) << 8) / ((256*256) / (scale + 256));
+s16 inverse_proj_x(s16 scale, s16 a2) {
+    s32 divisor = (256*256) / (scale + 256);
+    return ((a2 - PROJ_CENTER_X) << 8) / divisor + PROJ_CENTER_X;
 }
 
 //1D690
-s32 inverse_proj_y(s16 scale, s16 a2) {
-    return PROJ_CENTER_Y + ((a2 - PROJ_CENTER_Y) << 8) / ((256*256) / (scale + 256));
+s16 inverse_proj_y(s16 scale, s16 a2) {
+    s32 divisor = (256*256) / (scale + 256);
+    return ((a2 - PROJ_CENTER_Y) << 8) / divisor + PROJ_CENTER_Y;
 }
 
 //1D6C8
@@ -256,17 +260,17 @@ void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h) {
     anim_frame_t* frame = anim->frames + obj->anim_frame;
     *w = frame->width;
     *h = frame->height;
-    if (obj->flags.flip_x) {
-        *x = obj->x + 2 * obj->offset_bx - frame->x - *w;
-    } else {
+    if (!obj->flags.flip_x) {
         *x = obj->x + frame->x;
+    } else {
+        *x = 2 * obj->offset_bx + obj->x - frame->x - *w;
     }
-    *y = obj->y + frame->y;
+    *y = frame->y + obj->y;
 }
 
 //1D7D8
 void add_actobj(s16 obj_index) {
-    s32 index = actobj.num_active_objects;
+    s16 index = actobj.num_active_objects;
     actobj.num_active_objects++;
     actobj.objects[index] = obj_index;
     actobj.objects[index + 1] = -1;
@@ -456,8 +460,8 @@ s16 get_center_y(obj_t* obj) {
 }
 
 //1DAC8
-u8 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y) {
-    return (block_flags[BTYP((obj->x + center_x) >> 4, (obj->y + center_y) >> 4)] & 0x20) != 0;
+s16 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y) {
+    return block_flags[BTYP((obj->x + center_x) >> 4, (obj->y + center_y) >> 4)].bits.chdir;
 }
 
 //1DB04
@@ -592,21 +596,19 @@ void GET_BB1_ZDCs(obj_t* obj, s16 *x_1, s16 *y_1, s16 *w_1, s16 *h_1, s16 *x_2, 
     *w_1 -= 8;
     *y_1 += 4;
     *h_1 -= 8;
-    if (obj->main_etat == 0 && (obj->sub_etat == 16 || obj->sub_etat == 19))
+    if ((obj->main_etat == 0 && obj->sub_etat == 16) || (obj->main_etat == 0 && obj->sub_etat == 19))
         GET_SPRITE_POS(obj, 0, x_1, y_1, w_1, h_1);
 }
 
 //1DFB8
 void calc_obj_dir(obj_t* obj) {
-    if (ray.x + ray.offset_bx > obj->x + obj->offset_bx) {
-        obj->flags.flip_x = true;
-    } else {
-        obj->flags.flip_x = false;
-    }
+    s32 dx = ray.x + ray.offset_bx - obj->x - obj->offset_bx;
+    if (dx > 0) obj->flags.flip_x = true;
+    else obj->flags.flip_x = false;
 }
 
 //1DFF4
-u8 OBJ_IN_ZONE(obj_t* obj) {
+s16 OBJ_IN_ZONE(obj_t* obj) {
     /* 236C4 80147EC4 -O2 -msoft-float */
     switch(obj->type) {
         case TYPE_BADGUY2:
@@ -615,7 +617,7 @@ u8 OBJ_IN_ZONE(obj_t* obj) {
         case TYPE_LIDOLPINK2:
             return obj->detect_zone_flag == 1;
         default:
-            return obj->detect_zone_flag != 0;
+            return obj->detect_zone_flag >= 1;
     }
 }
 
@@ -834,7 +836,7 @@ void makeUturn(obj_t* obj) {
 
     if (label != 255) {
         // NOTE: difference with PS1 version
-        if (flags[obj->type] & flags1_0x10_move_x) {
+        if (((flags[obj->type] >> 12) & 1)) {
             obj->x -= instantSpeed(obj->speed_x);
         } else {
             obj->x -= obj->speed_x;
@@ -845,7 +847,7 @@ void makeUturn(obj_t* obj) {
 }
 
 //1E588
-u8 BTYP(s32 tile_x, s32 tile_y) {
+u8 BTYP(s16 tile_x, s16 tile_y) {
     if (tile_x >= 0 && tile_x <= (mp.width - 1) && tile_y >= 0 && tile_y <= (mp.height - 1)) {
         return mp.map[tile_y * mp.width + tile_x].tile_type;
     } else {
@@ -891,7 +893,7 @@ void calc_btyp_square(obj_t* obj) {
 
 //1E76C
 void DO_OBJ_REBOND_EN_X(obj_t* obj) {
-    if (block_flags[obj->btypes[2]] & 0x10 || block_flags[obj->btypes[1]] & 0x10) {
+    if (block_flags[obj->btypes[2]].raw & 0x10 || block_flags[obj->btypes[1]].raw & 0x10) {
         obj->speed_x = -obj->speed_x;
     }
 }
@@ -939,19 +941,19 @@ u8 calc_btyp(obj_t* obj) {
         }
     }
 
-    if (!(block_flags[obj->btypes[0]] & 2)) {
+    if (!(block_flags[obj->btypes[0]].raw & 2)) {
         if (obj->type == TYPE_RAYMAN) {
             btyp = mp.map[ray.ray_dist].tile_type;
         } else {
             btyp = BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_by) >> 4);
         }
 
-        if (obj->main_etat == 2 && !(block_flags[btyp] & 2)) {
+        if (obj->main_etat == 2 && !(block_flags[btyp].raw & 2)) {
             btyp = BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_by + 16) >> 4);
         }
 
-        if (!(block_flags[btyp] & 2)) {
-            btypes_1_2_solid = ((block_flags[obj->btypes[1]] & 2) != 0) | (block_flags[obj->btypes[2]] & 2);
+        if (!(block_flags[btyp].raw & 2)) {
+            btypes_1_2_solid = ((block_flags[obj->btypes[1]].raw & 2) != 0) | (block_flags[obj->btypes[2]].raw & 2);
             if (btypes_1_2_solid == 3) /* both 1 and 2 have solid flag */ {
                 if (((obj->offset_bx + (u16) obj->x) & 0xF) < 8)
                     btypes_1_2_solid = 1;
@@ -969,7 +971,7 @@ u8 calc_btyp(obj_t* obj) {
                         else
                             ray_x -= 16;
                         ray_y = ray.y + ray.offset_by - 16;
-                        if (!(block_flags[(u8) BTYP(ray_x >> 4, ray_y >> 4)] & 2)) {
+                        if (!(block_flags[(u8) BTYP(ray_x >> 4, ray_y >> 4)].raw & 2)) {
                             if (ray.main_etat != 2) {
                                 /* ??? don't understand */
                                 if (btypes_1_2_solid != (ray.flags.flip_x))
@@ -1026,7 +1028,7 @@ void init_obj_in_the_air(obj_t* obj) {
 //1EAB4
 void make_my_fruit_go_down(obj_t* obj, s16 x_accel) {
     /* 243C4 80148BC4 -O2 -msoft-float */
-    if (obj->main_etat == 2 && Abs(obj->speed_x) < 32)
+    if (obj->main_etat == 2 && Abs((s32)obj->speed_x) < 32)
         obj->speed_x += x_accel;
     if (obj->type == TYPE_FALLING_YING_OUYE)
     {
@@ -1054,7 +1056,7 @@ void switchOff(obj_t* obj) {
         if (!(ray_mode == MODE_5_CASSE_BRIQUE && obj->type == TYPE_161_WIZ)) {
             del_alwobj(obj->id);
         }
-        if (obj->type == TYPE_75_PAILLETTE || obj->type == TYPE_170_RAYON) {
+        if (obj->type == TYPE_170_RAYON || obj->type == TYPE_75_PAILLETTE) {
             obj->x = -32000;
             obj->y = -32000;
         }
@@ -1160,110 +1162,99 @@ void del_actobj(obj_t* obj) {
 }
 
 //1EEB8
-u8 calc_let_Width(u8 font_size, s32 num_let) {
+s32 calc_let_Width(u8 font_size, u32 num_let) {
     sprite_t* sprite;
-    if (num_let > 1000) {
-        sprite = alpha_numbers->sprites + (num_let - 1000);
+    if (num_let >= 1000) {
+        sprite = alpha_numbers + (num_let - 1000);
     } else {
         switch (font_size) {
             case 0:
-                sprite = alpha2->sprites + num_let;
-                break;
             case 1:
-                sprite = alpha2->sprites + num_let + 41;
-                break;
+                if (font_size == 1) num_let += 41;
+                sprite = alpha2 + num_let;
+                return sprite->outer_width;
             case 2:
-                sprite = alpha->sprites + num_let;
+                sprite = alpha + num_let;
                 break;
-            default:
-                // NOTE: possible bug here with an uninitialized pointer in the PC version (?)
-                return 0;
         }
     }
     return sprite->outer_width;
 }
 
 //1EF1C
-s32 calc_let_Width2(u8 font_size, s32 num_let) {
+s32 calc_let_Width2(u8 font_size, u32 num_let) {
     sprite_t* sprite;
-    if (num_let > 1000) {
-        sprite = alpha_numbers->sprites + (num_let - 1000);
+    if (num_let >= 1000) {
+        sprite = alpha_numbers + (num_let - 1000);
     } else {
-        if (font_size <= 1) {
-            if (font_size == 1) {
-                num_let += 41;
-            }
-            sprite = alpha2->sprites + num_let;
-        } else {
-            if (font_size != 2) {
-                return 0; // NOTE: possible bug here with an uninitialized pointer in the PC version (?)
-            }
-            sprite = alpha->sprites + num_let;
+        switch (font_size) {
+            case 0:
+            case 1:
+                if (font_size == 1) num_let += 41;
+                sprite = alpha2 + num_let;
+                break;
+            case 2:
+                sprite = alpha + num_let;
+                break;
         }
     }
-    if (sprite) {
-        s32 width = (sprite->sprite_pos & 0xF) + sprite->inner_width;
-        return width;
-    } else {
-        return 0;
-    }
+    return (u8)(sprite->sprite_pos & 15) + sprite->inner_width;
 }
 
 //1EF80
 void INIT_TEXT_TO_DISPLAY(void) {
     s32 i;
-    for (i = 0; i < COUNT(text_to_display); ++i) {
-        text_to_display[i].text[0] = '\0';
-        text_to_display[i].is_fond = 0;
+    for (i = 0; i < 10;) {
+        ++i;
+        strcpy(text_to_display[i].text, "");
         text_to_display[i].field_D5 = 0;
+        text_to_display[i].is_fond = 0;
     }
 }
 
 //1EFB4
 s32 deter_num_let(u8 c, const char* next_chars) {
+    s32 result = 0;
     if (c == ']') {
         char next_text[4] = {0};
         memcpy(next_text, next_chars, 3);
-        return atoi(next_text) + 1000;
+        result = atoi(next_text) + 1000;
+    } else {
+        if (c >= 'a' && c <= 'z') result = c - 93;
+        if (c >= '0' && c <= '9') result = c - 18;
+        switch (c) {
+            case 63:
+                result = 1; break;
+            case 33:
+                result = 2; break;
+            case 46:
+                result = 3; break;
+            case 58:
+                result = 40; break;
+            case 39:
+                result = 41; break;
+            case 35:
+                result = 47; break;
+            case 94:
+            case 126:
+                result = 46; break;
+            case 37:
+            case 248:
+                result = 45; break;
+            case 42:
+                result = 48; break;
+            case 124:
+                result = 49; break;
+            case 148:
+                result = 43; break;
+            case 129:
+                result = 44; break;
+            case 132:
+            case 156:
+                result = 42; break;
+        }
     }
-    if (c >= 'a' && c <= 'z') {
-        return c - 93;
-    } else if (c >= '0' && c <= '9') {
-        return c - 18;
-    } else if (c == '?') {
-        return 1;
-    } else if (c == '|') {
-        return 49;
-    } else if (c == '~') {
-        return 46;
-    } else if (c == 129) {
-        return 44;
-    } else if (c == 132) {
-        return 42;
-    } else if (c == 148) {
-        return 43;
-    } else if (c == 248) {
-        return 45;
-    } else if (c == 156) {
-        return 42;
-    } else if (c == 94) {
-        return 46;
-    } else if (c == '#') {
-        return 47;
-    } else if (c == '%') {
-        return 45;
-    } else if (c == '!') {
-        return 2;
-    } else if (c == '\'') {
-        return 41;
-    } else if (c == '*') {
-        return 48;
-    } else if (c == '.') {
-        return 3;
-    } else if (c == ':') {
-        return 40;
-    }
-    return 0;
+    return result;
 }
 
 //1F194
@@ -1380,14 +1371,10 @@ void INIT_TXT_BOX(display_item_t* box) {
 
 //1F4A0
 void Deter_Option_Caract(char* text, s16 key, s16 offset) {
-    s16 i;
+    u8 i;
     if (offset == 255) {
-        s16 len = (s16)strlen(text);
-        for (i = 0; i < len; ++i) {
-            char c = text[i];
-            if (c == '$') {
-                offset = i;
-            }
+        for (i = 0; text[i] != '\0'; i++) {
+            if (text[i] == '$') offset = i;
         }
     }
     if (offset != 255) {
@@ -1643,7 +1630,18 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y, s16 dest_x, s
 
 //1F880
 void init_finBossLevel(void) {
-    memset(&finBosslevel, 0, sizeof(finBosslevel));
+    finBosslevel.bzzit = 0;
+    finBosslevel.moskito = 0;
+    finBosslevel.mr_sax = 0;
+    finBosslevel.mr_stone = 0;
+    finBosslevel.viking_mama = 0;
+    finBosslevel.space_mama = 0;
+    finBosslevel.mr_skops = 0;
+    finBosslevel.mr_dark = 0;
+    finBosslevel.crazy_drummer = 0;
+    finBosslevel.helped_joe_1 = 0;
+    finBosslevel.helped_joe_2 = 0;
+    finBosslevel.helped_musician = 0;
 }
 
 //1F8A4
@@ -1665,17 +1663,14 @@ void add_alwobj(obj_t* obj) {
 
 //1F918
 void del_alwobj(s16 obj_index) {
-    s32 i;
-    s32 found_index = -1;
-    for (i = 0; i < level_obj.nb_objects; ++i) {
-        if (level_obj.obj_ids[i] == obj_index) {
-            found_index = i;
+    s16 i;
+    for (i = 0; i < level_obj.nb_objects; i++) {
+        if (obj_index == level_obj.obj_ids[i])
             break;
-        }
     }
-    if (found_index >= 0 && found_index < level_obj.nb_objects) {
+    if (i < level_obj.nb_objects) {
         --level_obj.nb_objects;
-        level_obj.obj_ids[found_index] = level_obj.obj_ids[level_obj.nb_objects];
+        level_obj.obj_ids[i] = level_obj.obj_ids[level_obj.nb_objects];
     }
 }
 
@@ -1684,18 +1679,22 @@ void FatalError(char* message) {
     stop_cd();
     InitTextMode();
     printf("Rayman says fatal error :\n%s\n", message);
-    //PrintMemInfo();
+    printf("System info : \n");
+    printf("  - errno = %d\n", errno);
+    printf("\n");
+    PrintMemInfo();
+    if (input_mode != 1) {
+        printf("\nPress a key to exit.\n");
+        getch();
+    }
     exit(-1);
-    //stub
 }
 
 //1FA00
 u8 sprite_of_ref(obj_t* obj, u8 ref) {
-    s32 i;
-    for (i = 0; i < obj->nb_sprites; ++i) {
-        if (obj->sprites[i].id == ref) {
-            return i;
-        }
+    s16 i;
+    for (i = 0; i < (u16)obj->nb_sprites; i++) {
+        if (obj->sprites[i].id == ref) return i;
     }
     return 0;
 }

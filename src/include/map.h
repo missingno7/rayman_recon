@@ -22,4 +22,15 @@ typedef struct map_data_t {
     map_tile_t *map;
 } map_data_t;
 
+/* block_flags[] element: the DOS code reads bit 5 through a bitfield (basic on_block_chdir is STRICT only with the
+   bitfield read; byte-mask spellings are not). Type name and member names INVENTED; Rayverse uses u8. */
+typedef union block_flags_t {
+    u8 raw;
+    struct {
+        u8 unused0 : 5;
+        u8 chdir : 1;
+        u8 unused1 : 2;
+    } bits;
+} block_flags_t;
+
 #endif

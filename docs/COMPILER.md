@@ -62,6 +62,10 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   changes the saved-register set and turns `movsx ecx,ax; ...; add ecx,0x100` into `cwde; lea ecx,[eax+0x100]`.
   Rayverse/PS1/Android widen return types; only the DOS code decides. When a function's first difference is in the
   register-save prologue or a sign extension, test narrower return/parameter types first.
+- **Bitfield reads are distinguishable from mask arithmetic** [PROVEN, basic on_block_chdir]: only a bitfield read of
+  bit 5 of `block_flags[]` is STRICT; `(x & 0x20) != 0`, `x & 0x20`, `(x & 0x20) >> 5` all differ. Hence block_flags is
+  declared as a union with a bitfield view (src/include/map.h); flags[] stays u32 (shift/mask reads match there).
+- **Declaration order, predicate grouping and switch-case order affect code** [basic_sol: EOA, GET_BB1_ZDCs, switchOff].
 - **Comparison operands are evaluated in source order** [PROVEN, basic obj_hurt]: the original loads
   `target->hit_points` first, i.e. `if (target->hit_points < poing.damage)`; Rayverse's equivalent
   `poing.damage > target->hit_points` swaps the loads and the branch (`jbe` vs `jae`). Read the operand order and the

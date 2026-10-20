@@ -76,4 +76,10 @@ typedef struct rayevts_t {          /* RayEvts: 2 bytes (Android agrees); src/po
     u8 squashed : 1;
 } rayevts_t;
 
+typedef struct finbosslevel_t {    /* src/basic.c, src/moskito.c */
+    u8 bzzit : 1; u8 moskito : 1; u8 mr_sax : 1; u8 mr_stone : 1;
+    u8 viking_mama : 1; u8 space_mama : 1; u8 mr_skops : 1; u8 mr_dark : 1;
+    u8 crazy_drummer : 1; u8 helped_joe_1 : 1; u8 helped_joe_2 : 1; u8 helped_musician : 1;
+} finbosslevel_t;
+
 #endif

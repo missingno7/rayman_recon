@@ -1171,6 +1171,16 @@
     "addr": "1:08a64",
     "name": "RAYVERSE",
     "evidence": "Rayverse moskito.c; DOS address from build/xref/xref.tsv"
+   },
+   "__get_errno_ptr_": {
+    "addr": "1:704e8",
+    "name": "WATCOM",
+    "evidence": "Watcom errno.h expands errno to *__get_errno_ptr(); FatalError caller matches every byte and calls this getter, whose body returns 2:574fc."
+   },
+   "PrintMemInfo": {
+    "addr": "1:6f410",
+    "name": "RAYVERSE",
+    "evidence": "FatalError reconstructed system-info path calls this function; its DOS body prints memory statistics. Android name exists (stub)."
    }
   },
   "data": {
@@ -2266,6 +2276,13 @@
     "type": "record_t",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CAF50; declaration type, checked against Android symbol or DOS access"
+   },
+   "input_mode": {
+    "addr": "2:3fa51",
+    "type": "u8",
+    "size": 1,
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA51; Android symbol input_mode is a 1-byte BSS object; DOS FatalError compares this byte to 1."
    }
   }
  }
