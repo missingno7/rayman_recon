@@ -3461,6 +3461,221 @@
     "addr": "1:642a8",
     "name": "RAYVERSE",
     "evidence": "DOS v1.21 disasm public at 1:642a8; called by init_struct_level for collected-object filtering"
+   },
+   "get_casse_brique_ON": {
+    "addr": "1:16a20",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A20"
+   },
+   "set_casse_brique_ON": {
+    "addr": "1:16a28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A28"
+   },
+   "get_casse_brique_active": {
+    "addr": "1:16a30",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A30"
+   },
+   "set_casse_brique_active": {
+    "addr": "1:16a38",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A38"
+   },
+   "enter_casse_brique": {
+    "addr": "1:16a40",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A40"
+   },
+   "enter_casse_brique2": {
+    "addr": "1:16a90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A90"
+   },
+   "exit_casse_brique": {
+    "addr": "1:16a9c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26A9C"
+   },
+   "exit_casse_brique2": {
+    "addr": "1:16ab8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26AB8"
+   },
+   "get_speed_ball": {
+    "addr": "1:16ad0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26AD0"
+   },
+   "speed_ball_null": {
+    "addr": "1:16c00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26C00"
+   },
+   "speed_ball_init": {
+    "addr": "1:16c30",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26C30"
+   },
+   "speed_up_ball": {
+    "addr": "1:16c5c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26C5C"
+   },
+   "invert_speed_ball_x": {
+    "addr": "1:16c8c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26C8C"
+   },
+   "invert_speed_ball_y": {
+    "addr": "1:16cb8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26CB8"
+   },
+   "set_ball_pos": {
+    "addr": "1:16ce4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26CE4"
+   },
+   "angle_direction": {
+    "addr": "1:16d0c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26D0C"
+   },
+   "move_ball": {
+    "addr": "1:16d88",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26D88"
+   },
+   "get_brik_bonus": {
+    "addr": "1:16e4c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26E4C"
+   },
+   "do_bonus": {
+    "addr": "1:16ed0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26ED0"
+   },
+   "get_brik_info": {
+    "addr": "1:16f2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //26F2C"
+   },
+   "frame_briques": {
+    "addr": "1:1701c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //2701C"
+   },
+   "AllocateCasseBriqueBoum": {
+    "addr": "1:17140",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //27140"
+   },
+   "AllocateBonus": {
+    "addr": "1:171f8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //271F8"
+   },
+   "bonus_fall": {
+    "addr": "1:172d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //272D8"
+   },
+   "collision_briques": {
+    "addr": "1:1737c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //2737C"
+   },
+   "collision_rayman": {
+    "addr": "1:17798",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //27798"
+   },
+   "move_briques": {
+    "addr": "1:179bc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //279BC"
+   },
+   "init_briques": {
+    "addr": "1:17a68",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //27A68"
+   },
+   "reset_briques": {
+    "addr": "1:17dc8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //27DC8"
+   },
+   "casse_brique_init": {
+    "addr": "1:17e14",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //27E14"
+   },
+   "casse_brique_start": {
+    "addr": "1:18004",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28004"
+   },
+   "ray_face_brik": {
+    "addr": "1:18170",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28170"
+   },
+   "casse_brique_play": {
+    "addr": "1:181ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //281AC"
+   },
+   "casse_brique_end": {
+    "addr": "1:18484",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28484"
+   },
+   "casse_brique_done": {
+    "addr": "1:18504",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28504"
+   },
+   "DISPLAY_FIXE_CB": {
+    "addr": "1:18590",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28590"
+   },
+   "DO_CB_BALL_COMMAND": {
+    "addr": "1:187d4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //287D4"
+   },
+   "DO_CB_BRIK_COMMAND": {
+    "addr": "1:18874",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28874"
+   },
+   "DO_RAY_CASSE_BRIQUE": {
+    "addr": "1:18888",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse breakout.c //28888"
+   },
+   "rightjoy": {
+    "addr": "1:31d54",
+    "name": "ANDROID",
+    "evidence": "Android symbol rightjoy; DOS call at 1:188ba"
+   },
+   "leftjoy": {
+    "addr": "1:31ce4",
+    "name": "ANDROID",
+    "evidence": "Android symbol leftjoy; DOS call at 1:1893d"
+   },
+   "display_sprite": {
+    "addr": "1:08eb0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse affiche.c; DOS call in DISPLAY_FIXE_CB at 1:185ff"
+   },
+   "TOUCHE": {
+    "addr": "1:31cb0",
+    "name": "ANDROID",
+    "evidence": "Android symbol TOUCHE; DOS call at 1:187de"
    }
   },
   "data": {
@@ -6669,6 +6884,102 @@
     "type": "u8*",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //95E28; DOS dword pointer load in INIT_GAME_MODE_NORMAL"
+   },
+   "num_world_choice": {
+    "addr": "2:3f83a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; Android symbol is .bss size 2 (2:3f83a)"
+   },
+   "old_num_world_choice": {
+    "addr": "2:4e80c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; Android symbol is .bss size 2 (2:4e80c)"
+   },
+   "old_num_level_choice": {
+    "addr": "2:4e80e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address comment; Android symbol is .bss size 2 (2:4e80e)"
+   },
+   "CasseBrique": {
+    "addr": "2:4e764",
+    "type": "casse_brique_entry_t[20]",
+    "name": "ANDROID",
+    "evidence": "Android .bss symbol size 160; DOS init_briques writes s16 x/y/object_index and u8 kind at a 8-byte stride (1:17a68..1:17dc8); plain short reads in frame_briques/get_brik_bonus reference fields through the -2 load form (1:16e4c, 1:1701c)"
+   },
+   "CBoffsetXMin": {
+    "addr": "2:4e810",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE810; Android symbol size 2"
+   },
+   "CBoffsetYMin": {
+    "addr": "2:4e812",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE812; Android symbol size 2"
+   },
+   "CBoffsetYMax": {
+    "addr": "2:4e814",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE814; Android symbol size 2"
+   },
+   "CBoffsetXMax": {
+    "addr": "2:4e816",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE816; Android symbol size 2"
+   },
+   "LIMITE_GAUCHE": {
+    "addr": "2:4e818",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE818; Android symbol size 2"
+   },
+   "XOFFSETCBRIGHT": {
+    "addr": "2:4e81a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE81A; Android symbol size 2"
+   },
+   "XOFFSETRAY": {
+    "addr": "2:4e81c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE81C; Android symbol size 2"
+   },
+   "LIMITE_DROITE": {
+    "addr": "2:4e81e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE81E; Android symbol size 2"
+   },
+   "YOFFSETCB": {
+    "addr": "2:4e820",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE820; Android symbol size 2"
+   },
+   "XOFFSETCBLEFT": {
+    "addr": "2:4e822",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE822; Android symbol size 2"
+   },
+   "nb_collis": {
+    "addr": "2:4e824",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DE824; Android symbol size 1"
+   },
+   "byte_93fa20": {
+    "addr": "2:3fa20",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte comparison at 1:17cac and 1:17f06; Android name query and Rayverse data.c lookup returned no symbol"
    }
   }
  }

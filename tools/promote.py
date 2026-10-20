@@ -1,7 +1,7 @@
 """Integrator helper: merge a worker's overlay bindings into config/symbols.json and register a unit.
 
     python tools/promote.py SYMBOLS_OVERLAY.json [--rename OLD=NEW ...]
-    python tools/promote.py --unit NAME SRC.c [--oracle O] [--provenance TAG,TAG]
+    python tools/promote.py --unit NAME SRC.c [--oracle O] [--provenance TAG,TAG]   (default tags: from available reference bodies)
 
 Bindings: a name already bound to a different address, or an address already bound under a different name in
 the same section, is refused. --unit adds/updates config/units.json with the statuses that tools/verify.py
@@ -108,15 +108,27 @@ def merge_symbols(overlay, renames):
     print(f"merged {added} bindings into config/symbols.json")
 
 
+def default_provenance(fname):
+    """docs/MATCHING.md tags from which reference bodies exist (a Rayverse stub does not count)."""
+    import seed
+    tags = []
+    rv = seed.rayverse_body(fname)[0]
+    if rv and "Not implemented" not in rv and "//stub" not in rv:
+        tags.append("RAYVERSE_GUIDED")
+    if seed.ps1_body(fname)[0]:
+        tags.append("PS1_SOURCE_GUIDED")
+    return tags + ["DOS_BINARY_DERIVED"]
+
+
 def register_unit(name, src, oracle, prov):
     units = load_json(CONFIG / "units.json")
     units["units"].setdefault(name, {"source": src, "oracle": oracle, "profile": "game", "functions": {}})
     dump_json(CONFIG / "units.json", units)
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "verify.py"), "--accept", name], cwd=ROOT)
     units = load_json(CONFIG / "units.json")
-    for fn in units["units"][name]["functions"].values():
+    for fname, fn in units["units"][name]["functions"].items():
         if not fn.get("provenance"):
-            fn["provenance"] = prov
+            fn["provenance"] = prov or default_provenance(fname)
     dump_json(CONFIG / "units.json", units)
     return r.returncode
 

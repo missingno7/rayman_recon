@@ -110,7 +110,10 @@
     },
     "start_cd_continue": {
      "status": "STRICT",
-     "provenance": []
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     }
    }
   },
@@ -2481,35 +2484,65 @@
    "functions": {
     "INIT_TXT_FEE": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "allocate_poing_or_free": {
      "status": "STRICT",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "init_fee": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "wait_for_dialogue_fee": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "DO_FEE_ETAPE": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "fee_gives_super_evts": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "DO_FEE": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     },
     "DoFeeRaymanZDD": {
      "status": "NEAR_MATCH",
-     "provenance": []
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
     }
    }
   },
@@ -3848,323 +3881,344 @@
     "popCmdContext": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "char2short": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readNoArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipNoArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readOneArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readTestArgs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readGoXYargs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readSpeedArgs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readInvalidArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipOneArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipTestArgs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipGoXYArgs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipSpeedArgs": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_SELF_HANDLED": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipInvalidArg": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_11_GO_LABEL": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_19_GO_WAITSTATE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_25_RESERVED_GO_GOSUB": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_26_RESERVED_GO_BRANCHTRUE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_27_RESERVED_GO_BRANCHFALSE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_28_RESERVED_GO_SKIPTRUE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_29_RESERVED_GO_SKIPFALSE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_21_GO_X": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_22_GO_Y": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_12_GO_GOTO": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_8_GO_STATE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_5_GO_SUBSTATE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_6_GO_SKIP": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_9_GO_PREPARELOOP": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_13_GO_GOSUB": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_14_GO_RETURN": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_10_GO_DOLOOP": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_33_INVALID_CMD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_15_GO_BRANCHTRUE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_16_GO_BRANCHFALSE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_31_GO_SKIPTRUE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_32_GO_SKIPFALSE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_18_GO_SETTEST": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "handle_17_GO_TEST": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "readOneCommand": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipOneCommand": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "GET_OBJ_CMD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "pushCmdContext": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "skipToLabel": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "pushToLabel": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -4177,204 +4231,232 @@
     "BB2_MARCHE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TOTEM_TOUCHE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TOTEM_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TOTBT_REBOND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_PI_EXPLOSION2": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBL_REBOND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "allocateDog": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "allocateTir": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "CreateFirstBBL": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "INIT_BBMONT": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBL_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "BBMONT_ECLAIR": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "BBMONT_ETINCELLES": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "BBMONT_TIRE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "Cree_BBL": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "BB_Attaque": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "Fin_BB_Attaque": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "BB_Atan": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT_ATTER": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT_TOUCHE": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT2_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT2_MARCHE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT2_ATTER": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT3_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT3_ATTER": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BBMONT4_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_ECLAIR_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BB1_PLAT_CMD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -4387,162 +4469,172 @@
     "MURDUR": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "dist_to_bloc_floor": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "bloc_floor": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "calc_typ_trav": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "calc_typ_travd": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "TEST_FIN_BLOC": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "TEST_IS_ON_RESSORT_BLOC": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "IS_ON_RESSORT_BLOC": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "CALC_MOV_ON_BLOC": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "recale_position": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_empty": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_right_45": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_left_45": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_right1_30": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_right2_30": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_left1_30": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_left2_30": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs3_empty": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_liane": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs1_hor": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs4_empty": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "blocs2_empty": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "init_calcbloc_func": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -4555,358 +4647,371 @@
     "ObjectUTurnDefault": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_WIZARD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "get_next_bonus_level": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "TEST_WIZARD": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TARZAN": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoTarzanPoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "allocate_badguy": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_PTI_ESQUIVE": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPrisePoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_PETIT_COUTEAU_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPetitCouteauPoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TIRE_BOUCHON_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoOneUpPoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoOneUpRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoMorningStarPoingCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoGrapBonusRaymanCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPoingPowerupRaymanCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPowerupRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoSuperHelicoRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoGraineRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoWizRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoJaugeUpRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoGeneratingDoorRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_REDUCTEUR": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoReducteurRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoSignPostRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "TEST_SIGNPOST": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPancarteRaymanCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_MUSICIEN": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoMusicienRaymanInZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_TEN_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoGeneBadGuyPoingCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoGeneBadGuyRaymanZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoChasseurPoingCollision": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoChasseurRaymanZDD": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_CHASSEUR_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoBadGuy23PoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoBadGuy23RaymanZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoBadGuy1PoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoBadGuy1RaymanZDD": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_CCL_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoCaisseClairePoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoCaisseClaireRaymanZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoStalagRaymanZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_ENSEIGNE_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_JOE_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoJoeRaymanZDD": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_BOUEE_JOE_COMMAND": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_PHOTOGRAPHE_CMD": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoAudioStartRaymanCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_SLOPEY_PLAT_CMD": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -4919,92 +5024,88 @@
     "deter_vide_plein_panach": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "deter_nb_blocks": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "Copy_Blocks": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "construct_MAP": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "init_build_map": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "update_display_map": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "set_default_Bloc_clipping": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "set_xymapini": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "set_xymap": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "set_whmap": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "DOS_BINARY_DERIVED"
      ]
     },
     "recaleRaysurlesBords": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "set_xywhmap": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "MaskScrollDiffSprites": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -5017,78 +5118,86 @@
     "DRAW_MAP": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "INIT_GAME_MODE_NORMAL": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "FIN_GAME_MODE_NORMAL": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "ngaweFollowsShip": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "ngaweTriesToGrabShip": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "allocatePirateNgaweRing": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_NGW_TIR": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "NGW_REACT_TO_RAY_IN_ZONE": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_ONE_NGW_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_NGW_POING_COLLISION": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_ONE_NGW_RING_COMMAND": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -5101,22 +5210,25 @@
     "DO_PIRATE_POELLE": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DO_PIRATE_POELLE_POING_COLLISION": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "PIRATE_POELLE_REACT": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -5129,15 +5241,16 @@
     "DO_SPECIAL_PLATFORM": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "DoPlatformPoingCollision": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
@@ -5150,50 +5263,302 @@
     "Prio": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "first_obj_init": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "obj_init": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "init_struct_level": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "INIT_OBJECTS": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "REINIT_OBJECT": {
      "status": "STRICT",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
      ]
     },
     "special_flags_init": {
      "status": "NEAR_MATCH",
      "provenance": [
-      "seed",
-      "worker"
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "breakout": {
+   "source": "src/breakout.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "get_casse_brique_ON": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_casse_brique_ON": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "get_casse_brique_active": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_casse_brique_active": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "enter_casse_brique": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "enter_casse_brique2": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "exit_casse_brique": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "exit_casse_brique2": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "get_speed_ball": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "speed_ball_null": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "speed_ball_init": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "speed_up_ball": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "invert_speed_ball_x": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "invert_speed_ball_y": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_ball_pos": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "angle_direction": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "move_ball": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "get_brik_bonus": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "do_bonus": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "get_brik_info": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "frame_briques": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateCasseBriqueBoum": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateBonus": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "bonus_fall": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "collision_briques": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "collision_rayman": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "move_briques": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_briques": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "reset_briques": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "casse_brique_init": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "casse_brique_start": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ray_face_brik": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "casse_brique_play": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "casse_brique_end": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "casse_brique_done": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_FIXE_CB": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_CB_BALL_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_CB_BRIK_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_RAY_CASSE_BRIQUE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
      ]
     }
    }
