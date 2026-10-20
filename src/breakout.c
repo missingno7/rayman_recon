@@ -1,8 +1,24 @@
-/* breakout.c (1:16a20..1:18b40, casse-brique minigame). Names RAYVERSE/ANDROID; Rayverse bodies are mostly stubs here, so most C is written from the DOS code (worker tu_breakout). See config/units.json for statuses. */
+/* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
+ * Worker gfin_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
+ */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include <stdio.h>
+#include <stdlib.h>
+#define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+extern s32 map_time;
+extern s16 scroll_start_y, scroll_end_y, num_level, sbar_obj_id;
+extern u8 nb_max_collis;
+typedef struct cb_collision_t {
+    s16 dx, dy;
+    u8 reflect_x, reflect_y, index, reserved;
+} cb_collision_t;
+extern cb_collision_t CBCollis[1];
+extern char *language_txt[300];
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
@@ -89,20 +105,20 @@ extern void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 extern u8 GET_SPRITE_POS(obj_t *obj, s16 sprite_index, s16 *x, s16 *y, s16 *w, s16 *h);
 extern void calc_obj_pos(obj_t *obj);
 extern s16 inter_box(s32 x1, s32 y1, s32 w1, s32 h1,
-                     s16 x2, s16 y2, s32 w2, s32 h2);
+    s16 x2, s16 y2, s32 w2, s32 h2);
 extern void DO_NOVA(obj_t *obj);
 extern void add_alwobj(obj_t *obj);
-extern s32 but0pressed(void);
-extern s32 rightjoy(void);
-extern s32 leftjoy(void);
+extern s16 but0pressed(void);
+extern s16 rightjoy(void);
+extern s16 leftjoy(void);
 extern void SET_X_SPEED(obj_t *obj);
 extern s16 instantSpeed(s16 speed);
 extern void GET_RAY_ZDC(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 extern void DO_COLLISIONS(void);
 extern void DO_ANIM(obj_t *obj);
 extern void display_sprite(obj_t *obj, u8 sprite_index, s16 x, s16 y, u8 flipped);
-extern void display_text(const char *text, s16 x, s16 y, u8 color, u8 centered);
-void AllocateBonus(obj_t *obj, s16 type, u8 sub_etat, u8 main_etat);
+extern void display_text(const char *text, s16 x, s16 y, u8 font_size, s8 color);
+void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat);
 u8 get_casse_brique_ON(void);
 void set_casse_brique_ON(u8 on);
 u8 get_casse_brique_active(void);
@@ -188,7 +204,7 @@ void get_speed_ball(void)
     if (speed_ball_angle < 0)
         speed_ball_angle += 72;
     else if (speed_ball_angle > 72)
-        speed_ball_angle -= 72;
+    speed_ball_angle -= 72;
 
     if (18 - speed_ball_angle >= 0) {
         x = CBdata[speed_ball_angle][level_index * 2 + 1];
@@ -268,8 +284,9 @@ void set_ball_pos(obj_t *obj, s16 x, s16 y)
 
 s16 angle_direction(s16 x, s16 y)
 {
-    s32 ratio;
+    s16 ratio;
     s16 angle;
+    u8 index;
     s16 original_x;
 
     original_x = x;
@@ -277,9 +294,10 @@ s16 angle_direction(s16 x, s16 y)
         ratio = (y << 9) / x;
         if (ratio < 0)
             ratio = -ratio;
-        angle = 17;
-        while (ratio < -CBdata[angle][0])
-            angle--;
+        index = 17;
+        while (ratio < -(u16)CBdata[index][0])
+            index--;
+        angle = index;
     } else if (y != 0) {
         angle = 18;
     } else {
@@ -294,8 +312,8 @@ s16 angle_direction(s16 x, s16 y)
 
 void move_ball(obj_t *obj)
 {
-    s32 dx;
-    s32 dy;
+    s16 dx;
+    s16 dy;
 
     dx = 0;
     dy = 0;
@@ -308,11 +326,9 @@ void move_ball(obj_t *obj)
     }
     ball_x += dx + speed_ball_x;
     ball_y += dy + speed_ball_y;
-    obj->x = ball_x / 256;
-    obj->y = ball_y / 256;
+    obj->x = (s16)(ball_x ? ball_x >> 8 : -((-ball_x) >> 8));
+    obj->y = (s16)(ball_y ? ball_y >> 8 : -((-ball_y) >> 8));
 }
-
-/* move_ball: no seed source */
 
 void get_brik_bonus(void)
 {
@@ -348,37 +364,37 @@ void do_bonus(void)
         if (BonusMode == 1)
             get_brik_bonus();
         else if (BonusMode != 2)
-            BonusMode = 1;
+        BonusMode = 1;
     }
 }
 
-u8 get_brik_info(obj_t *obj, s16 entry_index, s16 *x, s16 *y, u8 *kind)
+u16 get_brik_info(obj_t *obj, s16 entry_index, s16 *x, s16 *y, u8 *kind)
 {
     u8 *entry;
     sprite_t *sprite;
-    u32 anim_index;
+    u16 anim_index;
+    u8 result;
     u8 sprite_index;
 
     anim_index = obj->animations[2].layers_per_frame & 0x3fff;
-    entry = (u8 *)obj->animations[2].layers + (anim_index * NoCB + entry_index) * 4;
+    entry = (u8 *)obj->animations[2].layers + anim_index * NoCB * 4 + entry_index * 4;
     sprite_index = entry[3];
-    if (sprite_index == 0)
-        return 0;
     sprite = obj->sprites + sprite_index;
-    if (sprite->id == 0)
-        return 0;
-    *x = entry[1];
-    *y = entry[2];
-    switch (sprite->id) {
-    case 0x27: *kind = 2; break;
-    case 0x28: *kind = 1; break;
-    case 0x29: *kind = 3; break;
-    case 0x2a: *kind = 4; break;
-    case 0x2b: *kind = 5; break;
-    case 0x2c: *kind = 7; break;
-    default: *kind = 0; break;
-    }
-    return 1;
+    if (sprite_index != 0 && sprite->id != 0) {
+        *x = entry[1];
+        *y = entry[2];
+        switch (sprite->id) {
+        case 0x27: *kind = 2; break;
+        case 0x28: *kind = 1; break;
+        case 0x29: *kind = 3; break;
+        case 0x2a: *kind = 4; break;
+        case 0x2b: *kind = 5; break;
+        case 0x32: *kind = 7; break;
+        default: *kind = 0; break;
+        }
+        result = 1;
+    } else result = 0;
+    return result;
 }
 
 void frame_briques(obj_t *obj)
@@ -431,36 +447,38 @@ void frame_briques(obj_t *obj)
 
 void AllocateCasseBriqueBoum(obj_t *obj)
 {
+    s16 h;
     s16 x;
     s16 y;
     s16 w;
-    s16 h;
     s16 i;
+    s16 count;
     obj_t *explosion;
 
-    for (i = 0; i < level.nb_objects; i++) {
-        explosion = level.objects + i;
+    explosion = level.objects;
+    count = level.nb_objects;
+    for (i = 0; i < count; i++, explosion++) {
         if (explosion->type == 0xb && explosion->is_active == 0) {
             GET_ANIM_POS(obj, &x, &y, &w, &h);
             explosion->anim_frame = 0;
             explosion->x = x + (w >> 1) - explosion->offset_bx;
-            explosion->is_active = 1;
             explosion->y = y + h - explosion->offset_by;
             explosion->flags.alive = 1;
+            explosion->is_active = 1;
             add_alwobj(explosion);
             return;
         }
     }
 }
 
-void AllocateBonus(obj_t *obj, s16 type, u8 sub_etat, u8 main_etat)
+void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)
 {
     s16 i;
     obj_t *bonus;
 
-    for (i = 0; i < level.nb_objects; i++) {
-        bonus = level.objects + i;
-        if (bonus->type == type && bonus->is_active == 0) {
+    bonus = level.objects;
+    for (i = 0; i < level.nb_objects; i++, bonus++) {
+        if (type == bonus->type && bonus->is_active == 0) {
             bonus->x = obj->x + obj->offset_bx - bonus->offset_bx;
             bonus->y = obj->y + obj->offset_by - bonus->offset_by;
             set_main_and_sub_etat(bonus, sub_etat, main_etat);
@@ -470,7 +488,7 @@ void AllocateBonus(obj_t *obj, s16 type, u8 sub_etat, u8 main_etat)
             bonus->display_prio = 1;
             bonus->active_timer = 0;
             bonus->active_flag = 0;
-            bonus->speed_y = bonus->y + bonus->offset_bx - ymap < 100 ? 2 : 1;
+            bonus->speed_y = (bonus->y + bonus->offset_bx - ymap < 100) + 1;
             return;
         }
     }
@@ -478,10 +496,9 @@ void AllocateBonus(obj_t *obj, s16 type, u8 sub_etat, u8 main_etat)
 
 void bonus_fall(obj_t *obj)
 {
-    s16 type;
+    u16 type;
     u8 sub_etat;
     u8 main_etat;
-    u8 state;
 
     BonusMode = 1;
     if (status_bar.max_hitp != 4) {
@@ -489,19 +506,19 @@ void bonus_fall(obj_t *obj)
         sub_etat = 6;
         main_etat = 2;
     } else {
-        state = poing_obj->init_sub_etat;
-        if (state == 1 || state == 3 || state == 5) {
+
+        if (poing_obj->init_sub_etat == 1 || poing_obj->init_sub_etat == 3 || poing_obj->init_sub_etat == 5) {
             type = 0x5f;
             sub_etat = 5;
             main_etat = 7;
-        } else if (state == 12) {
-            type = 0xa1;
-            sub_etat = 5;
-            main_etat = (u8)(myRand(7) + 24);
-        } else {
+        } else if (poing_obj->init_sub_etat != 12) {
             type = 0x5f;
             sub_etat = 5;
             main_etat = 14;
+        } else {
+            type = 0xa1;
+            sub_etat = 5;
+            main_etat = (u8)(myRand(7) + 24);
         }
     }
     AllocateBonus(obj, type, sub_etat, main_etat);
@@ -509,22 +526,19 @@ void bonus_fall(obj_t *obj)
 
 u8 collision_briques(obj_t *obj)
 {
-    s16 i;
+    u8 i;
     s16 x;
     s16 y;
     s16 dx;
     s16 dy;
     s16 abs_x;
     s16 abs_y;
-    s16 old_param;
-    s16 speed_sign_x;
-    s16 speed_sign_y;
     u8 reflect_x;
     u8 reflect_y;
     obj_t *brick;
 
-    x = (s16)(obj->x - xmap + obj->offset_bx + 8);
-    y = (s16)(obj->y - ymap + obj->offset_by);
+    x = (s16)obj->x - xmap + obj->offset_bx + 8;
+    y = (s16)obj->y - ymap + obj->offset_by;
     nb_collis = 0;
     reflect_x = 0;
     reflect_y = 0;
@@ -533,63 +547,84 @@ u8 collision_briques(obj_t *obj)
             break;
         brick = level.objects + CasseBrique[i].object_index;
         if (brick->param != 0 && i != LastTouched) {
-            dx = x - (s16)(brick->x - xmap + brick->offset_bx + 8);
-            abs_x = (s16)ABS(dx);
+            dx = x - (s16)((s16)brick->x - xmap + brick->offset_bx + 8);
+            abs_x = (s16)abs(dx);
             if (abs_x <= 21) {
-                dy = y - (s16)(brick->y - ymap + brick->offset_by);
-                abs_y = (s16)ABS(dy);
-                if (abs_y <= 21 && dx * dx + dy * dy <= dist2) {
+                dy = y - (s16)((s16)brick->y - ymap + brick->offset_by);
+                abs_y = (s16)abs(dy);
+                if (abs_x <= 21 && dy * dy + dx * dx <= dist2) {
                     LastTouched = (u8)i;
-                    if (brick->param == 1) {
+                    switch (brick->param) {
+                    case 1:
                         brick->param = 2;
                         undestroy = 0;
-                        no_sound = 0xc1;
+                        no_sound = 193;
                         NbBrikTouched++;
-                    } else if (brick->param == 2) {
-                        brick->param = 3;
+                        break;
+                    case 2:
                         undestroy = 0;
-                        no_sound = 0xc1;
+                        brick->param = 3;
+                        no_sound = 193;
                         NbBrikTouched++;
-                    } else if (brick->param == 3 || brick->param == 6) {
-                        old_param = brick->param;
+                        break;
+                    case 3:
+                    case 6:
                         DO_NOVA(brick);
                         NbBrikTouched++;
-                        if (NbClassicBrik != 0)
-                            NbClassicBrik--;
-                        if (old_param == 6)
-                            bonus_fall(brick);
+                        NbClassicBrik--;
+                        if (brick->param == 6) bonus_fall(brick);
                         brick->param = 0;
-                        NbBrikTouched = 0;
-                        no_sound = 0xe;
-                    } else if (brick->param == 4) {
-                        no_sound = 0xd6;
+                        undestroy = 0;
+                        no_sound = 14;
+                        break;
+                    case 4:
+                        no_sound = 214;
                         undestroy++;
                         brick->hit_points--;
                         if (brick->hit_points == 0) {
                             DO_NOVA(brick);
                             brick->param = 0;
-                            no_sound = 0xe;
+                            undestroy = 0;
+                            no_sound = 14;
                         }
-                    } else if (brick->param == 5) {
+                        break;
+                    case 5:
                         speed_up_ball(obj);
+                        no_sound = 54;
                         undestroy++;
-                        no_sound = 0x36;
-                    } else if (brick->param == 7) {
+                        break;
+                    case 7:
                         tempo = 1;
+                        no_sound = 54;
                         CBoffsetY -= 5;
                         undestroy++;
-                        no_sound = 0x36;
+                        break;
                     }
-
-                    speed_sign_x = speed_ball_x > 0 ? 1 : (speed_ball_x < 0 ? -1 : 0);
-                    speed_sign_y = speed_ball_y > 0 ? 1 : (speed_ball_y < 0 ? -1 : 0);
-                    if (speed_sign_x == (dx > 0 ? 1 : (dx < 0 ? -1 : 0)))
-                        reflect_x = 1;
-                    if (speed_sign_y == (dy > 0 ? 1 : (dy < 0 ? -1 : 0)))
-                        reflect_y = 1;
+                    CBCollis[nb_collis].reflect_x = 0;
+                    CBCollis[nb_collis].reflect_y = 0;
+                    if (abs_y <= abs_x) {
+                        if (SGN(speed_ball_x) == SGN(dx)) {
+                            reflect_y++;
+                            CBCollis[nb_collis].reflect_y = 1;
+                        } else {
+                            reflect_x++;
+                            CBCollis[nb_collis].reflect_x = 1;
+                        }
+                    }
+                    if (abs_x <= abs_y) {
+                        if (SGN(speed_ball_y) == SGN(dy)) {
+                            reflect_x++;
+                            CBCollis[nb_collis].reflect_x = 1;
+                        } else {
+                            CBCollis[nb_collis].reflect_y = 1;
+                            reflect_y++;
+                        }
+                    }
+                    CBCollis[nb_collis].dx = dx;
+                    CBCollis[nb_collis].dy = dy;
+                    CBCollis[nb_collis].index = i;
                     nb_collis++;
-                    if (nb_collis > 20)
-                        nb_collis = 20;
+                    if (nb_collis > nb_max_collis) nb_max_collis = nb_collis;
                 }
             }
         }
@@ -605,93 +640,74 @@ u8 collision_briques(obj_t *obj)
     return nb_collis;
 }
 
-u8 collision_rayman(obj_t *obj)
+void collision_rayman(obj_t *obj)
 {
-    s16 ball_x;
-    s16 ball_y;
-    s16 ray_x;
-    s16 ray_y;
-    s16 ray_w;
-    s16 ray_h;
-    s16 dx;
-    s16 dy;
+    s16 ball_x, ball_y, ray_x, ray_y, ray_w, ray_h;
     u8 state;
-
+    state = 0;
     calc_obj_pos(obj);
     ball_x = obj->screen_x + obj->offset_bx - 8;
     ball_y = obj->screen_y + obj->offset_by - 8;
-    if (ray.main_etat == 0 && ray.sub_etat == 4) {
-        ray_x = ray.screen_x - 0x16;
-        ray_y = ray.screen_y + 0x20;
-        ray_w = 0x20;
-        ray_h = 0x2e;
-        state = 0x19;
-    } else if (ray.main_etat == 0 && ray.sub_etat == 0x14) {
-        ray_x = ray.screen_x - 0x26;
-        ray_y = ray.screen_y + 0x4a;
-        ray_w = 0x20;
-        ray_h = 0x4e;
-        state = 0x1a;
-    } else {
-        ray_x = ray.screen_x;
-        ray_y = ray.screen_y;
-        ray_w = 0x2e;
-        ray_h = 0x2e;
-        state = 0;
+    ray_w = 46;
+    ray_h = 2;
+    calc_obj_pos(&ray);
+    ray_x = ray.offset_bx + ray.screen_x;
+    ray_y = ray.screen_y;
+    if ((ray.main_etat == 0 && ray.sub_etat == 4) ||
+        (ray.main_etat == 1 && ray.main_etat == ray.sub_etat)) {
+        ray_x -= 22;
+        ray_y += 32;
+        if (LastTouched != 25) state = 25;
+    } else if ((ray.main_etat == 0 && ray.sub_etat == 20) ||
+        (ray.main_etat == 3 && ray.sub_etat == 17) ||
+        (ray.main_etat == 3 && ray.sub_etat == 18)) {
+        ray_w += 32;
+        ray_x -= 38;
+        ray_y += 74;
+        if (LastTouched != 26) state = 26;
     }
-    if (state == 0 || !inter_box(ball_x, ball_y, 0x10, 0x10,
-                                  ray_x, ray_y, ray_w, ray_h))
-        return 0;
-
-    if (speed_ball_y < 0)
-        return 0;
-    if (NbClassicBrik <= 5 && NoCB != 3)
-        speed_ball_level = 1;
-    else
-        speed_ball_level = 0;
-    dx = (s16)(ball_x + 8 - (ray_x + 16));
-    dy = (s16)(ball_y + 8 - (ray_y + 16));
-    speed_ball_angle = angle_direction(dx, dy);
-    get_speed_ball();
-    AllocateCasseBriqueBoum(obj);
-    PlaySnd_old(0x2c);
-    if (state == 0x19)
-        set_main_and_sub_etat(&ray, 3, 0x32);
-    LastTouched = state;
-    return 1;
+    if (state != 0 && inter_box(ball_x, ball_y, 16, 16, ray_x, ray_y, ray_w, ray_h) && speed_ball_y >= 0) {
+        if (NbClassicBrik <= 5 && NoCB != 3) speed_ball_level = 1;
+        else speed_ball_level = 0;
+        ball_x = ball_x + 16 - ray_x;
+        ray_w += 15;
+        speed_ball_angle = (s16)((-120 * ball_x / ray_w + 150.0) * 0.2);
+        get_speed_ball();
+        AllocateCasseBriqueBoum(obj);
+        PlaySnd_old(44);
+        if (state == 25) set_main_and_sub_etat(&ray, 3, 50);
+        LastTouched = state;
+        undestroy = 0;
+    }
 }
 
 void move_briques(obj_t *obj)
 {
-    s16 y;
-
     (void)obj;
-    if (InvadersMode != 1)
-        return;
-
-    tempo--;
-    if (tempo == 0) {
-        tempo = 500;
-        y = CBoffsetY + Ydir;
-        if (y >= CBoffsetYMax) {
-            CBoffsetY = CBoffsetYMax;
-            Xdir = 0;
-            Ydir = 0;
-        } else if (y <= CBoffsetYMin) {
-            CBoffsetY = CBoffsetYMin;
-            Xdir = 0;
-            Ydir = 1;
-        } else {
-            CBoffsetY = y;
-            Xdir = 0;
-            Ydir = 1;
+    if (InvadersMode == 1) {
+        tempo--;
+        if (tempo == 0) {
+            CBoffsetY += Ydir;
+            tempo = 500;
+            if (CBoffsetY >= CBoffsetYMax) {
+                CBoffsetY = CBoffsetYMax;
+                Xdir = 0;
+                Ydir = 0;
+            } else if (CBoffsetY <= CBoffsetYMin) {
+                CBoffsetY = CBoffsetYMin;
+                Xdir = 0;
+                Ydir = 1;
+            } else {
+                Xdir = 0;
+                Ydir = 1;
+            }
         }
     }
 }
 
 void init_briques(obj_t *obj)
 {
-    s16 i;
+    u8 i;
     s16 level_index;
     s16 x;
     s16 y;
@@ -700,53 +716,54 @@ void init_briques(obj_t *obj)
     s16 max_x;
     s16 min_y;
     s16 max_y;
+    s16 count;
     obj_t *brick;
     u8 brick_index;
 
+    max_x = -320;
+    max_y = -200;
+    min_x = 320;
+    min_y = 200;
+    InvadersMode = 0;
     BonusMode = 0;
-    NbClassicBrik = 0;
-    NbBrikTouched = 0;
-    LastTouched = 0;
+    BonusBrik = 20;
     for (i = 0; i < 20; i++) {
         CasseBrique[i].x = 0;
         CasseBrique[i].y = 0;
-        CasseBrique[i].object_index = 0;
         CasseBrique[i].kind = 0;
+        CasseBrique[i].object_index = 0;
     }
     obj->iframes_timer = 100;
 
-    max_x = -320;
-    min_x = 320;
-    max_y = -200;
-    min_y = 200;
+    brick = level.objects;
+    count = level.nb_objects;
     brick_index = 0;
-    for (level_index = 0; level_index < level.nb_objects && brick_index < 20; level_index++) {
-        brick = level.objects + level_index;
+    for (level_index = 0; level_index < count && brick_index < 20; level_index++, brick++) {
         if (brick->type == 0x100) {
             if (!get_brik_info(obj, brick_index, &x, &y, &kind)) {
-                x = 0;
-                y = 128;
+                y = 0;
+                x = 128;
                 kind = 0;
             }
             CasseBrique[brick_index].x = x + 0x2a;
             CasseBrique[brick_index].y = y + 9;
-            CasseBrique[brick_index].object_index = level_index;
             CasseBrique[brick_index].kind = kind;
-            if (x + 0x2a > max_x)
-                max_x = x + 0x2a;
-            if (x + 0x2a < min_x)
-                min_x = x + 0x2a;
-            if (y + 9 > max_y)
-                max_y = y + 9;
-            if (y + 9 < min_y)
-                min_y = y + 9;
+            CasseBrique[brick_index].object_index = level_index;
+            if (CasseBrique[brick_index].x > max_x)
+                max_x = CasseBrique[brick_index].x;
+            else if (CasseBrique[brick_index].x < min_x)
+            min_x = CasseBrique[brick_index].x;
+            if (CasseBrique[brick_index].y > max_y)
+                max_y = CasseBrique[brick_index].y;
+            else if (CasseBrique[brick_index].y < min_y)
+            min_y = CasseBrique[brick_index].y;
             brick_index++;
         }
     }
 
-    CBoffsetXMin = min_x > 12 ? 0 : 12 - min_x;
+    CBoffsetXMin = min_x <= 12 ? 0 : 12 - min_x;
     CBoffsetXMax = max_x > 0x124 ? 0 : 0x124 - max_x;
-    CBoffsetYMin = min_y > 8 ? 0 : 8 - min_y;
+    CBoffsetYMin = min_y <= 8 ? 0 : 8 - min_y;
     CBoffsetYMax = max_y > 0x78 ? 0 : 0x78 - max_y;
     CBoffsetX = CasseBriqueOffsetX[NoCB];
     CBoffsetY = 0;
@@ -755,19 +772,12 @@ void init_briques(obj_t *obj)
         if (byte_93fa20 == GameModeVideo)
             CBoffsetY = CasseBriqueOffsetX[NoCB];
     }
-    LIMITE_GAUCHE = 0x38 - ray.offset_bx;
-    XOFFSETCBRIGHT = 0x108 - ray.offset_bx;
-    XOFFSETRAY = -8;
-    LIMITE_DROITE = 0x108 - ray.offset_bx - 8;
-    YOFFSETCB = 0x20;
-    XOFFSETCBLEFT = 0x20;
-    NoCBInit = 0;
     NbClassicBrik = 0;
 
     for (i = 0; i < 20; i++) {
         brick = level.objects + CasseBrique[i].object_index;
-        brick->x = xmap + CBoffsetX + CasseBrique[i].x - brick->offset_bx;
-        brick->y = ymap + CBoffsetY + CasseBrique[i].y - brick->offset_by;
+        brick->x = xmap + CasseBrique[i].x - brick->offset_bx + CBoffsetX;
+        brick->y = CasseBrique[i].y + ymap - brick->offset_by + CBoffsetY;
         brick->is_active = 1;
         brick->flags.alive = 1;
         brick->param = CasseBrique[i].kind;
@@ -776,14 +786,11 @@ void init_briques(obj_t *obj)
         brick->display_prio = 4;
         brick->speed_x = 0;
         brick->speed_y = 0;
-        if (brick->param == 4)
-            brick->hit_points = 20;
-        if (brick->param == 1)
-            NbClassicBrik++;
-        else if (brick->param == 2)
-            InvadersMode = 2;
-        else if (brick->param == 3)
-            brick->hit_points = 20;
+        switch (brick->param) {
+        case 1: case 2: case 3: NbClassicBrik++; break;
+        case 4: brick->hit_points = 20; break;
+        case 7: InvadersMode = 2; break;
+        }
         frame_briques(brick);
     }
     NbBrikTouched = 0;
@@ -802,81 +809,67 @@ void reset_briques(void)
 
 void casse_brique_init(obj_t *obj)
 {
-    s16 angle;
-
     ray_mode = 5;
     exit_casse_brique();
     enter_casse_brique2();
-    if (GameModeVideo == 0)
-        xmap = 0;
-    else
-        xmap = -5;
-    scroll_start_x = xmap;
+    if (GameModeVideo == 0) xmap = 0;
+    else xmap = -5;
     scroll_end_x = xmap;
-
+    scroll_start_x = xmap;
     CBoffsetY = 0;
     CBoffsetX = CasseBriqueOffsetX[NoCB];
-    Xdir = 0;
-    Ydir = 0;
     YOFFSETCB = 0;
-    if (GameModeVideo == 0) {
-        xmap += 8;
-        LIMITE_GAUCHE = 0x38 - ray.offset_bx;
-        XOFFSETCBRIGHT = 0x100 - ray.offset_bx;
-        XOFFSETCBLEFT = 0x20;
-        LIMITE_DROITE = 0xf8 - ray.offset_bx;
-        XOFFSETRAY = -8;
-    } else {
-        ymap -= 8;
+    XOFFSETRAY = 56;
+    LIMITE_GAUCHE = 56 - ray.offset_bx - 8;
+    ymap = 24;
+    scroll_end_y = 24;
+    scroll_start_y = 24;
+    LIMITE_DROITE = 264 - ray.offset_bx - 8;
+    XOFFSETCBLEFT = 32;
+    XOFFSETCBRIGHT = 32;
+    if (GameModeVideo == 0) xmap += 8;
+    else {
+        CBoffsetX -= 8;
         if (byte_93fa20 == 1) {
             CBoffsetY = CasseBriqueOffsetY[NoCB];
             YOFFSETCB = 10;
         }
         XOFFSETRAY = -8;
-        XOFFSETCBRIGHT = 0x18;
-        XOFFSETCBLEFT = 0x28;
-        LIMITE_GAUCHE = 0x28 - ray.offset_bx;
-        LIMITE_DROITE = 0xf8 - ray.offset_bx;
+        XOFFSETCBLEFT -= 8;
+        XOFFSETCBRIGHT += 8;
+        LIMITE_GAUCHE -= 8;
+        LIMITE_DROITE -= 8;
     }
-
     obj->display_prio = 0;
     speed_ball_null(obj);
-    ray.y = ymap + 0xc0 - ray.offset_by;
-    if (num_world == 2) {
-        angle = myRand(obj->animations[0].frames_count - 1);
-        NoCB = angle;
-        NoCBInit = angle;
+    ray.y = ymap + 192 - ray.offset_by;
+    if (map_time == 2) {
+        NoCB = myRand(obj->animations[2].frames_count - 1);
+        NoCBInit = NoCB;
         obj->hit_points = 3;
         init_briques(obj);
-        set_main_and_sub_etat(&ray, 3, 2);
-    } else if (num_world == 0x32) {
-        obj->hit_points = 1;
-        obj->iframes_timer = 0;
-        set_main_and_sub_etat(&ray, 0, 1);
-    }
-
+        set_main_and_sub_etat(&ray, 3, 1);
+    } else if (map_time == 50) set_main_and_sub_etat(obj, 0, 1);
 }
 
 void casse_brique_start(obj_t *obj)
 {
-    s16 x;
     s16 y;
-    s16 w;
     s16 h;
+    s16 x;
+    s16 w;
 
     Ydir = 0;
     Xdir = 0;
     if (!((ray.main_etat == 0 && ray.sub_etat == 4) ||
-          (ray.main_etat == 1 && ray.sub_etat == ray.main_etat)))
-        return;
+        (ray.main_etat == 1 && ray.main_etat == ray.sub_etat)))
+    return;
 
     speed_ball_null(obj);
     GET_SPRITE_POS(&ray, 1, &x, &y, &w, &h);
-    if (ray.flags.flip_x)
-        x = 0;
-    else
-        x -= 2;
-    set_ball_pos(obj, x - obj->offset_bx, y + h - obj->offset_by);
+    x += (ray.flags.flip_x == 0 ? w - 2 : 0) - obj->offset_by;
+    y -= obj->offset_by + 5;
+    set_ball_pos(obj, x, y);
     if (obj->display_prio == 0) {
         DO_NOVA(obj);
         PlaySnd_old(0xc2);
@@ -906,26 +899,21 @@ u8 ray_face_brik(s16 x)
     delta = x - (ray.screen_x + ray.offset_bx);
     if ((ray.flags.flip_x && delta >= 0) ||
         (!ray.flags.flip_x && delta <= 0))
-        return 1;
+    return 1;
     return 0;
 }
 
 void casse_brique_play(obj_t *obj)
 {
-    s16 ball_x_screen;
-    s16 ball_y_screen;
-    s16 ray_x;
-    s16 ray_y;
-    s16 ray_w;
-    s16 ray_h;
-
+    s16 x, y;
     if (NbClassicBrik == 0) {
         obj->display_prio = 0;
-        speed_ball_null(obj);
         obj->iframes_timer--;
+        speed_ball_null(obj);
         if (obj->iframes_timer == 0) {
             reset_briques();
             NoCB++;
+            if (NoCB > obj->animations[2].frames_count - 1) NoCB = 0;
             if (NoCB == NoCBInit) {
                 obj->iframes_timer = 100;
                 set_main_and_sub_etat(obj, 0, 4);
@@ -936,79 +924,53 @@ void casse_brique_play(obj_t *obj)
                 PlaySnd_old(0x69);
             }
         }
-        return;
-    }
-
-    ball_x_screen = (s16)(obj->x - xmap + obj->offset_bx + 8);
-    ball_y_screen = (s16)(obj->y - ymap + obj->offset_by);
-    if (ball_x_screen + 8 >= LIMITE_DROITE) {
-        if (LastTouched != 0x16) {
-            invert_speed_ball_x(obj);
-            LastTouched = 0x16;
-            undestroy = 0;
-            PlaySnd_old(0x2d);
-        }
-        return;
-    }
-    if (ball_x_screen - 8 <= LIMITE_GAUCHE) {
-        if (LastTouched != 0x15) {
-            invert_speed_ball_x(obj);
-            LastTouched = 0x15;
-            undestroy = 0;
-            PlaySnd_old(0x2d);
-        }
+    } else {
+        x = (s16)obj->x - xmap + obj->offset_bx + 8;
+        y = (s16)obj->y - ymap + obj->offset_by;
+        if (x + 8 >= 320 - XOFFSETCBRIGHT) {
+            if (LastTouched != 22) {
+                invert_speed_ball_x(obj);
+                LastTouched = 22;
+                undestroy = 0;
+                PlaySnd_old(45);
+            }
+        } else if (x - 8 <= XOFFSETCBLEFT) {
+            if (LastTouched != 21) {
+                invert_speed_ball_x(obj);
+                LastTouched = 21;
+                undestroy = 0;
+                PlaySnd_old(45);
+            }
+        } else if (y - 8 <= YOFFSETCB) {
+            if (LastTouched != 23) {
+                invert_speed_ball_y(obj);
+                LastTouched = 23;
+                if (undestroy != 0) undestroy++;
+                PlaySnd_old(45);
+                upscreen = 1;
+            }
+        } else if (y + 8 > ray.screen_y + 64) {
+            if (ray.speed_x != 0 && ray_face_brik(x) &&
+                ((ray.main_etat == 0 && ray.sub_etat == 4) ||
+                (ray.main_etat == 1 && ray.main_etat == ray.sub_etat))) {
+                set_main_and_sub_etat(&ray, 3, 17);
+            } else if (y >= 200 - YOFFSETCB) {
+                set_main_and_sub_etat(obj, 0, 3);
+                obj->display_prio = 0;
+                speed_ball_null(obj);
+                if (InvadersMode == 1) InvadersMode = 2;
+            } else collision_rayman(obj);
+        } else if (collision_briques(obj) == 0) collision_rayman(obj);
         move_ball(obj);
         do_bonus();
-        return;
     }
-    if (ball_y_screen - 8 <= YOFFSETCB) {
-        if (LastTouched != 0x17) {
-            invert_speed_ball_y(obj);
-            if (undestroy != 0)
-                undestroy++;
-            LastTouched = 0x17;
-            PlaySnd_old(0x2d);
-            upscreen = 1;
-        }
-        move_ball(obj);
-        do_bonus();
-        return;
-    }
-    if (ball_y_screen + 8 > 0xc8 - XOFFSETCBLEFT) {
-        if (!ray_face_brik(ball_x_screen) || ray.speed_x == 0) {
-            set_main_and_sub_etat(obj, 0, 3);
-            obj->display_prio = 0;
-            speed_ball_null(obj);
-            if (InvadersMode == 1)
-                InvadersMode = 2;
-            move_ball(obj);
-            do_bonus();
-            return;
-        }
-        set_main_and_sub_etat(&ray, 3, 0x11);
-        move_ball(obj);
-        do_bonus();
-        return;
-    }
-
-    if (collision_briques(obj) == 0)
-        collision_rayman(obj);
-    GET_SPRITE_POS(&ray, 1, &ray_x, &ray_y, &ray_w, &ray_h);
-    (void)ray_x;
-    (void)ray_y;
-    (void)ray_w;
-    (void)ray_h;
-    move_ball(obj);
-    do_bonus();
 }
 
 void casse_brique_end(obj_t *obj)
 {
-    obj_t *brick;
 
     if (BonusMode == 2) {
-        brick = level.objects + CasseBrique[BonusBrik].object_index;
-        brick->param = BonusBrikType;
+        (level.objects + CasseBrique[BonusBrik].object_index)->param = BonusBrikType;
     }
     BonusMode = 0;
     obj->hit_points--;
@@ -1046,31 +1008,54 @@ void casse_brique_done(obj_t *obj)
 
 void DISPLAY_FIXE_CB(obj_t *obj)
 {
-    s16 i;
-    s16 x;
-
-    if (obj->hit_points > 1) {
-        x = 0xc8;
-        if (GameModeVideo == 1 && byte_93fa20 == GameModeVideo)
-            x = 0xc0;
+    s16 y, x;
+    s32 icon_x;
+    s32 icon_y;
+    u8 i;
+    obj_t *digits;
+    char text[20];
+    if (obj->hit_points > 0) {
+        y = 320;
+        x = 200;
+        if (GameModeVideo == 1 && GameModeVideo == byte_93fa20) {
+            y = 317;
+            x = 192;
+        }
         for (i = 1; i < obj->hit_points; i++)
-            display_sprite(obj, 0x0b, x - i * 20, 11, 1);
+            display_sprite(obj, 11, y - 28, x - i * 20, 1);
     }
-
-    if (NbBrikTouched <= 20) {
-        display_sprite(obj, 0x39, 0xa0, 0xaf + NbBrikTouched / 10, 1);
-        display_sprite(obj, 0x39, 0xa0, 0x27 + NbBrikTouched / 10, 1);
+    if (NbClassicBrik <= 20) {
+        icon_x = 16;
+        icon_y = 175;
+        if (GameModeVideo == 1 && GameModeVideo == byte_93fa20) {
+            icon_x = 12;
+            icon_y = 169;
+        }
+        digits = level.objects + sbar_obj_id;
+        display_sprite(digits, 57, icon_x - 2, icon_y, 1);
+        display_sprite(digits, 28 + NbClassicBrik / 10, icon_x + 39, icon_y, 1);
+        display_sprite(digits, 28 + NbClassicBrik % 10, icon_x + 54, icon_y, 1);
     }
-
-    if (obj->sub_etat == 1)
-        display_text("BRICKS", 0xa0, 0x64, 0, 0);
-    else if (obj->sub_etat == 4)
-        display_text("GAME OVER", 0xa0, 0x64, 0, 0);
+    if (obj->main_etat == 0) {
+        switch (obj->sub_etat) {
+        case 1:
+            if ((map_time & 63) < 32) {
+                sprintf(text, "/%s/", language_txt[188]);
+                display_text(text, 160, 100, 0, 0);
+                display_text(language_txt[180], 160, 150, 2, 0);
+            }
+            break;
+        case 4:
+            if (cbout != 0) display_text(language_txt[128], 160, 100, 0, 0);
+            else if (obj->hit_points == 0) display_text(language_txt[128], 160, 100, 0, 0);
+            else display_text(language_txt[157], 160, 100, 0, 0);
+            break;
+        }
+    }
 }
 
 void DO_CB_BALL_COMMAND(obj_t *obj)
 {
-    u8 sub_etat;
 
     if (TOUCHE(1) && cbout == 0) {
         obj->hit_points = 0;
@@ -1079,17 +1064,16 @@ void DO_CB_BALL_COMMAND(obj_t *obj)
         set_main_and_sub_etat(obj, 0, 4);
         PlaySnd_old(0x16);
     }
-    if (obj->main_etat != 0)
-        return;
-    sub_etat = obj->sub_etat;
-    if (sub_etat == 10 || sub_etat > 4)
-        return;
-    switch (sub_etat) {
-    case 0: casse_brique_init(obj); break;
-    case 1: casse_brique_start(obj); break;
-    case 2: casse_brique_play(obj); break;
-    case 3: casse_brique_end(obj); break;
-    case 4: casse_brique_done(obj); break;
+    if (obj->main_etat == 0) {
+
+        if (obj->sub_etat != 10)
+            switch (obj->sub_etat) {
+        case 0: casse_brique_init(obj); break;
+        case 1: casse_brique_start(obj); break;
+        case 2: casse_brique_play(obj); break;
+        case 3: casse_brique_end(obj); break;
+        case 4: casse_brique_done(obj); break;
+        }
     }
 }
 
@@ -1101,63 +1085,43 @@ void DO_CB_BRIK_COMMAND(obj_t *obj)
 
 void DO_RAY_CASSE_BRIQUE(void)
 {
-    s16 speed;
-    u8 can_steer;
-
-    can_steer = (u8)((ray.main_etat == 0 && ray.sub_etat == 4) ||
-                     (ray.main_etat == 1 && ray.sub_etat == ray.main_etat));
-    if (can_steer && rightjoy()) {
-        if (!ray.flags.flip_x) {
-            ray.flags.flip_x = 1;
-            ray.speed_x = -ray.speed_x;
-        }
-        if (ray.main_etat == 0 && ray.sub_etat == 4) {
-            set_main_and_sub_etat(&ray, 1, 0x10);
-            ray.speed_x = 0x10;
+    if ((ray.main_etat == 0 && ray.sub_etat == 4) ||
+        (ray.main_etat == 1 && ray.main_etat == ray.sub_etat)) {
+        if (rightjoy()) {
+            if (!ray.flags.flip_x) {
+                ray.flags.flip_x = 1;
+                ray.speed_x = -ray.speed_x;
+            }
+            if (ray.main_etat == 0 && ray.sub_etat == 4) {
+                set_main_and_sub_etat(&ray, 1, 1);
+                ray.speed_x = 16;
+            } else ray.speed_x = MIN(47, ray.speed_x + 1);
+        } else if (leftjoy()) {
+            if (ray.flags.flip_x) {
+                ray.flags.flip_x = 0;
+                ray.speed_x = -ray.speed_x;
+            }
+            if (ray.main_etat == 0 && ray.sub_etat == 4) {
+                set_main_and_sub_etat(&ray, 1, 1);
+                ray.speed_x = -16;
+            } else ray.speed_x = MAX(-47, ray.speed_x - 1);
         } else {
-            speed = ray.speed_x + 1;
-            if (speed > 0x2f)
-                speed = 0x2f;
-            ray.speed_x = speed;
+            if (ray.speed_x > 0) ray.speed_x = MAX(0, ray.speed_x - 1);
+            else if (ray.speed_x < 0) ray.speed_x = MIN(0, ray.speed_x + 1);
+            if (abs(ray.speed_x) < 16) set_main_and_sub_etat(&ray, 0, 4);
         }
-    } else if (can_steer && leftjoy()) {
-        if (ray.flags.flip_x) {
-            ray.flags.flip_x = 0;
-            ray.speed_x = -ray.speed_x;
-        }
-        if (ray.main_etat == 0 && ray.sub_etat == 4) {
-            set_main_and_sub_etat(&ray, 1, (u8)-16);
-            ray.speed_x = -0x10;
-        } else {
-            speed = ray.speed_x - 1;
-            if (speed < -0x2f)
-                speed = -0x2f;
-            ray.speed_x = speed;
-        }
-    } else if (can_steer && ray.speed_x > 0) {
-        ray.speed_x--;
-    } else if (can_steer && ray.speed_x < 0) {
-        ray.speed_x++;
-    }
-
-    if ((ray.main_etat == 3 && ray.sub_etat == 0x12) ||
-        (ray.main_etat == 0 && ray.sub_etat == 0x14)) {
+    } else if ((ray.main_etat == 3 && ray.sub_etat == 18) ||
+        (ray.main_etat == 0 && ray.sub_etat == 20)) {
         SET_X_SPEED(&ray);
-        if (but0pressed())
-            set_main_and_sub_etat(&ray, 0, 4);
-    } else if (ray.main_etat == 3 && ray.sub_etat == 0x11) {
-        SET_X_SPEED(&ray);
-    }
-
-    if (ray.x <= LIMITE_GAUCHE && ray.speed_x < 0) {
+        if (but0pressed()) set_main_and_sub_etat(&ray, 0, 4);
+    } else if (ray.main_etat == 3 && ray.sub_etat == 17) SET_X_SPEED(&ray);
+    if (LIMITE_GAUCHE >= ray.x && ray.speed_x < 0) {
         ray.x = LIMITE_GAUCHE;
         ray.speed_x = 0;
-    } else if (ray.x >= LIMITE_DROITE && ray.speed_x > 0) {
+    } else if (LIMITE_DROITE <= ray.x && ray.speed_x > 0) {
         ray.x = LIMITE_DROITE;
         ray.speed_x = 0;
-    } else {
-        ray.x += instantSpeed(ray.init_y);
-    }
+    } else ray.x += instantSpeed(ray.speed_x);
     GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_y, &ray_zdc_w, &ray_zdc_h);
     DO_COLLISIONS();
     DO_ANIM(&ray);

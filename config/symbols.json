@@ -9096,6 +9096,18 @@
     "type": "char[]",
     "name": "ANDROID",
     "evidence": "DOS DO_STAGE_NAMES strcpy destination and indexed byte accesses; name from Android, extent OPEN"
+   },
+   "sbar_obj_id": {
+    "addr": "2:3f87e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Android .bss size 2; Rayverse CF87E; DISPLAY_FIXE_CB DOS load at 1:18650 has -2 short-load addend."
+   },
+   "CBCollis": {
+    "addr": "2:4e75c",
+    "type": "cb_collision_t[1]",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 8. DOS collision_briques writes s16 dx/dy +0/+2 and byte flags +4/+5, index +6 at 8-byte stride."
    }
   }
  }

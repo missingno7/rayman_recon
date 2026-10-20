@@ -5508,7 +5508,7 @@
      ]
     },
     "casse_brique_start": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -5526,7 +5526,7 @@
      ]
     },
     "casse_brique_end": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -5544,7 +5544,7 @@
      ]
     },
     "DO_CB_BALL_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -5561,6 +5561,9 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   },
   "jumelle": {
