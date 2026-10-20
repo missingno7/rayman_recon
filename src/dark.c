@@ -1,13 +1,15 @@
 /*
  * Mr Dark boss (GOG v1.21 object 1:22a70-1:240f0). File name invented (Rayverse dark.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: 16/22 STRICT; six functions remain NEAR_MATCH.
+ * Detailed evidence and negative results: NOTES.md in this directory.
  */
 #include "obj.h"
 #include "game.h"
+#include <stdlib.h>
+#include <stdlib.h>
 
 #define TYPE_DARK_SORT 215
 #define TYPE_VITRAIL 247
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
 #define ashl16(value, amount) ((s32)(value) << (amount))
 #define SGN(value) ((value) >= 0 ? ((value) > 0 ? 1 : 0) : -1)
 
@@ -51,7 +53,7 @@ extern s16 dark_rayon_dy;
 extern u16 final_pass_n;
 extern u16 final_pass_a;
 extern u16 final_pass_f;
-extern u16 final_pass_x;
+extern s16 final_pass_x; /* DOS signed -60 coordinate; see NOTES.md. */
 extern u8 dark_phase;
 extern s16 scroll_start_x;
 extern s16 scroll_start_y;
@@ -59,6 +61,7 @@ extern s16 scroll_end_x;
 extern s16 scroll_end_y;
 extern u8 scrollLocked;
 extern u8 fin_boss;
+extern u8 TextDark2_Affiche;
 extern u8 ray_stack_is_full;
 extern u8 black_pos_in_stack;
 extern u8 ray_pos_in_stack;
@@ -140,13 +143,16 @@ void init_vitraux(void)
             i++;
             cur_obj++;
         } while (i < nb_objs);
-        }
+    }
 }
 
 u8 poing_face_obj(obj_t *obj)
 {
-    return (obj->x + obj->offset_bx > poing_obj->x + poing_obj->offset_bx) ==
-           poing_obj->flags.flip_x;
+    s32 diff_x = (obj->x + obj->offset_bx) - (poing_obj->x + poing_obj->offset_bx);
+    u8 facing = 0;
+    if ((diff_x > 0) == poing_obj->flags.flip_x)
+        facing = 1;
+    return facing;
 }
 
 void DARK_phase1(obj_t *mr_drk_obj)
@@ -163,6 +169,8 @@ void DARK_phase1(obj_t *mr_drk_obj)
             set_main_and_sub_etat(poing_obj, 5, 64);
             poing_obj->x = crd_drk_obj->x + crd_drk_obj->offset_bx - poing_obj->offset_bx;
             poing_obj->y = crd_drk_obj->y + crd_drk_obj->offset_by - poing_obj->offset_by - 5;
+            if (!poing_obj->is_active)
+                add_alwobj(poing_obj);
             poing_obj->flags.alive = 1;
             poing_obj->is_active = 1;
         }
@@ -179,7 +187,7 @@ void DARK_phase1(obj_t *mr_drk_obj)
             if (poing_obj_id != -1)
                 poing_obj->y = crd_drk_obj->y + crd_drk_obj->offset_by - poing_obj->offset_by - 5;
             if (EOA(mr_drk_obj)) {
-            if (--crd_drk_obj->param == 0)
+                if (--crd_drk_obj->param == 0)
                     set_main_and_sub_etat(mr_drk_obj, 0, 40);
                 else {
                     crd_drk_obj->iframes_timer = 0;
@@ -202,16 +210,15 @@ void DARK_phase1(obj_t *mr_drk_obj)
             break;
         case 26:
         case 28:
-            diff_x = (ray.x + ray.offset_bx) - (corde_x + crd_drk_obj->offset_bx);
-            diff_y = (ray.y + ray.offset_by) - (corde_y_bas + crd_drk_obj->offset_by);
+            diff_x = ((s16)ray.x + ray.offset_bx) - (corde_x + crd_drk_obj->offset_bx);
+            diff_y = ((s16)ray.y + ray.offset_by) - (corde_y_bas + crd_drk_obj->offset_by);
             dist = diff_x * diff_x + diff_y * diff_y;
-            unk_1 = Abs(diff_x) < 40 || dist < 3000;
+            unk_1 = abs(diff_x) < 40 || dist < 3000;
             switch (mr_drk_obj->sub_etat) {
             case 26:
-                if (unk_1 || (ray.main_etat == 2 && ray.sub_etat == 0))
-                    set_main_and_sub_etat(mr_drk_obj, 0, 27);
-                else if ((ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) &&
-                         Abs(diff_y) < 30 && dist < 3000)
+                if (unk_1 || (ray.main_etat == 2 && ray.sub_etat == 0) ||
+                    ((ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) &&
+                    abs(diff_y) < 30 && dist < 3000))
                     set_main_and_sub_etat(mr_drk_obj, 0, 27);
                 else if (crd_drk_obj->iframes_timer < 30 - 1) {
                     crd_drk_obj->y = corde_y_bas - oscille[crd_drk_obj->iframes_timer];
@@ -239,21 +246,18 @@ void DARK_phase1(obj_t *mr_drk_obj)
 void DARK_phase3(obj_t *mr_drk_obj)
 {
     obj_t *boss_obj;
-    s16 unk_1;
 
-    RayEvts.poing = 1;
     switch (type_dark_attaque) {
     case 0:
         if (stosko_obj_id != -1) {
             boss_obj = &level.objects[stosko_obj_id];
-            unk_1 = boss_obj->param;
-            if (unk_1 == 0) {
+            if (boss_obj->param == 0) {
                 boss_obj->param = 2;
                 allume_vitraux(vitrail_clignotement[0]);
                 flags[boss_obj->type].flags0 |= 0x80;
                 scrollLocked = 1;
                 allocateSTOSKO();
-            } else if (unk_1 == 1 && !boss_obj->is_active) {
+            } else if (boss_obj->param == 1 && !boss_obj->is_active) {
                 flags[boss_obj->type].flags0 &= 0x7f;
                 scrollLocked = 0;
                 boss_obj->flags.alive = 0;
@@ -265,8 +269,7 @@ void DARK_phase3(obj_t *mr_drk_obj)
     case 1:
         if (moskitomama_droite_obj_id != -1) {
             boss_obj = &level.objects[moskitomama_droite_obj_id];
-            unk_1 = boss_obj->param;
-            if (unk_1 == 0) {
+            if (boss_obj->param == 0) {
                 boss_obj->param = 2;
                 if (moskitomama_gauche_obj_id != -1)
                     level.objects[moskitomama_gauche_obj_id].param = 2;
@@ -274,7 +277,7 @@ void DARK_phase3(obj_t *mr_drk_obj)
                 flags[boss_obj->type].flags0 |= 0x80;
                 scrollLocked = 1;
                 allocateMOSKITOMAMA();
-            } else if (unk_1 == 1 && !boss_obj->is_active) {
+            } else if (boss_obj->param == 1 && !boss_obj->is_active) {
                 flags[boss_obj->type].flags0 &= 0x7f;
                 scrollLocked = 0;
                 boss_obj->flags.alive = 0;
@@ -286,14 +289,13 @@ void DARK_phase3(obj_t *mr_drk_obj)
     case 2:
         if (moskitosaxo_obj_id != -1) {
             boss_obj = &level.objects[moskitosaxo_obj_id];
-            unk_1 = boss_obj->param;
-            if (unk_1 == 0) {
+            if (boss_obj->param == 0) {
                 boss_obj->param = 2;
                 allume_vitraux(vitrail_clignotement[2]);
                 flags[boss_obj->type].flags0 |= 0x80;
                 scrollLocked = 1;
                 allocateMOSKITOSAXO();
-            } else if (unk_1 == 1 && !boss_obj->is_active) {
+            } else if (boss_obj->param == 1 && !boss_obj->is_active) {
                 flags[boss_obj->type].flags0 &= 0x7f;
                 scrollLocked = 0;
                 boss_obj->flags.alive = 0;
@@ -311,12 +313,12 @@ void DARK_phase3(obj_t *mr_drk_obj)
 
 void DO_DARK_COMMAND(obj_t *mr_drk_obj)
 {
+    s16 dark_h;
     s16 dark_x;
     s16 dark_y;
     s16 dark_w;
-    s16 dark_h;
-    s16 sort_x;
     s16 sort_y;
+    s16 sort_x;
 
     if (mr_drk_obj->main_etat == 0) {
         if (mr_drk_obj->sub_etat == 39) {
@@ -336,83 +338,79 @@ void DO_DARK_COMMAND(obj_t *mr_drk_obj)
                 break;
             }
         }
-        if (mr_drk_obj->main_etat == 0) {
-            if (mr_drk_obj->sub_etat == 6) {
-                if (mr_drk_obj->anim_frame == 4)
-                    mr_drk_obj->speed_y = -4;
-                else if (dark_phase == 4) {
-                    if (EOA(mr_drk_obj))
-                        goto_phase5(mr_drk_obj);
-                } else if (EOA(mr_drk_obj)) {
-                    mr_drk_obj->is_active = 0;
-                    mr_drk_obj->flags.alive = 0;
-                }
-            } else if ((mr_drk_obj->sub_etat == 8 || mr_drk_obj->sub_etat == 10 ||
-                        mr_drk_obj->sub_etat == 12 || mr_drk_obj->sub_etat == 14 ||
-                        mr_drk_obj->sub_etat == 22 || mr_drk_obj->sub_etat == 23 ||
-                        mr_drk_obj->sub_etat == 24) && mr_drk_obj->anim_frame == 22) {
-                GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
-                dark_rayon_dx = -5;
-                dark_rayon_dy = 0;
-                sort_x = dark_x + (dark_w >> 1) - 96;
-                sort_y = dark_y + (dark_h >> 1) - 128;
-                switch (mr_drk_obj->sub_etat) {
-                case 8:
-                    allocate_DARK_SORT(sort_x, sort_y, 0, 1);
-                    break;
-                case 10:
-                    allocate_DARK_SORT(sort_x, sort_y, 1, 1);
-                    break;
-                case 12:
-                    allocate_DARK_SORT(sort_x, sort_y, 2, 1);
-                    break;
-                case 14:
-                    allocate_DARK_SORT(sort_x, sort_y, 3, 1);
-                    break;
-                case 22:
-                    byte_DF74C = 2;
-                    allume_vitraux(vitrail_clignotement[0]);
-                    allocate_DARK_SORT(sort_x, sort_y, 18, 3);
-                    allocate_DARK_SORT(sort_x, sort_y, 18, 5);
-                    break;
-                case 23:
-                    byte_DF74C = 2;
-                    allume_vitraux(vitrail_clignotement[1]);
-                    allocate_DARK_SORT(sort_x, sort_y, 19, 1);
-                    allocate_DARK_SORT(sort_x, sort_y, 19, 4);
-                    break;
-                case 24:
-                    byte_DF74C = 2;
-                    allume_vitraux(vitrail_clignotement[2]);
-                    allocate_DARK_SORT(sort_x, sort_y, 20, 1);
-                    allocate_DARK_SORT(sort_x, sort_y, 20, 2);
-                    break;
-                }
-            } else if (mr_drk_obj->main_etat == 0) {
-                if (mr_drk_obj->sub_etat == 15) {
-                    if (mr_drk_obj->anim_frame == 0) {
-                        if (horloge[mr_drk_obj->eta[mr_drk_obj->main_etat][mr_drk_obj->sub_etat].anim_speed & 0x0f] == 0) {
-                            DO_NOVA2(mr_drk_obj);
-                            mr_drk_obj->flags.flip_x = 1;
-                            mr_drk_obj->flags.alive = 1;
-                            mr_drk_obj->is_active = 1;
-                        }
-                    } else if (mr_drk_obj->anim_frame == 22) {
-                        GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
-                        dark_rayon_dx = -2;
-                        dark_rayon_dy = 0;
-                        allocate_DARK_SORT((s16)(dark_x + (dark_w >> 1) - 96),
-                                           (s16)(dark_y + (dark_h >> 1) - 128), 4, 1);
-                    }
-                } else if (mr_drk_obj->sub_etat == 21) {
-                    DARK_phase3(mr_drk_obj);
-                } else if (mr_drk_obj->sub_etat == 26 || mr_drk_obj->sub_etat == 27 ||
-                           mr_drk_obj->sub_etat == 28 || mr_drk_obj->sub_etat == 29 ||
-                           mr_drk_obj->sub_etat == 40) {
-                    DARK_phase1(mr_drk_obj);
-                }
-            }
+    }
+    if (mr_drk_obj->main_etat == 0 && mr_drk_obj->sub_etat == 6) {
+        if (mr_drk_obj->anim_frame == 4)
+            mr_drk_obj->speed_y = -4;
+        else if (dark_phase == 4) {
+            if (EOA(mr_drk_obj))
+                goto_phase5(mr_drk_obj);
+        } else if (EOA(mr_drk_obj)) {
+            mr_drk_obj->is_active = 0;
+            mr_drk_obj->flags.alive = 0;
         }
+    } else if (mr_drk_obj->main_etat == 0 && (mr_drk_obj->sub_etat == 8 || mr_drk_obj->sub_etat == 10 ||
+        mr_drk_obj->sub_etat == 12 || mr_drk_obj->sub_etat == 14 ||
+        mr_drk_obj->sub_etat == 22 || mr_drk_obj->sub_etat == 23 ||
+        mr_drk_obj->sub_etat == 24) && mr_drk_obj->anim_frame == 22) {
+        GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
+        dark_rayon_dx = -5;
+        dark_rayon_dy = 0;
+        sort_x = dark_x + (dark_w >> 1) - 96;
+        sort_y = dark_y + (dark_h >> 1) - 128;
+        switch (mr_drk_obj->sub_etat) {
+        case 8:
+            allocate_DARK_SORT(sort_x, sort_y, 0, 1);
+            break;
+        case 10:
+            allocate_DARK_SORT(sort_x, sort_y, 1, 1);
+            break;
+        case 12:
+            allocate_DARK_SORT(sort_x, sort_y, 2, 1);
+            break;
+        case 14:
+            allocate_DARK_SORT(sort_x, sort_y, 3, 1);
+            break;
+        case 22:
+            byte_DF74C = 2;
+            allume_vitraux(vitrail_clignotement[0]);
+            allocate_DARK_SORT(sort_x, sort_y, 18, 3);
+            allocate_DARK_SORT(sort_x, sort_y, 18, 5);
+            break;
+        case 23:
+            byte_DF74C = 2;
+            allume_vitraux(vitrail_clignotement[1]);
+            allocate_DARK_SORT(sort_x, sort_y, 19, 1);
+            allocate_DARK_SORT(sort_x, sort_y, 19, 4);
+            break;
+        case 24:
+            byte_DF74C = 2;
+            allume_vitraux(vitrail_clignotement[2]);
+            allocate_DARK_SORT(sort_x, sort_y, 20, 1);
+            allocate_DARK_SORT(sort_x, sort_y, 20, 2);
+            break;
+        }
+    } else if (mr_drk_obj->main_etat == 0 && mr_drk_obj->sub_etat == 15) {
+        if (mr_drk_obj->anim_frame == 0) {
+            if (horloge[mr_drk_obj->eta[mr_drk_obj->main_etat][mr_drk_obj->sub_etat].anim_speed & 0x0f] == 0) {
+                DO_NOVA2(mr_drk_obj);
+                mr_drk_obj->flags.flip_x = 1;
+                mr_drk_obj->flags.alive = 1;
+                mr_drk_obj->is_active = 1;
+            }
+        } else if (mr_drk_obj->anim_frame == 22) {
+            GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
+            dark_rayon_dx = -2;
+            dark_rayon_dy = 0;
+            allocate_DARK_SORT((s16)(dark_x + (dark_w >> 1) - 96),
+                (s16)(dark_y + (dark_h >> 1) - 128), 4, 1);
+        }
+    } else if (mr_drk_obj->main_etat == 0 && mr_drk_obj->sub_etat == 21) {
+        DARK_phase3(mr_drk_obj);
+    } else if (mr_drk_obj->main_etat == 0 && (mr_drk_obj->sub_etat == 26 || mr_drk_obj->sub_etat == 27 ||
+        mr_drk_obj->sub_etat == 28 || mr_drk_obj->sub_etat == 29 ||
+        mr_drk_obj->sub_etat == 40)) {
+        DARK_phase1(mr_drk_obj);
     }
 }
 
@@ -455,36 +453,37 @@ void DO_DARK_SORT_COMMAND(obj_t *ds_obj)
             br_obj = &level.objects[black_ray_obj_id];
             if (ds_obj->iframes_timer == 1) {
                 ds_obj->iframes_timer = 0;
-                br_obj->hit_points = 0xfe;
                 br_obj->flags.flip_x = 0;
+                br_obj->hit_points = 0xfe;
                 set_main_and_sub_etat(br_obj, 0, 0);
-                br_obj->x = ray.x;
-                br_obj->y = ray.y;
+                br_obj->x = 0;
+                br_obj->y = 0;
                 br_obj->init_x = ray.x;
                 br_obj->init_y = ray.y;
+
+                br_obj->flags.alive = 1;
+                br_obj->is_active = 1;
+                add_alwobj(br_obj);
                 br_obj->display_prio = 0;
                 ray_stack_is_full = 0;
                 ray_pos_in_stack = 0;
                 black_pos_in_stack = 0;
-                br_obj->flags.alive = 1;
-                br_obj->is_active = 1;
-                add_alwobj(br_obj);
             }
-            diff_x = (br_obj->init_x + br_obj->offset_bx) - (ds_obj->x + ds_obj->offset_bx);
-            diff_y = (br_obj->init_y + br_obj->offset_by) - (ds_obj->y + ds_obj->offset_by);
+            diff_x = (br_obj->init_x + br_obj->offset_bx) - ((s16)ds_obj->x + ds_obj->offset_bx);
+            diff_y = (br_obj->init_y + br_obj->offset_by) - ((s16)ds_obj->y + ds_obj->offset_by);
             if (ray_stack_is_full == 1 && black_pos_in_stack == 25)
                 ds_obj->hit_points = 0;
         } else {
             ds_obj->iframes_timer = 0;
-            diff_x = (ray.x + ray.offset_bx) - (ds_obj->x + ds_obj->offset_bx);
+            diff_x = ((s16)ray.x + ray.offset_bx) - ((s16)ds_obj->x + ds_obj->offset_bx);
             if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)
-                diff_y = (ray.y + ray.offset_by) - (ds_obj->y + ds_obj->offset_by);
+                diff_y = ((s16)ray.y + ray.offset_by) - ((s16)ds_obj->y + ds_obj->offset_by);
             else
                 diff_y = (ray.y + ray.offset_hy + ((ray.offset_by - ray.offset_hy) >> 1)) -
-                         (ds_obj->y + ds_obj->offset_by);
+                (ds_obj->y + ds_obj->offset_by);
         }
 
-        dist = Abs(diff_x) + Abs(diff_y);
+        dist = abs(diff_x) + abs(diff_y);
         if (dist > 0) {
             diff_x = ashl16(diff_x, 4) / dist;
             diff_y = ashl16(diff_y, 4) / dist;
@@ -492,8 +491,8 @@ void DO_DARK_SORT_COMMAND(obj_t *ds_obj)
         if (horloge[2] == 0) {
             dark_rayon_dx += SGN(diff_x - dark_rayon_dx);
             dark_rayon_dy += SGN(diff_y - dark_rayon_dy);
-            allocate_DARK_SORT(ds_obj->x + dark_rayon_dx, ds_obj->y + dark_rayon_dy,
-                               ds_obj->sub_etat, ds_obj->iframes_timer);
+            allocate_DARK_SORT((s16)ds_obj->x + dark_rayon_dx, (s16)ds_obj->y + dark_rayon_dy,
+                ds_obj->sub_etat, ds_obj->iframes_timer);
             ds_obj->hit_points = 0;
         }
     }
@@ -526,52 +525,51 @@ void DO_DARK_SORT_COLLISION(obj_t *obj)
 
 void allocate_DARK_SORT(s16 x, s16 y, s16 sub_etat, s16 iframes)
 {
-    s16 unk_1 = 0;
-    s16 unk_2;
+    s16 oldest_frame;
     obj_t *cur_obj = &level.objects[0];
-    s16 i = 0;
+    s16 scan_or_found = 0;
+    s16 selected_or_index = 0;
     s16 nb_objs = level.nb_objects;
 
     do {
         if (cur_obj->type == TYPE_DARK_SORT && !cur_obj->is_active)
-            unk_1 = 1;
+            scan_or_found = 1;
         cur_obj++;
-        i++;
-    } while (unk_1 == 0 && i < nb_objs);
+        selected_or_index++;
+    } while (scan_or_found == 0 && selected_or_index < nb_objs);
     cur_obj--;
-    if (unk_1 != 0) {
+    if (scan_or_found != 0) {
+        cur_obj->flags.alive = 1;
+        cur_obj->is_active = 1;
+        add_alwobj(cur_obj);
         cur_obj->x = x;
         cur_obj->y = y;
         cur_obj->hit_points = 1;
         cur_obj->iframes_timer = iframes;
         cur_obj->param = 0;
-        cur_obj->flags.alive = 1;
-        cur_obj->is_active = 1;
-        add_alwobj(cur_obj);
         set_main_and_sub_etat(cur_obj, 0, sub_etat);
         cur_obj->anim_frame = 0;
     } else {
-        unk_2 = 0;
+        oldest_frame = 0;
         cur_obj = &level.objects[0];
-        i = 0;
-        unk_1 = 0;
+        scan_or_found = selected_or_index = 0;
         do {
-            if (cur_obj->type == TYPE_DARK_SORT && unk_2 < cur_obj->anim_frame) {
-                unk_1 = i;
-                unk_2 = cur_obj->anim_frame;
+            if (cur_obj->type == TYPE_DARK_SORT && cur_obj->anim_frame > oldest_frame) {
+                selected_or_index = scan_or_found;
+                oldest_frame = cur_obj->anim_frame;
             }
             cur_obj++;
-            i++;
-        } while (i < nb_objs);
-        cur_obj = &level.objects[unk_1];
+            scan_or_found++;
+        } while (scan_or_found < nb_objs);
+        cur_obj = &level.objects[selected_or_index];
+        cur_obj->flags.alive = 1;
+        cur_obj->is_active = 1;
+        add_alwobj(cur_obj);
         cur_obj->x = x;
         cur_obj->y = y;
         cur_obj->hit_points = 1;
         cur_obj->iframes_timer = iframes;
         cur_obj->param = 0;
-        cur_obj->flags.alive = 1;
-        cur_obj->is_active = 1;
-        add_alwobj(cur_obj);
         set_main_and_sub_etat(cur_obj, 0, sub_etat);
         cur_obj->anim_frame = 0;
     }
@@ -595,13 +593,10 @@ void DoAnnuleDarkSortRaymanCollision(obj_t *obj)
 void corde_en_bas(void)
 {
     obj_t *obj;
-
     if (corde_dark_obj_id != -1) {
         obj = &level.objects[corde_dark_obj_id];
-        obj->x = corde_x;
-        obj->init_x = corde_x;
-        obj->y = corde_y_bas;
-        obj->init_y = corde_y_bas;
+        obj->init_x = obj->x = corde_x;
+        obj->init_y = obj->y = corde_y_bas;
     }
 }
 
@@ -617,6 +612,8 @@ void corde_en_haut(u8 show_fist)
             set_main_and_sub_etat(poing_obj, 5, 64);
             poing_obj->x = corde_dark_obj->x + corde_dark_obj->offset_bx - poing_obj->offset_bx;
             poing_obj->y = corde_dark_obj->y + corde_dark_obj->offset_by - poing_obj->offset_by - 5;
+            if (!poing_obj->is_active)
+                add_alwobj(poing_obj);
             poing_obj->flags.alive = 1;
             poing_obj->is_active = 1;
         }
@@ -625,11 +622,14 @@ void corde_en_haut(u8 show_fist)
 
 void init_corde(obj_t *obj)
 {
+    obj_t *corde;
     corde_y_bas = obj->y;
     corde_y_haut = ymap - 184;
     corde_x = 0;
-    if (corde_dark_obj_id != -1)
-        corde_y_haut = obj->y + obj->offset_by - level.objects[corde_dark_obj_id].offset_by - 148;
+    if (corde_dark_obj_id != -1) {
+        corde = &level.objects[corde_dark_obj_id];
+        corde_y_haut = (s16)obj->y + obj->offset_by - 184 - corde->offset_by + 36;
+    }
 }
 
 void goto_phase1(obj_t *mr_drk_obj)
@@ -676,8 +676,6 @@ void goto_phase2(obj_t *mr_drk_obj)
 
 void goto_phase3(obj_t *mr_drk_obj)
 {
-    s16 y;
-
     dark_phase = 3;
     scroll_end_x = 0;
     scroll_start_x = 0;
@@ -688,16 +686,13 @@ void goto_phase3(obj_t *mr_drk_obj)
     PlaceDarkPhase1et2(mr_drk_obj);
     init_corde(mr_drk_obj);
     corde_en_haut(0);
-    mr_drk_obj->x = 0;
-    mr_drk_obj->init_x = 0;
+    mr_drk_obj->init_x = mr_drk_obj->x = 0;
+    mr_drk_obj->is_active = 1;
     mr_drk_obj->speed_x = 0;
     mr_drk_obj->speed_y = 0;
-    mr_drk_obj->param = 0;
-    y = ymap - mr_drk_obj->offset_by - 20;
-    mr_drk_obj->y = y;
-    mr_drk_obj->init_y = y;
+    mr_drk_obj->init_y = mr_drk_obj->y = ymap - mr_drk_obj->offset_by - 20;
     mr_drk_obj->flags.alive = 1;
-    mr_drk_obj->is_active = 1;
+    mr_drk_obj->param = 0;
     set_main_and_sub_etat(mr_drk_obj, 0, 21);
     dark_attaque = 0;
     type_dark_attaque = dark_sequence[0];
@@ -705,8 +700,6 @@ void goto_phase3(obj_t *mr_drk_obj)
 
 void goto_phase5(obj_t *mr_drk_obj)
 {
-    s16 y;
-
     dark_phase = 5;
     scroll_end_x = 0;
     scroll_start_x = 0;
@@ -721,37 +714,33 @@ void goto_phase5(obj_t *mr_drk_obj)
         DO_NOVA(&ray);
         RAY_DEMIRAY();
     }
-    final_pass_n = 0;
+    mr_drk_obj->init_x = mr_drk_obj->x = 0;
+    mr_drk_obj->param = 0;
+    final_pass_x = -60;
     final_pass_a = 0;
     final_pass_f = 0;
-    final_pass_x = (u16)-60;
-    mr_drk_obj->x = 0;
-    mr_drk_obj->init_x = 0;
-    mr_drk_obj->param = 0;
-    y = ymap - mr_drk_obj->offset_by - 20;
-    mr_drk_obj->y = y;
-    mr_drk_obj->init_y = y;
+    mr_drk_obj->init_y = mr_drk_obj->y = ymap - mr_drk_obj->offset_by - 20;
     mr_drk_obj->flags.alive = 0;
     mr_drk_obj->is_active = 0;
+    final_pass_n = 0;
     fin_boss = 1;
     finBosslevel.mr_dark = 1;
+    TextDark2_Affiche = 1;
 }
 
 void DO_VITRAIL_COMMAND(obj_t *obj)
 {
     u8 index = (u8)obj->param;
-    u8 mode;
 
     if (index < 5) {
-        mode = VitrauxInfos[index].mode;
-        if (mode != 0) {
+        if (VitrauxInfos[index].mode != 0) {
             obj->display_prio = 4;
             VitrauxInfos[index].value--;
             if (VitrauxInfos[index].value == 0) {
                 VitrauxInfos[index].value = 100;
                 VitrauxInfos[index].mode--;
                 if (VitrauxInfos[index].mode == 0)
-                    obj->display_prio = 0;
+                    obj->display_prio = VitrauxInfos[index].mode;
             }
         } else {
             obj->display_prio = 0;
@@ -764,15 +753,13 @@ void DO_VITRAIL_COMMAND(obj_t *obj)
 void allume_vitraux(u8 *param_1)
 {
     u8 i;
-    u8 mode;
 
     i = 0;
     while (i < 5) {
-        mode = VitrauxInfos[i].mode;
-        if (mode == 0) {
+        if (VitrauxInfos[i].mode == 0) {
             VitrauxInfos[i].mode = param_1[i];
             VitrauxInfos[i].value = 100;
-            level.objects[VitrauxInfos[i].obj_id].anim_frame = mode;
+            level.objects[(u8)VitrauxInfos[i].obj_id].anim_frame = 0;
         }
         i++;
     }

@@ -5183,6 +5183,12 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //E4D98; DOS address 2:54d98"
+   },
+   "TextDark2_Affiche": {
+    "addr": "2:3fa89",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Android size 1; DOS goto_phase5 at 1:24018 stores AL=1 to 2:3fa89; Rayverse data.c //CFA89."
    }
   }
  }
