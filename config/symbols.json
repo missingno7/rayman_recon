@@ -2316,6 +2316,176 @@
     "addr": "1:254a4",
     "name_origin": "RAYVERSE/Android",
     "evidence": "DOS fix_numlevel calls at 1:6abad and 1:6ac97; tools/android.py DISPLAY_GAME_VIGNET confirms original function name (Android text size 114)."
+   },
+   "get_nb_zdc": {
+    "addr": "1:1b2d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b2d0"
+   },
+   "get_zdc_index": {
+    "addr": "1:1b2e0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b2e0"
+   },
+   "get_zdc": {
+    "addr": "1:1b2e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b2e8"
+   },
+   "get_ZDCPTR": {
+    "addr": "1:1b300",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b300"
+   },
+   "in_coll_sprite_list": {
+    "addr": "1:1b308",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b308"
+   },
+   "box_inter_v_line": {
+    "addr": "1:1b3b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b3b8"
+   },
+   "box_inter_h_line": {
+    "addr": "1:1b3f4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b3f4"
+   },
+   "GET_OBJ_ZDC": {
+    "addr": "1:1b48c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1b48c"
+   },
+   "GET_SPRITE_ZDC": {
+    "addr": "1:1c028",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1c028"
+   },
+   "BOX_HIT_SPECIAL_ZDC": {
+    "addr": "1:1c33c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1c33c"
+   },
+   "BOX_IN_COLL_ZONES": {
+    "addr": "1:1c670",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1c670"
+   },
+   "COLL_BOX_SPRITE": {
+    "addr": "1:1ca84",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1ca84"
+   },
+   "CHECK_BOX_COLLISION": {
+    "addr": "1:1cb1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1cb1c"
+   },
+   "possible_sprite": {
+    "addr": "1:1cb9c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1cb9c"
+   },
+   "setToleranceDist": {
+    "addr": "1:1ce34",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1ce34"
+   },
+   "SET_RAY_DIST_SLOPEY_PLAT": {
+    "addr": "1:1cf14",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1cf14"
+   },
+   "SET_RAY_DIST_MULTISPR_CANTCHANGE": {
+    "addr": "1:1d0d4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d0d4"
+   },
+   "SET_RAY_DIST_PI": {
+    "addr": "1:1d334",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d334"
+   },
+   "SET_RAY_DIST_BAG": {
+    "addr": "1:1d3ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d3ec"
+   },
+   "SET_RAY_DIST": {
+    "addr": "1:1d4d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d4d0"
+   },
+   "do_boum": {
+    "addr": "1:1d5cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d5cc"
+   },
+   "DoPoingCollisionDefault": {
+    "addr": "1:1d858",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d858"
+   },
+   "COLL_BOX_ALL_SPRITES": {
+    "addr": "1:1d85c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d85c"
+   },
+   "COLL_RAY_PIC": {
+    "addr": "1:1d914",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1d914"
+   },
+   "COLL_RAY_BLK_MORTEL": {
+    "addr": "1:1da98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1da98"
+   },
+   "RAY_KO": {
+    "addr": "1:1dbac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1dbac"
+   },
+   "RAY_HIT": {
+    "addr": "1:1dbdc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1dbdc"
+   },
+   "standard_frontZone": {
+    "addr": "1:1df34",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1df34"
+   },
+   "SET_DETECT_ZONE_FLAG": {
+    "addr": "1:1df88",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1df88"
+   },
+   "goToRay": {
+    "addr": "1:1e738",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1e738"
+   },
+   "unleashMonsterHost": {
+    "addr": "1:1e998",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1e998"
+   },
+   "SHOW_COLLISIONS_ZONES": {
+    "addr": "1:1ea2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1ea2c"
+   },
+   "DO_COLLISIONS": {
+    "addr": "1:1eae8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1eae8"
+   },
+   "DoRaymanCollisionDefault": {
+    "addr": "1:1ed74",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse collision.c; DOS entry at 1:1ed74"
    }
   },
   "data": {
@@ -5194,6 +5364,42 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Android size 1; DOS goto_phase5 at 1:24018 stores AL=1 to 2:3fa89; Rayverse data.c //CFA89."
+   },
+   "ZDCPTR": {
+    "addr": "2:3f81c",
+    "name": "RAYVERSE",
+    "type": "u16",
+    "evidence": "Rayverse data.c //CF81C; DOS word load at 1:1b300; Android size 2"
+   },
+   "ObjectsFonctions": {
+    "addr": "2:35fc",
+    "name": "RAYVERSE",
+    "type": "obj_procs_t[262]",
+    "evidence": "Rayverse data.c //935FC; Android .bss size 5240 = 262 20-byte entries"
+   },
+   "dead_time": {
+    "addr": "2:3fa7e",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "Rayverse data.c //CFA7E; Android .bss size 1"
+   },
+   "ray_speed_inv": {
+    "addr": "2:3f83c",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "Rayverse data.c //CF83C; Android .bss size 2"
+   },
+   "in_air_because_hit": {
+    "addr": "2:3fa8c",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "Rayverse data.c //CFA8C; Android .bss size 1"
+   },
+   "jump_time": {
+    "addr": "2:3f8a4",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "Rayverse data.c //CF8A4; Android .bss size 2"
    }
   }
  }

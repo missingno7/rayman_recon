@@ -63,7 +63,7 @@ extern s16 ray_zdc_x;
 extern s16 ray_zdc_w;
 extern s16 ray_zdc_h;
 extern s16 ray_zdc_y;
-extern s16 slope_angle_table[16];
+extern s16 pente[16];
 extern s16 num_world;
 extern u8 block_flags[64];
 extern u32 flags[262];
@@ -974,7 +974,7 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
     angle = (s8)obj->change_anim_mode;
     if (angle < 0)
         angle = -angle;
-    slope_w = ((s32)cosinus(slope_angle_table[angle]) * spr_w) >> 9;
+    slope_w = ((s32)cosinus(pente[angle]) * spr_w) >> 9;
 
     slope_x1 = spr_x + ((spr_w - slope_w) >> 1);
     slope_x2 = slope_x1 + slope_w - 1;

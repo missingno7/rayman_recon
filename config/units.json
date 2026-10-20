@@ -3248,7 +3248,7 @@
    "profile": "game",
    "functions": {
     "get_nb_zdc": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3256,7 +3256,7 @@
      ]
     },
     "get_zdc_index": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3264,7 +3264,7 @@
      ]
     },
     "get_zdc": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3272,7 +3272,7 @@
      ]
     },
     "get_ZDCPTR": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3280,7 +3280,7 @@
      ]
     },
     "in_coll_sprite_list": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3288,7 +3288,7 @@
      ]
     },
     "box_inter_v_line": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3296,7 +3296,7 @@
      ]
     },
     "box_inter_h_line": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3312,7 +3312,7 @@
      ]
     },
     "GET_OBJ_ZDC": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3320,7 +3320,7 @@
      ]
     },
     "GET_SPRITE_ZDC": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3328,7 +3328,7 @@
      ]
     },
     "BOX_HIT_SPECIAL_ZDC": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3336,7 +3336,7 @@
      ]
     },
     "BOX_IN_COLL_ZONES": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3344,7 +3344,7 @@
      ]
     },
     "COLL_BOX_SPRITE": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3352,7 +3352,7 @@
      ]
     },
     "CHECK_BOX_COLLISION": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3360,7 +3360,7 @@
      ]
     },
     "possible_sprite": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3368,7 +3368,7 @@
      ]
     },
     "setToleranceDist": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3376,7 +3376,7 @@
      ]
     },
     "SET_RAY_DIST_SLOPEY_PLAT": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3384,7 +3384,7 @@
      ]
     },
     "SET_RAY_DIST_MULTISPR_CANTCHANGE": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3392,7 +3392,7 @@
      ]
     },
     "SET_RAY_DIST_PI": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3400,7 +3400,7 @@
      ]
     },
     "SET_RAY_DIST_BAG": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3408,7 +3408,7 @@
      ]
     },
     "SET_RAY_DIST": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3416,7 +3416,7 @@
      ]
     },
     "do_boum": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3432,7 +3432,7 @@
      ]
     },
     "DoPoingCollisionDefault": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3440,7 +3440,7 @@
      ]
     },
     "COLL_BOX_ALL_SPRITES": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3448,7 +3448,7 @@
      ]
     },
     "COLL_RAY_PIC": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3456,7 +3456,7 @@
      ]
     },
     "COLL_RAY_BLK_MORTEL": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3464,7 +3464,7 @@
      ]
     },
     "RAY_KO": {
-     "status": "UNPLACED",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3472,7 +3472,7 @@
      ]
     },
     "RAY_HIT": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3480,7 +3480,7 @@
      ]
     },
     "standard_frontZone": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3488,7 +3488,7 @@
      ]
     },
     "SET_DETECT_ZONE_FLAG": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3496,7 +3496,7 @@
      ]
     },
     "goToRay": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3504,7 +3504,7 @@
      ]
     },
     "unleashMonsterHost": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3512,7 +3512,7 @@
      ]
     },
     "SHOW_COLLISIONS_ZONES": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3520,7 +3520,7 @@
      ]
     },
     "DO_COLLISIONS": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3528,7 +3528,7 @@
      ]
     },
     "DoRaymanCollisionDefault": {
-     "status": "UNPLACED",
+     "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
