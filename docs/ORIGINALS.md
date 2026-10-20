@@ -10,12 +10,11 @@ Canonical hashes: `config/oracles.json`. Full per-file inventory (paths, sizes, 
 | `gog_v121_us` | **PRIMARY** matching oracle | `assets/GOG/RAYMAN.EXE` (428,743 B) | `599b1df2bda0aea8364161c0526d28c2ed70e881d57a4b52eebd7992ea009eb6` |
 | `dos_v112_us` | secondary DOS oracle | `assets/DOS/RAYMAN.EXE` = CD `RAYMAN/RAYMAN.EXE` (424,549 B) | `913a8d174a95ced8bf1a6b19475d1e23220fa02d4efc8ef6a38f8d1b6c54f6d6` |
 | `ps1_slus_00005` | supporting reference | PS1 Track 01 `SLUS-000.05` (700,416 B) | `36080c74â€¦5d66`, SHA-1 `4ac1789e118933762cd0ebcb9a970f63dfe2c72f` |
+| `android_apk` | supporting reference (names, data contents, x86 code semantics) | `assets/Android/com.ubisoft.raymananniversary-1.0.1-APK4Fun.com.apk` (35,270,794 B) | `44b5b8c8895fb1ba0d3c5f124f97bb259d91cccb95ef60d9b2bc3c3b7ee95fff` |
 
 Why GOG v1.21 is primary [PROVEN facts, chosen by judgement]: it is byte-identical to the GOG executable documented by
 rayman_disasm (same SHA-256), it is the version Rayverse annotates (Rayverse `//XXXXX` = obj1 offset + 0x10000,
 checked on myRand/EOA/reflexion), and it is the latest US PC build. v1.12 remains a verification target.
-
-| `android_apk` | supporting reference | `assets/Android/com.ubisoft.raymananniversary-1.0.1-APK4Fun.com.apk` | `44b5b8c8…fff` |
 
 ## What each asset tree is
 
