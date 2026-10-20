@@ -4182,7 +4182,7 @@
      ]
     },
     "DO_TOTEM_TOUCHE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4231,7 +4231,7 @@
      ]
     },
     "CreateFirstBBL": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4343,7 +4343,7 @@
      ]
     },
     "DO_BBMONT3_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
@@ -4364,7 +4364,7 @@
      ]
     },
     "DO_ECLAIR_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "seed",
       "worker"
