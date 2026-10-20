@@ -162,7 +162,12 @@ def segment_report(img, mod, seg_base, binds):
         else:
             o, b = next(iter(bases))
             ent["oracle"] = f"{o}:{b:05x}"
-            covered = bytes(seg.covered) == b"\x01" * seg.size
+            if b < 0 or b + seg.size > len(img.obj[o]):
+                ent["status"] = "MISMATCH"
+                ent["problem"] = f"segment ({seg.size} bytes at {o}:{b:x}) extends past the initialised bytes of oracle object {o}"
+                out.append(ent)
+                continue
+            covered =bytes(seg.covered) == b"\x01" * seg.size
             problems = []
             masked = set()
             cand_sites = set()

@@ -5092,6 +5092,111 @@
      ]
     }
    }
+  },
+  "objupdate3": {
+   "source": "src/objupdate3.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DO_PIRATE_POELLE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_PIRATE_POELLE_POING_COLLISION": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "PIRATE_POELLE_REACT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
+  },
+  "objupdate4": {
+   "source": "src/objupdate4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DO_SPECIAL_PLATFORM": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPlatformPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
+  },
+  "objinit": {
+   "source": "src/objinit.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "Prio": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "first_obj_init": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "obj_init": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "init_struct_level": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "INIT_OBJECTS": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "REINIT_OBJECT": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "special_flags_init": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
   }
  }
 }

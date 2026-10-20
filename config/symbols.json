@@ -3401,6 +3401,66 @@
     "addr": "1:70420",
     "name": "INVENTED",
     "evidence": "DOS direct call target at 1:4d60a; disassembly takes destination, byte value, and length then calls the fill routine"
+   },
+   "DO_PIRATE_POELLE": {
+    "addr": "1:53340",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "DO_PIRATE_POELLE_POING_COLLISION": {
+    "addr": "1:53610",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "PIRATE_POELLE_REACT": {
+    "addr": "1:5374c",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "DO_SPECIAL_PLATFORM": {
+    "addr": "1:53800",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "DoPlatformPoingCollision": {
+    "addr": "1:543bc",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "Prio": {
+    "addr": "1:4e160",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "first_obj_init": {
+    "addr": "1:4e640",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "init_struct_level": {
+    "addr": "1:4f1e8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "INIT_OBJECTS": {
+    "addr": "1:4f2d4",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "special_flags_init": {
+    "addr": "1:502c4",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 tumap/disasm public boundary; Rayverse/PS1 source name"
+   },
+   "swapGuetteurCollZones": {
+    "addr": "1:2db40",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 disasm at 1:2db40; function body selects Guetteur collision zones"
+   },
+   "bonus_taken": {
+    "addr": "1:642a8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 disasm public at 1:642a8; called by init_struct_level for collected-object filtering"
    }
   },
   "data": {
