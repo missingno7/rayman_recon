@@ -1,6 +1,6 @@
 /*
  * Clown enemies (GOG v1.21 object 1:1a940-1:1b2d0). File name invented (Rayverse clown.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: all 12 functions STRICT, contiguous _TEXT (see NOTES.md).
  */
 #include "obj.h"
 #include "game.h"
@@ -14,7 +14,6 @@
 #define TYPE_CLOWN_TNT 116
 #define TYPE_TNT_BOMB 119
 #define true 1
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
 
 extern obj_t ray;
 extern level_t level;
@@ -22,7 +21,7 @@ extern obj_t *poing_obj;
 extern s16 screen_trembling;
 
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
-u8 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
+s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 void SET_X_SPEED(obj_t *obj);
 void set_main_and_sub_etat(obj_t *obj, u8 etat, u8 sub_etat);
 void set_main_etat(obj_t *obj, u8 etat);
@@ -37,7 +36,8 @@ void allocatedrop(obj_t *obj);
 void DO_CLOWN_TNT_COMMAND(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 diff_x;
-    s16 offs_bx;
+    s32 offs_bx;
+    s32 center_x;
 
     if (obj->main_etat == 0 && obj->sub_etat == 2) {
         obj->speed_y = -8;
@@ -79,32 +79,30 @@ void DO_CLOWN_TNT_COMMAND(obj_t* obj) {
         } else if (!(obj->flags.flip_x)) {
             obj->speed_x = -3;
         }
-    } else if (diff_x >= -10) {
+    } else if (diff_x <= 10 && diff_x >= -10) {
         obj->speed_x = 0;
     }
 
-    offs_bx = obj->offset_bx;
     if (obj->flags.flip_x)
-        offs_bx += 16;
+        offs_bx = 16;
     else
-        offs_bx -= 16;
+        offs_bx = -16;
 
-    if (on_block_chdir(obj, offs_bx, obj->offset_by))
+    center_x = offs_bx + obj->offset_bx;
+    if (on_block_chdir(obj, center_x, obj->offset_by))
         obj->speed_x = 0;
 
-    if (obj->main_etat == 0) {
-        if (obj->sub_etat == 3) {
-            if (obj->y <= obj->init_y) {
-                obj->speed_y = 0;
-                obj->link = 0;
-                obj->y = obj->init_y;
-                skipToLabel(obj, 2, true);
-            }
-        } else if (obj->sub_etat == 6) {
-            if (obj->anim_frame > 15 && obj->link == 1) {
-                DO_CLOWN_TNT_ATTACK(obj);
-                obj->link = 2;
-            }
+    if (obj->main_etat == 0 && obj->sub_etat == 3) {
+        if (obj->y <= obj->init_y) {
+            obj->speed_y = 0;
+            obj->link = 0;
+            obj->y = obj->init_y;
+            skipToLabel(obj, 2, true);
+        }
+    } else if (obj->main_etat == 0 && obj->sub_etat == 6) {
+        if (obj->anim_frame > 15 && obj->link == 1) {
+            DO_CLOWN_TNT_ATTACK(obj);
+            obj->link = 2;
         }
     }
 
@@ -155,7 +153,9 @@ void DO_CLOWN_TNT2_COMMAND(obj_t* obj) {
 
 void DO_CLOWN_TNT3_COMMAND(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s16 diff_x; s16 diff_y;
+    s16 diff_x;
+    s16 link;
+    s16 diff_y;
 
     if (obj->main_etat == 0 && obj->sub_etat == 2) {
         obj->speed_y = -8;
@@ -182,7 +182,8 @@ void DO_CLOWN_TNT3_COMMAND(obj_t* obj) {
     }
     diff_x = (obj->x + obj->offset_bx) - ray.x - ray.offset_bx;
     diff_y = (ray.y + ray.offset_by) - obj->y - obj->offset_by;
-    if (obj->link == 0) {
+    link = obj->link;
+    if (link == 0) {
         if (diff_y >= 18) {
             if (diff_y < 40)
                 obj->speed_y = 1;
@@ -198,10 +199,10 @@ void DO_CLOWN_TNT3_COMMAND(obj_t* obj) {
                 if (abs_diff_x < 165)
                     obj->speed_y = 4;
                 else
-                    obj->speed_y = obj->link;
+                    obj->speed_y = link;
             }
         } else {
-            obj->speed_y = obj->link;
+            obj->speed_y = link;
         }
 
         if ((obj->flags.flip_x && diff_x > 90) || (!(obj->flags.flip_x) && diff_x < -90)) {
