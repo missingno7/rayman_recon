@@ -1344,7 +1344,7 @@
    "profile": "game",
    "functions": {
     "getIdealStingCoords": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -1379,7 +1379,7 @@
      ]
     },
     "allocateMoskitoFruit": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -1393,7 +1393,7 @@
      ]
     },
     "doMoskitoCommand": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -1407,7 +1407,7 @@
      ]
     },
     "changeMoskitoPhase": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -1421,7 +1421,7 @@
      ]
     },
     "DO_MST_SCROLL_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

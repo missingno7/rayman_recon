@@ -1,6 +1,6 @@
 /*
  * Moskito boss (GOG v1.21 object 1:43bc0-1:45480). File name invented (Rayverse moskito.c). Names: Rayverse/Android.
- * record_t is local until another unit needs it. Status per function: config/units.json.
+ * Worker candidate: per-function evidence and unresolved differences are in NOTES.md.
  */
 #include <stddef.h>
 #include "obj.h"
@@ -36,11 +36,12 @@ extern u8 *moskitoActionSequences[10];
 extern u8 bossEncounter, currentBossAction, currentBossActionIsOver;
 extern u8 saveBossEncounter, saveCurrentBossAction, bossReachingAccuracyX, bossReachingAccuracyY;
 extern u8 bossReachingTimer, bossSafeTimer, fin_boss;
-extern u8 MsAnimIndex;
+extern s16 MsAnimIndex;
 extern s16 remoteRayXToReach, bossXToReach, bossYToReach, floorLine, mst_scroll_obj_id;
 extern s32 Bloc_lim_H1;
 extern s32 alternateBossSpeedFactor, bossSpeedFactor;
-extern s16 scroll_x;
+extern s16 scroll_x, ray_mode, ray_wind_force;
+extern u8 boss_mort;
 extern u8 ModeDemo, horloge[25];
 extern obj_t ray;
 extern level_t level;
@@ -62,31 +63,30 @@ void obj_hurt(obj_t *obj);
 s16 testActionEnd(obj_t *obj);
 //53BC0
 void getIdealStingCoords(obj_t* obj, s16* out_x, s16* out_y) {
-    /* 6F914 80194114 -O2 -msoft-float */
-    s16 x;
-    s16 calc_y;
     s16 calc_x;
-
-    x = ray_zdc_x;
-    calc_y = ray_zdc_y + (ray_zdc_h >> 1);
-    calc_x = x + (ray_zdc_w >> 1) - obj->offset_bx;
-    *out_x = calc_x;
+    s16 calc_y;
+    calc_x = ray_zdc_x + (ray_zdc_w >> 1);
+    /* DOS 1:43bde..43bf4: halve ray_zdc_y, then add ray_zdc_h. */
+    /* DOS 1:43bde..43bf4: halve ray_zdc_y, then add ray_zdc_h. */
+    calc_y = ray_zdc_h + (ray_zdc_y >> 1);
+    *out_x = calc_x - obj->offset_bx;
     if (obj->flags.flip_x)
-        calc_x -= 48;
+        *out_x -= 48;
     else
-        calc_x += 48;
-    *out_x = calc_x;
+        *out_x += 48;
     *out_y = calc_y - 112;
 }
 
 //53C2C
 u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
-    /* 6F988 80194188 -O2 -msoft-float */
-    s16 sting_x; s16 sting_y;
+    /* Keep the short subtraction before the promoted absolute value. */
+    s16 sting_y; s16 sting_x;
 
     getIdealStingCoords(obj, &sting_x, &sting_y);
-    sting_x = Abs((s16) (sting_x - obj->x));
-    sting_y = Abs((s16) (sting_y - obj->y));
+    sting_x -= obj->x;
+    sting_x = Abs((s32)sting_x);
+    sting_y -= obj->y;
+    sting_y = Abs((s32)sting_y);
     if (sting_x < min_x && sting_y < min_y)
         return true;
     else
@@ -95,34 +95,30 @@ u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
 
 //53CAC
 u8 moskitoCanAttak(obj_t* obj) {
-    /* 6FB88 80194388 -O2 -msoft-float */
-    if (scrollLocked) {
+    if (!scrollLocked) {
+        if ((xmap >= bossScrollStartX - h_scroll_speed && xmap <= bossScrollEndX + h_scroll_speed) &&
+            (ymap >= bossScrollStartY - v_scroll_speed && ymap <= bossScrollEndY + v_scroll_speed))
+            scrollLocked = true;
+        else
+            scrollLocked = false;
+        if (scrollLocked) {
+            scroll_start_x = xmap;
+            scroll_end_x = xmap;
+            scroll_start_y = bossScrollStartY;
+            scroll_end_y = bossScrollEndY;
+        }
+    }
+    else {
         if (scroll_start_y < ymap)
             scroll_start_y = ymap;
         if (obj->timer != 0)
             --obj->timer;
         if (obj->scale != 0)
             --obj->scale;
-    } else {
-        if (
-                bossScrollStartX - h_scroll_speed <= xmap &&
-                bossScrollEndX + h_scroll_speed >= xmap &&
-                bossScrollStartY - v_scroll_speed <= ymap &&
-                bossScrollEndY + v_scroll_speed >= ymap
-        ) {
-            scrollLocked = true;
-        } else {
-            scrollLocked = false;
-        }
-
-        if (scrollLocked) {
-            scroll_start_x = bossScrollStartX;
-            scroll_end_x = bossScrollEndX;
-            scroll_start_y = bossScrollStartY;
-            scroll_end_y = bossScrollEndY;
-        }
     }
-    return scrollLocked && obj->timer == 0;
+    if (scrollLocked && obj->timer == 0)
+        return true;
+    return false;
 }
 
 //53DC4
@@ -132,19 +128,19 @@ s16 setMoskitoAtScrollBorder(obj_t* obj, u8 a2) {
 
     switch (a2) {
         case 0:
-            res = -1;
             obj->x = scroll_start_x - obj->offset_bx;
+            res = -1;
             obj->flags.flip_x = false;
             break;
         case 1:
+            obj->x = scroll_end_x + SCREEN_WIDTH - obj->offset_bx;
             res = 1;
-            obj->x = scroll_end_x - (obj->offset_bx - SCREEN_WIDTH);
             obj->flags.flip_x = true;
             break;
         default:
-            res = obj->offset_bx + obj->x - ((scroll_start_x + scroll_end_x + SCREEN_WIDTH) / 2);
-            if (res >= 1) {
-                obj->x = scroll_end_x - (obj->offset_bx - SCREEN_WIDTH);
+            res = obj->x + obj->offset_bx - ((scroll_start_x + scroll_end_x + SCREEN_WIDTH) / 2);
+            if (res > 0) {
+                obj->x = scroll_end_x + SCREEN_WIDTH - obj->offset_bx;
                 obj->flags.flip_x = false;
             } else {
                 obj->x = scroll_start_x - obj->offset_bx;
@@ -158,19 +154,16 @@ s16 setMoskitoAtScrollBorder(obj_t* obj, u8 a2) {
 //53F04
 void prepareNewMoskitoAttack(obj_t* mst_obj) {
     /* 6FDC8 801945C8 -O2 -msoft-float */
-    /* many heads were scratched that day */
     obj_t *cur_obj;
     s16 i;
-    s16 prev_flip_x;
+    u8 prev_flip_x;
     s32 temp_s0_2;
-    s32 unk_2;
-    s32 unk_1;
+    s16 unk_2;
     u8 curAct_tmp_1;
-    u8 nb_obj;
+    s16 nb_obj;
     s32 half_wid;
 
-    unk_1 = scroll_start_x + scroll_end_x + SCREEN_WIDTH;
-    unk_2 = (unk_1 - (unk_1 >> 31)) >> 1;
+    unk_2 = (scroll_end_x + scroll_start_x + SCREEN_WIDTH) / 2;
     while (currentBossActionIsOver)
     {
         curAct = moskitoActionSequences[bossEncounter][currentBossAction++];
@@ -246,6 +239,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                             mst_obj->animations = cur_obj->animations;
                             mst_obj->img_buffer = cur_obj->img_buffer;
                             mst_obj->eta = cur_obj->eta;
+                            mst_obj->nb_sprites = cur_obj->nb_sprites;
                             mst_obj->main_etat = cur_obj->main_etat;
                             mst_obj->sub_etat = cur_obj->sub_etat;
                             mst_obj->anim_index = cur_obj->anim_index;
@@ -274,8 +268,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                         scroll_start_x - (mst_obj->offset_bx - SCREEN_WIDTH / 2);
                 bossYToReach = floorLine - mst_obj->offset_by;
                 set_main_and_sub_etat(mst_obj, 2, 1);
-                skipToLabel(mst_obj, 2, true);
-                mst_obj->gravity_value_2 = 0; // NOTE: added in PC version
+                mst_obj->gravity_value_2 = 2;
+                skipToLabel(mst_obj, 2, true); // NOTE: added in PC version
                 bossReachingAccuracyX = 0xFF;
                 bossReachingAccuracyY = 0;
                 bossReachingTimer = 1;
@@ -283,8 +277,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 break;
             case 17: // recover after hit
                 half_wid = SCREEN_WIDTH / 2; /* TODO: ??? */
-                bossXToReach = scroll_start_x - (mst_obj->offset_bx - half_wid);
-                bossYToReach = floorLine - 230;
+                bossXToReach = scroll_start_x + half_wid - mst_obj->offset_bx;
+                bossYToReach = floorLine - 230 + (s16)Bloc_lim_H1;
                 set_main_and_sub_etat(mst_obj, 0, 6);
                 skipToLabel(mst_obj, 2, true);
                 bossReachingAccuracyX = 0xFF;
@@ -330,7 +324,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 }
                 break;
             case 23: // dying sequence: move up
-                remoteRayXToReach = scroll_start_x - mst_obj->offset_bx + 112;
+                remoteRayXToReach = scroll_start_x + 160 - mst_obj->offset_bx - 48;
                 if (ray.x & 1) /* ??? */
                     remoteRayXToReach |= 1;
                 else
@@ -354,7 +348,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
             case 4: // fly straight up, out of the screen
             block_52:
                 bossXToReach = mst_obj->x;
-                bossYToReach = Bloc_lim_H1 + scroll_start_y - 128; // NOTE: changed in PC version
+                bossYToReach = scroll_start_y + (s16)Bloc_lim_H1 - 128; // NOTE: changed in PC version
                 if (curAct == 4)
                     set_main_and_sub_etat(mst_obj, 0, 8);
                 else
@@ -379,7 +373,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 break;
             case 10: // fly down from the top of the screen toward Rayman (basic flying)
                 calc_obj_dir(mst_obj);
-                setMoskitoAtScrollBorder(mst_obj, mst_obj->flags.flip_x ^ 1);
+                setMoskitoAtScrollBorder(mst_obj, !mst_obj->flags.flip_x);
                 mst_obj->y = scroll_start_y - 128;
                 if (mst_obj->flags.flip_x)
                 {
@@ -426,7 +420,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 {
                     mst_obj->flags.flip_x = true;
                     mst_obj->x -= 48;
-                    bossXToReach = scroll_end_x - mst_obj->offset_bx + 368;
+                    bossXToReach = scroll_end_x + SCREEN_WIDTH - mst_obj->offset_bx + 48;
                 }
                 bossYToReach =
                 mst_obj->y =
@@ -451,7 +445,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 {
                     mst_obj->flags.flip_x = true;
                     mst_obj->x -= 96;
-                    bossXToReach = scroll_end_x - mst_obj->offset_bx + 384;
+                    bossXToReach = scroll_end_x + SCREEN_WIDTH - mst_obj->offset_bx + 64;
                 }
                 bossYToReach =
                 mst_obj->y =
@@ -468,7 +462,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
             case 19: // prepare to fly in fast from the side (high)
                 mst_obj->y = floorLine - 72;
                 if (curAct == 19)
-                    mst_obj->y = floorLine - 120;
+                    mst_obj->y -= 48;
 
                 if (setMoskitoAtScrollBorder(mst_obj, 2) > 0)
                 {
@@ -507,7 +501,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 else
                 {
                     mst_obj->flags.flip_x = true;
-                    bossXToReach = scroll_end_x - mst_obj->offset_bx + 368;
+                    bossXToReach = scroll_end_x + SCREEN_WIDTH - mst_obj->offset_bx + 48;
                 }
 
                 bossYToReach = mst_obj->y;
@@ -527,12 +521,11 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
 obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
     /* 70C64 80195464 -O2 -msoft-float */
     u8 spr_ind;
-    ObjType type_check;
+    u8 type_check;
     s16 i;
     obj_t* cur_obj;
     s16 nb_objs;
-    u16 cur_obj_type;
-    s16 unk_x; s16 unk_y; s16 unk_w; s16 unk_h;
+    s16 unk_h; s16 unk_w; s16 unk_y; s16 unk_x;
     obj_t* res = NULL;
 
     switch (mst2_obj->sub_etat)
@@ -551,8 +544,7 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
     cur_obj = &level.objects[i];
     nb_objs = level.nb_objects;
     while (i < (nb_objs)) {
-        cur_obj_type = cur_obj->type;
-        if (cur_obj_type == type_check && !cur_obj->is_active) {
+        if (cur_obj->type == type_check && !cur_obj->is_active) {
             cur_obj->flags.alive = true;
             cur_obj->is_active = true;
             add_alwobj(cur_obj);
@@ -561,7 +553,7 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
             cur_obj->y = unk_y - cur_obj->offset_hy;
             cur_obj->init_x = cur_obj->x;
             cur_obj->init_y = cur_obj->y;
-            switch (cur_obj_type)
+            switch (type_check)
             {
                 case TYPE_MST_FRUIT1:
                     cur_obj->param = 1;
@@ -585,8 +577,8 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
             res = cur_obj;
             break;
         }
-        cur_obj++;
         i++;
+        cur_obj++;
     }
 
     return res;
@@ -594,60 +586,28 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
 
 //54C9C
 void moskitoDropFruitOnRay(obj_t* obj) {
-    /* 70E50 80195650 -O2 -msoft-float */
-    s16 x_1;
-    s16 x_2;
-    u8 sub_etat;
-    s32 speed_x;
-    s16 y_1;
-    s16 cen_x;
-    s16 cen_y;
-    s16 unk_1;
-    s32 unk_2;
-    s16 unk_3;
-    s16 unk_4;
-
+    s16 x_1, x_2;
+    s16 y_1, cen_x, cen_y;
+    s16 distance, width, height;
     x_1 = obj->offset_bx + obj->x;
     x_2 = x_1;
-    sub_etat = obj->sub_etat;
-    if (sub_etat != 11)
-    {
-        if (sub_etat == 12)
-        {
-            speed_x = obj->speed_x;
-            if (speed_x < 0)
-                speed_x += 7;
-            speed_x = speed_x >> 3;
-            unk_1 = speed_x;
-            /* ??? */
-            unk_2 = (s32) (((u32) speed_x >> 31) + speed_x) >> 1;
-            x_1 -= unk_2;
-        }
+    switch (obj->sub_etat) {
+    case 12:
+        distance = ((obj->speed_x - ray.speed_x) * 2) / 16;
+        x_1 -= distance / 2;
+        break;
+    case 11:
+        distance = (obj->speed_x * 120) / 16;
+        break;
     }
-    else
-    {
-        unk_2 = obj->speed_x * 120;
-        unk_1 = unk_2 >> 4;
-        if (unk_2 < 0)
-            unk_1 = (unk_2 + 15) >> 4;
-    }
-
-    unk_3 = Abs(unk_1);
-    if (unk_1 < 0)
-        x_1 += unk_1;
+    width = Abs((s32)distance);
+    if (distance < 0) x_1 += distance;
     y_1 = obj->offset_by + obj->y;
-    unk_4 = scroll_end_y - scroll_start_y + SCREEN_HEIGHT;
+    height = scroll_end_y - scroll_start_y + SCREEN_HEIGHT;
     cen_x = ray_zdc_x + (ray_zdc_w >> 1);
-    cen_y = ray_zdc_y + (ray_zdc_h >> 1);
-    if (
-            scroll_start_x <= x_2 &&
-            scroll_end_x + SCREEN_WIDTH >= x_2 &&
-            cen_x >= x_1 &&
-            cen_y >= y_1 &&
-            cen_x <= x_1 + unk_3 &&
-            cen_y <= y_1 + unk_4
-            )
-    {
+    cen_y = ray_zdc_h + (ray_zdc_y >> 1);
+    if ((scroll_start_x <= x_2 && ray_wind_force + 304 >= x_2) &&
+        cen_x >= x_1 && cen_y >= y_1 && cen_x <= x_1 + width && cen_y <= y_1 + height) {
         allocateMoskitoFruit(obj);
         set_main_and_sub_etat(obj, 0, 16);
         bossYToReach -= 64;
@@ -665,17 +625,17 @@ void doMoskitoCommand(obj_t* obj) {
             bossSafeTimer--;
         if (!(obj->flags.hurtbyfist))
         {
-            if (obj->cmd == 2)
+            switch (obj->cmd)
             {
+            case 2:
                 if (MsAnimIndex == 14 && obj->anim_index == 0x0F)
-                    obj->flags.flip_x ^= 1;
+                    obj->flags.flip_x = !obj->flags.flip_x;
                 bossXToReach = -32000;
                 bossYToReach = -32000;
                 obj->speed_x = 0;
                 obj->speed_y = 0;
-            }
-            else
-            {
+                break;
+            default:
                 switch (curAct)
                 {
                     case 10:
@@ -703,7 +663,7 @@ void doMoskitoCommand(obj_t* obj) {
                             else
                                 obj->speed_y -= 80;
 
-                            if ((obj->x + obj->offset_bx) > (poing_obj->x + poing_obj->offset_bx))
+                            if ((obj->offset_bx + obj->x) > (poing_obj->offset_bx + poing_obj->x))
                                 obj->speed_x += 80;
                             else
                                 obj->speed_x -= 80;
@@ -711,7 +671,7 @@ void doMoskitoCommand(obj_t* obj) {
                         break;
                 }
                 setBossReachingSpeeds(obj, bossReachingTimer, bossReachingAccuracyX, bossReachingAccuracyY);
-                if (obj->main_etat == 0 && (u8) (obj->sub_etat - 0xB) < 2)
+                if (obj->main_etat == 0 && (obj->sub_etat == 12 || obj->sub_etat == 11))
                     moskitoDropFruitOnRay(obj);
             }
             testActionEnd(obj);
@@ -723,7 +683,7 @@ void doMoskitoCommand(obj_t* obj) {
 }
 
 //55054
-u8 tellNextMoskitoAction(obj_t* obj) {
+u8 tellNextMoskitoAction(void) {
     /* 71330 80195B30 -O2 -msoft-float */
     u8 *actions;
 
@@ -769,14 +729,14 @@ void changeMoskitoPhase(obj_t* obj) {
     enc_prev = *enc;
     if (obj->init_hit_points == 12)
     {
-        hp = obj->hit_points;
-        if (hp > 9)
+        
+        if (obj->hit_points > 9)
             *enc = 3;
-        else if (hp > 7)
+        else if (obj->hit_points > 7)
             *enc = 5;
-        else if (hp > 4)
+        else if (obj->hit_points > 4)
             *enc = 6;
-        else if (hp != 0)
+        else if (obj->hit_points > 0)
             *enc = 7;
         else
         {
@@ -792,8 +752,7 @@ void changeMoskitoPhase(obj_t* obj) {
 //55144
 void doMoskitoHit(obj_t* obj, s16 sprite) {
     /* 7151C 80195D1C -O2 -msoft-float */
-    s32 act_next;
-    s32 act_18;
+    u8 act_next;
     u8 hp;
     s32 dividend;
     s32 divisor;
@@ -805,19 +764,19 @@ void doMoskitoHit(obj_t* obj, s16 sprite) {
         bossSafeTimer = 0xFF;
         obj->flags.hurtbyfist = true;
         changeMoskitoPhase(obj);
-        act_next = tellNextMoskitoAction(obj);
-        act_18 = 18;
+        act_next = tellNextMoskitoAction();
         if (
                 act_next >= 7 &&
-                (act_next <= 10 || (act_next <= 21 && act_next >= act_18))
+                (act_next <= 10 || (act_next >= 18 && act_next <= 21))
                 )
             mstMustLeaveScreenToProceed = true;
 
         hp = obj->hit_points;
         if (hp != 0)
         {
-            dividend = obj->init_hit_points * 0x1000;
-            divisor = hp + obj->init_hit_points;
+            divisor = hp;
+            divisor += obj->init_hit_points;
+            dividend = obj->init_hit_points * 0xc000 / 12;
             bossSpeedFactor = (dividend / divisor) + 0x4000;
 
             if (bossEncounter != 8)
@@ -831,6 +790,7 @@ void doMoskitoHit(obj_t* obj, s16 sprite) {
         {
             bossEncounter = 9;
             bossSpeedFactor = 0x4000;
+            boss_mort = true;
         }
         currentBossAction = 0;
         currentBossActionIsOver = true;
@@ -853,7 +813,7 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
                 unk_y = 1;
                 break;
             case 1:
-                if (scroll_x == -1)
+                if (ray_mode <= 0)
                     obj->timer = 2;
                 obj->follow_id = xmap + obj->param - 100;
                 obj->iframes_timer = ymap + obj->link - 10;
@@ -879,7 +839,7 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
                 obj->speed_x++;
                 MIN_2(obj->speed_x, unk_x);
 
-                if (obj->follow_id < (obj->x + obj->speed_x))
+                if (obj->x + obj->speed_x > obj->follow_id)
                     obj->speed_x = unk_x - 1;
             }
             else
@@ -888,12 +848,12 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
                 MAX_2(obj->speed_x, -1);
             }
 
-            if (obj->y + obj->speed_y < obj->iframes_timer)
+            if (obj->iframes_timer > obj->y + obj->speed_y)
             {
                 obj->speed_y++;
                 MIN_2(obj->speed_y, unk_y);
             }
-            else if (obj->y + obj->speed_y - unk_y > obj->iframes_timer)
+            else if (obj->iframes_timer < obj->y + obj->speed_y - unk_y)
             {
                 obj->speed_y--;
                 MAX_2(obj->speed_y, -unk_y);

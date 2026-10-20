@@ -65,7 +65,10 @@ Shared root causes found and fixed:
 | census-guided display (21 min) | **11 of 18 (61%)**, 14 -> 25/32 |
 | census-guided meredenis (29 min) | **10 of 15 (67%)**, 3 -> 13/18 (one forced boolean form rejected) |
 | census-guided basic (32 min, second pass on a finished unit) | **9 of 22 (41%)**, 36 -> 45/58 |
-| **guided total (8 passes)** | **101 of 172 (59%)** vs 46% unguided; weakest where no reference C exists (breakout) |
+| census-guided moskito (22 min) | **5 of 11 (45%)**, 3 -> 8/14 |
+| census-guided input (12 min) | **6 of 10 (60%)**, 21 -> 27/31 (one more rejected: forced typed-ternary form) |
+| census-guided jumelle (9 min, second pass, PC-only FP code) | **1 of 13 (8%)**, 6 -> 7/19 |
+| **guided total (11 passes)** | **113 of 206 (55%)** vs 46% unguided; weakest where no reference C exists (breakout, jumelle) |
 The worldmap pass shows the upper end: the brief told it which functions were logic gaps (missing calls/guards/
 globals) and which were pure shape, so it did not search shape on logic gaps or vice versa.
 
