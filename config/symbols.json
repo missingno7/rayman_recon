@@ -1516,6 +1516,66 @@
     "addr": "1:6b29c",
     "name": "RAYVERSE",
     "evidence": "tools/xref.py; DOS direct call target from stoneman.c"
+   },
+   "get_luciole": {
+    "addr": "1:384c0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //484C0; DOS public at 1:384c0"
+   },
+   "CLEAR_FIXE_LUCIOLE": {
+    "addr": "1:38538",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48538; DOS public at 1:38538"
+   },
+   "set_luciole": {
+    "addr": "1:385ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //485AC; DOS public at 1:385ac"
+   },
+   "init_aff_luciole": {
+    "addr": "1:38650",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48650; DOS public at 1:38650"
+   },
+   "plot2line": {
+    "addr": "1:386b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //486B8; DOS public at 1:386b8"
+   },
+   "aff_luciole": {
+    "addr": "1:38858",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48858; DOS public at 1:38858"
+   },
+   "Display_and_free_luciole": {
+    "addr": "1:38914",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48914; DOS public at 1:38914"
+   },
+   "free_luciole": {
+    "addr": "1:389d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //489D8; DOS public at 1:389d8"
+   },
+   "INIT_LUCIOLE": {
+    "addr": "1:38a0c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48A0C; PS1 INIT_LUCIOLE 80161B84"
+   },
+   "DO_LUCIOLE": {
+    "addr": "1:38ae0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse luciole.c //48AE0; PS1 DO_LUCIOLE 80161C4C"
+   },
+   "sprite_clipping": {
+    "addr": "1:061fa",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target from get_luciole at 1:3852f; Rayverse lowlevel.c"
+   },
+   "DISPLAY_BLACKBOX": {
+    "addr": "1:0a1c4",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target from CLEAR_FIXE_LUCIOLE; Rayverse affiche.c"
    }
   },
   "data": {
@@ -3632,6 +3692,192 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CF896; Android size 2"
+   },
+   "id_Cling_Old": {
+    "addr": "2:3f830",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF830; Android size 2; DOS word access"
+   },
+   "x_ray": {
+    "addr": "2:32fa0",
+    "type": "s16[4]",
+    "name": "PS1",
+    "evidence": "DOS indexed word stores/loads at 2:32fa0; PS1 luciole.h; Android size 8"
+   },
+   "y_ray": {
+    "addr": "2:32f98",
+    "type": "s16[4]",
+    "name": "PS1",
+    "evidence": "DOS indexed word stores/loads at 2:32f98; PS1 luciole.h; Android size 8"
+   },
+   "positiony2": {
+    "addr": "2:3f7a6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7A6; Android size 2"
+   },
+   "old_x_luc": {
+    "addr": "2:3f7a8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7A8; Android size 2"
+   },
+   "debut_titre": {
+    "addr": "2:3f7ac",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7AC; Android size 2"
+   },
+   "old_y_luc": {
+    "addr": "2:3f7ae",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7AE; Android size 2"
+   },
+   "choix_menu": {
+    "addr": "2:3f7b0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7B0; Android size 2"
+   },
+   "ADDLUCLIP": {
+    "addr": "2:3f7b2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7B2; Android size 2"
+   },
+   "debut_options": {
+    "addr": "2:3f7c4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7C4; Android size 2"
+   },
+   "rayon_luciole": {
+    "addr": "2:3f7c6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7C6; Android size 2"
+   },
+   "x_luc": {
+    "addr": "2:3f7c8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7C8; Android size 2"
+   },
+   "y_luc": {
+    "addr": "2:3f7ca",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7CA; Android size 2"
+   },
+   "coeffktxt": {
+    "addr": "2:3f7cc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7CC; Android size 2"
+   },
+   "y_main_luc": {
+    "addr": "2:3f7ce",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7CE; Android size 2"
+   },
+   "x_main_luc": {
+    "addr": "2:3f7d0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7D0; Android size 2"
+   },
+   "vx_luc": {
+    "addr": "2:3f7d2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7D2; Android size 2"
+   },
+   "n_ray": {
+    "addr": "2:3f7d4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7D4; Android size 2"
+   },
+   "vy_luc": {
+    "addr": "2:3f7d6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7D6; Android size 2"
+   },
+   "rotationtxt": {
+    "addr": "2:3f7dc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7DC; Android size 2"
+   },
+   "Bloc_lim_W2_Aff": {
+    "addr": "2:3d060",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD060; Android size 4"
+   },
+   "Bloc_lim_W1_Aff": {
+    "addr": "2:3d064",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD064; Android size 4"
+   },
+   "Bloc_lim_H2_Glob": {
+    "addr": "2:3d074",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD074; Android size 4"
+   },
+   "Bloc_lim_H1_Glob": {
+    "addr": "2:3d078",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD078; Android size 4"
+   },
+   "Bloc_lim_W2_Glob": {
+    "addr": "2:3d07c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD07C; Android size 4"
+   },
+   "Bloc_lim_W1_Glob": {
+    "addr": "2:3d080",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD080; Android size 4"
+   },
+   "Bloc_lim_H2_Aff": {
+    "addr": "2:3d084",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD084; Android size 4"
+   },
+   "Bloc_lim_H1_Aff": {
+    "addr": "2:3d088",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD088; Android size 4"
+   },
+   "Bloc_lim_W2": {
+    "addr": "2:3d098",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD098; Android size 4"
+   },
+   "Bloc_lim_W1": {
+    "addr": "2:3d09c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD09C; Android size 4"
+   },
+   "Bloc_lim_H2": {
+    "addr": "2:3d0a0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD0A0; Android size 4"
    }
   }
  }

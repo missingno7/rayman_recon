@@ -5,7 +5,7 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **123 functions, 11,982 code bytes** (bootstrap end: 34 / 1,900) in 15 code units; 74 NEAR_MATCH recorded |
+| function-level STRICT | **127 functions, 12,374 code bytes** (bootstrap end: 34 / 1,900) in 16 code units; 80 NEAR_MATCH recorded |
 | whole-object code closure | rand (1:5bf60), mathutil (1:4def0), bonus (1:13a00; incl. its CONST) - every function STRICT and one contiguous `_TEXT` |
 | data closure | **25,532 bytes VERIFIED** (49 `_DATA` units + CONST of bonus and basic); mapped (named+sized bindings, not reconstruction): 89.7% of game `_DATA` |
 | BSS | order rule PROVEN for Watcom 10.5/10.6; names largely original; no BSS unit reconstructed yet |
@@ -29,6 +29,7 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 | trumpet | 3/6 | |
 | ufo | 3/5 | PS1 bodies (Rayverse stubs) STRICT unchanged |
 | moskito | 3/14 | |
+| luciole | 4/10 | Rayverse stubs; PS1 + binary |
 Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
 Verifier self-tests 9/9 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
 

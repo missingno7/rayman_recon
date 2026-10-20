@@ -2039,6 +2039,83 @@
      ]
     }
    }
+  },
+  "luciole": {
+   "source": "src/luciole.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "get_luciole": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "CLEAR_FIXE_LUCIOLE": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_luciole": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_aff_luciole": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "plot2line": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "aff_luciole": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Display_and_free_luciole": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "free_luciole": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_LUCIOLE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_LUCIOLE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
