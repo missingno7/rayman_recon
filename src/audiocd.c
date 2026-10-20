@@ -1,9 +1,9 @@
 /*
  * CD audio control (GOG v1.21 object 1:0cee0-1:0d070, 400 bytes). File name invented (Rayverse audiocd.c).
  * Names: Rayverse/Android; AudioTrackCommand, AudioStatusByte, AudioStopCommand, AudioStatusCheck are INVENTED
- * (callees not yet reconstructed). Status per function: config/units.json.
- * OPEN: the original start_cd_gameover has an extra `mov eax,eax` before `ret` that no tested source form
- * reproduces, so it and everything after it in this object sits 4 bytes early in the candidate layout.
+ * (callees not yet reconstructed). All 12 functions STRICT with worker symbols.json; contiguous _TEXT.
+ * start_cd_continue (PS1/Android name) is an empty DOS entry at 1:0d024, called at 1:5a7ea.
+ * Watcom shares its aligned return with start_cd_gameover, inserting the two-byte alignment no-op.
  */
 extern int CompteurTrameAudio;
 extern unsigned char MusicCdActive;
@@ -90,6 +90,11 @@ void start_cd_gameover(void)
         MusicCdActive = 0;
     if (MusicCdActive)
         AudioTrackCommand(10);
+}
+
+/* DOS: MAIN_CONTINUE_PRG calls this empty entry at 1:0d024 (call at 1:5a7ea). */
+void start_cd_continue(void)
+{
 }
 
 void stop_cd(void)

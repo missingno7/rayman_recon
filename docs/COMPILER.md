@@ -73,11 +73,14 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - **Index operand order affects register allocation** [PROVEN, bonus calc_left_time]: `index = level_index +
   world_index` vs the reverse selects ESI vs EDI at entry.
 
+- **Empty functions share the preceding function's aligned return** [PROVEN, audiocd]: start_cd_gameover's
+  "extra `mov eax,eax`" was the alignment no-op before the `ret` of a missing empty function, start_cd_continue
+  (1:0d024; DOS caller MAIN_CONTINUE_PRG 1:5a7ea; name from Android + PS1). Watcom falls through to the shared `ret`.
+  Lesson: an unexplained no-op before `ret` can mean a missing (empty) function, not a codegen quirk.
+
 ## Negative results (keep)
-- start_cd_gameover's extra `mov eax,eax` before `ret` (also present in v1.12 at 1:0cd2c): ~40 controlled variants
-  fail - callee return types (all integer/pointer/float widths), unused/assigned/cast call results, cdecl/pascal/
-  stdcall/syscall/fortran conventions, -d1/-d2/-d3, -oc/-of/-oi/-ol/-ol+/-om/-op/-or, Watcom 10.0/10.0a/10.5/10.6
-  (build/workers/near_leftovers/NOTES.md). OPEN; deliberately left NEAR rather than forced.
+- Before start_cd_continue was found, ~40 variants of start_cd_gameover itself failed (return types, conventions,
+  -d/-o flags, four compiler releases) - correctly: the cause was outside the function.
 - `-ox`, `-oxa`, `-os`, `-ot`, `-oil`, `-or`, `-otr`, `-olr`, `-omr`, `-oir`, `-oxe`, `-oxn`, `-oxl+`, `-ox -oe=100`:
   myRand not STRICT. `-ob*` is not a 10.6 option.
 - `myRand` with a local index (Rayverse shape) is never STRICT: 3-10 byte diffs (store/return order).

@@ -39,7 +39,7 @@
      ]
     },
     "DoCdCredits": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -74,7 +74,7 @@
      ]
     },
     "DoCdRap": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -88,7 +88,7 @@
      ]
     },
     "start_cd_gameover": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -107,6 +107,10 @@
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
+    },
+    "start_cd_continue": {
+     "status": "STRICT",
+     "provenance": []
     }
    }
   },

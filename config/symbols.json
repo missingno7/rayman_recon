@@ -1576,6 +1576,11 @@
     "addr": "1:0a1c4",
     "name": "RAYVERSE",
     "evidence": "DOS call target from CLEAR_FIXE_LUCIOLE; Rayverse affiche.c"
+   },
+   "start_cd_continue": {
+    "addr": "1:0d024",
+    "evidence": "DOS call 1:5a7ea in MAIN_CONTINUE_PRG targets the ret at 1:0d024; Android symbol start_cd_continue exists and Android MAIN_CONTINUE_PRG calls it at the corresponding point; PS1 src/menu/menu_6A3BC.c:312 agrees. Empty DOS entry shares the aligned return of start_cd_gameover.",
+    "name": "RAYVERSE"
    }
   },
   "data": {
