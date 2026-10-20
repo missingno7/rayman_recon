@@ -88,4 +88,41 @@ typedef struct bb_attack_entry_t {  /* SerieAtakBB 2:5ec6: [6][7] x 4 bytes (And
     u8 reserved;
 } bb_attack_entry_t;
 
+/* DOS save image; offsets from Rayverse types.h and direct DOS field loads in
+ * DO_WIZARD / DO_PHOTOGRAPHE_CMD. The trailing byte accounts for the 604-byte
+ * Android symbol size; no code in objupdate2 accesses it. save1 2:3e88c, save2 2:3eae8. */
+typedef struct save_state_t {
+    u32 triggered_objects[8];
+    s16 nb_floc[8];
+    s16 vent_x;
+    s16 vent_y;
+    s16 x_map;
+    s16 y_map;
+    s16 ray_x_pos;
+    s16 ray_y_pos;
+    s16 ray_screen_x;
+    s16 ray_screen_y;
+    u16 ray_flip_x;
+    s16 save_obj_id;
+    s16 save_obj_x_pos;
+    s16 save_obj_y_pos;
+    u16 link_init[256];
+    u8 save_obj_detect_zone_flag;
+    u8 save_obj_flag_1;
+    u8 ray_coll_btype[5];
+    u8 ray_anim_index;
+    u8 ray_anim_frame;
+    u8 ray_main_etat;
+    u8 ray_sub_etat;
+    u8 poing_sub_etat;
+    u8 rayevts_reverse;
+    u8 rayevts_super_helico;
+    u8 rayevts_poing;
+    u8 current_pal_id;
+    u8 dead_time;
+    u8 is_just_saved;
+    u8 status_bar_tings;
+    u8 field_25b;          /* unknown; size 604 = save2 - save1 (2:3eae8 - 2:3e88c) = Android */
+} save_state_t;
+
 #endif

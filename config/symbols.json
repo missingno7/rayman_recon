@@ -2981,6 +2981,271 @@
     "addr": "1:5cd40",
     "name": "RAYVERSE",
     "evidence": "DOS direct call targets from IS_ON_RESSORT_BLOC and CALC_MOV_ON_BLOC"
+   },
+   "DO_ENSEIGNE_COMMAND": {
+    "addr": "1:52e2c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoReducteurRaymanCollision": {
+    "addr": "1:52104",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoSuperHelicoRaymanCollision": {
+    "addr": "1:51ee4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoBadGuy1RaymanZDD": {
+    "addr": "1:52c40",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_CCL_COMMAND": {
+    "addr": "1:52cd4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "manage_snd_event": {
+    "addr": "1:61c00",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoChasseurRaymanZDD": {
+    "addr": "1:52928",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoOneUpRaymanCollision": {
+    "addr": "1:51c84",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoOneUpPoingCollision": {
+    "addr": "1:51c4c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "ObjectUTurnDefault": {
+    "addr": "1:512f0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoGeneratingDoorRaymanCollision": {
+    "addr": "1:520c4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoPowerupRaymanCollision": {
+    "addr": "1:51ea0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoMusicienRaymanInZDD": {
+    "addr": "1:52644",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_TEN_COMMAND": {
+    "addr": "1:52658",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "get_next_bonus_level": {
+    "addr": "1:514b4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoJoeRaymanZDD": {
+    "addr": "1:52fcc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoGeneBadGuyRaymanZDD": {
+    "addr": "1:528b8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoGrapBonusRaymanCollision": {
+    "addr": "1:51d54",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoGraineRaymanCollision": {
+    "addr": "1:51f20",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_SIGNPOST": {
+    "addr": "1:52150",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DoWizRaymanCollision": {
+    "addr": "1:51f50",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_REDUCTEUR": {
+    "addr": "1:520e4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_BOUEE_JOE_COMMAND": {
+    "addr": "1:53030",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_FADE_OUT": {
+    "addr": "1:2cab4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_WIZARD": {
+    "addr": "1:51320",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DO_TARZAN": {
+    "addr": "1:51894",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PETIT_COUTEAU_COMMAND": {
+    "addr": "1:51c08",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoCaisseClairePoingCollision": {
+    "addr": "1:52d68",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoAudioStartRaymanCollision": {
+    "addr": "1:5323c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoSignPostRaymanCollision": {
+    "addr": "1:52140",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoGeneBadGuyPoingCollision": {
+    "addr": "1:52854",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PTI_ESQUIVE": {
+    "addr": "1:51a90",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_TIRE_BOUCHON_COMMAND": {
+    "addr": "1:51c34",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoCaisseClaireRaymanZDD": {
+    "addr": "1:52dc4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoBadGuy23RaymanZDD": {
+    "addr": "1:52ad4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoJaugeUpRaymanCollision": {
+    "addr": "1:52024",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_JOE_COMMAND": {
+    "addr": "1:52ed0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoTarzanPoingCollision": {
+    "addr": "1:51968",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_WIZARD": {
+    "addr": "1:5154c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_CHASSEUR_COMMAND": {
+    "addr": "1:52988",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoStalagRaymanZDD": {
+    "addr": "1:52e10",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoMorningStarPoingCollision": {
+    "addr": "1:51d10",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocate_badguy": {
+    "addr": "1:51980",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoPrisePoingCollision": {
+    "addr": "1:51bb0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse stub name; DOS disassembly"
+   },
+   "DoPetitCouteauPoingCollision": {
+    "addr": "1:51c20",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse stub name; DOS disassembly"
+   },
+   "DoPoingPowerupRaymanCollision": {
+    "addr": "1:51db0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DoPancarteRaymanCollision": {
+    "addr": "1:5252c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DO_MUSICIEN": {
+    "addr": "1:525e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DoChasseurPoingCollision": {
+    "addr": "1:528c0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DoBadGuy23PoingCollision": {
+    "addr": "1:529d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DoBadGuy1PoingCollision": {
+    "addr": "1:52b54",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DO_PHOTOGRAPHE_CMD": {
+    "addr": "1:5309c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse objupdate.c; tools/xref.py"
+   },
+   "DO_SLOPEY_PLAT_CMD": {
+    "addr": "1:53244",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse stub name; DOS disassembly"
    }
   },
   "data": {
@@ -6015,6 +6280,90 @@
     "type": "s32 (*[64])(s32,s32)",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c address; Android size and DOS accesses confirm type/extent"
+   },
+   "joe_exp_probleme": {
+    "addr": "2:3f786",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF786; Android size 2; DOS word access"
+   },
+   "life_becoz_wiz": {
+    "addr": "2:3fa99",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA99; Android size 1; DOS byte access"
+   },
+   "no_ray_landing_smoke": {
+    "addr": "2:3fa79",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA79; Android size 1; DOS byte access"
+   },
+   "numero_palette_special": {
+    "addr": "2:3f740",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF740; Android size 2; DOS word access"
+   },
+   "NumScrollObj": {
+    "addr": "2:3f87a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF87A; Android size 2; DOS word access"
+   },
+   "pal_id_at_wizard": {
+    "addr": "2:3fa84",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA84; Android size 1; DOS byte access"
+   },
+   "ProchainEclair": {
+    "addr": "2:3f742",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF742; Android size 2; DOS word access"
+   },
+   "prise_branchee": {
+    "addr": "2:3f796",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF796; Android size 2; DOS word access"
+   },
+   "reduced_rayman_id": {
+    "addr": "2:3f886",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF886; Android size 2; DOS word access at address-2"
+   },
+   "save_save": {
+    "addr": "2:3fa85",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA85; Android size 1; DOS byte access"
+   },
+   "save1": {
+    "addr": "2:3e88c",
+    "type": "save_state_t",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CE88C; Android size 604; DOS accesses is_just_saved and poing_sub_etat"
+   },
+   "save2": {
+    "addr": "2:3eae8",
+    "type": "save_state_t",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CEAE8; Android size 604; DOS state restore argument"
+   },
+   "current_pal_id": {
+    "addr": "2:3fa82",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CFA82; Android size 1; DOS byte access"
+   },
+   "vignet_joe_affichee": {
+    "addr": "2:3f780",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "data.c //CF780; Android size 2; DOS word access"
    }
   }
  }

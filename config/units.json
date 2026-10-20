@@ -4546,6 +4546,370 @@
      ]
     }
    }
+  },
+  "objupdate2": {
+   "source": "src/objupdate2.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "ObjectUTurnDefault": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_WIZARD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "get_next_bonus_level": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "TEST_WIZARD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TARZAN": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoTarzanPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "allocate_badguy": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_PTI_ESQUIVE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPrisePoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_PETIT_COUTEAU_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPetitCouteauPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TIRE_BOUCHON_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoOneUpPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoOneUpRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoMorningStarPoingCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoGrapBonusRaymanCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPoingPowerupRaymanCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPowerupRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoSuperHelicoRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoGraineRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoWizRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoJaugeUpRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoGeneratingDoorRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_REDUCTEUR": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoReducteurRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoSignPostRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "TEST_SIGNPOST": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoPancarteRaymanCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_MUSICIEN": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoMusicienRaymanInZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_TEN_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoGeneBadGuyPoingCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoGeneBadGuyRaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoChasseurPoingCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoChasseurRaymanZDD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_CHASSEUR_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoBadGuy23PoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoBadGuy23RaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoBadGuy1PoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoBadGuy1RaymanZDD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_CCL_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoCaisseClairePoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoCaisseClaireRaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoStalagRaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_ENSEIGNE_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_JOE_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoJoeRaymanZDD": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_BOUEE_JOE_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_PHOTOGRAPHE_CMD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DoAudioStartRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    },
+    "DO_SLOPEY_PLAT_CMD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "seed",
+      "worker"
+     ]
+    }
+   }
   }
  }
 }
