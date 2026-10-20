@@ -1,7 +1,8 @@
 /*
  * Bat enemy (GOG v1.21 object 1:0fa40-1:100b0). File name invented (Rayverse bat.c). Names: Rayverse/Android.
  * Uses the shared src/include/obj.h layout.
- * Status per function: config/units.json (DO_BAT_FLASH, bat_dir, DO_BAT_COMMAND not yet STRICT).
+ * Worker candidate: seven STRICT functions, including bat_dir and its switch tables.
+ * DO_BAT_FLASH and DO_BAT_COMMAND remain NEAR; see NOTES.md and final_match.txt.
  */
 #include "obj.h"
 
@@ -19,8 +20,8 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 direction);
 u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void set_sub_etat(obj_t *obj, u8 sub_etat);
-u8 test_allowed(obj_t *obj, s16 center_x, s16 center_y);
-u8 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
+s16 test_allowed(obj_t *obj, s16 center_x, s16 center_y);
+s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 s16 myRand(s16 max);
 
 #define GO_SPEED 20
@@ -69,23 +70,23 @@ void DO_BAT_FLASH(s16 in_x, s16 in_y)
         unk_1 = diff_x * 45 / diff_y;
         if (x_gt_0) {
             if (y_gt_0) {
-                if (unk_1 >= 256)
+                if (unk_1 > 255)
                     fire_par_3 = 27;
                 else
                     fire_par_3 = 27 + N_anim[unk_1];
             } else {
-                if (unk_1 >= 256)
+                if (unk_1 > 255)
                     fire_par_3 = 0;
                 else
                     fire_par_3 = N_anim[unk_1];
             }
         } else if (y_gt_0) {
-            if (unk_1 >= 256)
+            if (unk_1 > 255)
                 fire_par_3 = 18;
             else
                 fire_par_3 = 18 + N_anim[unk_1];
         } else {
-            if (unk_1 >= 256)
+            if (unk_1 > 255)
                 fire_par_3 = 9;
             else
                 fire_par_3 = 9 + N_anim[unk_1];
@@ -137,15 +138,17 @@ s16 bat_dir(obj_t *obj)
 
 void DO_BAT_COMMAND(obj_t *obj)
 {
-    u8 offs_bx;
-    u8 offs_by;
-    eta_t *cmd_eta;
+    s16 offs_by;
+    s16 offs_bx;
     s16 obj_sub_etat;
+    s32 speed;
     u8 horl_0;
 
     obj_sub_etat = obj->sub_etat;
-    cmd_eta = obj->eta[obj->main_etat];
-    horl_0 = horloge[cmd_eta[obj->sub_etat].anim_speed & 0x0f] == 0;
+    /* This conditional form preserves the DOS switch-table destinations. */
+    horl_0 = 1;
+    if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f] != 0)
+        horl_0 = 0;
 
     switch (obj_sub_etat) {
     default:
@@ -156,9 +159,7 @@ void DO_BAT_COMMAND(obj_t *obj)
         break;
     case 5:
         if (obj->anim_frame == 22) {
-            if (obj->hit_points == 0)
-                skipToLabel(obj, 8, 1);
-            else if (myRand(1) == 0)
+            if (myRand(1) == 0)
                 skipToLabel(obj, 2, 1);
             else
                 skipToLabel(obj, 3, 1);
@@ -177,27 +178,21 @@ void DO_BAT_COMMAND(obj_t *obj)
         break;
     case 6:
     case 7:
-        if (obj->hit_points == 0)
-            skipToLabel(obj, 8, 1);
         if (obj->anim_frame == 20) {
-            if (obj->hit_points == 0)
-                skipToLabel(obj, 8, 1);
-            else {
-                switch (bat_nb_frap) {
-                case 1:
-                    set_sub_etat(obj, 11);
-                    break;
-                case 3:
-                    set_sub_etat(obj, 11);
-                    bat_nb_frap = 0;
-                    break;
-                default:
-                    if (obj_sub_etat == 6)
-                        skipToLabel(obj, 3, 1);
-                    else
-                        skipToLabel(obj, 2, 1);
-                    break;
-                }
+            switch (bat_nb_frap) {
+            case 1:
+                set_sub_etat(obj, 11);
+                break;
+            case 3:
+                set_sub_etat(obj, 11);
+                bat_nb_frap = 0;
+                break;
+            default:
+                if (obj_sub_etat == 6)
+                    skipToLabel(obj, 3, 1);
+                else
+                    skipToLabel(obj, 2, 1);
+                break;
             }
         }
         break;
@@ -221,11 +216,15 @@ void DO_BAT_COMMAND(obj_t *obj)
             switch (obj_sub_etat) {
             case 10:
             case 13:
-                obj->speed_x = -Abs(obj->iframes_timer);
+                speed = obj->iframes_timer;
+                obj->speed_x = Abs(speed);
+                /* DOS stores the positive magnitude before negating it. */
+                obj->speed_x = -obj->speed_x;
                 break;
             case 12:
             case 9:
-                obj->speed_x = Abs(obj->iframes_timer);
+                speed = obj->iframes_timer;
+                obj->speed_x = Abs(speed);
                 break;
             }
             obj->speed_y = obj->follow_id;
