@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "lowlevel.h"
 
 typedef struct mem_t {
     u32 align;
@@ -72,8 +73,6 @@ extern void Display_Bloc_Plein_Clippe(s16 x, s16 y, s16 width, s16 height, u8 *b
 extern void Display_Bloc_Clippe(s16 x, s16 y, s16 width, s16 height, u8 *buffer, u8 *tiles);
 extern void Display_Bloc_Plein(s16 x, s16 y, u8 *buffer, u8 *tiles);
 extern void Display_Bloc(s16 x, s16 y, u8 *buffer, u8 *tiles);
-extern void sprite_clipping(s32 x1, s32 x2, s32 y1, s32 y2);
-extern void N_CLRSCR(u8 *buffer);
 extern void Copy_Plan0Diff_To_Buf(u8 *source, u8 *dest, s32 width, s32 height, s32 draw_width);
 void set_default_Bloc_clipping(void);
 void set_xymapini(void);
@@ -244,7 +243,7 @@ void construct_MAP(mem_t *mem, big_map_t *map, u8 *map_blocks)
     }
 }
 
-void init_build_map(big_map_t *map)
+void init_build_map(big_map_t *map, u8 *map_blocks)  /* map_blocks: DOS caller passes MAP_BLOCKS in EDX; unused here */
 {
     map->width = mp.width;
     map->height = mp.height;

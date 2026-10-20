@@ -8,6 +8,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "lowlevel.h"
 #include <string.h>
 #include <math.h>
 
@@ -74,13 +75,6 @@ extern s32 ModeAutoPosYJumelle;
 extern u8 *EffetBufferNormal;
 extern u8 *PLAN2BIT;
 
-void sprite_clipping(s32 xmin, s32 xmax, s32 ymin, s32 ymax);
-void DisplayAnyPictureNormal(u8 *source_buffer, u8 *dest_buffer, s32 source_x, s32 source_y,
-                             s32 dest_x, s32 dest_y, s32 stride, s32 width, s32 height);
-/* DOS 1:04c19: ESI source, EDI destination; three stack arguments, RET 12.
-   Register-only ABI declaration; the external assembly body is not reproduced here. */
-#pragma aux DisplayAnyPictureNormal parm [esi] [edi] [eax] [ebx] [ecx] [edx] modify [eax ebx ecx edx esi edi]
-#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx]
 void FatalError(char *message);
 void *JumelleCalloc(s32 count, s32 size);
 void JumelleFreeArray(s32 **array);

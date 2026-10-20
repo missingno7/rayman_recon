@@ -5047,7 +5047,7 @@
      ]
     },
     "init_build_map": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "lowlevel.h"
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
@@ -55,13 +56,13 @@ extern obj_t *poing_obj;
 extern s16 poing_obj_id;
 extern obj_t ray;
 extern big_map_t BIG_MAP;
+void init_build_map(big_map_t *map, u8 *map_blocks);
 extern u8 *DrawBufferNormal;
 extern u8 *DrawBufferNormalIni;
 extern u8 *draw_buffer;
 extern u8 *DisplayBufferNormal;
 extern void (*Copy_Plan0_To_Buf)(u8 *, u8 *, s32, s32, s32);
-extern void sprite_clipping(s32, s32, s32, s32);
-extern void N_CLRSCR(u8 *buffer);
+extern u8 *MAP_BLOCKS;
 extern void Copy_Plan0Diff_To_Buf(u8 *, u8 *, s32, s32, s32);
 extern void clear_memory(u8 *buffer, s32 color, s32 length);
 extern void Display_Bloc_Plein_Clippe(s32 x, s32 y, s32 width, s32 height, u8 *buffer, u8 *tiles);
@@ -136,11 +137,11 @@ void DRAW_MAP(u8 *draw_buf, big_map_t *big_map)
 
 void INIT_GAME_MODE_NORMAL(void)
 {
-    sprite_clipping(Bloc_lim_W1, Bloc_lim_H2, Bloc_lim_W2, Bloc_lim_H1);
+    sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
     DrawBufferNormalIni = DrawBufferNormal;
     Copy_Plan0_To_Buf = Copy_Plan0Diff_To_Buf;
     DrawBufferNormal = DrawBufferNormalIni + 4;
-    init_build_map(&BIG_MAP);
+    init_build_map(&BIG_MAP, MAP_BLOCKS);
     clear_memory(DisplayBufferNormal, 0, 64000);
     N_CLRSCR(DrawBufferNormal);
 }

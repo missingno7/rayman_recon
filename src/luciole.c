@@ -6,6 +6,7 @@
 
 #include "obj.h"
 #include "game.h"
+#include "lowlevel.h"
 #include "rtypes.h"
 
 extern obj_t ray;
@@ -53,7 +54,6 @@ extern s32 Bloc_lim_W1;
 extern s32 Bloc_lim_H2;
 extern s32 Bloc_lim_H1;
 
-void sprite_clipping(s32 xmin, s32 ymax, s32 xmax, s32 ymin);
 void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_fond);
 u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 s16 myRand(s16 max);
@@ -72,7 +72,7 @@ void get_luciole(void)
         Bloc_lim_H2 = Bloc_lim_H2_Aff;
         Bloc_lim_W1 = Bloc_lim_W1_Aff;
         Bloc_lim_W2 = Bloc_lim_W2_Aff;
-        sprite_clipping(Bloc_lim_W1, Bloc_lim_H2, Bloc_lim_W2, Bloc_lim_H1);
+        sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
     }
 }
 

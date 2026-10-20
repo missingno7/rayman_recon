@@ -476,7 +476,7 @@ void DO_BAG1_COMMAND(obj_t* obj) {
 
 //2FC64
 void DoRaymanBag1Collision(obj_t* obj) {
-    if (!RayEvts.squashed && scroll_x == -1 && scroll_y == -1 && ray.main_etat <= 1) {
+    if (!RayEvts.squashed && scroll_x == -1 && scroll_y == -1 && (ray.main_etat == 0 || ray.main_etat == 1)) {
         Ray_RayEcrase(); //TODO
     }
 }

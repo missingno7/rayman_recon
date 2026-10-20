@@ -8405,6 +8405,12 @@
     "name": "RAYVERSE",
     "type": "void (*)(void)",
     "evidence": "external/rayverse/src/data.c:2619 comment CD13C; DOS obj2 offset 3d13c"
+   },
+   "MAP_BLOCKS": {
+    "addr": "2:3d830",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD830; Android 4 bytes; DOS INIT_GAME_MODE_NORMAL loads it into EDX as the 2nd argument of init_build_map (1:4d5e8)"
    }
   }
  }
