@@ -127,11 +127,6 @@ extern void InitTextMode(void);
 extern s16 InitModeXWithFrequency(u8 frequency);
 extern void DO_FADE_OUT(void);
 extern rgb_palette_t current_rvb;
-extern const char input_file_not_found[20];
-extern const char record_default_name[5];
-extern const char record_greeting[48];
-extern const char record_prompt[31];
-extern const char record_suffix[5];
 extern s16 new_world;
 extern s16 reduced_rayman_id;
 
@@ -470,7 +465,7 @@ void read_record(const char *filename, record_t *rec)
 
     handle = open(filename, O_BINARY, S_IREAD | S_IWRITE);
     if (handle == -1) {
-        printf(input_file_not_found, filename);
+        printf("FILE NOT FOUND: %s\n", filename);
         getch();
         return;
     }
@@ -487,10 +482,11 @@ void load_record(record_t *rec)
     char filename[100];
     register s16 index;
     register u8 character;
+    char *default_name = "DANY";
 
     InitTextMode();
-    printf(record_greeting);
-    printf(record_prompt, record_default_name);
+    printf(" tu veux voir comment y joue Monsieur Daniel ?\n");
+    printf(" NaMe oF fILe ? (DEfAuLT:%s) \n", default_name);
 
     index = 0;
     do {
@@ -500,8 +496,8 @@ void load_record(record_t *rec)
     filename[--index] = '\0';
 
     if (filename[0] == '\0')
-        strcpy(filename, record_default_name);
-    strcat(filename, record_suffix);
+        strcpy(filename, default_name);
+    strcat(filename, ".REC");
 
     read_record(filename, rec);
     InitModeXWithFrequency(VGA_FREQ);

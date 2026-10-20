@@ -5911,6 +5911,9 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   }
  }

@@ -7691,36 +7691,6 @@
     "type": "s32 (*)(u8 *,u8 *,s32,s32)",
     "name": "RAYVERSE",
     "evidence": "Rayverse types.h swap_func_t and data.c //CD120; Android object size 4; DOS function-pointer stores"
-   },
-   "input_file_not_found": {
-    "addr": "2:30dbc",
-    "type": "char[20]",
-    "name": "INVENTED",
-    "evidence": "DOS string bytes at obj2:30dbc: FILE NOT FOUND: %s followed by CR and NUL"
-   },
-   "record_default_name": {
-    "addr": "2:30dd0",
-    "type": "char[5]",
-    "name": "INVENTED",
-    "evidence": "DOS string bytes at obj2:30dd0: DANY"
-   },
-   "record_greeting": {
-    "addr": "2:30dd8",
-    "type": "char[48]",
-    "name": "INVENTED",
-    "evidence": "DOS string bytes at obj2:30dd8; used by load_record printf"
-   },
-   "record_prompt": {
-    "addr": "2:30e08",
-    "type": "char[31]",
-    "name": "INVENTED",
-    "evidence": "DOS string bytes at obj2:30e08; used by load_record printf"
-   },
-   "record_suffix": {
-    "addr": "2:30e28",
-    "type": "char[5]",
-    "name": "INVENTED",
-    "evidence": "DOS string bytes at obj2:30e28: .REC"
    }
   }
  }
