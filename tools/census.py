@@ -2,6 +2,7 @@
 
     python tools/census.py                 all accepted units -> build/near_census.json
     python tools/census.py --brief UNIT..  per-unit worker brief -> build/near_census_UNIT.md (run the census first)
+    python tools/census.py --file SRC.c [--symbols OVERLAY.json]   brief for any candidate -> SRC.census.md
 
 For every accepted NEAR function the compiled candidate is compared with the DOS bytes on structure:
   calls   ordered callee identities          globals  data targets (address+addend; CONST literals folded)
@@ -262,6 +263,33 @@ def compare_unit(orc, src, symbols=None, only=None):
 
 
 
+def rows_for(un, res):
+    rows = []
+    for r, fc, fo, cls, sim in res:
+        if cls == "STRICT":
+            continue
+        rv = seed.rayverse_body(r["function"])[0]
+        rows.append({
+            "unit": un, "function": r["function"], "class": cls, "sim": sim,
+            "size": r["size"], "oracle_size": r.get("oracle_size"), "byte_diffs": r.get("byte_diffs"),
+            "first_diff": r.get("first_diff"),
+            "ps1": bool(seed.ps1_body(r["function"])[0]),
+            "rayverse": bool(rv and "Not implemented" not in rv and "//stub" not in rv),
+            "calls_c": len(fc["calls"]), "calls_o": len(fo["calls"]),
+            "calls_missing": sorted((collections.Counter(fo["calls"]) - collections.Counter(fc["calls"])).elements()),
+            "calls_extra": sorted((collections.Counter(fc["calls"]) - collections.Counter(fo["calls"])).elements()),
+            "globals_missing": sorted(set(fo["globals"]) - set(fc["globals"])),
+            "globals_extra": sorted(set(fc["globals"]) - set(fo["globals"])),
+            "fields_missing": sorted(set(fo["fields"]) - set(fc["fields"])),
+            "fields_extra": sorted(set(fc["fields"]) - set(fo["fields"])),
+            "consts_missing": sorted(set(fo["consts"]) - set(fc["consts"])),
+            "consts_extra": sorted(set(fc["consts"]) - set(fo["consts"])),
+            "jcc": [fc["jcc"], fo["jcc"]], "frame": [fc["frame"], fo["frame"]],
+            "problems": r["problems"][:3],
+        })
+    return rows
+
+
 def census():
     units = load_json(ROOT / "config" / "units.json")["units"]
     orc = Oracle()
@@ -275,28 +303,7 @@ def census():
         except SystemExit as e:
             print("FAIL", un, str(e)[:200])
             continue
-        for r, fc, fo, cls, sim in res:
-            if cls == "STRICT":
-                continue
-            rv = seed.rayverse_body(r["function"])[0]
-            rows.append({
-                "unit": un, "function": r["function"], "class": cls, "sim": sim,
-                "size": r["size"], "oracle_size": r.get("oracle_size"), "byte_diffs": r.get("byte_diffs"),
-                "first_diff": r.get("first_diff"),
-                "ps1": bool(seed.ps1_body(r["function"])[0]),
-                "rayverse": bool(rv and "Not implemented" not in rv and "//stub" not in rv),
-                "calls_c": len(fc["calls"]), "calls_o": len(fo["calls"]),
-                "calls_missing": sorted((collections.Counter(fo["calls"]) - collections.Counter(fc["calls"])).elements()),
-                "calls_extra": sorted((collections.Counter(fc["calls"]) - collections.Counter(fo["calls"])).elements()),
-                "globals_missing": sorted(set(fo["globals"]) - set(fc["globals"])),
-                "globals_extra": sorted(set(fc["globals"]) - set(fo["globals"])),
-                "fields_missing": sorted(set(fo["fields"]) - set(fc["fields"])),
-                "fields_extra": sorted(set(fc["fields"]) - set(fo["fields"])),
-                "consts_missing": sorted(set(fo["consts"]) - set(fc["consts"])),
-                "consts_extra": sorted(set(fc["consts"]) - set(fo["consts"])),
-                "jcc": [fc["jcc"], fo["jcc"]], "frame": [fc["frame"], fo["frame"]],
-                "problems": r["problems"][:3],
-            })
+        rows += rows_for(un, res)
         print(un, collections.Counter(x["class"] for x in rows if x["unit"] == un), flush=True)
     out = ROOT / "build" / "near_census.json"
     out.write_text(json.dumps(rows, indent=1), encoding="utf-8")
@@ -324,10 +331,11 @@ def name_of(orc, ident):
     return ident
 
 
-def brief(unit):
-    orc = Oracle()
-    rows = [r for r in json.load(open(ROOT / "build" / "near_census.json")) if r["unit"] == unit]
-    out = [f"# NEAR census for unit `{unit}` ({len(rows)} functions)", "",
+def brief(unit, rows=None, path=None, orc=None):
+    orc = orc or Oracle()
+    if rows is None:
+        rows = [r for r in json.load(open(ROOT / "build" / "near_census.json")) if r["unit"] == unit]
+    out = [f"# NEAR census for `{unit}` ({len(rows)} functions)", "",
            "Structural comparison of the accepted candidate vs DOS (tools/census.py; docs/CENSUS.md). Validated:",
            "SAME-STRUCTURE (SHAPE) -> the fix was shape-only in 28/30 past cases; DIFF pointers were real in ~16/30",
            "(sometimes the fix is outside the function: a missing/empty callee, a prototype). 'oracle-only' = DOS has",
@@ -347,14 +355,24 @@ def brief(unit):
         if r["frame"][0] != r["frame"][1]:
             out.append(f"- prologue: cand {r['frame'][0]}  DOS {r['frame'][1]}")
         out.append("")
-    p = ROOT / "build" / f"near_census_{unit}.md"
+    p = Path(path) if path else ROOT / "build" / f"near_census_{unit}.md"
     p.write_text("\n".join(out), encoding="utf-8")
     print(p)
 
 
 
+def brief_file(src, symbols=None):
+    """Census of any candidate source (e.g. a worker's in-progress unit) -> <src>.census.md next to it."""
+    orc = Oracle()
+    res = compare_unit(orc, Path(src), symbols=symbols)
+    brief(Path(src).stem, rows_for(Path(src).stem, res), Path(src).with_suffix(".census.md"), orc)
+
+
 def main(argv):
-    if len(argv) > 1 and argv[1] == "--brief":
+    if len(argv) > 2 and argv[1] == "--file":
+        sym = argv[argv.index("--symbols") + 1] if "--symbols" in argv else None
+        brief_file(argv[2], sym)
+    elif len(argv) > 1 and argv[1] == "--brief":
         for u in argv[2:]:
             brief(u)
     else:
