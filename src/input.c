@@ -20,20 +20,6 @@ typedef u8 (*key_test_fn)(void);
 typedef void (*input_fn)(void);
 typedef s32 (*swap_func_t)(u8 *source_buf, u8 *dest_buf, s32 width, s32 height);
 
-typedef struct options_jeu_t {
-    button_test_fn test_fire1;
-    button_test_fn test_fire0;
-    button_test_fn test_button4;
-    button_test_fn test_button3;
-    u16 jump;
-    u16 fist;
-    u16 field_14;
-    u16 action;
-    u16 music_enabled;
-    u16 sound_volume;
-    u16 is_stereo;
-    u16 unknown_1e;
-} options_jeu_t;
 
 typedef struct record_t {
     s32 current_offset;

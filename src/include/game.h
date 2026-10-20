@@ -141,4 +141,35 @@ typedef struct display_item_t {   /* 216 bytes; text_to_display 2:3c4a0 is [11] 
 
 extern display_item_t text_to_display[11];
 
+typedef struct options_jeu_t {     /* options_jeu: 32 bytes (Android 32); fields u16 (input switch, fee/worldmap via s16 params) */
+    s32 (*test_fire1)(void);
+    s32 (*test_fire0)(void);
+    s32 (*test_button4)(void);
+    s32 (*test_button3)(void);
+    u16 jump;
+    u16 fist;
+    u16 field_14;
+    u16 action;
+    u16 music_enabled;
+    u16 sound_volume;
+    u16 is_stereo;
+    u16 unknown_1e;
+} options_jeu_t;
+
+typedef struct loadinforay_t {
+    u8 lives;
+    u8 tings;
+    u8 cages;
+    u8 continues;
+} loadinforay_t;
+
+typedef struct credit_t {
+    char *text;
+    s16 x_pos;
+    s16 y_pos;
+    u8 font;
+    u8 cmd;
+    u8 color;
+} credit_t;
+
 #endif

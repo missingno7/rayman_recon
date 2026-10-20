@@ -21,7 +21,7 @@ extern s16 num_level;
 extern u8 ModeDemo;
 extern fee_record_t record;
 extern char *language_txt[300];
-extern fee_options_jeu_t options_jeu;
+extern options_jeu_t options_jeu;
 extern display_item_t text_to_display[11];
 extern rayevts_t RayEvts;
 extern s16 png_or_fee_id;

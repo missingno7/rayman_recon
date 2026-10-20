@@ -21,20 +21,6 @@ typedef unsigned char bool;
 #define TYPE_GOMME 237
 #define TYPE_MARK_AUTOJUMP_PLAT 243
 
-typedef struct worker_options_jeu_t {
-    s32 (*test_fire1)(void);
-    s32 (*test_fire0)(void);
-    s32 (*test_button4)(void);
-    s32 (*test_button3)(void);
-    u16 jump;
-    u16 fist;
-    u16 field_14;
-    u16 action;
-    u16 music_enabled;
-    u16 sound_volume;
-    u16 is_stereo;
-    u8 trailing_pad[2];
-} worker_options_jeu_t;
 
 extern rayevts_t RayEvts;
 extern s16 decalage_en_cours;
@@ -43,7 +29,7 @@ extern u8 button_released;
 extern s16 jump_time;
 extern s16 num_world;
 extern u8 horloge[25];
-extern worker_options_jeu_t options_jeu;
+extern options_jeu_t options_jeu;
 bool EOA(obj_t* obj);
 u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void RAY_HIT(bool hurt, obj_t* obj);

@@ -3936,6 +3936,331 @@
     "addr": "1:70408",
     "name": "INVENTED",
     "evidence": "DOS direct call from keyboard ISR at 1:325a6; Watcom helper identity from target map"
+   },
+   "DO_MEDAILLONS": {
+    "addr": "1:57b2c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RESPOND_TO_RIGHT": {
+    "addr": "1:58fd8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_CHEMIN": {
+    "addr": "1:5947c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_PASTILLES_SAUVE": {
+    "addr": "1:59518",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RESPOND_TO_DOWN": {
+    "addr": "1:58f88",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "FIN_WORLD_CHOICE": {
+    "addr": "1:59570",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_NEW_GAME": {
+    "addr": "1:596cc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "FIN_LEVEL_ANIM": {
+    "addr": "1:5ba34",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_LOADER_ANIM": {
+    "addr": "1:5b1ec",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TEST_DISPLAY_PTS_WAY": {
+    "addr": "1:57860",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "SPECIAL_INIT": {
+    "addr": "1:5b550",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DETER_WORLD_AND_LEVEL": {
+    "addr": "1:595dc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DISPLAY_PTS_TO_PLAN2": {
+    "addr": "1:098c4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "PASTILLES_SAUVE_SAVED": {
+    "addr": "1:5954c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_NOT_SAVE_CHOICE": {
+    "addr": "1:597dc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RESPOND_TO_LEFT": {
+    "addr": "1:59028",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RESPOND_TO_UP": {
+    "addr": "1:58f38",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_SAVE_CONTINUE": {
+    "addr": "1:598f0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RESTORE_RAY": {
+    "addr": "1:58c8c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_LITTLE_RAY": {
+    "addr": "1:58c44",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DISPLAY_PTS_WAY": {
+    "addr": "1:578e8",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:19; address: xref/DOS"
+   },
+   "DISPLAY_PLAT_WAY": {
+    "addr": "1:5799c",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:37; address: xref/DOS"
+   },
+   "INIT_LEVEL_STAGE_NAME": {
+    "addr": "1:57d50",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:136; address: xref/DOS"
+   },
+   "INIT_WORLD_STAGE_NAME": {
+    "addr": "1:57e40",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:151; address: xref/DOS"
+   },
+   "INIT_STAGE_NAME": {
+    "addr": "1:58120",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:210; address: xref/DOS"
+   },
+   "CHANGE_STAGE_NAMES": {
+    "addr": "1:5817c",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:225; address: xref/DOS"
+   },
+   "DO_STAGE_NAMES": {
+    "addr": "1:58208",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:235; address: xref/DOS"
+   },
+   "INIT_WORLD_INFO": {
+    "addr": "1:58bc0",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:269; address: xref/DOS"
+   },
+   "INIT_CHEMIN": {
+    "addr": "1:58cb8",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:304; address: xref/DOS"
+   },
+   "DO_RAYMAN_IN_WLD_MAP": {
+    "addr": "1:59078",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:426; address: xref/DOS"
+   },
+   "INIT_SAVE_CHOICE": {
+    "addr": "1:5980c",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:623; address: xref/DOS"
+   },
+   "DO_COMMANDE_SAVE": {
+    "addr": "1:59944",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:660; address: xref/DOS"
+   },
+   "SELECTION_SAVE_OPTION": {
+    "addr": "1:59c1c",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:697; address: xref/DOS"
+   },
+   "INIT_AFFICHE_ECRAN_SAVE": {
+    "addr": "1:59d54",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:720; address: xref/DOS"
+   },
+   "SAISIE_NOM": {
+    "addr": "1:59dcc",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:735; address: xref/DOS"
+   },
+   "REALISATION_ACTION": {
+    "addr": "1:5a0f4",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:824; address: xref/DOS"
+   },
+   "DISPLAY_SYMBOLE": {
+    "addr": "1:5a3a0",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:165; address: xref/DOS"
+   },
+   "INIT_CONTINUE": {
+    "addr": "1:5a3ec",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:189; address: xref/DOS"
+   },
+   "CHEAT_MODE_CONTINUE": {
+    "addr": "1:5a5e8",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:244; address: xref/DOS"
+   },
+   "MAIN_CONTINUE_PRG": {
+    "addr": "1:5a798",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:300; address: xref/DOS"
+   },
+   "FIN_CONTINUE_PRG": {
+    "addr": "1:5aaa8",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:407; address: xref/DOS"
+   },
+   "INIT_NO_MORE_CONTINUE": {
+    "addr": "1:5ab24",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:888; address: xref/DOS"
+   },
+   "MAIN_NO_MORE_CONTINUE_PRG": {
+    "addr": "1:5ab98",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:429; address: xref/DOS"
+   },
+   "INIT_VIGNET": {
+    "addr": "1:5abec",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:898; address: xref/DOS"
+   },
+   "INIT_CREDITS": {
+    "addr": "1:5af40",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:523; address: xref/DOS"
+   },
+   "DO_CREDITS": {
+    "addr": "1:5b000",
+    "name": "PS1",
+    "evidence": "source: external\\rayman-ps1-decomp\\src\\menu\\menu_6A3BC.c:543; address: xref/DOS"
+   },
+   "INIT_ANIM_VICTOIRE": {
+    "addr": "1:5b138",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:963; address: xref/DOS"
+   },
+   "DO_RAYMAN_WINS": {
+    "addr": "1:5b178",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:968; address: xref/DOS"
+   },
+   "DO_LOADER_ANIM": {
+    "addr": "1:5b258",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:985; address: xref/DOS"
+   },
+   "INIT_LEVEL_ANIM": {
+    "addr": "1:5b590",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:1083; address: xref/DOS"
+   },
+   "DO_LEVEL_ANIM": {
+    "addr": "1:5b73c",
+    "name": "RAYVERSE",
+    "evidence": "source: external\\rayverse\\src\\worldmap.c:1135; address: xref/DOS"
+   },
+   "LOAD_VIGNET_GAME": {
+    "addr": "1:26788",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "REMOVE_FICHIER": {
+    "addr": "1:26b0c",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "ValidButPressed": {
+    "addr": "1:2715c",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "SelectButPressed": {
+    "addr": "1:27280",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "WaitNSynchro": {
+    "addr": "1:2db24",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "general_init_screen": {
+    "addr": "1:3f698",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "TestCompteur": {
+    "addr": "1:3f76c",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "TestButtonReleased": {
+    "addr": "1:3f7b0",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "confirmation_msg": {
+    "addr": "1:3fb94",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "INIT_RAY_BEGIN": {
+    "addr": "1:49900",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "manage_snd": {
+    "addr": "1:62f38",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "SaveGameOnDisk": {
+    "addr": "1:64400",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "LoadGameOnDisk": {
+    "addr": "1:646d0",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
+   },
+   "LoadInfoGame": {
+    "addr": "1:649c8",
+    "name": "RAYVERSE",
+    "evidence": "called target: xref/DOS"
    }
   },
   "data": {
@@ -7691,6 +8016,386 @@
     "type": "s32 (*)(u8 *,u8 *,s32,s32)",
     "name": "RAYVERSE",
     "evidence": "Rayverse types.h swap_func_t and data.c //CD120; Android object size 4; DOS function-pointer stores"
+   },
+   "wi_save_zone": {
+    "addr": "2:3af88",
+    "name": "RAYVERSE",
+    "type": "u8[24]",
+    "evidence": "external/rayverse/src/data.c:2541 comment CAF88; DOS obj2 offset 3af88"
+   },
+   "save_zone": {
+    "addr": "2:3afa0",
+    "name": "RAYVERSE",
+    "type": "u8[2592]",
+    "evidence": "external/rayverse/src/data.c:2542 comment CAFA0; DOS obj2 offset 3afa0"
+   },
+   "menu_to_display": {
+    "addr": "2:3bd08",
+    "name": "RAYVERSE",
+    "type": "display_item_t[10]",
+    "evidence": "external/rayverse/src/data.c:2546 comment CBD08; DOS obj2 offset 3bd08"
+   },
+   "TempsDemo": {
+    "addr": "2:3d134",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "external/rayverse/src/data.c:2617 comment CD134; DOS obj2 offset 3d134"
+   },
+   "save_ray": {
+    "addr": "2:3d798",
+    "name": "RAYVERSE",
+    "type": "char[3][4]",
+    "evidence": "external/rayverse/src/data.c:2622 comment CD798; DOS obj2 offset 3d798"
+   },
+   "LoadInfoRay": {
+    "addr": "2:3d8b0",
+    "name": "RAYVERSE",
+    "type": "loadinforay_t[3]",
+    "evidence": "external/rayverse/src/data.c:2668 comment CD8B0; DOS obj2 offset 3d8b0"
+   },
+   "mapobj": {
+    "addr": "2:3d8cc",
+    "name": "RAYVERSE",
+    "type": "obj_t[25]",
+    "evidence": "external/rayverse/src/data.c:2673 comment CD8CC; DOS obj2 offset 3d8cc"
+   },
+   "bigray": {
+    "addr": "2:3e784",
+    "name": "RAYVERSE",
+    "type": "obj_t",
+    "evidence": "external/rayverse/src/data.c:2692 comment CE784; DOS obj2 offset 3e784"
+   },
+   "raylittle": {
+    "addr": "2:3e808",
+    "name": "RAYVERSE",
+    "type": "obj_t",
+    "evidence": "external/rayverse/src/data.c:2693 comment CE808; DOS obj2 offset 3e808"
+   },
+   "raytmp": {
+    "addr": "2:3ee5c",
+    "name": "RAYVERSE",
+    "type": "obj_t",
+    "evidence": "external/rayverse/src/data.c:2702 comment CEE5C; DOS obj2 offset 3ee5c"
+   },
+   "nb_credits_lines": {
+    "addr": "2:3f764",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2728 comment CF764; DOS obj2 offset 3f764"
+   },
+   "basex": {
+    "addr": "2:3f76e",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2733 comment CF76E; DOS obj2 offset 3f76e"
+   },
+   "compteur_clignote": {
+    "addr": "2:3f772",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2734 comment CF772; DOS obj2 offset 3f772"
+   },
+   "sortie_save": {
+    "addr": "2:3f776",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2736 comment CF776; DOS obj2 offset 3f776"
+   },
+   "realisation_effectuee": {
+    "addr": "2:3f778",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2737 comment CF778; DOS obj2 offset 3f778"
+   },
+   "selection_effectuee": {
+    "addr": "2:3f77c",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2739 comment CF77C; DOS obj2 offset 3f77c"
+   },
+   "repetition": {
+    "addr": "2:3f77e",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2740 comment CF77E; DOS obj2 offset 3f77e"
+   },
+   "clignotement": {
+    "addr": "2:3f782",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2742 comment CF782; DOS obj2 offset 3f782"
+   },
+   "fin_saisie_nom": {
+    "addr": "2:3f784",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2743 comment CF784; DOS obj2 offset 3f784"
+   },
+   "fichier_existant": {
+    "addr": "2:3f788",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2745 comment CF788; DOS obj2 offset 3f788"
+   },
+   "compteur": {
+    "addr": "2:3f78a",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2746 comment CF78A; DOS obj2 offset 3f78a"
+   },
+   "affiche_bon_ecran": {
+    "addr": "2:3f790",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2749 comment CF790; DOS obj2 offset 3f790"
+   },
+   "max_compteur": {
+    "addr": "2:3f794",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2751 comment CF794; DOS obj2 offset 3f794"
+   },
+   "delai_repetition": {
+    "addr": "2:3f79a",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2754 comment CF79A; DOS obj2 offset 3f79a"
+   },
+   "action": {
+    "addr": "2:3f7a2",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2757 comment CF7A2; DOS obj2 offset 3f7a2"
+   },
+   "nbre_options": {
+    "addr": "2:3f7a4",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2758 comment CF7A4; DOS obj2 offset 3f7a4"
+   },
+   "positionx2": {
+    "addr": "2:3f7aa",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2761 comment CF7AA; DOS obj2 offset 3f7aa"
+   },
+   "ecarty": {
+    "addr": "2:3f7b4",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2766 comment CF7B4; DOS obj2 offset 3f7b4"
+   },
+   "ecartx": {
+    "addr": "2:3f7b6",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2767 comment CF7B6; DOS obj2 offset 3f7b6"
+   },
+   "debut_sortie": {
+    "addr": "2:3f7b8",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2768 comment CF7B8; DOS obj2 offset 3f7b8"
+   },
+   "ecart_options": {
+    "addr": "2:3f7ba",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2769 comment CF7BA; DOS obj2 offset 3f7ba"
+   },
+   "fichier_selectionne": {
+    "addr": "2:3f7bc",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2770 comment CF7BC; DOS obj2 offset 3f7bc"
+   },
+   "positiony": {
+    "addr": "2:3f7be",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2771 comment CF7BE; DOS obj2 offset 3f7be"
+   },
+   "positionx": {
+    "addr": "2:3f7c0",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2772 comment CF7C0; DOS obj2 offset 3f7c0"
+   },
+   "fichier_a_copier": {
+    "addr": "2:3f7c2",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2773 comment CF7C2; DOS obj2 offset 3f7c2"
+   },
+   "ktxtenx": {
+    "addr": "2:3f7d8",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2784 comment CF7D8; DOS obj2 offset 3f7d8"
+   },
+   "ktxteny": {
+    "addr": "2:3f7da",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2785 comment CF7DA; DOS obj2 offset 3f7da"
+   },
+   "loop_nb_trames": {
+    "addr": "2:3f824",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2821 comment CF824; DOS obj2 offset 3f824"
+   },
+   "loop_timing": {
+    "addr": "2:3f826",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2822 comment CF826; DOS obj2 offset 3f826"
+   },
+   "ywldmapsave": {
+    "addr": "2:3f832",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2828 comment CF832; DOS obj2 offset 3f832"
+   },
+   "xwldmapsave": {
+    "addr": "2:3f834",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2829 comment CF834; DOS obj2 offset 3f834"
+   },
+   "ymapinit": {
+    "addr": "2:3f83e",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2834 comment CF83E; DOS obj2 offset 3f83e"
+   },
+   "xmapinit": {
+    "addr": "2:3f844",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2837 comment CF844; DOS obj2 offset 3f844"
+   },
+   "special_ray_mov_win_x_left": {
+    "addr": "2:3f8a8",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2886 comment CF8A8; DOS obj2 offset 3f8a8"
+   },
+   "special_ray_mov_win_x_right": {
+    "addr": "2:3f8ae",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "external/rayverse/src/data.c:2889 comment CF8AE; DOS obj2 offset 3f8ae"
+   },
+   "MenuCredits": {
+    "addr": "2:3fa19",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2938 comment CFA19; DOS obj2 offset 3fa19"
+   },
+   "first_credit": {
+    "addr": "2:3fa34",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2965 comment CFA34; DOS obj2 offset 3fa34",
+    "dos_size_evidence": "only byte accesses in DOS INIT_CREDITS/DO_CREDITS (mov/inc byte ptr); Android widened to 2"
+   },
+   "menuEtape": {
+    "addr": "2:3fa37",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2968 comment CFA37; DOS obj2 offset 3fa37"
+   },
+   "MENU_RETURN": {
+    "addr": "2:3fa39",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2970 comment CFA39; DOS obj2 offset 3fa39"
+   },
+   "last_credit": {
+    "addr": "2:3fa3a",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2971 comment CFA3A; DOS obj2 offset 3fa3a",
+    "dos_size_evidence": "only byte accesses in DOS INIT_CREDITS/DO_CREDITS (mov/inc byte ptr); Android widened to 2"
+   },
+   "nb_continue": {
+    "addr": "2:3fa3b",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2972 comment CFA3B; DOS obj2 offset 3fa3b"
+   },
+   "NBRE_SAVE": {
+    "addr": "2:3fa3d",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2974 comment CFA3D; DOS obj2 offset 3fa3d"
+   },
+   "nouvelle_partie": {
+    "addr": "2:3fa3f",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2976 comment CFA3F; DOS obj2 offset 3fa3f"
+   },
+   "PROC_EXIT": {
+    "addr": "2:3fa40",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2977 comment CFA40; DOS obj2 offset 3fa40"
+   },
+   "dontdoit": {
+    "addr": "2:3fa43",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2980 comment CFA43; DOS obj2 offset 3fa43"
+   },
+   "chemin_percent": {
+    "addr": "2:3fa45",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2982 comment CFA45; DOS obj2 offset 3fa45"
+   },
+   "display_Vignet": {
+    "addr": "2:3fa47",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:2984 comment CFA47; DOS obj2 offset 3fa47"
+   },
+   "dir_on_wldmap": {
+    "addr": "2:3fa5a",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:3003 comment CFA5A; DOS obj2 offset 3fa5a"
+   },
+   "fin_continue": {
+    "addr": "2:3fa5c",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:3005 comment CFA5C; DOS obj2 offset 3fa5c"
+   },
+   "old_num_world": {
+    "addr": "2:3fa5f",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:3008 comment CFA5F; DOS obj2 offset 3fa5f"
+   },
+   "ALL_WORLD": {
+    "addr": "2:3fa61",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "external/rayverse/src/data.c:3010 comment CFA61; DOS obj2 offset 3fa61"
+   },
+   "anim_sequence": {
+    "addr": "2:54e78",
+    "name": "RAYVERSE",
+    "type": "s16*",
+    "evidence": "external/rayverse/src/data.c:3307 comment E4E78; DOS obj2 offset 54e78"
+   },
+   "anim_func": {
+    "addr": "2:3d13c",
+    "name": "RAYVERSE",
+    "type": "void (*)(void)",
+    "evidence": "external/rayverse/src/data.c:2619 comment CD13C; DOS obj2 offset 3d13c"
    }
   }
  }
