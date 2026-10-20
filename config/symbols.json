@@ -1696,6 +1696,66 @@
     "addr": "1:45fbc",
     "name": "RAYVERSE",
     "evidence": "DOS call at 1:6ad67; python tools/xref.py and tools/android.py confirm make_active at 1:45fbc (Android size 77)"
+   },
+   "DO_CLOWN_TNT_COMMAND": {
+    "addr": "1:1a940",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2A940; DOS object map 1:1a940..1:1b2d0"
+   },
+   "DO_CLOWN_TNT2_COMMAND": {
+    "addr": "1:1ab2c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2AB2C; DOS disassembly"
+   },
+   "DO_CLOWN_TNT3_COMMAND": {
+    "addr": "1:1abc8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2ABC8; DOS disassembly"
+   },
+   "DO_BIG_CLOWN_ATTAK": {
+    "addr": "1:1ad1c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2AD1C; DOS disassembly"
+   },
+   "allocatedrop": {
+    "addr": "1:1adb8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2ADB8; DOS disassembly"
+   },
+   "DO_WAT_CLOWN_ATTAK": {
+    "addr": "1:1aee4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2AEE4; DOS disassembly"
+   },
+   "DO_CLOWN_TNT_ATTACK": {
+    "addr": "1:1af3c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2AF3C; DOS disassembly"
+   },
+   "Clown_Music_Atter": {
+    "addr": "1:1b0fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2B0FC; DOS disassembly"
+   },
+   "DoWatAndBigClownPoingCollision": {
+    "addr": "1:1b18c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2B18C; DOS disassembly"
+   },
+   "DoTntClownPoingCollision": {
+    "addr": "1:1b1fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2B1FC; DOS disassembly"
+   },
+   "DoWatAndBigClownRaymanZDD": {
+    "addr": "1:1b274",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2B274; DOS disassembly"
+   },
+   "DoTntClownRaymanZDD": {
+    "addr": "1:1b2a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse clown.c //2B2A0; DOS disassembly"
    }
   },
   "data": {
@@ -4136,6 +4196,12 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "data.c //CF846; Android size 2; DOS word accesses at 2:3f846"
+   },
+   "screen_trembling": {
+    "addr": "2:3f852",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF852; DOS word store at 1:1ad49; Android symbol size 2 in .bss"
    }
   }
  }

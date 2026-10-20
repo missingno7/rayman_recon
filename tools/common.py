@@ -38,7 +38,7 @@ def load_json(path):
 def dump_json(path, obj):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp = path.with_suffix(path.suffix + f".{os.getpid()}.tmp")   # per-process: concurrent writers must not collide
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
         json.dump(obj, f, indent=1, sort_keys=False)
         f.write("\n")
