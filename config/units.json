@@ -1438,6 +1438,9 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "_BSS": "VERIFIED"
    }
   },
   "data_195a": {

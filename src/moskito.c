@@ -33,6 +33,11 @@ typedef struct record_t {
     u8 is_finished;
 } record_t;
 
+/* These three one-byte states form the MOSKITO object's natural _BSS block. */
+u8 curAct;
+u8 fistAvoided;
+u8 mstMustLeaveScreenToProceed;
+
 extern s16 ray_zdc_x, ray_zdc_y, ray_zdc_h, ray_zdc_w;
 extern s16 scroll_start_x, scroll_end_x, scroll_start_y, scroll_end_y;
 extern s16 bossScrollStartX, bossScrollEndX, bossScrollStartY, bossScrollEndY;
@@ -40,10 +45,9 @@ extern s16 h_scroll_speed, v_scroll_speed, xmap, ymap;
 extern u8 scrollLocked;
 extern u8 *moskitoActionSequences[10];
 extern u8 bossEncounter, currentBossAction, currentBossActionIsOver;
-extern u8 curAct;
 extern u8 saveBossEncounter, saveCurrentBossAction, bossReachingAccuracyX, bossReachingAccuracyY;
-extern u8 bossReachingTimer, bossSafeTimer, mstMustLeaveScreenToProceed, fin_boss;
-extern u8 fistAvoided, MsAnimIndex;
+extern u8 bossReachingTimer, bossSafeTimer, fin_boss;
+extern u8 MsAnimIndex;
 extern s16 remoteRayXToReach, bossXToReach, bossYToReach, floorLine, mst_scroll_obj_id;
 extern s32 Bloc_lim_H1;
 extern s32 alternateBossSpeedFactor, bossSpeedFactor;
