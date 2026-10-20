@@ -1,7 +1,8 @@
-/* jumelle.c (1:32930..1:34580, binoculars/world-map zoom; software floating point, -fpc). Names RAYVERSE/ANDROID; workers tu_jumelle + fin_jumelle. #pragma aux lines below only declare the register ABI of external hand-written assembly routines (no code). */
+/* jumelle.c (1:32930..1:34580, binoculars/world-map zoom; software floating point, -fpc). Names RAYVERSE/ANDROID; workers tu_jumelle + fin_jumelle + gfin_jumelle. #pragma aux lines below only declare the register ABI of external hand-written assembly routines (no code). */
 /* jumelle.c -- DOS v1.21 candidate, 1:32930..1:34571.
  * Compile wc106 -zq -oaxt -s -5r -fpc; overlay symbols.json.
- * Partial reconstruction: see NOTES.md and final.json for strict results.
+ * Partial reconstruction: 7/19 STRICT; see NOTES.md and final.json.
+ * DisplayJumellesNormal: explicit guarded midpoint-circle recurrences are STRICT.
  * Function/global names RAYVERSE except ChangeRealPosJumelle (ANDROID).
  * Descriptive locals INVENTED. No shared types changed.
  */
@@ -251,19 +252,27 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
 }
 
 
-void DisplayJumellesNormal(s32 x, s32 y, s32 rayon, s32 a4, u8* effet_buf, u8* draw_buf) {
-    s32 v7 = 0;
-    s32 v6 = 0;
-    s32 v8 = rayon;
-    while (v7 <= v8) {
-        plot2linejumelle(x, y, v7, v8, a4, effet_buf, draw_buf);
-        plot2linejumelle(x, y, v8, v7, a4, effet_buf, draw_buf);
-        v6 += 2 * v7 + 1;
-        ++v7;
-        if (v6 >= v8) {
-            v6 -= 2 * v8 - 1;
-            --v8;
-        }
+void DisplayJumellesNormal(s32 x, s32 y, s32 rayon, s32 circle2_offset, u8* effet_buf, u8* draw_buf) {
+    s32 plot_x = 0;
+    s32 decision = 0;
+    s32 plot_y = rayon;
+    /* First differences of the midpoint-circle decision variable.
+     * The guarded declarations also reproduce the DOS induction slots. */
+    if (plot_x <= plot_y) {
+        s32 east_step = 2 * plot_x + 1;
+        s32 south_step = 2 * plot_y - 1;
+        do {
+            plot2linejumelle(x, y, plot_x, plot_y, circle2_offset, effet_buf, draw_buf);
+            plot2linejumelle(x, y, plot_y, plot_x, circle2_offset, effet_buf, draw_buf);
+            decision += east_step;
+            east_step += 2;
+            ++plot_x;
+            if (decision >= plot_y) {
+                decision -= south_step;
+                south_step -= 2;
+                --plot_y;
+            }
+        } while (plot_x <= plot_y);
     }
     if (ParamZoomChange) PrepareJumelleZoom();
 }
