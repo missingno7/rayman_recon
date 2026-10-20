@@ -62,7 +62,10 @@ Shared root causes found and fixed:
 | census-guided collision2 (19 min) | **16 of 24 (67%)**, 12 -> 28/36 |
 | census-guided objupdate2 (23 min) | **13 of 17 (76%)**, 34 -> 47/51 (one more rejected: forced boolean form) |
 | census-guided breakout (27 min) | **3 of 20 (15%)**, 19 -> 22/39 - C written from disassembly (no PS1, Rayverse stubs) |
-| **guided total** | **71 of 117 (61%)** vs 46% unguided; weakest where no reference C exists |
+| census-guided display (21 min) | **11 of 18 (61%)**, 14 -> 25/32 |
+| census-guided meredenis (29 min) | **10 of 15 (67%)**, 3 -> 13/18 (one forced boolean form rejected) |
+| census-guided basic (32 min, second pass on a finished unit) | **9 of 22 (41%)**, 36 -> 45/58 |
+| **guided total (8 passes)** | **101 of 172 (59%)** vs 46% unguided; weakest where no reference C exists (breakout) |
 The worldmap pass shows the upper end: the brief told it which functions were logic gaps (missing calls/guards/
 globals) and which were pure shape, so it did not search shape on logic gaps or vice versa.
 
