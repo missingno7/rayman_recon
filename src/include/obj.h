@@ -158,6 +158,11 @@ typedef struct level_t {          /* DOS 6 bytes (packed); Android reports 8 (na
     s16 nb_objects;
 } level_t;
 
+typedef struct level_obj_t {       /* src/blacktoon.c */
+    s16 *obj_ids;
+    s16 nb_objects;
+} level_obj_t;
+
 typedef struct active_objects_t {  /* actobj: 202 bytes (Android agrees); src/ufo.c */
     s16 objects[100];
     s16 num_active_objects;

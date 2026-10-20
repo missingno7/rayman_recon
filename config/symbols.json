@@ -601,6 +601,76 @@
     "addr": "1:14f60",
     "name": "RAYVERSE",
     "evidence": "Direct DOS call target from DO_ONE_PINK_CMD"
+   },
+   "allocateBlacktoonEyes": {
+    "addr": "1:13030",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //23030; DOS entry at 1:13030"
+   },
+   "DO_BLK_SPEED_COMMAND": {
+    "addr": "1:1311c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //2311C; DOS entry at 1:1311c"
+   },
+   "blkUTurn": {
+    "addr": "1:131bc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //231BC; DOS entry at 1:131bc"
+   },
+   "DO_BLK_LR_COMMAND": {
+    "addr": "1:1320c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //2320C; DOS entry at 1:1320c"
+   },
+   "DO_BLK_NOP_COMMAND": {
+    "addr": "1:13350",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //23350; DOS entry at 1:13350"
+   },
+   "DO_BLKTOON_COMMAND": {
+    "addr": "1:134cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //234CC; DOS entry at 1:134cc"
+   },
+   "DoBlackToonPoingCollision": {
+    "addr": "1:134fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //234FC; DOS entry at 1:134fc"
+   },
+   "DoBlackToonRaymanZDD": {
+    "addr": "1:135a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blacktoon.c //235A0; DOS entry at 1:135a0"
+   },
+   "DoEffectBloodOut": {
+    "addr": "1:13800",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse blood.c //23800 supplies the function name only; body reconstructed from DOS instructions"
+   },
+   "calc_obj_dir": {
+    "addr": "1:0dfb8",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct calls from blacktoon at 1:130b0 and 1:13705; Rayverse basic.c"
+   },
+   "get_center_x": {
+    "addr": "1:0d824",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct calls from blacktoon at 1:1312f and 1:132b6; Rayverse basic.c"
+   },
+   "get_center_y": {
+    "addr": "1:0d954",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct calls from blacktoon at 1:13138 and 1:132bf; Rayverse basic.c"
+   },
+   "sinYspeed": {
+    "addr": "1:0d528",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from blacktoon at 1:132ab; Rayverse engine helper"
+   },
+   "synchro": {
+    "addr": "1:06e8a",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from blood routine at 1:13996; Rayverse lowlevel.c"
    }
   },
   "data": {
@@ -1324,6 +1394,42 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CFA70; DOS byte comparison"
+   },
+   "level_alw": {
+    "addr": "2:3cde8",
+    "type": "level_obj_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CCDE8; DOS accesses obj_ids pointer at +0 and count word at +4; local struct matches Rayverse types.h"
+   },
+   "SpeedYLine": {
+    "addr": "2:3fac4",
+    "type": "s32[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFAC4; DOS reads/writes ten dword launch speeds"
+   },
+   "PosXLine": {
+    "addr": "2:3faec",
+    "type": "s32[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFAEC; DOS reads/writes ten dword launch positions"
+   },
+   "PosYLine": {
+    "addr": "2:3fb14",
+    "type": "s32[320]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFB14; DOS indexes 320 dword positions at scale 4"
+   },
+   "DrawBufferNormal": {
+    "addr": "2:3d138",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD138; DOS loads buffer pointer before the word-copy loop"
+   },
+   "display_buffer": {
+    "addr": "2:3d7d0",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD7D0; DOS loads destination pointer before the word-copy loop"
    }
   }
  }
