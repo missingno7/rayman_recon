@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import BUILD, CONFIG, load_json  # noqa: E402
 
 GAME_CODE_END = {"gog_v121_us": 0x6fbe6}   # first CLIB member (strupr) - game code + hand asm below it
+GAME_DATA_END = 0x2d998                      # first runtime _DATA member (cstrt386), docs/DATA.md
 
 
 def main():
@@ -30,7 +31,23 @@ def main():
     end = GAME_CODE_END["gog_v121_us"]
     print(f"STRICT code bytes (last verify): {strict_bytes} of ~{end} game code bytes in 1:00000-1:{end:05x} "
           f"({100.0 * strict_bytes / end:.2f}%)")
-    print(f"VERIFIED data segment bytes (last verify): {data_b}")
+    # mapped = bytes of game _DATA covered by named bindings with a known size (claims, not reconstruction)
+    import promote
+    from image import parse_addr
+    spans = []
+    for n, e in sym.get("data", {}).items():
+        o, a = parse_addr(e["addr"])
+        size = promote.type_size(e.get("type")) or e.get("size")
+        if o == 2 and size and a < GAME_DATA_END:
+            spans.append((a, min(a + size, GAME_DATA_END)))
+    mapped, last = 0, 0
+    for a, b in sorted(spans):
+        a = max(a, last)
+        if b > a:
+            mapped += b - a
+            last = b
+    print(f"data: reconstructed (VERIFIED segments, last verify) {data_b} bytes; mapped game _DATA (named+sized "
+          f"bindings) {mapped} of {GAME_DATA_END} bytes ({100.0 * mapped / GAME_DATA_END:.1f}%)")
     print(f"bindings: {len(sym.get('functions', {}))} functions, {len(sym.get('data', {}))} data")
     for name, u in units.items():
         st = {}

@@ -102,17 +102,31 @@ def side_by_side(cand, orig, start, base, n=10):
 
 
 def segment_report(img, mod, seg_base, binds):
-    """Status of the object's data segments: VERIFIED (whole contents equal the oracle at one consistent base),
-    MISMATCH, UNPLACED (no reference or binding fixes a base), BSS (contents not checkable here)."""
+    """Status of the object's data segments: VERIFIED (whole contents equal the oracle at one consistent base and
+    every relocation inside the segment is verified), MISMATCH, UNPLACED (no reference or binding fixes a base),
+    BSS (contents not checkable here).
+
+    Relocations inside data (pointer initialisers): each candidate off32 fixup must coincide with an oracle obj2
+    fixup at the same site, the oracle must have no extra fixups in the segment, and the target must resolve to the
+    oracle target through (a) config/symbols.json / library bindings of the referenced symbol + addend or (b) one of
+    this object's own segments whose base is already established."""
     out = []
-    for si, seg in enumerate(mod.segments):
-        if not seg or seg.cls.upper() == "CODE" or seg.size == 0 or seg.name.startswith("$$"):
-            continue
+    data_si = [si for si, seg in enumerate(mod.segments)
+               if seg and seg.cls.upper() != "CODE" and seg.size and not seg.name.startswith("$$")]
+    for si in data_si:
+        seg = mod.segments[si]
+        for n, s2, o, _ in mod.publics:          # defined data bound in config/symbols.json
+            if s2 == si:
+                a, _src = binds.lookup(n)
+                if a and si not in seg_base:
+                    seg_base[si] = (a[0], a[1] - o)
+    for si in data_si:
+        seg = mod.segments[si]
         ent = {"segment": seg.name, "class": seg.cls, "size": seg.size}
         bases = set()
         if si in seg_base:
             bases.add(seg_base[si])
-        for n, s2, o, _ in mod.publics:          # defined data bound in config/symbols.json
+        for n, s2, o, _ in mod.publics:
             if s2 == si:
                 a, _src = binds.lookup(n)
                 if a:
@@ -127,15 +141,46 @@ def segment_report(img, mod, seg_base, binds):
         else:
             o, b = next(iter(bases))
             ent["oracle"] = f"{o}:{b:05x}"
-            seg_fx = [f for f in mod.fixups if f.seg == si]
-            covered = bytes(seg.covered) == b"" * seg.size
-            equal = img.obj[o][b:b + seg.size] == bytes(seg.data)
-            ent["status"] = "VERIFIED" if covered and equal and not seg_fx else "MISMATCH"
-            if seg_fx:
-                ent["problem"] = f"{len(seg_fx)} fixups inside the segment (data relocations not verified yet)"
-            elif not equal:
-                diff = next(i for i in range(seg.size) if img.obj[o][b + i] != seg.data[i])
-                ent["problem"] = f"first byte difference at +{diff:x}"
+            covered = bytes(seg.covered) == b"\x01" * seg.size
+            problems = []
+            masked = set()
+            cand_sites = set()
+            for f in (f for f in mod.fixups if f.seg == si):
+                if f.self_rel or f.size() != 4:
+                    problems.append(f"+{f.off:x}: unsupported data fixup {f.kind()}")
+                    continue
+                cand_sites.add(f.off)
+                masked.update(range(f.off, f.off + 4))
+                ofx = img.fixups.get((o, b + f.off))
+                if not ofx:
+                    problems.append(f"+{f.off:x}: candidate relocation, oracle has none")
+                    continue
+                _, tobj, toff = ofx
+                field = struct.unpack_from("<i", seg.data, f.off)[0]
+                addend = f.disp + field
+                tm = f.target[0] & 3
+                taddr = None
+                if tm == 2:
+                    taddr, _src = binds.lookup(mod.target_name(f))
+                elif tm == 0 and f.target[1] in seg_base:
+                    taddr = seg_base[f.target[1]]
+                if taddr is None:
+                    problems.append(f"+{f.off:x}: target {mod.target_name(f)} unbound (oracle {tobj}:{toff:x})")
+                elif (taddr[0], taddr[1] + addend) != (tobj, toff):
+                    problems.append(f"+{f.off:x}: -> {mod.target_name(f)}+{addend:x} = {taddr[0]}:{taddr[1] + addend:x}, "
+                                    f"oracle {tobj}:{toff:x}")
+            extra = sorted(s - b for (ob, s) in img.fixups if ob == o and b <= s < b + seg.size and s - b not in cand_sites)
+            if extra:
+                problems.append("oracle relocations without candidate relocation at +" + ",".join(f"{x:x}" for x in extra[:8]))
+            diffs = [i for i in range(seg.size) if i not in masked and img.obj[o][b + i] != seg.data[i]]
+            if diffs:
+                problems.append(f"first byte difference at +{diffs[0]:x} ({len(diffs)} bytes differ)")
+            if not covered:
+                problems.append("segment has uncovered bytes")
+            ent["relocations"] = len(cand_sites)
+            ent["status"] = "VERIFIED" if not problems else "MISMATCH"
+            if problems:
+                ent["problem"] = "; ".join(problems[:4])
         out.append(ent)
     return out
 

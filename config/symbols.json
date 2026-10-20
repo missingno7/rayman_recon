@@ -1430,6 +1430,18 @@
     "type": "u8*",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CD7D0; DOS loads destination pointer before the word-copy loop"
+   },
+   "joy_done": {
+    "addr": "2:2994",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //92994; initialised _DATA on DOS (Android .bss)"
+   },
+   "zonediffy": {
+    "addr": "2:2ba2",
+    "type": "s16[262]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //92BA2; Android .data size 524"
    }
   }
  }

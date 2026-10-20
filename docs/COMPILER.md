@@ -21,6 +21,9 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   functions inside 4-aligned with nop padding (90, 8bc0, 8d4000); WLINK pads between objects with 00.
 - **Structure packing 1 by default** [PROVEN, wcc386 10.6 probe]: `struct {char a; int b;}` -> b at +1, size 5;
   no `-zp` flag or pragma is needed for the packed game structures (src/include/obj.h).
+- **`_DATA` items are naturally aligned** [PROVEN probe + oracle]: `-zp1` packs struct members only; file-scope
+  initialised objects are aligned to their type (short 2, int 4, double 8). Oracle: `u8 joy_done` at 2:02994 is
+  followed by one pad byte before `s16 zonediffx[]` at 2:02996 (src/data_coll.c VERIFIED).
 - **Bitfields allocate LSB-first in `unsigned char` units** [PROVEN]: BAT_ray_in_zone (STRICT) clears `flip_x`
   (4th field) with `and byte ptr [obj+0x81],0xf7`.
 - **Data reference encoding**: wcc386 keeps the addend in the fixup field (`RandArray-2` -> field -2); PMW1 stores
