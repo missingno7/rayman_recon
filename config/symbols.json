@@ -1386,6 +1386,136 @@
     "addr": "1:50c2c",
     "name": "RAYVERSE",
     "evidence": "tools/xref.py maps skipTestArgs to 1:50c2c; Rayverse objupdate.c:81"
+   },
+   "DO_STONEMAN_COMMAND": {
+    "addr": "1:6ca90",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CA90"
+   },
+   "DO_STONEDOG_COMMAND": {
+    "addr": "1:6cb48",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CB48"
+   },
+   "DoStoneDogPoingCollision": {
+    "addr": "1:6ccf0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CCF0"
+   },
+   "DO_STONEBOMB_COMMAND": {
+    "addr": "1:6cd54",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CD54"
+   },
+   "IS_STONEWOMAN_WAIT": {
+    "addr": "1:6cde0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CDE0"
+   },
+   "DO_STONEWOMAN_COMMAND": {
+    "addr": "1:6ce04",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7CE04"
+   },
+   "DO_NOMOVE_STONEWOMAN_COMMAND": {
+    "addr": "1:6d070",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D070"
+   },
+   "DO_ONE_STONECHIP_COMMAND": {
+    "addr": "1:6d0f0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D0F0"
+   },
+   "setStoneChipPos": {
+    "addr": "1:6d1c8",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D1C8"
+   },
+   "allocateStoneChips": {
+    "addr": "1:6d37c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D37C"
+   },
+   "DO_STONE_EXPLOSION": {
+    "addr": "1:6d43c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D43C"
+   },
+   "allocateStonemanStone": {
+    "addr": "1:6d4e4",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D4E4"
+   },
+   "DO_STONEMAN1_TIR": {
+    "addr": "1:6d83c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D83C"
+   },
+   "DO_STONEMAN2_TIR": {
+    "addr": "1:6d908",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D908"
+   },
+   "allocateStonewomanStone": {
+    "addr": "1:6d9c0",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7D9C0"
+   },
+   "DO_STONEWOMAN_TIR": {
+    "addr": "1:6dc5c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7DC5C"
+   },
+   "allocateEclatPS": {
+    "addr": "1:6dd78",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7DD78"
+   },
+   "DO_PI_EXPLOSION": {
+    "addr": "1:6de68",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7DE68"
+   },
+   "DoPiMusPoingCollision": {
+    "addr": "1:6e000",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E000"
+   },
+   "DoPiPoingCollision": {
+    "addr": "1:6e120",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E120"
+   },
+   "DO_PNG_COLL_STONEMAN": {
+    "addr": "1:6e190",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E190"
+   },
+   "DO_PNG_COLL_STONEWOMAN": {
+    "addr": "1:6e258",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E258"
+   },
+   "DoStoneMan1et2RaymanZDD": {
+    "addr": "1:6e2fc",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E2FC"
+   },
+   "DoStoneDogRaymanZDD": {
+    "addr": "1:6e33c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; Rayverse stoneman.c //7E33C"
+   },
+   "PlaySnd_old": {
+    "addr": "1:62960",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; DOS direct call target from stoneman.c"
+   },
+   "allocateExplosion": {
+    "addr": "1:6b29c",
+    "name": "RAYVERSE",
+    "evidence": "tools/xref.py; DOS direct call target from stoneman.c"
    }
   },
   "data": {
@@ -3478,6 +3608,30 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c address comment and declaration; byte width; oracle zero."
+   },
+   "xmapmax": {
+    "addr": "2:3f890",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF890; Android size 2"
+   },
+   "saveRMjumpX": {
+    "addr": "2:3f89c",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF89C; Android size 2"
+   },
+   "saveRMjumpY": {
+    "addr": "2:3f89a",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF89A; Android size 2"
+   },
+   "Mus_obj_id": {
+    "addr": "2:3f896",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF896; Android size 2"
    }
   }
  }
