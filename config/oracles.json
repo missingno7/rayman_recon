@@ -120,6 +120,16 @@
     "created": "1995-04-19 21:06:35",
     "boot": "cdrom:\\SLUS-000.05;1"
    }
+  },
+  "android_apk": {
+   "role": "SUPPORTING reference (names, initialised data contents, x86 code semantics)",
+   "description": "Rayman Anniversary for Android 1.0.1 (com.ubisoft.raymananniversary), third-party APK mirror; lib/x86/libSparkApp.so and lib/armeabi-v7a/libSparkApp.so with dynamic symbols only (no .symtab, no DWARF). Read as data, never executed.",
+   "source": {
+    "kind": "file",
+    "path": "assets/Android/com.ubisoft.raymananniversary-1.0.1-APK4Fun.com.apk"
+   },
+   "size": 35270794,
+   "sha256": "44b5b8c8895fb1ba0d3c5f124f97bb259d91cccb95ef60d9b2bc3c3b7ee95fff"
   }
  }
 }

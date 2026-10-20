@@ -28,7 +28,8 @@ Hard rules
   `match.py --symbols`; no git commits; no background processes; bounded runs, one compile at a time.
 - Keep facts, hypotheses and open questions apart (PROVEN / STRONG / HYPOTHESIS / OPEN) and keep negative results.
 - Names: Rayverse/Android-derived names (RAYVERSE), PS1 decomp names (PS1), or INVENTED (say so). Check
-  `python tools/android.py NAME` (original Android symbol: exists? data size/section = true type) before inventing. Rayverse and
+  `python tools/android.py NAME` (original Android symbol: exists? data size/section = true type) before inventing;
+  `python tools/android.py --dis NAME` shows the Android x86 code of a function (semantics only, never bytes). Rayverse and
   the PS1 decomp are semantic references only; the DOS binary wins every disagreement.
 
 Commands (all run from the repo root with `python`, stdlib + capstone):

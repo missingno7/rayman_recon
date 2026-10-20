@@ -54,3 +54,14 @@ source (names) but with a different compiler and replaced platform layers. Measu
 - NOT usable: Android `.bss` address order does not reflect the DOS declaration order (pairwise agreement with the
   DOS BSS order at chance level: 8,446/15,942) [negative result, `tools/probes/bss_android_order.py`].
 - The DOS CD-audio driver layer is absent on Android (our INVENTED AudioTrackCommand & co. have no Android name).
+
+### Android APK (assets/Android, `android_apk` in config/oracles.json)
+Rayman Anniversary 1.0.1 APK (a later Android build than the text dumps; addresses differ between them). Its
+`lib/x86/libSparkApp.so` has dynamic symbols only (no `.symtab`, no DWARF), but two things are usable:
+- Initialised data contents: `python tools/androiddata.py` finds named `.data/.rodata` objects in DOS obj2 by
+  content. 109 unique hits (>= 4 bytes); 61 unique hits >= 16 bytes with game names became data bindings
+  (name ANDROID) after the overlap/size gates; they reproduce the three earlier independent bindings exactly
+  (costab 2:6fe0, RandArray 2:7344, N_anim 2:4a9c). Watcom keeps `_DATA` in definition order, so these addresses
+  also give the original definition order of initialised globals.
+- x86 code per exported function: `python tools/android.py --dis NAME` (semantic reference for Rayverse stubs and
+  unnamed functions; e.g. DoEffectBloodOut starts with MakeMyRand(1); start_cd_* call playSound on Android).

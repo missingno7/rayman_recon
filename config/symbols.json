@@ -652,6 +652,354 @@
     "type": "rgb_palette_t",
     "name": "RAYVERSE",
     "evidence": "DOS address passed to SAVE_PALETTE"
+   },
+   "TableImageX": {
+    "addr": "2:195a",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'TableImageX' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "ecroule_rubis_order": {
+    "addr": "2:2524",
+    "size": 24,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'ecroule_rubis_order' (24 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "block_flags": {
+    "addr": "2:253c",
+    "size": 64,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'block_flags' (64 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "flags": {
+    "addr": "2:257c",
+    "size": 1048,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'flags' (1048 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "zonediffx": {
+    "addr": "2:2996",
+    "size": 524,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'zonediffx' (524 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "zdc_tab": {
+    "addr": "2:2dae",
+    "size": 1600,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'zdc_tab' (1600 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "type_zdc": {
+    "addr": "2:33ee",
+    "size": 524,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'type_zdc' (524 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "pente": {
+    "addr": "2:4a7c",
+    "size": 32,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pente' (32 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "bagDy": {
+    "addr": "2:4b9c",
+    "size": 40,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'bagDy' (40 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "bagW": {
+    "addr": "2:4bc4",
+    "size": 40,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'bagW' (40 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "bagH": {
+    "addr": "2:4bec",
+    "size": 40,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'bagH' (40 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "expsin": {
+    "addr": "2:4c14",
+    "size": 126,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'expsin' (126 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "expsin2": {
+    "addr": "2:4c92",
+    "size": 98,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'expsin2' (98 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "EauDy": {
+    "addr": "2:4cf4",
+    "size": 28,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'EauDy' (28 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "angletab": {
+    "addr": "2:4d18",
+    "size": 65,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'angletab' (65 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "mapCd": {
+    "addr": "2:4f3c",
+    "size": 132,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'mapCd' (132 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "timeCd": {
+    "addr": "2:4fc0",
+    "size": 528,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'timeCd' (528 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "DemoRecord": {
+    "addr": "2:5828",
+    "size": 1500,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'DemoRecord' (1500 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "SerieAtakBB": {
+    "addr": "2:5ec6",
+    "size": 168,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'SerieAtakBB' (168 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "PalPlasma": {
+    "addr": "2:5f70",
+    "size": 48,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'PalPlasma' (48 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "pal": {
+    "addr": "2:5fb2",
+    "size": 48,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pal' (48 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "CBdata": {
+    "addr": "2:6018",
+    "size": 646,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'CBdata' (646 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "oscille": {
+    "addr": "2:632c",
+    "size": 58,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'oscille' (58 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "vitrail_clignotement": {
+    "addr": "2:6369",
+    "size": 20,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'vitrail_clignotement' (20 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "pitchTab": {
+    "addr": "2:66b8",
+    "size": 256,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pitchTab' (256 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "title": {
+    "addr": "2:67d8",
+    "size": 100,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'title' (100 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "droppedBombLine1": {
+    "addr": "2:6c98",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'droppedBombLine1' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "droppedBombLine3": {
+    "addr": "2:6cb8",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'droppedBombLine3' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "droppedBombLine4": {
+    "addr": "2:6cc8",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'droppedBombLine4' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "droppedBombLine7": {
+    "addr": "2:6cf8",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'droppedBombLine7' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "droppedBombLine8": {
+    "addr": "2:6d08",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'droppedBombLine8' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "mereDenisEncounter3": {
+    "addr": "2:6e63",
+    "size": 56,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'mereDenisEncounter3' (56 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "mereDenisBehindMachine": {
+    "addr": "2:6ea0",
+    "size": 58,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'mereDenisBehindMachine' (58 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "mereDenisMedley": {
+    "addr": "2:6edd",
+    "size": 25,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'mereDenisMedley' (25 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "firstEncounterSequence": {
+    "addr": "2:6f33",
+    "size": 40,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'firstEncounterSequence' (40 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "secondEncounterSequence2": {
+    "addr": "2:6f74",
+    "size": 21,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'secondEncounterSequence2' (21 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "secondEncounterSequence3": {
+    "addr": "2:6f89",
+    "size": 19,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'secondEncounterSequence3' (19 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "secondEncounterSequence4": {
+    "addr": "2:6f9c",
+    "size": 21,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'secondEncounterSequence4' (21 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "pst2_sequence": {
+    "addr": "2:7290",
+    "size": 26,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pst2_sequence' (26 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "moust1_sequence": {
+    "addr": "2:72aa",
+    "size": 18,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'moust1_sequence' (18 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "moust2_sequence": {
+    "addr": "2:72bc",
+    "size": 18,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'moust2_sequence' (18 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "pst1_sequence": {
+    "addr": "2:72ce",
+    "size": 26,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pst1_sequence' (26 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "worry_sequence": {
+    "addr": "2:72e8",
+    "size": 24,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'worry_sequence' (24 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "car_sequence": {
+    "addr": "2:7300",
+    "size": 66,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'car_sequence' (66 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "sound_table": {
+    "addr": "2:7544",
+    "size": 256,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'sound_table' (256 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "frame_snd_bis": {
+    "addr": "2:7744",
+    "size": 256,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'frame_snd_bis' (256 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "snd_bis": {
+    "addr": "2:7844",
+    "size": 512,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'snd_bis' (512 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "hard_sound_table": {
+    "addr": "2:7a44",
+    "size": 1024,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'hard_sound_table' (1024 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "bank_to_use": {
+    "addr": "2:7e44",
+    "size": 256,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'bank_to_use' (256 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "atak": {
+    "addr": "2:7f7c",
+    "size": 70,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'atak' (70 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "SerieDatak": {
+    "addr": "2:7fc2",
+    "size": 176,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'SerieDatak' (176 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "NumSerie": {
+    "addr": "2:8072",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'NumSerie' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "Type_Scroll": {
+    "addr": "2:8084",
+    "size": 60,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'Type_Scroll' (60 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "Tab_NbBande": {
+    "addr": "2:80c0",
+    "size": 60,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'Tab_NbBande' (60 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "Def_Bande": {
+    "addr": "2:80fc",
+    "size": 144000,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'Def_Bande' (144000 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "Tab_NbSprite": {
+    "addr": "2:2b37c",
+    "size": 60,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'Tab_NbSprite' (60 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "Def_Sprite": {
+    "addr": "2:2b3b8",
+    "size": 9600,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'Def_Sprite' (9600 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
+   },
+   "SinTabFeu": {
+    "addr": "2:2d938",
+    "size": 16,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'SinTabFeu' (16 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
    }
   }
  }

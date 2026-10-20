@@ -45,7 +45,7 @@ def overlaps(canon):
         spans = []
         for name, ent in secs.get("data", {}).items():
             o, a = parse_addr(ent["addr"])
-            spans.append((o, a, a + (type_size(ent.get("type")) or 1), name))
+            spans.append((o, a, a + (type_size(ent.get("type")) or ent.get("size") or 1), name))
         spans.sort()
         for x, y in zip(spans, spans[1:]):
             if x[0] == y[0] and y[1] < x[2]:

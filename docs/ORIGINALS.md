@@ -15,6 +15,8 @@ Why GOG v1.21 is primary [PROVEN facts, chosen by judgement]: it is byte-identic
 rayman_disasm (same SHA-256), it is the version Rayverse annotates (Rayverse `//XXXXX` = obj1 offset + 0x10000,
 checked on myRand/EOA/reflexion), and it is the latest US PC build. v1.12 remains a verification target.
 
+| `android_apk` | supporting reference | `assets/Android/com.ubisoft.raymananniversary-1.0.1-APK4Fun.com.apk` | `44b5b8c8…fff` |
+
 ## What each asset tree is
 
 ### assets/GOG (user-supplied GOG install, 100 files)
