@@ -3883,6 +3883,36 @@
     "type": "s32",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CD0A0; Android size 4"
+   },
+   "rvb_save": {
+    "addr": "2:36d88",
+    "name": "RAYVERSE",
+    "type": "rgb_palette_t",
+    "evidence": "Rayverse data.c:2521; contiguous palette subrange; sizes independently agree with Android"
+   },
+   "rvb_pres": {
+    "addr": "2:37088",
+    "name": "RAYVERSE",
+    "type": "rgb_palette_t",
+    "evidence": "Rayverse data.c:2522; contiguous palette subrange; sizes independently agree with Android"
+   },
+   "rvb_fade": {
+    "addr": "2:37388",
+    "name": "RAYVERSE",
+    "type": "u16[256 * 3]",
+    "evidence": "Rayverse data.c:2523; contiguous palette subrange; sizes independently agree with Android"
+   },
+   "current_rvb": {
+    "addr": "2:37988",
+    "name": "RAYVERSE",
+    "type": "rgb_palette_t",
+    "evidence": "Rayverse data.c:2524; contiguous palette subrange; sizes independently agree with Android"
+   },
+   "rvb": {
+    "addr": "2:37f88",
+    "name": "RAYVERSE",
+    "type": "rgb_palette_t[3]",
+    "evidence": "Rayverse data.c:2526; contiguous palette subrange; sizes independently agree with Android"
    }
   }
  }

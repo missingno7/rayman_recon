@@ -2126,6 +2126,15 @@
      ]
     }
    }
+  },
+  "bss_palettes": {
+   "source": "src/data/bss_palettes.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
   }
  }
 }
