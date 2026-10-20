@@ -5,7 +5,7 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **178 functions, 20,705 code bytes** (bootstrap end: 34 / 1,900) in 21 code units |
+| function-level STRICT | **208 functions, 25,473 code bytes** (bootstrap end: 34 / 1,900) in 23 code units |
 | whole-object code closure | rand (1:5bf60; + its _BSS), mathutil (1:4def0), bonus (1:13a00; + CONST), audiocd (1:0cee0; recovered empty start_cd_continue), clown (1:1a940) - every function STRICT, one contiguous `_TEXT` |
 | data closure | **25,532 bytes VERIFIED** (49 `_DATA` units + CONST of bonus and basic); mapped (named+sized bindings, not reconstruction): 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED 6,919 bytes (rand, moskito, central-block palette prefix); ~26 BSS objects delimited |
@@ -32,8 +32,10 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 | luciole | 4/10 | Rayverse stubs; PS1 + binary |
 | clown | 12/12 | whole object |
 | special | 6/30 | |
-| dark | 9/22 | |
-| saxo | 10/25 | |
+| dark | 16/22 | |
+| saxo | 19/25 | |
+| pmama | 11/28 | |
+| meredenis | 3/18 | |
 | fee | 1/8 | 3 functions genuinely differ from Rayverse/PS1 |
 Worker results not integrated (0 STRICT): cymbal (3 large functions), blood (DoEffectBloodOut).
 Verifier self-tests 9/9 (incl. layout and data-tamper tests); `python tools/verify.py`: 0 regressions.
