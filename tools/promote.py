@@ -86,6 +86,8 @@ def merge_symbols(overlay, renames):
     ov = load_json(overlay)
     added = 0
     for oracle, secs in ov.items():
+        if not isinstance(secs, dict):          # e.g. a top-level "note"
+            continue
         dst = canon.setdefault(oracle, {"functions": {}, "data": {}})
         for sec in ("functions", "data"):
             have = dst.setdefault(sec, {})

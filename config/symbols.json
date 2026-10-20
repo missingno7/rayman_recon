@@ -9108,6 +9108,36 @@
     "type": "cb_collision_t[1]",
     "name": "ANDROID",
     "evidence": "Android .bss size 8. DOS collision_briques writes s16 dx/dy +0/+2 and byte flags +4/+5, index +6 at 8-byte stride."
+   },
+   "language": {
+    "addr": "2:3fa35",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse CFA35; DOS DISPLAY_GAME_VIGNET byte load; Android symbol checked"
+   },
+   "plan2_width": {
+    "addr": "2:3d7ec",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse CD7EC; DOS copies low word; Android size 4; Android symbol checked"
+   },
+   "plan2_height": {
+    "addr": "2:3f7e2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse CF7E2; DOS word load; Android symbol checked"
+   },
+   "fin_de_rayman": {
+    "addr": "2:3fa74",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse CFA74; DOS DO_WORLD_MAP byte store; Android symbol checked"
+   },
+   "DrawSpriteColorNormalEtX": {
+    "addr": "2:3d0f8",
+    "type": "stage_draw_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse CD0F8; indirect DOS stage draw call, six-register ABI; Android symbol checked"
    }
   }
  }

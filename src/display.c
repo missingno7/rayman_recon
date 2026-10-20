@@ -1,8 +1,12 @@
-/* display.c (1:240f0..1:25f50: menus, save screens, credits, victory). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_display. See config/units.json for statuses. */
+/* display: original object 1:240f0..1:25f49. Worker gfin_display; see NOTES.md for measured status.
+ * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_resource_t are INVENTED. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "lowlevel.h"
 #include <string.h>
+#include <stdlib.h>
+
 
 extern u8 PROC_EXIT;
 extern u8 display_Vignet;
@@ -81,13 +85,13 @@ extern s16 action, sortie_save, fin_saisie_nom, fichier_selectionne, fichier_exi
 extern s16 realisation_effectuee, level_select, inter_select;
 extern u8 save_ray[3][4], save_ray_copy[4];
 extern s32 TempsDemo;
-extern s16 RunTimeDemo;
+extern u16 RunTimeDemo;
 extern s16 compteur, compteur_clignote, max_compteur;
 extern s16 loop_nb_trames;
 extern u8 new_txt_fee, Vignet_To_Display;
-extern u8 colour, language;
+extern u8 colour, language, VGA_FREQ;
 extern u8 need_timer;
-extern s16 word_CF7EE;
+extern u16 word_CF7EE;
 extern s32 JumellePosX, JumellePosY, RayonJumelle;
 extern u8 *DrawBufferNormal, *EffetBufferNormal, *draw_buffer;
 extern u8 PositionStageNameCalcule;
@@ -129,21 +133,18 @@ extern void DisplayJumellesFondNormal(void);
 extern void DisplayJumellesNormal(s32 x, s32 y, s32 radius, s32 radius_y,
                                   u8 *effect_buffer, u8 *draw_buffer);
 extern void test_Keyb_on_wldmap(void);
-extern s32 wait_until(s32 target);
-extern void sprite_clipping(s16 x, s16 y, s16 width, s16 height);
 extern void display_box_text(display_item_t *box);
 extern void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height,
                              s16 font_size, u8 is_fond);
 extern void INIT_CHEMIN(void);
-extern void INIT_RAY(s16 level);
+extern void INIT_RAY(u8 level);
 extern void DefaultJumelleVariable(void);
 extern void DETER_WORLD_AND_LEVEL(void);
 extern void FIN_WORLD_CHOICE(void);
-extern s16 get_casse_brique_active(void);
+extern u8 get_casse_brique_active(void);
 extern void PlaySnd_old(s16 sound);
 extern void WaitNSynchro(s16 count);
 extern void mute_snd(void);
-extern void get_sprite_clipping(s32 *xmin, s32 *xmax, s32 *ymin, s32 *ymax);
 extern void SAVE_PLAN3(void);
 extern void RESTORE_PLAN3(void);
 extern void INIT_VIGNET(void);
@@ -154,14 +155,16 @@ extern void InitModeXWithFrequency(s32 frequency);
 extern rgb_palette_t rvb_Vig[8];
 extern u8 CarteSonAutorisee, ModeVideoActuel;
 extern s16 ProchainEclair, numero_palette_special;
-extern s16 WidthNworld, HeightNworld, plan2_width, plan2_height, chemin_percent;
+extern s16 WidthNworld, HeightNworld, plan2_height;
+extern s32 plan2_width;
+extern u8 chemin_percent;
 extern s32 map_time;
 extern s16 scroll_start_x, scroll_end_x, scroll_start_y, scroll_end_y;
 extern s16 num_world, num_level, num_world_choice, num_level_choice;
-extern s16 world_index, menuEtape;
+extern u8 world_index, menuEtape;
 extern u8 JeuCracker, fin_de_rayman, ALL_WORLD;
 extern u8 You_Win;
-extern u16 SauveRayEvtsDemo;
+extern rayevts_t SauveRayEvtsDemo;
 extern s16 NumDemo;
 extern s16 DemoRecordSize[6], DemoRecordWorld[6], DemoRecordMap[6];
 extern u8 DemoRecord[1500];
@@ -174,7 +177,6 @@ extern obj_t *star_ray_dev, *star_ray_der;
 extern u8 MenuCredits;
 extern u16 nb_fade;
 extern void INIT_CREDITS(void);
-extern void speaker_enable(u8 enabled);
 extern u32 clock_ticks(void);
 extern void SAVE_PLAN3(void);
 extern void RESTORE_PLAN3(void);
@@ -191,7 +193,7 @@ extern void block_free(mem_t *mem);
 extern credit_t credits[1722];
 extern u8 first_credit;
 extern u8 last_credit;
-extern void display_text(const char *text, s16 x, s16 y, u8 font, s8 color);
+extern void display_text(const char *text, s16 x, s16 y, u8 font, u8 color);
 extern void DoCdCredits(void);
 extern u8 ValidButPressed(void);
 extern u8 SelectButPressed(void);
@@ -239,6 +241,9 @@ extern u8 fin_dark;
 extern rayevts_t RayEvts;
 extern finbosslevel_t finBosslevel;
 extern void SYNCHRO_LOOP(s32 (*scene)(u32));
+
+
+#include "display_local.h"
 
 s32 display_inter_anim(u32 a1)
 {
@@ -311,13 +316,16 @@ s16 saisie_nom_prg(u32 a1)
     if (action == 3)
         sortie_save = 1;
 
+    {
+        u8 done = fin_saisie_nom != 0 || MENU_RETURN != 0;
     if (MENU_RETURN) {
         if (action == 1)
             strcpy(save_ray[fichier_selectionne - 1], save_ray_copy);
         else
-            save_ray[fichier_selectionne - 1][0] = *"";
+            strcpy(save_ray[fichier_selectionne - 1], "");
     }
-    return fin_saisie_nom != 0 || MENU_RETURN != 0;
+    return done;
+    }
 }
 
 s16 selection_save_option_prg(u32 a1)
@@ -380,8 +388,8 @@ void DO_SAVE_CHOICE(void)
     ButtonReleasedSav1 = 1;
     ButtonReleasedSav2 = 1;
     ButtonReleasedSav3 = 0;
-    max_compteur = 100;
     compteur = 0;
+    max_compteur = 100;
     xwldmapsave = 0;
     ywldmapsave = 0;
     SYNCHRO_LOOP(selection_save_option_prg);
@@ -392,47 +400,53 @@ void DO_SAVE_CHOICE(void)
 
 void AFFICHE_ECRAN_SAVE(void)
 {
+    s32 blink_period = 30;
+    s16 save_index;
     s16 start_xpos;
     s16 erase_xpos;
-    s32 save_index;
+    s16 copy_xpos;
+    s16 cur_x;
+    char temp[4];
 
-    if (compteur >= max_compteur || button_released) {
-        if (button_released)
-            compteur = 0;
-        else
-            compteur = delai_repetition + 1;
-    } else {
+    if (compteur < max_compteur && !button_released) {
         ++compteur;
+    } else {
+        if (!button_released)
+            compteur = delai_repetition + 1;
+        else
+            compteur = 0;
     }
-    if (compteur_clignote >= 30)
-        compteur_clignote = 0;
-    else
+    if ((s16)blink_period > compteur_clignote)
         ++compteur_clignote;
+    else
+        compteur_clignote = 0;
 
     DISPLAY_FOND3();
     display_text(language_txt[96], 160, debut_titre, 1, 0);
     if (language == 1) {
-        start_xpos = 255;
+        copy_xpos = 53;
         erase_xpos = 145;
+        start_xpos = 255;
     } else {
-        start_xpos = 265;
+        copy_xpos = 53;
         erase_xpos = 159;
+        start_xpos = 265;
     }
 
     if (positionx2 == 1) {
-        memcpy(menu_to_display[0].text, language_txt[97], 200);
-        menu_to_display[0].xpos = 53;
+        strcpy(menu_to_display[0].text, language_txt[97]);
+        menu_to_display[0].xpos = copy_xpos;
     } else {
-        display_text(language_txt[97], 53, debut_sortie, 1, 5);
+        display_text(language_txt[97], copy_xpos, debut_sortie, 1, 5);
     }
     if (positionx2 == 2) {
-        memcpy(menu_to_display[0].text, language_txt[98], 200);
+        strcpy(menu_to_display[0].text, language_txt[98]);
         menu_to_display[0].xpos = erase_xpos;
     } else {
         display_text(language_txt[98], erase_xpos, debut_sortie, 1, 5);
     }
     if (positionx2 == 3) {
-        memcpy(menu_to_display[0].text, language_txt[99], 200);
+        strcpy(menu_to_display[0].text, language_txt[99]);
         menu_to_display[0].xpos = start_xpos;
     } else {
         display_text(language_txt[99], start_xpos, debut_sortie, 1, 5);
@@ -441,50 +455,46 @@ void AFFICHE_ECRAN_SAVE(void)
     INIT_TXT_BOX(&menu_to_display[0]);
     display_box_text_plasma(&menu_to_display[0], 1);
 
-    for (save_index = 0; save_index < NBRE_SAVE; ++save_index) {
-        if (save_ray[save_index][0] == '\0') {
-            let_shadow = 1;
-            display_text(language_txt[155], basex,
-                         debut_options + (ecarty + 23) * save_index, 1, 2);
-        } else {
-            s32 cur_x;
+    for (save_index = 0; NBRE_SAVE > save_index; ++save_index) {
+        if (strcmp(save_ray[save_index], "")) {
             for (cur_x = 1; cur_x <= strlen(save_ray[save_index]); ++cur_x) {
-                char temp[4];
-                char c;
-                memcpy(temp, save_ray[save_index], 4);
-                temp[cur_x] = '\0';
-                c = temp[cur_x - 1];
-
-                if (positionx == cur_x && positiony == save_index + 1 && clignotement) {
-                    ktxtenx = 4096;
-                    if (coeffktxt >= 512)
-                        coeffktxt = 0;
-                    ktxteny = 8 * cosinus(coeffktxt);
-                    coeffktxt += (cosinus(coeffktxt + 256) >> 7) + 5;
-                    if (c == '~') {
-                        display_deform_text("~", basex + ecartx * (cur_x - 1),
-                                            debut_options + save_index * (ecarty + 23),
-                                            1, 2, rotationtxt, ktxtenx, ktxteny);
-                    } else {
-                        display_deform_text(temp + (cur_x - 1),
-                                            basex + ecartx * (cur_x - 1),
-                                            debut_options + save_index * (ecarty + 23),
-                                            1, colour, rotationtxt, ktxtenx, ktxteny);
-                    }
-                } else if (c == '~') {
-                    display_deform_text("~", basex + ecartx * (cur_x - 1),
-                                        debut_options + save_index * (ecarty + 23),
-                                        1, 2, rotationtxt, ktxtenx, ktxteny);
-                } else if (c == ' ') {
-                    display_text("", basex + ecartx * (cur_x - 1),
-                                 debut_options + save_index * (ecarty + 23), 1, colour);
+                if (cur_x != positionx || positiony != save_index + 1 || !clignotement) {
+                    strcpy(temp, save_ray[save_index]);
+                    temp[cur_x] = '\0';
+                    if (temp[cur_x - 1] == '~')
+                        display_deform_text("~", basex + ecartx * (cur_x - 1) - 10,
+                            debut_options + save_index * (ecarty + 23), 1, 2,
+                            rotationtxt, ktxtenx, ktxteny);
+                    else if (temp[cur_x - 1] == ' ')
+                        display_text("", basex + ecartx * (cur_x - 1),
+                            debut_options + save_index * (ecarty + 23), 1, 2);
+                    else
+                        display_text(temp + cur_x - 1, basex + ecartx * (cur_x - 1),
+                            debut_options + save_index * (ecarty + 23), 1, colour);
                 } else {
-                    display_text(temp + (cur_x - 1),
-                                 basex + ecartx * (cur_x - 1),
-                                 debut_options + save_index * (ecarty + 23), 1, colour);
+                    s32 delta;
+                    strcpy(temp, save_ray[save_index]);
+                    temp[cur_x] = '\0';
+                    ktxtenx = 4096;
+                    if (coeffktxt >= 512) coeffktxt = 0;
+                    delta = (cosinus(coeffktxt + 256) >> 7) + 5;
+                    ktxteny = 8 * cosinus(coeffktxt);
+                    coeffktxt += delta;
+                    if (temp[cur_x - 1] == '~')
+                        display_deform_text("~", basex + ecartx * (cur_x - 1) - 10,
+                            debut_options + save_index * (ecarty + 23), 1, 2,
+                            rotationtxt, ktxtenx, ktxteny);
+                    else
+                        display_deform_text(temp + cur_x - 1, basex + ecartx * (cur_x - 1) + 1,
+                            debut_options + save_index * (ecarty + 23) + 1, 1, colour,
+                            rotationtxt, ktxtenx, ktxteny);
                 }
             }
             DISPLAY_SAVE_SPRITES(basex + 3 * (ecartx + 11) - 30, save_index);
+        } else {
+            let_shadow = 1;
+            display_text(language_txt[155], basex,
+                debut_options + save_index * (ecarty + 23), 1, 2);
         }
     }
     DISPLAY_SAVE_POING();
@@ -492,26 +502,26 @@ void AFFICHE_ECRAN_SAVE(void)
 
 s16 select_level_prg(u32 a1)
 {
-    u32 num[6] = {0x1100, 0x1000, 11, 11, 11, 4};
+    s32 num[6] = {0x1100, 0x1000, 11, 11, 11, 4};
     char level_text[12];
 
     readinput();
     DISPLAY_FOND_SELECT();
-    display_text("level ", 100, 100, 0, (s8)colour);
+    display_text("level ", 100, 100, 0, colour);
     itoa(level_select, level_text, 10);
-    display_text(level_text, 200, 100, 0, (s8)colour);
+    display_text(level_text, 200, 100, 0, colour);
 
     if (rightjoy() && inter_select == 0)
         ++level_select;
     else if (leftjoy() && inter_select == 0)
         --level_select;
 
-    if (level_select > num[PROJ_CENTER_X - 1])
-        level_select = num[PROJ_CENTER_X - 1];
+    if (level_select > num[num_world_choice - 1])
+        level_select = num[num_world_choice - 1];
     if (level_select < 1)
         level_select = 1;
     ++inter_select;
-    if (inter_select > 3)
+    if (inter_select >= 4)
         inter_select = 0;
 
     return but0pressed() || but1pressed() || but2pressed() || but3pressed();
@@ -562,57 +572,86 @@ void CLEAR_STAGE_NAMES(void)
 
 void DISPLAY_STAGE_NAMES(void)
 {
+    s32 i, letter;
+    s32 width;
+    sprite_t *sprite;
     DO_STAGE_NAMES();
     sprite_clipping(0, 320, 0, 200);
     if (PositionStageNameCalcule != 1) {
         if (text_to_display[2].text[0] != '\0')
-            display_text(text_to_display[2].text, text_to_display[2].height,
-                         text_to_display[2].xpos, text_to_display[2].font_size,
-                         text_to_display[2].color);
+            display_text(text_to_display[2].text, text_to_display[2].xpos,
+                         text_to_display[2].ypos, text_to_display[2].font_size,
+                         (u8)text_to_display[2].color);
         if (text_to_display[1].text[0] != '\0')
-            display_text(text_to_display[1].text, text_to_display[1].height,
-                         text_to_display[1].xpos, text_to_display[1].font_size,
-                         text_to_display[1].color);
+            display_text(text_to_display[1].text, text_to_display[1].xpos,
+                         text_to_display[1].ypos, text_to_display[1].font_size,
+                         (u8)text_to_display[1].color);
         if (text_to_display[4].text[0] != '\0')
-            display_text(text_to_display[4].text, text_to_display[4].height,
-                         text_to_display[4].xpos, text_to_display[4].font_size,
-                         text_to_display[4].color);
+            display_text(text_to_display[4].text, text_to_display[4].xpos,
+                         text_to_display[4].ypos, text_to_display[4].font_size,
+                         (u8)text_to_display[4].color);
         if (text_to_display[3].text[0] != '\0')
-            display_text(text_to_display[3].text, text_to_display[3].height,
-                         text_to_display[3].xpos, text_to_display[3].font_size,
-                         text_to_display[3].color);
+            display_text(text_to_display[3].text, text_to_display[3].xpos,
+                         text_to_display[3].ypos, text_to_display[3].font_size,
+                         (u8)text_to_display[3].color);
     }
     if (PositionStageNameCalcule) {
-        /* DOS letter-placement loops remain open; Rayverse leaves this block empty. */
+        for (i = 0; i < LongueurStageNameWorld; ++i) {
+            if (TexteStageNameWorld[i] == '/' || TexteStageNameWorld[i] == ' ')
+                letter = 0;
+            else
+                letter = deter_num_let((u8)TexteStageNameWorld[i], &TexteStageNameWorld[i + 1]);
+            if (letter) {
+                width = calc_let_Width((u8)TailleStageNameWorld, letter);
+                sprite = &alpha2.sprites[letter + 41];
+                DrawSpriteColorNormalEtX((s16)(PositionXStageNameWorld[i] >> 4),
+                    (u8)CouleurStageNameWorld,
+                    (s16)((PositionYStageNameWorld[i] >> 4) - sprite->outer_height),
+                    (u16)(width + (sprite->outer_height << 8)), draw_buffer,
+                    alpha2.img_buffer + sprite->offset_in_atlas);
+            }
+        }
+        for (i = 0; i < LongueurStageNameLevel; ++i) {
+            if (TexteStageNameLevel[i] == '/' || TexteStageNameLevel[i] == ' ')
+                letter = 0;
+            else
+                letter = deter_num_let((u8)TexteStageNameLevel[i], &TexteStageNameLevel[i + 1]);
+            if (letter) {
+                width = calc_let_Width((u8)TailleStageNameLevel, letter);
+                sprite = &alpha.sprites[letter];
+                DrawSpriteColorNormalEtX((s16)(PositionXStageNameLevel[i] >> 4),
+                    (u8)CouleurStageNameLevel,
+                    (s16)((PositionYStageNameLevel[i] >> 4) - sprite->outer_height),
+                    (u16)(width + (sprite->outer_height << 8)), draw_buffer,
+                    alpha.img_buffer + sprite->offset_in_atlas);
+            }
+        }
     }
 }
 
 s16 WORLD_CHOICE(u32 a1)
 {
-    s32 next_clock_target = 0;
+    s32 next_clock_target;
     s32 radius_y;
-    s32 result;
+    s16 result;
 
     PC_do_cheats_in_world_map();
     if (need_timer)
         next_clock_target = word_CF7EE + a1;
 
-    DO_RAYMAN_IN_WLD_MAP();
-    DO_CHEMIN();
-
     let_shadow = 0;
-    memset(DrawBufferNormal, 0, 320 * 200);
+    memset(DrawBufferNormal, 0, 64000);
     draw_buffer = EffetBufferNormal;
 
+    DO_RAYMAN_IN_WLD_MAP();
+    DO_CHEMIN();
     DisplayJumellesFondNormal();
     display2(&ray);
     DISPLAY_PLAT_WAY();
 
-    radius_y = 3 * RayonJumelle + 3;
-    if (radius_y >= 0)
-        radius_y = 3 * RayonJumelle;
+    radius_y = 3 * RayonJumelle / 4;
     DisplayJumellesNormal(JumellePosX, JumellePosY, RayonJumelle,
-                          radius_y >> 2, EffetBufferNormal, DrawBufferNormal);
+                          radius_y, EffetBufferNormal, DrawBufferNormal);
     draw_buffer = DrawBufferNormal;
 
     DISPLAY_STAGE_NAMES();
@@ -641,7 +680,7 @@ void DO_WORLD_MAP(void)
     PC_clear_text_input_buffer();
     SetCompteurTrameAudio();
     EFFACE_VIDEO();
-    INIT_RAY(new_level);
+    INIT_RAY((u8)new_level);
     readinput();
     map_time = 0;
     if (!ModeDemo) {
@@ -664,7 +703,7 @@ void DO_WORLD_MAP(void)
         SYNCHRO_LOOP(WORLD_CHOICE);
     }
 
-    if (JeuCracker && num_world_choice > 2) {
+    if (JeuCracker && num_world_choice > 3) {
         fin_de_rayman = 1;
         new_world = 1;
         new_level = 1;
@@ -680,21 +719,21 @@ void DO_WORLD_MAP(void)
         num_level_choice = num_level;
         num_world = 0;
         PlaySnd_old(77);
-    }
-    for (;;) {
-        if (!but0pressed() && !but1pressed() && !but2pressed() && !but3pressed())
-            break;
-        if (ModeDemo)
-            break;
-        readinput();
-        break;
-    }
-    DETER_WORLD_AND_LEVEL();
-    if (!get_casse_brique_active() && ALL_WORLD && !ModeDemo)
-        num_level_choice = SELECT_LEVEL(num_level_choice);
-    if (!ModeDemo) {
-        PlaySnd_old(69);
-        WaitNSynchro(5);
+    } else {
+        for (;;) {
+            if (!but0pressed() && !but1pressed() && !but2pressed() && !but3pressed())
+                break;
+            if (ModeDemo)
+                break;
+            readinput();
+        }
+        DETER_WORLD_AND_LEVEL();
+        if (!get_casse_brique_active() && ALL_WORLD && !ModeDemo)
+            num_level_choice = SELECT_LEVEL(num_level_choice);
+        if (!ModeDemo) {
+            PlaySnd_old(69);
+            WaitNSynchro(5);
+        }
     }
     FIN_WORLD_CHOICE();
     stop_cd();
@@ -702,12 +741,11 @@ void DO_WORLD_MAP(void)
 
 void DISPLAY_TXT_VIGNET(void)
 {
-    s32 i;
-
-    for (i = new_txt_fee;
-         (text_to_display + 1)[i].text[0] != '\0' && i <= new_txt_fee + 1;
-         ++i)
-        display_box_text(&(text_to_display + 1)[i]);
+    u32 i;
+    for (i = new_txt_fee; (text_to_display + 1)[i].text[0]; ++i) {
+        if (i > new_txt_fee + 1) break;
+        display_box_text((text_to_display + 1) + i);
+    }
 }
 
 s16 display_vignet_prg(u32 a1)
@@ -753,7 +791,7 @@ void DISPLAY_GAME_VIGNET(void)
     SAVE_PLAN3();
     if (ModeVideoActuel == 1) {
         need_restore_mode_x = 1;
-        InitModeNormalWithFrequency(60);
+        InitModeNormalWithFrequency(VGA_FREQ);
     }
     INIT_FADE_IN();
     INIT_VIGNET();
@@ -767,7 +805,7 @@ void DISPLAY_GAME_VIGNET(void)
     Vignet_To_Display = 0;
     PROC_EXIT = 0;
     if (need_restore_mode_x)
-        InitModeXWithFrequency(60);
+        InitModeXWithFrequency(VGA_FREQ);
     RESTORE_PALETTE();
     RESTORE_PLAN3();
     sprite_clipping(xmin, xmax, ymin, ymax);
@@ -787,7 +825,7 @@ void DISPLAY_TXT_CREDITS(void)
 
 s16 display_credits_prg(u32 a1)
 {
-    u8 prev_exit;
+    s16 prev_exit;
 
     readinput();
     DoCdCredits();
@@ -851,21 +889,21 @@ void DISPLAY_CREDITS_MENU(void)
     MenuCredits = 0;
 
     while (display_Vignet <= 7) {
-        speaker_enable(0);
+        do {
+        speaker_enable();
         endsynchro();
         synchro();
-        if (sound_state != CarteSonAutorisee)
+        if (sound_state != need_timer)
             tick = clock_ticks();
         if (do_fade) {
             DO_FADE();
-            if (loop_timing == nb_fade)
+            if ((u16)sound_state == nb_fade)
                 do_fade = 0;
         }
         SWAP_BUFFERS();
-        if (display_credits_prg(tick)) {
-            ++display_Vignet;
-            PROC_EXIT = 0;
-        }
+        } while (!display_credits_prg(tick));
+        ++display_Vignet;
+        PROC_EXIT = 0;
     }
     DO_FADE_OUT();
     RESTORE_PALETTE();
@@ -883,8 +921,8 @@ void DISPLAY_PROTOON_BACK(void)
     loop_timing = 4;
     new_txt_fee = 0;
     INIT_TEXT_TO_DISPLAY();
-    ((void (*)(s32 (*)(u32), u32))SYNCHRO_LOOP)
-        (display_vignet_prg, (u32)&main_mem_level);
+    ((void (*)(s16 (*)(u32), mem_t *))SYNCHRO_LOOP)
+        (display_vignet_prg, &main_mem_level);
     LOAD_CREDITS_VIGNET(&main_mem_world);
     DO_FADE_OUT();
     RESTORE_PALETTE();
@@ -921,57 +959,58 @@ void DO_VICTOIRE(void)
 void InitDemoJeu(void)
 {
     DO_FADE_OUT();
-    if (GameModeVideo == 1) {
-        if (DemoRecordWorld[NumDemo] == 5 && DemoRecordMap[NumDemo] == 10) {
-            ++NumDemo;
-            if (NumDemo == 6)
-                NumDemo = 0;
-        }
-    } else if (GameModeVideo == 0 && DemoRecordWorld[NumDemo] == 1 &&
-               DemoRecordMap[NumDemo] == 9) {
+    if ((GameModeVideo == 1 && DemoRecordWorld[NumDemo] == 5 && DemoRecordMap[NumDemo] == 10) ||
+        (GameModeVideo == 0 && SizeScreen && DemoRecordWorld[NumDemo] == 1 && DemoRecordMap[NumDemo] == 9)) {
         ++NumDemo;
-        if (NumDemo == 6)
-            NumDemo = 0;
+        if (NumDemo == 6) NumDemo = 0;
     }
-
     ModeDemo = 1;
-    TempsDemo = 0;
-    memcpy(&SauveRayEvtsDemo, &RayEvts, sizeof(SauveRayEvtsDemo));
+    SauveRayEvtsDemo = RayEvts;
     RayEvts.poing = 1;
     RayEvts.hang = 1;
     RayEvts.helico = 1;
     RayEvts.super_helico = 1;
+    TempsDemo = 0;
     RayEvts.handstand_dash = 0;
     RayEvts.handstand = 0;
-    RayEvts.magicseed = DemoRecordWorld[NumDemo] == 1 &&
-                        DemoRecordMap[NumDemo] == 9;
+    if (DemoRecordWorld[NumDemo] == 1 && DemoRecordMap[NumDemo] == 9)
+        RayEvts.magicseed = 1;
+    else
+        RayEvts.magicseed = 0;
     RayEvts.grap = 1;
     RayEvts.run = 1;
     RayEvts.tiny = 0;
-    RayEvts.firefly = num_world == 5 && num_level == 4;
+    if (num_world == 5 && num_level == 4)
+        RayEvts.firefly = 1;
+    else
+        RayEvts.firefly = 0;
+    options_jeu_save = options_jeu;
     RayEvts.force_run = 0;
     RayEvts.reverse = 0;
-
-    memcpy(&options_jeu_save, &options_jeu, sizeof(options_jeu));
     options_jeu.jump = 1;
     options_jeu.fist = 0;
-    options_jeu.field_14 = 3;
-    options_jeu.action = 3;
+    options_jeu.action = 2;
+    options_jeu.field_14 = 2;
     POINTEUR_BOUTONS_OPTIONS_BIS();
-
     finBosslevel.helped_joe_1 = 1;
     finBosslevel.helped_musician = 1;
-    num_world_choice = DemoRecordWorld[NumDemo];
-    num_level_choice = DemoRecordMap[NumDemo];
     new_world = 1;
     new_level = 1;
     num_world = 0;
     num_level = 0;
+    num_world_choice = DemoRecordWorld[NumDemo];
+    ray.hit_points = 2;
+    status_bar.max_hitp = 2;
+    status_bar.num_wiz = 0;
+    num_level_choice = DemoRecordMap[NumDemo];
+    record.length = DemoRecordSize[NumDemo];
+    poing.sub_etat = 1;
     record.is_playing = 1;
     record.current_offset = 0;
-    record.length = DemoRecordSize[NumDemo];
     record.data = &DemoRecord[NumDemo * 250];
+    status_bar.lives = 3;
     memset(save_zone, 0, sizeof(save_zone));
+    t_world_info[num_world_choice].nb_cages = 0;
     INIT_HORLOGES();
 }
 
@@ -985,7 +1024,7 @@ void FinDemoJeu(void)
     ModeDemo = 0;
     TempsDemo = 0;
     INIT_RAY(1);
-    memcpy(&RayEvts, &SauveRayEvtsDemo, sizeof(SauveRayEvtsDemo));
+    RayEvts = SauveRayEvtsDemo;
     record.is_playing = 0;
     record.current_offset = 0;
     record.length = 0;
@@ -998,7 +1037,7 @@ void FinDemoJeu(void)
     num_level_choice = 0;
     finBosslevel.helped_joe_1 = 0;
     finBosslevel.helped_musician = 0;
-    memcpy(&options_jeu, &options_jeu_save, sizeof(options_jeu));
+    options_jeu = options_jeu_save;
     POINTEUR_BOUTONS_OPTIONS_BIS();
     ++NumDemo;
     if (NumDemo == 6)
@@ -1072,21 +1111,16 @@ void START_LEVEL_ANIM(void)
 void PouvoirsParMap(u8 world, u8 level)
 {
     if (!RayEvts.poing) {
-        if (world == 1 && level <= 3)
-            RayEvts.poing = 0;
-        else
-            RayEvts.poing = 1;
+        RayEvts.poing = world == 1 && level <= 3 ? 0 : 1;
     }
     if (!RayEvts.hang)
-        RayEvts.hang = !(world == 1 && level <= 8);
+        RayEvts.hang = world == 1 && level <= 8 ? 0 : 1;
     if (!RayEvts.grap)
-        RayEvts.grap = !(world == 1 && level <= 17);
+        RayEvts.grap = world == 1 && level <= 17 ? 0 : 1;
     if (!RayEvts.helico)
-        RayEvts.helico = !(world < 2 || (world == 2 && level <= 11));
+        RayEvts.helico = world < 2 || (world == 2 && level <= 11) ? 0 : 1;
     if (!RayEvts.run)
-        RayEvts.run = !(world < 3 || (world == 3 && level <= 11));
-    if (!finBosslevel.helped_musician)
-        finBosslevel.helped_musician = !(world < 3 || (world == 3 && level <= 6));
-    if (!finBosslevel.helped_joe_2)
-        finBosslevel.helped_joe_2 = !(world < 5 || (world == 5 && level <= 6));
+        RayEvts.run = world < 3 || (world == 3 && level <= 11) ? 0 : 1;
+    finBosslevel.helped_musician = world < 3 || (world == 3 && level <= 6) ? 0 : 1;
+    finBosslevel.helped_joe_2 = world < 5 || (world == 5 && level <= 6) ? 0 : 1;
 }
