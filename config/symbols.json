@@ -4645,6 +4645,38 @@
     "addr": "1:6fa70",
     "name": "INVENTED",
     "evidence": "DOS INIT_WORLD_STAGE_NAME allocation counterpart at epilogue (allocator 1:6f8d8)"
+   },
+   "RAY_TOMBE": {
+    "addr": "1:5df28",
+    "provenance": [
+     "DOS_BINARY_DERIVED",
+     "RAYVERSE_GUIDED"
+    ],
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c //6DF28; Android symbol exists; DOS call target from collision1 (census oracle-only call, gfin_collision1)"
+   },
+   "RAY_HURT": {
+    "addr": "1:60408",
+    "provenance": [
+     "DOS_BINARY_DERIVED",
+     "RAYVERSE_GUIDED"
+    ],
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c //70408; Android symbol exists; DOS call target from collision1 (census oracle-only call, gfin_collision1)"
+   },
+   "sko_get_eject_sens": {
+    "addr": "1:69688",
+    "provenance": [
+     "DOS_BINARY_DERIVED",
+     "RAYVERSE_GUIDED"
+    ],
+    "name": "RAYVERSE",
+    "evidence": "Rayverse skops.c //79688; Android symbol exists; DOS call target from collision1 (census oracle-only call, gfin_collision1)"
+   },
+   "get_spi_zdc": {
+    "addr": "1:0c0c0",
+    "name": "RAYVERSE",
+    "evidence": "DOS GET_OBJ_ZDC TYPE_SPIDER_PLAFOND calls 1:c0c0; Android symbol exists"
    }
   },
   "data": {

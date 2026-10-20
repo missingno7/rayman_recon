@@ -1,6 +1,12 @@
 #ifndef COLL1_DEFS_H
 #define COLL1_DEFS_H
 typedef int ObjType;
+#define TYPE_73_RING 73
+#define TYPE_66_DARD 66
+#define TYPE_164_GENERATING_DOOR 164
+#define TYPE_258_NOUGAT 258 /* RAYVERSE numeric name, DOS case 0x102 */
+#define TYPE_30_AUDIOSTART 30
+#define TYPE_254_SLOPEY_PLAT 254
 #define TYPE_23_RAYMAN 23
 #define TYPE_81_CYMBALE 81
 #define TYPE_100_MITE 100

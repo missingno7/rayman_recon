@@ -1,12 +1,14 @@
 /*
  * Collision engine, first object (GOG v1.21 1:1b2d0-1:1f1e0). File name invented (Rayverse collision.c).
- * Names: Rayverse/Android. Status per function: config/units.json.
+ * Names: Rayverse/Android. Worker status: 24/37 STRICT; see NOTES.md.
+ * Whole-object layout remains unresolved. No promotion is claimed.
  */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include "collision1_local.h"
 #include <string.h>
+#include <stdlib.h>
 
 typedef struct obj_procs_t {
     void (*command)(obj_t *obj);
@@ -22,7 +24,7 @@ extern u8 in_air_because_hit;
 extern s16 jump_time;
 
 typedef int bool;
-#define get_eta(obj) ((obj)->eta[(obj)->main_etat] + (obj)->sub_etat)
+#define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define true 1
 #define false 0
 
@@ -31,11 +33,11 @@ void start_cd_perdu(void);
 void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
-u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
 void GET_BB1_ZDCs(obj_t* obj, s16 *x_1, s16 *y_1, s16 *w_1, s16 *h_1, s16 *x_2, s16 *y_2, s16 *w_2, s16 *h_2);
 void calc_obj_dir(obj_t* obj);
-u8 BTYP(s32 tile_x, s32 tile_y);
+u8 BTYP(s16 tile_x, s16 tile_y);
 s32 bat_get_eject_sens(obj_t* obj);
 u8 calc_typ_trav(obj_t* obj, u8 a2);
 void make_active(obj_t* obj, u8 do_nova);
@@ -72,6 +74,7 @@ extern s16 bagDy[20];
 extern s16 bagW[20];
 extern s16 bagH[20];
 extern obj_t* poing_obj;
+extern s16 poing_obj_id;
 extern s16 decalage_en_cours;
 extern map_data_t mp;
 extern level_t level;
@@ -112,11 +115,11 @@ u16 get_ZDCPTR(void) {
 }
 
 //2B308
-s32 in_coll_sprite_list(obj_t* obj, s16 a2) {
+s16 in_coll_sprite_list(obj_t* obj, s16 a2) {
     /* 1B2E0 8013FAE0 -O2 -msoft-float */
     u8 unk_1[12];
     s16 i;
-    s32 res = false;
+    s16 res = false;
 
     switch (obj->type)
     {
@@ -194,19 +197,18 @@ s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1, s16 x_2, s16 y_2, s32 w_2, s32
     comp_y = y_1 - h_2;
     sum_w = w_1 + w_2;
     sum_h = h_1 + h_2;
-    if (comp_x > x_2 || comp_y > y_2 ||
-        comp_x + sum_w < x_2 || comp_y + sum_h < y_2)
-        return 0;
-    return 1;
+    if (comp_x <= x_2 && comp_y <= y_2 &&
+        comp_x + sum_w >= x_2 && comp_y + sum_h >= y_2) return 1;
+    return 0;
 }
 
 //2B48C
 void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
     s16 anim_x; s16 anim_y; s16 anim_w; s16 anim_h;
-    s32 unk_1;
-    s32 unk_2;
+    s32 inset;
+    s32 limit_frame;
     s16 old_flip_x;
-    s32 bc_x_pos;
+    s16 bc_x_pos;
     s16 new_x;
     u8 unk_3;
     s16 new_y;
@@ -215,8 +217,7 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
     {
         case TYPE_STALAG:
             GET_SPRITE_POS(obj, 1, out_x, out_y, out_w, out_h);
-            unk_1 = 3;
-            if ((s32) *out_w > *out_h)
+            if (*out_w > *out_h)
             {
                 *out_x += 4;
                 *out_w -= 8;
@@ -225,7 +226,7 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
             }
             else
             {
-                *out_x = *out_x - unk_1 + (*out_w >> 1);
+                *out_x += (*out_w >> 1) - 3;
                 *out_w = 6;
                 *out_y += 16;
                 *out_h -= 32;
@@ -251,11 +252,13 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
             *out_w = anim_w - 20;
             *out_h = anim_h - 20;
             break;
+        case TYPE_73_RING:
+            GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
+            break;
         case TYPE_FLASH:
             GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
-            unk_2 = 2;
-            *out_x = *out_x - unk_2 + (*out_w >> 1);
-            *out_y = *out_y - unk_2 + (*out_h >> 1);
+            *out_x += (*out_w >> 1) - 2;
+            *out_y += (*out_h >> 1) - 2;
             *out_w = 4;
             *out_h = 4;
             break;
@@ -322,19 +325,24 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
         case TYPE_STONEMAN2:
         case TYPE_STONEWOMAN2:
         case TYPE_STONEWOMAN:
-            if (obj->main_etat == 0 && (obj->sub_etat == 3 || obj->sub_etat == 4))
-            {
-                *out_x = obj->x;
-                *out_y = obj->y;
-                *out_w = 0;
-                *out_h = 0;
-            }
-            else
-            {
-                *out_x = obj->x + obj->offset_bx - 10;
-                *out_y = obj->y + obj->offset_by - 60;
-                *out_w = 20;
-                *out_h = 50;
+            *out_x = obj->x + obj->offset_bx - 8;
+            *out_y = obj->y + obj->offset_by - 60;
+            *out_w = 16;
+            *out_h = 50;
+            if (obj->main_etat == 0) {
+                if (obj->sub_etat == 5) {
+                    *out_y += obj->anim_frame * 2;
+                    *out_h -= obj->anim_frame * 2;
+                } else if (obj->sub_etat == 6) {
+                    *out_h >>= 1;
+                    *out_y += *out_h;
+                    limit_frame = 15;
+                    if (limit_frame > obj->anim_frame) limit_frame = obj->anim_frame;
+                    *out_y -= limit_frame * 2;
+                    limit_frame = 15;
+                    if (limit_frame > obj->anim_frame) limit_frame = obj->anim_frame;
+                    *out_h += limit_frame * 2;
+                }
             }
             break;
         case TYPE_CAGE2:
@@ -350,61 +358,41 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
             *out_h = 110;
             break;
         case TYPE_BIG_CLOWN:
-            if (obj->main_etat == 0 && obj->sub_etat == 2 && obj->anim_frame >= 16)
-            {
-                bc_x_pos = obj->x;
-                if (obj->flags.flip_x)
-                    new_x = bc_x_pos + 80;
-                else
-                    new_x = bc_x_pos + 16;
-                *out_x = new_x;
+            if (obj->main_etat == 0 && obj->sub_etat == 2 && obj->anim_frame >= 16) {
+                *out_x = (obj->flags.flip_x ? 80 : 16) + obj->x;
                 *out_y = obj->y + 40;
                 *out_w = 68;
-            }
-            else if (obj->main_etat == 0 && obj->sub_etat == 2)
-            {
-                bc_x_pos = obj->x;
-                if (obj->flags.flip_x)
-                    new_x = bc_x_pos + 80;
+                *out_h = 48;
+            } else {
+                if (obj->main_etat == 0 && obj->sub_etat == 2)
+                    *out_x = (obj->flags.flip_x ? 80 : 48) + obj->x;
                 else
-                    new_x = bc_x_pos + 48;
-                *out_x = new_x;
+                    *out_x = obj->x + 64;
                 *out_y = obj->y + 38;
                 *out_w = 32;
+                *out_h = 48;
             }
-            else
-            {
-                *out_x = obj->x + 64;
-                *out_y = obj->y + 38;
-                *out_w = 32;
-            }
-            *out_h = 48;
+            break;
+        case TYPE_66_DARD:
+            GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
             break;
         case TYPE_DROP:
             GET_SPRITE_POS(obj, 0, &anim_x, &anim_y, &anim_w, &anim_h);
-            if (obj->main_etat == 2)
-            {
-                if (obj->sub_etat == 2)
-                {
-                    *out_x = anim_x + 5;
-                    *out_y = anim_y + 28;
-                    *out_w = 6;
-                    *out_h = 22;
-                }
-                else if (obj->sub_etat == 1)
-                {
-                    *out_x = anim_x + 6;
-                    *out_y = anim_y + 18;
-                    *out_w = 13;
-                    *out_h = 11;
-                }
-                else if (obj->sub_etat == 0)
-                {
-                    *out_x = anim_x + 7;
-                    *out_y = anim_y + 8;
-                    *out_w = 19;
-                    *out_h = 11;
-                }
+            if (obj->main_etat == 2 && obj->sub_etat == 2) {
+                *out_x = anim_x + 5;
+                *out_y = anim_y + 28;
+                *out_w = 6;
+                *out_h = 22;
+            } else if (obj->main_etat == 2 && obj->sub_etat == 1) {
+                *out_x = anim_x + 6;
+                *out_y = anim_y + 18;
+                *out_w = 13;
+                *out_h = 11;
+            } else if (obj->main_etat == 2 && obj->sub_etat == 0) {
+                *out_x = anim_x + 7;
+                *out_y = anim_y + 8;
+                *out_w = 19;
+                *out_h = 11;
             }
             break;
         case TYPE_TROMPETTE:
@@ -423,16 +411,15 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
         case TYPE_EXPLOSION:
             *out_x = obj->x;
             *out_y = obj->y;
-            if (obj->sub_etat == 0)
-            {
+            if (obj->sub_etat == 0) {
                 *out_w = 22;
                 *out_h = 22;
                 *out_x += 68;
                 *out_y += 65;
-                break;
+            } else {
+                *out_w = 0;
+                *out_h = 0;
             }
-            *out_w = 0;
-            *out_h = 0;
             break;
         case TYPE_COUTEAU:
             get_cou_zdc(obj, out_x, out_y, out_w, out_h);
@@ -441,22 +428,19 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
             get_spi_zdc(obj, out_x, out_y, out_w, out_h);
             break;
         case TYPE_POI3:
-            if (
-                    (obj->main_etat == 2) &&
-                    (obj->sub_etat == 15 || obj->sub_etat == 12 || obj->sub_etat == (unk_3 = 13))
-                    )
-            {
+            if ((obj->main_etat == 2 && obj->sub_etat == 15) ||
+                (obj->main_etat == 2 && obj->sub_etat == 12) ||
+                (obj->main_etat == 2 && obj->sub_etat == 13)) {
                 *out_x = obj->x + 54;
-                new_y = obj->y + 55;
-            }
-            else
-            {
+                *out_y = obj->y + 55;
+                *out_w = 14;
+                *out_h = 21;
+            } else {
                 *out_x = obj->x + 74;
-                new_y = obj->y + 45;
+                *out_y = obj->y + 45;
+                *out_w = 14;
+                *out_h = 21;
             }
-            *out_y = new_y;
-            *out_w = 14;
-            *out_h = 21;
             break;
         case TYPE_PETIT_COUTEAU:
             if (obj->hit_points == 1)
@@ -488,6 +472,14 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
                 *out_h = 48;
             }
             break;
+        case TYPE_164_GENERATING_DOOR:
+            GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
+            inset = 24 - 12 * ((get_eta(obj)->flags >> 7 & 1) + 2 * (get_eta(obj)->flags >> 6 & 1));
+            *out_x += inset;
+            *out_y += inset;
+            *out_w -= inset * 2;
+            *out_h -= inset * 2;
+            break;
         default:
             GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
             break;
@@ -496,12 +488,8 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
 }
 
 //2C028
-s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
-    s16 type;
-    s32 unk_x; s32 unk_y; s32 unk_w; s32 unk_h;
-    s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
-    s16 succ;
-    s16 temp_h;
+s16 GET_SPRITE_ZDC(obj_t* obj, u16 index, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
+    s16 unk_y; s16 unk_x; s16 unk_h; s16 unk_w; s16 spr_x; u16 type; s16 spr_y; s16 spr_w; s16 spr_h; s16 succ; s16 temp_h;
 
     type = obj->type;
     unk_h = 0;
@@ -577,56 +565,22 @@ s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s1
                     succ = false;
                 }
                 break;
-            case TYPE_BADGUY3:
-                if (index != 2)
-                {
-                    if (index == 4)
-                    {
-                        unk_x = -3;
-                        unk_y = 0;
-                        spr_w = 21;
-                        spr_h = 10;
-                        break;
-                    }
-                }
-                else
-                {
-                    unk_x = 1;
-                    unk_y = -4;
-                    unk_w = -2;
-                    unk_h = 6;
-                }
-                break;
             case TYPE_MITE:
             case TYPE_MITE2:
                 switch (index)
                 {
                     case 1:
-                        if (obj->main_etat == 0)
-                        {
-                            if (obj->sub_etat == 9 || obj->sub_etat == 10 || obj->sub_etat == 11)
-                            {
-                                unk_x = -8;
-                                unk_y = 5;
-                                spr_w = 26;
-                                temp_h = 8;
-                            }
-                            else
-                            {
-                                unk_x = 1;
-                                unk_y = -5;
-                                spr_w = 16;
-                                temp_h = 30;
-                            }
-                        }
-                        else
-                        {
+                        if (obj->main_etat == 0 && (obj->sub_etat == 9 || obj->sub_etat == 10 || obj->sub_etat == 11)) {
+                            unk_x = -8;
+                            unk_y = 5;
+                            spr_w = 26;
+                            spr_h = 8;
+                        } else {
                             unk_x = 1;
                             unk_y = -5;
                             spr_w = 16;
-                            temp_h = 30;
+                            spr_h = 30;
                         }
-                        spr_h = temp_h;
                         break;
                     case 2:
                         unk_x = 0;
@@ -643,21 +597,20 @@ s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s1
                 }
                 break;
         }
-        *out_x = unk_x + spr_x;
-        *out_y = unk_y + spr_y;
-        *out_w = unk_w + spr_w;
-        *out_h = unk_h + spr_h;
+        *out_x = spr_x + unk_x;
+        *out_y = spr_y + unk_y;
+        *out_w = spr_w + unk_w;
+        *out_h = spr_h + unk_h;
     }
     return succ;
 }
 
 //2C33C
-s32 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
+s16 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    u8 frame;
+    s16 frame;
     s16 d;
-    s16 bb1_x_1; s16 bb1_y_1; s16 bb1_w_1; s16 bb1_h_1;
-    s16 bb1_x_2; s16 bb1_y_2; s16 bb1_w_2; s16 bb1_h_2;
+    s16 bb1_x_2; s16 bb1_y_2; s16 bb1_w_2; s16 bb1_h_2; s16 bb1_x_1; s16 bb1_y_1; s16 bb1_h_1; s16 bb1_w_1;
     s16 res = -1;
 
     switch (obj->type) {
@@ -678,15 +631,12 @@ s32 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
         case TYPE_BB12:
         case TYPE_BB13:
         case TYPE_BB14:
-            if (in_h == ray_zdc_h) {
+            if (in_h == ray_zdc_y) {
                 GET_BB1_ZDCs(obj, &bb1_x_1, &bb1_y_1, &bb1_w_1, &bb1_h_1, &bb1_x_2, &bb1_y_2, &bb1_w_2, &bb1_h_2);
 
-                /* TODO: write a bit nicer, not sure how yet */
-                if (!inter_box(in_x, in_y, in_w, in_h, bb1_x_1, bb1_y_1, bb1_w_1, bb1_h_1)) {
-                    if (inter_box(in_x, in_y, in_w, in_h, bb1_x_2, bb1_y_2, bb1_w_2, bb1_h_2))
-                        res = 1;
-                }
-                else
+                if (inter_box(in_x, in_y, in_w, in_h, bb1_x_1, bb1_y_1, bb1_w_1, bb1_h_1))
+                    res = 1;
+                else if (inter_box(in_x, in_y, in_w, in_h, bb1_x_2, bb1_y_2, bb1_w_2, bb1_h_2))
                     res = 1;
             } else {
                 GET_BB1_ZDCs(obj, &bb1_x_1, &bb1_y_1, &bb1_w_1, &bb1_h_1, &bb1_x_2, &bb1_y_2, &bb1_w_2, &bb1_h_2);
@@ -708,12 +658,13 @@ s32 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
 }
 
 //2C670
-s32 BOX_IN_COLL_ZONES(s16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
+s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     /* 1C7E4 80140FE4 -O2 -msoft-float */
     s16 res;
     s16 unk_x; s16 unk_y; s16 unk_w; s16 unk_h;
     s16 nb_zdc;
     s16 i;
+    s16 sprite_index;
     zdc_t* cur_zdc;
     anim_t* cur_anim;
     anim_layer_t* cur_layer;
@@ -725,7 +676,7 @@ s32 BOX_IN_COLL_ZONES(s16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     unk_x = 0;
     res = -1;
 
-    ASSERT(obj->anim_index != 255);
+
 
     if (obj->zdc != 0)
     {
@@ -800,15 +751,15 @@ s32 BOX_IN_COLL_ZONES(s16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
         else if (obj->hit_sprite == 0xFF)
         {
             layers_count = obj->animations[obj->anim_index].layers_per_frame & 0x3FFF;
-            for (i = 0; i < layers_count; i++)
+            for (sprite_index = 0; sprite_index < layers_count; sprite_index++)
             {
                 if (
-                        in_coll_sprite_list(obj, i) &&
-                        GET_SPRITE_ZDC(obj, i, &unk_x, &unk_y, &unk_w, &unk_h) &&
+                        in_coll_sprite_list(obj, sprite_index) &&
+                        GET_SPRITE_ZDC(obj, sprite_index, &unk_x, &unk_y, &unk_w, &unk_h) &&
                         inter_box(x, y, w, h, unk_x, unk_y, unk_w, unk_h)
                         )
                 {
-                    res = i;
+                    res = sprite_index;
                     break;
                 }
             }
@@ -819,43 +770,42 @@ s32 BOX_IN_COLL_ZONES(s16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
 }
 
 //2CA84
-s32 COLL_BOX_SPRITE(s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
+s16 COLL_BOX_SPRITE(s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     s16 spr_x;
     s16 spr_y;
     s16 spr_w;
     s16 spr_h;
-    if (GET_SPRITE_POS(obj, obj->hit_sprite, &spr_x, &spr_y, &spr_w, &spr_h)) {
-        if (inter_box(x, y, w, h, spr_x, spr_y, spr_w, spr_h)) {
-            return obj->hit_sprite;
-        }
-    }
-    return -1;
+    s16 succ;
+    succ = GET_SPRITE_POS(obj, obj->hit_sprite, &spr_x, &spr_y, &spr_w, &spr_h);
+    if (succ) succ = inter_box(x, y, w, h, spr_x, spr_y, spr_w, spr_h);
+    return succ ? obj->hit_sprite : -1;
 }
 
 //2CB1C
-s16 CHECK_BOX_COLLISION(s16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
-    if (obj->hit_sprite == 0xFD) {
-        return BOX_HIT_SPECIAL_ZDC(x, y, w, h, obj);
-    } else if (obj->hit_sprite < 0xFD) {
-        return COLL_BOX_SPRITE(x, y, w, h, obj);
-    } else {
-        return BOX_IN_COLL_ZONES(type, x, y, w, h, obj);
+s16 CHECK_BOX_COLLISION(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
+    s16 hit_sprite = obj->hit_sprite;
+    switch (hit_sprite) {
+        case 0xFD:
+            return BOX_HIT_SPECIAL_ZDC(x, y, w, h, obj);
+        case 0xFE:
+        case 0xFF:
+            return BOX_IN_COLL_ZONES(type, x, y, w, h, obj);
+        default:
+            return COLL_BOX_SPRITE(x, y, w, h, obj);
     }
 }
 
 //2CB9C
 s16 possible_sprite(obj_t* obj, s16 index) {
     /* 1CF08 80141708 -O2 -msoft-float */
-    s16 spr[12];
+    s16 spr[10];
 
     switch (obj->type) {
-        case TYPE_BON3:
+        case TYPE_258_NOUGAT:
             spr[0] = 0;
             spr[1] = 1;
             spr[2] = 2;
-            spr[3] = 3;
-            spr[4] = 4;
-            spr[5] = 255;
+            spr[3] = 255;
             break;
         case TYPE_CYMBALE:
         case TYPE_CYMBAL2:
@@ -863,6 +813,14 @@ s16 possible_sprite(obj_t* obj, s16 index) {
             spr[1] = 1;
             spr[2] = 2;
             spr[3] = 255;
+            break;
+        case TYPE_BON3:
+            spr[0] = 0;
+            spr[1] = 1;
+            spr[2] = 2;
+            spr[3] = 3;
+            spr[4] = 4;
+            spr[5] = 255;
             break;
         case TYPE_ROULETTE:
             spr[0] = 5;
@@ -929,25 +887,13 @@ s16 setToleranceDist(s16 x, s16 w, s16 y) {
     s16 ray_y = ray.y + ray.offset_by;
     s16 unk_1 = x + w - 1;
 
-    s16 unk_2 = (RayEvts.tiny) ? 4 : 8;
-    if ((ray_x >= x - unk_2) && (ray_x <= unk_1 + unk_2)) {
-        if (ray_x >= x && ray_x <= unk_1) {
-            /* abs??? */
-            if (ray_y - y >= 0)
-                dist = ray_y - y;
-            else
-                dist = y - ray_y;
-        } else {
-            if (ray_y - y < 0)
-                dist = ray_y - y;
-            else
-                dist = y - ray_y;
-            dist--;
-        }
+    s16 unk_2 = 8;
+    if (RayEvts.tiny) unk_2 = 4;
+    if ((ray_x < x - unk_2 ? 0 : (ray_x > unk_1 + unk_2 ? 0 : 1))) {
+        if ((ray_x < x ? 0 : (ray_x > unk_1 ? 0 : 1))) return abs(ray_y - y);
+        else return -abs(ray_y - y) - 1;
     }
-    else
-        dist = 10000;
-    return dist;
+    return 10000;
 }
 
 //2CF14
@@ -1012,12 +958,14 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
 
     s16 i;
     s16 new_dist;
-    s16 ray_x; s16 ray_y;
-    s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
+    s16 spr_y; s16 unk_1;
+    s16 sprite; s16 spr_w; s16 spr_x; s16 spr_h;
     s16 diff_x;
-    s16 sprite;
+    s16 ray_y;
 
-    s16 unk_1 = (RayEvts.tiny) ? 4 : 8;
+    s16 ray_x;
+    unk_1 = 8;
+    if (RayEvts.tiny) unk_1 = 4;
     i = 0;
     new_dist = 10000;
     ray_x = ray.x + ray.offset_bx;
@@ -1031,7 +979,7 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
             spr_x += 5;
         }
 
-        if (obj->type == TYPE_TIBETAIN_6 && ray.main_etat == 0 && (obj->anim_frame >= 10 && obj->anim_frame < 40))
+        if (obj->type == TYPE_TIBETAIN_6 && ray.main_etat == 0 && (obj->anim_frame > 9 && obj->anim_frame < 40))
         {
             diff_x = (ray.x + ray.offset_bx) - (spr_x + (spr_w >> 1));
             if (diff_x > 0)
@@ -1046,8 +994,7 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
     if (new_dist == 10000)
     {
         sprite = possible_sprite(obj, i++);
-        while (sprite != 0xFF)
-        {
+        while (((s32)new_dist < 0 ? -(s32)new_dist : (s32)new_dist) > 7 && sprite != 0xFF) {
             GET_SPRITE_POS(obj, sprite, &spr_x, &spr_y, &spr_w, &spr_h);
             spr_y += obj->offset_hy;
             if (obj->type == TYPE_ROULETTE || obj->type == TYPE_ROULETTE2 || obj->type == TYPE_ROULETTE3)
@@ -1059,7 +1006,7 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
             if ((ray_x <= spr_x + spr_w + unk_1) && (ray_x >= spr_x - unk_1))
             {
                 new_dist = ray_y - spr_y;
-                if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist <= 10))
+                if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist < 11))
                     new_dist = 0;
             }
             else
@@ -1068,9 +1015,9 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
             if (new_dist != 10000)
                 obj->follow_sprite = sprite;
 
+
+
             sprite = possible_sprite(obj, i++);
-            if (Abs(new_dist) < 8)
-                break;
         }
     }
     obj->ray_dist = new_dist;
@@ -1098,7 +1045,7 @@ void SET_RAY_DIST_PI(obj_t* obj) {
 //2D3EC
 void SET_RAY_DIST_BAG(obj_t* obj) {
     /* 1D66C 80141E6C -O2 -msoft-float */
-    s16 x; s16 y; s16 w; s16 h;
+    s16 x; s16 h; s16 w; s16 y;
     s16 new_w;
     s16 new_dist = 0;
 
@@ -1126,33 +1073,29 @@ void SET_RAY_DIST_BAG(obj_t* obj) {
 //2D4D0
 void SET_RAY_DIST(obj_t* obj) {
     /* 1D798 80141F98 -O2 -msoft-float */
-    ObjType type;
     s16 x; s16 y; s16 w; s16 h;
 
-    type = (ObjType)obj->type;
-    if (flags[type] & flags1_8_ray_dist_multispr_cantchange) {
+    if (flags[obj->type] & flags1_8_ray_dist_multispr_cantchange) {
         SET_RAY_DIST_MULTISPR_CANTCHANGE(obj);
     } else {
-        if (type == TYPE_PI || type == TYPE_BBL)
+        if (obj->type == TYPE_PI || obj->type == TYPE_BBL)
             SET_RAY_DIST_PI(obj);
-        else if (type == TYPE_BAG3)
+        else if (obj->type == TYPE_BAG3)
             SET_RAY_DIST_BAG(obj);
+        else if (obj->type == TYPE_254_SLOPEY_PLAT)
+            SET_RAY_DIST_SLOPEY_PLAT(obj);
         else
         {
             GET_SPRITE_POS(obj, obj->follow_sprite, &x, &y, &w, &h);
             y += obj->offset_hy;
-            type = (ObjType)obj->type;
-            if (
-                    type == TYPE_FALLING_OBJ || type == TYPE_FALLING_OBJ2 || type == TYPE_FALLING_OBJ3 ||
-                    type == TYPE_FALLING_YING || type == TYPE_FALLING_YING_OUYE
+                    if (
+                    obj->type == TYPE_FALLING_OBJ || obj->type == TYPE_FALLING_OBJ2 || obj->type == TYPE_FALLING_OBJ3 ||
+                    obj->type == TYPE_FALLING_YING || obj->type == TYPE_FALLING_YING_OUYE
                     )
             {
                 x -= 2;
                 w += 4;
             }
-            else if (type == TYPE_MOVE_START_NUA || (type == TYPE_PLATFORM && num_world == 2))
-                w -= 8;
-
             obj->ray_dist = setToleranceDist(x, w, y);
         }
     }
@@ -1172,23 +1115,28 @@ void do_boum(void) {
 void DO_POING_COLLISION(void) {
     s16 x, y, w, h;
     u8 btyp;
-    s32 i;
+    s16 i;
     obj_t *obj;
     s16 sprite;
-    s8 old_hp;
-    s32 unk_1;
+    s16 old_hp;
+    u8 unk_1;
 
-    GET_SPRITE_POS(poing_obj, 0, &x, &y, &w, &h);
     btyp = 0;
-
-    btyp = BTYP((poing_obj->x + poing_obj->offset_bx) >> 4,
-                   (poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1)) >> 4);
+    GET_SPRITE_POS(poing_obj, 0, &x, &y, &w, &h);
+    if (poing_obj->speed_x >= 0) {
+        btyp = BTYP((s16)((poing_obj->x + poing_obj->offset_bx) >> 4),
+                   (s16)((poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1)) >> 4));
+    } else if (poing_obj->speed_x < 0) {
+        btyp = BTYP((s16)((poing_obj->x + poing_obj->offset_bx) >> 4),
+                   (s16)((poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1)) >> 4));
+    }
     if (block_flags[btyp] & 2) {
         do_boum();
         fin_poing_follow(1);
     } else {
-        for (i = 0; i < actobj.num_active_objects; ++i) {
-            obj = level.objects + actobj.objects[i];
+        i = 0;
+        obj = level.objects + actobj.objects[i];
+        while (i < actobj.num_active_objects) {
             if (new_world || new_level || fin_boss || boss_mort) {
                 break;
             }
@@ -1200,15 +1148,17 @@ void DO_POING_COLLISION(void) {
                     do_boum();
                     obj->gravity_value_1 = 0;
                     unk_1 = get_eta(obj)->anim_speed >> 4;
-                    if (!(unk_1 == 10 || unk_1 == 11)) {
+                    if (!(unk_1 == 11 || unk_1 == 10)) {
                         obj->gravity_value_2 = 0;
                     }
                     if (obj->hit_points == old_hp && (flags[obj->type] & flags3_1_poing_collision_snd)) {
-                        PlaySnd(214, obj->id);
+                        PlaySnd(214, (flags[obj->type] & 0x80) ? poing_obj_id : obj->id);
                     }
                     break;
                 }
             }
+            ++i;
+            obj = level.objects + actobj.objects[i];
         }
     }
 }
@@ -1238,46 +1188,27 @@ s16 COLL_BOX_ALL_SPRITES(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t *obj) {
 }
 
 //2D914
-bool COLL_RAY_PIC(void) {
-    /* 1F1B4 801439B4 -O2 -msoft-float */
-    s32 ray_dist;
-    s32 unk_1;
-    s32 unk_2;
-    s32 unk_3;
-    s32 unk_4;
-    s32 unk_5;
-    s16 res = false;
-
-    if ((ray.y + ray.offset_by) < (mp.height * 16)) {
-        ray_dist = ray.ray_dist;
-        if (ray.follow_id == -1) {
-            res = (mp.map[ray_dist].tile_type) == BTYP_HURT;
-        }
+s16 COLL_RAY_PIC(void) {
+    s32 index, left, right;
+    s16 res = 0;
+    if (ray.y + ray.offset_by < mp.height * 16) {
+        index = ray.ray_dist;
+        if (ray.follow_id == -1)
+            res = mp.map[index].tile_type == BTYP_HURT;
         if (!res) {
-            unk_1 = ray_dist - mp.width;
-            res = (mp.map[unk_1].tile_type) == BTYP_HURT;
-            if (!res)
-            {
-                unk_2 = unk_1 + 1;
-                unk_3 = unk_1 - 1;
-                if (ray.main_etat != 2 || ray.speed_x != 0) {
-                    res = false;
-                    if ((mp.map[unk_3].tile_type) == BTYP_HURT || (mp.map[unk_2].tile_type) == BTYP_HURT) {
-                        res = true;
-                    }
-                }
-
-                if (!res && !(RayEvts.tiny) && !(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) {
-                    unk_4 = unk_1 - mp.width;
-                    unk_5 = unk_4 - mp.width;
-                    while (unk_5 < 0)
-                        unk_5 += mp.width;
-                    while (unk_4 < 0)
-                        unk_4 += mp.width;
-                    res = false;
-                    if ((mp.map[unk_5].tile_type) == BTYP_HURT || (mp.map[unk_4].tile_type) == BTYP_HURT) {
-                        res = true;
-                    }
+            index -= mp.width;
+            res = mp.map[index].tile_type == BTYP_HURT;
+            if (!res) {
+                right = index + 1;
+                left = index - 1;
+                if (ray.main_etat != 2 || ray.speed_x != 0)
+                    res = mp.map[left].tile_type == BTYP_HURT || mp.map[right].tile_type == BTYP_HURT;
+                if (!res && !RayEvts.tiny && !(get_eta(&ray)->flags & 0x40)) {
+                    index -= mp.width;
+                    left = index - mp.width;
+                    while (left < 0) left += mp.width;
+                    while (index < 0) index += mp.width;
+                    res = mp.map[left].tile_type == BTYP_HURT || mp.map[index].tile_type == BTYP_HURT;
                 }
             }
         }
@@ -1288,7 +1219,7 @@ bool COLL_RAY_PIC(void) {
 //2DA98
 void COLL_RAY_BLK_MORTEL(void) {
     if ((ray.y + ray.offset_by) < (mp.height * 16)) {
-        s16 btyp = mp.map[ray.ray_dist].tile_type;
+        u8 btyp = mp.map[ray.ray_dist].tile_type;
         if (btyp == BTYP_SPIKES) {
             set_main_and_sub_etat(&ray, 3, 32);
             if (dead_time != 1) {
@@ -1296,9 +1227,10 @@ void COLL_RAY_BLK_MORTEL(void) {
                 stop_all_snd();
                 start_cd_perdu();
             }
+            { s32 next_y = ray.y + 5;
             ray.speed_y = 0;
             ray.speed_x = 0;
-            ray.y += 5;
+            ray.y = next_y; }
         } else if (ray.btypes[3] == BTYP_SPIKES) {
             set_main_and_sub_etat(&ray, 3, 32);
             if (dead_time != 1) {
@@ -1327,10 +1259,10 @@ void RAY_KO(void) {
 //2DBDC
 void RAY_HIT(u8 hurt, obj_t* obj) {
     if (hurt) {
-        s32 tile_x;
+        s16 tile_x;
         RAY_HURT();
-        tile_x = (ray.x + ray.offset_bx) / 16;
-        while (BTYP(tile_x, (ray.y + ray.offset_by) / 16) == BTYP_WATER) {
+        tile_x = ray.x + ray.offset_bx;
+        while (BTYP((s16)(tile_x >> 4), (s16)((ray.y + ray.offset_by) >> 4)) == BTYP_WATER) {
             --ray.y;
         }
         ray.btypes[0] = BTYP_NONE;
@@ -1353,9 +1285,9 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
             if (obj == NULL && !(ray.main_etat == 0 && ray.sub_etat == 61)) {
                 ray.speed_x = ray.flags.flip_x ? -2 : 2;
                 ray.speed_y = -3;
-            } else if (obj && !(ray.main_etat == 0 && ray.sub_etat == 61)){
-                s32 eject_sens = -1;
-                s32 bump_speed;
+            } else if (!(ray.main_etat == 0 && ray.sub_etat == 61)){
+                s16 eject_sens = -1;
+                s16 bump_speed;
                 if (obj->type == TYPE_180_SAXO2) {
                     eject_sens = saxo2_get_eject_sens();
                 } else if (obj->type == TYPE_150_SCORPION) {
@@ -1375,7 +1307,7 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
                 } else if (obj->type == TYPE_210_FIRE_RIGHT) {
                     eject_sens = -1;
                 } else {
-                    s32 xspeed_delta = obj->speed_x - ray.speed_x;
+                    s16 xspeed_delta = obj->speed_x - ray.speed_x;
                     if (xspeed_delta == 0) {
                         eject_sens = ray.flags.flip_x ? 1 : -1;
                     } else {
@@ -1389,19 +1321,25 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
                 } else {
                     bump_speed = 2;
                 }
-                ray.speed_x = bump_speed * eject_sens; // Note: eject_sens is always 1 or -1
-                ray.speed_y = ~bump_speed;
+                if (eject_sens == 1) {
+                    ray.speed_x = bump_speed;
+                } else if (eject_sens == -1) {
+                    ray.speed_x = bump_speed;
+                    ray.speed_x = -ray.speed_x;
+                }
+                ray.speed_y = bump_speed + 1;
+                ray.speed_y = -ray.speed_y;
             }
 
             in_air_because_hit = true;
             jump_time = 0;
+            ray.follow_id = -1;
+            decalage_en_cours = 0;
             helico_time = -1;
+            ray.nb_cmd = 0;
             ray.gravity_value_1 = 0;
             ray.gravity_value_2 = 0;
-            ray.follow_id = -1;
             poing.is_charging = false;
-            decalage_en_cours = 0;
-            ray.nb_cmd = 0;
             if (RayEvts.super_helico) {
                 button_released = 1;
             }
@@ -1424,9 +1362,8 @@ void standard_frontZone(obj_t* obj, s16* x, s16* w) {
 void SET_DETECT_ZONE_FLAG(obj_t* obj) {
     /* 1FAB4 801442B4 -O2 -msoft-float */
 
-    s16 obj_x; s16 obj_y; s16 obj_w; s16 obj_h;
-    s32 unk_1;
-    u16 det_zn_flg;
+    s16 obj_w; s16 obj_y; s16 obj_h; s16 obj_x;
+    u8 det_zn_flg;
 
     GET_ANIM_POS(obj, &obj_x, &obj_y, &obj_w, &obj_h);
     switch (obj->type)
@@ -1439,7 +1376,7 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
             break;
         case TYPE_MST_SHAKY_FRUIT:
             obj_y += obj_h;
-            obj_h += 240;
+            obj_h += 200;
             break;
         case TYPE_PIRATE_GUETTEUR:
         case TYPE_PIRATE_GUETTEUR2:
@@ -1451,7 +1388,6 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
             }
             break;
         case TYPE_BLACKTOON1:
-            unk_1 = -1;
             switch (obj->follow_sprite)
             {
                 case 3:
@@ -1466,7 +1402,7 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
                 case 7:
                     if (obj->main_etat == 1 && obj->sub_etat == 1)
                     {
-                        obj_x = obj_x + unk_1 + (obj_w >> 1);
+                        obj_x += (obj_w >> 1) - 1;
                         obj_y += (obj_h >> 1);
                         obj_w = 20;
                         obj_h += obj->detect_zone;
@@ -1543,13 +1479,12 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
             obj_h = (obj_h << 1);
             break;
         case TYPE_MITE:
-            unk_1 = 150;
             if (!obj->flags.flip_x)
                 obj_x -= obj->detect_zone;
             else
-                obj_x = obj_x + -unk_1 + (obj_w >> 1);
+                obj_x += (obj_w >> 1) - 150;
 
-            obj_w = obj->detect_zone + unk_1;
+            obj_w = obj->detect_zone + 150;
             obj_y -= ((obj->detect_zone - obj_h) >> 1);
             obj_h = obj->detect_zone;
             break;
@@ -1599,10 +1534,10 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
             break;
     }
 
-    if (inter_box(obj_x, obj_y, obj_w, obj_h, ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h))
+    if (inter_box(obj_x, obj_y, obj_w, obj_h, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y))
     {
         det_zn_flg = obj->detect_zone_flag;
-        if (det_zn_flg == 0 || det_zn_flg == 1)
+        if (det_zn_flg < 2)
         {
             if (det_zn_flg == 0)
                 obj->detect_zone_flag = 1;
@@ -1627,17 +1562,11 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
 //2E738
 void goToRay(obj_t* obj) {
     /* 201D8 801449D8 -O2 -msoft-float */
-    s32 follow_sprite;
+    u8 follow_sprite;
 
     PlaySnd(204, obj->id); // spawn sound
     switch (obj->type)
     {
-        case TYPE_STALAG:
-            if (obj->sub_etat == 4)
-                calc_obj_dir(obj);
-            else
-                obj->flags.flip_x = 0;
-            break;
         case TYPE_PLATFORM:
         case TYPE_FALLPLAT:
         case TYPE_LIFTPLAT:
@@ -1667,6 +1596,15 @@ void goToRay(obj_t* obj) {
         case TYPE_MARK_AUTOJUMP_PLAT:
             obj->flags.flip_x = 0;
             break;
+        case TYPE_STALAG:
+            if (obj->sub_etat == 4)
+                calc_obj_dir(obj);
+            else
+                obj->flags.flip_x = 0;
+            break;
+        case TYPE_30_AUDIOSTART:
+            obj->timer = 1;
+            break;
         case TYPE_BADGUY1:
         case TYPE_BADGUY2:
         case TYPE_BADGUY3:
@@ -1678,7 +1616,7 @@ void goToRay(obj_t* obj) {
             break;
         case TYPE_BLACKTOON1:
             follow_sprite = obj->follow_sprite;
-            if (follow_sprite < 2 || (follow_sprite >= 4 && ((s16) follow_sprite >= 8 || follow_sprite < 6))) {
+            if (follow_sprite < 2 || (follow_sprite > 3 && (follow_sprite < 6 || follow_sprite > 7))) {
                 calc_obj_dir(obj);
                 if (obj->flags.flip_x)
                     skipToLabel(obj, 3, true);
@@ -1701,9 +1639,11 @@ void unleashMonsterHost(obj_t* obj) {
     /* 20304 80144B04 -O2 -msoft-float */
     obj_t* linked_obj;
     s16 prev_id;
-    s16 linked_id = obj->link;
+    s16 linked_id;
+    s16 first_id = obj->link;
+    linked_id = first_id;
 
-    if (linked_id != obj->id) {
+    if (first_id != obj->id) {
         do {
             linked_obj = &level.objects[linked_id];
             if (!((flags[linked_obj->type] & flags1_2_is_collectible) && (bonus_taken(linked_obj->id)))) {
@@ -1723,46 +1663,39 @@ void unleashMonsterHost(obj_t* obj) {
 void SHOW_COLLISIONS_ZONES(void) {
     s16 i;
     obj_t *obj;
-    for (i = 0; i < actobj.num_active_objects; ++i) {
-        obj = &level.objects[actobj.objects[i]];
+    i = 0;
+    obj = &level.objects[actobj.objects[i]];
+    while (i < actobj.num_active_objects) {
         if (!(flags[obj->type] & flags0_4_no_collision) && (get_eta(obj)->flags & 0x20)) {
-            CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h, obj);
+            CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, obj);
         }
+        ++i;
+        obj = &level.objects[actobj.objects[i]];
     }
 }
 
 //2EAE8
 void DO_COLLISIONS(void) {
-    s32 i;
+    s16 i;
     obj_t *obj;
-    for (i = 0; i < actobj.num_active_objects; ++i) {
+    i = 0;
+    obj = level.objects + actobj.objects[i];
+    while (i < actobj.num_active_objects) {
         if (new_world || new_level || fin_boss || boss_mort) {
             break;
         }
-        obj = level.objects + actobj.objects[i];
 
         if (get_eta(obj)->flags & 0x20)  {
-            if (flags[obj->type] & flags2_0x10_do_not_check_ray_collision) {
-                if (!(ray.main_etat == 3 && ray.sub_etat == 32)) {
-                    s16 collision;
-                    if (obj->type  == TYPE_81_CYMBALE || obj->type == TYPE_169_CYMBAL2) {
-                        collision = 0;
-                    } else {
-                        collision = CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h, obj);
-                    }
-                    if (collision != -1) {
-                        ObjectsFonctions[obj->type].rayman_collision(obj);
-                    }
-                }
-            } else if (ray.config == 0 && ray.iframes_timer == -1) {
+            if (!(flags[obj->type] & flags2_0x10_do_not_check_ray_collision)) {
+                if (ray.config == 0 && ray.iframes_timer == -1) {
                 if ((get_eta(&ray)->flags & 8) && !(flags[obj->type] & flags0_4_no_collision)) {
                     s16 collision;
-                    if ((obj->type == TYPE_170_RAYON && (obj->anim_frame == 0 || obj->anim_frame > 3)) ||
-                            (obj->type == TYPE_147_MST_SCROLL && obj->hit_points != 0)
-                    ) {
+                    if (obj->type == TYPE_170_RAYON && (obj->anim_frame > 3 || obj->anim_frame == 0)) {
+                        collision = -1;
+                    } else if (obj->type == TYPE_147_MST_SCROLL && obj->hit_points != 0) {
                         collision = -1;
                     } else {
-                        collision = CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h, obj);
+                        collision = CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, obj);
                     }
                     if (collision != -1) {
                         ObjectsFonctions[obj->type].rayman_collision(obj);
@@ -1770,11 +1703,27 @@ void DO_COLLISIONS(void) {
                                 !(ray.main_etat == 3 && ray.sub_etat  == 32)
                         ) {
                             RAY_HIT(1, obj);
+                            break;
                         }
+                    }
+                }
+                }
+            } else {
+                if (!(ray.main_etat == 3 && ray.sub_etat == 32)) {
+                    s16 collision;
+                    if (obj->type  == TYPE_81_CYMBALE || obj->type == TYPE_169_CYMBAL2) {
+                        collision = 0;
+                    } else {
+                        collision = CHECK_BOX_COLLISION(TYPE_23_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, obj);
+                    }
+                    if (collision != -1) {
+                        ObjectsFonctions[obj->type].rayman_collision(obj);
                     }
                 }
             }
         }
+        ++i;
+        obj = level.objects + actobj.objects[i];
     }
     if (ray.config != 0) {
         RAY_KO();
@@ -1788,7 +1737,7 @@ void DO_COLLISIONS(void) {
 void DoRaymanCollisionDefault(obj_t* obj) {
     // NOTE(Falcury): PS1 implementation is located in PS1_DoRaymanCollision(). Seems to be functionally identical.
     if ((flags[obj->type] & flags2_0x10_do_not_check_ray_collision) && get_eta(obj)->flags & 0x20) {
-        if (!(ray.main_etat == 3 && ray.sub_etat == 32)) {
+        if (((ray.main_etat != 3 || ray.sub_etat != 32)) != 0) {
             s16 ray_iframes = ray.iframes_timer;
             if (ray_iframes >= 60) {
                 RAY_HIT(false, obj);
@@ -1815,8 +1764,8 @@ void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
     obj_t* cur_obj;
     s16 cur_x; s16 cur_y; s16 cur_w; s16 cur_h;
 
-    GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);
     done = false;
+    GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);
     if (obj->type == TYPE_FALLING_OBJ || obj->type == TYPE_FALLING_OBJ2 || obj->type == TYPE_FALLING_OBJ3)
     {
         in_x += 10;
@@ -1843,7 +1792,7 @@ void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
                 {
                     case TYPE_BADGUY1:
                         if (
-                                !(cur_obj->main_etat == 2 || (cur_obj->main_etat == 0 && cur_obj->sub_etat == 3)) &&
+                                cur_obj->main_etat != 2 && ((cur_obj->main_etat != 0 || cur_obj->sub_etat != 3) != 0) &&
                                 (!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40) &&
                                  GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) &&
                                  inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)
