@@ -74,6 +74,15 @@ yields 0x27), mapCd is 132 bytes (Rayverse 128, so its timeCd address comment is
 u16 (Rayverse u8). Rayverse declarations wider than DOS (Android sizes + byte accesses in DOS code):
 nb_levels_in_world u8[7], LastTouched u8, speed_ball_level u8.
 
+## BSS objects and layout verification
+`tools/probes/bss_objects.py`: within one object's `_BSS` Watcom orders globals by descending size rank, so a rank
+increase between address-adjacent globals starts a new object. With Rayverse names + Android sizes this finds ~26
+BSS objects (a few false breaks come from Android-widened 1-byte globals; with DOS sizes 2:3f842..2:3fa9d is one
+block). A large central block (rvb_save..position_ray, ~450 globals) is the central data TU's `_BSS`; small blocks
+belong to code objects in `_TEXT` link order - e.g. RandomIndex (2:5548c) is alone in its block and is defined by
+src/rand.c, whose `_BSS` now VERIFIES. BSS verification is layout-only (contents are zero): every public bound, one
+implied base, and no other bound global inside the span (tests/test_match.py BssLayoutTests).
+
 ## Open
 - Central data TU(s): reconstruct declaration order (index groups) from the BSS layout + names; flag globals whose
   hash breaks an ascending run as candidates for wrong names.

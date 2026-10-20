@@ -17,7 +17,10 @@ def main():
     rep_p = BUILD / "verify" / "report.json"
     rep = load_json(rep_p) if rep_p.exists() else {}
     counts, strict_bytes, total = {}, 0, 0
-    data_b = sum(g["size"] for segs in rep.get("_segments", {}).values() for g in segs if g["status"] == "VERIFIED")
+    data_b = sum(g["size"] for segs in rep.get("_segments", {}).values() for g in segs
+                 if g["status"] == "VERIFIED" and not g.get("layout_only"))
+    bss_b = sum(g["size"] for segs in rep.get("_segments", {}).values() for g in segs
+                if g["status"] == "VERIFIED" and g.get("layout_only"))
     for name, u in units.items():
         for fn, ent in u["functions"].items():
             counts[ent["status"]] = counts.get(ent["status"], 0) + 1
@@ -47,7 +50,7 @@ def main():
             mapped += b - a
             last = b
     print(f"data: reconstructed (VERIFIED segments, last verify) {data_b} bytes; mapped game _DATA (named+sized "
-          f"bindings) {mapped} of {GAME_DATA_END} bytes ({100.0 * mapped / GAME_DATA_END:.1f}%)")
+          f"bindings) {mapped} of {GAME_DATA_END} bytes ({100.0 * mapped / GAME_DATA_END:.1f}%); BSS layout VERIFIED {bss_b} bytes")
     print(f"bindings: {len(sym.get('functions', {}))} functions, {len(sym.get('data', {}))} data")
     data_units = [n for n, u in units.items() if not u["functions"]]
     for name, u in units.items():

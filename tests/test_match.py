@@ -119,5 +119,24 @@ class DataSegmentTests(unittest.TestCase):
         self.assertEqual(self.segs(bad)["CONST"]["status"], "MISMATCH")
 
 
+class BssLayoutTests(unittest.TestCase):
+    """rand defines RandomIndex, alone in its _BSS object: layout VERIFIED; an extra global must break it."""
+
+    def segs(self, text):
+        img = Image("gog_v121_us")
+        p = BUILD / "tests" / "rand_bss.c"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text)
+        out = []
+        match.verify_object(img, compile_src(p, "rand_bss"), None, out)
+        return {g["segment"]: g for g in out}
+
+    def test_bss_layout(self):
+        src = (ROOT / "src" / "rand.c").read_text()
+        self.assertEqual(self.segs(src)["_BSS"]["status"], "VERIFIED")
+        extra = src.replace("int RandomIndex;", "int RandomIndex;\nint rand_extra_global;")
+        self.assertNotEqual(self.segs(extra)["_BSS"]["status"], "VERIFIED")
+
+
 if __name__ == "__main__":
     unittest.main()

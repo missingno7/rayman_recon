@@ -68,7 +68,7 @@ def main(argv):
     images = {}
     report = {}
     regressions = len(bad)
-    strict_f = strict_b = data_b = 0
+    strict_f = strict_b = data_b = bss_b = 0
     for name in names:
         unit = units["units"][name]
         out, err = verify_unit(name, unit, images)
@@ -85,7 +85,10 @@ def main(argv):
                 print(f"[{name}] REGRESSION data segment {sname}: VERIFIED -> {got_s} {seg_now.get(sname, {}).get('problem', '')}")
         for sname, g in seg_now.items():
             if g["status"] == "VERIFIED":
-                data_b += g["size"]
+                if g.get("layout_only"):
+                    bss_b += g["size"]
+                else:
+                    data_b += g["size"]
                 if unit.get("segments", {}).get(sname) != "VERIFIED":
                     print(f"[{name}] data segment {sname} VERIFIED" + (" (recorded)" if accept else " (not recorded)"))
                     if accept:
@@ -121,7 +124,7 @@ def main(argv):
             from common import dump_json as dj
             dj(CONFIG / "units.json", units)
             print("accepted statuses written to config/units.json")
-    print(f"# STRICT functions {strict_f}, STRICT code bytes {strict_b}; VERIFIED data bytes {data_b}; "
+    print(f"# STRICT functions {strict_f}, STRICT code bytes {strict_b}; VERIFIED data bytes {data_b}; VERIFIED BSS layout bytes {bss_b}; "
           f"regressions {regressions}")
     return 1 if regressions else 0
 

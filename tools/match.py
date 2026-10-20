@@ -132,7 +132,28 @@ def segment_report(img, mod, seg_base, binds):
                 if a:
                     bases.add((a[0], a[1] - o))
         if seg.cls.upper() == "BSS":
-            ent["status"] = "BSS"
+            # Layout check (contents are zero by definition): every public of the segment is bound, all imply one
+            # base, and no other bound data symbol lies inside [base, base+size) (nothing missing or foreign).
+            pubs = [(n, o) for n, s2, o, _ in mod.publics if s2 == si]
+            bound = [(n, o, binds.lookup(n)[0]) for n, o in pubs]
+            if not pubs or any(a is None for _, _, a in bound):
+                ent["status"] = "BSS"
+                ent["problem"] = "unbound BSS publics: " + ", ".join(n for n, _, a in bound if a is None)[:200] if pubs else ""
+            elif len({(a[0], a[1] - o) for _, o, a in bound}) != 1:
+                ent["status"] = "MISMATCH"
+                ent["problem"] = "BSS publics imply different bases (order/size differs from the oracle)"
+            else:
+                o2, b2 = bound[0][2][0], bound[0][2][1] - bound[0][1]
+                ent["oracle"] = f"{o2}:{b2:05x}"
+                names = {demangle(n) for n, _ in pubs} | {n for n, _ in pubs}
+                foreign = [k for k, a in binds.game.items() if a[0] == o2 and b2 <= a[1] < b2 + seg.size
+                           and k not in names]
+                if foreign:
+                    ent["status"] = "MISMATCH"
+                    ent["problem"] = "bound globals inside this BSS span not defined here: " + ", ".join(sorted(foreign)[:6])
+                else:
+                    ent["status"] = "VERIFIED"
+                    ent["layout_only"] = True
         elif not bases:
             ent["status"] = "UNPLACED"
         elif len(bases) > 1:
