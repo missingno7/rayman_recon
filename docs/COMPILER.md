@@ -64,7 +64,10 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
 - OPEN, not accepted: objupdate2 TEST_SIGNPOST is reproduced only by a materialised boolean inside `&&`
   (`ray.main_etat == 2 && (ray.sub_etat != 8 ? 1 : 0)` or `(u8)(ray.sub_etat != 8)`); the plain form (as in the PS1
   matching source) and a local flag do not. No source evidence for that form (a macro/helper is possible) -> kept
-  NEAR rather than forcing bytes.
+  NEAR rather than forcing bytes. Same class (input, 2026-10-20): one joystick-recording function matches only
+  with operand-typed ternaries `(buttons & 0x10) ? (s16)1 : (s16)0`; `? 1 : 0`, `!= 0`, TRUE/FALSE macros and an
+  outer cast do not -> kept NEAR. Materialised-boolean shapes recur; an original typed-constant macro is a
+  hypothesis to test when more cases accumulate.
 
 - **Bitfield views of packed bytes** [PROVEN, basic]: `sprite_t.sprite_pos` low/high nibbles (calc_let_Width2) and
   `flags[type]` byte-1 bits 4/5 move_x/move_y (makeUturn, 1324 bytes) only match as bitfield reads - mask arithmetic

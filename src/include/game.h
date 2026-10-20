@@ -134,10 +134,10 @@ typedef struct display_item_t {   /* 216 bytes; text_to_display 2:3c4a0 is [11] 
 extern display_item_t text_to_display[11];
 
 typedef struct options_jeu_t {     /* options_jeu: 32 bytes (Android 32); fields u16 (input switch, fee/worldmap via s16 params) */
-    s32 (*test_fire1)(void);
-    s32 (*test_fire0)(void);
-    s32 (*test_button4)(void);
-    s32 (*test_button3)(void);
+    s16 (*test_fire1)(void);
+    s16 (*test_fire0)(void);
+    s16 (*test_button4)(void);
+    s16 (*test_button3)(void);
     u16 jump;
     u16 fist;
     u16 field_14;

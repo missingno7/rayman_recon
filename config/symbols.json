@@ -9142,6 +9142,12 @@
     "type": "stage_draw_t*",
     "name": "RAYVERSE",
     "evidence": "Rayverse CD0F8; indirect DOS stage draw call, six-register ABI; Android symbol checked"
+   },
+   "fee_obj_id": {
+    "addr": "2:3f888",
+    "type": "s16",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "Android fee_obj_id object size 2; Rayverse CF888; DOS INIT_OBJECTS writes word at 1:4f332 and 1:4fda7; do_record 1:324d7 reads dword at 2:3f886 then SAR 16, i.e. true short at 2:3f888."
    }
   }
  }

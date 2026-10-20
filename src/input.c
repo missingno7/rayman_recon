@@ -1,4 +1,4 @@
-/* input.c (1:31ab0..1:32930: keyboard/joystick/demo record). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholder names); worker tu_input first pass. See config/units.json for statuses. */
+/* input.c (1:31ab0..1:32930: keyboard/joystick/demo record). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholder names); worker gfin_input finishing candidate. See NOTES.md for measured statuses. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -15,7 +15,7 @@
 #define SC_CONTROL 0x1d
 #define SC_NUMLOCK 0x45
 
-typedef s32 (*button_test_fn)(void);
+typedef s16 (*button_test_fn)(void);
 typedef u8 (*key_test_fn)(void);
 typedef void (*input_fn)(void);
 typedef s32 (*swap_func_t)(u8 *source_buf, u8 *dest_buf, s32 width, s32 height);
@@ -54,8 +54,8 @@ extern u8 RaymanDansUneMapDuJeu;
 extern u8 in_pause;
 extern u8 WindowsLance;
 extern u8 need_timer;
-extern u8 something_with_cfg_25_default_00_joy;
 extern u8 is_joypad_mode;
+extern u8 something_with_cfg_25_default_00_joy;
 extern u8 VGA_FREQ;
 extern s16 joyy0;
 extern s16 joyx0;
@@ -103,7 +103,7 @@ extern s16 InitModeXWithFrequency(u8 frequency);
 extern void DO_FADE_OUT(void);
 extern rgb_palette_t current_rvb;
 extern s16 new_world;
-extern s16 reduced_rayman_id;
+extern s16 fee_obj_id;
 
 u8 TestKeyWeapon(void);
 u8 TOUCHE(u8 key);
@@ -113,12 +113,12 @@ u16 leftjoy(void);
 u16 rightjoy(void);
 u16 downjoy(void);
 u16 upjoy(void);
-s32 but0pressed(void);
-s32 but1pressed(void);
-s32 but2pressed(void);
-s32 but3pressed(void);
+s16 but0pressed(void);
+s16 but1pressed(void);
+s16 but2pressed(void);
+s16 but3pressed(void);
 s32 butX0pressed(void);
-s32 butX1pressed(void);
+s16 butX1pressed(void);
 void sub_4212C(s16 value);
 void readinput(void);
 void readinput_calibrate_joystick(s16 *xmax, s16 *xmin, s16 *ymax, s16 *ymin);
@@ -292,9 +292,9 @@ u16 upjoy(void)
     return result;
 }
 
-s32 but0pressed(void)
+s16 but0pressed(void)
 {
-    s32 result = 0;
+    s16 result = 0;
 
     if (nb_fade == 0) {
         if (!Main_Control || notbut[0] == 1) {
@@ -308,9 +308,9 @@ s32 but0pressed(void)
     return result;
 }
 
-s32 but1pressed(void)
+s16 but1pressed(void)
 {
-    s32 result = 0;
+    s16 result = 0;
 
     if (nb_fade == 0) {
         if (!Main_Control || notbut[1] == 1) {
@@ -324,9 +324,9 @@ s32 but1pressed(void)
     return result;
 }
 
-s32 but2pressed(void)
+s16 but2pressed(void)
 {
-    s32 result = 0;
+    s16 result = 0;
 
     if (nb_fade == 0) {
         if (!Main_Control || notbut[2] == 1) {
@@ -340,9 +340,9 @@ s32 but2pressed(void)
     return result;
 }
 
-s32 but3pressed(void)
+s16 but3pressed(void)
 {
-    s32 result = 0;
+    s16 result = 0;
 
     if (nb_fade == 0) {
         if (!Main_Control || notbut[3] == 1) {
@@ -365,9 +365,9 @@ s32 butX0pressed(void)
     return result;
 }
 
-s32 butX1pressed(void)
+s16 butX1pressed(void)
 {
-    s32 result = 0;
+    s16 result = 0;
 
     if (nb_fade == 0)
         result = bux11 == 1;
@@ -467,7 +467,7 @@ void load_record(record_t *rec)
     do {
         character = getche();
         filename[index++] = (char)character;
-    } while (character != '\r' && character != SC_ESCAPE);
+    } while (character != '\r' && character != 27);
     filename[--index] = '\0';
 
     if (filename[0] == '\0')
@@ -489,31 +489,25 @@ void load_record(record_t *rec)
 
 void sub_42408(u8 buttons)
 {
-    s16 a2 = 0;
-
-    joy_buttonB2 = 0;
-    joy_buttonB1 = 0;
-    joy_buttonA1 = 0;
+    joy_buttonA1 = joy_buttonA2 = joy_buttonB1 = joy_buttonB2 = 0;
 
     if (buttons & 1)
         joy_buttonA1 = 1;
     if (buttons & 2)
         joy_buttonB1 = 1;
     if (buttons & 4)
-        a2 = 1;
+        joy_buttonA2 = 1;
     if (buttons & 8)
-        a2 = 1;
-    joy_buttonA2 = a2;
-
-    joy_rec_left = (buttons & 0x10) != 0;
-    joy_rec_right = (buttons & 0x20) != 0;
-    joy_rec_up = (buttons & 0x40) != 0;
-    joy_rec_down = (buttons & 0x80) != 0;
+        joy_buttonA2 = 1;
+    joy_rec_left = (buttons & 0x10) ? 1 : 0;
+    joy_rec_right = (buttons & 0x20) ? 1 : 0;
+    joy_rec_up = (buttons & 0x40) ? 1 : 0;
+    joy_rec_down = (buttons & 0x80) ? 1 : 0;
 }
 
 void do_record(record_t *rec)
 {
-    s32 current_offset;
+    u32 current_offset;
 
     bux00 = joy_buttonA1;
     bux01 = joy_buttonA2;
@@ -523,18 +517,17 @@ void do_record(record_t *rec)
     current_offset = rec->current_offset;
     if (rec->is_playing) {
         if (current_offset == 0) {
-            if (reduced_rayman_id == -1 && ModeDemo == 0)
+            if (fee_obj_id == -1 && ModeDemo == 0)
                 load_record(rec);
             rec->repeat_index = 0;
-            current_offset++;
-            sub_42408(rec->data[current_offset - 1]);
+            sub_42408(rec->data[current_offset++]);
+            rec->repeat_length = rec->data[current_offset];
             rec->is_finished = 0;
             rec->current_offset = current_offset;
-            rec->repeat_length = rec->data[current_offset];
         } else {
             rec->repeat_index++;
             if (rec->repeat_index == rec->repeat_length) {
-                if (rec->is_finished || current_offset + 1 >= rec->length) {
+                if (rec->is_finished == 1 || current_offset + 1 >= rec->length) {
                     rec->is_playing = 0;
                     if (ModeDemo == 1) {
                         ModeDemo = 2;
@@ -588,23 +581,27 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
             PositionStageNameCalcule = 2;
     }
 
-    if (byte_967CC != 0) {
-        if (byte_967CC <= 1) {
-            if (scancode == SC_CONTROL)
-                byte_967CC = 2;
-            else
-                byte_967CC = 0;
-        } else if (byte_967CC == 2) {
-            if (scancode == SC_NUMLOCK && RaymanDansUneMapDuJeu)
-                in_pause = !in_pause;
+    switch (byte_967CC) {
+    case 0:
+        if (scancode == 0xe1)
+            byte_967CC = 1;
+        else
+            v3 = 1;
+        break;
+    case 1:
+        if (scancode == SC_CONTROL)
+            byte_967CC = 2;
+        else
             byte_967CC = 0;
-        } else {
-            byte_967CC = 0;
-        }
-    } else if (scancode == 0xe0) {
-        byte_967CC = 1;
-    } else {
-        v3 = 1;
+        break;
+    case 2:
+        if (scancode == SC_NUMLOCK && RaymanDansUneMapDuJeu)
+            in_pause = !in_pause;
+        byte_967CC = 0;
+        break;
+    default:
+        byte_967CC = 0;
+        break;
     }
 
     if (v3) {
@@ -649,80 +646,48 @@ void Reset_Clavier(void)
 
 u8 JoystickPresent(void)
 {
-    u8 mode;
-    u8 port;
-    input_fn read_fn;
-
-    if (need_timer != 0 && WindowsLance != 0) {
-        mode = 1;
-        port = WindowsLance;
-        something_with_cfg_25_default_00_joy = port;
-        is_joypad_mode = mode;
-        Swap_And_Test_Joystick = get_joy_input1_dos1;
-        read_fn = get_joy_input2_dos1;
-    } else {
-        mode = 0;
-        port = 0;
+    if (need_timer == 0 || WindowsLance != 0) {
         something_with_cfg_25_default_00_joy = 0;
+        Read_Input_Func = get_joy_input2_windows1;
         is_joypad_mode = 0;
-        read_fn = get_joy_input2_windows1;
+    } else {
+        is_joypad_mode = 1;
+        something_with_cfg_25_default_00_joy = WindowsLance;
+        Read_Input_Func = get_joy_input2_dos1;
+        Swap_And_Test_Joystick = get_joy_input1_dos1;
     }
-    Read_Input_Func = read_fn;
 
     if (dos_game_io_port_something() == 0 &&
         dos_game_io_port_something2() == 0) {
         Main_Control = 0;
-        joyx0 = 0;
-        joyy0 = 0;
-        joy_buttonB1 = 0;
-        joy_buttonB2 = 0;
-        joy_buttonA1 = 0;
-        joy_buttonA2 = 0;
-        bux00 = 0;
-        bux01 = 0;
-        bux10 = 0;
-        bux11 = 0;
-        joy_rec_up = 0;
-        joy_rec_right = 0;
-        joy_rec_down = 0;
-        joy_rec_left = 0;
-        word_E0CD0 = 0;
-        word_E0CD4 = 0;
-        word_E0CD8 = 0;
-        auto_joy_left = 0;
-        auto_joy_up = 0;
-        auto_joy_right = 0;
-        auto_joy_down = 0;
+        auto_joy_up = auto_joy_down = auto_joy_left = auto_joy_right =
+            bux00 = bux01 = bux10 = bux11 = joy_buttonA1 = joy_buttonA2 =
+            joy_buttonB1 = joy_buttonB2 = joyx0 = joyy0 = 0;
+        return 0;
     } else {
         if (Main_Control == 0)
             Main_Control = 1;
-
         if (dos_game_io_port_something() != 0) {
-            if (need_timer != 0 && WindowsLance != 0) {
-                mode = 1;
-                port = WindowsLance;
-                Swap_And_Test_Joystick = get_joy_input1_dos1;
-                read_fn = get_joy_input2_dos1;
+            if (need_timer == 0 || WindowsLance != 0) {
+                is_joypad_mode = 0;
+                Read_Input_Func = get_joy_input2_windows1;
+                something_with_cfg_25_default_00_joy = 0;
             } else {
-                mode = 0;
-                port = 0;
-                read_fn = get_joy_input2_windows1;
+                is_joypad_mode = 1;
+                Swap_And_Test_Joystick = get_joy_input1_dos1;
+                Read_Input_Func = get_joy_input2_dos1;
+                something_with_cfg_25_default_00_joy = 0;
             }
-        } else if (need_timer != 0 && WindowsLance != 0) {
-            mode = 1;
-            port = 1;
-            Swap_And_Test_Joystick = get_joy_input1_dos2;
-            read_fn = get_joy_input2_dos2;
+        } else if (need_timer == 0 || WindowsLance != 0) {
+            is_joypad_mode = 0;
+            Read_Input_Func = get_joy_input2_windows2;
+            something_with_cfg_25_default_00_joy = 1;
         } else {
-            mode = 0;
-            port = 1;
-            read_fn = get_joy_input2_windows2;
+            something_with_cfg_25_default_00_joy = 1;
+            is_joypad_mode = 1;
+            Read_Input_Func = get_joy_input2_dos2;
+            Swap_And_Test_Joystick = get_joy_input1_dos2;
         }
-
-        is_joypad_mode = mode;
-        something_with_cfg_25_default_00_joy = port;
-        Read_Input_Func = read_fn;
+        return 1;
     }
-
-    return 1;
 }
