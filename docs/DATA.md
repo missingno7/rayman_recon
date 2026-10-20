@@ -48,6 +48,19 @@ the original identifiers, and (b) the BSS is mostly one large central data TU (~
 verified reconstruction of the central BSS feasible: the rule turns names + declaration order into addresses.
 Probe: `tools/probes/bss_names.py`.
 
+## Initialised `_DATA` coverage [measured]
+Named objects with known size (Rayverse data.c addresses with Android sizes, plus Android content matches from
+`tools/androiddata.py`) cover 166,573 of the 186,776 bytes of game `_DATA` (2:00000..2:2d998), 89.2%, in 203 objects
+with no conflicting overlap (the single overlap is an excluded 8-byte C++ library constant matched by chance).
+47 gaps remain; the largest are 2:00000..2:01957 (6.5 KB, data of the hand-written low-level code at 1:00000..),
+2:035fa..2:04a74 (5.2 KB) and 2:01c9a..2:0251c (2.2 KB). Because `_DATA` is laid out in definition order, the
+named objects in address order already give the definition order of the central data TU(s).
+
+Policy question for the data stage: reconstructing initialised data means writing the initial values as C
+initialisers. Those values can only come from the oracle (or Android/PS1 where identical). This is ordinary source
+reconstruction (the original source contained these literals), but it must be expressed as typed initialisers with
+symbolic pointers, verified by the data-segment check - never as raw byte blobs.
+
 ## Open
 - Central data TU(s): reconstruct declaration order (index groups) from the BSS layout + names; flag globals whose
   hash breaks an ascending run as candidates for wrong names.
