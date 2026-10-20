@@ -1941,6 +1941,141 @@
     "addr": "1:302c0",
     "name": "RAYVERSE",
     "evidence": "DOS call target in the dark object; Rayverse/xref name AllocateDarkPhase2"
+   },
+   "saxoCanAttak": {
+    "addr": "1:65840",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75840; DOS function start from tumap/disassembly"
+   },
+   "INIT_SAXO": {
+    "addr": "1:65928",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75928; DOS function start from tumap/disassembly"
+   },
+   "allocateNote2": {
+    "addr": "1:659b4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //759b4; DOS function start from tumap/disassembly"
+   },
+   "DO_EXPLOSE_NOTE2": {
+    "addr": "1:65ac0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75ac0; DOS function start from tumap/disassembly"
+   },
+   "DO_NOTE_CMD": {
+    "addr": "1:65b0c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75b0c; DOS function start from tumap/disassembly"
+   },
+   "Cree_Eclat_Note": {
+    "addr": "1:65d20",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75d20; DOS function start from tumap/disassembly"
+   },
+   "DO_EXPLOSE_NOTE1": {
+    "addr": "1:65e88",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75e88; DOS function start from tumap/disassembly"
+   },
+   "BonneNote": {
+    "addr": "1:65f98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //75f98; DOS function start from tumap/disassembly"
+   },
+   "DO_NOTE_TOUCHEE": {
+    "addr": "1:660cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //760cc; DOS function start from tumap/disassembly"
+   },
+   "DO_NOTE_REBOND": {
+    "addr": "1:66124",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76124; DOS function start from tumap/disassembly"
+   },
+   "allocateNote": {
+    "addr": "1:6619c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //7619c; DOS function start from tumap/disassembly"
+   },
+   "PrepareAtak": {
+    "addr": "1:66334",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76334; DOS function start from tumap/disassembly"
+   },
+   "SAXO_TIRE": {
+    "addr": "1:66388",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76388; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO_COUP": {
+    "addr": "1:663bc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //763bc; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO2_COUP": {
+    "addr": "1:66450",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76450; DOS function start from tumap/disassembly"
+   },
+   "SetSaxoEventPos": {
+    "addr": "1:664f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //764f0; DOS function start from tumap/disassembly"
+   },
+   "SetSaxoCollNoteBox": {
+    "addr": "1:66564",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76564; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO_COMMAND": {
+    "addr": "1:66614",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //76614; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO_ATTER": {
+    "addr": "1:67134",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //77134; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO2_COMMAND": {
+    "addr": "1:671b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //771b8; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO2_ATTER": {
+    "addr": "1:676a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //776a0; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO_MARCHE": {
+    "addr": "1:676f4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //776f4; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO3_COMMAND": {
+    "addr": "1:67704",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //77704; DOS function start from tumap/disassembly"
+   },
+   "DO_SAXO3_DEBUT": {
+    "addr": "1:678a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //778a4; DOS function start from tumap/disassembly"
+   },
+   "saxo2_get_eject_sens": {
+    "addr": "1:678cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse saxo.c //778cc; DOS function start from tumap/disassembly"
+   },
+   "setBossScrollLimits": {
+    "addr": "1:08c8c",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:65992"
+   },
+   "allocateLandingSmoke": {
+    "addr": "1:45d78",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target at 1:6716d"
    }
   },
   "data": {
@@ -4561,6 +4696,84 @@
     "type": "u16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CF8CA; DOS goto_phase5 stores -60; no Android name."
+   },
+   "attaque": {
+    "addr": "2:55764",
+    "type": "sax_attack_entry_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E5764; 4-byte attack entry; Android size 4"
+   },
+   "Sax": {
+    "addr": "2:55768",
+    "type": "sax_data_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E5768; field offsets match DOS; Android size 18"
+   },
+   "IndexSerie": {
+    "addr": "2:5577a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E577A; Android size 2"
+   },
+   "IndexAtak": {
+    "addr": "2:5577c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E577C; Android size 2"
+   },
+   "SaxMarche": {
+    "addr": "2:5577e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E577E; Android size 2"
+   },
+   "NextNote": {
+    "addr": "2:55780",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E5780; Android size 1"
+   },
+   "IsBossThere": {
+    "addr": "2:3fa8e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA8E; Android size 1"
+   },
+   "NiveauDansPhase": {
+    "addr": "2:3fa92",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA92; Android size 1"
+   },
+   "FinAnim": {
+    "addr": "2:3fa93",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA93; Android size 1"
+   },
+   "Phase": {
+    "addr": "2:3fa94",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA94; Android size 1"
+   },
+   "WaitForFinAtan": {
+    "addr": "2:3fa95",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA95; Android size 1"
+   },
+   "screen_trembling3": {
+    "addr": "2:3f84c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF84C; Android size 2"
+   },
+   "WaitForAnim": {
+    "addr": "2:3fa90",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA90; Android size 1"
    }
   }
  }
