@@ -2221,6 +2221,96 @@
     "addr": "1:14eac",
     "name": "RAYVERSE",
     "evidence": "DOS direct call target from y_floor at 1:5462b; xref blocs.c"
+   },
+   "findMereDenisWeapon": {
+    "addr": "1:40b60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //50b60; DOS address is comment - 0x10000 = 1:40b60"
+   },
+   "mereDenisCanAttak": {
+    "addr": "1:40bb8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //50bb8; DOS address is comment - 0x10000 = 1:40bb8"
+   },
+   "setMereDenisAtScrollBorder": {
+    "addr": "1:40cc8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //50cc8; DOS address is comment - 0x10000 = 1:40cc8"
+   },
+   "setCirclePointToReach": {
+    "addr": "1:40da4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //50da4; DOS address is comment - 0x10000 = 1:40da4"
+   },
+   "allocateMereDenisBombChips": {
+    "addr": "1:40e5c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //50e5c; DOS address is comment - 0x10000 = 1:40e5c"
+   },
+   "mereDenisExplodeBombs": {
+    "addr": "1:41010",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //51010; DOS address is comment - 0x10000 = 1:41010"
+   },
+   "mereDenisDropBomb": {
+    "addr": "1:4108c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //5108c; DOS address is comment - 0x10000 = 1:4108c"
+   },
+   "swapWeaponAnimState": {
+    "addr": "1:41470",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //51470; DOS address is comment - 0x10000 = 1:41470"
+   },
+   "swapMereDenisCollZones": {
+    "addr": "1:4149c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //5149c; DOS address is comment - 0x10000 = 1:4149c"
+   },
+   "prepareNewMereDenisAttack": {
+    "addr": "1:415ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //515ac; DOS address is comment - 0x10000 = 1:415ac"
+   },
+   "snapLaserToWeapon": {
+    "addr": "1:425fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //525fc; DOS address is comment - 0x10000 = 1:425fc"
+   },
+   "allocateSpaceMamaLaser": {
+    "addr": "1:42718",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52718; DOS address is comment - 0x10000 = 1:42718"
+   },
+   "doMereDenisCommand": {
+    "addr": "1:42870",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52870; DOS address is comment - 0x10000 = 1:42870"
+   },
+   "changeMereDenisPhase": {
+    "addr": "1:429a8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //529a8; DOS address is comment - 0x10000 = 1:429a8"
+   },
+   "fitSaveCurrentAction": {
+    "addr": "1:42a28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52a28; DOS address is comment - 0x10000 = 1:42a28"
+   },
+   "doMereDenisHit": {
+    "addr": "1:42af4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52af4; DOS address is comment - 0x10000 = 1:42af4"
+   },
+   "mereDenisBigLaserCommand": {
+    "addr": "1:42c54",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52c54; DOS address is comment - 0x10000 = 1:42c54"
+   },
+   "mereDenisBombCommand": {
+    "addr": "1:42d10",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse meredenis.c //52d10; DOS address is comment - 0x10000 = 1:42d10"
    }
   },
   "data": {
@@ -5003,6 +5093,96 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CFA78; DOS byte store in lance_couteau_lineaire"
+   },
+   "circle_index": {
+    "addr": "2:54d96",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D96; DOS address 2:54d96"
+   },
+   "circle_x": {
+    "addr": "2:54d92",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D92; DOS address 2:54d92"
+   },
+   "circle_y": {
+    "addr": "2:54d94",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D94; DOS address 2:54d94"
+   },
+   "currentBombSequence": {
+    "addr": "2:54d9c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D9C; DOS address 2:54d9c"
+   },
+   "currentLaserSize": {
+    "addr": "2:54d99",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D99; DOS address 2:54d99"
+   },
+   "currentPhaseHitCounter": {
+    "addr": "2:54d9b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D9B; DOS address 2:54d9b"
+   },
+   "droppedBombIds": {
+    "addr": "2:54d00",
+    "type": "s16[64]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declares s16 droppedBombIds[64] at //E4D00; Android size 128 and DOS byte offset t*16 + v*2 agree"
+   },
+   "laserSourceSprNumInAnim": {
+    "addr": "2:3fa6d",
+    "type": "s8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA6D; DOS address 2:3fa6d"
+   },
+   "lastDroppedBombIdInSequence": {
+    "addr": "2:54d80",
+    "type": "u8[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D80; DOS address 2:54d80"
+   },
+   "lastDroppedBombXCenterPos": {
+    "addr": "2:54d8e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D8E; DOS address 2:54d8e"
+   },
+   "machine_obj_id": {
+    "addr": "2:54d90",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D90; DOS address 2:54d90"
+   },
+   "mereDenis_weapon_id": {
+    "addr": "2:54d8c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D8C; DOS address 2:54d8c"
+   },
+   "mere_denis_wait_time": {
+    "addr": "2:54d88",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D88; DOS address 2:54d88"
+   },
+   "stepsForward": {
+    "addr": "2:54d9a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D9A; DOS address 2:54d9a"
+   },
+   "timerBeforeFirstBomb": {
+    "addr": "2:54d98",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4D98; DOS address 2:54d98"
    }
   }
  }
