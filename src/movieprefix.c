@@ -83,8 +83,8 @@ extern u8 AudioStatusByte(void);
 extern void sub_1a5b8(s32 state);
 extern u16 sub_1a02c(u8 command, u8 *track, u8 *minute, u8 *second, u8 *frame);
 extern void sub_1a4ac(s32 command, u8 track, u8 minute, u8 second);
-extern void effect_set_audio_status(s32 status);
-extern void effect_restore_audio_status(s32 status);
+extern void effect_set_audio_status(u8 status);
+extern void effect_restore_audio_status(u8 status);
 extern void endsynchro(void);
 extern void synchro(void);
 extern void readinput(void);
@@ -148,15 +148,8 @@ void sub_3B274(void);
 
 s32 sub_3A1C0(void)
 {
-    u32 count;
-    u32 *dst;
-
-    dst = (u32 *)DrawBufferNormal;
-    movie_draw_buffer = (u8 *)dst;
-    count = 0x3e80;
-    do {
-        *dst++ = 0;
-    } while (--count != 0);
+    movie_draw_buffer = DrawBufferNormal;
+    fill(DrawBufferNormal);
     return 0;
 }
 
@@ -225,7 +218,7 @@ void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
     u8 *dst;
     dst = x + y * 320 + surface->pixels;
-    copy_guarded(src, dst, width);
+    copy(src, dst, width);
 }
 
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)
@@ -582,36 +575,27 @@ read_packets:
 
 void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    u32 count;
-    u32 *dst;
-    dst = (u32 *)surface->pixels;
-    count = 0x3e80;
-    do {
-        *dst++ = 0;
-    } while (--count != 0);
+    fill(surface->pixels);
     (void)data;
     (void)work;
 }
 
 void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    s32 row;
     s32 width;
-    s32 height;
+    s32 rows;
     u8 *dst;
     const u8 *src;
 
-    src = data;
     dst = surface->pixels + work->surface_offset;
+    rows = work->height;
     width = work->width;
-    height = work->height;
-    row = 0;
-    while (row < height) {
+    src = data;
+    do {
         memcpy(dst, src, width);
-        src += width;
         dst += 320;
-        ++row;
-    }
+        src += width;
+    } while (--rows != 0);
 }
 
 void sub_3AA4C(u8 *work_bytes)
