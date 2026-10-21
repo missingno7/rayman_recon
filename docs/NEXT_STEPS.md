@@ -1,9 +1,7 @@
 # Next steps (ordered by measured value, 2026-10-21)
 
-1. **Low-level assembly block 1:00000-1:06f80** (~28 KB, the largest unreconstructed code): hand-written assembly
-   (ABIs proven, docs/reference/lowlevel_abi.h). Needs an assembly reconstruction path: identify the assembler
-   (Watcom WASM 10.x vs TASM/MASM from object-format and encoding evidence), then a matcher mode that assembles a
-   .asm unit and compares it under the same STRICT rules. Scope before starting; reconstruct as assembly only.
+1. **Low-level assembly: done** (2026-10-21): 1:00010-06f7e in 8 STRICT `.asm` slices + VERIFIED data prefix. Open:
+   one-module consolidation (only with evidence for the original module structure), assembler identity.
 2. **Movie prefix 1:2a1c0-1:2b288** (34 anonymous routines; worker w5_flc decides C vs assembly).
 3. **Finishing passes only with new evidence.** Most NEAR pools have had >=2 sol passes; wave-4 passes on exhausted
    units returned in 3-9 minutes with no gain (effect1/2, cymbal/save/display, affiche, pcfee). Re-open a unit when a

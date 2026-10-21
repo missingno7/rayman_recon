@@ -7,9 +7,9 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1151 of 1552 recorded functions, 192,300 code bytes** (~42.0% of game code 1:00000-1:6fbe6) in 124 code units; 401 NEAR_MATCH |
-| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson |
-| data closure | **30,058 bytes VERIFIED**; mapped (named+sized bindings): 89.7% of game `_DATA` |
+| function-level STRICT | **1257 recorded STRICT, 220,826 code bytes** (~48% of game code 1:00000-1:6fbe6) in 133 units (C + hand-written assembly); `python tools/status.py` for the per-unit table |
+| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
+| data closure | **38,558 bytes VERIFIED** (incl. the low-level asm data prefix 2:00010-0215c); mapped: 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED 6,919 bytes |
 | linked binary / packed EXE | not started (by design; first step only: PMODE/W 1.22 PMWLITE determinism, docs/NEXT_STEPS.md) |
 
@@ -29,11 +29,14 @@ destinations, exact rollback of written files only, literal-pathspec commit of w
 replaced only when private to the run's units. tests/test_integrate.py.
 
 ## Coverage
-Every C range of the game code below 1:6fbe6 now has a unit except the hand-written low-level assembly block
-1:00000-1:06f80 (~28 KB; scoping report build/workers/w5_asmscope/REPORT.md: ~119 routines, WASM 10.5/10.6 run
-natively, assembler identity OPEN, pilot 2/2 STRICT; not started) and four effect drafts without a unit (1:633e0,
-1:6c3b0, 1:6e380, 1:50350 partly). Remaining NEAR blockers: object layout drift (first size-drifting function per
-object), register/stack allocation, clamp lowering, materialised booleans.
+Hand-written assembly 1:00010-06f7e (28,526 bytes) is reconstructed as 8 contiguous `.asm` slices, 106 entries, all
+STRICT (lowlevel_00010, _02640, _03125, _04430, _04ab7, _05609, _0611e, _066df; WASM 10.6 via tools/wcc.py build;
+readable instructions, typed state only), plus lowlevel_data (2:00010-0215c, VERIFIED). OPEN: historical assembler
+identity and original module count (slices are not claimed as original objects); consolidation into one module
+would also reconcile the two mask-table names at 1:0311d/03121 (local labels in _02640, extern names in _03125);
+record-field and timer partitions; runtime callback payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
+BEGTEXT (runtime). Remaining C work: 401 NEAR functions (layout drift, register/stack allocation, clamp
+lowering, materialised booleans) and four effect drafts without a unit (1:633e0, 1:6c3b0, 1:6e380, part of 1:50350).
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
