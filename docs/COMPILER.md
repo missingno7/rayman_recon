@@ -50,12 +50,14 @@ Only then shape the body:
 **Do not try (measured dead ends):**
 - Compiler options: `-on/-oi/-ol/-ol+/-om/-or/-oc/-ou` were probed in ~40 units / 100+ functions with **zero STRICT
   gain**; `-oe`/`-oe=N` (~12 units) always inlines and regresses; `-oh/-ok/-oi+` are rejected. Releases 10.0/10.5:
-  identical to 10.6; 10.0a worse (~15 units). The profile is settled: `-zq -oaxt -s -5r -fpc`.
+  identical to 10.6; 10.0a worse (~15 units). Measured over all 121 units / 1,497 functions (ai_decomp review
+  2026-10-21): `-d1` no change; `-d2` changes every function, 0 gains; `-j` 1 loss (load GetStringTxt), 0 gains;
+  `-ei` no change. The profile is settled: `-zq -oaxt -s -5r -fpc`.
 - `inline`/`__inline`/`static __inline` (E1022) and C99 declarations: rejected by Watcom 10.6 (~11 units retried).
 - `register` keyword: no effect in most of ~8 units.
 - Exhaustive declaration-order or width grids on a function whose residue is a helper idiom (ashr16 toward zero,
-  sgn, CL-count shifts, inclusive-range booleans, min/max clamps - ~45 functions): no legal C form found yet; park
-  them (record the idiom) instead of re-grinding.
+  sgn, CL-count shifts, inclusive-range booleans, fill/copy): plain C never produces these; they are original
+  inline helpers - use src/include/inline_helpers.h (AGENTS.md exception, section "Original inline helpers").
 - Byte-forcing constructs (dead redundant init, empty cases, scratch clobbers, type-forcing block-scope externs)
   make bytes match but are rejected.
 
@@ -144,7 +146,10 @@ Only then shape the body:
 - Compiler release for v1.21 game code: 10.0, 10.0a, 10.5 and 10.6 give identical code on everything tested
   (only the 10.6 libraries match the v1.21 runtime). The 10.5 compiler was recovered from the CD's packed
   `DISKIMGS` set (`C:\tools\watcom-10.5-pck`, docs/TOOLCHAIN.md).
-- `-ei` enums, `-j` char signedness: not yet discriminated.
+- `-ei` enums, `-j` char signedness: settled - `-ei` no change, `-j` 1 loss / 0 gains over all units (see "Do not
+  try").
+- Toolchain pitfall: WCC386 10.6 (BINNT) crashes with a register dump when source/working paths are ~150
+  characters long (fine at ~50). Keep worker scratch paths short (build/workers/<short>/, build/tmp).
 - Linker: WLINK version/options, object order, `_DATA`/`_BSS` order not studied yet.
 - v1.12 rand variant is STRICT with the 10.6 compiler against v1.12 (scratch), although its runtime is 10.5.
 
