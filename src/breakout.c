@@ -1,5 +1,5 @@
 /* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
- * Worker c2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Worker g_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
  * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
  */
 #include "obj.h"
@@ -467,21 +467,26 @@ void AllocateCasseBriqueBoum(obj_t *obj)
 void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)
 {
     s16 i;
+    s16 count;
     obj_t *bonus;
 
     bonus = level.objects;
-    for (i = 0; i < level.nb_objects; i++, bonus++) {
+    count = level.nb_objects;
+    for (i = 0; i < count; i++, bonus++) {
         if (type == bonus->type && bonus->is_active == 0) {
+            /* INVENTED local: DOS 1:1729f..172b5 materializes the short fall speed. */
+            s16 fall_speed;
             bonus->x = obj->x + obj->offset_bx - bonus->offset_bx;
             bonus->y = obj->y + obj->offset_by - bonus->offset_by;
             set_main_and_sub_etat(bonus, sub_etat, main_etat);
             bonus->flags.alive = 1;
+            fall_speed = (bonus->y + bonus->offset_bx - ymap < 100) + 1;
             bonus->is_active = 1;
             bonus->speed_x = 0;
             bonus->display_prio = 1;
             bonus->active_timer = 0;
             bonus->active_flag = 0;
-            bonus->speed_y = (bonus->y + bonus->offset_bx - ymap < 100) + 1;
+            bonus->speed_y = fall_speed;
             return;
         }
     }
