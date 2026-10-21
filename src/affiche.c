@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d2_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d3_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -754,7 +754,7 @@ void DISPLAY_ALL_OBJECTS(void) {
     s32 xmin;
     s32 xmax;
     s32 ymax;
-    s32 angle;
+    s16 angle;
 
     for (current_display_prio = 7; current_display_prio >= 1; --current_display_prio) {
         for (i = 0, obj = actobj.objects[0] + level.objects; i < actobj.num_active_objects;
@@ -797,11 +797,17 @@ void DISPLAY_ALL_OBJECTS(void) {
             }
         }
     }
-    for (i = 0, obj = actobj.objects[0] + level.objects; i < actobj.num_active_objects;
-         ++i, obj = level.objects + actobj.objects[i]) {
-        if (obj->display_prio == 0 && obj->type == 0xF5) {
-            display2(obj);
-            break;
+    /* A separate pass draws the priority-zero type 0xF5 object.
+       DOS 1:09cb0..09d12 has independent index/pointer lifetimes here. */
+    {
+        s16 last_index;
+        obj_t *last_obj;
+        for (last_index = 0, last_obj = actobj.objects[0] + level.objects; last_index < actobj.num_active_objects;
+             ++last_index, last_obj = level.objects + actobj.objects[last_index]) {
+            if (last_obj->display_prio == 0 && last_obj->type == 0xF5) {
+                display2(last_obj);
+                break;
+            }
         }
     }
 }
