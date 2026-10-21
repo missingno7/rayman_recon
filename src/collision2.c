@@ -1,7 +1,7 @@
 /*
  * Collision engine, second object (GOG v1.21 1:1f1e0-1:21840). File name invented (Rayverse collision.c).
- * Names: Rayverse/Android. Note: collision2_local.h defines ashr16 as a toward-zero shift (unit-local; basic uses a
- * plain shift) - reconcile when helpers are consolidated. Status per function: config/units.json.
+ * Names: Rayverse/Android. Uses the shared ORIGINAL_INLINE ashr16 helper at its two DOS sites.
+ * Status per function: config/units.json.
  */
 #include "collision2_local.h"
 
@@ -238,7 +238,7 @@ void DO_ONE_CMD(obj_t* obj) {
 void DO_ROLL_EYES(obj_t* obj) {
     /* 4BC40 80170440 -O2 -msoft-float */
     // TODO: fix? (PS1 decomp is non-matching)
-    s16 temp_a0_3;
+    s32 temp_a0_3;
     s16 temp_v0_1;
     s16 temp_v0_2;
     s16 temp_v0_3;
@@ -258,11 +258,9 @@ void DO_ROLL_EYES(obj_t* obj) {
     u16 temp_v1_2;
     u8 temp_v1_1;
     s16 fire_par_3;
-    s16 shifted;
-    u8 half_shift;
     extern void DO_REDEYE_FIRE(s16, s16, s16);
-    u8 y_gt_0;
     u8 x_gt_0;
+    u8 y_gt_0;
 
     if (obj->type == TYPE_145_KILLING_EYES) {
         switch (obj->sub_etat) {
@@ -302,16 +300,8 @@ void DO_ROLL_EYES(obj_t* obj) {
     }
     if (unk_x_1 > 200)
     {
-        half_shift = 1;
-        shifted = unk_x_1;
-        if (shifted >= 0) shifted >>= half_shift;
-        else { shifted = -shifted; shifted >>= half_shift; shifted = -shifted; }
-        unk_x_1 = shifted;
-        half_shift = 1;
-        shifted = unk_y_1;
-        if (shifted >= 0) shifted >>= half_shift;
-        else { shifted = -shifted; shifted >>= half_shift; shifted = -shifted; }
-        unk_y_1 = shifted;
+        unk_x_1 = ashr16(unk_x_1, 1);
+        unk_y_1 = ashr16(unk_y_1, 1);
     }
 
     if (unk_y_1 == 0)
@@ -337,7 +327,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         {
             if (y_gt_0)
             {
-                if (temp_lo > 255)
+                if (temp_lo >= (s16)LEN(N_anim))
                 {
                     fire_par_3 = 0x1B;
                 }
@@ -349,7 +339,7 @@ void DO_ROLL_EYES(obj_t* obj) {
             else
             {
                 fire_par_3 = 0;
-                if (temp_lo <= 255)
+                if (temp_lo < (s16)LEN(N_anim))
                 {
                     fire_par_3 = N_anim[temp_lo];
                 }
@@ -358,7 +348,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         else if (y_gt_0)
         {
             fire_par_3 = 0x12;
-            if (temp_lo <= 255)
+            if (temp_lo < (s16)LEN(N_anim))
             {
                 fire_par_3 = N_anim[temp_lo] + 0x12;
             }
@@ -366,7 +356,7 @@ void DO_ROLL_EYES(obj_t* obj) {
         else
         {
             fire_par_3 = 9;
-            if (temp_lo <= 255)
+            if (temp_lo < (s16)LEN(N_anim))
             {
                 fire_par_3 = N_anim[temp_lo] + 9;
             }
@@ -376,9 +366,8 @@ void DO_ROLL_EYES(obj_t* obj) {
     {
         if ((--obj->iframes_timer) == 0)
         {
-            temp_s2 = obj->screen_y;
-            /*unk_y_1 = obj->screen_y;*/
             temp_a0_3 = obj->screen_x;
+            temp_s2 = obj->screen_y;
             obj->sub_etat = 1;
             obj->iframes_timer = 60;
             if (
@@ -1065,9 +1054,8 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
 //30EA8
 void DO_CORDE_COMMAND(obj_t* obj) {
     /* 4FB58 80174358 -O2 -msoft-float */
-    extern s16 inter_box(s16, s16, s16, s16, s16, s16, s16, s16);
+    extern s16 inter_box(s32, s32, s32, s32, s16, s16, s32, s32);
     extern void DO_FUMEE_CORDE(s16, s16);
-    extern s32 set_sub_etat(obj_t *, u8);
     s32 pa_id;
     s16 bVar2;
     s16 obj_x_pos;

@@ -4,13 +4,14 @@
 #include "game.h"
 #include "map.h"
 #include "rtypes.h"
+#include "inline_helpers.h"
 #define true 1
 #define false 0
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
 #define Abs(x) ((x) >= 0 ? (x) : -(x))
-#define ashr16(value, amount) ((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount)))
 extern map_data_t mp;
 extern u8 EOA(obj_t *obj);
+extern void set_sub_etat(obj_t *obj, u8 sub_etat);
 extern s16 get_center_x(obj_t *obj);
 extern s16 get_center_y(obj_t *obj);
 extern s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
