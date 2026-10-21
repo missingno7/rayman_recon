@@ -11493,7 +11493,7 @@
      ]
     },
     "report_save_codec_error": {
-     "status": "CODE_BYTES_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
