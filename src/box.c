@@ -386,8 +386,7 @@ void gauge(s16 x, s16 y, s16 width, s16 height, s16 min_value, s16 max_value, s1
     if (value > max_value) value = max_value;
     if (value < min_value) value = 0;
     else value -= min_value;
-    step = 8;
-    if ((width >> 3) >= step) step = width >> 3;
+    step = max32(width >> 3, 8);
     fill = x + 1 + value * (s16)(width - step - 3) / (max_value - min_value);
     DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2026);
     color = 0;
