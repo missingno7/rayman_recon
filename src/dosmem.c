@@ -2,71 +2,85 @@
 #include "rtypes.h"
 #include <i86.h>
 
-extern u8 dpmi_workspace[0x5c];
-extern void clear_memory(u8 *destination, s32 value, s32 bytes);
+/* INVENTED layout, offsets proven at 1:564f8..1:56664. */
+typedef struct real_mode_regs {
+    u32 edi, esi, ebp, reserved, ebx, edx, ecx, eax;
+    u16 flags, es, ds, fs, gs, ip, cs, sp, ss, padding;
+} real_mode_regs_t;
+typedef struct dpmi_scratch {
+    union REGS regs;
+    real_mode_regs_t real;
+    struct SREGS segments;
+} dpmi_scratch_t;
+extern dpmi_scratch_t dpmi_workspace;
+extern void clear_memory(void *destination, s32 value, s32 bytes);
 
-#define DPMI16(offset) (*(u16 *)(dpmi_workspace + (offset)))
-#define DPMI32(offset) (*(u32 *)(dpmi_workspace + (offset)))
-
-u16 dos_allocate_conventional_block(u16 bytes, u32 *selector_and_segment)
+u16 dos_allocate_conventional_block(u16 bytes, s32 *selector_and_segment)
 {
     u32 paragraphs;
+    u16 handle;
 
-    DPMI32(0) = 0x100;
+    dpmi_workspace.regs.x.eax = 0x100;
     paragraphs = ((s32)bytes + 15) / 16;
-    DPMI32(4) = paragraphs;
-    int386(0x31, (union REGS *)dpmi_workspace, (union REGS *)dpmi_workspace);
-    if ((dpmi_workspace[0x18] & 1) != 0) {
+    dpmi_workspace.regs.x.ebx = paragraphs;
+    int386(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs);
+    if ((dpmi_workspace.regs.x.cflag & 1) != 0) {
         *selector_and_segment = 0;
         return 0;
     }
-    *selector_and_segment = (u32)DPMI16(0) << 16;
-    return DPMI16(0x0c);
+    handle = dpmi_workspace.regs.w.dx;
+    *selector_and_segment = (u32)dpmi_workspace.regs.w.ax << 16;
+    return handle;
 }
 
 u8 dos_free_conventional_block(u16 handle)
 {
-    DPMI16(0) = 0x101;
-    DPMI16(0x0c) = handle;
-    int386(0x31, (union REGS *)dpmi_workspace, (union REGS *)dpmi_workspace);
-    return (dpmi_workspace[0x18] & 1) != 0;
+    dpmi_workspace.regs.w.ax = 0x101;
+    dpmi_workspace.regs.w.dx = handle;
+    int386(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs);
+    return (dpmi_workspace.regs.x.cflag & 1) != 0;
 }
 
-void sub_564f8(u8 interrupt_number, s16 *registers)
+typedef struct dos_regs {
+    s16 ax, bx, cx, dx, si, di, flags, cs, ds, es, ss;
+} dos_regs_t;
+
+s16 sub_564f8(u8 interrupt_number, dos_regs_t *registers)
 {
-    clear_memory(dpmi_workspace, 0, 0x1c);
-    clear_memory(dpmi_workspace + 0x50, 0, 0x0c);
-    clear_memory(dpmi_workspace + 0x1c, 0, 0x34);
+    clear_memory(&dpmi_workspace.regs, 0, 0x1c);
+    clear_memory(&dpmi_workspace.segments, 0, 0x0c);
+    clear_memory(&dpmi_workspace.real, 0, 0x34);
 
-    DPMI32(0x38) = (u16)registers[0];
-    DPMI32(0x2c) = (u16)registers[1];
-    DPMI32(0x34) = (u16)registers[2];
-    DPMI32(0x30) = (u16)registers[3];
-    DPMI32(0x20) = (u16)registers[4];
-    DPMI32(0x1c) = (u16)registers[5];
-    DPMI32(0x3c) = (u16)registers[6];
-    DPMI32(0x48) = (u16)registers[7];
-    DPMI32(0x40) = (u16)registers[8];
-    DPMI16(0x3e) = (u16)registers[9];
-    DPMI16(0x4c) = (u16)registers[10];
+    dpmi_workspace.real.eax = (u16)registers->ax;
+    dpmi_workspace.real.ebx = (u16)registers->bx;
+    dpmi_workspace.real.ecx = (u16)registers->cx;
+    dpmi_workspace.real.edx = (u16)registers->dx;
+    dpmi_workspace.real.esi = (u16)registers->si;
+    dpmi_workspace.real.edi = (u16)registers->di;
+    dpmi_workspace.regs.w.ax = 0x0300;
+    dpmi_workspace.real.flags = registers->flags;
+    dpmi_workspace.regs.h.bl = interrupt_number;
+    dpmi_workspace.real.cs = registers->cs;
+    dpmi_workspace.regs.w.cx = 0;
+    dpmi_workspace.real.ds = registers->ds;
+    dpmi_workspace.real.es = registers->es;
+    dpmi_workspace.real.ss = registers->ss;
+    dpmi_workspace.regs.h.bh = 0;
+    dpmi_workspace.segments.es = FP_SEG(&dpmi_workspace.real);
+    dpmi_workspace.regs.x.edi = (u32)&dpmi_workspace.real;
+    int386x(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs,
+            &dpmi_workspace.segments);
 
-    DPMI16(0) = 0x0300;
-    dpmi_workspace[4] = interrupt_number;
-    dpmi_workspace[5] = 0;
-    DPMI32(0x14) = (u32)(dpmi_workspace + 0x1c);
-    DPMI16(0x50) = FP_SEG((void __far *)dpmi_workspace);
-    int386x(0x31, (union REGS *)dpmi_workspace, (union REGS *)dpmi_workspace,
-            (struct SREGS *)(dpmi_workspace + 0x50));
-
-    registers[0] = (s16)DPMI16(0x38);
-    registers[1] = (s16)DPMI16(0x2c);
-    registers[2] = (s16)DPMI16(0x34);
-    registers[3] = (s16)DPMI16(0x30);
-    registers[4] = (s16)DPMI16(0x20);
-    registers[5] = (s16)DPMI16(0x1c);
-    registers[6] = (s16)DPMI16(0x3c);
-    registers[7] = (s16)DPMI16(0x48);
-    registers[8] = (s16)DPMI16(0x40);
-    registers[9] = (s16)DPMI16(0x3e);
-    registers[10] = (s16)DPMI16(0x4c);
+    registers->ax = (s16)dpmi_workspace.real.eax;
+    registers->bx = (s16)dpmi_workspace.real.ebx;
+    registers->cx = (s16)dpmi_workspace.real.ecx;
+    registers->dx = (s16)dpmi_workspace.real.edx;
+    registers->si = (s16)dpmi_workspace.real.esi;
+    registers->di = (s16)dpmi_workspace.real.edi;
+    registers->flags = (s16)dpmi_workspace.real.flags;
+    registers->cs = (s16)dpmi_workspace.real.cs;
+    registers->ds = (s16)dpmi_workspace.real.ds;
+    registers->es = (s16)dpmi_workspace.real.es;
+    registers->ss = (s16)dpmi_workspace.real.ss;
+    return registers->ss;
 }
