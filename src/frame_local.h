@@ -9,4 +9,11 @@ void frame_palette_stream(u32 port, const u8 *source, u32 count);
    EAX/EDX carry the full-width C arguments; the instruction preserves them. */
 void frame_palette_index(u32 port, u32 color);
 #pragma aux frame_palette_index = "out dx,al" parm [edx] [eax] modify exact []
+/* INVENTED purpose names. ORIGINAL_INLINE: CLI/STI at DOS
+   1:2c597/1:2c59e, 1:2c699/1:2c6a0 and 1:2c763/1:2c76a.
+   They change IF only; no general register is modified. */
+void frame_disable_irq(void);
+#pragma aux frame_disable_irq = "cli" modify exact []
+void frame_enable_irq(void);
+#pragma aux frame_enable_irq = "sti" modify exact []
 #endif

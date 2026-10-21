@@ -1,6 +1,6 @@
 /* 1:2b4d0..1:2e580: frame.c tail + guetteur.c (pirate lookout).
    Names RAYVERSE/ANDROID except explicitly INVENTED renderer purposes.
-   Worker w4_frame supplies all 55 bodies; object layout is still unverified.
+   All 55 bodies are represented; object layout is still unverified.
    Existing frame_local.h contains original port-only inline instructions.
    All new pragmas below declare external assembly register ABIs only. */
 #include "obj.h"
@@ -363,20 +363,19 @@ void build_map(s16 x, s16 y) {
     u8 *buffer = PLAN1_BUFFER;
     map_tile_t *start;
     s32 plane;
-    s32 dest_offset;
     PLAN1_BUFFER_START_POINTER = (u32)buffer;
     start = mp.map + ((y >> 4) * mp.width + (x >> 4));
-    dest_offset = 0;
-    for (plane = 0; plane != 256; plane += 64) {
+    /* DOS 1:2b88e..2b938: four planes, source step 64 and dest step 0x4600. */
+    for (plane = 0; plane < 4; ++plane) {
         map_tile_t *tile = start;
-        u8 *dest = buffer + dest_offset;
+        u8 *dest = buffer + plane * 0x4600;
         s16 row;
         for (row = 0; row < 224; row += 16) {
             s16 col;
             for (col = 0; col < 320; col += 16) {
                 s16 texture_id = tile->texture_id;
                 if (texture_id >= 0 && texture_id < 1200 && tile->transparency == 0)
-                    block_copy((u8*)gros_patai_src[texture_id] + plane, dest);
+                    block_copy((u8*)gros_patai_src[texture_id] + plane * 64, dest);
                 else
                     block_clear(dest);
                 ++tile;
@@ -385,7 +384,6 @@ void build_map(s16 x, s16 y) {
             tile += mp.width - 20;
             dest += 1200;
         }
-        dest_offset += 0x4600;
     }
 }
 
@@ -1380,22 +1378,17 @@ s16 hasGuetteurABomb(obj_t* obj) {
 
 void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 param_4) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s32 unk_1;
+    s16 unk_1;
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    s16 gue_x; s16 gue_y; s16 gue_w; s16 gue_h;
-    s16 unk_x;
-    s16 new_spd_x;
+    s16 gue_y; s16 gue_x; s16 new_spd_x; s16 gue_h; s16 gue_w;
     u8 mul_x_pos;
     eta_t *cur_eta_1;
     eta_t *cur_eta_2;
     eta_t *cur_eta_3;
 
-#ifdef NUGGET
-    /* reg s3 set to 2 at 801424dc. but can have other values? */
-    mul_x_pos = 2;
-#endif
+    /* DOS leaves the multiplier/speed unset on unhandled substates. */
     unk_1 = hasGuetteurABomb(gue_obj);
     if ((s16) unk_1 != -1) {
         i = 0;
@@ -1407,7 +1400,7 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                     if (param_3)
                         cur_obj->flags.flip_x = gue_obj->flags.flip_x;
                     else
-                        cur_obj->flags.flip_x = gue_obj->flags.flip_x ^ 1;
+                        cur_obj->flags.flip_x = !gue_obj->flags.flip_x;
 
                     cur_obj->speed_y = param_2;
                     GET_SPRITE_POS(gue_obj, (s16) unk_1, &gue_x, &gue_y, &gue_w, &gue_h);
@@ -1420,7 +1413,8 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                             mul_x_pos = 3;
                             cur_obj->y -= 1;
                             cur_eta_1 = &cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat];
-                            cur_eta_1->anim_speed = (cur_eta_1->anim_speed & 0xF) | 0xA0;
+                            cur_eta_1->anim_speed &= 0x0f;
+                            cur_eta_1->anim_speed |= 0xa0;
                             cur_obj->gravity_value_1 = 0;
                             cur_obj->gravity_value_2 = 10;
                             break;
@@ -1429,17 +1423,19 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                             mul_x_pos = 3;
                             cur_obj->y += 24;
                             cur_eta_2 = &cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat];
-                            cur_eta_2->anim_speed = (cur_eta_2->anim_speed & 0xF) | 0x20;
+                            cur_eta_2->anim_speed &= 0x0f;
+                            cur_eta_2->anim_speed |= 0x20;
                             cur_obj->gravity_value_1 = 0;
                             cur_obj->gravity_value_2 = 0;
                             break;
                         case 0x0D:
-                            unk_x = 8 - myRand(32);
-                            unk_x += 8 * sgn(unk_x);
-                            new_spd_x = unk_x;
+                            /* Same short snapshot at DOS 1:2e076 and 1:2e095. */
+                            new_spd_x = 8 - myRand(32);
+                            new_spd_x += 8 * sgn(new_spd_x);
                             mul_x_pos = 0;
                             cur_eta_3 = &cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat];
-                            cur_eta_3->anim_speed = (cur_eta_3->anim_speed & 0xF) | 0x20;
+                            cur_eta_3->anim_speed &= 0x0f;
+                            cur_eta_3->anim_speed |= 0x20;
                             cur_obj->gravity_value_1 = 0;
                             cur_obj->gravity_value_2 = 0;
                             cur_obj->y -= 20;
@@ -1448,9 +1444,8 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                     if (param_3 == 0)
                         new_spd_x = 16;
 
-                    if (gue_obj->flags.flip_x) /* ternary-free zone */
-                        cur_obj->speed_x = new_spd_x;
-                    else
+                    cur_obj->speed_x = new_spd_x;
+                    if (!gue_obj->flags.flip_x)
                         cur_obj->speed_x = -new_spd_x;
 
                     cur_obj->x += mul_x_pos * ashr16(cur_obj->speed_x, 4);
