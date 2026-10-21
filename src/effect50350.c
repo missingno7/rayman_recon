@@ -166,8 +166,9 @@ u8 effect_helper_50738(u8 mode, s16 speed, u8 *source, u8 *destination)
             if (state->vertices != 0) {
                 state->transformed = (effect3d_point_t *)sub_6FBB4(0x78);
                 if (state->transformed != 0) {
+                    u8 *second_screen = EffetBufferNormal + 0xc800;
                     state->screen_a = EffetBufferNormal;
-                    state->screen_b = 0xc800 + EffetBufferNormal;
+                    state->screen_b = second_screen;
                     okay = 1;
                 }
             }
@@ -269,5 +270,6 @@ void effect_helper_50aa8(void)
     effect3d_t *state = effect_data();
     effect_segment_t *points = state->vertices;
     draw_effect_segment(state->destination, (u8 *)points);
-    draw_effect_segment(state->destination, (u8 *)(points + 1));
+    ++points;
+    draw_effect_segment(state->destination, (u8 *)points);
 }

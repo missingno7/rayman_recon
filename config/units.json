@@ -11412,7 +11412,7 @@
      ]
     },
     "effect_helper_50aa8": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
