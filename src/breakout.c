@@ -1,5 +1,5 @@
 /* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
- * Worker gfin_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Worker w2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
  * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
  */
 #include "obj.h"
@@ -738,7 +738,8 @@ void init_briques(obj_t *obj)
     brick = level.objects;
     count = level.nb_objects;
     brick_index = 0;
-    for (level_index = 0; level_index < count && brick_index < 20; level_index++, brick++) {
+    for (level_index = 0; level_index < count; level_index++, brick++) {
+        if (brick_index >= 20) break;
         if (brick->type == 0x100) {
             if (!get_brik_info(obj, brick_index, &x, &y, &kind)) {
                 y = 0;
@@ -761,10 +762,14 @@ void init_briques(obj_t *obj)
         }
     }
 
-    CBoffsetXMin = min_x <= 12 ? 0 : 12 - min_x;
-    CBoffsetXMax = max_x > 0x124 ? 0 : 0x124 - max_x;
-    CBoffsetYMin = min_y <= 8 ? 0 : 8 - min_y;
-    CBoffsetYMax = max_y > 0x78 ? 0 : 0x78 - max_y;
+    if (min_x <= 12) CBoffsetXMin = 0;
+    else CBoffsetXMin = 12 - min_x;
+    if (max_x > 0x124) CBoffsetXMax = 0;
+    else CBoffsetXMax = 0x124 - max_x;
+    if (min_y <= 8) CBoffsetYMin = 0;
+    else CBoffsetYMin = 8 - min_y;
+    if (max_y > 0x78) CBoffsetYMax = 0;
+    else CBoffsetYMax = 0x78 - max_y;
     CBoffsetX = CasseBriqueOffsetX[NoCB];
     CBoffsetY = 0;
     if (GameModeVideo == 1) {
@@ -777,19 +782,19 @@ void init_briques(obj_t *obj)
     for (i = 0; i < 20; i++) {
         brick = level.objects + CasseBrique[i].object_index;
         brick->x = xmap + CasseBrique[i].x - brick->offset_bx + CBoffsetX;
-        brick->y = CasseBrique[i].y + ymap - brick->offset_by + CBoffsetY;
+        brick->y = ymap + CasseBrique[i].y - brick->offset_by + CBoffsetY;
         brick->is_active = 1;
-        brick->flags.alive = 1;
         brick->param = CasseBrique[i].kind;
         brick->iframes_timer = i;
+        brick->flags.alive = 1;
         add_alwobj(brick);
         brick->display_prio = 4;
         brick->speed_x = 0;
         brick->speed_y = 0;
         switch (brick->param) {
         case 1: case 2: case 3: NbClassicBrik++; break;
-        case 4: brick->hit_points = 20; break;
         case 7: InvadersMode = 2; break;
+        case 4: brick->hit_points = 20; break;
         }
         frame_briques(brick);
     }
@@ -907,8 +912,11 @@ void casse_brique_play(obj_t *obj)
 {
     s16 x, y;
     if (NbClassicBrik == 0) {
+        s16 countdown;
         obj->display_prio = 0;
-        obj->iframes_timer--;
+        countdown = obj->iframes_timer;
+        countdown--;
+        obj->iframes_timer = countdown;
         speed_ball_null(obj);
         if (obj->iframes_timer == 0) {
             reset_briques();
@@ -949,12 +957,12 @@ void casse_brique_play(obj_t *obj)
                 PlaySnd_old(45);
                 upscreen = 1;
             }
-        } else if (y + 8 > ray.screen_y + 64) {
+        } else if (ray.screen_y + 64 < y + 8) {
             if (ray.speed_x != 0 && ray_face_brik(x) &&
                 ((ray.main_etat == 0 && ray.sub_etat == 4) ||
                 (ray.main_etat == 1 && ray.main_etat == ray.sub_etat))) {
                 set_main_and_sub_etat(&ray, 3, 17);
-            } else if (y >= 200 - YOFFSETCB) {
+            } else if (200 - YOFFSETCB <= y) {
                 set_main_and_sub_etat(obj, 0, 3);
                 obj->display_prio = 0;
                 speed_ball_null(obj);
