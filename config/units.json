@@ -11889,7 +11889,7 @@
      ]
     },
     "sub_3A6F0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

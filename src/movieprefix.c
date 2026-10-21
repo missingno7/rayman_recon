@@ -454,19 +454,20 @@ void sub_3A6E0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
     const u8 *src;
-    s32 rows;
+    s32 height;
+    s32 width;
     s32 x;
     s32 y;
     s32 right;
-    s32 width;
     s8 count;
 
     src = data;
-    rows = work->height;
+    /* DOS 1:2a700..2a720: promote both dimensions before spilling the row count. */
     width = work->width;
-    right = width + work->x_offset;
+    height = work->height;
+    right = work->x_offset + width;
     y = work->y_offset;
-    while (--rows >= 0) {
+    while (--height >= 0) {
         count = 0;
         ++src; /* BRUN packet count is not used; decode to the row width. */
         x = work->x_offset;
@@ -594,21 +595,23 @@ void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 
 void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
+    s32 row;
     s32 width;
-    s32 rows;
+    s32 height;
     u8 *dst;
     const u8 *src;
 
-    dst = surface->pixels + work->surface_offset;
-    rows = work->height;
-    width = work->width;
     src = data;
-    /* DOS 1:2aa38..2aa43 copies a row before decrementing the count. */
-    do {
+    dst = surface->pixels + work->surface_offset;
+    width = work->width;
+    height = work->height;
+    row = 0;
+    while (row < height) {
         memcpy(dst, src, width);
-        dst += 320;
         src += width;
-    } while (--rows != 0);
+        dst += 320;
+        ++row;
+    }
 }
 
 void sub_3AA4C(u8 *work_bytes)
