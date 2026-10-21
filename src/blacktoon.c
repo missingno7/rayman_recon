@@ -3,6 +3,7 @@
  * Names: Rayverse/Android. Status per function: config/units.json.
  */
 #include "obj.h"
+#include "inline_helpers.h"
 extern level_obj_t level_alw;
 extern level_t level;
 extern obj_t ray;
@@ -156,7 +157,7 @@ void DO_BLK_NOP_COMMAND(obj_t* obj) {
         ((obj->main_etat == 0 && obj->sub_etat == 2) || (obj->main_etat == 2 && obj->sub_etat == 3))
     ) {
         if (obj->timer == 255) {
-            condition = (obj->param >= obj->y + obj->speed_y) && obj->y >= obj->param;
+            condition = (inrange)(obj->param, obj->y + obj->speed_y, obj->y);
             if (condition || obj->speed_y == 0) {
                 obj->timer = 60;
             }
@@ -178,7 +179,7 @@ void DO_BLK_NOP_COMMAND(obj_t* obj) {
             (obj->main_etat == 0 && obj->sub_etat == 2) || (obj->main_etat == 2 && obj->sub_etat == 3))
     ) {
         if (obj->detect_zone_flag != 0) {
-            condition = (obj->param >= obj->y + obj->speed_y) && obj->y >= obj->param;
+            condition = (inrange)(obj->param, obj->y + obj->speed_y, obj->y);
             if (condition) {
                 set_main_and_sub_etat(obj, 0, 3);
                 obj->speed_y = 0;
