@@ -1280,12 +1280,11 @@ void swapGuetteurCollZones(obj_t *obj, u8 param_2)
 }
 
 void guetteurFollowsShip(obj_t *obj) {
-    s16 ship_id = bateau_obj_id;
-    if (ship_id != -1)
-        snapToSprite(obj, &level.objects[ship_id], 1, -52, -63);
+    if (bateau_obj_id != -1)
+        snapToSprite(obj, &level.objects[bateau_obj_id], 1, -52, -63);
     else {
-        obj->speed_y = 0;
-        obj->speed_x = obj->speed_y;
+        /* DOS 1:2dba5..2dbaf: assign Y, then reload it as the chain value. */
+        obj->speed_x = obj->speed_y = 0;
     }
 }
 
