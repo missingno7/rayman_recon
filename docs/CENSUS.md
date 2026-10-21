@@ -120,3 +120,11 @@ objupdate4, araignee, ...): their remaining NEAR functions are now body-shape on
 original objects (11 zero bytes at 1:2f035..2f040) - split into hifi + hybrid (FreeDetectDriver STRICT). New compiler
 fact: unused prefix vs postfix short decrement differ (ray_pc). Measured: the drift-first brief gained STRICT in 23 of 52 units (44%),
 versus about a third of units in the preceding helper pass.
+
+## 7. Second mining pass (2026-10-21)
+scratch/mine2.py re-mined recurring non-STRICT windows after the first helpers. Of six families, three were ordinary C
+(W-BITF extraction, struct indexing, call setup - already present), two were new helpers (palette_output; min32/max32,
+correcting the earlier "clamp is C" note) and one a composition (C abs + max32). Proofs +7, per-unit placement +5
+(DO_RAY_CASSE_BRIQUE, load_record, PC_do_cheats, ChangeDeltaZoomAmpJumelle, effect_helper_6ee54): 1309 -> 1321 STRICT.
+Lesson: a helper placed in one function can move a shared RET that the next function's branches target (effect6ec80);
+the gate caught it and the placement was kept only where the DOS bytes need it.

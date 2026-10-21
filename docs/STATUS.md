@@ -7,7 +7,7 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1309 recorded STRICT, 238,580 code bytes** (52.1% of game code 1:00000-1:6fbe6) in 134 units (C + hand-written assembly); 349 NEAR; `python tools/status.py` for the per-unit table |
+| function-level STRICT | **1321 recorded STRICT, 241,839 code bytes** (52.8% of game code 1:00000-1:6fbe6) in 134 units (C + hand-written assembly); 337 NEAR; `python tools/status.py` for the per-unit table |
 | whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
 | data closure | **38,558 bytes VERIFIED** (incl. the low-level asm data prefix 2:00010-0215c); mapped: 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED 6,919 bytes |
@@ -16,7 +16,7 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
 
 ## Original inline helpers (2026-10-21)
-Six ORIGINAL_INLINE helpers in src/include/inline_helpers.h (ashr16, inrange, sgn, fill, copy, ashl16; AGENTS.md
+Ten ORIGINAL_INLINE helpers in src/include/inline_helpers.h (ashr16, inrange, sgn, fill, copy, ashl16, palette_output, min32, max32, write_movie_palette; AGENTS.md
 exception, docs/COMPILER.md "Original inline helpers"). Applied at every recorded DOS site in 37 units. This pass:
 1105 -> 1151 STRICT = helpers +27, new movieprefix unit +18, display CONST fix +1; 0 regressions. Most remaining helper sites have exact helper bytes displaced by size
 drift of earlier code in the same function (fix the first size-drifting function, W-LAYOUT). copy's advertised
@@ -35,7 +35,7 @@ readable instructions, typed state only), plus lowlevel_data (2:00010-0215c, VER
 identity and original module count (slices are not claimed as original objects); consolidation into one module
 would also reconcile the two mask-table names at 1:0311d/03121 (local labels in _02640, extern names in _03125);
 record-field and timer partitions; runtime callback payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
-BEGTEXT (runtime). Remaining C work: 349 NEAR functions (layout drift, register/stack allocation, clamp
+BEGTEXT (runtime). Remaining C work: 337 NEAR functions (layout drift, register/stack allocation, clamp
 lowering, materialised booleans) and four effect drafts without a unit (1:633e0, 1:6c3b0, 1:6e380, part of 1:50350).
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
