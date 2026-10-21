@@ -177,9 +177,12 @@ u16 effect_helper_507f0(void)
     effect3d_point_t *point = state->transformed;
     /* Neutral coefficient names: EDX receives first_result, EBX second_result.
      * DOS caller dataflow at 1:5083b..508b4 establishes their use below. */
-    s16 first_result, second_result;
+    /* DOS stack outputs: first +0x24, second +0x28 (1:5083b..50894). */
+    s16 second_result, first_result;
     s16 extent;
-    s32 first_x, cofirst_x, first_y, cofirst_y, first_z, cofirst_z;
+    /* DOS spill slots: cofirst_z +10, first_x +14, cofirst_y +18,
+     * first_y +1c, first_z +20; cofirst_x remains in EBP. */
+    s32 first_z, cofirst_x, cofirst_z, first_x, cofirst_y, first_y;
     u8 index;
 
     if (state->field_1c == 0) {
@@ -198,10 +201,9 @@ u16 effect_helper_507f0(void)
         s32 y = point->y - state->field_1a;
         s32 z = point->z;
         s32 temp;
-        s32 divisor;
         if (state->angle_z != 0) {
             temp = cofirst_z * x - first_z * y;
-            y = (y * cofirst_z + x * first_z) >> 9;
+            y = (x * first_z + y * cofirst_z) >> 9;
             x = temp >> 9;
         }
         if (state->angle_y != 0) {
@@ -210,14 +212,15 @@ u16 effect_helper_507f0(void)
             x = temp >> 9;
         }
         if (state->angle_x != 0) {
-            temp = first_x * z + cofirst_x * y;
+            temp = first_x * z + y * cofirst_x;
             z = z * cofirst_x - y * first_x;
             y = temp >> 9;
             z >>= 9;
         }
-        divisor = z + extent;
-        point->screen_x = state->field_18 + (x << 9) / divisor;
-        point->screen_y = (y << 9) / divisor + state->field_1a;
+        /* The rotated depth becomes the projection denominator (1:50995). */
+        z += extent;
+        point->screen_x = state->field_18 + (x << 9) / z;
+        point->screen_y = (y << 9) / z + state->field_1a;
     }
     state->angle_x += state->step_x;
     state->angle_y += state->step_y;
