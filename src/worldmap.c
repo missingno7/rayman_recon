@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 extern u8 JeuCracker;
@@ -14,10 +15,10 @@ extern u8 NewMs;
 extern s16 ray_mode;
 u8 ValidButPressed(void);
 u8 StartButPressed(void);
-u16 rightjoy(void);
-u16 leftjoy(void);
-u16 upjoy(void);
-u16 downjoy(void);
+s16 rightjoy(void);
+s16 leftjoy(void);
+s16 upjoy(void);
+s16 downjoy(void);
 u8 confirmation_msg(u8 message);
 void SaveGameOnDisk(u8 slot);
 void LoadGameOnDisk(u8 slot);
@@ -27,8 +28,8 @@ void MAIN_NO_MORE_CONTINUE_PRG(void);
 void *temp_malloc(s32 size);
 void temp_free(void *ptr);
 void check_cd_for_save(void); /* INVENTED: DOS 1:5bc40 */
-s32 deter_num_let(u8 c, const char *next_chars);
-s16 calc_largmax_text(const char *text, s16 char_index, s16 space_width, s16 spacing, u8 font_size);
+u32 deter_num_let(u8 c, const char *next_chars);
+s16 calc_largmax_text(const char *text, s16 char_index, s32 space_width, s32 spacing, u8 font_size);
 s16 myRand(s16 max);
 extern sprite_t *alpha, *alpha2;
 extern char TexteStageNameLevel[], TexteStageNameWorld[];
@@ -57,9 +58,6 @@ void Deter_Option_Caract(char *text, s16 key, s16 offset);
 #define world_2_music 2
 #define world_3_mountain 3
 #define world_4_image 4
-#ifndef SGN
-#define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
-#endif
 
 #define GO_LEFT 0
 #define world_5_cave 5
@@ -461,7 +459,7 @@ void DO_STAGE_NAMES(void) {
                     VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + myRand(32) - 16;
                 } while (!VitesseXStageNameLevel[i]);
                 VitesseYStageNameLevel[i] = -16 - myRand(32);
-                x += sprite_level->sprite_pos.raw + (sprite_level->flags & 15) - spacing;
+                x += (sprite_level->sprite_pos.raw & 15) + sprite_level->inner_width - spacing;
             }
         }
         item_world = &text_to_display[3];
@@ -484,7 +482,8 @@ void DO_STAGE_NAMES(void) {
                 letter = 0;
             }
             if (letter) {
-                sprite_world = &alpha2[letter + 41];
+                letter += 41;
+sprite_world = &alpha2[letter];
                 PositionXStageNameWorld[i] = x << 4;
                 PositionYStageNameWorld[i] = item_world->ypos << 4;
                 VitesseXStageNameWorld[i] = 0;
@@ -492,7 +491,7 @@ void DO_STAGE_NAMES(void) {
                     VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + myRand(32) - 16;
                 } while (!VitesseXStageNameWorld[i]);
                 VitesseYStageNameWorld[i] = -16 - myRand(32);
-                x += sprite_world->sprite_pos.raw + (sprite_world->flags & 15) - spacing;
+                x += (sprite_world->sprite_pos.raw & 15) + sprite_world->inner_width - spacing;
             }
         }
         PositionStageNameCalcule = 1;
@@ -823,8 +822,8 @@ void DO_RAYMAN_IN_WLD_MAP(void) {
         }
         ++ray.timer;
 
-        ray.speed_x = t_world_info[old_num_world].xpos + xspeed * SGN(diff_x) - ray.offset_bx - (s16)ray.x;
-        ray.speed_y = t_world_info[old_num_world].ypos + yspeed * SGN(diff_y) - ray.offset_by - (s16)(ray.y - 8);
+        ray.speed_x = t_world_info[old_num_world].xpos + xspeed * sgn(diff_x) - ray.offset_bx - (s16)ray.x;
+        ray.speed_y = t_world_info[old_num_world].ypos + yspeed * sgn(diff_y) - ray.offset_by - (s16)(ray.y - 8);
 
         if (abs(xspeed) >= abs(diff_x) && abs(yspeed) >= abs(diff_y)) {
             // arrived at new location
