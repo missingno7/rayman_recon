@@ -1,5 +1,6 @@
 /* GOG v1.21 cymbal reconstruction, guided by Rayverse/PS1 and DOS disassembly.
  * DO_CYMBAL_COMMAND is STRICT; the other two functions remain provisional.
+ * Worker c3_cymbal: see NOTES.md for remaining layout/allocation differences.
  * Descriptive new local names are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -318,7 +319,7 @@ void DO_2_PARTS_CYMBAL(obj_t* cym_obj) {
                             ray.x -= 4;
                             ray.is_active = 1;
                             GET_SPRITE_POS(cym_obj, 1, &cym_x, &cym_y, &cym_w, &cym_h);
-                            ray.y = cym_obj->offset_hy + cym_y - ray.offset_by;
+                            ray.y = cym_y + cym_obj->offset_hy - ray.offset_by;
                             set_main_and_sub_etat(&ray, 0, 8);
                         }
                     }
@@ -363,7 +364,6 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
     s16 cym_sub_etat;
     obj_t *cym_link_obj;
     s16 ray_speed_y;
-    s16 diff_x;
     s16 sprite = 0; /* i think, BOX_IN_COLL_ZONES returned a sprite? */
 
     if (cym_obj->type == TYPE_CYMBAL2)
@@ -376,13 +376,17 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
             cym_link_obj = &level.objects[cym_link_id];
             if (cym_link_obj->type == TYPE_CYMBAL1)
             {
+                /* Recompute after BOX: the call may change speed_y. INVENTED name. */
+                s32 delta_y;
                 if (cym_link_obj->speed_y > 128)
                     cym_link_obj->speed_y = 1;
                 else if (cym_link_obj->speed_y < -128)
                     cym_link_obj->speed_y = -1;
-                cym_link_obj->y += cym_link_obj->speed_y * 2;
+                delta_y = cym_link_obj->speed_y * 2;
+                cym_link_obj->y += delta_y;
                 sprite = BOX_IN_COLL_ZONES(TYPE_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, cym_link_obj);
-                cym_link_obj->y -= cym_link_obj->speed_y * 2;
+                delta_y = cym_link_obj->speed_y * 2;
+                cym_link_obj->y -= delta_y;
                 ray_speed_y = cym_link_obj->speed_y * 2;
             }
         }
@@ -425,6 +429,7 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
                         !(ray.main_etat == 0 && ray.sub_etat == 61)
                         )
                 {
+                    s16 diff_x;
                     diff_x = ray.x + ray.offset_bx - cym_obj->x - cym_obj->offset_bx;
                     if (Abs((s32)diff_x) < 25)
                     {
@@ -457,4 +462,5 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
         }
     }
 }
+
 
