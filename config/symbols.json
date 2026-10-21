@@ -7792,6 +7792,16 @@
     "addr": "1:0611e",
     "name": "RAYVERSE/ANDROID",
     "evidence": "DOS PcMain at 1:0842e calls 1:0611e and stores AL to TheProcesseur; Rayverse lowlevel.c and Android exact name. Assembly body leaves CPU class in EAX."
+   },
+   "sub_1268A": {
+    "addr": "1:0268a",
+    "name": "INVENTED",
+    "evidence": "DOS direct call from DO_OPTIONS_IN_GAME at 1:39e08; assembly entry inspected at 1:0268a"
+   },
+   "itoa_dos": {
+    "addr": "1:71256",
+    "name": "INVENTED",
+    "evidence": "Invented helper name for DOS routine at 1:71256; callers pass signed value in EAX, radix in EBX, and destination in EDX; routine returns destination in EAX. Android x86 symbol lookup found no itoa function."
    }
   },
   "data": {
@@ -14183,6 +14193,36 @@
     "type": "s16",
     "name": "RAYVERSE/ANDROID",
     "evidence": "Android current_star .bss size2; DOS display_grp_stars 1:0ae95 writes short2:3f7fc, display_etoile -5 load field3f7fa."
+   },
+   "byte_49290": {
+    "addr": "1:39290",
+    "type": "s8[4]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse menu.c //49290 declares four signed bytes; DOS data at 1:39290 is 00 00 00 00 and INIT_GENERAL_CHOICE copies the dword to its stack table"
+   },
+   "byte_E4CFF": {
+    "addr": "2:54cff",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS INIT_KEY_SCREEN stores byte 0 at 2:54cff; DO_COMMANDE_KEY tests and updates that same byte. Android symbol lookup returned None and Rayverse data.c has no binding."
+   },
+   "but_options": {
+    "addr": "2:54cf6",
+    "type": "u8[5]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CF6; DOS AFFICHE_BUTTON_JOYSTICK indexes four bytes; Android .bss size 5"
+   },
+   "byte_E4CFE": {
+    "addr": "2:54cfe",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c:3274 declares byte_E4CFE at obj2 offset 54cfe; DOS byte writes and reads at 1:3d0d6..1:3d115"
+   },
+   "VideoSpeed": {
+    "addr": "2:54cf2",
+    "type": "s16",
+    "name": "ANDROID",
+    "evidence": "python tools/android.py VideoSpeed reports a 2-byte .bss object; Rayverse data.c:3268 //E4CF2; DOS word store and comparison at 1:3d161 and 1:3f660"
    }
   }
  }

@@ -1,10 +1,13 @@
-/* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. 38 functions not yet reconstructed. */
+/* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. INIT_GENERAL_CHOICE contains a DOS self-modifying trampoline (1:39ed1, OPEN). */
 #include "obj.h"
 #include "game.h"
+#include "lowlevel.h"
 #include "map.h"
 #include "menu_local.h"
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
+#include <i86.h>
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
@@ -51,12 +54,13 @@ extern u8 *DrawBufferNormal;
 extern u8 *EffetBufferNormal;
 extern void (*pAFFICHE_SCREEN)(void);
 extern u8 GameModeVideo;
-extern u16 SizeScreen;
+extern s16 SizeScreen;
 extern s16 TabH1[4];
 extern s16 TabH2[4];
 extern s16 TabW1[4];
 extern s16 TabW2[4];
 extern u8 button_released;
+extern u8 but_options[5];
 extern s16 compteur;
 extern s16 debut_options;
 extern s16 debut_sortie;
@@ -67,21 +71,34 @@ extern s16 ecart_options;
 extern s16 hFondu;
 extern s16 EtapeFondu;
 extern u8 is_fee;
-extern u8 byte_49290[4];
+extern s8 byte_49290[4];
 extern u8 current_pal_id;
 extern char *language_txt[300];
+extern char title[100];
 extern s16 max_compteur;
 extern u8 msg_box_being_displayed;
 extern s16 nbre_options;
 extern s16 num_level;
 extern s16 num_world;
+extern u8 BackgroundOptionOn;
+extern u8 BackgroundOn;
+extern u8 ScrollDiffOn;
+extern u16 fixon;
+extern u8 GoMenu;
+extern u8 byte_96884;
+extern u8 dead_time;
+extern u8 in_pause;
+extern s32 MapTimePause;
 extern s16 sortie_options;
 extern s16 wFondu;
 extern s16 xFondu;
 extern s16 yFondu;
+extern s16 ProchainEclair;
 void FireBox(s16 x, s16 y, s16 width, s16 height);
 void N_CLRSCR(u8* buffer);
 void PlasmaBox(s16 x, s16 y, s16 width, s16 height, u8 a5);
+void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, s16 font_size, u8 is_fond);
+void CadreTrans(s16 x, s16 y, s16 width, s16 height);
 void SYNCHRO_LOOP(scene_func_t scene_func);
 void default_sprite_clipping(void);
 void display_box_text(display_item_t* box);
@@ -116,6 +133,12 @@ extern s32 Irq;
 extern u8 MENU_RETURN;
 extern u8 MENU_SUITE;
 extern u8 Main_Control;
+extern u8 ModeNormalAutorise;
+extern u8 first_credit;
+extern u8 Mode_Pad;
+extern u8 Port_Pad;
+extern u8 is_joypad_mode;
+extern u8 something_with_cfg_25_default_00_joy;
 extern rgb_palette_t MenuPalette;
 extern u8 ModeDemo;
 extern u8 MusicCdActive;
@@ -136,6 +159,9 @@ extern u8 byte_E4CD8;
 extern u8 byte_E4CD9;
 extern u8 byte_E4CFC;
 extern u8 byte_E4CFD;
+extern u8 byte_E4CFF;
+extern u8 byte_E4CFE;
+extern s16 VideoSpeed;
 extern s32 cdTime;
 extern s16 choix_menu;
 extern u8 dans_la_map_monde;
@@ -147,13 +173,14 @@ extern s16 ecart_barre;
 extern u8 fin_de_rayman;
 extern u8 fin_du_jeu;
 extern u8 first_option;
+extern u8 input_mode;
 extern s16 joyx0;
 extern s16 joyy0;
 extern u8 language;
 extern s16 loop_nb_trames;
 extern s16 loop_timing;
-extern mem_t* main_mem_fix;
-extern mem_t* main_mem_level;
+extern mem_t main_mem_fix;
+extern mem_t main_mem_level;
 extern s16 max_sound;
 extern u8 menuEtape;
 extern rgb_palette_t menu_rvb;
@@ -166,6 +193,7 @@ extern s16 numero_palette_special;
 extern s16 option_exit;
 extern options_t options;
 extern options_jeu_t options_jeu;
+extern s16 notbut[4];
 extern void (*pCOMMANDE_BOX)(void);
 extern void (*pDO_COMMANDE)(void);
 extern void (*pEND_SCREEN)(void);
@@ -175,8 +203,12 @@ extern void (*pINIT_SCROLL)(void);
 extern void (*pLOAD_SCREEN)(void);
 extern u8 pos_YN;
 extern s16 position;
+extern s16 action;
+extern s16 positionx2;
+extern s16 positiony2;
 extern s16 positiony;
 extern s16 repetition;
+extern s16 joy_buttonA1;
 extern rgb_palette_t rvb[3];
 extern rgb_palette_t rvb_E40AC;
 extern rgb_palette_t rvb_menu_save;
@@ -184,6 +216,12 @@ extern rgb_palette_t rvb_options_in_game;
 extern rgb_palette_t rvb_plan3;
 extern rgb_palette_t* rvb_special;
 extern u16 tRefRam2VramNormalFix[8];
+extern u16 tRefRam2VramNormal[8];
+extern u16 tRefTransFondNormal[8];
+extern u16 tRefSpriteNormal[2];
+extern u16 tRefRam2VramX[2];
+extern u16 tRefVram2VramX[2];
+extern u16 tRefSpriteX[2];
 extern u8 tab_key_sav[7];
 extern s16 word_E4CEC_x;
 extern s16 word_E4CEE_h;
@@ -199,7 +237,7 @@ extern s16 ypadmin;
 
 /* External callee prototypes from Rayverse proto.h; widths are provisional. */
 void CalcTab(void);
-void CaptureVideo(u8* source_buf, u8* dest_buf, u8 grayscale);
+void CaptureVideo(u8* source_buf, u8 grayscale);
 void DISPLAY_CREDITS_MENU(void);
 void DISPLAY_FOND_MENU(void);
 void DO_FADE(void);
@@ -223,9 +261,16 @@ void Keyflush(void);
 void LOAD_GENERAL_SCREEN(void);
 void LOAD_OPTIONS_SCREEN(void);
 void LoadBnkFixe(void);
+void SaveOptionsOnDisk(void);
 void LoadLanguageTxt(mem_t* mem, s32 language_index);
+extern u32 plan0bit_nb_bytes;
+extern s32 plan0bit_length;
+extern u8 *PLAN0BIT;
+void sub_1268A(u8 *plan, s32 offset, s32 width);
+#pragma aux sub_1268A parm [esi] [ebx] [edx]
 bool LoadOptionsOnDisk(void);
 void LoadPlan3InVignet(mem_t* mem, s32 resource_id);
+void align_mem_desc(mem_t* desc);
 void POINTEUR_BOUTONS_OPTIONS_BIS(void);
 void PlaySnd_old(s16 sound_id);
 void RESET_ALL_TOUCHE(void);
@@ -234,6 +279,7 @@ void SWAP_BUFFERS(void);
 bool SelectButPressed(void);
 void SetCompteurTrameAudio(void);
 void SetDeviceID(s32 device_id);
+s32 sub_3E780(void);
 void SetDma(s32 dma);
 void SetIrq(s32 irq);
 void SetPalette(rgb_palette_t* palette, u8 first_color, s32 num_colors);
@@ -241,6 +287,7 @@ void SetParam(s32 param);
 void SetPort_(s32 port);
 void SetVolumeSound(s16 volume);
 bool ValidButPressed(void);
+void readinput_center_joystick(s16* xcentre, s16* ycentre);
 void advance_frame(void);
 s16 calc_largmax_text(const char* text, s16 char_index, s16 space_width, s16 char_spacing, u8 font_size);
 s16 downjoy(void);
@@ -253,25 +300,62 @@ void readinput(void);
 s16 rightjoy(void);
 void stop_cd(void);
 void synchro(void);
+void WaitNSynchro(s32 count);
+void readinput_calibrate_joystick(s16* xmax, s16* xmin, s16* ymax, s16* ymin);
+u8 TOUCHE(u8 key);
 void update_pad_limits(s16* xmax, s16* xmin, s16* ymax, s16* ymin, s16* xcentre, s16* ycentre);
 s16 upjoy(void);
+s16 but0pressed(void);
+s16 but1pressed(void);
+s16 but2pressed(void);
+s16 but3pressed(void);
 
 /* In-range function prototypes, source-derived unless manually corrected. */
 void check_key_table(void);
 void LOAD_CONFIG(void);
 void DO_NEW_MENUS(void);
 void INIT_KEY_SCREEN(void);
+void INIT_AFFICHE_KEY_SCREEN(void);
+void AFFICHE_KEY_SCREEN(void);
+void DO_COMMANDE_KEY(void);
+void END_KEY_SCREEN(void);
 void INIT_PAD_SCREEN(void);
 void INIT_GRAPHIC_SCREEN(void);
+void INIT_AFFICHE_GRAPHIC_SCREEN(void);
+void AFFICHE_GRAPHIC_SCREEN(void);
+void DO_COMMANDE_GRAPHIC(void);
+void END_GRAPHIC_SCREEN(void);
 void INIT_VIDEOMODE_SCREEN(void);
+void INIT_AFFICHE_VIDEOMODE_SCREEN(void);
+void AFFICHE_VIDEOMODE_SCREEN(void);
+void DO_COMMANDE_VIDEOMODE(void);
+void INIT_BUTTON_SCREEN(void);
+void INIT_AFFICHE_BUTTON_SCREEN(void);
+void AFFICHE_BUTTON_JOYSTICK(void);
+void DO_BUTTON_COMMANDE(void);
+void END_BUTTON_COMMAND(void);
+void INIT_AFFICHE_PAD_SCREEN(void);
+void AFFICHE_PAD_SCREEN(void);
+void DO_COMMANDE_PAD(void);
+void END_PAD_SCREEN(void);
+void END_VIDEOMODE_SCREEN(void);
+void INIT_CALIBRATE_JOYSTICK(s16* xmax, s16* xmin, s16* ymax, s16* ymin);
+void AFFICHE_CALIBRATE_JOYSTICK(void);
+s16 calibrate_joystick_prg(u32 a1);
+s16 center_joystick_prg(u32 a1);
 void DO_OPTIONS_IN_GAME(void);
 void INIT_GENERAL_CHOICE(void);
 void AFFICHE_ECRAN_GENERAL(void);
 void DO_COMMANDE_GENERAL(void);
 void END_GENERAL_SCREEN(void);
 void INIT_OPTIONS_CHOICE(void);
+void MAIN_CALIBRATE_JOYSTICK(void);
+char *itoa_dos(s32 value, char *buffer, s32 radix);
+s32 CalcSpeed(void);
+void InitParamGraphicsScreen(void);
 void INIT_AFFICHE_ECRAN_OPTIONS(void);
 void AFFICHE_ECRAN_OPTIONS(void);
+void AFFICHE_ECRAN_SAVE(void);
 void DO_COMMANDE_OPTIONS(void);
 void END_OPTIONS_SCREEN(void);
 s16 menu_prg(u32 a1);
@@ -293,7 +377,7 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode);
 
 /* DOS 1:39308; menu.c:106 */
 void check_key_table(void) {
-    u8 valid = 1;
+    s32 valid = 1;
     s32 i;
     for (i = 0; i < 7; ++i) {
         u8 key = *tab_key[i];
@@ -314,8 +398,9 @@ void check_key_table(void) {
 /* DOS 1:39388; menu.c:128 */
 void LOAD_CONFIG(void) {
     if (LoadOptionsOnDisk()) {
-        LoadLanguageTxt(main_mem_fix, 0); // English
-        if (tRefRam2VramNormalFix[0] >= 128 && xpadmax == -1) {
+        language = 0;
+        LoadLanguageTxt(&main_mem_fix, 0); // English
+        if ((s16)tRefRam2VramNormalFix[0] >= 128 && xpadmax == -1) {
             // NOTE: this may occur if a RAYMAN.CFG is present that contains values that meet this condition.
             // TODO: figure out why this causes Mode X to be used instead of normal mode.
             GameModeVideo = MODE_X;
@@ -328,41 +413,54 @@ void LOAD_CONFIG(void) {
         POINTEUR_BOUTONS_OPTIONS_BIS();
 
         // STUB: this section seems to be related to sound card initialization
-        if (CarteSonAutorisee && DeviceID != 999) {
+        if (DeviceID != 999 && CarteSonAutorisee) {
             SetPort_(Port);
             SetIrq(Irq);
             SetDma(Dma);
             SetParam(Param);
             SetDeviceID(DeviceID);
-            //if (sub_3E780()) {} // seems to do something with locking memory regions (DOS protected mode stuff)
-
+            if (sub_3E780()) {
+                CarteSonAutorisee = 0;
+            } else {
+                LoadBnkFixe();
+                CarteSonAutorisee = 1;
+                InitSnd();
+            }
         } else {
             SetDeviceID(DeviceID);
             CarteSonAutorisee = 0;
         }
 
-        if (CarteSonAutorisee) {
-            LoadBnkFixe();
-            InitSnd();
-        }
-
         if (JoystickPresent()) {
-            // stub: init joypad
+            if (xpadmax < 0 || Mode_Pad != is_joypad_mode ||
+                Port_Pad != something_with_cfg_25_default_00_joy ||
+                (notbut[0] != 0 && notbut[0] != 1) ||
+                (notbut[1] != 0 && notbut[1] != 1) ||
+                (notbut[2] != 0 && notbut[2] != 1) ||
+                (notbut[3] != 0 && notbut[3] != 1)) {
+                pLOAD_SCREEN = LOAD_OPTIONS_SCREEN;
+                CalcTab();
+                DO_FADE_OUT();
+                MAIN_CALIBRATE_JOYSTICK();
+            } else {
+                Main_Control = 2;
+                update_pad_limits(&xpadmax, &xpadmin, &ypadmax, &ypadmin,
+                                  &xpadcentre, &ypadcentre);
+            }
         } else {
             if (xpadmax == -1) {
                 xpadmax = -2;
             }
         }
-
-        // stub
     } else {
         // We didn't load a .cfg file -> load defaults
         if (CarteSonAutorisee) {
+            CarteSonAutorisee = 0;
             LoadBnkFixe();
             InitSnd();
         }
         language = 0; // English
-        LoadLanguageTxt(main_mem_fix, language);
+        LoadLanguageTxt(&main_mem_fix, 0);
         if (JoystickPresent()) {
             pLOAD_SCREEN = LOAD_OPTIONS_SCREEN;
             CalcTab();
@@ -371,14 +469,14 @@ void LOAD_CONFIG(void) {
         } else {
             xpadmax = -2;
         }
-        options_jeu.music_enabled = 2;
+        options_jeu.music_enabled = 13;
         options_jeu.sound_volume = 18;
         options_jeu.is_stereo = 1;
         options_jeu.jump = 1;
         options_jeu.fist = 0;
         options_jeu.action = 2;
-        SetVolumeSound((options_jeu.sound_volume * 127) / 20);
-        GameModeVideo = MODE_NORMAL;
+        raj_env_sound(options_jeu.sound_volume);
+        GameModeVideo = 0;
         POINTEUR_BOUTONS_OPTIONS_BIS();
     }
 
@@ -431,20 +529,32 @@ void NewFrequency(u8 frequency) {
 
 /* DOS 1:39720; menu.c:209 */
 void InitClipping(void) {
-    if (GameModeVideo != MODE_NORMAL) {
-        default_sprite_clipping();
-    } else if (is_fee || (num_world == world_6_cake && num_level == 4) || get_casse_brique_active()) {
-        set_xywhmap(TabW1[0], TabW2[0], TabH1[0], TabH2[0]);
-        sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+    if (GameModeVideo == MODE_NORMAL) {
+        if (is_fee || (num_world == world_6_cake && num_level == 4) || get_casse_brique_active()) {
+            set_xywhmap(TabW1[0], TabW2[0], TabH1[0], TabH2[0]);
+            sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+        } else {
+            set_xywhmap(TabW1[SizeScreen], TabW2[SizeScreen], TabH1[SizeScreen], TabH2[SizeScreen]);
+            sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+            N_CLRSCR(DrawBufferNormal);
+        }
     } else {
-        set_xywhmap(TabW1[SizeScreen], TabW2[SizeScreen], TabH1[SizeScreen], TabH2[SizeScreen]);
-        sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
-        N_CLRSCR(DrawBufferNormal);
+        default_sprite_clipping();
     }
 }
-
 /* DOS 1:3980c; menu.c:223 */
-/* IsBackgroundOn: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+/* DOS 1:3980c; menu.c:223 */
+u8 IsBackgroundOn(void)
+{
+    return (num_world == 1 && num_level == 16) ||
+        (num_world == 2 && num_level == 16) ||
+        (num_world == 3 && num_level == 10) ||
+        (num_world == 4 && num_level == num_world) ||
+        (num_world == 4 && num_level == 11) ||
+        (num_world == 5 && num_level == 3) ||
+        (num_world == 5 && num_level == 11) ||
+        (num_world == 6 && num_level == 4) || BackgroundOptionOn;
+}
 
 /* DOS 1:398a4; misc_source.c:64 */
 void set_special_key_descriptions(void) {
@@ -549,17 +659,116 @@ void DO_NEW_MENUS(void) {
         }
     }
     new_key();
-    //SaveOptionsOnDisk();
+    SaveOptionsOnDisk();
 
 }
 
 /* DOS 1:39b7c; menu.c:320 */
-/* DO_OPTIONS_IN_GAME: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_OPTIONS_IN_GAME(void)
+{
+    u8 button_released_saved;
+    u8 SizeScreen_saved;
+
+    button_released_saved = button_released;
+    SetCompteurTrameAudio();
+    menuEtape = 4;
+    byte_E4CFD = 1;
+    MENU_SUITE = 0;
+    MENU_RETURN = 0;
+    if (GoMenu == 1) {
+        if (byte_96884 == 64) {
+            set_xywhmap(TabW1[0], TabW2[0], TabH1[0], TabH2[0]);
+            sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+            ++GoMenu;
+        } else {
+            GoMenu = 0;
+        }
+    } else if (GoMenu == 2 || GameModeVideo == MODE_X) {
+        if ((num_world == 6 && num_level == 4) || is_fee) {
+            SizeScreen_saved = SizeScreen;
+            SizeScreen = 0;
+        }
+        memcpy(&rvb_options_in_game, &rvb[0], 768);
+        Keyflush();
+        default_key();
+        GoMenu = 0;
+        OptionGame = 1;
+        stop_cd();
+        cdTime = 0;
+        if (CarteSonAutorisee) {
+            start_freeze_snd();
+        }
+        while (menuEtape != 0) {
+            raj_env_sound(options_jeu.sound_volume);
+            raj_env_stereo(options_jeu.is_stereo);
+            raj_env_audio(options_jeu.music_enabled);
+            RESET_ALL_TOUCHE();
+            switch (menuEtape) {
+            case 4:
+                pINIT_SCREEN = INIT_OPTIONS_CHOICE;
+                pLOAD_SCREEN = NULL;
+                if (MENU_RETURN) {
+                    menuEtape = 4;
+                }
+                DO_MENU();
+                break;
+            case 7:
+                pINIT_SCREEN = INIT_KEY_SCREEN;
+                pLOAD_SCREEN = NULL;
+                if (MENU_RETURN) {
+                    menuEtape = 4;
+                }
+                DO_MENU();
+                break;
+            case 8:
+                pINIT_SCREEN = INIT_PAD_SCREEN;
+                pLOAD_SCREEN = NULL;
+                if (MENU_RETURN) {
+                    menuEtape = 4;
+                }
+                DO_MENU();
+                break;
+            case 9:
+                pINIT_SCREEN = INIT_GRAPHIC_SCREEN;
+                pLOAD_SCREEN = NULL;
+                if (MENU_RETURN) {
+                    menuEtape = 4;
+                }
+                DO_MENU();
+                break;
+            default:
+                break;
+            }
+            OptionGame = 0;
+            new_key();
+            if (GameModeVideo == MODE_NORMAL) {
+                set_xywhmap(TabW1[SizeScreen], TabW2[SizeScreen], TabH1[SizeScreen], TabH2[SizeScreen]);
+                sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+                N_CLRSCR(DrawBufferNormal);
+            } else if (P486 == 1) {
+                sub_1268A(PLAN0BIT, plan0bit_nb_bytes, plan0bit_length >> 2);
+            }
+            if (CarteSonAutorisee) {
+                stop_freeze_snd();
+            }
+            in_pause = 0;
+            ProchainEclair = 1;
+            numero_palette_special = 0;
+            MapTimePause = 0;
+            if ((num_world == 6 && num_level == 4) || is_fee) {
+                SizeScreen = SizeScreen_saved;
+            }
+        }
+        byte_96884 = dead_time;
+        button_released = button_released_saved;
+    }
+}
 
 /* DOS 1:39e98; menu.c:426 */
 void INIT_GENERAL_CHOICE(void) {
-    u8 max_options = 0;
+    u32 color_table;
     s32 i;
+    color_table = *(u32 *)byte_49290;
     pINIT_AFFICHE_SCREEN = NULL;
     pINIT_SCROLL = NULL;
     pDO_COMMANDE = DO_COMMANDE_GENERAL;
@@ -571,7 +780,7 @@ void INIT_GENERAL_CHOICE(void) {
     for (i = 0; i < nbre_options; ++i) {
         display_item_t* display_item = menu_to_display + i;
         strcpy(display_item->text, language_txt[190]); // "music"
-        display_item->color = byte_49290[i];
+        display_item->color = ((u8 *)&color_table)[i];
         switch(i) {
             default: break;
             case 0: {
@@ -610,13 +819,13 @@ void INIT_GENERAL_CHOICE(void) {
 
 /* DOS 1:3a0dc; menu.c:477 */
 void AFFICHE_ECRAN_GENERAL(void) {
-    s32 i;
+    u8 i;
     DISPLAY_FOND_MENU();
     for (i = 0; i < nbre_options; ++i) {
-        display_item_t* to_display = menu_to_display + i;
         if (i == positiony) {
-            display_box_text_plasma(to_display, 1);
+            display_box_text_plasma(menu_to_display + i, 1);
         } else {
+            display_item_t* to_display = menu_to_display + i;
             display_text(to_display->text, to_display->xpos, to_display->ypos, to_display->font_size, to_display->color);
         }
     }
@@ -626,7 +835,7 @@ void AFFICHE_ECRAN_GENERAL(void) {
 void DO_COMMANDE_GENERAL(void) {
     TestCompteur();
     ++TempsDemo;
-    if (TempsDemo >= RunTimeDemo && !fin_du_jeu) {
+    if (TempsDemo >= (u16)RunTimeDemo && !fin_du_jeu) {
         InitDemoJeu();
     }
     if (SelectButPressed()) {
@@ -635,16 +844,16 @@ void DO_COMMANDE_GENERAL(void) {
             MENU_RETURN = 1;
         }
     }
-    if (upjoy() && (button_released || (delai_repetition < compteur && compteur % repetition == 0))) {
+    if (upjoy() && (button_released || (compteur > delai_repetition && compteur % repetition == 0))) {
         PlaySnd_old(68);
-        if (positiony <= first_option) {
-            positiony = option_exit;
-        } else {
+        if (positiony > first_option) {
             --positiony;
+        } else {
+            positiony = option_exit;
         }
         TempsDemo = 0;
     }
-    if (downjoy() && (button_released || (delai_repetition < compteur && compteur % repetition == 0))) {
+    if (downjoy() && (button_released || (compteur > delai_repetition && compteur % repetition == 0))) {
         PlaySnd_old(68);
         if (positiony < option_exit) {
             ++positiony;
@@ -671,13 +880,13 @@ void DO_COMMANDE_GENERAL(void) {
                 You_Win = 1;
                 loop_nb_trames = 0;
                 new_txt_fee = 0;
-                LoadPlan3InVignet(main_mem_level, 61);
                 loop_timing = 4;
+                LoadPlan3InVignet(&main_mem_level, 61);
                 INIT_TEXT_TO_DISPLAY();
                 DO_FADE_OUT();
                 INIT_FADE_IN();
                 DISPLAY_CREDITS_MENU();
-                block_free(main_mem_level);
+                align_mem_desc(&main_mem_level);
                 You_Win = 0;
             } break;
             case 3: {
@@ -697,7 +906,8 @@ void END_GENERAL_SCREEN(void) {
         fin_de_rayman = 1;
         if (pAFFICHE_SCREEN) {
             pAFFICHE_SCREEN();
-            advance_frame();
+            endsynchro();
+            synchro();
             InitPlasma(1);
             SWAP_BUFFERS();
         }
@@ -713,9 +923,7 @@ void END_GENERAL_SCREEN(void) {
 
 /* DOS 1:3a44c; menu.c:579 */
 void INIT_OPTIONS_CHOICE(void) {
-    /*if (WindowsLance == 0) {
-        if (__readdr(0) || __readdr(1) || __readdr(2) || __readdr(3)) { exit(); }
-    }*/
+    /* DOS's DR0..DR3 debugger check is omitted: Watcom has no C89 intrinsic here. */
     pINIT_AFFICHE_SCREEN = INIT_AFFICHE_ECRAN_OPTIONS;
     pAFFICHE_SCREEN = AFFICHE_ECRAN_OPTIONS;
     pDO_COMMANDE = DO_COMMANDE_OPTIONS;
@@ -729,10 +937,12 @@ void INIT_OPTIONS_CHOICE(void) {
     button_released = 1;
     delai_barre = 3;
     delai_stereo = 8;
-    if (language != 0) {
-        byte_E4CFC = 90;
-    } else {
+    if (language < 1) {
         byte_E4CFC = 75;
+    } else if (language <= 1) {
+        byte_E4CFC = 90;
+    } else if (language == 2) {
+        byte_E4CFC = 90;
     }
     basex = 160 - byte_E4CFC;
     if (OptionGame) {
@@ -760,17 +970,16 @@ void INIT_OPTIONS_CHOICE(void) {
 
 /* DOS 1:3a628; menu.c:626 */
 void INIT_AFFICHE_ECRAN_OPTIONS(void) {
-    s32 i;
-    char v39[4];
+    u8 v28[9] = {5, 5, 5, 5, 5, 5, 3, 0}; //0x5050505;
     char* v32 = "off";
-    u8 v28[8] = {5, 5, 5, 5, 5, 5, 3, 0}; //0x5050505;
+    char v39[4] = "on";
 //    u8 v29[4] = {5, 5, 3, 0}; // 0x30505; //dword_49294[1]
     u32 v30 = 0; //dword_49294[2];
+    s16 i;
     menu_to_display[9].is_fond = 1;
     menu_to_display[9].font_size = 2;
     menu_to_display[9].field_D5 = 0;
     menu_to_display[9].color = 1;
-    memcpy(v39, "on", 3);
     for (i = first_option; i <= first_option + nbre_options; ++i) {
         display_item_t* to_display = menu_to_display + i;
         to_display->font_size = 2;
@@ -872,7 +1081,82 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
 }
 
 /* DOS 1:3ab34; menu.c:736 */
-/* AFFICHE_ECRAN_OPTIONS: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_ECRAN_OPTIONS(void)
+{
+    u8 option_index;
+    u8 i;
+    s32 v5;
+    s32 v6;
+    s32 v18;
+    s32 v8;
+    s32 draw_x;
+    s16 x;
+    s16 y;
+    u8 color;
+    char on_text[4] = "on";
+    char off_text[4] = "off";
+    const char *nonselected_text;
+    const char *other_text;
+    display_item_t *to_display;
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_text(language_txt[181], SCREEN_WIDTH / 2, debut_titre, 1, 1);
+    for (option_index = first_option; option_index <= first_option + nbre_options; ++option_index) {
+        x = menu_to_display[option_index].xpos;
+        y = menu_to_display[option_index].ypos;
+        if (option_index == position) {
+            display_box_text_plasma(menu_to_display + option_index, 1);
+        } else if (option_index == option_exit) {
+            display_text(language_txt[232], x, y, 2, menu_to_display[option_index].color);
+        } else {
+            display_text(language_txt[190 + option_index], x, y, 2, menu_to_display[option_index].color);
+        }
+        if (option_index == 0) {
+            v5 = calc_largmax_text(menu_to_display[0].text, -1, 8, 1, 2);
+            v6 = v5 + x;
+            if (options.music_enabled) {
+                nonselected_text = off_text;
+                v18 = v6 + calc_largmax_text("on", -1, 8, 1, 2) + 32;
+                v8 = v6 + 16;
+                other_text = on_text;
+            } else {
+                nonselected_text = on_text;
+                v18 = v6 + 16;
+                v8 = v6 + calc_largmax_text("on", -1, 8, 1, 2) + 32;
+                other_text = off_text;
+            }
+            display_text(nonselected_text, v18, y, 2, 5);
+            if (position == option_index) {
+                to_display = text_to_display;
+                strcpy(to_display->text, other_text);
+                to_display->xpos = v8;
+                to_display->ypos = menu_to_display[0].ypos;
+                INIT_TXT_BOX(to_display);
+                display_box_text_plasma(to_display, 0);
+            } else {
+                display_text(other_text, v8, y, 2, 5);
+            }
+        } else if (option_index == 1) {
+            draw_x = x + calc_largmax_text(menu_to_display[1].text, -1, 8, 1, 2);
+            draw_x += 16;
+            DrawBlackBorderBox(draw_x, y - 14, 15, 20 * ecart_barre + 1, 1);
+            for (i = 0; i < options.sound_volume; ++i) {
+                if (i >= (2 * max_sound) / 3) {
+                    color = 1;
+                } else if (i >= max_sound / 3) {
+                    color = 3;
+                } else {
+                    color = 5;
+                }
+                display_text("|", draw_x + ecart_barre * i,
+                             debut_options + ecart_options + 15, 2, color);
+            }
+        }
+    }
+}
 
 /* DOS 1:3af28; menu.c:803 */
 void DO_COMMANDE_OPTIONS(void) {
@@ -909,6 +1193,7 @@ void DO_COMMANDE_OPTIONS(void) {
                 MusicCdActive = 1;
             }
         } else {
+            SetCompteurTrameAudio();
             stop_cd();
             if (OptionMusicCdActive) {
                 MusicCdActive = 0;
@@ -916,7 +1201,7 @@ void DO_COMMANDE_OPTIONS(void) {
         }
     } else if (position == 1 && rightjoy()) {
         if (options.sound_volume < max_sound) {
-            if (button_released || (delai_repetition < compteur && (compteur % repetition) == 0)) {
+            if (button_released || (delai_repetition < compteur && (compteur % delai_barre) == 0)) {
                 PlaySnd_old(68);
                 ++options.sound_volume;
                 raj_env_sound(options.sound_volume);
@@ -924,7 +1209,7 @@ void DO_COMMANDE_OPTIONS(void) {
         }
     } else if (position == 1 && leftjoy()) {
         if (options.sound_volume > 0) {
-            if (button_released || (delai_repetition < compteur && (compteur % repetition) == 0)) {
+            if (button_released || (delai_repetition < compteur && (compteur % delai_barre) == 0)) {
                 PlaySnd_old(68);
                 --options.sound_volume;
                 raj_env_sound(options.sound_volume);
@@ -946,12 +1231,16 @@ void DO_COMMANDE_OPTIONS(void) {
         menuEtape = 7; // go to setup keys
         sortie_options = 1;
         byte_96883 = 1;
+        TestButtonReleased();
+        return;
     } else if (position == 4 && ValidButPressed()) {
         byte_E4CD8 = options.music_enabled;
         byte_E4CD9 = options.sound_volume;
         menuEtape = 9; // go to graphics details
         byte_96883 = 1;
         sortie_options = 1;
+        TestButtonReleased();
+        return;
     } else if (position == 5 && ValidButPressed() && button_released && OptionGame) {
         if (confirmation_msg(0)) {
             ExitMenu = 1;
@@ -983,100 +1272,1376 @@ void END_OPTIONS_SCREEN(void) {
 }
 
 /* DOS 1:3b3ec; menu.c:911 */
-/* INIT_KEY_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_KEY_SCREEN(void) {
+    s16 i;
+    if (language == 1) {
+        key_descriptions = key_descriptions_azerty;
+    } else {
+        key_descriptions = key_descriptions_qwerty;
+    }
+    set_special_key_descriptions();
+    pINIT_AFFICHE_SCREEN = INIT_AFFICHE_KEY_SCREEN;
+    pAFFICHE_SCREEN = AFFICHE_KEY_SCREEN;
+    pDO_COMMANDE = DO_COMMANDE_KEY;
+    pEND_SCREEN = END_KEY_SCREEN;
+    position = 8;
+    nbre_options = 8;
+    option_exit = 8;
+    for (i = 0; i < 7; ++i) {
+        ((s16*)&options)[i] = tab_key_sav[i];
+    }
+    byte_E4CFF = 0;
+    compteur = 0;
+    max_compteur = 100;
+    delai_repetition = 12;
+    button_released = 1;
+    repetition = 6;
+    if (language == 0) {
+        byte_E4CFC = 90;
+    } else if (language == 1) {
+        byte_E4CFC = 105;
+    } else if (language == 2) {
+        byte_E4CFC = 120;
+    }
+    basex = 160 - byte_E4CFC;
+    general_init_screen(15, 68, 5);
+}
 
 /* DOS 1:3b514; menu.c:916 */
-/* INIT_AFFICHE_KEY_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_AFFICHE_KEY_SCREEN(void) {
+    s16 i;
+    u8 language_offset;
+    s16 new_x, new_y, new_w, new_h;
+    s16 left, top, right, bottom, width, height;
+    u8 color[10] = {5, 5, 5, 5, 5, 5, 5, 5, 3, 0};
+
+    switch (language) {
+    case 0:
+        language_offset = 20;
+        break;
+    case 1:
+        language_offset = 25;
+        break;
+    case 2:
+        language_offset = 45;
+        break;
+    }
+
+    strcpy(title + 1, language_txt[233]);
+    i = (s16)strlen(language_txt[233]);
+    title[i + 1] = '/';
+    title[i + 2] = 0;
+
+    for (i = 0; i <= nbre_options; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        if (i == 8) {
+            strcpy(item->text, language_txt[232]);
+            item->xpos = 160;
+            item->ypos = debut_sortie;
+        } else {
+            strcpy(item->text, language_txt[182 + i]);
+            if (i == 7) {
+                item->xpos = 160;
+            } else {
+                item->xpos = (s16)(basex + language_offset);
+            }
+            item->ypos = (s16)(i * (ecart_options + 15) + debut_options);
+        }
+        item->color = (s8)color[i];
+        item->font_size = 2;
+        item->field_D5 = 0;
+        item->is_fond = 1;
+        INIT_TXT_BOX(item);
+    }
+
+    text_to_display[0].is_fond = 1;
+    text_to_display[0].xpos = (s16)(debut_titre + 80);
+    text_to_display[0].field_D5 = 0;
+    text_to_display[0].font_size = 2;
+
+    msg_to_display[0].xpos = 160;
+    msg_to_display[0].ypos = 100;
+    msg_to_display[0].font_size = 2;
+    msg_to_display[0].field_D5 = 0;
+    msg_to_display[0].is_fond = 1;
+    strcpy(msg_to_display[0].text, language_txt[222]);
+    INIT_TXT_BOX(&msg_to_display[0]);
+
+    new_x = (s16)(basex - 2);
+    new_y = (s16)(debut_titre - 25);
+    new_w = (s16)(byte_E4CFC * 2);
+    new_h = (s16)(menu_to_display[8].ypos - debut_titre + 35);
+
+    left = (word_E4CEC_x < new_x) ? word_E4CEC_x : new_x;
+    top = (word_E4CF0_y < new_y) ? word_E4CF0_y : new_y;
+    right = ((s16)(word_E4CEC_x + word_E4CF4_w) > (s16)(new_x + new_w)) ?
+            (s16)(word_E4CEC_x + word_E4CF4_w) : (s16)(new_x + new_w);
+    bottom = ((s16)(word_E4CF0_y + word_E4CEE_h) > (s16)(new_y + new_h)) ?
+             (s16)(word_E4CF0_y + word_E4CEE_h) : (s16)(new_y + new_h);
+    width = (s16)(right - left);
+    height = (s16)(bottom - top);
+
+    word_E4CEC_x = left;
+    word_E4CF0_y = top;
+    word_E4CF4_w = width;
+    word_E4CEE_h = height;
+    if (OptionGame) {
+        FonduOption(left, top, width, height, 1);
+    } else {
+        FonduPixel(left, top, width, height);
+    }
+}
 
 /* DOS 1:3b8a4; menu.c:921 */
-/* AFFICHE_KEY_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_KEY_SCREEN(void) {
+    s16 xpos;
+    u8 i;
+    u8 language_offset;
+
+    switch (language) {
+    case 0:
+        language_offset = 62;
+        break;
+    case 1:
+        language_offset = 70;
+        break;
+    case 2:
+        language_offset = 75;
+        break;
+    }
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_text(title, 160, debut_titre, 1, 1);
+
+    for (i = 0; i <= nbre_options; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        const char* key_name;
+        xpos = item->xpos;
+        if (i == position) {
+            display_box_text_plasma(item, 1);
+        } else {
+            display_text(item->text, xpos, item->ypos, 2, item->color);
+        }
+
+        if (i < nbre_options - 1) {
+            key_name = key_descriptions[((s16*)&options)[i]];
+            if (byte_E4CFF && i == position) {
+                strcpy(text_to_display[0].text, key_name);
+                text_to_display[0].color = item->color;
+                text_to_display[0].ypos = item->ypos;
+                text_to_display[0].xpos = (s16)(xpos + language_offset);
+                INIT_TXT_BOX(&text_to_display[0]);
+                display_box_text_plasma(&text_to_display[0], 0);
+            } else {
+                display_text(key_name, (s16)(xpos + language_offset), item->ypos, 2, item->color);
+            }
+        }
+    }
+}
 
 /* DOS 1:3bacc; menu.c:926 */
-/* DO_COMMANDE_KEY: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_COMMANDE_KEY(void) {
+    s16 i;
+    s16 j;
+    s16 found_duplicate;
+
+    TestCompteur();
+    if (!byte_E4CFF) {
+        if (SelectButPressed()) {
+            MENU_RETURN = 1;
+        }
+
+        if (!rightjoy() && !leftjoy() &&
+                (button_released || (compteur > delai_repetition && compteur % repetition == 0))) {
+            if (upjoy()) {
+                PlaySnd_old(0x44);
+                if (position == 0) {
+                    position = 8;
+                } else {
+                    --position;
+                }
+            } else if (downjoy()) {
+                PlaySnd_old(0x44);
+                if (position == 8) {
+                    position = 0;
+                } else {
+                    ++position;
+                }
+            }
+        }
+
+        if (position == 7) {
+            if (ValidButPressed() && button_released) {
+                ((s16*)&options)[0] = SC_LEFT;
+                ((s16*)&options)[1] = SC_UP;
+                ((s16*)&options)[2] = SC_RIGHT;
+                ((s16*)&options)[3] = SC_DOWN;
+                ((s16*)&options)[4] = SC_CONTROL;
+                ((s16*)&options)[5] = SC_ALT;
+                ((s16*)&options)[6] = SC_X;
+            }
+        } else if (position >= 0 && position <= 6) {
+            if (ValidButPressed() && button_released) {
+                byte_E4CFF = 1;
+                RESET_ALL_TOUCHE();
+                TestButtonReleased();
+                return;
+            }
+        } else if (position == 8 && ValidButPressed()) {
+            found_duplicate = 0;
+            for (i = 0; i < nbre_options && !found_duplicate; ++i) {
+                for (j = i + 1; j < nbre_options; ++j) {
+                    if (((s16*)&options)[i] == ((s16*)&options)[j]) {
+                        found_duplicate = 1;
+                        break;
+                    }
+                }
+            }
+            if (found_duplicate) {
+                display_box_msg(&msg_to_display[0]);
+                TestButtonReleased();
+                return;
+            }
+        }
+
+        TestButtonReleased();
+    } else {
+        for (i = 0; i < 128; ++i) {
+            if (TOUCHE((u8)i) && key_descriptions[i] != NULL) {
+                byte_E4CFF = 0;
+                ((s16*)&options)[position] = i;
+                RESET_ALL_TOUCHE();
+            }
+        }
+        TestButtonReleased();
+    }
+}
 
 /* DOS 1:3bd50; menu.c:931 */
-/* END_KEY_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void END_KEY_SCREEN(void) {
+    s16 i;
+    menuEtape = 4;
+    if (!MENU_RETURN) {
+        for (i = 0; i < nbre_options - 1; ++i) {
+            tab_key_sav[i] = ((u8*)&options)[i * 2];
+        }
+    } else {
+        byte_96883 = 0;
+        if (!OptionGame) {
+            DO_FADE_OUT();
+        }
+    }
+}
 
 /* DOS 1:3bda4; menu.c:936 */
-/* INIT_BUTTON_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_BUTTON_SCREEN(void) {
+    pINIT_SCREEN = INIT_BUTTON_SCREEN;
+    pINIT_AFFICHE_SCREEN = INIT_AFFICHE_BUTTON_SCREEN;
+    pAFFICHE_SCREEN = AFFICHE_BUTTON_JOYSTICK;
+    pDO_COMMANDE = DO_BUTTON_COMMANDE;
+    pEND_SCREEN = END_BUTTON_COMMAND;
+    notbut[3] = 0;
+    notbut[2] = 0;
+    notbut[1] = 0;
+    notbut[0] = 0;
+}
 
 /* DOS 1:3be04; menu.c:941 */
-/* INIT_AFFICHE_BUTTON_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_AFFICHE_BUTTON_SCREEN(void) {
+    s32 i;
+    u8 color[5] = {5, 5, 5, 5, 3};
+    compteur = 0;
+    delai_repetition = 12;
+    position = 0;
+    first_option = 0;
+    button_released = 1;
+    max_compteur = 100;
+    repetition = 6;
+    nbre_options = 4;
+    option_exit = 4;
+    for (i = 0; i <= 4; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        item->font_size = 2;
+        item->field_D5 = 0;
+        item->is_fond = 1;
+        if (i == 4) {
+            strcpy(item->text, language_txt[232]);
+            item->xpos = 160;
+            item->ypos = 155;
+        } else {
+            strcpy(item->text, language_txt[226 + i]);
+            item->xpos = 120;
+            item->ypos = (s16)(70 + i * 20);
+        }
+        item->color = color[i];
+        INIT_TXT_BOX(item);
+    }
+}
 
 /* DOS 1:3bf60; menu.c:946 */
-/* AFFICHE_BUTTON_JOYSTICK: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_BUTTON_JOYSTICK(void) {
+    u8 i;
+    u8 color[5] = {5, 5, 5, 5, 3};
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_box_text_plasma(&text_to_display[0], 1);
+
+    for (i = 0; i <= 4; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        if (i < 4) {
+            if (but_options[i]) {
+                PlasmaBox(192, (s16)(59 + 20 * i), 34, 9, 0);
+            }
+            if (notbut[i] == 2) {
+                DISPLAY_BLACKBOX(188, (s16)(55 + 20 * i), 40, 16, 0, 2);
+                display_text("ok", 233, item->ypos, 2, color[i]);
+            } else {
+                DISPLAY_BLACKBOX(188, (s16)(55 + 20 * i), 40, 16, 0, 1);
+            }
+        }
+
+        if (i == position) {
+            item->color = color[i];
+            INIT_TXT_BOX(item);
+            display_box_text_plasma(item, 0);
+        } else {
+            display_text(item->text, item->xpos, item->ypos, 2, color[i]);
+        }
+    }
+
+    display_text(language_txt[230], 160, 175, 2, 5);
+}
 
 /* DOS 1:3c138; menu.c:951 */
-/* DO_BUTTON_COMMANDE: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_BUTTON_COMMANDE(void) {
+    TestCompteur();
+
+    if (joy_buttonA1 == 1) {
+        if (notbut[0] == 0) {
+            if (position == option_exit) {
+                joy_buttonA1 = notbut[0];
+            }
+        }
+    }
+
+    if (SelectButPressed()) {
+        MENU_RETURN = 1;
+    }
+
+    if (button_released == 0) {
+        if (compteur > delai_repetition) {
+            if (compteur % repetition == 0) {
+                if (upjoy()) {
+                    PlaySnd_old(0x44);
+                    if (position == first_option) {
+                        position = option_exit;
+                    } else {
+                        --position;
+                    }
+                } else if (downjoy()) {
+                    PlaySnd_old(0x44);
+                    if (position == option_exit) {
+                        position = first_option;
+                    } else {
+                        ++position;
+                    }
+                }
+            }
+        }
+    }
+
+    input_mode = 0;
+    if (but0pressed() && position != option_exit) {
+        if (but_options[0] == 0) {
+            PlaySnd_old(0x44);
+        }
+        but_options[0] = 1;
+    } else {
+        if (but_options[0] != 0) {
+            notbut[0] = 2;
+        }
+        but_options[0] = 0;
+    }
+
+    if (but1pressed() && position != option_exit) {
+        if (but_options[1] == 0) {
+            PlaySnd_old(0x44);
+        }
+        but_options[1] = 1;
+    } else {
+        if (but_options[1] != 0) {
+            notbut[1] = 2;
+        }
+        but_options[1] = 0;
+    }
+
+    if (but2pressed() && position != option_exit) {
+        if (but_options[2] == 0) {
+            PlaySnd_old(0x44);
+        }
+        but_options[2] = 1;
+    } else {
+        if (but_options[2] != 0) {
+            notbut[2] = 2;
+        }
+        but_options[2] = 0;
+    }
+
+    if (but3pressed() && position != option_exit) {
+        if (but_options[3] == 0) {
+            PlaySnd_old(0x44);
+        }
+        but_options[3] = 1;
+    } else {
+        if (but_options[3] != 0) {
+            notbut[3] = 2;
+        }
+        but_options[3] = 0;
+    }
+
+    input_mode = 1;
+    TestButtonReleased();
+}
 
 /* DOS 1:3c390; menu.c:956 */
-/* END_BUTTON_COMMAND: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void END_BUTTON_COMMAND(void) {
+    s16 i;
+    for (i = 0; i < 4; ++i) {
+        notbut[i] = notbut[i] == 0;
+    }
+    MENU_RETURN = 0;
+    sortie_options = 0;
+    pEND_SCREEN = NULL;
+}
 
 /* DOS 1:3c3d0; menu.c:961 */
-/* INIT_PAD_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_PAD_SCREEN(void) {
+    pINIT_AFFICHE_SCREEN = INIT_AFFICHE_PAD_SCREEN;
+    pAFFICHE_SCREEN = AFFICHE_PAD_SCREEN;
+    pDO_COMMANDE = DO_COMMANDE_PAD;
+    pEND_SCREEN = END_PAD_SCREEN;
+    max_compteur = 100;
+    options.sound_volume = options_jeu.jump;
+    options.SizeScreen = options_jeu.fist;
+    position = 5;
+    nbre_options = 5;
+    option_exit = 5;
+    compteur = 0;
+    options.Frequence = options_jeu.action;
+    button_released = 1;
+    first_option = 0;
+    delai_repetition = 12;
+    repetition = 6;
+    if (language == 0) {
+        byte_E4CFC = 65;
+    } else if (language == 1 || language == 2) {
+        byte_E4CFC = 105;
+    }
+    basex = 160 - byte_E4CFC;
+    general_init_screen(20, 60, 5);
+}
 
 /* DOS 1:3c4d0; menu.c:966 */
-/* INIT_AFFICHE_PAD_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_AFFICHE_PAD_SCREEN(void) {
+    u8 i;
+    s16 row;
+    s16 text_width;
+    s16 letter_width;
+    s16 old_x, old_y, old_w, old_h;
+    s16 new_x, new_y, new_w, new_h;
+    s16 left, top, right, bottom, width, height;
+    u8 first;
+    u8 color[6] = {5, 5, 5, 5, 5, 3};
+
+    strcpy(title, language_txt[234]);
+    first = first_option;
+    for (i = first; i <= first + nbre_options; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        row = i - first;
+        item->color = (s8)color[row];
+        item->ypos = (s16)(row * (ecart_options + 15) + debut_options);
+        if (i == option_exit) {
+            strcpy(item->text, language_txt[232]);
+            item->xpos = 160;
+            item->ypos = debut_sortie;
+        } else if (i == 0) {
+            strcpy(item->text, language_txt[208]);
+            item->xpos = 160;
+        } else {
+            strcpy(item->text, language_txt[185 + i]);
+            if (first == 4) {
+                item->xpos = 160;
+            } else {
+                text_width = calc_largmax_text(item->text, -1, 8, 1, 2);
+                letter_width = calc_largmax_text("a", -1, 8, 1, 2);
+                item->xpos = (s16)(160 - ((text_width + letter_width + 16) / 2));
+            }
+        }
+        item->font_size = 2;
+        item->field_D5 = 0;
+        item->is_fond = 1;
+        INIT_TXT_BOX(item);
+    }
+
+    new_x = basex;
+    new_y = (s16)(debut_titre - 25);
+    new_w = (s16)(byte_E4CFC * 2);
+    new_h = (s16)(menu_to_display[option_exit].ypos - debut_titre + 35);
+
+    left = (word_E4CEC_x < new_x) ? word_E4CEC_x : new_x;
+    top = (word_E4CF0_y < new_y) ? word_E4CF0_y : new_y;
+    right = ((s16)(word_E4CEC_x + word_E4CF4_w) > (s16)(new_x + new_w)) ?
+            (s16)(word_E4CEC_x + word_E4CF4_w) : (s16)(new_x + new_w);
+    bottom = ((s16)(word_E4CF0_y + word_E4CEE_h) > (s16)(new_y + new_h)) ?
+             (s16)(word_E4CF0_y + word_E4CEE_h) : (s16)(new_y + new_h);
+    width = (s16)(right - left);
+    height = (s16)(bottom - top);
+    word_E4CEC_x = left;
+    word_E4CF0_y = top;
+    word_E4CF4_w = width;
+    word_E4CEE_h = height;
+
+    if (OptionGame) {
+        FonduOption(left, top, width, height, 1);
+    } else {
+        FonduPixel(left, top, width, height);
+    }
+}
 
 /* DOS 1:3c854; menu.c:971 */
-/* AFFICHE_PAD_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_PAD_SCREEN(void) {
+    u8 i;
+    const char* button_labels[4] = {"a/", "b/", "c/", "d/"};
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_text(title, 160, debut_titre, 1, 1);
+
+    for (i = first_option; i <= first_option + nbre_options; ++i) {
+        display_item_t* item = &menu_to_display[i];
+        if (i == position) {
+            display_box_text_plasma(item, 1);
+        } else {
+            display_text(item->text, item->xpos, item->ypos, 2, item->color);
+        }
+
+        if (i > 0 && i < 4) {
+            s16 label_width = calc_largmax_text(item->text, -1, 8, 1, 2);
+            const char* button_label = button_labels[((s16*)&options)[i]];
+            display_text(button_label, (s16)(item->xpos + label_width + 16),
+                         item->ypos, 2, item->color);
+        }
+    }
+}
 
 /* DOS 1:3c9d8; menu.c:976 */
-/* DO_COMMANDE_PAD: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_COMMANDE_PAD(void) {
+    u8 selected_button;
+    s16 button_index;
+    s16 old_button;
+
+    TestCompteur();
+    selected_button = 4;
+    if (SelectButPressed()) {
+        MENU_RETURN = 1;
+    }
+
+    if (!button_released &&
+        (compteur <= delai_repetition || compteur % repetition != 0)) {
+        goto pad_actions;
+    }
+    if (upjoy()) {
+        PlaySnd_old(0x44);
+        if (position == first_option) {
+            position = option_exit;
+        } else {
+            --position;
+        }
+    } else if (downjoy()) {
+        PlaySnd_old(0x44);
+        if (position == option_exit) {
+            position = first_option;
+        } else {
+            ++position;
+        }
+    }
+
+pad_actions:
+    if (position == 0 && ValidButPressed()) {
+        input_mode = 0;
+        if (!OptionGame) {
+            DO_FADE_OUT();
+        }
+        MAIN_CALIBRATE_JOYSTICK();
+        if (Main_Control == 0) {
+            Mode_Pad = 0xff;
+            is_joypad_mode = 0xff;
+            xpadmax = -1;
+            xpadmin = -1;
+            ypadmax = -1;
+            ypadmin = -1;
+            xpadcentre = -1;
+            ypadcentre = -1;
+            notbut[0] = -1;
+            notbut[1] = -1;
+            notbut[2] = -1;
+            notbut[3] = -1;
+            sortie_options = 1;
+            if (!OptionGame) {
+                DO_FADE_OUT();
+                INIT_OPTIONS_CHOICE();
+                INIT_AFFICHE_ECRAN_OPTIONS();
+                INIT_FADE_IN();
+            } else {
+                INIT_OPTIONS_CHOICE();
+                INIT_AFFICHE_ECRAN_OPTIONS();
+            }
+        }
+        input_mode = 1;
+        readinput();
+        TestButtonReleased();
+        return;
+    }
+
+    if (position >= 1 && position <= 3 && button_released) {
+        input_mode = 0;
+        if (but1pressed() && ((s16*)&options)[position] != 1) {
+            selected_button = 1;
+        } else if (but0pressed() && ((s16*)&options)[position] != 0) {
+            selected_button = 0;
+        } else if (but2pressed() && ((s16*)&options)[position] != 2) {
+            selected_button = 2;
+        } else if (but3pressed() && ((s16*)&options)[position] != 3) {
+            selected_button = 3;
+        }
+
+        if (selected_button != 4) {
+            if (selected_button == ((s16*)&options)[1] ||
+                selected_button == ((s16*)&options)[2] ||
+                selected_button == ((s16*)&options)[3]) {
+                PlaySnd_old(0x44);
+                button_index = 1;
+                while (button_index <= 3 &&
+                       ((s16*)&options)[button_index] != selected_button) {
+                    ++button_index;
+                }
+                old_button = ((s16*)&options)[position];
+                ((s16*)&options)[button_index] = old_button;
+            }
+            ((s16*)&options)[position] = selected_button;
+        }
+    } else if (position == 4 && ValidButPressed() && button_released) {
+        ((s16*)&options)[1] = 1;
+        ((s16*)&options)[2] = 0;
+        ((s16*)&options)[3] = 2;
+    }
+    TestButtonReleased();
+}
 
 /* DOS 1:3cd38; menu.c:981 */
-/* END_PAD_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void END_PAD_SCREEN(void) {
+    menuEtape = 4;
+    if (!MENU_RETURN) {
+        options_jeu.jump = options.sound_volume;
+        options_jeu.fist = options.SizeScreen;
+        options_jeu.action = options.Frequence;
+        POINTEUR_BOUTONS_OPTIONS_BIS();
+    } else {
+        byte_96883 = 0;
+        if (!OptionGame) {
+            DO_FADE_OUT();
+        }
+    }
+}
 
 /* DOS 1:3cd94; menu.c:986 */
-/* InitParamGraphicsScreen: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void InitParamGraphicsScreen(void) {
+    s16 special_world;
+
+    button_released = 1;
+    compteur = 0;
+    max_compteur = 100;
+    delai_repetition = 12;
+    repetition = 6;
+
+    special_world = (s16)(((num_world == 6 && num_level == 4) || is_fee) != 0);
+    if (options.sound_volume == 0 && ModeNormalAutorise && OptionGame) {
+        if (special_world) {
+            position = 5;
+            options.SizeScreen = 4;
+            first_option = 2;
+        } else {
+            position = 4;
+            options.SizeScreen = 3;
+            first_option = 3;
+        }
+        option_exit = 5;
+    } else {
+        position = 5;
+        option_exit = 6;
+        if (OptionGame) {
+            options.SizeScreen = 4;
+            first_option = 3;
+        } else {
+            options.SizeScreen = 5;
+            first_option = 1;
+        }
+    }
+
+    if (first_credit == 0 || first_credit == 1) {
+        byte_E4CFC = 'n';
+    } else if (first_credit == 2) {
+        byte_E4CFC = 'x';
+    }
+    basex = (s16)(160 - byte_E4CFC);
+    if (options.sound_volume == 0 && ModeNormalAutorise && OptionGame) {
+        general_init_screen(20, 5, 60);
+    } else if (FondAutorise == 1 && !OptionGame) {
+        general_init_screen(15, 5, 70);
+    } else {
+        general_init_screen(20, 5, 60);
+    }
+    --nbre_options;
+}
 
 /* DOS 1:3d094; menu.c:991 */
-/* INIT_GRAPHIC_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_GRAPHIC_SCREEN(void) {
+    pINIT_SCREEN = INIT_GRAPHIC_SCREEN;
+    pINIT_AFFICHE_SCREEN = INIT_AFFICHE_GRAPHIC_SCREEN;
+    pAFFICHE_SCREEN = AFFICHE_GRAPHIC_SCREEN;
+    pDO_COMMANDE = DO_COMMANDE_GRAPHIC;
+    pEND_SCREEN = END_GRAPHIC_SCREEN;
+
+    if (GameModeVideo == 0) {
+        byte_E4CFE = 2;
+        options.sound_volume = 0;
+    } else if (GameModeVideo == 1 && P486 == 0) {
+        byte_E4CFE = 1;
+        options.sound_volume = 1;
+    } else {
+        byte_E4CFE = 1;
+        options.sound_volume = 2;
+    }
+
+    options.Frequence = (s16)SizeScreen;
+    options.fixon = Frequence;
+    options.BackgroundOn = (s16)fixon;
+    options.ScrollDiffOn = BackgroundOptionOn;
+    options.field_E = ScrollDiffOn;
+    VideoSpeed = (s16)CalcSpeed();
+    InitParamGraphicsScreen();
+}
 
 /* DOS 1:3d178; menu.c:996 */
-/* INIT_AFFICHE_GRAPHIC_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
+    s16 i;
+    s16 last_option;
+    s16 new_x;
+    s16 new_y;
+    s16 new_w;
+    s16 new_h;
+    s16 left;
+    s16 top;
+    s16 right;
+    s16 bottom;
+    u8 colors[8] = {5, 5, 5, 5, 5, 5, 5, 3};
+    display_item_t* item;
+
+    strcpy(title, language_txt[235]);
+    last_option = (s16)(first_option + nbre_options);
+    for (i = 0; i <= last_option; ++i) {
+        item = &menu_to_display[i];
+        item->font_size = 2;
+        item->field_D5 = 1;
+        item->is_fond = 1;
+        item->color = colors[i];
+        if (i == option_exit) {
+            strcpy(item->text, language_txt[232]);
+            item->xpos = 160;
+            item->ypos = debut_sortie;
+        } else {
+            strcpy(item->text, language_txt[196 + i]);
+            item->xpos = (s16)(basex + 10);
+            item->ypos = (s16)(debut_options +
+                (i - first_option) * (ecart_options + 15));
+        }
+        INIT_TXT_BOX(item);
+    }
+
+    new_x = basex;
+    new_y = (s16)(debut_titre - 25);
+    new_w = (s16)(byte_E4CFC * 2);
+    new_h = (s16)(menu_to_display[option_exit].ypos - debut_titre + 35);
+    left = word_E4CEC_x < new_x ? word_E4CEC_x : new_x;
+    top = word_E4CF0_y < new_y ? word_E4CF0_y : new_y;
+    right = (s16)(word_E4CEC_x + word_E4CF4_w);
+    if (new_x + new_w > right) {
+        right = (s16)(new_x + new_w);
+    }
+    bottom = (s16)(word_E4CF0_y + word_E4CEE_h);
+    if (new_y + new_h > bottom) {
+        bottom = (s16)(new_y + new_h);
+    }
+    word_E4CEC_x = new_x;
+    word_E4CF0_y = new_y;
+    word_E4CF4_w = new_w;
+    word_E4CEE_h = new_h;
+    if (OptionGame) {
+        FonduOption(left, top, (s16)(right - left),
+                    (s16)(bottom - top), 1);
+    } else {
+        FonduPixel(left, top, (s16)(right - left), (s16)(bottom - top));
+    }
+}
 
 /* DOS 1:3d55c; menu.c:1001 */
-/* AFFICHE_GRAPHIC_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_GRAPHIC_SCREEN(void) {
+    s16 i;
+    s16 last_option;
+    s16 x;
+    s16 y;
+    const char* value_text;
+    display_item_t* item;
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_text(title, 160, positionx2, 1, 1);
+    last_option = (s16)(first_option + nbre_options);
+    for (i = first_option; i <= last_option; ++i) {
+        item = &menu_to_display[i];
+        x = item->xpos;
+        y = item->ypos;
+        if (i == position) {
+            display_box_text_plasma(item, 1);
+        } else {
+            display_text(item->text, x, y, 2, item->color);
+        }
+
+        if (i == 1) {
+            value_text = options.fixon ? "on" : "off";
+            display_text(value_text, (s16)(x + byte_E4CFC + 22), y, 2, 5);
+        } else if (i == 2) {
+            value_text = options.BackgroundOn ? "on" : "off";
+            display_text(value_text, (s16)(x + byte_E4CFC + 22), y, 2, 5);
+        } else if (i == 3) {
+            value_text = options.ScrollDiffOn ? "on" : "off";
+            display_text(value_text, (s16)(x + byte_E4CFC + 22), y, 2, 5);
+        } else if (i == 4) {
+            if (options.Frequence == 0) {
+                value_text = "50";
+            } else if (options.Frequence == 1) {
+                value_text = "60";
+            } else {
+                value_text = "max";
+            }
+            display_text(value_text, (s16)(x + byte_E4CFC + 22), y, 2, 5);
+        }
+    }
+}
 
 /* DOS 1:3da8c; menu.c:1006 */
-/* DO_COMMANDE_GRAPHIC: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_COMMANDE_GRAPHIC(void) {
+    u8 changed;
+    s16 selected_mode;
+
+    TestCompteur();
+    changed = 0;
+    menuEtape = 4;
+    if (SelectButPressed()) {
+        MENU_RETURN = 1;
+    }
+    if (button_released ||
+        (compteur > delai_repetition && compteur % repetition == 0)) {
+        if (upjoy()) {
+            PlaySnd_old(0x44);
+            if (position == first_option) {
+                position = option_exit;
+            } else if (options.sound_volume != 0 && position == 3) {
+                position = 1;
+            } else {
+                --position;
+            }
+        } else if (downjoy()) {
+            PlaySnd_old(0x44);
+            if (position == option_exit) {
+                position = first_option;
+            } else if (options.sound_volume != 0 && position == 1) {
+                position = 3;
+            } else {
+                ++position;
+            }
+        }
+    }
+
+    if (options.sound_volume == 0 && position == 2 &&
+        !downjoy() && !upjoy() && button_released) {
+        if (leftjoy() && options.SizeScreen < 3) {
+            ++options.SizeScreen;
+            changed = 1;
+        } else if (rightjoy()) {
+            if (options.SizeScreen > 0) {
+                --options.SizeScreen;
+            } else {
+                options.SizeScreen = 3;
+            }
+            changed = 1;
+        }
+        if (changed) {
+            set_xywhmap(TabW1[options.SizeScreen], TabW2[options.SizeScreen],
+                        TabH1[options.SizeScreen], TabH2[options.SizeScreen]);
+        }
+    }
+
+    if (position == 6 && !OptionGame && button_released &&
+        (ValidButPressed() || rightjoy() || leftjoy())) {
+        options.ScrollDiffOn = (s16)(options.ScrollDiffOn == 0);
+        changed = 1;
+    }
+
+    if (position == 3 && !downjoy() && !upjoy() && button_released) {
+        selected_mode = options.Frequence;
+        if (rightjoy() || ValidButPressed()) {
+            if (GameModeVideo == 1 && selected_mode < byte_E4CFE) {
+                ++selected_mode;
+            } else {
+                selected_mode = 0;
+            }
+            options.Frequence = selected_mode;
+            NewFrequency((u8)selected_mode);
+            changed = 1;
+        } else if (leftjoy()) {
+            if (selected_mode > 0) {
+                --selected_mode;
+            } else {
+                selected_mode = byte_E4CFE;
+            }
+            options.Frequence = selected_mode;
+            NewFrequency((u8)selected_mode);
+            changed = 1;
+        }
+    }
+
+    if (position >= 4 && position < option_exit && position != 6 &&
+        button_released && (ValidButPressed() || rightjoy() || leftjoy())) {
+        ((s16*)&options)[position] =
+            (s16)(((s16*)&options)[position] == 0);
+        changed = 1;
+    }
+
+    if (position == 5 && !OptionGame && options.BackgroundOn == 0 &&
+        options.SizeScreen == 0) {
+        options.SizeScreen = 1;
+        byte_E4CFE = 1;
+        P486 = 0;
+        if (options.Frequence == 2) {
+            options.Frequence = 0;
+        }
+        InitParamGraphicsScreen();
+        position = 5;
+        INIT_AFFICHE_GRAPHIC_SCREEN();
+        FonduPixel(18, (s16)(debut_titre + 14), 270,
+                   (s16)(menu_to_display[option_exit].ypos - debut_titre - 36));
+        changed = 1;
+    }
+
+    if (position == 1 && ValidButPressed() && button_released) {
+        menuEtape = 10;
+        sortie_options = 1;
+    }
+    if (changed) {
+        VideoSpeed = (s16)CalcSpeed();
+    }
+    TestButtonReleased();
+}
 
 /* DOS 1:3df88; menu.c:1011 */
-/* END_GRAPHIC_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void END_GRAPHIC_SCREEN(void) {
+    if (!MENU_RETURN) {
+        SizeScreen = options.SizeScreen;
+        Frequence = (u8)options.Frequence;
+        fixon = (u16)options.fixon;
+        BackgroundOptionOn = (u8)options.BackgroundOn;
+        BackgroundOn = IsBackgroundOn();
+        ScrollDiffOn = (u8)options.ScrollDiffOn;
+        if ((u16)options.sound_volume < 1) {
+            GameModeVideo = 0;
+            P486 = 0;
+        } else if ((u16)options.sound_volume <= 1) {
+            GameModeVideo = 1;
+            P486 = 0;
+        } else if (options.sound_volume == 2) {
+            GameModeVideo = 1;
+            P486 = 1;
+        }
+    } else {
+        byte_96883 = 0;
+        if (GameModeVideo == MODE_NORMAL) {
+            set_xywhmap(TabW1[SizeScreen], TabW2[SizeScreen], TabH1[SizeScreen], TabH2[SizeScreen]);
+        }
+        WaitNSynchro(25);
+        NewFrequency(Frequence);
+        if (!OptionGame) {
+            DO_FADE_OUT();
+        }
+    }
+}
 
 /* DOS 1:3e0a0; menu.c:1016 */
-/* INIT_VIDEOMODE_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_VIDEOMODE_SCREEN(void) {
+    pINIT_SCREEN = INIT_VIDEOMODE_SCREEN;
+    pINIT_AFFICHE_SCREEN = INIT_AFFICHE_VIDEOMODE_SCREEN;
+    pAFFICHE_SCREEN = AFFICHE_VIDEOMODE_SCREEN;
+    pDO_COMMANDE = DO_COMMANDE_VIDEOMODE;
+    pEND_SCREEN = END_VIDEOMODE_SCREEN;
+    button_released = 1;
+    compteur = 0;
+    max_compteur = 100;
+    delai_repetition = 12;
+    repetition = 6;
+    position = 3;
+    option_exit = 3;
+    nbre_options = 3;
+    first_option = 0;
+    general_init_screen(15, 68, 5);
+    options.music_enabled = 0;
+    options.sound_volume = 0;
+    options.SizeScreen = 0;
+    if (GameModeVideo == MODE_NORMAL) {
+        options.music_enabled = 1;
+    } else if (GameModeVideo == 1 && !P486) {
+        options.sound_volume = 1;
+    } else {
+        options.SizeScreen = 1;
+    }
+    if (language <= 2) {
+        byte_E4CFC = 0x8c;
+    }
+    basex = 160 - byte_E4CFC;
+}
 
 /* DOS 1:3e1cc; menu.c:1021 */
-/* INIT_AFFICHE_VIDEOMODE_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
+    s16 i;
+    s16 left;
+    s16 top;
+    s16 right;
+    s16 bottom;
+    s16 new_x;
+    s16 new_y;
+    s16 new_w;
+    s16 new_h;
+    u8 color[4] = {5, 5, 5, 3};
+    display_item_t* item;
+
+    text_to_display[0].font_size = 2;
+    text_to_display[0].field_D5 = 0;
+    text_to_display[0].is_fond = 1;
+    text_to_display[0].color = 1;
+
+    strcpy(title, language_txt[203]);
+    for (i = 0; i <= first_option + nbre_options; ++i) {
+        item = &menu_to_display[i];
+        item->xpos = 160;
+        item->font_size = 2;
+        item->is_fond = 1;
+        item->field_D5 = 1;
+        if (i == option_exit) {
+            strcpy(item->text, language_txt[232]);
+            item->ypos = debut_sortie;
+            item->color = color[3];
+        } else {
+            strcpy(item->text, language_txt[223 + i]);
+            item->ypos = (s16)(debut_options + i * (ecart_options + 15));
+            item->color = color[i];
+        }
+        INIT_TXT_BOX(item);
+    }
+
+    new_x = basex;
+    new_y = (s16)(debut_titre - 25);
+    new_w = (s16)(byte_E4CFC * 2);
+    new_h = (s16)(menu_to_display[option_exit].ypos - debut_titre + 35);
+    left = word_E4CEC_x < new_x ? word_E4CEC_x : new_x;
+    top = word_E4CF0_y < new_y ? word_E4CF0_y : new_y;
+    right = word_E4CEC_x + word_E4CF4_w;
+    if (new_x + new_w > right) {
+        right = (s16)(new_x + new_w);
+    }
+    bottom = word_E4CF0_y + word_E4CEE_h;
+    if (new_y + new_h > bottom) {
+        bottom = (s16)(new_y + new_h);
+    }
+    word_E4CEC_x = new_x;
+    word_E4CF0_y = new_y;
+    word_E4CF4_w = new_w;
+    word_E4CEE_h = new_h;
+    if (OptionGame) {
+        FonduOption(left, top, (s16)(right - left),
+                    (s16)(bottom - top), 1);
+    } else {
+        FonduPixel(left, top, (s16)(right - left), (s16)(bottom - top));
+    }
+}
 
 /* DOS 1:3e470; menu.c:1026 */
-/* AFFICHE_VIDEOMODE_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_VIDEOMODE_SCREEN(void) {
+    u8 i;
+    u8 color;
+    display_item_t* item;
+
+    DISPLAY_FOND_MENU();
+    display_text(title, 160, debut_titre, 1, 1);
+    for (i = first_option; i <= first_option + nbre_options; ++i) {
+        item = &menu_to_display[i];
+        if (i < 3 && ((s16*)&options)[i] != 0) {
+            color = 1;
+        } else {
+            color = item->color;
+        }
+        if (i == position) {
+            item->field_D5 = color;
+            INIT_TXT_BOX(item);
+            display_box_text_plasma(item, 1);
+        } else {
+            display_text(item->text, item->xpos, item->ypos, 2, color);
+        }
+    }
+}
 
 /* DOS 1:3e574; menu.c:1031 */
-/* DO_COMMANDE_VIDEOMODE: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_COMMANDE_VIDEOMODE(void) {
+    u8 active_option;
+
+    TestCompteur();
+    if (SelectButPressed()) {
+        MENU_RETURN = 1;
+    }
+    if (!button_released &&
+        (compteur <= delai_repetition || compteur % repetition != 0)) {
+        goto video_action;
+    }
+    if (upjoy()) {
+        PlaySnd_old(0x44);
+        if (position == first_option) {
+            position = option_exit;
+        } else {
+            --position;
+        }
+    } else if (downjoy()) {
+        PlaySnd_old(0x44);
+        if (position == option_exit) {
+            position = first_option;
+        } else {
+            ++position;
+        }
+    }
+
+video_action:
+    if (position >= 0 && position <= 2 && button_released &&
+        (ValidButPressed() || rightjoy() || leftjoy())) {
+        for (active_option = 0; ((s16*)&options)[active_option] == 0; ++active_option) {
+        }
+        if (active_option != position) {
+            ((s16*)&options)[position] = ((s16*)&options)[position] == 0;
+            ((s16*)&options)[active_option] = ((s16*)&options)[active_option] == 0;
+        }
+    }
+    TestButtonReleased();
+}
 
 /* DOS 1:3e708; menu.c:1036 */
-/* END_VIDEOMODE_SCREEN: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void END_VIDEOMODE_SCREEN(void) {
+    if (!MENU_RETURN) {
+        if (options.music_enabled != 0) {
+            GameModeVideo = 0;
+            P486 = 0;
+            BackgroundOptionOn = 1;
+        } else if (options.sound_volume != 0) {
+            P486 = 0;
+            GameModeVideo = 1;
+            if (Frequence == 2) {
+                goto reset_frequency;
+            }
+        } else {
+            GameModeVideo = 1;
+            P486 = 1;
+            if (Frequence == 2) {
+                goto reset_frequency;
+            }
+        }
+    }
+    goto menu_exit;
+
+reset_frequency:
+    Frequence = 0;
+    NewFrequency(0);
+menu_exit:
+    menuEtape = 9;
+}
 
 /* DOS 1:3e790; menu.c:1041 */
-/* INIT_CALIBRATE_JOYSTICK: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void INIT_CALIBRATE_JOYSTICK(s16* xmax, s16* xmin, s16* ymax, s16* ymin) {
+    *xmax = 200;
+    *xmin = 0;
+    *ymax = 200;
+    *ymin = 0;
+    memcpy(text_to_display[0].text, language_txt[236], 70);
+    text_to_display[0].xpos = 160;
+    text_to_display[0].ypos = 36;
+    text_to_display[0].font_size = 1;
+    text_to_display[0].field_D5 = 0;
+    text_to_display[0].is_fond = 1;
+    text_to_display[0].color = 0;
+    INIT_TXT_BOX(&text_to_display[0]);
+}
 
 /* DOS 1:3e804; menu.c:1046 */
-/* AFFICHE_CALIBRATE_JOYSTICK: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_CALIBRATE_JOYSTICK(void) {
+    u8 i;
+    char number[12];
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_box_text_plasma(&text_to_display[0], 1);
+    display_text("/......./", 155, 98, 1, 5);
+    for (i = 0; i < 7; ++i) {
+        display_text(".", 150, (s16)(74 + i * 8), 1, 5);
+    }
+    itoa_dos(xpadmax / 10, number, 10);
+    display_text(number, 198, 98, 2, 5);
+    itoa_dos(xpadmin / 10, number, 10);
+    display_text(number, 105, 98, 2, 5);
+    itoa_dos(ypadmin / 10, number, 10);
+    display_text(number, 150, 64, 2, 5);
+    itoa_dos(ypadmax / 10, number, 10);
+    display_text(number, 150, 138, 2, 5);
+    display_text(language_txt[134], 160, 160, 2, 5);
+}
 
 /* DOS 1:3e99c; menu.c:1051 */
-/* calibrate_joystick_prg: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+s16 calibrate_joystick_prg(u32 a1) {
+    (void)a1;
+    readinput_calibrate_joystick(&xpadmax, &xpadmin, &ypadmax, &ypadmin);
+    AFFICHE_CALIBRATE_JOYSTICK();
+    {
+        u32 done = 0;
+        done += ValidButPressed();
+        if (TOUCHE(1)) {
+            Main_Control = 0;
+            done = 1;
+        }
+        return done;
+    }
+}
 
 /* DOS 1:3e9e8; menu.c:1056 */
-/* AFFICHE_CENTER_JOYSTICK: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void AFFICHE_CENTER_JOYSTICK(void) {
+    char number[12];
+
+    DISPLAY_FOND_MENU();
+    if (OptionGame) {
+        CadreTrans(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h);
+    }
+    display_box_text_plasma(&text_to_display[0], 1);
+    display_text(language_txt[133], 160, 100, 2, 5);
+    itoa_dos((xpadcentre / 20) * 2, number, 10);
+    display_text(number, 130, 120, 2, 5);
+    itoa_dos((ypadcentre / 20) * 2, number, 10);
+    display_text(number, 180, 120, 2, 5);
+    display_text(language_txt[135], 160, 160, 2, 5);
+}
 
 /* DOS 1:3eae8; menu.c:1061 */
-/* center_joystick_prg: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+s16 center_joystick_prg(u32 a1) {
+    (void)a1;
+    readinput_center_joystick(&xpadcentre, &ypadcentre);
+    AFFICHE_CENTER_JOYSTICK();
+    {
+        u32 done = 0;
+        done += ValidButPressed();
+        if (TOUCHE(1)) {
+            Main_Control = 0;
+            done = 1;
+        }
+        return done;
+    }
+}
 
 /* DOS 1:3eb28; menu.c:1066 */
-/* MAIN_CALIBRATE_JOYSTICK: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void MAIN_CALIBRATE_JOYSTICK(void) {
+    DoCdRap();
+    if (pINIT_SCROLL != 0) {
+        (*pINIT_SCROLL)();
+    }
+    InitPlasma(0);
+    INIT_CALIBRATE_JOYSTICK(&xpadmax, &xpadmin, &ypadmax, &ypadmin);
+    if (!OptionGame) {
+        INIT_FADE_IN();
+    } else {
+        pAFFICHE_SCREEN = AFFICHE_CALIBRATE_JOYSTICK;
+        FonduOption(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w,
+                    word_E4CEE_h, 1);
+    }
+
+    if (Main_Control) {
+        SYNCHRO_LOOP(calibrate_joystick_prg);
+    }
+    if (!OptionGame) {
+        DO_FADE_OUT();
+        INIT_FADE_IN();
+    }
+    if (Main_Control) {
+        pAFFICHE_SCREEN = AFFICHE_CENTER_JOYSTICK;
+        FonduOption(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w,
+                    word_E4CEE_h, 1);
+        SYNCHRO_LOOP(center_joystick_prg);
+    }
+    if (!OptionGame) {
+        DO_FADE_OUT();
+        INIT_FADE_IN();
+    }
+    if (Main_Control) {
+        INIT_AFFICHE_BUTTON_SCREEN();
+        pAFFICHE_SCREEN = AFFICHE_BUTTON_JOYSTICK;
+        FonduOption(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w,
+                    word_E4CEE_h, 1);
+    }
+
+    update_pad_limits(&xpadmax, &xpadmin, &ypadmax, &ypadmin,
+                      &xpadcentre, &ypadcentre);
+    if (Main_Control) {
+        pINIT_SCREEN = INIT_BUTTON_SCREEN;
+        if (OptionGame) {
+            DO_INTER_MENU();
+        } else {
+            DO_MENU();
+        }
+        if (!OptionGame) {
+            DO_FADE_OUT();
+        }
+        INIT_PAD_SCREEN();
+        INIT_AFFICHE_PAD_SCREEN();
+        if (!OptionGame) {
+            INIT_FADE_IN();
+        }
+    }
+    if (pINIT_SCROLL != 0) {
+        (*pINIT_SCROLL)();
+    }
+    Keyflush();
+}
 
 /* DOS 1:3f17c; menu.c:1071 */
 s16 menu_prg(u32 a1) {
@@ -1102,7 +2667,6 @@ s16 menu_prg(u32 a1) {
         }
     }
     if (pad_limits_changed) {
-        // NOTE: this is not present in the Android version.
         update_pad_limits(&xpadmax, &xpadmin, &ypadmax, &ypadmin, &xpadcentre, &ypadcentre);
     }
     if (pAFFICHE_SCREEN) {
@@ -1110,7 +2674,8 @@ s16 menu_prg(u32 a1) {
     }
     if (ReInitPlasma) {
         ReInitPlasma = 0;
-        advance_frame();
+        endsynchro();
+        synchro();
         InitPlasma(1);
         SWAP_BUFFERS();
     }
@@ -1133,7 +2698,18 @@ s16 menu_prg(u32 a1) {
 }
 
 /* DOS 1:3f2e0; menu.c:1124 */
-/* DO_INTER_MENU: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+void DO_INTER_MENU(void) {
+    if (pINIT_SCREEN != 0) {
+        (*pINIT_SCREEN)();
+    }
+    if (pINIT_AFFICHE_SCREEN != 0) {
+        (*pINIT_AFFICHE_SCREEN)();
+    }
+    SYNCHRO_LOOP(menu_prg);
+    if (pEND_SCREEN != 0) {
+        (*pEND_SCREEN)();
+    }
+}
 
 /* DOS 1:3f318; menu.c:1129 */
 void DO_MENU(void) {
@@ -1155,21 +2731,21 @@ void DO_MENU(void) {
         palette = rvb_special + numero_palette_special;
     } else {
         palette = rvb + current_pal_id;
-        rvb[current_pal_id] = rvb_plan3;
+        memcpy(&rvb[current_pal_id], &rvb_plan3, 768);
     }
-    menu_rvb = *palette;
+    memcpy(&menu_rvb, palette, 768);
     InitGauge(); // TODO
     InitPlasma(0); // TODO
     SYNCHRO_LOOP(menu_prg);
     if (pEND_SCREEN) {
         pEND_SCREEN();
     }
-    menu_rvb = rvb[current_pal_id];
+    memcpy(&menu_rvb, &rvb[current_pal_id], 768);
 }
 
 /* DOS 1:3f488; menu.c:1161 */
 void default_key(void) {
-    s32 i;
+    s16 i;
     check_key_table();
     for (i = 0; i < 7; ++i) {
         tab_key_sav[i] = *(tab_key[i]);
@@ -1192,7 +2768,51 @@ void new_key(void) {
 }
 
 /* DOS 1:3f50c; menu.c:1183 */
-/* CalcSpeed: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+s32 CalcSpeed(void) {
+    s32 table_index;
+    s32 sprite_speed;
+    s32 speed;
+
+    if (options.sound_volume == 0) {
+        if (options.Frequence == 2) {
+            speed = 0;
+        } else {
+            table_index = options.Frequence * 4 + options.SizeScreen;
+            speed = tRefSpriteNormal[options.Frequence];
+            if (options.fixon != 0) {
+                speed += tRefRam2VramNormalFix[table_index];
+            } else {
+                speed += tRefRam2VramNormal[table_index];
+            }
+            if (options.ScrollDiffOn != 0) {
+                speed += (s32)tRefTransFondNormal[table_index] * 2;
+            } else {
+                speed += tRefTransFondNormal[table_index];
+            }
+        }
+    } else {
+        sprite_speed = tRefSpriteX[options.Frequence];
+        speed = sprite_speed + (sprite_speed >> 1);
+        if (options.fixon != 0) {
+            speed += sprite_speed >> 3;
+        }
+        if (options.BackgroundOn != 0) {
+            if (P486 != 0) {
+                speed += tRefVram2VramX[options.Frequence];
+            } else {
+                speed += tRefRam2VramX[options.Frequence];
+            }
+        }
+    }
+
+    if (VideoSpeed > 0x100) {
+        return 0x80;
+    }
+    if (speed < 0x80) {
+        return 0x100;
+    }
+    return (0x100 - speed) + 0x80;
+}
 
 /* DOS 1:3f698; menu.c:1189 */
 void general_init_screen(s16 a1, s16 a2, s16 a3) {
@@ -1308,20 +2928,19 @@ void display_box_msg_commande(display_item_t* box, void (*commande_box_func)(voi
 
 /* DOS 1:3f9f0; menu.c:1303 */
 void AfficheYesNo(void) {
-    display_item_t* to_display = dialog_display_item_ptr;
     if (pos_YN == 0) {
-        display_text(language_txt[147], to_display->xpos - 25, to_display->centered_y_pos + to_display->height, 2, 1);
-        display_text(language_txt[148], to_display->xpos + 35, to_display->centered_y_pos + to_display->height, 2, 0);
+        display_text(language_txt[147], dialog_display_item_ptr->xpos - 25, dialog_display_item_ptr->centered_y_pos + dialog_display_item_ptr->height, 2, 1);
+        display_text(language_txt[148], dialog_display_item_ptr->xpos + 35, dialog_display_item_ptr->centered_y_pos + dialog_display_item_ptr->height, 2, 0);
     } else {
-        display_text(language_txt[147], to_display->xpos - 25, to_display->centered_y_pos + to_display->height, 2, 0);
-        display_text(language_txt[148], to_display->xpos + 35, to_display->centered_y_pos + to_display->height, 2, 1);
+        display_text(language_txt[147], dialog_display_item_ptr->xpos - 25, dialog_display_item_ptr->centered_y_pos + dialog_display_item_ptr->height, 2, 0);
+        display_text(language_txt[148], dialog_display_item_ptr->xpos + 35, dialog_display_item_ptr->centered_y_pos + dialog_display_item_ptr->height, 2, 1);
     }
 }
 
 /* DOS 1:3fac4; menu.c:1315 */
 void DO_YESNOBIS(void) {
     TestCompteur();
-    if ((leftjoy() || rightjoy()) && !(downjoy() || upjoy())) {
+    if ((leftjoy() || rightjoy()) && !downjoy() && !upjoy()) {
         if (button_released || (compteur > delai_repetition && (compteur % repetition == 0))) {
             pos_YN = !pos_YN;
             PlaySnd_old(68);
@@ -1339,58 +2958,146 @@ void DO_YESNOBIS(void) {
 }
 
 /* DOS 1:3fb94; menu.c:1335 */
-/* confirmation_msg: OPEN - no usable DOS C body; Rayverse body depends on a port-only state object or is a stub. */
+#define COPY_CONFIRMATION_TEXT(index) do { \
+    char *copy_src = language_txt[(index)]; \
+    char *copy_dst = msg_to_display[1].text; \
+    for (;;) { \
+        *copy_dst = *copy_src; \
+        if (*copy_src == 0) break; \
+        copy_dst[1] = copy_src[1]; \
+        copy_dst += 2; \
+        copy_src += 2; \
+    } \
+} while (0)
+u8 confirmation_msg(u8 which_message) {
+    msg_to_display[1].xpos = 160;
+    msg_to_display[1].ypos = 100;
+    msg_to_display[1].font_size = 2;
+    msg_to_display[1].is_fond = 2;
+    msg_to_display[1].field_D5 = 0;
+    switch (which_message) {
+        case 0:
+            pos_YN = 1;
+            if (OptionGame) {
+                COPY_CONFIRMATION_TEXT(131);
+            } else {
+                COPY_CONFIRMATION_TEXT(132);
+            }
+            INIT_TXT_BOX(&msg_to_display[1]);
+            display_box_msg_commande(&msg_to_display[1], DO_YESNOBIS);
+            break;
+        case 1:
+            pos_YN = 1;
+            pAFFICHE_SCREEN = AFFICHE_ECRAN_SAVE;
+            COPY_CONFIRMATION_TEXT(129);
+            INIT_TXT_BOX(&msg_to_display[1]);
+            display_box_msg_commande(&msg_to_display[1], DO_YESNOBIS);
+            break;
+        case 2:
+            pos_YN = 1;
+            pAFFICHE_SCREEN = AFFICHE_ECRAN_SAVE;
+            COPY_CONFIRMATION_TEXT(130);
+            INIT_TXT_BOX(&msg_to_display[1]);
+            display_box_msg_commande(&msg_to_display[1], DO_YESNOBIS);
+            break;
+        case 3: {
+            s32 i;
+            default_key();
+            pos_YN = 1;
+            rvb_menu_save = rvb[0];
+            InitMenuPalette();
+            CaptureVideo(display_buffer, 1);
+            DO_FADE_OUT();
+            for (i = 0; i < 16000; ++i) {
+                ((u32*)display_buffer)[i] = 0;
+            }
+            rvb[0] = MenuPalette;
+            INIT_FADE_IN();
+            COPY_CONFIRMATION_TEXT(130);
+            pAFFICHE_SCREEN = DISPLAY_FOND_MENU;
+            INIT_TXT_BOX(&msg_to_display[1]);
+            display_box_msg_commande(&msg_to_display[1], DO_YESNOBIS);
+            DO_FADE_OUT();
+            rvb[0] = rvb_menu_save;
+            INIT_FADE_IN();
+            new_key();
+            break;
+        }
+        case 4: {
+            s32 i;
+            default_key();
+            pos_YN = 1;
+            rvb_menu_save = rvb[0];
+            InitMenuPalette();
+            CaptureVideo(display_buffer, 1);
+            DO_FADE_OUT();
+            for (i = 0; i < 16000; ++i) {
+                ((u32*)display_buffer)[i] = 0;
+            }
+            rvb[0] = MenuPalette;
+            INIT_FADE_IN();
+            COPY_CONFIRMATION_TEXT(131);
+            pAFFICHE_SCREEN = DISPLAY_FOND_MENU;
+            INIT_TXT_BOX(&msg_to_display[1]);
+            display_box_msg_commande(&msg_to_display[1], DO_YESNOBIS);
+            DO_FADE_OUT();
+            rvb[0] = rvb_menu_save;
+            INIT_FADE_IN();
+            ReInitPlasma = 0;
+            new_key();
+            break;
+        }
+        default:
+            break;
+    }
+    return pos_YN == 0;
+}
+#undef COPY_CONFIRMATION_TEXT
 
 /* DOS 1:3fef0; menu.c:1413 */
 void SYNCHRO_LOOP_PALETTE(synchro_loop_palette_func_t func) {
-    s16 ended = 0;
-    u32 timer = 0;
+    u16 i;
     do {
         endsynchro();
         synchro();
-        SetPalette(&rvb_E40AC, 0, 256);
-        timer = 0;
-        ended = func();
-    } while(!ended);
+        outp(0x3c8, 0);
+        _disable();
+        for (i = 0; i < 256 * 3; ++i) {
+            outp(0x3c9, ((u8*)&rvb_E40AC)[i]);
+        }
+        _enable();
+        SWAP_BUFFERS();
+    } while (func() == 0);
 }
 
 /* DOS 1:3ff3c; menu.c:1426 */
 s16 apparition_prg(u32 a1) {
-    s32 w, h, src_row_skip, yoff, yoff_end;
+    s16 row_skip, yoff;
+    s32 xoff, dst_y, dst_x;
     u8* src;
     (void)a1;
-    w = wFondu;
-    h = hFondu;
-    src_row_skip = SCREEN_WIDTH - w;
+    row_skip = SCREEN_WIDTH - wFondu;
 
     DoCdRap();
     DISPLAY_FOND_MENU();
 
     src = EffetBufferNormal + (SCREEN_WIDTH * SCREEN_HEIGHT) + yFondu * SCREEN_WIDTH + xFondu;
 
-    yoff = -((h-1)/2);
-    yoff_end = h/2;
-
-    while (yoff < yoff_end) {
-        s32 dst_y = (SCREEN_HEIGHT/2) + EtapeFondu * yoff;
+    yoff = -((hFondu-1)/2);
+    while (yoff < hFondu/2) {
+        dst_y = (SCREEN_HEIGHT/2) + EtapeFondu * yoff;
 
         if (dst_y > Bloc_lim_H1 && dst_y < Bloc_lim_H2) {
-            u8* dst_row = (u8*)DrawBufferNormal + dst_y * SCREEN_WIDTH;
-
-            s32 xoff = -((w-1)/2);
-            s32 xoff_end = w/2;
-            u8* s = src;
-            while (xoff < xoff_end) {
-                s32 dst_x = (SCREEN_WIDTH/2) + EtapeFondu * xoff;
-
+            xoff = -((wFondu-1)/2);
+            while (xoff < wFondu/2) {
+                dst_x = (SCREEN_WIDTH/2) + EtapeFondu * xoff;
                 if (dst_x > Bloc_lim_W1 && dst_x < Bloc_lim_W2) {
-                    dst_row[dst_x] = *s;
+                    DrawBufferNormal[dst_y * SCREEN_WIDTH + dst_x] = *src;
                 }
                 ++xoff;
-                ++s;
+                ++src;
             }
-
-            src += w + src_row_skip; // advance exactly one source scanline
+            src += wFondu + row_skip;
         } else {
             src += SCREEN_WIDTH; // skip full source scanline
         }
@@ -1449,24 +3156,37 @@ s16 fondu_prg(u32 a1) {
 
 /* DOS 1:401e8; menu.c:1518 */
 s16 change_couleur_prg(void) {
-    s32 i, c;
     s16 done = 1;
+    s16 i;
     for (i = 0; i < 256; ++i) {
-        rgb_t* rgb_cur = rvb_E40AC.colors + i;
-        rgb_t* rgb_goal = rvb_menu_save.colors + i;
-        for (c = 0; c < 3; ++c) {
-            u8* cur = ((u8*)rgb_cur) + c;
-            u8 goal = ((u8*)rgb_goal)[c];
-            if (*cur == goal) {
-                continue;
-            }
+        if (rvb_E40AC.colors[i].r != rvb_menu_save.colors[i].r) {
             done = 0;
-            if (*cur > goal + 2) {
-                *cur -= 2;
-            } else if (*cur + 2 < goal) {
-                *cur += 2;
+            if (rvb_E40AC.colors[i].r > rvb_menu_save.colors[i].r + 2) {
+                rvb_E40AC.colors[i].r -= 2;
+            } else if (rvb_E40AC.colors[i].r < rvb_menu_save.colors[i].r - 2) {
+                rvb_E40AC.colors[i].r += 2;
             } else {
-                *cur = goal;
+                rvb_E40AC.colors[i].r = rvb_menu_save.colors[i].r;
+            }
+        }
+        if (rvb_menu_save.colors[i].g != rvb_E40AC.colors[i].g) {
+            done = 0;
+            if (rvb_E40AC.colors[i].g > rvb_menu_save.colors[i].g + 2) {
+                rvb_E40AC.colors[i].g -= 2;
+            } else if (rvb_E40AC.colors[i].g < rvb_menu_save.colors[i].g - 2) {
+                rvb_E40AC.colors[i].g += 2;
+            } else {
+                rvb_E40AC.colors[i].g = rvb_menu_save.colors[i].g;
+            }
+        }
+        if (rvb_E40AC.colors[i].b != rvb_menu_save.colors[i].b) {
+            done = 0;
+            if (rvb_E40AC.colors[i].b > rvb_menu_save.colors[i].b + 2) {
+                rvb_E40AC.colors[i].b -= 2;
+            } else if (rvb_E40AC.colors[i].b < rvb_menu_save.colors[i].b - 2) {
+                rvb_E40AC.colors[i].b += 2;
+            } else {
+                rvb_E40AC.colors[i].b = rvb_menu_save.colors[i].b;
             }
         }
     }
@@ -1490,14 +3210,14 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode) {
             InOut = 1;
             break;
     }
-    xFondu = (x & ~3) + 4;
+    xFondu = x - (x & 3) + 4;
     yFondu = y;
-    wFondu = (w & ~3) + 6;
+    wFondu = w - (w & 3) + 6;
     hFondu = h + 2;
 
     if (mode == 0) {
         if (GameModeVideo == MODE_NORMAL) {
-            CaptureVideo(draw_buffer, EffetBufferNormal, 1);
+            CaptureVideo(draw_buffer, 1);
             if (RayEvts.firefly) {
                 set_xywhmap(TabW1[0], TabW2[0], TabH1[0], TabH2[0]);
                 sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
@@ -1507,7 +3227,7 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode) {
             sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
             N_CLRSCR(DrawBufferNormal);
         } else {
-            CaptureVideo(display_buffer, EffetBufferNormal, 1);
+            CaptureVideo(display_buffer, 1);
             DO_FADE_OUT();
             InitModeNormalWithFrequency(VGA_FREQ);
             NewFrequency(Frequence);
@@ -1527,8 +3247,7 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode) {
         DISPLAY_FOND_MENU();
     } else if (mode == 1) {
         for (i = 0; i < 256; ++i) {
-            rgb_t rgb = MenuPalette.colors[i];
-            u8 gray = ((rgb.r + rgb.g + rgb.b) >> 2) / 3 + 128;
+            u8 gray = ((MenuPalette.colors[i].r + MenuPalette.colors[i].g + MenuPalette.colors[i].b) >> 2) / 3 + 128;
             rvb_menu_save.colors[i] = MenuPalette.colors[gray];
         }
         rvb_E40AC = MenuPalette;
@@ -1620,9 +3339,9 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode) {
 /* DOS 1:40a38; menu.c:1685 */
 s16 FonduPixel_prg(u32 arg) {
     s32 line_offset = 320 - wFondu;
-    s16 row = 0;
+    s32 row = 0;
     s32 phase = 0;
-    s16 column;
+    s32 column;
     u8 *src = DrawBufferNormal + (320 * yFondu) + line_offset;
     u8 *dst = EffetBufferNormal + 64000 + xFondu;
 
