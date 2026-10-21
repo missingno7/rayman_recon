@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d4_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d5_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -1046,15 +1046,17 @@ void display_text(const char* text, s16 x, s16 y, u8 font_size, u8 color) {
     }
 }
 
+/* STRICT: DOS 1:0a68c..0a8dc. Short metric/baseline lifetimes and the
+ * grouped font switch reproduce the complete 592-byte public extent. */
 void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color, s16 rotation, s16 enx, s16 eny) {
-    s32 line_height;
-    s16 char_spacing;
+    s16 line_height;
     s16 space_width;
+    s16 char_spacing;
     u32 number;
     s16 current_x;
     sprite_t *sprite;
     s16 index;
-    s32 current_y;
+    s16 current_y;
     s32 let_width;
     number = 0;
     if (font_size == 2) { line_height = 15; char_spacing = 1; space_width = 8; }
@@ -1072,23 +1074,26 @@ void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color,
                 number = 0;
                 current_x += space_width;
             } else {
-                number = deter_num_let((u8)text[index], text + index + 1);
+                number = deter_num_let((u8)text[index], text + (index + 1));
             }
             if (number != 0) {
                 let_width = calc_let_Width(font_size, number);
                 calc_num_let_spr(font_size, (u8*)&number);
                 if (number >= 1000) {
-                    sprite = alpha_numbers.sprites + number - 1000;
+                    sprite = alpha_numbers.sprites + (number - 1000);
                     DISPLAY_DEFORM_SPRITE(sprite, alpha_numbers.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
                     index += 3;
                 }
-                else if (font_size <= 1) {
+                else switch (font_size) {
+                case 0:
+                case 1:
                     sprite = alpha2.sprites + number;
                     DISPLAY_DEFORM_SPRITE(sprite, alpha2.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
-                }
-                else if (font_size == 2) {
+                    break;
+                case 2:
                     sprite = alpha.sprites + number;
                     DISPLAY_DEFORM_SPRITE(sprite, alpha.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                    break;
                 }
                 current_x += sprite->sprite_pos.bits.x + sprite->inner_width - char_spacing;
             }

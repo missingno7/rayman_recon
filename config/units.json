@@ -10518,7 +10518,7 @@
      ]
     },
     "display_deform_text": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
