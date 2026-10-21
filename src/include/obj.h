@@ -21,9 +21,12 @@ typedef struct eta_t {
     u8 anim_index;
     u8 next_main_etat;
     u8 next_sub_etat;
-    u8 anim_speed;
+    union { u8 anim_speed; struct { u8 low : 4; u8 high : 4; } anim_speed_bits; };   /* nibble view (ray RAY_HELICO) */
     u8 sound_index;
-    u8 flags;
+    union {                            /* bit view PROVEN by ray RAY_RESPOND_TO_DOWN (bitfield vs mask control) */
+        u8 flags;
+        struct { u8 bit0:1; u8 bit1:1; u8 bit2:1; u8 bit3:1; u8 bit4:1; u8 bit5:1; u8 bit6:1; u8 bit7:1; } flags_bits;
+    };
 } eta_t;
 
 typedef struct sprite_t {

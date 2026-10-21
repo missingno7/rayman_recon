@@ -6700,7 +6700,7 @@
      ]
     },
     "RAY_TOMBE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6708,7 +6708,7 @@
      ]
     },
     "RAY_RESPOND_TO_DOWN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6796,7 +6796,7 @@
      ]
     },
     "RAY_FIN_BALANCE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6844,7 +6844,7 @@
      ]
     },
     "snifRayIsDead": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6932,7 +6932,7 @@
      ]
     },
     "TEST_FIN_FOLLOW": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
