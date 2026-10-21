@@ -10130,27 +10130,27 @@
    },
    "final_pass_n": {
     "addr": "2:3f8c0",
-    "type": "u16",
+    "type": "s16",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //CF8C0; DOS goto_phase5 zeroes this word; no Android name."
+    "evidence": "Rayverse data.c //CF8C0; DOS goto_phase5 zeroes this word; no Android name.; signed: DOS jle comparisons / signed short load (sfin_hybrid)"
    },
    "final_pass_a": {
     "addr": "2:3f8c2",
-    "type": "u16",
+    "type": "s16",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //CF8C2; DOS goto_phase5 zeroes this word; no Android name."
+    "evidence": "Rayverse data.c //CF8C2; DOS goto_phase5 zeroes this word; no Android name.; signed: DOS jle comparisons / signed short load (sfin_hybrid)"
    },
    "final_pass_f": {
     "addr": "2:3f8c6",
-    "type": "u16",
+    "type": "s16",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //CF8C6; DOS goto_phase5 zeroes this word; no Android name."
+    "evidence": "Rayverse data.c //CF8C6; DOS goto_phase5 zeroes this word; no Android name.; signed: DOS jle comparisons / signed short load (sfin_hybrid)"
    },
    "final_pass_x": {
     "addr": "2:3f8ca",
-    "type": "u16",
+    "type": "s16",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //CF8CA; DOS goto_phase5 stores -60; no Android name."
+    "evidence": "Rayverse data.c //CF8CA; DOS goto_phase5 stores -60; no Android name.; signed: DOS jle comparisons / signed short load (sfin_hybrid)"
    },
    "attaque": {
     "addr": "2:55764",
@@ -13589,10 +13589,10 @@
     "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30f09 and 1:30f40"
    },
    "PosYSin1": {
-    "addr": "2:50c16",
+    "addr": "2:50c18",
     "type": "s16",
     "name": "PS1",
-    "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30f50 and 1:30f40"
+    "evidence": "PS1 dark_phase2.c PosYSin1 (first trajectory); DOS DO_DARK2_SORT_COMMAND reads/stores short 2:50c18 (1:30f34/1:30f40), DO_DARK_PHASE2_COMMAND initializes it (1:30cdf); Android 2 bytes"
    },
    "PosXSin2": {
     "addr": "2:50c0e",
@@ -13797,6 +13797,12 @@
     "type": "u8",
     "name": "ANDROID",
     "evidence": "Android .bss object size 1; DOS LoadBnkFixe reads this byte at 2:3fa13."
+   },
+   "PosYSin2": {
+    "addr": "2:50c16",
+    "type": "s16",
+    "name": "PS1",
+    "evidence": "PS1 dark_phase2.c PosYSin2 (second trajectory); DOS DO_DARK_PHASE2_COMMAND initializes 2:50c16 (1:30cd9); Android symbol PosYSin2 2 bytes; separate from temps_text 2:50c14 (sfin_hybrid)"
    }
   }
  }

@@ -9803,7 +9803,7 @@
      ]
     },
     "allocateSTOSKO": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9864,7 +9864,7 @@
      ]
     },
     "DO_HYB_BBF2_POING_COLLISION": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9926,7 +9926,7 @@
      ]
     },
     "allocate_DARK2_SORT": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9940,7 +9940,7 @@
      ]
     },
     "DoFlammeRaymanCollision": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9967,7 +9967,7 @@
      ]
     },
     "ToonDonnePoing": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9980,7 +9980,7 @@
      ]
     },
     "sub_3E6B0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9992,7 +9992,7 @@
      ]
     },
     "sub_3E780": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -10012,7 +10012,7 @@
      ]
     },
     "LoadBnkWorld": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10040,7 +10040,7 @@
      ]
     },
     "DigiMusicDone": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -10070,6 +10070,9 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   },
   "effect2": {

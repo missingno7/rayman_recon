@@ -1,4 +1,8 @@
-/* 1:2e580..1:31ab0: hifi.c (sound driver config, banks, KeyOn/Off/Vol, Tchatch; source boundary 1:2f040) + hybrid.c (hybrid bosses). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_hybrid. 2:50c14 is temps_text (one DOS variable; PS1 PosYSin2 role, OPEN). */
+/* 1:2e580..1:31ab0: hifi.c + hybrid.c, names RAYVERSE/ANDROID/PS1.
+ * Worker sfin_hybrid: see NOTES.md for measured matches and unresolved layout.
+ * The accepted PosYSin1 binding and missing PosYSin2 require correction by the
+ * integrator; see header_proposal.md. No shifted aliases are used here.
+ */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -24,19 +28,19 @@
 #define ashl16(v, b) ((v) << (b))
 #endif
 #ifndef ashr16
-#define ashr16(v, b) ((v) >> (b))
+#define ashr16(v, b) ((s16)(v) < 0 ? (s16)(-((-(s16)(v)) >> (b))) : (s16)((s16)(v) >> (b)))
 #endif
 
 typedef struct archive_header_t {
     s32 offset;
-    s32 size;
+    u32 size;
     u8 xor_byte;
     u8 checksum_byte;
     u8 pad[2];
 } archive_header_t;
 
 typedef struct bnk_header_t {
-    u32 offset;
+    u8 *offset;
     u32 size;
     u32 field_8;
     u32 field_C;
@@ -46,8 +50,7 @@ typedef struct dos_sound_config_t {
     u32 reserved_00[4];
     s32 timeout;
     u32 reserved_14[2];
-    u32 arg0;
-    u16 arg1;
+    void __far *callback;
     u16 pad_22;
 } dos_sound_config_t;
 
@@ -59,8 +62,7 @@ typedef struct dos_sound_request_t {
     u32 field_10;
     s32 volume;
     u32 field_18[4];
-    u16 flags;
-    u16 flags_pad;
+    u32 flags;
     u32 field_2c;
     u32 field_30;
     u32 field_34;
@@ -110,6 +112,7 @@ extern s16 dark2_rayon_dy_1;
 extern s16 dark2_rayon_dy_2;
 extern s16 PosXSin1;
 extern s16 PosYSin1;
+extern s16 PosYSin2;
 extern s16 PosXSin2;
 extern s16 VitesseYText;
 extern u8 num_dark2_phrase;
@@ -133,6 +136,10 @@ extern s16 flamme_droite_id;
 extern s16 flamme_gauche_id;
 extern u8 flammes_actives;
 extern u8 let_shadow;
+extern finbosslevel_t finBosslevel;
+extern s16 final_pass_n, final_pass_a, final_pass_f, final_pass_x;
+extern u8 NBRE_SAVE, gele;
+extern s16 expsin[63];
 extern active_objects_t actobj;
 extern level_t level;
 extern s16 moskitomama_droite_obj_id;
@@ -154,6 +161,7 @@ extern u8 horloge[25];
 extern s16 stosko_obj_id;
 extern s16 temps_text;
 extern char txt_dark2[100];
+extern char *language_txt[300];
 extern s16 xmap;
 extern s16 xmapmax;
 extern s16 ymap;
@@ -181,7 +189,7 @@ void calc_obj_dir(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 void obj_hurt(obj_t *obj);
 void RAY_HIT(u8 hurt, obj_t *obj);
-void display_text_sin(const char* text, s16 x, s16 y, u8 font_size, s8 color, u8 a6);
+void display_text_sin(const char* text, s16 x, s16 y, s16 font_size, s16 color, s16 a6);
 void stop_cd(void);
 s16 firstFloorBelow(obj_t* obj);
 void setBossReachingSpeeds(obj_t* obj, u8 timer, u8 accuracyX, u8 accuracyY);
@@ -216,9 +224,9 @@ void DoMOSAMSPoingCollision(obj_t *obj, s16 sprite);
 void allocateStoskoClaw(obj_t *stsk_obj);
 void doSTOSKOcommand(obj_t *stsk_obj);
 void DoSTOSKOPoingCollision(obj_t *obj, s16 sprite);
-void DO_HYB_BBF2_POING_COLLISION(obj_t *obj);
+void DO_HYB_BBF2_POING_COLLISION(obj_t *obj, s16 sprite);
 s16 OBJ_IN_COL_ZDC(obj_t *obj1, obj_t *obj2);
-void allocate_DARK2_SORT(s32 x, s16 y, s16 sub_etat, s16 param_4);
+void allocate_DARK2_SORT(s16 x, s16 y, s16 sub_etat, s16 param_4);
 void doBBF2command(obj_t *bbf2_obj);
 void AllocateTirBBF2(obj_t *bbf2_obj);
 void DoHybBBF2LasRaymanCollision(obj_t *obj);
@@ -234,7 +242,7 @@ void ToonDonnePoing(obj_t *d2fly_obj);
 /* Address-identified routines in the DOS sound and file-driver modules. */
 extern s32 sub_71B0F(s32 driver);
 extern s32 sub_71B98(s32 a1, s32 a2);
-extern s32 sub_71CAE(s32 a1, s32 a2, u32 a3, s16 a4, void __far *a5);
+extern s32 sub_71CAE(s32 a1, void __far *callback, void __far *a5);
 extern s32 sub_71C74(s32 a1);
 extern s32 sub_72033(s32 handle);
 extern s32 sub_7234F(s32 a1, s16 a2);
@@ -245,7 +253,7 @@ extern s32 sub_735C4(s32 a1, s32 a2, s32 a3);
 extern s32 sub_7367D(s32 device_id, s32 timeout, s32 __far *port,
     void __far *init_data, void __far *driver_data);
 extern s32 sub_7363D(void);
-extern s32 sub_73F3D(s32 driver, s32 enabled);
+extern s32 sub_73F3D(s32 driver, s32 enabled, s32 flags);
 extern s16 sub_743F7(s32 driver, dos_sound_request_t __far *request);
 extern s32 sub_74A10(s32 driver, s16 voice);
 extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
@@ -258,11 +266,11 @@ void sub_3E66C(void);
 void sub_3E6B0(void);
 s32 sub_3E710(void);
 s32 sub_3E780(void);
-void LoadBnkFile(s32 header_index, s32 data_index,
+s32 LoadBnkFile(s32 header_index, s32 data_index,
     bnk_header_t *headers, u8 **data);
 void LoadBnkFixe(void);
-void LoadBnkWorld(s16 world);
-s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan);
+s32 LoadBnkWorld(s16 world);
+s16 KeyOn(s16 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan);
 void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note);
 void KeyVol(s16 voice, s16 volume, s16 pan);
 void DigiMusicDone(void);
@@ -286,7 +294,7 @@ void sub_3E66C(void)
 void sub_3E6B0(void)
 {
     sub_71B98(0xff00, 0);
-    if (sub_71CAE(0x28, 0, sound_config.arg0, sound_config.arg1,
+    if (sub_71CAE(0x28, sound_config.callback,
             (void __far *)&sound_detect_handle) != 0)
         sub_71C74(0);
 }
@@ -296,7 +304,7 @@ void rayman_sound_fatal_error(const char* message) {
     exit(-1);
 }
 
- s32 sub_3E710(void)
+s32 sub_3E710(void)
 {
     s32 probe;
 
@@ -331,83 +339,73 @@ s32 sub_3E780(void)
         sub_7363D();
         return 1;
     }
-    result = sub_71CAE(0x28, 0, sound_config.arg0, sound_config.arg1,
+    result = sub_71CAE(0x28, sound_config.callback,
         (void __far *)&sound_detect_handle);
     if (result != 0) {
         sub_71C74(0);
-        sub_73F3D(sound_driver_handle, 1);
+        sub_73F3D(sound_driver_handle, 1, 1);
         return 2;
     }
     return 0;
 }
 
-void LoadBnkFile(s32 header_index, s32 data_index,
+s32 LoadBnkFile(s32 header_index, s32 data_index,
     bnk_header_t *headers, u8 **data)
 {
-    FILE *file;
-    s32 size;
-    s32 i;
+    FILE *header_file;
+    FILE *data_file;
+    u32 size, i;
     u8 check;
-    u8 key;
-    u8 *bytes;
-    archive_header_t *info;
-    archive_header_t *data_info;
-    u8 *end;
-    u8 *word;
+    u8 *bytes, *end;
+    u8 *new_data;
 
     stop_cd();
-    file = fopen("SNDH8B.DAT", "rb");
-    if (file == 0)
-        rayman_sound_fatal_error("Fichier data introuvable.\n");
-    info = &snd8b_header_infos[header_index];
-    fseek(file, info->offset, SEEK_SET);
-    fread(headers, 0x10, 0x80, file);
-    fclose(file);
-
+    header_file = fopen("SNDH8B.DAT", "rb");
+    if (header_file == 0)
+        rayman_sound_fatal_error("Fichier header introuvable (SNDH8B.DAT).\n");
+    fseek(header_file, snd8b_header_infos[header_index].offset, SEEK_SET);
+    fread(headers, 0x10, 0x80, header_file);
+    fclose(header_file);
     bytes = (u8 *)headers;
-    check = (u8)(info->checksum_byte - bytes[0]);
-    key = info->xor_byte;
+    check = snd8b_header_infos[header_index].checksum_byte;
     end = bytes + 0x800;
-    while (bytes != end) {
-        *bytes ^= key;
+    do {
+        check -= *bytes;
+        *bytes ^= snd8b_header_infos[header_index].xor_byte;
+        bytes++;
+    } while (bytes != end);
+    if (check != 0)
+        rayman_sound_fatal_error("Load error in sndh8b.dat.\n");
+    stop_cd();
+    data_file = fopen("SNDD8B.DAT", "rb");
+    if (data_file == 0)
+        rayman_sound_fatal_error("Fichier data introuvable.\n");
+    size = snd8b_data_infos[data_index].size;
+    if (*data != 0)
+        JumelleFreeArray((void **)data);
+    new_data = sub_6FBB4(size);
+    if (new_data == 0)
+        rayman_sound_fatal_error("M\x82moire insuffisante pour charger les samples.\n");
+    *data = new_data;
+    fseek(data_file, snd8b_data_infos[data_index].offset, SEEK_SET);
+    fread(new_data, 1, size, data_file);
+    fclose(data_file);
+    check = snd8b_data_infos[data_index].checksum_byte;
+    bytes = new_data;
+    for (i = 0; i < size; i++) {
+        check -= *bytes;
+        *bytes ^= snd8b_data_infos[data_index].xor_byte;
         bytes++;
     }
     if (check != 0)
-        rayman_sound_fatal_error("Load error in sndh8b.dat.\n");
-
-    stop_cd();
-    file = fopen("SNDD8B.DAT", "rb");
-    if (file == 0)
-        rayman_sound_fatal_error("Fichier data introuvable.\n");
-    data_info = &snd8b_data_infos[data_index];
-    size = data_info->size;
-    if (*data != 0)
-        JumelleFreeArray((void **)data);
-    *data = sub_6FBB4((u32)size);
-    if (*data == 0)
-        rayman_sound_fatal_error("Mmoire insuffisante pour charger les samples.\n");
-    fseek(file, data_info->offset, SEEK_SET);
-    fread(*data, 1, size, file);
-    fclose(file);
-
-    bytes = *data;
-    check = data_info->checksum_byte;
-    key = data_info->xor_byte;
-    i = 0;
-    while (i < size) {
-        check -= bytes[i];
-        bytes[i] ^= key;
-        i++;
-    }
-    if (check != 0)
         rayman_sound_fatal_error("Load error in sndd8b.dat.\n");
-
-    word = (u8 *)headers;
-    end = word + 0x800;
-    while (word != end) {
-        *(u32 *)word += (u32)*data;
-        word += 0x10;
-    }
+    bytes = (u8 *)headers;
+    end = bytes + 0x800;
+    do {
+        *(u32 *)bytes += (u32)new_data;
+        bytes += 0x10;
+    } while (bytes != end);
+    return 0;
 }
 
 void LoadBnkFixe(void)
@@ -417,20 +415,20 @@ void LoadBnkFixe(void)
     LoadBnkFile(2, 2, bnkHeaderFixe, &bnkDataFixe);
 }
 
-void LoadBnkWorld(s16 world)
+s32 LoadBnkWorld(s16 world)
 {
     switch (world) {
-    case 1: LoadBnkFile(4, 4, bnkHeaderWorld, &bnkDataWorld); break;
-    case 2: LoadBnkFile(6, 6, bnkHeaderWorld, &bnkDataWorld); break;
-    case 3: LoadBnkFile(5, 5, bnkHeaderWorld, &bnkDataWorld); break;
-    case 4: LoadBnkFile(3, 3, bnkHeaderWorld, &bnkDataWorld); break;
-    case 5: LoadBnkFile(1, 1, bnkHeaderWorld, &bnkDataWorld); break;
-    case 6: LoadBnkFile(0, 0, bnkHeaderWorld, &bnkDataWorld); break;
-    default: break;
+    case 1: return LoadBnkFile(4, 4, bnkHeaderWorld, &bnkDataWorld);
+    case 2: return LoadBnkFile(6, 6, bnkHeaderWorld, &bnkDataWorld);
+    case 3: return LoadBnkFile(5, 5, bnkHeaderWorld, &bnkDataWorld);
+    case 4: return LoadBnkFile(3, 3, bnkHeaderWorld, &bnkDataWorld);
+    case 5: return LoadBnkFile(1, 1, bnkHeaderWorld, &bnkDataWorld);
+    case 6: return LoadBnkFile(0, 0, bnkHeaderWorld, &bnkDataWorld);
+    default: return 0;
     }
 }
 
-s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan)
+s16 KeyOn(s16 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
 {
     dos_sound_request_t request = {0};
     s16 voice;
@@ -444,27 +442,28 @@ s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan)
         request.data = (u8 __far *)bnkHeaderFixe[(s16)prog].offset;
         request.size = bnkHeaderFixe[(s16)prog].size;
         if (bnkHeaderFixe[(s16)prog].field_C != 0) {
-            request.field_0c = -1;
+            request.flags |= 0x4760;
             request.field_30 = bnkHeaderFixe[(s16)prog].field_8;
             request.field_34 = bnkHeaderFixe[(s16)prog].field_C;
-            request.flags |= 0x4760;
+            request.field_0c = -1;
         }
     } else {
         request.data = (u8 __far *)bnkHeaderWorld[(s16)prog].offset;
         request.size = bnkHeaderWorld[(s16)prog].size;
         if (bnkHeaderWorld[(s16)prog].field_C != 0) {
-            request.field_0c = -1;
+            request.flags |= 0x4760;
             request.field_30 = bnkHeaderWorld[(s16)prog].field_8;
             request.field_34 = bnkHeaderWorld[(s16)prog].field_C;
-            request.flags |= 0x4760;
+            request.field_0c = -1;
         }
     }
-    if (request.size == 0)
-        return -1;
-    voice = sub_743F7(sound_driver_handle,
-        (dos_sound_request_t __far *)&request);
-    if (voice == -1 || voice >= 0x20)
-        return -1;
+    if (request.size != 0) {
+        voice = sub_743F7(sound_driver_handle,
+            (dos_sound_request_t __far *)&request);
+        if (voice == -1 || voice >= 0x20)
+            voice = -1;
+    } else
+        voice = -1;
     return voice;
 }
 
@@ -492,7 +491,7 @@ void DigiMusicDone(void)
         KeyOff(voice, 0, 0, 0, 0);
     sub_72033(sound_detect_handle);
     sub_71C74(0);
-    sub_73F3D(sound_driver_handle, 1);
+    sub_73F3D(sound_driver_handle, 1, 1);
     sub_7363D();
 }
 
@@ -500,32 +499,27 @@ void LoadTchatchPerdu(void)
 {
     FILE *file;
     s32 size;
-    s32 i;
+    u32 i;
     u8 check;
-    u8 key;
-    u8 *bytes;
-    archive_header_t *info;
+    s32 bank = 6;
 
     stop_cd();
-    info = &sndvig_infos[6];
-    file = fopen("SNDVIG.DAT", "rb");
+    file = fopen("sndvig.dat", "rb");
     if (file == 0)
-        rayman_sound_fatal_error("Fichier data introuvable.\n");
-    size = info->size;
+        rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
+    size = sndvig_infos[bank].size;
     ptrTchatch = sub_6FBB4((u32)size);
     if (ptrTchatch == 0) {
         fclose(file);
         return;
     }
-    fseek(file, info->offset, SEEK_SET);
+    fseek(file, sndvig_infos[bank].offset, SEEK_SET);
     fread(ptrTchatch, 1, size, file);
     fclose(file);
-    bytes = ptrTchatch;
-    check = info->checksum_byte;
-    key = info->xor_byte;
+    check = sndvig_infos[bank].checksum_byte;
     for (i = 0; i < size; i++) {
-        check -= bytes[i];
-        bytes[i] ^= key;
+        check -= ptrTchatch[i];
+        ptrTchatch[i] ^= sndvig_infos[bank].xor_byte;
     }
     if (check != 0)
         rayman_sound_fatal_error("Load error in sndvig.dat.\n");
@@ -540,38 +534,29 @@ void PlayTchatch(s32 sound, s32 volume)
     s32 bank;
     FILE *file;
     s32 size;
-    s32 i;
+    u32 i;
     u8 check;
-    u8 key;
-    u8 *bytes;
-    archive_header_t *info;
     s16 voice;
 
-    request.volume = ((s32)(s16)volume * 0x7fff) / 0x7f;
+    request.volume = (volume * 0x7fff) / 0x7f;
     ((u8 *)&request)[0x29] |= 1;
     switch (sound) {
     case 1: bank = 8; break;
-    case 2: bank = 5; break;
-    case 3: bank = 2; break;
-    case 4: bank = 0; break;
-    case 5: bank = 3; break;
     case 6: bank = 7; break;
+    case 2: bank = 5; break;
     case 7: bank = 1; break;
+    case 4: bank = 0; break;
+    case 3: bank = 2; break;
     case 8: bank = 6; break;
+    case 5:
     case 9: bank = 3; break;
-    default: return;
     }
-    if (bank == 6) {
-        request.data = (u8 __far *)TchachPerduPtr;
-        request.size = TchachPerduSize;
-        request.flags |= 0x80;
-    } else {
+    if (bank != 6) {
         stop_cd();
-        file = fopen("SNDVIG.DAT", "rb");
+        file = fopen("sndvig.dat", "rb");
         if (file == 0)
-            rayman_sound_fatal_error("Fichier data introuvable.\n");
-        info = &sndvig_infos[bank];
-        size = info->size;
+            rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
+        size = sndvig_infos[bank].size;
         if (ptrTchatch != 0)
             JumelleFreeArray((void **)&ptrTchatch);
         ptrTchatch = sub_6FBB4((u32)size);
@@ -579,20 +564,22 @@ void PlayTchatch(s32 sound, s32 volume)
             fclose(file);
             return;
         }
-        fseek(file, info->offset, SEEK_SET);
+        fseek(file, sndvig_infos[bank].offset, SEEK_SET);
         fread(ptrTchatch, 1, size, file);
         fclose(file);
-        bytes = ptrTchatch;
-        check = info->checksum_byte;
-        key = info->xor_byte;
+        check = sndvig_infos[bank].checksum_byte;
         for (i = 0; i < size; i++) {
-            check -= bytes[i];
-            bytes[i] ^= key;
+            check -= ptrTchatch[i];
+            ptrTchatch[i] ^= sndvig_infos[bank].xor_byte;
         }
         if (check != 0)
             rayman_sound_fatal_error("Load error in sndvig.dat.\n");
         request.data = (u8 __far *)ptrTchatch;
         request.size = size;
+        request.flags |= 0x80;
+    } else {
+        request.data = (u8 __far *)TchachPerduPtr;
+        request.size = TchachPerduSize;
         request.flags |= 0x80;
     }
     voice = sub_743F7(sound_driver_handle,
@@ -659,16 +646,14 @@ void FreeDetectDriver(void)
 
 void allocateSTOSKO(void)
 {
-    s16 y;
     obj_t *obj = &level.objects[stosko_obj_id];
 
     obj->flags.alive = 1 | FLG(OBJ_ACTIVE);
     obj->is_active = 1;
     obj->x = 160;
     obj->y = ymap - 50;
-    y = firstFloorBelow(obj) - obj->offset_by;
-    obj->init_y = y;
-    obj->y = y;
+    obj->init_y = firstFloorBelow(obj) - obj->offset_by;
+    obj->y = obj->init_y;
     obj->x = xmapmax + 304;
     obj->init_x = xmap + 320 - obj->offset_bx - 60;
     obj->timer = 50;
@@ -683,10 +668,11 @@ void allocateMOSKITOMAMA(void)
 
     YPosBBF2D =
         YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
-        ((ray.x + ray.offset_bx + 8 - xmap) >> 1);
+        ((ray.x + 8 + ray.offset_bx - xmap) >> 1);
     boss_obj = &level.objects[moskitomama_droite_obj_id];
+    boss_obj->x = 160;
     boss_obj->flags.flip_x = 0;
-    boss_obj->init_x = boss_obj->x = 160;
+    boss_obj->init_x = boss_obj->x;
     boss_obj->init_y = boss_obj->y = ymap;
     NiveauSol = firstFloorBelow(boss_obj);
     boss_obj->speed_x = 0;
@@ -699,15 +685,15 @@ void allocateMOSKITOMAMA(void)
 
     YPosBBF2G =
         NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
-        ((ray.x + ray.offset_bx + 8 - xmap) >> 1);
+        ((ray.x + 8 + ray.offset_bx - xmap) >> 1);
     boss_obj = &level.objects[moskitomama_gauche_obj_id];
-    boss_obj->flags.flip_x = 1;
-    boss_obj->init_x = boss_obj->x = 32 - boss_obj->offset_bx;
-    boss_obj->init_y = boss_obj->y = ymap - 200;
     boss_obj->speed_x = 0;
     boss_obj->speed_y = 0;
     boss_obj->is_active = 1;
+    boss_obj->init_y = boss_obj->y = ymap - 200;
     boss_obj->flags.alive = 1 | FLG(OBJ_ACTIVE);
+    boss_obj->flags.flip_x = 1;
+    boss_obj->init_x = boss_obj->x = 32 - boss_obj->offset_bx;
     BBF2GEsk = 0;
 
     RayEvts.poing = 1;
@@ -750,8 +736,7 @@ void doMOSAMScommand(obj_t *obj)
             calc_obj_dir(obj);
         bossXToReach = -32000;
         bossYToReach = -32000;
-        obj->speed_y = 0;
-        obj->speed_x = 0;
+        obj->speed_x = obj->speed_y = 0;
         break;
     case GO_SPEED:
         calc_obj_dir(obj);
@@ -759,13 +744,14 @@ void doMOSAMScommand(obj_t *obj)
         bossYToReach = firstFloorBelow(&ray) - obj->offset_by + 16;
         obj->speed_x = obj->iframes_timer;
         obj->speed_y = obj->follow_id;
-        bossSpeedFactor = abs(
+        bossSpeedFactor =
             (((bossXToReach - obj->x) << 18) / 55) / obj->eta[obj->main_etat][obj->sub_etat].speed_x_right
-        ); /* ??? the shift is multiplication by 262144 ??? */
+        ;
+        bossSpeedFactor = labs(bossSpeedFactor);
         bossReachingAccuracyX = -1; /* not sure if best represented as -1 or 0xff */
-        bossReachingAccuracyY = 0;
         bossReachingTimer = 1;
         obj->gravity_value_1 = 0;
+        bossReachingAccuracyY = 0;
         obj->gravity_value_2 = 0;
         break;
     case GO_NOP:
@@ -955,7 +941,6 @@ void doBBF2command(obj_t *bbf2_obj)
     s16 bbf2_y_3;
     s16 var_v1;
     u16 unk_2;
-    s16 unk_1;
 
     if (!(bbf2_obj->main_etat == 0 && bbf2_obj->sub_etat == 2))
     {
@@ -964,9 +949,8 @@ void doBBF2command(obj_t *bbf2_obj)
         {
             if (BBF2DEsk == 0)
             {
-                unk_1 = 0x5A;
                 YPosBBF2D =
-                    YPosBBF2G - (ray.offset_by - ray.offset_hy) + unk_1 -
+                    YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
                     ((ray_center_x + ray.offset_bx - xmap) >> 1);
             }
             else
@@ -992,23 +976,21 @@ void doBBF2command(obj_t *bbf2_obj)
                         YPosBBF2D -= 80;
                     else
                     {
-                        unk_1 = 0x5A;
-                        YPosBBF2D =
-                            YPosBBF2G - (ray.offset_by - ray.offset_hy) + unk_1 -
+                                YPosBBF2D =
+                            YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
                             ((ray_center_x + ray.offset_bx - xmap) >> 1);
                     }
                 }
                 BBF2DEsk--;
             }
-            unk_2 = YPosBBF2D - 150 - bbf2_obj->y;
+            unk_2 = YPosBBF2D - (bbf2_obj->y + 150);
         }
         else if (bbf2_obj->type == TYPE_HYB_BBF2_G)
         {
             if (BBF2GEsk == 0)
             {
-                unk_1 = 0x46;
                 YPosBBF2G =
-                    NiveauSol - (ray.offset_by - ray.offset_hy) - unk_1 +
+                    NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
                     ((ray_center_x + ray.offset_bx - xmap) >> 1);
             }
             else
@@ -1034,20 +1016,19 @@ void doBBF2command(obj_t *bbf2_obj)
                         YPosBBF2G -= 80;
                     else
                     {
-                        unk_1 = 0x46;
-                        YPosBBF2G =
-                            NiveauSol - (ray.offset_by - ray.offset_hy) - unk_1 +
+                                YPosBBF2G =
+                            NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
                             ((ray_center_x + ray.offset_bx - xmap) >> 1);
                     }
                 }
                 BBF2GEsk--;
             }
-            unk_2 = YPosBBF2G - 150 - bbf2_obj->y;
+            unk_2 = YPosBBF2G - (bbf2_obj->y + 150);
         }
 
         bbf2_y_2 = bbf2_obj->y;
         if (
-            ((bbf2_y_2 > ymap + 90) && (s16)unk_2 > 0) ||
+            ((bbf2_y_2 > ymap + 50) && (s16)unk_2 > 0) ||
             ((bbf2_y_2 < ymap - 150) && (s16)unk_2 < 0)
         )
         {
@@ -1091,7 +1072,7 @@ void doBBF2command(obj_t *bbf2_obj)
     }
 }
 
-void DO_HYB_BBF2_POING_COLLISION(obj_t *obj)
+void DO_HYB_BBF2_POING_COLLISION(obj_t *obj, s16 sprite)
 {
     /* TODO: ??? switch instead didn't work */
     if (obj->sub_etat == 2)
@@ -1201,7 +1182,7 @@ void DO_HYB_BBF2_LAS(obj_t *las_obj)
                 cur_obj++;
                 i++;
             }
-            DO_HYB_BBF2_POING_COLLISION(unk_obj);
+            DO_HYB_BBF2_POING_COLLISION(unk_obj, 0);
             las_obj->is_active = 0;
             las_obj->flags.alive = 0;
         }
@@ -1296,15 +1277,52 @@ void AllocateDarkPhase2(obj_t *mr_drk_obj)
 
 void DO_DARK2_AFFICHE_TEXT(void)
 {
-    s32 x; s32 y;
-
+    s16 delta;
+    u8 shift = 7;
     if (TextDark2_Affiche)
     {
         let_shadow = 1;
-        x = XText;
-        y = YText;
-        temps_text += 3;
-        display_text_sin(txt_dark2, x, y, temps_text & 0xFFFF, 2, 10);
+        if (finBosslevel.mr_dark)
+        {
+            if (NBRE_SAVE == 0)
+            {
+                if (final_pass_f == 0)
+                {
+                    if (final_pass_x > 66)
+                    {
+                        final_pass_a = final_pass_x;
+                        final_pass_f = 1;
+                    }
+                    else if (final_pass_x > 40)
+                        final_pass_x += 4;
+                    else
+                        final_pass_x += 2;
+                }
+                else
+                {
+                    delta = expsin[final_pass_n];
+                    if (delta >= 0)
+                        delta >>= shift;
+                    else
+                        {
+                        delta = -delta;
+                        delta >>= shift;
+                        delta = -delta;
+                    }
+                    if (delta != 255)
+                    {
+                        final_pass_x += delta;
+                        final_pass_n++;
+                    }
+                }
+            }
+        }
+        else
+        {
+            display_text_sin(txt_dark2, XText, YText, temps_text, 2, 0);
+            if (!gele)
+                temps_text += 3;
+        }
     }
 }
 
@@ -1434,7 +1452,6 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
         else if (PosArXToon1 == -1 && level.objects[flamme_gauche_id].speed_x == 4)
         {
             AllocateToons();
-            poing_obj = &level.objects[poing_obj_id];
             PosArXToon1 = poing_obj->x + 64;
             PosArYToon1 = poing_obj->y + 50;
             PosArXToon2 = poing_obj->x + 48;
@@ -1503,15 +1520,15 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
                 sens_sinus_1 = 0;
                 sens_sinus_2 = 1;
                 PosXSin1 = PosXSin2 = dp2_x + (dp2_w >> 1) - 96;
-                PosYSin1 = temps_text = dp2_y + (dp2_h >> 1) - 128;
+                PosYSin1 = PosYSin2 = dp2_y + (dp2_h >> 1) - 128;
                 allocate_DARK2_SORT(PosXSin1, PosYSin1, 35, 1);
-                allocate_DARK2_SORT(PosXSin2, temps_text, 35, 0);
+                allocate_DARK2_SORT(PosXSin2, PosYSin2, 35, 0);
             }
             break;
         case 33:
             if (num_dark2_phrase == 0)
             {
-                memcpy(txt_dark2, "/you're doomed rayman .../", 27);
+                strcpy(txt_dark2, language_txt[95]);
                 XText = SCREEN_WIDTH / 2;
                 YText = -10;
                 VitesseYText = 40;
@@ -1554,7 +1571,7 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
     {
         if (ds2_obj->sub_etat == 35 || ds2_obj->sub_etat == 36)
         {
-            if (ds2_obj->x < -ds2_obj->offset_bx)
+            if (-ds2_obj->offset_bx > ds2_obj->x)
             {
                 sinus_actif = 2;
                 ds2_obj->hit_points = 0;
@@ -1599,8 +1616,8 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                         sens_sinus_2 = 1;
                 }
                 PosXSin2 += ashr16(dark2_rayon_dx_2, 4);
-                unk_y_1 = temps_text + ashr16(dark2_rayon_dy_2, 4);
-                temps_text = unk_y_1;
+                unk_y_1 = PosYSin2 + ashr16(dark2_rayon_dy_2, 4);
+                PosYSin2 = unk_y_1;
                 if (ds2_obj->anim_frame == 1)
                 {
                     unk_x_1 = PosXSin2;
@@ -1659,12 +1676,12 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
     }
 }
 
-void allocate_DARK2_SORT(s32 x, s16 y, s16 sub_etat, s16 param_4)
+void allocate_DARK2_SORT(s16 param_1, s16 param_2, s16 param_3, s16 param_4)
 {
     obj_t *first;
     obj_t *cur_obj = level.objects;
-    s16 i = 0;
     s16 found = 0;
+    s16 i = 0;
     s16 nb_objs = level.nb_objects;
 
     do
@@ -1675,47 +1692,56 @@ void allocate_DARK2_SORT(s32 x, s16 y, s16 sub_etat, s16 param_4)
         i++;
     } while (!found && i < nb_objs);
     cur_obj--;
-    if (!found)
-        return;
-
-    first = cur_obj;
-    found = 0;
-    do
+    if (found)
     {
-        if (cur_obj->type == TYPE_DARK2_SORT && cur_obj->is_active)
-            found = 1;
-        cur_obj++;
-        i++;
-    } while (!found && i < nb_objs);
-    cur_obj--;
-
-    if (!found)
-        cur_obj = first;
-    else
-    {
+        first = cur_obj;
         found = 0;
         do
         {
-            if (cur_obj->type == TYPE_DARK2_SORT && !cur_obj->is_active)
+            if (cur_obj->type == TYPE_DARK2_SORT && cur_obj->is_active == 1)
                 found = 1;
             cur_obj++;
             i++;
         } while (!found && i < nb_objs);
         cur_obj--;
-        if (!found)
-            cur_obj = first;
-    }
 
-    cur_obj->flags.alive = 1;
-    if (!cur_obj->is_active)
-        add_alwobj(cur_obj);
-    cur_obj->is_active = 1;
-    cur_obj->x = (s16)x;
-    cur_obj->y = y;
-    cur_obj->hit_points = 1;
-    cur_obj->iframes_timer = param_4;
-    cur_obj->param = 0;
-    set_main_and_sub_etat(cur_obj, 0, (u8)sub_etat);
+        if (!found)
+        {
+            found = 1;
+            cur_obj = first;
+        }
+        else
+        {
+            found = 0;
+            do
+            {
+                if (cur_obj->type == TYPE_DARK2_SORT && !cur_obj->is_active)
+                    found = 1;
+                cur_obj++;
+                i++;
+            } while (!found && i < nb_objs);
+            cur_obj--;
+            if (!found)
+            {
+                found = 1;
+                cur_obj = first;
+            }
+        }
+
+    }
+    if (found)
+    {
+        cur_obj->flags.alive = 1;
+        if (!cur_obj->is_active)
+            add_alwobj(cur_obj);
+        cur_obj->is_active = 1;
+        cur_obj->hit_points = 1;
+        cur_obj->x = param_1;
+        cur_obj->y = param_2;
+        cur_obj->iframes_timer = param_4;
+        cur_obj->param = 0;
+        set_main_and_sub_etat(cur_obj, 0, (u8)param_3);
+    }
 }
 
 void DoFlammeCommand(obj_t *obj)
@@ -1732,26 +1758,25 @@ void DoFlammeCommand(obj_t *obj)
 void DoFlammeRaymanCollision(obj_t *obj)
 {
     s16 ray_iframes = ray.iframes_timer;
-
     if (ray_iframes < 10)
     {
-        if (ray_iframes != -1)
+        if (ray_iframes == -1)
+        {
+            RAY_HIT(1, obj);
+            if (ray_mode != 3)
+                ray.iframes_timer = 10;
+        }
+        else
         {
             RAY_HIT(0, obj);
             ray.iframes_timer = ray_iframes;
-            return;
         }
-        RAY_HIT(1, obj);
-        if (ray_mode == 3)
-            return;
-        ray.iframes_timer = 10;
     }
     else
     {
         RAY_HIT(1, obj);
-        if (ray_mode == 3)
-            return;
-        ray.iframes_timer = 10;
+        if (ray_mode != 3)
+            ray.iframes_timer = 10;
     }
 }
 
@@ -1991,24 +2016,18 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
 
 void ToonDonnePoing(obj_t *d2fly_obj)
 {
-    obj_t *p_obj;
-    s16 *unk_1 = &d2fly_obj->link;
-
-    if (d2fly_obj->param != 0 && level.objects[*unk_1].param != 0)
+    if (d2fly_obj->param != 0 && level.objects[d2fly_obj->link].param != 0)
     {
+        d2fly_obj->param = 0;
         RayEvts.poing = 1;
+        level.objects[d2fly_obj->link].param = 0;
         PosArXToon1 = 10;
         PosArXToon2 = 300;
-        p_obj = poing_obj;
-        d2fly_obj->param = 0;
-        level.objects[*unk_1].param = 0;
-        PosArYToon2 =
-        PosArYToon1 =
-            ymap - 200;
-        DO_NOVA(p_obj);
+        PosArYToon2 = PosArYToon1 = ymap - 200;
+        DO_NOVA(poing_obj);
+        poing_obj->is_active = 0;
+        poing_obj->flags.alive = 0;
+        poing_obj->init_sub_etat = 8;
         ToonJustGivePoing = 1;
-        p_obj->init_sub_etat = 8;
-        p_obj->is_active = 0;
-        p_obj->flags.alive = 0;
     }
 }
