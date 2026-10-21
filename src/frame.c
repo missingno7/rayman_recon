@@ -69,9 +69,12 @@ extern copy_dwords_t copy_dwords;
 extern u32 frame_records_38888[14][32];
 extern u32 plan0bit_nb_bytes;
 extern u8 P486;
-/* ABI evidence: docs/reference/lowlevel_abi.h, 1:03257 and 1:037e4. */
-void asm_03257(u32 mask, u32 stride, u32 offset, const u32 *context, const u32 *records, u32 dest);
-#pragma aux asm_03257 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]
+/* ABI evidence: docs/reference/lowlevel_abi.h, 1:03257 and 1:037e4.
+   asm_03257 parameter order is INVENTED: reverse argument preparation follows
+   DOS 1:2be9e..2beab (context, destination, records, mask, stride).
+   The parameter/register mapping and exact clobbers are unchanged. */
+void asm_03257(u32 mask, u32 stride, u32 offset, const u32 *records, u32 dest, const u32 *context);
+#pragma aux asm_03257 parm [eax] [edx] [ebx] [esi] [edi] [ecx] modify exact [eax ecx esi]
 void asm_037e4(const void *records, u8 *dest);
 #pragma aux asm_037e4 parm [esi] [ecx] modify exact [eax ebx ecx edx esi edi]
 
@@ -504,7 +507,7 @@ void sub_3BE20(s16 x, s16 y) {
     } else {
         for (plane = 0; plane < 4; ++plane) {
             offset = ((u32)plan0bit_length >> 2) * plane;
-            asm_03257(mask, plan0bit_nb_bytes, offset, context, &frame_records_38888[0][0], dest);
+            asm_03257(mask, plan0bit_nb_bytes, offset, &frame_records_38888[0][0], dest, context);
             mask *= 2;
             if (mask == 16) {
                 mask = 1;
@@ -771,8 +774,9 @@ void start_fade_in(s16 speed, rgb_palette_t *palette) {
     u32 last_color = 0xff;
     (void)palette;
     nb_fade = 1 << (6 - speed);
-    fade_speed = speed;
     fade = 1; // fade in
+    /* W-STORE: this assignment order reproduces DOS 1:2c55d..2c57a. */
+    fade_speed = speed;
     clear_palette((rgb_palette_t*)palette_bytes);
     palette_output(first_color, last_color, palette_bytes);
 }
