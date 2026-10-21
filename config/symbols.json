@@ -5997,6 +5997,236 @@
     "addr": "1:05609",
     "name": "RAYVERSE",
     "evidence": "DOS function-pointer constant loaded at 1:2daa8"
+   },
+   "ToDoAtExit": {
+    "addr": "1:272b8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_38258": {
+    "addr": "1:28258",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "ExitButPressed": {
+    "addr": "1:27210",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DEPART_INIT_LOOP": {
+    "addr": "1:26d30",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "FIN_MAP_LOOP": {
+    "addr": "1:26d58",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LOAD_GENERAL_SCREEN": {
+    "addr": "1:26c54",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "file_level": {
+    "addr": "1:2631c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "SwapPlan2PlanVignInVignet": {
+    "addr": "1:26678",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_EXTENSIONS": {
+    "addr": "1:26e1c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_38220": {
+    "addr": "1:28220",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "load_big_ray": {
+    "addr": "1:36078",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "FIN_DEAD_LOOP": {
+    "addr": "1:26d8c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_35F70": {
+    "addr": "1:25f70",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LoadPlan3InVignet": {
+    "addr": "1:2640c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LOAD_VIGNET_PC": {
+    "addr": "1:26554",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LOAD_OPTIONS_SCREEN": {
+    "addr": "1:26c88",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "END_WORLD_VIGNET": {
+    "addr": "1:26f48",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "TestSave": {
+    "addr": "1:26bbc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DEPART_DEAD_LOOP": {
+    "addr": "1:26d30",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "world_level": {
+    "addr": "1:26394",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "PauseButPressed": {
+    "addr": "1:271d4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "init_divers_level_PC": {
+    "addr": "1:262e4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_38290": {
+    "addr": "1:28290",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LoadPcxOptions": {
+    "addr": "1:38038",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "CancelButPressed": {
+    "addr": "1:27248",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_3609C": {
+    "addr": "1:2609c",
+    "name": "INVENTED",
+    "evidence": "Address-based label; DOS code entry in this object, no original Android or Rayverse identifier found."
+   },
+   "FIRST_INIT": {
+    "addr": "1:2622c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "DISPLAY_AND_FADE_PLAN3": {
+    "addr": "1:264e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "DEPART_WORLD": {
+    "addr": "1:26880",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "DEPART_LEVEL": {
+    "addr": "1:26998",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "Keyflush": {
+    "addr": "1:26c44",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "HANDLE_KEY": {
+    "addr": "1:26cbc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "remove": {
+    "addr": "1:712fb",
+    "name": "INVENTED",
+    "evidence": "REMOVE_FICHIER calls this DOS thunk at 1:712fb; disassembly confirms it jumps to the runtime unlink implementation at 1:700a3."
+   },
+   "FIN_GAME_LOOP": {
+    "addr": "1:26d34",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "END_GAME": {
+    "addr": "1:26d90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "DISPLAY_LOADING": {
+    "addr": "1:26e20",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "START_WORLD_VIGNET": {
+    "addr": "1:26e60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "sub_36FAC": {
+    "addr": "1:26fac",
+    "name": "INVENTED",
+    "evidence": "Address-based label; DOS code entry in this object, no original Android or Rayverse identifier found."
+   },
+   "sub_36FBB": {
+    "addr": "1:26fbb",
+    "name": "INVENTED",
+    "evidence": "Address-based label; DOS code entry in this object, no original Android or Rayverse identifier found."
+   },
+   "sub_370E8": {
+    "addr": "1:270e8",
+    "name": "INVENTED",
+    "evidence": "Address-based label; DOS code entry in this object, no original Android or Rayverse identifier found."
+   },
+   "sub_37134": {
+    "addr": "1:27134",
+    "name": "INVENTED",
+    "evidence": "Address-based label; DOS code entry in this object, no original Android or Rayverse identifier found."
+   },
+   "PC_init_cheats": {
+    "addr": "1:27310",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation"
+   },
+   "init_all_memory": {
+    "addr": "1:6f768",
+    "name": "INVENTED",
+    "evidence": "DOS function entry; allocates temp_mem_buf and initializes memory descriptors before InitTextMode at 1:2622E."
+   },
+   "NewFrequency": {
+    "addr": "1:39638",
+    "name": "ANDROID",
+    "evidence": "Android symbol NewFrequency; DOS call in PC_do_cheats_in_world_map at 1:27841."
+   },
+   "set_speaker_off": {
+    "addr": "1:06eea",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c name; DOS call in ToDoAtExit at 1:272BE."
+   },
+   "CalcSpeed": {
+    "addr": "1:3f50c",
+    "name": "ANDROID",
+    "evidence": "Android symbol CalcSpeed; DOS call at 1:261FE and return compared as AX at 1:26203."
    }
   },
   "data": {
@@ -9295,12 +9525,6 @@
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c comment //DE824; Android symbol size 1"
    },
-   "byte_93fa20": {
-    "addr": "2:3fa20",
-    "type": "u8",
-    "name": "INVENTED",
-    "evidence": "DOS byte comparison at 1:17cac and 1:17f06; Android name query and Rayverse data.c lookup returned no symbol"
-   },
    "ChangeJumelleSizeOK": {
     "addr": "2:3fa2f",
     "type": "u8",
@@ -11140,6 +11364,264 @@
     "name": "RAYVERSE",
     "type": "u8 *",
     "evidence": "Rayverse data.c //DFAE4; Android symbol size 4"
+   },
+   "plan2bit_length": {
+    "addr": "2:3d7f8",
+    "type": "s32",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 4; Rayverse data.c CD7F8; DOS saves/restores the dword around LoadPlan2InVignet at 1:2640C."
+   },
+   "plan2bit_nb_bytes": {
+    "addr": "2:3d7fc",
+    "type": "s32",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 4; Rayverse data.c CD7FC; DOS saves/restores the dword around LoadPlan2InVignet at 1:2640C."
+   },
+   "TailleMainMemTmp": {
+    "addr": "2:3d86c",
+    "type": "u32",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 4; Rayverse data.c CD86C; DOS reads the dword as the size argument at 1:2622E."
+   },
+   "temp_mem_buf": {
+    "addr": "2:3d88c",
+    "type": "mem_t",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 12; DOS init-memory wrapper at 1:6F768 passes its address to init_memory."
+   },
+   "freeze": {
+    "addr": "2:3fa4a",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 1; Rayverse data.c CFA4A; DOS byte-clears at 1:2623F."
+   },
+   "use_sync": {
+    "addr": "2:3fa4e",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 1; Rayverse data.c CFA4E; DOS byte-stores 1 at 1:262CB."
+   },
+   "ModeNormalAutorise": {
+    "addr": "2:3fa33",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 1; Rayverse data.c CFA33; DOS byte-test in DEPART_WORLD at 1:26892."
+   },
+   "FondAutorise": {
+    "addr": "2:3fa1a",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 1; Rayverse data.c CFA1A; DOS byte-test in DEPART_WORLD at 1:268A2."
+   },
+   "path_has_changed": {
+    "addr": "2:3f8f2",
+    "type": "u16",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 2; Rayverse data.c CF8F2; DOS word-store at 1:262DA."
+   },
+   "main_mem_sprite": {
+    "addr": "2:3d860",
+    "type": "mem_t",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 12; DOS passes descriptor address to SpriteFixeBlocksFree at 1:2694F."
+   },
+   "main_mem_fix": {
+    "addr": "2:3d874",
+    "type": "mem_t",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 12; DOS memory descriptor, address use in EndGame call sites."
+   },
+   "world_filename": {
+    "addr": "2:3d7d8",
+    "type": "char[20]",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 20; Rayverse data.c CD7D8; DOS passes destination to world_level at 1:2695E."
+   },
+   "level_filename": {
+    "addr": "2:3d80c",
+    "type": "char[20]",
+    "name": "ANDROID",
+    "evidence": "Android .bss size 20; Rayverse data.c CD80C; DOS passes destination to file_level in DEPART_LEVEL."
+   },
+   "byte_CFA2A": {
+    "addr": "2:3fa2a",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "Android symbol absent; DOS byte test in DEPART_LEVEL at 1:26? and Rayverse data address CFA2A."
+   },
+   "cheat_code_programmer_message": {
+    "addr": "2:4f760",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF760; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_win_map_alt": {
+    "addr": "2:4f764",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF764; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_10_wiz_alt": {
+    "addr": "2:4f768",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF768; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_all_powers_alt": {
+    "addr": "2:4f76c",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF76C; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_breakout_alt": {
+    "addr": "2:4f770",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF770; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_golden_fist_alt": {
+    "addr": "2:4f774",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF774; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_10_wiz": {
+    "addr": "2:4f778",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF778; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_win_map": {
+    "addr": "2:4f77c",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF77C; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_unlock_all_levels_alt": {
+    "addr": "2:4f780",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF780; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_99_lives_alt": {
+    "addr": "2:4f784",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF784; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_5hp_alt": {
+    "addr": "2:4f788",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF788; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_golden_fist": {
+    "addr": "2:4f78c",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF78C; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_unlock_all_levels": {
+    "addr": "2:4f790",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF790; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_breakout": {
+    "addr": "2:4f794",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF794; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_all_powers": {
+    "addr": "2:4f798",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF798; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_99_lives": {
+    "addr": "2:4f79c",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF79C; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_free_movement": {
+    "addr": "2:4f7a0",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7A0; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_5hp": {
+    "addr": "2:4f7a4",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7A4; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_freq80": {
+    "addr": "2:4f7a8",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7A8; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_lens": {
+    "addr": "2:4f7ac",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7AC; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_breakout_before_victory": {
+    "addr": "2:4f7b0",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7B0; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_level_select": {
+    "addr": "2:4f7b4",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7B4; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "saved_frequence": {
+    "addr": "2:4f7b8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7B8; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "cheat_code_freq100": {
+    "addr": "2:4f7bc",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation DF7BC; DOS PC_init_cheats writes/reads this exact dword at 1:27310..27524."
+   },
+   "MessageProgram": {
+    "addr": "2:3fa10",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation CFA10; DOS byte toggle at 1:278? in programmer-message cheat path."
+   },
+   "game_title": {
+    "addr": "2:32ee4",
+    "type": "char *",
+    "name": "INVENTED",
+    "evidence": "DOS ToDoAtExit loads a dword from 2:32EE4 and passes it as the %s argument at 1:272DF..272EB; BSS pointer, size 4."
+   },
+   "word_CF7E6": {
+    "addr": "2:3f7e6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation CF7E6; DOS word store at 1:26143."
+   },
+   "word_CF7F0": {
+    "addr": "2:3f7f0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c annotation CF7F0; DOS word store at 1:26119."
+   },
+   "P486": {
+    "addr": "2:3fa20",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android symbol P486 (1 byte .bss); DOS byte accesses; cheat worker"
    }
   }
  }

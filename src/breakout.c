@@ -88,7 +88,7 @@ extern s16 YOFFSETCB;
 extern s16 XOFFSETCBLEFT;
 extern u8 nb_collis;
 extern u8 GameModeVideo;
-extern u8 byte_93fa20;
+extern u8 P486;
 extern s16 ray_mode;
 extern s16 new_world;
 extern obj_t ray;
@@ -769,7 +769,7 @@ void init_briques(obj_t *obj)
     CBoffsetY = 0;
     if (GameModeVideo == 1) {
         CBoffsetX -= 8;
-        if (byte_93fa20 == GameModeVideo)
+        if (P486 == GameModeVideo)
             CBoffsetY = CasseBriqueOffsetX[NoCB];
     }
     NbClassicBrik = 0;
@@ -830,7 +830,7 @@ void casse_brique_init(obj_t *obj)
     if (GameModeVideo == 0) xmap += 8;
     else {
         CBoffsetX -= 8;
-        if (byte_93fa20 == 1) {
+        if (P486 == 1) {
             CBoffsetY = CasseBriqueOffsetY[NoCB];
             YOFFSETCB = 10;
         }
@@ -1017,7 +1017,7 @@ void DISPLAY_FIXE_CB(obj_t *obj)
     if (obj->hit_points > 0) {
         y = 320;
         x = 200;
-        if (GameModeVideo == 1 && GameModeVideo == byte_93fa20) {
+        if (GameModeVideo == 1 && GameModeVideo == P486) {
             y = 317;
             x = 192;
         }
@@ -1027,7 +1027,7 @@ void DISPLAY_FIXE_CB(obj_t *obj)
     if (NbClassicBrik <= 20) {
         icon_x = 16;
         icon_y = 175;
-        if (GameModeVideo == 1 && GameModeVideo == byte_93fa20) {
+        if (GameModeVideo == 1 && GameModeVideo == P486) {
             icon_x = 12;
             icon_y = 169;
         }

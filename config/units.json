@@ -8549,6 +8549,374 @@
      ]
     }
    }
+  },
+  "cheat": {
+   "source": "src/cheat.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "sub_35F70": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_3609C": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "InitPcSoundCard": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "FIRST_INIT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_divers_level_PC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "file_level": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "world_level": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LoadPlan3InVignet": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_AND_FADE_PLAN3": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_VIGNET_PC": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_SAVE_SCREEN": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_PERFTIME_SCREEN": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_PERFECT_SCREEN": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_CONTINUE_SCREEN": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_FOND_CONTINUE": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SwapPlan2PlanVignInVignet": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_VIGNET_GAME": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_CREDITS_VIGNET": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DEPART_WORLD": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DEPART_LEVEL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "REMOVE_FICHIER": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "TestSave": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "test_EXIT": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "test_Keyb_on_wldmap": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Keyflush": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_GENERAL_SCREEN": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_OPTIONS_SCREEN": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "HANDLE_KEY": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_FOND_SELECT": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DEPART_DEAD_LOOP": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DEPART_INIT_LOOP": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "FIN_GAME_LOOP": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "FIN_DEAD_LOOP": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "FIN_MAP_LOOP": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "END_GAME": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_EXTENSIONS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DISPLAY_LOADING": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "START_WORLD_VIGNET": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "END_WORLD_VIGNET": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LOAD_BIG_RAYMAN": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ValidButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "StartButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PauseButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ExitButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "CancelButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SelectButPressed": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ToDoAtExit": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PC_clear_text_input_buffer": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PC_init_cheats": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PC_do_cheats_in_world_map": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PC_do_cheats": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
+   }
   }
  }
 }

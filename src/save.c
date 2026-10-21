@@ -47,7 +47,7 @@ extern u8 nb_continue;
 extern u8 bonus_perfect[24];
 extern u8 save_ray_copy[4];
 extern loadinforay_t LoadInfoRay[3];
-extern u8 language, NumCard, Mode_Pad, Port_Pad, byte_93fa20, ScrollDiffOn;
+extern u8 language, NumCard, Mode_Pad, Port_Pad, P486, ScrollDiffOn;
 extern u8 is_joypad_mode, something_with_cfg_25_default_00_joy;
 extern u8 dans_la_map_monde, JeuCracker;
 extern s16 num_world_choice;
@@ -612,7 +612,7 @@ u8 SaveOptionsOnDisk(void)
     for (i = 0; i < 7; i++)
         if (write(fd, tab_key[i], 1) <= 0) return 0;
     if (write(fd, &GameModeVideo, 1) <= 0) return 0;
-    if (write(fd, &byte_93fa20, 1) <= 0) return 0;
+    if (write(fd, &P486, 1) <= 0) return 0;
     if (write(fd, &SizeScreen, 1) <= 0) return 0;
     if (saved_frequency != 1 && saved_frequency != 0 && saved_frequency != 2)
         saved_frequency = 0;
@@ -678,7 +678,7 @@ u8 LoadOptionsOnDisk(void)
     for (i = 0; i < 7; i++)
         if (read(fd, tab_key[i], 1) <= 0) return 0;
     if (read(fd, &GameModeVideo, 1) <= 0) return 0;
-    if (read(fd, &byte_93fa20, 1) <= 0) return 0;
+    if (read(fd, &P486, 1) <= 0) return 0;
     if (read(fd, &SizeScreen, 1) <= 0) return 0;
     if (Frequence != 70) {
         if (read(fd, &Frequence, 1) <= 0) return 0;
