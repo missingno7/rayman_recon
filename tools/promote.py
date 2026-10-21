@@ -7,6 +7,7 @@ Bindings: a name already bound to a different address, or an address already bou
 the same section, is refused. --unit adds/updates config/units.json with the statuses that tools/verify.py
 measures now (fresh compile) and refuses if any already-accepted unit regresses.
 """
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -81,6 +82,10 @@ def android_mismatches(canon):
     return bad
 
 
+RUNTIME = re.compile(r"^(IF@|__)")                       # compiler-generated / runtime entry names
+RUNTIME_EVIDENCE = re.compile(r"libscan|\.LIB\b|probe", re.I)
+
+
 def merge_symbols(overlay, renames):
     canon = load_json(CONFIG / "symbols.json")
     ov = load_json(overlay)
@@ -92,15 +97,24 @@ def merge_symbols(overlay, renames):
         for sec in ("functions", "data"):
             have = dst.setdefault(sec, {})
             by_addr = {norm(v["addr"]): k for k, v in have.items()}
+            alias = {a: (k, norm(v["addr"])) for k, v in have.items() for a in v.get("aliases", [])}
             for name, ent in secs.get(sec, {}).items():
                 name = renames.get(name, name)
                 ent = dict(ent, addr=norm(ent["addr"]))
+                if name in alias:          # recorded alias of an existing binding (tools/integrate.py --rename)
+                    if alias[name][1] != ent["addr"]:
+                        raise SystemExit(f"conflict: {name} is an alias of {alias[name][0]} at {alias[name][1]}, "
+                                         f"overlay {ent['addr']}")
+                    continue
                 if name in have:
                     if norm(have[name]["addr"]) != ent["addr"]:
                         raise SystemExit(f"conflict: {name} bound to {have[name]['addr']}, overlay {ent['addr']}")
                     continue
                 if ent["addr"] in by_addr:
                     raise SystemExit(f"conflict: {ent['addr']} already bound as {by_addr[ent['addr']]}, overlay {name}")
+                if RUNTIME.match(name) and not RUNTIME_EVIDENCE.search(ent.get("evidence", "")):
+                    raise SystemExit(f"refusing runtime/compiler name {name}: needs library-member or compile-probe "
+                                     "evidence (libscan, .LIB member, probe), not 'the target of my own call'")
                 have[name] = ent
                 added += 1
     bad = overlaps(canon) + android_mismatches(canon)
