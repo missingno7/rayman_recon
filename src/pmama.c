@@ -560,7 +560,7 @@ void lance_couteau_droit(obj_t* obj) {
             if (abs_y < 0) abs_y = -abs_y;
             abs_x = diff_x;
             if (abs_x < 0) abs_x = -abs_x;
-            if (abs_x < abs_y) abs_x = abs_y;
+            abs_x = max32(abs_x, abs_y);
             divisor = ashl16(abs_x, 4) / 4;
             obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
             obj->speed_y = convertspeed(ashl16(diff_y, 4) / (s16) divisor);
@@ -612,8 +612,7 @@ void retour_couteau(obj_t* obj) {
                 CouteauxInfos[cout_ind].active = false;
                 abs_x = Abs(diff_x);
                 abs_y = Abs(diff_y);
-                if (abs_x < abs_y)
-                    abs_x = abs_y;
+                abs_x = max32(abs_x, abs_y);
                 divisor = 2;
                 divisor = ashl16(abs_x, 4) / divisor;
                 obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
@@ -695,7 +694,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                             if (unk_3 < 0) unk_3 = -unk_3;
                             value = diff_x;
                             if (value < 0) value = -value;
-                            if (value < unk_3) value = unk_3;
+                            value = max32(value, unk_3);
                             unk_4 = ashl16(value, 4) / 4;
                         }
                         unk_x_1 = convertspeed(ashl16(diff_x, 4) / unk_4);
