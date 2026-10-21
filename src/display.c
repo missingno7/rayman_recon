@@ -182,7 +182,7 @@ extern u32 clock_ticks(void);
 extern void SAVE_PLAN3(void);
 extern void RESTORE_PLAN3(void);
 extern void INIT_TEXT_TO_DISPLAY(void);
-extern void LOAD_CREDITS_VIGNET(mem_t *mem);
+extern void LOAD_CREDITS_VIGNET(mem_t *mem1, mem_t *mem2);
 extern void LOAD_VIGNET_GAME(mem_t *mem);
 extern void INIT_ANIM_VICTOIRE(void);
 extern void DO_RAYMAN_WINS(void);
@@ -933,9 +933,8 @@ void DISPLAY_PROTOON_BACK(void)
     loop_timing = 4;
     new_txt_fee = 0;
     INIT_TEXT_TO_DISPLAY();
-    ((void (*)(s16 (*)(u32), mem_t *))SYNCHRO_LOOP)
-        (display_vignet_prg, &main_mem_level);
-    LOAD_CREDITS_VIGNET(&main_mem_world);
+    SYNCHRO_LOOP(display_vignet_prg);
+    LOAD_CREDITS_VIGNET(&main_mem_world, &main_mem_level);
     DO_FADE_OUT();
     RESTORE_PALETTE();
     RESTORE_PLAN3();
