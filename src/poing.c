@@ -308,16 +308,22 @@ void DO_POING(obj_t *obj)
                         ray_diff_x -= 11;
                 }
 
-                ray_diff_y =
-                    (ray_zdc_h + (ray_zdc_y >> 1) -
-                     ((obj->offset_by + obj->offset_hy) >> 1)) * 16;
+                {
+                    /* DOS 1:56ea1..56ec5: snapshot the ray half-height, then
+                     * accumulate the object's two height offsets. */
+                    s32 half_height = ray_zdc_y >> 1;
+                    s32 obj_height = obj->offset_by;
+                    obj_height += obj->offset_hy;
+                    ray_diff_y = (ray_zdc_h + half_height - (obj_height >> 1)) * 16;
+                }
 
                 if ((obj->flags.flip_x && ray_diff_x >= obj->x) ||
                     (!obj->flags.flip_x && ray_diff_x <= obj->x))
                     switch_off_fist();
                 else {
-                    unk_x_1 = ray_diff_x - obj->x;
                     unk_y_1 = ray_diff_y - poing.y_16;
+                    /* DOS 1:56efa..56f03 subtracts the low coordinate words. */
+                    unk_x_1 = (s16)ray_diff_x - (s16)obj->x;
                     if (unk_x_1 != 0)
                         unk_y_1 = unk_y_1 / unk_x_1;
                     obj->speed_y = unk_y_1 * obj->speed_x;
