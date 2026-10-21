@@ -4,6 +4,7 @@
 #include "map.h"
 #include "palette.h"
 #include "action_local.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -769,7 +770,7 @@ void DISPLAY_ALL_OBJECTS(void) {
                 DISPLAY_CYMBALE(obj, draw_buffer, 1);
             } else if (obj->type == 0xFE) {
                 angle = ((pente[abs((s8)obj->hit_points)] << 9) *
-                    -((s8)obj->hit_points == 0 ? 0 : ((s8)obj->hit_points > 0 ? 1 : -1))) / 360;
+                    -sgn((s8)obj->hit_points)) / 360;
                 DISPLAY_DEFORMATION(obj, (s16)angle, 0x1000, 0x1000);
             } else if (obj->type == 0xFC || obj->type == 0xFB || obj->type == 0xAD) {
                 get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);
@@ -1113,8 +1114,7 @@ void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u
                 let_width = calc_let_Width(font_size, number);
                 calc_num_let_spr(font_size, (u8*)&number);
                 vertical_offset = cosinus((s16)(phase + (index << 5)));
-                if (vertical_offset >= 0) vertical_offset >>= 5;
-                else vertical_offset = -((-vertical_offset) >> 5);
+                vertical_offset = ashr16(vertical_offset, 5);
                 if (number >= 1000) {
                     sprite = alpha_numbers.sprites + number - 1000;
                     DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);
