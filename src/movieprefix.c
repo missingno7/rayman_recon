@@ -594,23 +594,21 @@ void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 
 void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    s32 row;
     s32 width;
-    s32 height;
+    s32 rows;
     u8 *dst;
     const u8 *src;
 
-    src = data;
     dst = surface->pixels + work->surface_offset;
+    rows = work->height;
     width = work->width;
-    height = work->height;
-    row = 0;
-    while (row < height) {
+    src = data;
+    /* DOS 1:2aa38..2aa43 copies a row before decrementing the count. */
+    do {
         memcpy(dst, src, width);
-        src += width;
         dst += 320;
-        ++row;
-    }
+        src += width;
+    } while (--rows != 0);
 }
 
 void sub_3AA4C(u8 *work_bytes)
