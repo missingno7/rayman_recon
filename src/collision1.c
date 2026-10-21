@@ -206,7 +206,6 @@ s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1, s16 x_2, s16 y_2, s32 w_2, s32
 void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
     s16 anim_x; s16 anim_y; s16 anim_w; s16 anim_h;
     s32 inset;
-    s32 limit_frame;
     s16 old_flip_x;
     s16 bc_x_pos;
     s16 new_x;
@@ -336,12 +335,8 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
                 } else if (obj->sub_etat == 6) {
                     *out_h >>= 1;
                     *out_y += *out_h;
-                    limit_frame = 15;
-                    if (limit_frame > obj->anim_frame) limit_frame = obj->anim_frame;
-                    *out_y -= limit_frame * 2;
-                    limit_frame = 15;
-                    if (limit_frame > obj->anim_frame) limit_frame = obj->anim_frame;
-                    *out_h += limit_frame * 2;
+                    *out_y -= min32(15, obj->anim_frame) * 2;
+                    *out_h += min32(15, obj->anim_frame) * 2;
                 }
             }
             break;
