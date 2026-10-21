@@ -6376,7 +6376,7 @@
      ]
     },
     "select_level_prg": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -6404,7 +6404,7 @@
      ]
     },
     "WORLD_CHOICE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

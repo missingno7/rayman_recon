@@ -4,6 +4,7 @@
 #include "game.h"
 #include "map.h"
 #include "lowlevel.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -109,7 +110,7 @@ extern void INIT_SAVE_CONTINUE(void);
 extern void INIT_SAVE_CHOICE(void);
 extern void INIT_AFFICHE_ECRAN_SAVE(void);
 extern void SaveGameOnDisk(s16 slot);
-extern void InitPlasma(s32 enabled);
+extern void InitPlasma(u8 enabled);
 extern void SWAP_BUFFERS(void);
 extern void DoCdRap(void);
 extern void block_free(mem_t *mem);
@@ -122,8 +123,8 @@ extern s16 xwldmapsave, ywldmapsave;
 extern void INIT_TXT_BOX(display_item_t *box);
 extern void display_box_text_plasma(display_item_t *box, u8 arg);
 extern void display_deform_text(const char *text, s16 x, s16 y, u8 font,
-                                u8 color, s16 rotation, s16 kx, s16 ky);
-extern s16 cosinus(s16 angle);
+                                s8 color, s16 rotation, s16 kx, s16 ky);
+extern s16 cosinus(s32 angle);
 extern void DISPLAY_SAVE_SPRITES(s16 x, s16 save_index);
 extern void DISPLAY_SAVE_POING(void);
 extern void DO_STAGE_NAMES(void);
@@ -317,14 +318,20 @@ s16 saisie_nom_prg(u32 a1)
         sortie_save = 1;
 
     {
-        u8 done = fin_saisie_nom != 0 || MENU_RETURN != 0;
-    if (MENU_RETURN) {
-        if (action == 1)
-            strcpy(save_ray[fichier_selectionne - 1], save_ray_copy);
+        u8 done;
+        if (fin_saisie_nom != 0)
+            done = 1;
+        else if (MENU_RETURN != 0)
+            done = 1;
         else
-            strcpy(save_ray[fichier_selectionne - 1], "");
-    }
-    return done;
+            done = 0;
+        if (MENU_RETURN) {
+            if (action == 1)
+                strcpy(save_ray[fichier_selectionne - 1], save_ray_copy);
+            else
+                strcpy(save_ray[fichier_selectionne - 1], "");
+        }
+        return done;
     }
 }
 
@@ -576,6 +583,7 @@ void DISPLAY_STAGE_NAMES(void)
     s32 i, letter;
     s32 width;
     sprite_t *sprite;
+    s16 draw_x, draw_y;
     DO_STAGE_NAMES();
     sprite_clipping(0, 320, 0, 200);
     if (PositionStageNameCalcule != 1) {
@@ -605,9 +613,11 @@ void DISPLAY_STAGE_NAMES(void)
             if (letter) {
                 width = calc_let_Width((u8)TailleStageNameWorld, letter);
                 sprite = &alpha2.sprites[letter + 41];
-                DrawSpriteColorNormalEtX((s16)(PositionXStageNameWorld[i] >> 4),
+                draw_y = (s16)((PositionYStageNameWorld[i] >> 4) - sprite->outer_height);
+                draw_x = (s16)(PositionXStageNameWorld[i] >> 4);
+                DrawSpriteColorNormalEtX(draw_x,
                     (u8)CouleurStageNameWorld,
-                    (s16)((PositionYStageNameWorld[i] >> 4) - sprite->outer_height),
+                    draw_y,
                     (u16)(width + (sprite->outer_height << 8)), draw_buffer,
                     alpha2.img_buffer + sprite->offset_in_atlas);
             }
@@ -620,9 +630,11 @@ void DISPLAY_STAGE_NAMES(void)
             if (letter) {
                 width = calc_let_Width((u8)TailleStageNameLevel, letter);
                 sprite = &alpha.sprites[letter];
-                DrawSpriteColorNormalEtX((s16)(PositionXStageNameLevel[i] >> 4),
+                draw_y = (s16)((PositionYStageNameLevel[i] >> 4) - sprite->outer_height);
+                draw_x = (s16)(PositionXStageNameLevel[i] >> 4);
+                DrawSpriteColorNormalEtX(draw_x,
                     (u8)CouleurStageNameLevel,
-                    (s16)((PositionYStageNameLevel[i] >> 4) - sprite->outer_height),
+                    draw_y,
                     (u16)(width + (sprite->outer_height << 8)), draw_buffer,
                     alpha.img_buffer + sprite->offset_in_atlas);
             }
@@ -633,7 +645,6 @@ void DISPLAY_STAGE_NAMES(void)
 s16 WORLD_CHOICE(u32 a1)
 {
     s32 next_clock_target;
-    s32 radius_y;
     s16 result;
 
     PC_do_cheats_in_world_map();
@@ -641,7 +652,7 @@ s16 WORLD_CHOICE(u32 a1)
         next_clock_target = word_CF7EE + a1;
 
     let_shadow = 0;
-    memset(DrawBufferNormal, 0, 64000);
+    fill(DrawBufferNormal);
     draw_buffer = EffetBufferNormal;
 
     DO_RAYMAN_IN_WLD_MAP();
@@ -650,9 +661,9 @@ s16 WORLD_CHOICE(u32 a1)
     display2(&ray);
     DISPLAY_PLAT_WAY();
 
-    radius_y = 3 * RayonJumelle / 4;
     DisplayJumellesNormal(JumellePosX, JumellePosY, RayonJumelle,
-                          radius_y, EffetBufferNormal, DrawBufferNormal);
+                          3 * RayonJumelle / 4, EffetBufferNormal,
+                          DrawBufferNormal);
     draw_buffer = DrawBufferNormal;
 
     DISPLAY_STAGE_NAMES();
