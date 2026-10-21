@@ -204,7 +204,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
     {
         ray_x = ray.x + ray.offset_bx;
         smama_x_1 = smama_obj->offset_bx + smama_obj->x;
-        if ((ray_x >= smama_x_1 - 8) && (ray_x <= smama_x_1 + 8))
+        if (inrange(ray_x, smama_x_1 - 8, smama_x_1 + 8))
         {
             cur_obj = level.objects; 
             j = 0;
@@ -248,7 +248,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
                 smama_x_2 = smama_obj->x + smama_obj->offset_bx;
                 if (i == 0) {
 #ifdef PC
-                    if (abs(smama_x_2 - lastDroppedBombXCenterPos) < (Bloc_lim_W2 - Bloc_lim_W1) / 9) {
+                    if (Abs(smama_x_2 - lastDroppedBombXCenterPos) < (Bloc_lim_W2 - Bloc_lim_W1) / 9) {
                         return;
                     }
 #else
@@ -365,8 +365,8 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
             case 0:
                 bossEncounter++;
             case 1:
-                currentBossActionIsOver = 1;
                 currentBossAction = 0;
+                currentBossActionIsOver = 1;
                 break;
 
             case 2:
@@ -748,7 +748,7 @@ block_98:
                 setMereDenisAtScrollBorder(smama_obj, smama_obj->flags.flip_x);
                 if (cur_act == 45)
                 {
-                    bossXToReach = ray.offset_bx + ray.x - smama_obj->offset_bx;
+                    bossXToReach = ray.x + ray.offset_bx - smama_obj->offset_bx;
                     smama_obj->x = bossXToReach;
                 }
                 else if (cur_act == 25)
