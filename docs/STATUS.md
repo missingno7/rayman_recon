@@ -1,67 +1,27 @@
-# Status (Phase 2 continued - systematic DOS matching, 2026-10-20)
+# Status (Phase 2 continued - systematic DOS matching, 2026-10-21)
 
-Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record).
-NEAR diagnosis: `python tools/census.py` (docs/CENSUS.md).
+Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record;
+the per-unit table is printed by tools/status.py and is not duplicated here). NEAR diagnosis: `python tools/census.py`
+(docs/CENSUS.md). Wave history and measured worker effectiveness: docs/CENSUS.md sections 2-5.
 
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **503 of 780 recorded functions, 70,689 code bytes** (~15.4% of game code 1:00000-1:6fbe6) in 39 code units; 277 NEAR_MATCH |
-| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1 - every function STRICT |
-| data closure | **25,741 bytes VERIFIED** (`_DATA` units + CONST of bonus, basic, input, jumelle, worldmap); mapped (named+sized bindings): 89.7% of game `_DATA` |
-| BSS | order rule PROVEN; layout VERIFIED 6,919 bytes (rand, moskito, central-block palette prefix) |
+| function-level STRICT | **1105 of 1511 recorded functions, 184,133 code bytes** (~40.2% of game code 1:00000-1:6fbe6) in 123 code units; 406 NEAR_MATCH, 1 CODE_BYTES_MATCH |
+| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe |
+| data closure | **30,027 bytes VERIFIED**; mapped (named+sized bindings): 89.7% of game `_DATA` |
+| BSS | order rule PROVEN; layout VERIFIED 6,919 bytes |
 | linked binary / packed EXE | not started (by design) |
 
-Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc` (software FP proven by jumelle).
-Bindings: 933 functions, 732 data. Tests: `python -m unittest discover -s tests` (15).
+Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1683 functions, 1143 data. Tests: 17.
 
-## NEAR_MATCH (277) by structural class (tools/census.py)
-SHAPE / same structure 128 (logic right, Watcom shape left), REFS_LAYOUT 23 (bytes equal; follows object layout),
-DIFF pointers 126 (calls/globals/fields/constants differ - logic, binding or prototype gaps, ~60% real).
-
-## Code units (GOG v1.21)
-| unit | STRICT | notes |
-|---|---|---|
-| rand | 2/2 | whole object ; _BSS VERIFIED |
-| audiocd | 12/12 | whole object |
-| mathutil | 12/12 | whole object |
-| bat | 7/9 | |
-| bonus | 8/8 | whole object ; CONST VERIFIED |
-| trumpet | 3/6 | |
-| ufo | 3/5 | |
-| cage | 9/10 | |
-| blacktoon | 4/8 | |
-| poing | 4/11 | |
-| poisson | 7/8 | |
-| basic | 36/58 | ; CONST VERIFIED |
-| mite | 5/11 | |
-| moskito | 3/14 | ; _BSS VERIFIED |
-| stoneman | 21/24 | |
-| luciole | 4/10 | |
-| special | 21/30 | |
-| clown | 12/12 | whole object |
-| fee | 1/8 | |
-| dark | 16/22 | |
-| saxo | 19/25 | |
-| pmama | 19/28 | |
-| meredenis | 3/18 | |
-| collision1 | 24/37 | |
-| collision2 | 12/36 | |
-| objupdate1 | 46/46 | whole object |
-| bbmont | 19/29 | |
-| blocs | 18/23 | |
-| objupdate2 | 34/51 | |
-| map | 5/13 | |
-| map_ngawe | 5/11 | |
-| objupdate3 | 1/3 | |
-| objupdate4 | 1/2 | |
-| objinit | 1/7 | |
-| breakout | 19/39 | |
-| jumelle | 6/19 | ; CONST VERIFIED |
-| input | 21/31 | ; CONST VERIFIED |
-| worldmap | 46/50 | ; CONST VERIFIED |
-| display | 14/32 | |
-Not integrated: cymbal (3 large functions), blood (DoEffectBloodOut); untouched objects: tumap --list.
+## Coverage
+Every C range of the game code below 1:6fbe6 now has a unit except: the hand-written low-level assembly block
+1:00000-1:06f80 (~28 KB; ABIs in docs/reference/lowlevel_abi.h; needs an assembly reconstruction path - not started)
+and the anonymous prefix of the movie object 1:2a1c0-1:2b288 (34 routines; C-vs-assembly being decided).
+Of 406 NEAR functions most have had two or more finishing passes; remaining blockers are register/stack allocation,
+the F3 `rep movs` copy idiom (OPEN, not a compiler-release difference: 10.5 and 10.6 emit identical prefixes), clamp
+lowering and object layout drift (each brief names the first size-drifting function).
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).

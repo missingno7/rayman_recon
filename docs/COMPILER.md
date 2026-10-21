@@ -129,6 +129,13 @@ Only then shape the body:
   `flags[type]` byte-1 bits 4/5 move_x/move_y (makeUturn, 1324 bytes) only match as bitfield reads - mask arithmetic
   on the raw byte compiles differently (same lesson as block_flags). Shared as unions with a `raw` view.
 
+- **Callee body moved beside a later caller, cold epilogue left behind** [PROVEN, cdaudio 2026-10-21]: with the game
+  profile, a non-adjacent earlier-defined callee can have its entry/fall-through body emitted next to a later wrapper,
+  leaving only a cold common epilogue at its own definition position; branch nesting decides which body moves. DOS:
+  cold code 1:1a493..1a49c, late entry 1:1a734 (same in v1.12 at 1:1a2e8/1:1a048, so not a GOG patch). Consequence for
+  W-LAYOUT: a function's DOS extent may include another function's cold return - measure extents from the disassembly,
+  not from symbol spacing. Probes: build/workers/w4_cdaudio (before_pool_probe.c, pool_location_probe, pool_nested).
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
   evidence (e.g. an FP function whose residue changes under `-on`: box CalcTab 71 -> 64 diffs, still NEAR).
