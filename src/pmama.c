@@ -511,15 +511,19 @@ void lance_couteau_parabolique(obj_t* obj) {
                 obj->speed_x = convertspeed(0);
                 obj->speed_y = convertspeed(-1);
             } else {
+                /* DOS 1:5509f..550a8 keeps each promoted operand in its own register. */
+                s32 vertical; s32 horizontal;
                 if (diff_x >= 0)
                     spd_x = 2;
                 else
                     spd_x = -2;
+                vertical = diff_y;
+                horizontal = spd_x;
                 spd_y =
-                    -((((diff_y << 4) * spd_x) << 3) +
+                    -((((vertical << 4) * horizontal) << 3) +
                             diff_x * (diff_x << 3)
                     ) /
-                    ((diff_x * spd_x) << 3);
+                    ((diff_x * horizontal) << 3);
                 obj->speed_x = convertspeed(spd_x) - 10;
                 obj->speed_y = spd_y;
             }
@@ -552,18 +556,19 @@ void lance_couteau_droit(obj_t* obj) {
         diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->offset_by + obj->y);
         if (Abs(diff_x) >= 4 || Abs(diff_y) >= 4) {
             CouteauxInfos[cout_ind].active = false;
-            abs_x = Abs(diff_x);
-            abs_y = Abs(diff_y);
-            abs_x = MAX(abs_x, abs_y);
-            divisor = 4;
-            divisor = ashl16(abs_x, 4) / divisor;
+            abs_y = diff_y;
+            if (abs_y < 0) abs_y = -abs_y;
+            abs_x = diff_x;
+            if (abs_x < 0) abs_x = -abs_x;
+            if (abs_x < abs_y) abs_x = abs_y;
+            divisor = ashl16(abs_x, 4) / 4;
             obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
             obj->speed_y = convertspeed(ashl16(diff_y, 4) / (s16) divisor);
             update_couteau(obj);
             obj->display_prio = 3;
         } else {
             CouteauxInfos[cout_ind].active = true;
-            if ((u32) (pma_type_attaque - 1) >= 2) {
+            if (pma_type_attaque != 1 && pma_type_attaque != 2) {
                 if (obj->main_etat != 2 || obj->sub_etat != 13) {
                     obj->main_etat = 2;
                     obj->sub_etat = 13;
@@ -635,10 +640,8 @@ void retour_couteau(obj_t* obj) {
 //654F8
 void lance_couteau_lineaire(obj_t* in_obj) {
     // NOTE(Falcury): PS1 and PC versions seem mostly identical (minor difference).
-    s16 unk_1;
     obj_t *cout_obj;
     s16 cout_x; s16 cout_y;
-    s16 unk_2;
     s16 diff_x; s16 diff_y;
     s16 unk_sub_etat;
     s32 unk_3;
@@ -652,7 +655,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
     u8 cout_ind = find_couteau(in_obj);
 
     if (cout_ind != 0xFF && (cout_ind == 0 || (cout_ind != 0 && CouteauxInfos[cout_ind - 1].field2_0x4 == 0))) {
-        unk_1 = CouteauxInfos[cout_ind].field2_0x4;
+        s16 unk_1 = CouteauxInfos[cout_ind].field2_0x4;
         if (unk_1 == 0) {
             if (!CouteauxInfos[cout_ind].active) {
                 cout_obj = &level.objects[CouteauxInfos[cout_ind].field7_0xe];
@@ -677,7 +680,7 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 }
             }
         } else if (unk_1 == 1) {
-            unk_2 = CouteauxInfos[cout_ind].field4_0x8;
+            s16 unk_2 = CouteauxInfos[cout_ind].field4_0x8;
             if (unk_2 == 15) {
                 CouteauxInfos[cout_ind].x_pos = ray.x + ray.offset_bx;
                 CouteauxInfos[cout_ind].y_pos = ray.y + ray.offset_by;
@@ -686,9 +689,15 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 switch (CouteauxInfos[cout_ind].field9_0x12) {
                     case 1:
                         unk_sub_etat = 11;
-                        unk_3 = MAX(Abs(diff_x), Abs(diff_y));
-                        unk_4 = 4; /* get rid of this? */
-                        unk_4 = ashl16(unk_3, 4) / unk_4;
+                        {
+                            s32 value;
+                            unk_3 = diff_y;
+                            if (unk_3 < 0) unk_3 = -unk_3;
+                            value = diff_x;
+                            if (value < 0) value = -value;
+                            if (value < unk_3) value = unk_3;
+                            unk_4 = ashl16(value, 4) / 4;
+                        }
                         unk_x_1 = convertspeed(ashl16(diff_x, 4) / unk_4);
                         unk_y_1 = convertspeed(ashl16(diff_y, 4) / unk_4);
                         unk_anim_frame = couteau_frame(unk_x_1, unk_y_1);
