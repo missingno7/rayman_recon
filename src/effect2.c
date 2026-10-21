@@ -1,4 +1,4 @@
-/* effect.c part 2 (1:28a30..1:29210; sub_* = Rayverse placeholder names, PC-only). Worker sfin_effect; partial finishing candidate, see NOTES.md. */
+/* effect.c part 2 (1:28a30..1:29210; sub_* = Rayverse placeholder names, PC-only). Worker c3_effect2; partial candidate, see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
@@ -130,8 +130,9 @@ void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
 
         item->x0 = item->x1 = x;
         item->x2 = item->x3 = x + x_step - 1;
-        item->y0 = item->y2 = y;
-        item->y1 = item->y3 = y + y_step - 1;
+        /* DOS 1:28c44..28c67: top corners 0/3, bottom corners 1/2. */
+        item->y0 = item->y3 = y;
+        item->y1 = item->y2 = y + y_step - 1;
         item->width0 = item->width1 = item->width2 = item->width3 = 0x200;
         if (x < 160) {
             item->screen = state->screen_a;
