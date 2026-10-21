@@ -1,13 +1,12 @@
 /*
  * Mr Dark boss (GOG v1.21 object 1:22a70-1:240f0). File name invented (Rayverse dark.c). Names: Rayverse/Android.
- * Worker candidate: 16/22 STRICT; six functions remain NEAR_MATCH.
+ * Worker candidate: 18/22 STRICT; four functions remain NEAR_MATCH; contiguous _TEXT.
  * Detailed evidence and negative results: NOTES.md in this directory.
  */
 #include "obj.h"
 #include "game.h"
 #include "inline_helpers.h"
 extern obj_type_flags_t flags[262];
-#include <stdlib.h>
 #include <stdlib.h>
 
 #define TYPE_DARK_SORT 215
@@ -306,12 +305,12 @@ void DARK_phase3(obj_t *mr_drk_obj)
 
 void DO_DARK_COMMAND(obj_t *mr_drk_obj)
 {
-    s16 dark_h;
     s16 dark_x;
     s16 dark_y;
     s16 dark_w;
-    s16 sort_y;
+    s16 dark_h;
     s16 sort_x;
+    s16 sort_y;
 
     if (mr_drk_obj->main_etat == 0) {
         if (mr_drk_obj->sub_etat == 39) {
@@ -347,10 +346,10 @@ void DO_DARK_COMMAND(obj_t *mr_drk_obj)
         mr_drk_obj->sub_etat == 22 || mr_drk_obj->sub_etat == 23 ||
         mr_drk_obj->sub_etat == 24) && mr_drk_obj->anim_frame == 22) {
         GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
+        sort_x = dark_x + (dark_w >> 1) - 96;
+        sort_y = dark_y + (dark_h >> 1) - 128;
         dark_rayon_dx = -5;
         dark_rayon_dy = 0;
-        sort_x = (dark_w >> 1) + dark_x - 96;
-        sort_y = dark_y + (dark_h >> 1) - 128;
         switch (mr_drk_obj->sub_etat) {
         case 8:
             allocate_DARK_SORT(sort_x, sort_y, 0, 1);
@@ -393,10 +392,11 @@ void DO_DARK_COMMAND(obj_t *mr_drk_obj)
             }
         } else if (mr_drk_obj->anim_frame == 22) {
             GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
+            sort_x = dark_x + (dark_w >> 1) - 96;
+            sort_y = dark_y + (dark_h >> 1) - 128;
             dark_rayon_dx = -2;
             dark_rayon_dy = 0;
-            allocate_DARK_SORT((s16)(dark_x + (dark_w >> 1) - 96),
-                (s16)(dark_y + (dark_h >> 1) - 128), 4, 1);
+            allocate_DARK_SORT(sort_x, sort_y, 4, 1);
         }
     } else if (mr_drk_obj->main_etat == 0 && mr_drk_obj->sub_etat == 21) {
         DARK_phase3(mr_drk_obj);
@@ -760,3 +760,4 @@ void allume_vitraux(u8 *param_1)
         i++;
     }
 }
+
