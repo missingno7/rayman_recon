@@ -19,7 +19,9 @@ prints the rule IDs to try for each NEAR function. One hypothesis at a time; rec
    (~20 units; on_block_chdir/test_allowed `s16` was re-derived 8 times.)
 3. **W-BIND** a global/field reference differs: check the binding (true start, true type, Rayverse address
    conversion, Android size can be wrong) and the -5 short load (`mov r,[x-2]; sar r,16` = plain `short x`).
-   (~15 units of wrong bindings; ~10 where a -2 addend was misread as another global.)
+   (~15 units of wrong bindings; ~10 where a -2 addend was misread as another global.) The same trick loads a
+   promoted *signed byte*: `mov r,[x-3]; sar r,24` reads `(s8)x` (collision1 slope, PROVEN) - a -3 displacement
+   is not another field.
 4. **W-PORT** size or calls differ substantially: remove Rayverse/PS1 port additions (debug, clamps, `&0x7f`, guards),
    restore DOS-only calls, missing (empty) functions. (~25 units)
 Only then shape the body:

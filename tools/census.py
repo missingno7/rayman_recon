@@ -58,15 +58,15 @@ def features(code, refs, rel_calls):
     prologue = True
     # -5 short loads `mov r,[x-2] ... sar/shr r,16` read x: undo the -2 so width changes do not look like new
     # targets (the shift may be scheduled a few instructions later)
-    short_at = set()
+    short_at = {}
     for k, a in enumerate(ins):
         m0 = re.match(r"mov (e\w\w), dword ptr \[", a.mnemonic + " " + a.op_str)
         if not m0:
             continue
         r = m0.group(1)
         for b in ins[k + 1:k + 9]:
-            if b.mnemonic in ("sar", "shr") and b.op_str == r + ", 0x10":
-                short_at.add(a.address)
+            if b.mnemonic in ("sar", "shr") and b.op_str in (r + ", 0x10", r + ", 0x18"):
+                short_at[a.address] = 2 if b.op_str.endswith("0x10") else 3   # short: [x-2]; signed byte: [x-3]
                 break
             if b.op_str.split(",")[0].strip() in (r, r[1:]) and b.mnemonic not in ("cmp", "test", "push"):
                 break
@@ -89,7 +89,7 @@ def features(code, refs, rel_calls):
                 g = refs[s]
                 if i.address in short_at and re.match(r"\d:[0-9a-f]+$", g):
                     o, a = g.split(":")
-                    g = f"{o}:{int(a, 16) + 2:x}"
+                    g = f"{o}:{int(a, 16) + short_at[i.address]:x}"
                 f["globals"][g] += 1
         if m.startswith("j") and m != "jmp":
             f["jcc"] += 1
@@ -102,7 +102,7 @@ def features(code, refs, rel_calls):
         for d in re.findall(r"\[(e[a-z]{2})[^\]]*?([+-] 0x[0-9a-f]+|[+-] \d+)\]", ops):
             base, disp = d
             if base not in ("esp", "ebp"):
-                v = int(disp.replace(" ", ""), 0) + (2 if i.address in short_at else 0)
+                v = int(disp.replace(" ", ""), 0) + short_at.get(i.address, 0)
                 if abs(v) < 0x10000:
                     f["fields"][v] += 1
         for imm in re.findall(r"(?:, |^)(0x[0-9a-f]+|\d+)$", ops):
