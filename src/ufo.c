@@ -66,8 +66,7 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
             {
                 s32 abs_y = Abs((s32)speed_y);
                 maximum_speed = Abs((s32)speed_x);
-                if (maximum_speed < abs_y)
-                    maximum_speed = abs_y;
+                maximum_speed = max32(maximum_speed, abs_y);
             }
             switch (indicator->sub_etat)
             {
