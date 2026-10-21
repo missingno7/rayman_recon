@@ -284,8 +284,8 @@ void mereDenisDropBomb(obj_t *smama_obj)
                     new_flip_x = !smama_obj->flags.flip_x;
                     break;
                 case 8:
-                    smama_x_2 = 0;
                     droppedBombIds[i][lastDroppedBombIdInSequence[i]] = -1;
+                    smama_x_2 = 0;
                     break;
                 default:
                     break;
@@ -431,7 +431,7 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
                     if (poing_obj->speed_x != 0) {
                         skipToLabel(smama_obj, 0, true);
                         state_row = smama_obj->eta[0];
-                        bossXToReach = smama_obj->nb_cmd * state_row[2].speed_x_right / 16;
+                        bossXToReach = state_row[2].speed_x_right * smama_obj->nb_cmd / 16;
                         if (poing_obj->speed_x < 0)
                             bossXToReach = smama_obj->x + bossXToReach;
                         else if (poing_obj->speed_x > 0)
