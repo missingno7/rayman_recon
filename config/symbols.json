@@ -16546,6 +16546,12 @@
     "name": "ANDROID",
     "evidence": "DOS 1:6f747 clears 0x168 bytes at 2:39688; 1:6f7a4 uses stride 12, 1:6f7c6 stops at 30; fields capacity+0, buffer+4, allocated+8. Android temp_mem is .bss size 360; allocator-table identity independent of BSS ordering.",
     "type": "temp_mem_entry_t [30]"
+   },
+   "mem_32190": {
+    "addr": "2:32190",
+    "name": "INVENTED",
+    "type": "u8 *",
+    "evidence": "DOS fixups 1:6f3de and 1:6f3e8 pass the address of this storage to the allocator; 1:6f404 loads the resulting dword pointer; 1:70378 passes its address to SpriteWorldBlocksFree. Pointer type/4-byte size; name INVENTED."
    }
   }
  },
