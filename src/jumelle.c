@@ -88,10 +88,10 @@ void CalcObjPosInWorldMap(obj_t* obj);
 void MoveRayInWorldMap(void);
 
 void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 circle2_offset, u8* effet_buf, u8* draw_buf) {
+    s32 v53 = jumelle_y - 64;
     s32 v55 = SCREEN_WIDTH * JumelleYMin + JumelleXMin;
     s32 v56 = jumelle_x - 112;
     s32 v7 = jumelle_x - plot_x - circle2_offset;
-    s32 v53 = jumelle_y - 64;
     if (plot_x > circle2_offset) {
         // Draw middle part of both circles
         s32 v58 = 2 * (plot_x + circle2_offset);
