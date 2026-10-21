@@ -1,6 +1,6 @@
 /*
  * Special level objects (GOG v1.21 object 1:6a340-1:6c3b0). File name invented (Rayverse special.c).
- * Worker candidate: 21/30 STRICT; see NOTES.md and final.json.
+ * Worker candidate: 21/30 STRICT, contiguous _TEXT; see NOTES.md and final.json.
  * Names: Rayverse/Android; new arithmetic local names are INVENTED.
  */
 #include "obj.h"
@@ -670,7 +670,8 @@ void DO_BALLE(obj_t* obj) {
 void DO_TIR(obj_t* obj) {
     obj_t *cur_obj;
     s16 i, nb_objs;
-    s16 distance, speed_y;
+    s16 distance;
+    s32 speed_y; /* Extent-correct hypothesis: narrow only at the object-field store. */
     s32 x, numerator;
 
     if (obj->main_etat == 0 && obj->sub_etat == 11) {
@@ -1006,8 +1007,9 @@ void DO_NOVA2(obj_t* obj) {
             nova_obj->y = obj->y;
             GET_ANIM_POS(nova_obj, &nova_x, &nova_y, &nova_w, &nova_h);
             GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);
-            new_x = in_x - (nova_x + (nova_w >> 1));
-            new_y = in_y - (nova_y + (nova_h >> 1));
+            /* Extent-correct equivalent form; arithmetic bytes remain NEAR. */
+            new_x = in_x - nova_x - (nova_w >> 1);
+            new_y = in_y - nova_y - (nova_h >> 1);
             nova_obj->is_active = 1;
             switch (i)
             {
@@ -1238,7 +1240,8 @@ void calc_esquive_poing(obj_t* mit_obj, s16* out_diff_x, s16* out_diff_y, s16* o
         unk_y = ray_zdc_h + (ray_zdc_y >> 1);
     } else {
         unk_x = (s16)poing_obj->x + poing_obj->offset_bx;
-        unk_y = poing_obj->y + ((poing_obj->offset_by * 2) >> 1);
+        /* Repeated sum reproduces DOS scheduling at 1:6bcb0..6bcb7. */
+        unk_y = poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_by) >> 1);
     }
 
     *out_diff_x = unk_x - (s16)mit_obj->x - mit_obj->offset_bx;
