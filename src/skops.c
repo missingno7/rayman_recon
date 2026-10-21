@@ -11,10 +11,6 @@
 #ifndef ABS
 #define ABS(x) abs(x)
 #endif
-#ifndef ashl16
-#define ashl16(v, b) ((v) << (b))
-#endif
-
 #define ANIMMODE_NONE 0
 #define TYPE_SCORPION 150
 #define TYPE_RAYON 170
@@ -735,8 +731,8 @@ void do_sko_rayon2(void)
         diff_x = sko_final_x - sko_rayon_x;
         dist = ABS(diff_x) + ABS(diff_y);
         if (dist > 0) {
-            diff_x = ashl16(diff_x, (u32)D_801E4E10) / dist;
-            diff_y = ashl16(diff_y, (u32)D_801E4E10) / dist;
+            diff_x = ashl16(diff_x, D_801E4E10) / dist;
+            diff_y = ashl16(diff_y, D_801E4E10) / dist;
         }
         if (horl_zero) {
             sko_rayon_dx += sgn(diff_x - sko_rayon_dx);
