@@ -75,7 +75,9 @@ build/workers/w6_helpers/REPORT.md; source of the finding: the ai_decomp review 
 | fill (64000-byte zero, no CLD) | `b8 00 00 00 00 b9 80 3e 00 00 f3 ab` | 11 / 9 | EDI; `modify exact [eax ecx edi]` | 4 effect1 functions, DEPART_LEVEL, confirmation_msg STRICT |
 | copy (CLD; bytes then dwords) | `fc 89 c8 83 e1 03 74 02 f3 a4 89 c1 c1 e9 02 f3 a5` | 15 / 10 | EDI, ESI, ECX; advertised clobbers OPEN | bytes reproduce; full functions still NEAR |
 Rules: use the header as declared (no per-unit redefinitions, no new helper pragmas); the CL/bounds setup is caller
-code. OPEN candidates (fail the gate: one STRICT proof each, both in breakout; build/workers/w7_shift32/REPORT.md):
+code. UPDATE 2026-10-22 (build/workers/w10_proofs): the bare `shl eax,cl` form is now the accepted helper **ashl32** (proofs
+set_ball_pos/breakout, RAY_GOING_BALANCE/ray); the sar32 JE-form and copy_guarded still have one proof each (OPEN).
+Earlier status - OPEN candidates (one STRICT proof each, both in breakout; build/workers/w7_shift32/REPORT.md):
 bare `shl eax,cl` after `mov cl,N` (4 sites / 2 functions; set_ball_pos STRICT in scratch) and a 32-bit
 `sar r32,cl` JE-form body (9 bodies / 4 functions; move_ball STRICT in scratch), both EAX,CL -> EAX. They block
 moteur instantSpeed and breakout set_ball_pos; accept only with a second-unit proof. Added 2026-10-21 (w8_mine, user approval): **palette_output** (`29 c1 41 6b c9 03 66 ba c8 03 ee 6b c0 03 ...` - OUT,
