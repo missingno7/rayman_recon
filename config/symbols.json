@@ -7162,6 +7162,171 @@
     "addr": "1:6fbb4",
     "name": "INVENTED",
     "evidence": "Address-based helper name; FIRST_INIT calls 1:6fbb4 twice, and DOS bytes there jump to Watcom malloc at 1:76012. Android lookup for sub_6FBB4 returned no symbol."
+   },
+   "display_text_sin": {
+    "addr": "1:0a8dc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_DARK2_TOONS_COMMAND": {
+    "addr": "1:31650",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoFlammeCommand": {
+    "addr": "1:31328",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_3E66C": {
+    "addr": "1:2e66c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "GetDeviceName": {
+    "addr": "1:2f000",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "AllocateToons": {
+    "addr": "1:31510",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocateStoskoClaw": {
+    "addr": "1:2f518",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_DARK2_AFFICHE_TEXT": {
+    "addr": "1:30364",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "ToonDonnePoing": {
+    "addr": "1:319e4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "doMOSAMScommand": {
+    "addr": "1:2f340",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "rayman_sound_fatal_error": {
+    "addr": "1:2e6ec",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_HYB_BBF2_POING_COLLISION": {
+    "addr": "1:2fd78",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "AllocateFlammes": {
+    "addr": "1:313b4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_3E6B0": {
+    "addr": "1:2e6b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:8 (DOS address annotation //3E6B0)"
+   },
+   "sub_3E710": {
+    "addr": "1:2e710",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:19 (DOS address annotation //3E710)"
+   },
+   "sub_3E780": {
+    "addr": "1:2e780",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:24 (DOS address annotation //3E780)"
+   },
+   "LoadBnkFile": {
+    "addr": "1:2e820",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:29 (DOS address annotation //3E820)"
+   },
+   "LoadBnkWorld": {
+    "addr": "1:2ea00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:132 (DOS address annotation //3EA00)"
+   },
+   "DigiMusicDone": {
+    "addr": "1:2ec78",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:205 (DOS address annotation //3EC78)"
+   },
+   "LoadTchatchPerdu": {
+    "addr": "1:2ecc4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:213 (DOS address annotation //3ECC4)"
+   },
+   "FreeDetectDriver": {
+    "addr": "1:2f030",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hifi.c:298 (DOS address annotation //3F030)"
+   },
+   "DoMOSAMSPoingCollision": {
+    "addr": "1:2f4a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:23 (DOS address annotation //3F4A4)"
+   },
+   "doSTOSKOcommand": {
+    "addr": "1:2f598",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:33 (DOS address annotation //3F598)"
+   },
+   "DoSTOSKOPoingCollision": {
+    "addr": "1:2f7ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:38 (DOS address annotation //3F7EC)"
+   },
+   "doBBF2command": {
+    "addr": "1:2f8ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:43 (DOS address annotation //3F8AC)"
+   },
+   "AllocateTirBBF2": {
+    "addr": "1:2fe8c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:53 (DOS address annotation //3FE8C)"
+   },
+   "DO_HYB_BBF2_LAS": {
+    "addr": "1:2ff5c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:58 (DOS address annotation //3FF5C)"
+   },
+   "DoHybBBF2LasRaymanCollision": {
+    "addr": "1:30168",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:63 (DOS address annotation //40168)"
+   },
+   "OBJ_IN_COL_ZDC": {
+    "addr": "1:30184",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:68 (DOS address annotation //40184)"
+   },
+   "DO_DARK_PHASE2_COMMAND": {
+    "addr": "1:304b0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:83 (DOS address annotation //404B0)"
+   },
+   "DO_DARK2_SORT_COMMAND": {
+    "addr": "1:30e58",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:88 (DOS address annotation //40E58)"
+   },
+   "allocate_DARK2_SORT": {
+    "addr": "1:31208",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:93 (DOS address annotation //41208)"
+   },
+   "DoFlammeRaymanCollision": {
+    "addr": "1:31354",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse hybrid.c:103 (DOS address annotation //41354)"
    }
   },
   "data": {
@@ -12995,6 +13160,240 @@
     "type": "void (__interrupt __far *)(void)",
     "name": "INVENTED",
     "evidence": "DOS sub_370E8 saves the INT 8 vector offset dword at 2:4f7cc and selector word at 2:4f7d0."
+   },
+   "current_port": {
+    "addr": "2:50af0",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS SetPort_ stores a dword at 2:50af0; getter returns this address"
+   },
+   "current_irq": {
+    "addr": "2:50af4",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS SetIrq stores a dword at 2:50af4; getter returns this address"
+   },
+   "current_dma": {
+    "addr": "2:50af8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS SetDma stores a dword at 2:50af8; getter returns this address"
+   },
+   "current_param": {
+    "addr": "2:50afc",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS SetParam stores a dword at 2:50afc; getter returns this address"
+   },
+   "current_device_name": {
+    "addr": "2:50b0a",
+    "type": "char[100]",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS GetDeviceName returns 2:50b0a; next global begins 0x64 bytes later"
+   },
+   "current_device_id": {
+    "addr": "2:50b6e",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "hifi DOS SetDeviceID stores a dword at 2:50b6e; getter returns this address"
+   },
+   "txt_dark2": {
+    "addr": "2:50b88",
+    "type": "char[100]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0B88; Android size 100"
+   },
+   "PosArYToon2": {
+    "addr": "2:50bf4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BF4; Android size 2; DOS word accesses in DO_DARK2_TOONS_COMMAND"
+   },
+   "PosArXToon2": {
+    "addr": "2:50bf6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BF6; Android size 2; DOS word accesses in DO_DARK2_TOONS_COMMAND"
+   },
+   "PosArYToon1": {
+    "addr": "2:50bf8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BF8; Android size 2; DOS word accesses in DO_DARK2_TOONS_COMMAND"
+   },
+   "PosArXToon1": {
+    "addr": "2:50bfa",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BFA; Android size 2; DOS word accesses in DO_DARK2_TOONS_COMMAND"
+   },
+   "flamme_droite_id": {
+    "addr": "2:50bfc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BFC; Android size 2; DOS word store in AllocateFlammes"
+   },
+   "XText": {
+    "addr": "2:50bfe",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0BFE; Android size 2"
+   },
+   "YText": {
+    "addr": "2:50c04",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C04; Android size 2"
+   },
+   "flamme_gauche_id": {
+    "addr": "2:50c0a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C0A; Android size 2; DOS word store in AllocateFlammes"
+   },
+   "temps_text": {
+    "addr": "2:50c14",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C14; Android size 2; DOS uses 2:50c14 both as the text timer (add word [50c14],3 at 1:30470) and for the PS1 PosYSin2 role (1:30d8e/1:30dc7): one variable in DOS (OPEN which original name)"
+   },
+   "YPosBBF2D": {
+    "addr": "2:50c1c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C1C; Android size 2; DOS word access in allocateMOSKITOMAMA"
+   },
+   "YPosBBF2G": {
+    "addr": "2:50c1e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C1E; Android size 2; DOS word access in allocateMOSKITOMAMA"
+   },
+   "NiveauSol": {
+    "addr": "2:50c20",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C20; Android size 2; DOS word access in allocateMOSKITOMAMA"
+   },
+   "ToonJustGivePoing": {
+    "addr": "2:50c22",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C22; Android size 1"
+   },
+   "flammes_actives": {
+    "addr": "2:50c27",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C27; Android size 1; DOS byte store in AllocateFlammes"
+   },
+   "BBF2DEsk": {
+    "addr": "2:50c28",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C28; Android size 1"
+   },
+   "BBF2GEsk": {
+    "addr": "2:50c29",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C29; Android size 1"
+   },
+   "dark_obj": {
+    "addr": "2:50b84",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0B84; Android size 4; DOS pointer store in AllocateDarkPhase2"
+   },
+   "TirBBF2D": {
+    "addr": "2:50bf0",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "DOS pointer store in AllocateTirBBF2 at 1:2feee (D branch); Android size 4"
+   },
+   "TirBBF2G": {
+    "addr": "2:50bec",
+    "type": "obj_t*",
+    "name": "RAYVERSE",
+    "evidence": "DOS pointer store in AllocateTirBBF2 at 1:2fef0 (G branch); Android size 4"
+   },
+   "phase_dark2": {
+    "addr": "2:50c0c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C0C; Android size 2; DOS word store in AllocateDarkPhase2"
+   },
+   "dark2_rayon_dx_1": {
+    "addr": "2:50c00",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C00; Android size 2; DOS word accesses in DO_DARK2_SORT_COMMAND"
+   },
+   "dark2_rayon_dx_2": {
+    "addr": "2:50c02",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C02; Android size 2; DOS word accesses in DO_DARK2_SORT_COMMAND"
+   },
+   "dark2_rayon_dy_1": {
+    "addr": "2:50c06",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C06; Android size 2; DOS word accesses in DO_DARK2_SORT_COMMAND"
+   },
+   "dark2_rayon_dy_2": {
+    "addr": "2:50c08",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C08; Android size 2; DOS word accesses in DO_DARK2_SORT_COMMAND"
+   },
+   "VitesseYText": {
+    "addr": "2:50c12",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C12; Android size 2"
+   },
+   "sinus_actif": {
+    "addr": "2:50c23",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C23; Android size 1; DOS byte store in DO_DARK2_SORT_COMMAND"
+   },
+   "num_dark2_phrase": {
+    "addr": "2:50c24",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C24; Android size 1"
+   },
+   "sens_sinus_1": {
+    "addr": "2:50c25",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C25; Android size 1; DOS byte access in DO_DARK2_SORT_COMMAND"
+   },
+   "sens_sinus_2": {
+    "addr": "2:50c26",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0C26; Android size 1; DOS byte access in DO_DARK2_SORT_COMMAND"
+   },
+   "PosXSin1": {
+    "addr": "2:50c10",
+    "type": "s16",
+    "name": "PS1",
+    "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30f09 and 1:30f40"
+   },
+   "PosYSin1": {
+    "addr": "2:50c16",
+    "type": "s16",
+    "name": "PS1",
+    "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30f50 and 1:30f40"
+   },
+   "PosXSin2": {
+    "addr": "2:50c0e",
+    "type": "s16",
+    "name": "PS1",
+    "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30fe0 and 1:30ff1"
    }
   }
  }

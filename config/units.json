@@ -9676,6 +9676,268 @@
      ]
     }
    }
+  },
+  "hybrid": {
+   "source": "src/hybrid.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "rayman_sound_fatal_error": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SetPort_": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SetIrq": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SetDma": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SetParam": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SetDeviceID": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetDeviceName": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetPort": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetIrq": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetDma": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetParam": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "GetDeviceID_Ray": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocateSTOSKO": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocateMOSKITOMAMA": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocateMOSKITOSAXO": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "doMOSAMScommand": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoMOSAMSPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocateStoskoClaw": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "doSTOSKOcommand": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoSTOSKOPoingCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "doBBF2command": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_HYB_BBF2_POING_COLLISION": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateTirBBF2": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_HYB_BBF2_LAS": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoHybBBF2LasRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "OBJ_IN_COL_ZDC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateDarkPhase2": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_DARK2_AFFICHE_TEXT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_DARK_PHASE2_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_DARK2_SORT_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocate_DARK2_SORT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoFlammeCommand": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoFlammeRaymanCollision": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateFlammes": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocateToons": {
+     "status": "STRICT",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_DARK2_TOONS_COMMAND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ToonDonnePoing": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
