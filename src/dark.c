@@ -45,9 +45,9 @@ extern s16 moskitosaxo_obj_id;
 extern s16 stosko_obj_id;
 extern s16 dark_rayon_dx;
 extern s16 dark_rayon_dy;
-extern u16 final_pass_n;
-extern u16 final_pass_a;
-extern u16 final_pass_f;
+extern s16 final_pass_n;
+extern s16 final_pass_a;
+extern s16 final_pass_f;
 extern s16 final_pass_x; /* DOS signed -60 coordinate; see NOTES.md. */
 extern u8 dark_phase;
 extern s16 scroll_start_x;
