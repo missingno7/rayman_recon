@@ -1,5 +1,5 @@
 /* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
- * Worker w2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Worker d_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
  * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
  */
 #include "obj.h"
@@ -8,8 +8,6 @@
 #include "inline_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
 extern s32 map_time;
 extern s16 scroll_start_y, scroll_end_y, num_level, sbar_obj_id;
 extern u8 nb_max_collis;
@@ -194,34 +192,27 @@ void exit_casse_brique2(void)
 
 void get_speed_ball(void)
 {
-    s16 x;
-    s16 y;
-    u8 level_index;
+    s16 index;
 
-    x = speed_ball_x;
-    y = speed_ball_y;
-    level_index = speed_ball_level;
     if (speed_ball_angle < 0)
         speed_ball_angle += 72;
     else if (speed_ball_angle > 72)
-    speed_ball_angle -= 72;
+        speed_ball_angle -= 72;
 
     if (18 - speed_ball_angle >= 0) {
-        x = CBdata[speed_ball_angle][level_index * 2 + 1];
-        y = CBdata[speed_ball_angle][level_index * 2 + 2];
-    } else if (36 - speed_ball_angle >= 0) {
-        x = -CBdata[36 - speed_ball_angle][level_index * 2 + 1];
-        y = CBdata[36 - speed_ball_angle][level_index * 2 + 2];
+        speed_ball_x = CBdata[speed_ball_angle][speed_ball_level * 2 + 1];
+        speed_ball_y = CBdata[speed_ball_angle][speed_ball_level * 2 + 2];
+    /* DOS 1:16b3b and 1:16ba9 test the reflected index as a signed word. */
+    } else if ((index = 36 - speed_ball_angle) >= 0) {
+        speed_ball_x = -CBdata[index][speed_ball_level * 2 + 1];
+        speed_ball_y = CBdata[index][speed_ball_level * 2 + 2];
     } else if (54 - speed_ball_angle >= 0) {
-        x = -CBdata[speed_ball_angle - 36][level_index * 2 + 1];
-        y = -CBdata[speed_ball_angle - 36][level_index * 2 + 2];
-    } else if (72 - speed_ball_angle >= 0) {
-        x = CBdata[72 - speed_ball_angle][level_index * 2 + 1];
-        y = -CBdata[72 - speed_ball_angle][level_index * 2 + 2];
+        speed_ball_x = -CBdata[(s16)(speed_ball_angle - 36)][speed_ball_level * 2 + 1];
+        speed_ball_y = -CBdata[(s16)(speed_ball_angle - 36)][speed_ball_level * 2 + 2];
+    } else if ((index = 72 - speed_ball_angle) >= 0) {
+        speed_ball_x = CBdata[index][speed_ball_level * 2 + 1];
+        speed_ball_y = -CBdata[index][speed_ball_level * 2 + 2];
     }
-    speed_ball_y = y;
-    speed_ball_x = x;
-    speed_ball_level = level_index;
 }
 
 void speed_ball_null(obj_t *obj)
@@ -371,24 +362,27 @@ void do_bonus(void)
 u16 get_brik_info(obj_t *obj, s16 entry_index, s16 *x, s16 *y, u8 *kind)
 {
     u8 *entry;
+    anim_layer_t **layers;
     sprite_t *sprite;
     u16 anim_index;
     u8 result;
     u8 sprite_index;
 
     anim_index = obj->animations[2].layers_per_frame & 0x3fff;
-    entry = (u8 *)obj->animations[2].layers + anim_index * NoCB * 4 + entry_index * 4;
+    layers = &obj->animations[2].layers;
+    entry = (u8 *)*layers + anim_index * NoCB * 4 + entry_index * 4;
     sprite_index = entry[3];
     sprite = obj->sprites + sprite_index;
     if (sprite_index != 0 && sprite->id != 0) {
         *x = entry[1];
         *y = entry[2];
+        /* DOS table 1:16efc..16f28; bodies 1:16fca..16fe6. */
         switch (sprite->id) {
-        case 0x27: *kind = 2; break;
-        case 0x28: *kind = 1; break;
+        case 0x28: *kind = 2; break;
+        case 0x27: *kind = 1; break;
         case 0x29: *kind = 3; break;
-        case 0x2a: *kind = 4; break;
-        case 0x2b: *kind = 5; break;
+        case 0x2b: *kind = 4; break;
+        case 0x2a: *kind = 5; break;
         case 0x32: *kind = 7; break;
         default: *kind = 0; break;
         }
@@ -422,10 +416,11 @@ void frame_briques(obj_t *obj)
     case 5:
         obj->anim_frame = 4;
         break;
-    case 6:
+    /* DOS table 1:17014/17018 maps kind 7 to frame 5, kind 6 to animation. */
+    case 7:
         obj->anim_frame = 5;
         break;
-    case 7:
+    case 6:
         if (obj->anim_frame == obj->animations[1].frames_count - 1) {
             obj->anim_frame = 0;
             obj->hit_points--;
@@ -1093,6 +1088,8 @@ void DO_CB_BRIK_COMMAND(obj_t *obj)
 
 void DO_RAY_CASSE_BRIQUE(void)
 {
+    s32 speed;
+    s32 limit;
     if ((ray.main_etat == 0 && ray.sub_etat == 4) ||
         (ray.main_etat == 1 && ray.main_etat == ray.sub_etat)) {
         if (rightjoy()) {
@@ -1103,7 +1100,12 @@ void DO_RAY_CASSE_BRIQUE(void)
             if (ray.main_etat == 0 && ray.sub_etat == 4) {
                 set_main_and_sub_etat(&ray, 1, 1);
                 ray.speed_x = 16;
-            } else ray.speed_x = MIN(47, ray.speed_x + 1);
+            } else {
+                speed = ray.speed_x + 1;
+                limit = 47;
+                if (limit > speed) limit = speed;
+                ray.speed_x = limit;
+            }
         } else if (leftjoy()) {
             if (ray.flags.flip_x) {
                 ray.flags.flip_x = 0;
@@ -1112,11 +1114,26 @@ void DO_RAY_CASSE_BRIQUE(void)
             if (ray.main_etat == 0 && ray.sub_etat == 4) {
                 set_main_and_sub_etat(&ray, 1, 1);
                 ray.speed_x = -16;
-            } else ray.speed_x = MAX(-47, ray.speed_x - 1);
+            } else {
+                speed = ray.speed_x - 1;
+                limit = -47;
+                if (limit < speed) limit = speed;
+                ray.speed_x = limit;
+            }
         } else {
-            if (ray.speed_x > 0) ray.speed_x = MAX(0, ray.speed_x - 1);
-            else if (ray.speed_x < 0) ray.speed_x = MIN(0, ray.speed_x + 1);
-            if (abs(ray.speed_x) < 16) set_main_and_sub_etat(&ray, 0, 4);
+            if (ray.speed_x > 0) {
+                speed = ray.speed_x - 1;
+                limit = 0;
+                if (limit < speed) limit = speed;
+                ray.speed_x = limit;
+            }
+            else if (ray.speed_x < 0) {
+                speed = ray.speed_x + 1;
+                limit = 0;
+                if (limit > speed) limit = speed;
+                ray.speed_x = limit;
+            }
+            if (ABS((s32)ray.speed_x) < 16) set_main_and_sub_etat(&ray, 0, 4);
         }
     } else if ((ray.main_etat == 3 && ray.sub_etat == 18) ||
         (ray.main_etat == 0 && ray.sub_etat == 20)) {
@@ -1130,7 +1147,8 @@ void DO_RAY_CASSE_BRIQUE(void)
         ray.x = LIMITE_DROITE;
         ray.speed_x = 0;
     } else ray.x += instantSpeed(ray.speed_x);
-    GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_y, &ray_zdc_w, &ray_zdc_h);
+    /* DOS 1:18b07..18b20: stack arg=2:3f876, EBX arg=2:3f862. */
+    GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_h, &ray_zdc_w, &ray_zdc_y);
     DO_COLLISIONS();
     DO_ANIM(&ray);
 }
