@@ -1,11 +1,12 @@
 /*
  * Mr Sax boss (GOG v1.21 object 1:65840-1:678f0). File name invented (Rayverse saxo.c). Names: Rayverse/Android.
- * Worker candidate: 19/25 STRICT; remaining evidence in NOTES.md.
+ * Worker candidate: 20/25 STRICT; _TEXT contiguous; remaining evidence in NOTES.md.
  */
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 typedef u8 bool;
 #define true 1
@@ -86,7 +87,8 @@ extern void allocateLandingSmoke(obj_t *obj);
 extern s16 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 extern void CALC_MOV_ON_BLOC(obj_t *obj);
 extern s16 inter_box(s32 x1, s32 y1, s32 w1, s32 h1, s16 x2, s16 y2, s32 w2, s32 h2);
-extern s16 calc_obj_dir(obj_t *obj);
+extern void calc_obj_dir(obj_t *obj);
+extern void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 
 #define TYPE_74_SAXO 74
 #define TYPE_NOTE0 90
@@ -105,14 +107,11 @@ extern s16 calc_obj_dir(obj_t *obj);
 
 //75840
 u8 saxoCanAttak(void) {
-    if (scrollLocked == 0) {
-        s32 lock = false;
-        if ((xmap >= bossScrollStartX - h_scroll_speed && xmap <= h_scroll_speed + bossScrollEndX) ? 1 : 0) {
-            if ((ymap >= bossScrollStartY - v_scroll_speed && ymap <= v_scroll_speed + bossScrollEndY) ? 1 : 0)
-                lock = true;
-        }
-        scrollLocked = lock;
-        if (scrollLocked != 0) {
+    if (!scrollLocked) {
+        scrollLocked =
+            inrange(xmap, bossScrollStartX - h_scroll_speed, bossScrollEndX + h_scroll_speed) &&
+            inrange(ymap, bossScrollStartY - v_scroll_speed, bossScrollEndY + v_scroll_speed);
+        if (scrollLocked) {
             scroll_end_x = xmap;
             scroll_start_x = xmap;
             scroll_start_y = bossScrollStartY;
@@ -668,8 +667,8 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             obj->anim_frame = 255;
             set_main_and_sub_etat(obj, 0, 4);
             skipToLabel(obj, 0, 1);
-            boss_mort = 1;
             Phase = 100;
+            boss_mort = 1;
             Sax.field10_0x10 = 420;
             obj->speed_x = 0;
             obj->speed_y = 0;
@@ -983,7 +982,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
     }
 
     temp_v1_9 = obj->x + obj->offset_bx + obj->speed_x;
-    if (!((temp_v1_9 >= 0 && temp_v1_9 <= xmapmax + 303) ? 1 : 0)) // NOTE: 319 changed to 303 in PC version
+    if (!inrange(temp_v1_9, 0, xmapmax + 303)) // NOTE: 319 changed to 303 in PC version
     {
         obj->speed_x = 0;
     }
@@ -1005,16 +1004,10 @@ void DO_SAXO_ATTER(obj_t* obj) {
 //771B8
 void DO_SAXO2_COMMAND(obj_t* obj) {
     /* 52C28 80177428 -O2 -msoft-float */
-    s16 sprite_w;
-    s16 sprite_h;
-    u16 temp_x;
     s16 x_pos;
-    u8 anim_frame;
     
     
     
-    s32 next_x;
-    s32 max_x, min_x;
 
     scrollLocked = true;
     SetSaxoEventPos(obj);
@@ -1054,7 +1047,8 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                 set_main_and_sub_etat(obj, 0, 1);
             }
             break;
-        case 1:
+        case 1: {
+            u8 anim_frame;
             switch (obj->sub_etat) {
                 case 1:
                     if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xF] == 0) {
@@ -1079,6 +1073,7 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                     break;
             }
             break;
+        }
         case 2:
             switch (obj->sub_etat) {
                 case 3:
@@ -1100,7 +1095,7 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                 case 11:
                     if (FinAnim)
                     {
-                        if (ray.x - 50 > obj->x) {
+                        if (ray.x - 50 > x_pos) {
                             obj->flags.flip_x = 1 - obj->flags.flip_x;
                             set_sub_etat(obj, 0);
                             Phase = 3;
@@ -1112,50 +1107,44 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
             }
             break;
         case 3:
-            switch (obj->main_etat) {
-                case 0:
-                    if (FinAnim) {
-                        switch (obj->sub_etat) {
-                            case 0: case 2: case 3: case 11:
-                                set_main_and_sub_etat(obj, 1, 0);
-                                obj->speed_x = Sax.field10_0x10;
-                                Sax.coup = 0;
-                                break;
-                            case 10:
-                                set_main_and_sub_etat(obj, 2, 1);
-                                obj->anim_frame = obj->gravity_value_2;
-                                obj->gravity_value_2 = 5;
-                                obj->gravity_value_1 = 0;
-                                obj->speed_y = -7;
-                                obj->speed_x = 2;
-                                obj->y -= 7;
-                                break;
-                        }
+            if (obj->main_etat < 1) {
+                if (FinAnim) {
+                    switch (obj->sub_etat) {
+                        case 0: case 2: case 3: case 11:
+                            set_main_and_sub_etat(obj, 1, 0);
+                            obj->speed_x = Sax.field10_0x10;
+                            Sax.coup = 0;
+                            break;
+                        case 10:
+                            set_main_and_sub_etat(obj, 2, 1);
+                            obj->anim_frame = obj->gravity_value_2;
+                            obj->gravity_value_2 = 5;
+                            obj->gravity_value_1 = 0;
+                            obj->speed_y = -7;
+                            obj->speed_x = 2;
+                            obj->y -= 7;
+                            break;
                     }
-                    break;
-                case 1:
-                    if (!(block_flags[mp.map[(s16)(((obj->x + 50 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))].tile_type].raw & 2)) {
-                        set_main_and_sub_etat(obj, 0, 10);
-                        obj->speed_x = 0;
-                    } else if (obj->x + 150 > xmap) {
-                        if (Sax.field10_0x10 == 2) {
-                            if (horloge[2] != 0) {
-                                obj->speed_x = 1;
-                                if (horloge[4] < 2) obj->anim_frame--;
-                            } else obj->speed_x = 2;
-                        } else {
+                }
+            } else if (obj->main_etat <= 1) {
+                if (!(block_flags[mp.map[(s16)(((obj->x + 50 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))].tile_type].raw & 2)) {
+                    set_main_and_sub_etat(obj, 0, 10);
+                    obj->speed_x = 0;
+                } else if (obj->x + 150 > xmap) {
+                    if (Sax.field10_0x10 == 2) {
+                        if (horloge[2] != 0) {
                             obj->speed_x = 1;
-                            if (horloge[2] != 0) obj->anim_frame--;
-                        }
-                    } else obj->speed_x = 2;
-                    break;
+                            if (horloge[4] < 2) obj->anim_frame--;
+                        } else obj->speed_x = 2;
+                    } else {
+                        obj->speed_x = 1;
+                        if (horloge[2] != 0) obj->anim_frame--;
+                    }
+                } else obj->speed_x = 2;
             }
             break;
     }
-    max_x = xmapmax + 303;
-    min_x = 0;
-    next_x = obj->x + obj->offset_bx + obj->speed_x;
-    if (!((next_x >= min_x && next_x <= max_x) ? 1 : 0))
+    if (!inrange(obj->x + obj->offset_bx + obj->speed_x, 0, xmapmax + 303))
         obj->speed_x = 0;
 }
 
