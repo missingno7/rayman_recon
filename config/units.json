@@ -8687,6 +8687,18 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
+    },
+    "sub_3BEE0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_3C3BC": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
     }
    }
   },

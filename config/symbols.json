@@ -8312,6 +8312,46 @@
     "addr": "1:5f0ac",
     "name": "RAYVERSE",
     "evidence": "Rayverse ray.c and PS1 ray_5D190.c both place this empty function immediately before RAY_RESPOND_TO_BUTTON3. Android confirms named size-1 function. DOS 1:5f0a4..5f0a8 restores NOTHING registers, 1:5f0a9 LEA EAX,[EAX] aligns the shared RET at 1:5f0ac, followed by LEA padding and BUTTON3 at 1:5f0b0. W-LAYOUT shared aligned RET as in start_cd_continue. Restored conditional empty calls retain TEST AX at 1:611a9 and 1:61659, with no helper CALL, and close DO_RAY_ON_MS (836 bytes/all reference targets). Original DO_PIEDS_RAYMAN signature/extent unchanged."
+   },
+   "asm_02850": {
+    "addr": "1:02850",
+    "name": "INVENTED",
+    "evidence": "DOS assembly 1:2850..29d2; ABI audited in docs/reference/lowlevel_abi.h"
+   },
+   "asm_029d3": {
+    "addr": "1:029d3",
+    "name": "INVENTED",
+    "evidence": "DOS assembly 1:29d3..2a72; ABI audited in docs/reference/lowlevel_abi.h"
+   },
+   "asm_02a73": {
+    "addr": "1:02a73",
+    "name": "INVENTED",
+    "evidence": "DOS assembly 1:2a73..2b2f; ABI audited in docs/reference/lowlevel_abi.h"
+   },
+   "asm_03912": {
+    "addr": "1:03912",
+    "name": "INVENTED",
+    "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
+   },
+   "asm_03ea1": {
+    "addr": "1:03ea1",
+    "name": "INVENTED",
+    "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
+   },
+   "asm_0283c": {
+    "addr": "1:0283c",
+    "name": "INVENTED",
+    "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
+   },
+   "asm_04430": {
+    "addr": "1:04430",
+    "name": "INVENTED",
+    "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
+   },
+   "asm_04493": {
+    "addr": "1:04493",
+    "name": "INVENTED",
+    "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
    }
   },
   "data": {
@@ -15130,6 +15170,36 @@
     "type": "effect_state_6e_t *",
     "name": "INVENTED",
     "evidence": "DOS references a 32-bit pointer at 2:57464; 1:6ee54 allocates 0xbc bytes for its pointee, and Android lookup for effect_state_6e returned no symbol"
+   },
+   "frame_buffer_origin": {
+    "addr": "2:321c4",
+    "name": "INVENTED",
+    "type": "u8 *",
+    "evidence": "DOS 1:6f80..6fd4 computes draw_buffer-relative pointer, 1:2c3e8 reads dword"
+   },
+   "frame_source_origin": {
+    "addr": "2:321d0",
+    "name": "INVENTED",
+    "type": "u8 *",
+    "evidence": "DOS 1:700f..7075 computes PLAN0BIT-relative pointer, 1:2c403 reads dword"
+   },
+   "frame_records_38f88": {
+    "addr": "2:38f88",
+    "name": "INVENTED",
+    "type": "u32[14][32]",
+    "evidence": "DOS 1:2c4d8 passes array; 1:2850..29d2 writes 14 record rows at 128-byte stride; 1:2bfa6 passes its second row 2:39008"
+   },
+   "frame_scroll_x": {
+    "addr": "2:321c8",
+    "name": "INVENTED",
+    "type": "s32",
+    "evidence": "DOS 1:6fe4/6ff4 and 1:700a dword stores; 1:2bef2/2befc reads; camera offsets from 1:6f80..7082"
+   },
+   "frame_scroll_y": {
+    "addr": "2:321cc",
+    "name": "INVENTED",
+    "type": "s32",
+    "evidence": "DOS 1:6fe4/6ff4 and 1:700a dword stores; 1:2bef2/2befc reads; camera offsets from 1:6f80..7082"
    }
   }
  }

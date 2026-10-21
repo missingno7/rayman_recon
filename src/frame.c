@@ -1,4 +1,8 @@
-/* 1:2b4d0..1:2e580: frame.c tail (fades, palettes, plan3, video modes, map building) + guetteur.c (pirate lookout); split candidate 1:2db40 (STRONG). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_frame. Pragmas declare assembly-routine register ABIs only. Two renderer bodies remain unreconstructed; see worker NOTES.md. */
+/* 1:2b4d0..1:2e580: frame.c tail + guetteur.c (pirate lookout).
+   Names RAYVERSE/ANDROID except explicitly INVENTED renderer purposes.
+   Worker w4_frame supplies all 55 bodies; object layout is still unverified.
+   Existing frame_local.h contains original port-only inline instructions.
+   All new pragmas below declare external assembly register ABIs only. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -517,7 +521,106 @@ void sub_3BE20(s16 x, s16 y) {
         }
     }
 }
-/* sub_3BEE0: renderer-call structure and map wrap logic still being reconstructed */
+/* All purpose names below INVENTED. Context offsets follow DOS 1:2bf5b..
+   2c0cc; callback-only fields are read at 1:0444c/04454/0444f. */
+typedef struct frame_context_t {
+    u32 plane_size;
+    u32 source_end;
+    u32 run_step;
+    u32 source_stride;
+    u32 source_three_rows;
+    map_tile_t *last_tile;
+    u8 *background_end;
+    u32 background_length;
+} frame_context_t;
+extern u8 *frame_buffer_origin;
+extern s32 frame_scroll_x, frame_scroll_y;
+extern u32 frame_records_38f88[14][32];
+extern s32 block_add[1200];
+void asm_03912(u32 mask, u32 stride, u32 offset, const frame_context_t *context,
+               const u32 *records, u32 dest);
+#pragma aux asm_03912 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]
+void asm_03ea1(u32 mask, u32 stride, u32 offset, const frame_context_t *context,
+               const u32 *records, u32 dest);
+#pragma aux asm_03ea1 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]
+void asm_0283c(u32 mask);
+#pragma aux asm_0283c parm [eax] modify exact [eax]
+/* PROVEN from 1:04430..04503 plus audit_callbacks.py: all 82 GOG level
+   callback tables, 2380 distinct bodies, all branch paths. Callbacks change
+   EDX and EDI only. Helpers preserve EAX/EBX/ECX/EBP and change ESI/EDI/EDX. */
+void asm_04430(u32 phase, map_tile_t *tiles, const frame_context_t *context,
+               const s32 *callbacks, const u8 *background, u8 *dest);
+#pragma aux asm_04430 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [edx esi edi]
+void asm_04493(u32 phase, map_tile_t *tiles, const frame_context_t *context,
+               const s32 *callbacks, const u8 *background, u8 *dest);
+#pragma aux asm_04493 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [edx esi edi]
+
+void sub_3BEE0(s16 x, s16 y) {
+    frame_context_t context;
+    u8 *origin = frame_buffer_origin;
+    s32 scroll_x = frame_scroll_x;
+    s32 scroll_y = frame_scroll_y;
+    u32 tile_stride = plan0bit_nb_bytes * 16;
+    map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
+    s32 mask = planar_copy_offset;
+    s32 saved_mask = mask;
+    u32 dest = 0;
+    u8 *saved_origin = origin;
+    s16 plane;
+    map_tile_t *draw_tiles;
+    u8 *background;
+    s32 plane_step;
+    u16 phase;
+    context.plane_size = 0x4600;
+    context.source_end = (u32)PLAN1_BUFFER;
+    context.run_step = 0x4600;
+    for (plane = 0; plane < 4; ++plane) {
+        u32 offset = plane * 0x4600;
+        context.source_end += 0x4600;
+        if (P486)
+            asm_03ea1(mask, 80, offset, &context, &frame_records_38f88[1][0], dest);
+        else
+            asm_03912(mask, 80, offset, &context, &frame_records_38f88[0][0], dest);
+        mask *= 2;
+        if (mask == 16) {
+            mask = 1;
+            dest = 1;
+            ++origin;
+        }
+    }
+    origin = saved_origin;
+    draw_tiles = tiles;
+    background = (scroll_x / 4 + (scroll_x % 4) * ((u32)plan0bit_length >> 2)) + PLAN0BIT
+                 + scroll_y * plan0bit_nb_bytes;
+    plane_step = (u32)plan0bit_length >> 2;
+    plane_step = -plane_step;
+    context.plane_size = tile_stride;
+    context.source_end = mp.width * 6;
+    context.source_stride = plan0bit_nb_bytes;
+    context.source_three_rows = plan0bit_nb_bytes * 3;
+    mask = saved_mask;
+    context.background_length = plan0bit_length;
+    context.run_step = 1200;
+    context.last_tile = mp.map + (mp.width * mp.height - 1);
+    context.background_end = PLAN0BIT + plan0bit_length;
+    for (phase = 0; phase < 4; ++phase) {
+        asm_0283c(mask);
+        plane_step += (u32)plan0bit_length >> 2;
+        if (background + plane_step > PLAN0BIT + plan0bit_length) {
+            plane_step -= plan0bit_length;
+            ++background;
+        }
+        if (P486)
+            asm_04493(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
+        else
+            asm_04430(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
+        mask *= 2;
+        if (mask == 16) {
+            mask = 1;
+            ++origin;
+        }
+    }
+}
 
 void set_vga_frequency(u8 freq) {
     u8 value;
@@ -607,7 +710,48 @@ void SetVideoRegister(void) {
 
 /* SetVideoRegister: no seed source */
 
-/* sub_3C3BC: no seed source */
+/* INVENTED purpose names. DOS 1:06fd4 stores draw-buffer-relative origin;
+   1:07075 stores the PLAN0BIT-relative source pointer. */
+extern u8 *frame_buffer_origin;
+extern u8 *frame_source_origin;
+extern u32 frame_records_38f88[14][32];
+extern u8 BackgroundOn, FondAutorise;
+/* External assembly ABIs proven by 1:02850..02b2f; see lowlevel_abi.h.
+   The records are 128-byte rows. Row skip is measured in map-tile bytes. */
+void asm_02850(map_tile_t *tiles, u32 *records, u8 *source, u8 *buffer,
+               u8 *dest, s32 row_skip);
+#pragma aux asm_02850 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax edx esi]
+void asm_029d3(map_tile_t *tiles, u32 *records, u8 *source, u32 stride,
+               u8 *dest, s32 row_skip);
+#pragma aux asm_029d3 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ebx ecx edx esi]
+void asm_02a73(map_tile_t *tiles, u32 *records, u8 *source, u32 stride,
+               u8 *dest, s32 row_skip);
+#pragma aux asm_02a73 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ebx ecx edx esi]
+
+void sub_3C3BC(s16 x, s16 y) {
+    s32 row, column;
+    u8 *buffer_start = (u8*)PLAN1_BUFFER_START_POINTER;
+    s32 row_skip = mp.width - 20;
+    u8 *dest = frame_buffer_origin;
+    map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
+    u8 *source = frame_source_origin;
+    if (BackgroundOn && FondAutorise) {
+        u32 stride = plan0bit_nb_bytes * 16;
+        if (P486) {
+            s32 delta = draw_buffer - dest + 4;
+            row = 16 - delta / 80;
+            column = 4 - delta % 80;
+            asm_02a73(tiles, &frame_records_38888[0][0],
+                       (u8*)0xab000 + row * 80 + column, stride,
+                       draw_buffer + row * 80 + column, row_skip * 6);
+        } else {
+            asm_029d3(tiles, &frame_records_38888[0][0], source, stride,
+                       dest, row_skip * 6);
+        }
+    }
+    asm_02850(tiles, &frame_records_38f88[0][0], buffer_start,
+               PLAN1_BUFFER, dest, row_skip * 6);
+}
 
 void clear_palette(rgb_palette_t* palette) {
     s16 i = 0;
