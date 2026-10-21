@@ -864,40 +864,41 @@ void cyclage_palette(s16 palette_id, s16 first_color, s16 last_color) {
 void DO_SWAP_PALETTE(void) {
     s16 i;
     obj_t *obj;
-    u8 axis, left, right, above, below, new_pal;
-    s16 ray_pos, obj_pos;
+    /* DOS 1:2c93a..2ca21: byte allocation and independent X/Y homes. */
+    u8 above, right, axis, below, left, new_pal;
+    s16 ray_y, ray_x, obj_pos;
     if (last_plan1_palette != 0) {
         if (fade & 0x40) {
             obj = level.objects + actobj.objects[0];
             for (i = 0; i < actobj.num_active_objects; ++i, obj = level.objects + actobj.objects[i]) {
                 if (obj->type == TYPE_158_PALETTE_SWAPPER) {
                     switch (obj->sub_etat) {
-                        case 0: left=1; right=0; axis=0; break;
-                        case 1: left=2; right=0; axis=0; break;
-                        case 2: left=2; right=1; axis=0; break;
-                        case 3: left=0; right=1; axis=0; break;
-                        case 4: left=0; right=2; axis=0; break;
-                        case 5: left=1; right=2; axis=0; break;
+                        case 0: right=0; left=1; axis=0; break;
+                        case 1: right=0; left=2; axis=0; break;
+                        case 2: right=1; left=2; axis=0; break;
+                        case 3: right=1; left=0; axis=0; break;
+                        case 4: right=2; left=0; axis=0; break;
+                        case 5: right=2; left=1; axis=0; break;
                         case 6: above=1; below=0; axis=1; break;
                         case 7: above=2; below=0; axis=1; break;
                         case 8: above=2; below=1; axis=1; break;
-                        case 9: above=0; below=1; axis=1; break;
-                        case 10: above=0; below=2; axis=1; break;
-                        case 11: above=1; below=2; axis=1; break;
+                        case 9: below=1; above=0; axis=1; break;
+                        case 10: below=2; above=0; axis=1; break;
+                        case 11: below=2; above=1; axis=1; break;
                     }
                     switch (axis) {
                         case 0:
-                            ray_pos = (s16)ray.offset_bx + (s16)ray.x;
-                            obj_pos = (s16)obj->offset_bx + (s16)obj->x;
-                            if (obj_pos < ray_pos) new_pal = left;
-                            else if (obj_pos > ray_pos) new_pal = right;
+                            ray_x = (s16)ray.x + (s16)ray.offset_bx;
+                            obj_pos = (s16)obj->x + (s16)obj->offset_bx;
+                            if (obj_pos < ray_x) new_pal = left;
+                            else if (obj_pos > ray_x) new_pal = right;
                             else new_pal = current_pal_id;
                             break;
                         case 1:
-                            ray_pos = (s16)ray.offset_by + (s16)ray.y;
-                            obj_pos = (s16)obj->offset_by + (s16)obj->y;
-                            if (obj_pos < ray_pos) new_pal = above;
-                            else if (obj_pos > ray_pos) new_pal = below;
+                            ray_y = (s16)ray.y + (s16)ray.offset_by;
+                            obj_pos = (s16)obj->y + (s16)obj->offset_by;
+                            if (obj_pos < ray_y) new_pal = above;
+                            else if (obj_pos > ray_y) new_pal = below;
                             else new_pal = current_pal_id;
                             break;
                     }
@@ -1134,20 +1135,20 @@ void InitPaletteSpecialPC(void) {
 }
 
 void DoFadePaletteSpecialPC(s16 start, s16 end) {
-    s32 p;
-    s32 i;
-    s32 denom = end - start;
-    if (start + 1 >= end)
-        return;
+    /* DOS 1:2d55f/2d6d6: short indices; 2d5fe, 2d660, 2d6b6:
+       truncate each interpolated channel before the constant-first clamp. */
+    s16 p, i;
     for (p = start + 1; p < end; ++p) {
-        s32 from_weight = end - p;
-        s32 to_weight = p - start;
         for (i = 0; i < 256; ++i) {
-            rgb_t from = rvb_special[start].colors[i];
-            rgb_t to = rvb_special[end].colors[i];
-            rvb_special[p].colors[i].r = clip_palette_component((from.r * from_weight + to.r * to_weight) / denom);
-            rvb_special[p].colors[i].g = clip_palette_component((from.g * from_weight + to.g * to_weight) / denom);
-            rvb_special[p].colors[i].b = clip_palette_component((from.b * from_weight + to.b * to_weight) / denom);
+            rvb_special[p].colors[i].r = min32(63, (u8)(
+                (rvb_special[start].colors[i].r * (end - p) +
+                 rvb_special[end].colors[i].r * (p - start)) / (end - start)));
+            rvb_special[p].colors[i].g = min32(63, (u8)(
+                (rvb_special[start].colors[i].g * (end - p) +
+                 rvb_special[end].colors[i].g * (p - start)) / (end - start)));
+            rvb_special[p].colors[i].b = min32(63, (u8)(
+                (rvb_special[start].colors[i].b * (end - p) +
+                 rvb_special[end].colors[i].b * (p - start)) / (end - start)));
         }
     }
 }
