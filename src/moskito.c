@@ -40,7 +40,7 @@ extern s16 MsAnimIndex;
 extern s16 remoteRayXToReach, bossXToReach, bossYToReach, floorLine, mst_scroll_obj_id;
 extern s32 Bloc_lim_H1;
 extern s32 alternateBossSpeedFactor, bossSpeedFactor;
-extern s16 scroll_x, ray_mode, ray_wind_force;
+extern s16 scroll_x, ray_mode;
 extern u8 boss_mort;
 extern u8 ModeDemo, horloge[25];
 extern obj_t ray;
@@ -66,7 +66,6 @@ void getIdealStingCoords(obj_t* obj, s16* out_x, s16* out_y) {
     s16 calc_x;
     s16 calc_y;
     calc_x = ray_zdc_x + (ray_zdc_w >> 1);
-    /* DOS 1:43bde..43bf4: halve ray_zdc_y, then add ray_zdc_h. */
     /* DOS 1:43bde..43bf4: halve ray_zdc_y, then add ray_zdc_h. */
     calc_y = ray_zdc_h + (ray_zdc_y >> 1);
     *out_x = calc_x - obj->offset_bx;
@@ -606,7 +605,8 @@ void moskitoDropFruitOnRay(obj_t* obj) {
     height = scroll_end_y - scroll_start_y + SCREEN_HEIGHT;
     cen_x = ray_zdc_x + (ray_zdc_w >> 1);
     cen_y = ray_zdc_h + (ray_zdc_y >> 1);
-    if ((scroll_start_x <= x_2 && ray_wind_force + 304 >= x_2) &&
+    /* DOS 1:44d44: [scroll_end_x - 2] >> 16 is the signed short upper bound. */
+    if ((scroll_start_x <= x_2 && scroll_end_x + 304 >= x_2) &&
         cen_x >= x_1 && cen_y >= y_1 && cen_x <= x_1 + width && cen_y <= y_1 + height) {
         allocateMoskitoFruit(obj);
         set_main_and_sub_etat(obj, 0, 16);

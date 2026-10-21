@@ -560,7 +560,7 @@ void DO_SAXO_COUP(obj_t* obj) {
             }
 
             IndexSerie++;
-            if (IndexSerie >= 4) {
+            if (IndexSerie > 3) {
                 IndexSerie = 3;
             } else {
                 IndexAtak = 0;
@@ -643,7 +643,6 @@ void DO_SAXO_COMMAND(obj_t* obj) {
     u16 temp_v0_3;
     s16 temp_v1_1;
     u32 temp_a3;
-    s16 temp_v1_8;
     u8 temp_a1;
     s16 temp_s2;
     s16 temp_v1_2;
@@ -802,7 +801,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                             obj->gravity_value_2 = 5;
                             obj->gravity_value_1 = 0;
                             obj->speed_y = -6;
-                            obj->y += obj->speed_y;
+                            obj->y -= 6;
                             obj->speed_x = obj->flags.flip_x ? 1 : -1;
                             break;
                         case 11:
@@ -855,7 +854,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                             obj->gravity_value_2 = 5;
                             obj->gravity_value_1 = 0;
                             obj->speed_y = -6;
-                            obj->y += obj->speed_y;
+                            obj->y -= 6;
                             obj->speed_x = obj->flags.flip_x ? 1 : -1;
                             break;
                         case 11:
@@ -907,14 +906,11 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                         case 10:
                             obj->gravity_value_2 = 5;
                             obj->gravity_value_1 = 0;
-                            temp_v1_8 = (ray.x - 0x30);
-                            temp_v1_8 = obj->x - temp_v1_8;
-                            var_a0_2 = temp_v1_8;
-                            if (temp_v1_8 < 0)
-                            {
-                                var_a0_2 = -temp_v1_8;
-                            }
-                            if (var_a0_2 >= 0x65)
+                            /* DOS 1:66e5a..66e7f: signed short distance, absolute value, > 100. */
+                            var_a0_2 = obj->x - (s16)(ray.x - 0x30);
+                            if (var_a0_2 < 0)
+                                var_a0_2 = -var_a0_2;
+                            if (var_a0_2 > 100)
                             {
                                 obj->speed_y = var_a0_2 / 20;
                                 if (obj->speed_y > 9)
@@ -925,12 +921,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                                 {
                                     obj->speed_y = 4;
                                 }
-                                var_v1_3 = -2;
-                                if (obj->flags.flip_x)
-                                {
-                                    var_v1_3 = 2;
-                                }
-                                obj->speed_x = var_v1_3;
+                                obj->speed_x = obj->flags.flip_x ? 2 : -2;
                             }
                             else
                             {
@@ -943,12 +934,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                                 {
                                     obj->speed_y = 4;
                                 }
-                                var_v1_3 = -1;
-                                if (obj->flags.flip_x)
-                                {
-                                    var_v1_3 = 1;
-                                }
-                                obj->speed_x = var_v1_3;
+                                obj->speed_x = obj->flags.flip_x ? 1 : -1;
                             }
 
                             obj->y = obj->y - obj->speed_y;
