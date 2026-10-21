@@ -9940,6 +9940,12 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CFA25; DOS SaveOptionsOnDisk writes one byte at 2:3fa25; Android size 1"
+   },
+   "rideau_obj_id": {
+    "addr": "2:3f8cc",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Display_Back_Screen 1:67c28 loads dword [3f8ca]; sar edx,16. True short start 3f8cc."
    }
   }
  }

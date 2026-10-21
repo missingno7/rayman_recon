@@ -3,14 +3,15 @@
 #include "game.h"
 #include "map.h"
 #include "screen_types.h"
+#include <stdlib.h>
 #ifndef MAX_2
 #define MAX_2(x, y) if (x < y) x = y;
 #endif
 #ifndef ABS
-#define ABS(x) (x >= 0 ? (x) : -(x))
+#define ABS(x) abs(x)
 #endif
 #ifndef SGN
-#define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
+#define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #endif
 #ifndef ashl16
 #define ashl16(v, b) ((v) << (b))
@@ -29,16 +30,16 @@
 #define world_5_cave 5
 
 extern bande_t Bande[300];
-extern def_bande_t Def_Bande[18000];
-extern def_sprite_t Def_Sprite[1200];
+extern def_bande_t Def_Bande[6][10][300];
+extern def_sprite_t Def_Sprite[6][10][20];
 extern def_sprite_t Sprite[20];
 extern u8 Tab_NbBande[60];
 extern u8 Tab_NbSprite[60];
 extern u8 Type_Scroll[60];
-extern s16 NbBande;
-extern s16 NbSprite;
-extern s16 Num_Fond;
-extern s16 Val_Div_Scroll_Y;
+extern u16 NbBande;
+extern u16 NbSprite;
+extern u16 Num_Fond;
+extern u16 Val_Div_Scroll_Y;
 extern s16 Val_Add_Scroll_Y;
 extern s16 PosLave_Y;
 extern s32 sko_ecran_tremble;
@@ -47,8 +48,11 @@ extern u8 ModeDemo;
 extern u8 gele;
 extern s16 ray_mode;
 extern s16 scroll_end_y;
+extern s16 scroll_start_y;
 extern s16 poing_obj_id;
 extern poing_t poing;
+extern obj_t *poing_obj;
+extern u8 boss_mort;
 extern s16 jump_time;
 extern s16 xmap;
 extern u8 SinTabFeu[16];
@@ -65,7 +69,10 @@ extern obj_t *ScrollDiffSprites;
 extern u8 *Scroll_Masque[20];
 extern u8 *draw_buffer;
 extern s32 BufferNormalDeplt;
-extern void (*Copy_Plan0_To_Buf)(u8 *, u8 *, s32, s32, s32);
+typedef void copy_plan_t(u8 *, u8 *, u16, s16, s16);
+/* Copy_Plan0Diff_To_Buf assembly preserves all registers (PUSHA/POPA). */
+#pragma aux copy_plan_t parm [esi] [edi] [edx] [ebx] [ecx] modify exact []
+extern copy_plan_t *Copy_Plan0_To_Buf;
 extern u8 scrollLocked;
 extern map_data_t mp;
 extern s16 num_world;
@@ -73,10 +80,12 @@ extern s16 num_level;
 extern s16 ymap;
 extern s16 ymapmax;
 extern s16 rideau_obj_id;
-void DrawSpriteDiffNormal(s32 x, s32 y, vec2b_t size, u8 *mask, u8 *draw_buf, u8 *image_data);
-void Init_Effet_Chaleur(s32 width, s32 height, u8 *source_buf, u8 *dest_buf);
-void Do_Effet_Chaleur(s16 width, s16 height);
-void Display_Sprite_On_Front(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2, s32 h2);
+void DrawSpriteDiffNormal(s16 x, s16 y, u16 size, u8 *mask, u8 *draw_buf, u8 *image_data);
+/* Original assembly: docs/reference/lowlevel_abi.h; DOS calls at 1:685ec etc. */
+#pragma aux DrawSpriteDiffNormal parm [eax] [ebx] [ecx] [edx] [edi] [esi] modify exact [eax ebx ecx edx esi edi]
+void Init_Effet_Chaleur(u16 width, u16 height, u8 *source_buf, u8 *dest_buf);
+void Do_Effet_Chaleur(u16 width, u16 height);
+void Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2);
 
 extern u8 ecroule_plat_index;
 extern u8 ecroule_rubis_list[8];
@@ -134,15 +143,16 @@ void DO_SCORPION_COLLISION(obj_t *obj);
 void DO_SCORPION_MORT(obj_t *obj);
 void DO_SKO(obj_t *obj);
 void SKO_ray_in_zone(obj_t *obj);
-void DO_SKO_HIT(obj_t *obj);
+void DO_SKO_HIT(obj_t *obj, s16 sprite);
 s16 Get_PosLave_Y(void);
 
-void Init_Bande(u8 fnd, s32 width, u16 height, u8* source_buf, u8* dest_buf) {
+void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
     s16 cumulative_length;
-    s32 i;
+    s16 i;
     u8 type_scroll;
+    u16 length;
 
-    // NB. Decided to initialize Def_Bande at runtime instead of compile-time because it's a very large and sparse array.
+    /* Screen tables are read from their separately bound data objects. */
     Num_Fond = fnd;
 
     if (height > 200) {
@@ -165,42 +175,42 @@ void Init_Bande(u8 fnd, s32 width, u16 height, u8* source_buf, u8* dest_buf) {
     NbBande = Tab_NbBande[10 * (num_world - 1) + Num_Fond];
 
     cumulative_length = 0;
-    for (i = 0; i < NbBande; ++i) {
-        def_bande_t* def_bande = Def_Bande + 3000 * (num_world - 1) + 300 * Num_Fond + i;
-        bande_t* bande = Bande + i;
-        bande->length = def_bande->length;
-        bande->field_8 = def_bande->field_2;
-        bande->field_9 = def_bande->field_4;
-        bande->field_4 = def_bande->field_6;
-        bande->field_6 = 0;
-        bande->field_14 = 0;
-        bande->offset = cumulative_length;
+    for (i = 0; i < NbBande;) {
+        Bande[i].length = Def_Bande[num_world - 1][Num_Fond][i].length;
+        Bande[i].field_8 = Def_Bande[num_world - 1][Num_Fond][i].field_2;
+        Bande[i].field_9 = Def_Bande[num_world - 1][Num_Fond][i].field_4;
+        Bande[i].field_4 = Def_Bande[num_world - 1][Num_Fond][i].field_6;
+        Bande[i].field_6 = 0;
+        Bande[i].field_14 = 0;
+        Bande[i].offset = cumulative_length;
         type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
         if (type_scroll == 0 || type_scroll == 2) {
-            bande->source_buffer_pos = source_buf + cumulative_length * width;
-            bande->draw_buffer_pos = dest_buf + cumulative_length * 320;
+            Bande[i].source_buffer_pos = source_buf + cumulative_length * width;
+            Bande[i].draw_buffer_pos = dest_buf + cumulative_length * 320;
         } else {
-            bande->source_buffer_pos = source_buf + cumulative_length;
-            bande->draw_buffer_pos = dest_buf + cumulative_length;
+            Bande[i].source_buffer_pos = source_buf + cumulative_length;
+            Bande[i].draw_buffer_pos = dest_buf + cumulative_length;
         }
 
-        cumulative_length += bande->length;
+        length = Bande[i].length;
+        ++i;
+        cumulative_length += length;
     }
 
     NbSprite = Tab_NbSprite[10 * (num_world - 1) + Num_Fond];
     for (i = 0; i < NbSprite; ++i) {
-        def_sprite_t* def_sprite = Def_Sprite + 200 * (num_world - 1) + 20 * Num_Fond + i;
-        def_sprite_t* sprite = Sprite + i;
-        sprite->x = def_sprite->x;
-        sprite->y = def_sprite->y;
-        sprite->bande_index = def_sprite->bande_index;
+        Sprite[i].x = Def_Sprite[num_world - 1][Num_Fond][i].x;
+        Sprite[i].y = Def_Sprite[num_world - 1][Num_Fond][i].y;
+        Sprite[i].bande_index = Def_Sprite[num_world - 1][Num_Fond][i].bande_index;
     }
 }
 
-void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2, s32 h2) {
-    s32 y;
-    s32 v68;
-    s32 i;
+void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2) {
+    s16 y;
+    s16 v68;
+    u16 i;
+    u16 sprite_index;
+    u16 size;
     u8 type_scroll;
 
     y = h1;
@@ -231,13 +241,12 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
             v68 = plan_height - h2;
         }
         for (i = 0; i < NbBande; ++i) {
-            bande_t* bande = Bande + i;
-            u8* source_buffer_pos = bande->source_buffer_pos + bande->field_6 + w1;
-            u8* dest_buffer_pos = bande->draw_buffer_pos - SCREEN_WIDTH * v68 + w1;
-            s32 draw_height = bande->length;
-            s32 v34 = bande->offset - v68;
-            s32 v36 = bande->length + v34;
-            if (v34 < 0 && v36 > 0 && bande->length != 0) {
+            u8* source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 + w1;
+            u8* dest_buffer_pos = Bande[i].draw_buffer_pos - SCREEN_WIDTH * v68 + w1;
+            s16 draw_height = Bande[i].length;
+            s16 v34 = Bande[i].offset - v68;
+            s16 v36 = Bande[i].length + v34;
+            if (v34 < 0 && v36 > 0 && Bande[i].length != 0) {
                 draw_height = v36;
                 dest_buffer_pos -= SCREEN_WIDTH * v34;
                 source_buffer_pos -= plan_width * v34;
@@ -255,31 +264,26 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
             }
         }
         plan_width /= 2;
-        for (i = 0; i < NbSprite; ++i) {
-            def_sprite_t* sprite = Sprite + i;
-            bande_t* bande = Bande + sprite->bande_index;
-            if (bande->length != 0) {
-                s32 source_x;
+        for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
+            if (Bande[Sprite[i].bande_index].length != 0) {
+                s16 source_x;
                 sprite_t* scroll_diff_sprite;
 
-                source_x = sprite->x - bande->field_6;
+                source_x = Sprite[i].x - Bande[Sprite[i].bande_index].field_6;
                 if (source_x > SCREEN_WIDTH) {
                     source_x -= plan_width;
                 }
-                scroll_diff_sprite = ScrollDiffSprites->sprites + (i + 1);
+                scroll_diff_sprite = ScrollDiffSprites->sprites + sprite_index;
                 if (source_x + scroll_diff_sprite->outer_width > w1) {
-                    vec2b_t size;
-                    size.x = scroll_diff_sprite->outer_width;
-                    size.y = scroll_diff_sprite->outer_height;
-                    DrawSpriteDiffNormal(source_x, sprite->y - v68, size, Scroll_Masque[i + 1], draw_buffer,
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(source_x, Sprite[i].y - v68, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
                 // Draw a second sprite further to the right if >1 fit on screen
-                if (source_x + plan_width < w2) {
-                    vec2b_t size;
-                    size.x = scroll_diff_sprite->outer_width;
-                    size.y = scroll_diff_sprite->outer_height;
-                    DrawSpriteDiffNormal(source_x + plan_width, sprite->y - v68, size, Scroll_Masque[i + 1],
+                source_x += plan_width;
+                if (source_x < w2) {
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(source_x, Sprite[i].y - v68, size, Scroll_Masque[i + 1],
                                          draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
@@ -289,31 +293,30 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
     } else {
         // type_scroll == 1
         for (i = 0; i < NbBande; ++i) {
-            bande_t* bande = Bande + i;
-            s16 v24_4 = plan_height - bande->field_6 - h1;
-            if (bande->offset + bande->length > w1 && bande->offset < w2) {
-                if (bande->length != 0) {
-                    s32 v67 = bande->length;
-                    u8* source_buffer_pos = bande->source_buffer_pos + bande->field_6 * plan_width + h1 * plan_width;
-                    u8* dest_buffer_pos = bande->draw_buffer_pos + SCREEN_WIDTH * h1;
-                    s32 v14;
-                    s32 v15;
-                    s32 v18;
-                    if (bande->offset + bande->length <= w2) {
-                        if (bande->offset < w1) {
-                            source_buffer_pos += w1 - bande->offset;
-                            dest_buffer_pos += w1 - bande->offset;
-                            v67 = bande->length + bande->offset - w1;
+            s16 v24_4 = plan_height - Bande[i].field_6 - h1;
+            if (Bande[i].offset + Bande[i].length > w1 && Bande[i].offset < w2) {
+                if (Bande[i].length != 0) {
+                    s16 v67 = Bande[i].length;
+                    u8* source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 * plan_width + h1 * plan_width;
+                    u8* dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
+                    s16 v14;
+                    s16 v15;
+                    s16 v18;
+                    if (Bande[i].offset + Bande[i].length <= w2) {
+                        if (Bande[i].offset < w1) {
+                            source_buffer_pos += w1 - Bande[i].offset;
+                            dest_buffer_pos += w1 - Bande[i].offset;
+                            v67 = Bande[i].length + Bande[i].offset - w1;
                         }
-                    } else if (bande->offset >= w1) {
-                        v67 = w2 - bande->offset;
+                    } else if (Bande[i].offset >= w1) {
+                        v67 = w2 - Bande[i].offset;
                     } else {
-                        source_buffer_pos += w1 - bande->offset;
-                        dest_buffer_pos += w1 - bande->offset;
+                        source_buffer_pos += w1 - Bande[i].offset;
+                        dest_buffer_pos += w1 - Bande[i].offset;
                         v67 = w2 - w1;
                     }
                     v14 = h2 - h1;
-                    v15 = plan_height - bande->field_6 - h1;
+                    v15 = plan_height - Bande[i].field_6 - h1;
                     if (v15 > v14) {
                         v15 = v14;
                     }
@@ -322,13 +325,13 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
                         v18 = v14;
                     } else {
                         Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, v15, v67);
-                        source_buffer_pos = bande->source_buffer_pos;
-                        dest_buffer_pos = bande->draw_buffer_pos + SCREEN_WIDTH * h1 + SCREEN_WIDTH * v15;
+                        source_buffer_pos = Bande[i].source_buffer_pos;
+                        dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1 + SCREEN_WIDTH * v15;
                         v18 = v14 - v15;
                     }
-                    if (bande->offset < w1) {
-                        source_buffer_pos += w1 - bande->offset;
-                        dest_buffer_pos += w1 - bande->offset;
+                    if (Bande[i].offset < w1) {
+                        source_buffer_pos += w1 - Bande[i].offset;
+                        dest_buffer_pos += w1 - Bande[i].offset;
                     }
                     if (v14 < v18) {
                         v18 = v14;
@@ -339,29 +342,24 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
                 }
             }
         }
-        for (i = 0; i < NbSprite; ++i) {
-            def_sprite_t* sprite = Sprite + i;
-            bande_t* bande = Bande + sprite->bande_index;
-            if (bande->length != 0) {
-                s32 source_y = sprite->y - bande->field_6;
+        for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
+            if (Bande[Sprite[i].bande_index].length != 0) {
+                s16 source_y = Sprite[i].y - Bande[Sprite[i].bande_index].field_6;
                 sprite_t* scroll_diff_sprite;
                 if (source_y > SCREEN_HEIGHT) {
                     source_y -= plan_height;
                 }
-                scroll_diff_sprite = ScrollDiffSprites->sprites + (i + 1);
+                scroll_diff_sprite = ScrollDiffSprites->sprites + sprite_index;
                 if (source_y + scroll_diff_sprite->outer_height > h1) {
-                    vec2b_t size;
-                    size.x = scroll_diff_sprite->outer_width;
-                    size.y = scroll_diff_sprite->outer_height;
-                    DrawSpriteDiffNormal(sprite->x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
                 // Draw a second sprite further to the right if >1 fit on screen
-                if (source_y + plan_height < h2) {
-                    vec2b_t size;
-                    size.x = scroll_diff_sprite->outer_width;
-                    size.y = scroll_diff_sprite->outer_height;
-                    DrawSpriteDiffNormal(sprite->x, source_y + plan_height, size, Scroll_Masque[i + 1],
+                source_y += plan_height;
+                if (source_y < h2) {
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1],
                                          draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
@@ -370,68 +368,59 @@ void Display_Back_Screen(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2
     }
 }
 
-void Display_Sprite_On_Front(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s32 w2, s32 h2) {
-    s32 i;
-    s32 y_scroll;
+void Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2) {
+    u16 i;
+    u16 size;
+    u16 sprite_index;
+    s16 y_scroll;
     u8 type_scroll;
+    sprite_t *scroll_diff_sprite;
+    s16 source_x;
+    s16 source_y;
 
-    type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
-    y_scroll = 2 * ymapmax - 2 * ymap + SCREEN_HEIGHT;
-    plan_width /= 2;
+    type_scroll = Type_Scroll[Num_Fond + 10 * (num_world - 1)];
     if (type_scroll == 0 || type_scroll == 2) {
-        for (i = 0; i < NbSprite; ++i) {
-            def_sprite_t *sprite;
-            bande_t *bande;
-            sprite_t *scroll_diff_sprite;
-            s32 source_x;
-            s32 source_y;
-            vec2b_t size;
-
-            sprite = Sprite + i;
-            bande = Bande + sprite->bande_index;
-            if (bande->length == 0) {
-                source_x = sprite->x - bande->field_6;
+        plan_width /= 2;
+        y_scroll = 2 * ymapmax - 2 * ymap + SCREEN_HEIGHT;
+        for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
+            if (Bande[Sprite[i].bande_index].length == 0) {
+                scroll_diff_sprite = ScrollDiffSprites->sprites + sprite_index;
+                source_x = Sprite[i].x - Bande[Sprite[i].bande_index].field_6;
                 if (source_x > SCREEN_WIDTH) {
                     source_x -= plan_width;
                 }
-                scroll_diff_sprite = ScrollDiffSprites->sprites + i + 1;
-                source_y = sprite->y - y_scroll;
-                size.x = scroll_diff_sprite->outer_width;
-                size.y = scroll_diff_sprite->outer_height;
-                if (source_x + size.x > w1) {
+                if (source_x + scroll_diff_sprite->outer_width > w1) {
+                    source_y = y_scroll - scroll_diff_sprite->outer_height;
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
                     DrawSpriteDiffNormal(source_x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
-                if (source_x + plan_width < w2) {
-                    DrawSpriteDiffNormal(source_x + plan_width, source_y, size, Scroll_Masque[i + 1], draw_buffer,
+                source_x += plan_width;
+                if (source_x < w2) {
+                    source_y = y_scroll - scroll_diff_sprite->outer_height;
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(source_x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
             }
         }
     } else {
-        for (i = 0; i < NbSprite; ++i) {
-            def_sprite_t *sprite;
-            bande_t *bande;
-            sprite_t *scroll_diff_sprite;
-            s32 source_y;
-            vec2b_t size;
-
-            sprite = Sprite + i;
-            bande = Bande + sprite->bande_index;
-            if (bande->length != 0) {
-                source_y = sprite->y - bande->field_6;
+        for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
+            if (Bande[Sprite[i].bande_index].length == 0) {
+                scroll_diff_sprite = ScrollDiffSprites->sprites + sprite_index;
+                source_y = Sprite[i].y - Bande[Sprite[i].bande_index].field_6;
                 if (source_y > SCREEN_HEIGHT) {
                     source_y -= plan_height;
                 }
-                scroll_diff_sprite = ScrollDiffSprites->sprites + i + 1;
-                size.x = scroll_diff_sprite->outer_width;
-                size.y = scroll_diff_sprite->outer_height;
-                if (source_y + size.y > h1) {
-                    DrawSpriteDiffNormal(sprite->x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
+                if (source_y + scroll_diff_sprite->outer_height > h1) {
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
-                if (source_y + plan_height < h2) {
-                    DrawSpriteDiffNormal(sprite->x, source_y + plan_height, size, Scroll_Masque[i + 1], draw_buffer,
+                source_y += plan_height;
+                if (source_y < h2) {
+                    size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
+                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
             }
@@ -439,42 +428,41 @@ void Display_Sprite_On_Front(s32 plan_width, s32 plan_height, s32 w1, s32 h1, s3
     }
 }
 
-void Calcul_Deplacement_Bande(s16 x, s32 plan_width, s32 plan_height) {
-    s32 i;
+void Calcul_Deplacement_Bande(s16 x, u16 plan_width, u16 plan_height) {
+    u16 i;
     u8 type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
     if (type_scroll != 0) {
         if (type_scroll == 1) {
             for (i = 0; i < NbBande; ++i) {
-                bande_t* bande = Bande + i;
-                if (bande->length != 0) {
-                    if (bande->field_4 != 0) {
-                        if (bande->field_4 == 1 || bande->field_4 == 4) {
-                            bande->field_14 = (bande->field_9 + bande->field_14) % (16 * plan_height);
-                            if (bande->field_4 != 1) {
-                                bande->field_6 = (ymap + plan_height * bande->field_8) / bande->field_8 % plan_height;
-                                bande->field_6 += bande->field_14 >> 4;
-                                bande->field_6 = bande->field_6 % plan_height;
+                if (Bande[i].length != 0) {
+                    if (Bande[i].field_4 != 0) {
+                        if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
+                            Bande[i].field_14 = (Bande[i].field_9 + Bande[i].field_14) % (16 * plan_height);
+                            if (Bande[i].field_4 != 1) {
+                                Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
+                                Bande[i].field_6 += Bande[i].field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_6 % plan_height;
                             } else {
-                                bande->field_6 = bande->field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_14 >> 4;
                             }
-                        } else if (bande->field_4 == 2 || bande->field_4 == 5) {
-                            if (bande->field_9 > bande->field_14) {
-                                bande->field_14 += 16 * plan_height;
+                        } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
+                            if (Bande[i].field_9 > Bande[i].field_14) {
+                                Bande[i].field_14 += 16 * plan_height;
                             }
-                            bande->field_14 -= bande->field_9;
-                            if (bande->field_4 != 2) {
-                                bande->field_6 = (ymap + plan_height * bande->field_8) / bande->field_8 % plan_height;
-                                bande->field_6 += bande->field_14 >> 4;
-                                bande->field_6 = bande->field_6 % plan_height;
+                            Bande[i].field_14 -= Bande[i].field_9;
+                            if (Bande[i].field_4 != 2) {
+                                Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
+                                Bande[i].field_6 += Bande[i].field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_6 % plan_height;
                             } else {
-                                bande->field_6 = bande->field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_14 >> 4;
                             }
                         }
                     } else {
-                        bande->field_6 = (ymap + plan_height * bande->field_8) / bande->field_8 % plan_height;
+                        Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
                     }
                 } else {
-                    bande->field_6 = (2 * ymap) % plan_height;
+                    Bande[i].field_6 = (2 * ymap) % plan_height;
                 }
             }
         }
@@ -483,36 +471,35 @@ void Calcul_Deplacement_Bande(s16 x, s32 plan_width, s32 plan_height) {
         plan_width /= 2;
         if (NbBande != 0) {
             for (i = 0; i < NbBande; ++i) {
-                bande_t* bande = Bande + i;
-                if (bande->length != 0) {
-                    if (bande->field_4 != 0) {
-                        if (bande->field_4 == 1 || bande->field_4 == 4) {
-                            bande->field_14 = (bande->field_9 + bande->field_14) % (16 * plan_width);
-                            if (bande->field_4 != 1) {
-                                bande->field_6 = (x + plan_width * bande->field_8) / bande->field_8 % plan_width;
-                                bande->field_6 += bande->field_14 >> 4;
-                                bande->field_6 = bande->field_6 % plan_width;
+                if (Bande[i].length != 0) {
+                    if (Bande[i].field_4 != 0) {
+                        if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
+                            Bande[i].field_14 = (Bande[i].field_9 + Bande[i].field_14) % (16 * plan_width);
+                            if (Bande[i].field_4 != 1) {
+                                Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
+                                Bande[i].field_6 += Bande[i].field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_6 % plan_width;
                             } else {
-                                bande->field_6 = bande->field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_14 >> 4;
                             }
-                        } else if (bande->field_4 == 2 || bande->field_4 == 5) {
-                            if (bande->field_9 > bande->field_14) {
-                                bande->field_14 += 16 * plan_width;
+                        } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
+                            if (Bande[i].field_9 > Bande[i].field_14) {
+                                Bande[i].field_14 += 16 * plan_width;
                             }
-                            bande->field_14 -= bande->field_9;
-                            if (bande->field_4 != 2) {
-                                bande->field_6 = (x + plan_width * bande->field_8) / bande->field_8 % plan_width;
-                                bande->field_6 += bande->field_14 >> 4;
-                                bande->field_6 = bande->field_6 % plan_width;
+                            Bande[i].field_14 -= Bande[i].field_9;
+                            if (Bande[i].field_4 != 2) {
+                                Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
+                                Bande[i].field_6 += Bande[i].field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_6 % plan_width;
                             } else {
-                                bande->field_6 = bande->field_14 >> 4;
+                                Bande[i].field_6 = Bande[i].field_14 >> 4;
                             }
                         }
                     } else {
-                        bande->field_6 = (x + plan_width * bande->field_8) / bande->field_8 % plan_width;
+                        Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
                     }
                 } else {
-                    bande->field_6 = (2 * x) % plan_width;
+                    Bande[i].field_6 = (2 * x) % plan_width;
                 }
             }
         }
@@ -522,51 +509,49 @@ void Calcul_Deplacement_Bande(s16 x, s32 plan_width, s32 plan_height) {
     }
 }
 
-void Init_Effet_Chaleur(s32 width, s16 height, u8* source_buf, u8* dest_buf) {
-    s32 i;
+void Init_Effet_Chaleur(u16 width, u16 height, u8* source_buf, u8* dest_buf) {
+    s16 i;
 
     NbBande = height;
     for (i = 0; i < NbBande; ++i) {
-        bande_t *bande = Bande + i;
-        bande->length = 1;
-        bande->field_8 = 2;
-        bande->field_9 = 0;
-        bande->field_4 = 0;
-        bande->field_6 = 0;
-        bande->field_14 = 0;
-        bande->offset = i;
-        bande->source_buffer_pos = source_buf + i * width;
-        bande->draw_buffer_pos = dest_buf + i * SCREEN_WIDTH;
+        Bande[i].length = 1;
+        Bande[i].field_8 = 2;
+        Bande[i].field_9 = 0;
+        Bande[i].field_4 = 0;
+        Bande[i].field_6 = 0;
+        Bande[i].field_14 = 0;
+        Bande[i].offset = i;
+        Bande[i].source_buffer_pos = source_buf + i * width;
+        Bande[i].draw_buffer_pos = dest_buf + i * SCREEN_WIDTH;
     }
     NbSprite = 0;
 }
 
-void Do_Effet_Chaleur(s16 width, s16 height) {
-    s32 start_y;
-    s32 y;
-    s32 counter;
-    s32 phase;
+void Do_Effet_Chaleur(u16 width, u16 height) {
+    s16 max_y;
+    s16 start_y;
+    s16 y;
+    u8 phase;
+    s16 counter;
 
-    start_y = jump_time >> 2;
-    if (start_y > height - 201) {
-        start_y = height - 201;
-    }
-    start_y += Get_PosLave_Y() - ymap - 20;
+    counter = height - 201;
+    max_y = ymap >> 2;
+    if (max_y > counter) max_y = counter;
+    start_y = (s16)(Get_PosLave_Y() - ymap) + max_y - 20;
     if (gele == 0) {
         ++data_22d948;
-        if (data_22d948 == 16) {
-            data_22d948 = 0;
-        }
     }
+    if (data_22d948 == 16) data_22d948 = 0;
+    y = start_y;
     phase = data_22d948;
     counter = 90;
-    for (y = start_y; y < height + 90; ++y) {
+    for (; y < start_y + 90 && y < height; ++y) {
         --counter;
         if (counter < 16) {
             counter = 16;
         }
         if (y > 0) {
-            Bande[y].field_6 = (Bande[y].field_6 + width + SinTabFeu[phase] * 16 / counter) % width;
+            Bande[y].field_6 = ((s16)(SinTabFeu[phase] * 16 / counter) + (Bande[y].field_6 + width)) % width;
         }
         ++phase;
         if (phase == 16) {
@@ -578,7 +563,7 @@ void Do_Effet_Chaleur(s16 width, s16 height) {
 
 void swap(s32 ind_1, s32 ind_2)
 {
-    u8 temp = ecroule_rubis_list[ind_1];
+    s16 temp = ecroule_rubis_list[ind_1];
     ecroule_rubis_list[ind_1] = ecroule_rubis_list[ind_2];
     ecroule_rubis_list[ind_2] = temp;
 }
@@ -589,11 +574,8 @@ void set_rubis_list(void)
     s32 i;
     obj_t *cur_obj;
     s32 nb_objs;
-    u16 type;
     s32 swapped;
     s32 j;
-    s16 *mp_height;
-    u8 *cur_lave_obj;
 
     rubis_list_calculated = 1;
     rubis_ind = 0;
@@ -602,13 +584,12 @@ void set_rubis_list(void)
     cur_obj = &level.objects[i];
     nb_objs = level.nb_objects;
     while (i < nb_objs) {
-        type = cur_obj->type;
-        if (type == TYPE_RUBIS) {
+        if (cur_obj->type == TYPE_RUBIS) {
             ecroule_rubis_list[rubis_ind] = cur_obj->id;
             rubis_ind++;
-        } else if (type == TYPE_SKO_PINCE) {
+        } else if (cur_obj->type == TYPE_SKO_PINCE) {
             sko_pince_obj_id = i;
-        } else if (type == TYPE_LAVE) {
+        } else if (cur_obj->type == TYPE_LAVE) {
             sko_lave_obj[sko_nb_lave] = i;
             sko_nb_lave++;
         }
@@ -619,8 +600,7 @@ void set_rubis_list(void)
     do {
         swapped = 0;
         for (j = 0; j < 7; j++) {
-            if (level.objects[ecroule_rubis_list[j]].x >
-                level.objects[ecroule_rubis_list[j + 1]].x) {
+            if (level.objects[ecroule_rubis_list[j+1]].x < level.objects[ecroule_rubis_list[j]].x) {
                 swap(j, j + 1);
                 swapped = 1;
             }
@@ -636,17 +616,13 @@ void set_rubis_list(void)
     sko_enfonce_enable = 0;
 
     mp.height = 32;
-    ymapmax = 272;
-    scroll_end_y = 272;
+    ymapmax = 312;
+    scroll_end_y = 312;
     sko_ecran_tremble = 0;
-    if (sko_nb_lave != 0) {
-        mp_height = &mp.height;
-        cur_lave_obj = &sko_lave_obj[0];
-        do {
-            level.objects[*cur_lave_obj].init_y = *mp_height * 16 - 60;
-            level.objects[*cur_lave_obj].y = level.objects[*cur_lave_obj].init_y;
-            cur_lave_obj++;
-        } while (cur_lave_obj < &sko_lave_obj[sko_nb_lave]);
+    for (i = 0; i < sko_nb_lave; i++) {
+        level.objects[sko_lave_obj[i]].init_y = mp.height * 16 - 60;
+        level.objects[sko_lave_obj[i]].y = level.objects[sko_lave_obj[i]].init_y;
+        PosLave_Y = level.objects[sko_lave_obj[i]].init_y;
     }
 }
 
@@ -655,7 +631,7 @@ void allocate_rayon(s16 x, s16 y)
     s16 found;
     s16 i;
     obj_t *cur_obj;
-    u16 nb_objs;
+    s16 nb_objs;
 
     found = 0;
     i = 0;
@@ -667,8 +643,8 @@ void allocate_rayon(s16 x, s16 y)
         cur_obj++;
         i++;
     } while (!found && i < nb_objs);
+    cur_obj--;
     if (found) {
-        cur_obj--;
         cur_obj->flags.alive = 1;
         cur_obj->is_active = 1;
         add_alwobj(cur_obj);
@@ -692,9 +668,10 @@ void allocate_8_petits_rayons(s16 x, s16 y)
     if (found_obj != 0) {
         found_obj->x = x + 64;
         found_obj->y = y + 64;
-        found_obj->display_prio = 1;
-        found_obj->init_x = 0;
         found_obj->is_active = 1;
+        add_alwobj(found_obj);
+        found_obj->display_prio = 1;
+        found_obj->param = 0;
         calc_obj_pos(found_obj);
     }
     start_pix_gerbe(x + 140, y + 32);
@@ -702,12 +679,14 @@ void allocate_8_petits_rayons(s16 x, s16 y)
     i = 0;
     rayon_obj = &found_obj[10];
     while (i < 8) {
+        if (!rayon_obj->is_active)
+            add_alwobj(rayon_obj);
+        rayon_obj->is_active = 1;
+        rayon_obj->flags.alive = 1;
+        rayon_obj->main_etat = 3;
         rayon_obj->x = x + 8;
         rayon_obj->y = y;
-        rayon_obj->main_etat = 3;
         rayon_obj->sub_etat = 2;
-        rayon_obj->flags.alive = 1;
-        rayon_obj->is_active = 1;
         rayon_obj->speed_x = rayon_speed_x[i];
         rayon_obj->speed_y = rayon_speed_y[i];
         rayon_obj->anim_frame = 2;
@@ -753,7 +732,6 @@ void do_sko_rayon(void)
 
 void do_sko_rayon2(void)
 {
-    obj_t *poing_obj;
     s16 horl_zero;
     s16 diff_x;
     s16 diff_y;
@@ -763,7 +741,6 @@ void do_sko_rayon2(void)
         sko_rayon_on--;
         if (poing.is_active) {
             D_801E4E10 = 3;
-            poing_obj = &level.objects[poing_obj_id];
             sko_final_x = poing_obj->x + poing_obj->offset_bx - 104;
             sko_final_y = poing_obj->y + poing_obj->offset_hy - 120;
             horl_zero = horloge[2] == 0;
@@ -824,7 +801,7 @@ void start_sko_rayon2(s16 obj_x, s16 obj_y)
     obj_t *final_obj;
 
     if (poing.is_active)
-        final_obj = &level.objects[poing_obj_id];
+        final_obj = poing_obj;
     else
         final_obj = &ray;
     sko_rayon_on = 120;
@@ -859,77 +836,68 @@ s32 sko_get_eject_sens(void)
 
 void DO_SOL_ENFONCE(void)
 {
-    s32 i;
-
+    s16 i;
+    s16 scroll_y = scroll_end_y;
+    s16 lave_y = PosLave_Y;
+    s32 tremble = sko_ecran_tremble;
     if (ray_mode == 3 ||
         (ray.main_etat == 2 && ray.sub_etat == 9) ||
-        (ray.main_etat == 3 && (ray.sub_etat == 23 || ray.sub_etat == 52))) {
+        (ray.main_etat == 3 && (ray.sub_etat == 23 || ray.sub_etat == 7))) {
         sko_enfonce_enable = 0;
         pixels_enfonce = 0;
     }
-    if (sko_ecran_tremble != 0) {
-        --sko_ecran_tremble;
-        if (horloge[4] >= 2) {
-            xmap += 2;
-        } else {
-            xmap -= 2;
-        }
+    if (tremble != 0) {
+        --tremble;
+        if (horloge[4] >= 2) xmap += 2;
+        else xmap -= 2;
     }
-    if (!(pixels_enfonce < 96 && sko_enfonce_enable == 1)) {
-        if (pixels_enfonce < 196 && sko_enfonce_enable == 2) {
-            goto block_19;
-        }
-    } else if (horloge[2] != 0) {
-block_19:
-        if (sko_enfonce_enable == 2 && horloge[4] == 0) {
-            goto block_21;
-        }
-    } else {
-        if (horloge[4] >= 2) {
-block_21:
-            xmap += 3;
-        } else {
-            xmap -= 3;
-        }
-        --ymapmax;
-        --scroll_end_y;
-        ++pixels_enfonce;
-        if ((pixels_enfonce & 15) == 0) {
-            --mp.height;
-        }
-        for (i = 0; i < sko_nb_lave; ++i) {
-            obj_t *lave_obj;
-
-            lave_obj = &level.objects[sko_lave_obj[i]];
-            --lave_obj->y;
-            --lave_obj->init_y;
-            if (sko_enfonce_enable == 1 && horloge[10] == 0) {
-                --lave_obj->y;
-                --lave_obj->init_y;
+    if ((pixels_enfonce < 96 && sko_enfonce_enable == 1) ||
+        (pixels_enfonce < 196 && sko_enfonce_enable == 2)) {
+        if ((sko_enfonce_enable == 1 && horloge[2] == 0) ||
+            (sko_enfonce_enable == 2 && horloge[4] == 0)) {
+            if (horloge[4] >= 2) xmap += 3;
+            else xmap -= 3;
+            --scroll_y;
+            if (ymapmax > scroll_start_y) --ymapmax;
+            ++pixels_enfonce;
+            if ((pixels_enfonce & 15) == 0) --mp.height;
+            for (i = 0; i < sko_nb_lave; ++i) {
+                --level.objects[sko_lave_obj[i]].y;
+                --level.objects[sko_lave_obj[i]].init_y;
+                if (sko_enfonce_enable == 1 && horloge[10] == 0) {
+                    --level.objects[sko_lave_obj[i]].y;
+                    --level.objects[sko_lave_obj[i]].init_y;
+                }
+                if (scroll_y + 120 > level.objects[sko_lave_obj[i]].y)
+                    level.objects[sko_lave_obj[i]].y = scroll_y + 120;
+                lave_y = level.objects[sko_lave_obj[i]].y;
             }
         }
     }
     if (pixels_enfonce == 96 && sko_enfonce_enable == 1) {
         pixels_enfonce = 0;
         sko_enfonce_enable = 0;
-        sko_ecran_tremble = 60;
+        tremble = 60;
     }
     if (pixels_enfonce == 196 && sko_enfonce_enable == 2) {
         pixels_enfonce = 0;
         sko_enfonce_enable = 0;
-        sko_ecran_tremble = 60;
+        tremble = 60;
     }
+    sko_ecran_tremble = tremble;
+    PosLave_Y = lave_y;
+    scroll_end_y = scroll_y;
 }
 
 void DO_SKO_PHASE_0(obj_t *sko_obj)
 {
-    s16 sko_sub_etat;
+    s16 sko_main_etat = sko_obj->main_etat;
+    s16 sko_sub_etat = sko_obj->sub_etat;
     obj_t *ecroule_obj = &level.objects[sko_ecroule_plat];
-    if (sko_obj->main_etat == 0) {
-        sko_sub_etat = sko_obj->sub_etat;
-        if (sko_sub_etat >= 2) {
-            if (sko_sub_etat >= 4) {
-                if (sko_sub_etat == 4 && sko_obj->anim_frame == 27 && screen_trembling == 0) {
+    if (sko_main_etat == 0) {
+        switch (sko_sub_etat) {
+        case 4:
+                if (sko_obj->anim_frame == 27 && screen_trembling == 0) {
                     screen_trembling = 1;
                     sko_nb_frap++;
                     if (ecroule_obj->sub_etat == 7) {
@@ -938,7 +906,7 @@ void DO_SKO_PHASE_0(obj_t *sko_obj)
                         ecroule_plat_index++;
                         sko_ecroule_plat = ecroule_rubis_list[ecroule_rubis_order[ecroule_plat_index]];
                     }
-                    if (sko_nb_frap == sko_sub_etat)
+                    if (sko_nb_frap == 4)
                         skipToLabel(sko_obj, 4, 1);
                     if (sko_nb_frap == 5) {
                         sko_nb_frap = 0;
@@ -948,7 +916,10 @@ void DO_SKO_PHASE_0(obj_t *sko_obj)
                         ecroule_plat_index--;
                     }
                 }
-            } else if (sko_last_action == 4) {
+            break;
+        case 2:
+        case 3:
+            if (sko_last_action == 4) {
                 set_sub_etat(sko_obj, 8);
                 sko_last_action = 8;
             } else {
@@ -956,15 +927,19 @@ void DO_SKO_PHASE_0(obj_t *sko_obj)
                 skipToLabel(sko_obj, 3, 1);
                 sko_last_action = 4;
             }
+            break;
         }
     }
 }
 
 void DO_SKO_PHASE_1(obj_t *obj)
 {
-    if (obj->main_etat == 0 && obj->sub_etat == 4 &&
-        obj->anim_frame == 27 && screen_trembling == 0)
-    {
+    s16 main_etat = obj->main_etat;
+    s16 sub_etat = obj->sub_etat;
+    switch (main_etat) { case 0:
+      switch (sub_etat) {
+      case 4:
+       if (obj->anim_frame == 27 && screen_trembling == 0) {
         screen_trembling = 1;
         sko_nb_frap++;
         if (ray.main_etat == 5)
@@ -980,6 +955,9 @@ void DO_SKO_PHASE_1(obj_t *obj)
             sko_nb_frap = 0;
             obj->anim_frame = 0;
         }
+       }
+       break;
+      }
     }
 }
 
@@ -1077,48 +1055,41 @@ void DO_SKO_PHASE_3(obj_t *obj)
 
 void DO_SKO_PINCE(obj_t *obj)
 {
-    u8 sub_etat;
-    s32 pince_id;
-    obj_t *pince_obj;
 
     if (obj->main_etat == 0) {
-        sub_etat = obj->sub_etat;
-        if (sub_etat == 8) {
+        if (obj->sub_etat == 8) {
             if (obj->anim_frame == 65) {
                 lance_pince(obj);
                 set_sub_etat(obj, 9);
                 skipToLabel(obj, 9, 1);
             }
-        } else if (sub_etat == 9) {
-            pince_id = sko_pince_obj_id;
-            pince_obj = &level.objects[pince_id];
-            pince_obj->speed_x += 2;
-            if (-pince_obj->speed_x == -110) {
+        } else if (obj->sub_etat == 9) {
+            level.objects[sko_pince_obj_id].speed_x += 2;
+            if (-level.objects[sko_pince_obj_id].speed_x == -110) {
                 set_sub_etat(obj, 10);
             }
-        } else if (sub_etat == 10 && obj->anim_frame == 7) {
-            pince_id = sko_pince_obj_id;
-            pince_obj = &level.objects[pince_id];
-            pince_obj->flags.alive = 0;
-            pince_obj->x = -32000;
-            pince_obj->y = -32000;
+        } else if (obj->sub_etat == 10 && obj->anim_frame == 7) {
+            level.objects[sko_pince_obj_id].x = -32000;
+            level.objects[sko_pince_obj_id].y = -32000;
+            level.objects[sko_pince_obj_id].flags.alive = 0;
         }
     }
 }
 
 void DO_SCORPION_COLLISION(obj_t *obj)
 {
-    s16 iVar1 = -1;
     s16 rayon_x = sko_rayon_x + 120;
     s16 rayon_y = sko_rayon_y + 120;
+    s16 w = 16;
+    s16 h = 16;
+    s16 iVar1 = -1;
 
-    s16 unk_1 = 11;
-    if (!(obj->main_etat == 0 && (obj->sub_etat == unk_1 || obj->sub_etat == 12)))
+    if (!(obj->main_etat == 0 && obj->sub_etat == 11) && !(obj->main_etat == 0 && obj->sub_etat == 12))
     {
         iVar1 = BOX_IN_COLL_ZONES(
             TYPE_SCORPION,
             rayon_x, rayon_y,
-            16, 16,
+            w, h,
             obj
         );
     }
@@ -1127,14 +1098,16 @@ void DO_SCORPION_COLLISION(obj_t *obj)
     {
         set_sub_etat(obj, 11);
         allocate_8_petits_rayons(sko_rayon_x, sko_rayon_y);
-        sko_rayon_x = 33536;
-        sko_rayon_y = 33536;
+        sko_rayon_x = -32000;
+        sko_rayon_y = -32000;
         sko_rayon_on = 0;
         obj->hit_points--;
         if (obj->hit_points == 1)
             skipToLabel(obj, 13, 1);
-        if (obj->hit_points == 0)
+        if (obj->hit_points == 0) {
             set_sub_etat(obj, 12);
+            boss_mort = 1;
+        }
     }
 }
 
@@ -1158,7 +1131,7 @@ void DO_SKO(obj_t *obj)
     s16 sub_etat = obj->sub_etat;
     obj_t *cur_obj;
     s16 i;
-    u8 nb_objs;
+    s16 nb_objs;
 
     if (main_etat == 0 && sub_etat == 1) {
         if (obj->anim_frame == 0) {
@@ -1276,7 +1249,7 @@ void SKO_ray_in_zone(obj_t *obj)
     }
 }
 
-void DO_SKO_HIT(obj_t *obj)
+void DO_SKO_HIT(obj_t *obj, s16 sprite)
 {
     s16 main_etat;
     s16 sub_etat;
