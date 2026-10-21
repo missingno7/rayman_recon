@@ -11690,6 +11690,37 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "cymbal": {
+   "source": "src\\cymbal.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DO_CYMBAL_COMMAND": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_2_PARTS_CYMBAL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_COLL_RAY_CYMBALE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
