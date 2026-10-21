@@ -466,7 +466,8 @@ void AFFICHE_ECRAN_SAVE(void)
                             debut_options + save_index * (ecarty + 23), 1, 2,
                             rotationtxt, ktxtenx, ktxteny);
                     else if (temp[cur_x - 1] == ' ')
-                        display_text("", basex + ecartx * (cur_x - 1),
+                        /* DOS 1:2484b passes 2:30c0d, the NUL of a "z" literal (CONST "" "~" "z" "level "), not the shared "" */
+                        display_text("z" + 1, basex + ecartx * (cur_x - 1),
                             debut_options + save_index * (ecarty + 23), 1, 2);
                     else
                         display_text(temp + cur_x - 1, basex + ecartx * (cur_x - 1),
