@@ -1806,30 +1806,29 @@ void RAY_RESPOND_TO_BUTTON4(void) {}
 
 void RAY_RESPOND_TO_BUTTON3(void) {
     /* 61568 80185D68 -O2 -msoft-float */
-    if (ray.main_etat != 2) {
-        if (ray.main_etat != 1) {
-            RAY_STOP();
-            if (ray.main_etat == 0 &&
-                    (ray.sub_etat == 0 || ray.sub_etat == 1 || ray.sub_etat == 2 ||
-                     ray.sub_etat == 63 || ray.sub_etat == 62 || ray.sub_etat == 59 ||
-                     ray.sub_etat == 3 || ray.sub_etat == 8)
-             ) {
-                if (RayEvts.magicseed) {
-                    if (ray.follow_id == -1) {
-                        set_main_and_sub_etat(&ray, 3, 16);
-                        ray.speed_x = 0;
-                        ray.speed_y = 0;
-                    }
-                } else if ( !ray_on_poelle && !(ray.sub_etat == 18) && RayEvts.force_run == 0 && !RayEvts.run && !(ray.sub_etat == 8) && !RayEvts.squashed) {
-                    set_sub_etat(&ray, 18);
+    if (ray.main_etat != 2 && ray.main_etat != 1) {
+        RAY_STOP();
+        if (ray.main_etat == 0 &&
+                (ray.sub_etat == 0 || ray.sub_etat == 1 || ray.sub_etat == 2 ||
+                 ray.sub_etat == 63 || ray.sub_etat == 62 || ray.sub_etat == 59 ||
+                 ray.sub_etat == 3 || ray.sub_etat == 8)
+         ) {
+            if (RayEvts.magicseed) {
+                if (ray.follow_id == -1) {
+                    set_main_and_sub_etat(&ray, 3, 16);
+                    ray.speed_x = 0;
+                    ray.speed_y = 0;
                 }
-            }
-        } else {
-            if (RayEvts.force_run == 0 && RayEvts.run && ray.sub_etat == 0) {
-                set_sub_etat(&ray, 3);
+            } else if ( !ray_on_poelle && !(ray.sub_etat == 18) && RayEvts.force_run == 0 && !RayEvts.run && !(ray.sub_etat == 8) && !RayEvts.squashed) {
+                set_sub_etat(&ray, 18);
             }
         }
+    } else if (ray.main_etat == 1) {
+        if (RayEvts.force_run == 0 && RayEvts.run && ray.sub_etat == 0) {
+            set_sub_etat(&ray, 3);
+        }
     }
+
 }
 
 void RAY_RESPOND_TO_FIRE0(void)
@@ -1839,19 +1838,20 @@ void RAY_RESPOND_TO_FIRE0(void)
 }
 
 void RAY_RESPOND_TO_FIRE1(void) {
+    /* DOS table 1:5f1e8: state 1 checks down; 0/2/5/7 jump directly. */
     if (!fin_boss) {
         switch (ray.main_etat) {
-            case 0:
-            case 2:
-            case 5:
-            case 7: {
+            case 1: {
                 if (!downjoy() || ray.sub_etat == 3) {
                     ray_jump();
                 } else {
                     button_released = 0;
                 }
             } break;
-            case 1: {
+            case 0:
+            case 2:
+            case 5:
+            case 7: {
                 ray_jump();
             } break;
             default: break;
@@ -2322,7 +2322,8 @@ void RAY_IN_THE_AIR(void) {
             }
         }
     }
-    if (ray_mode != MODE_3_MORT_DE_RAYMAN && ray.main_etat == 2 && ray.sub_etat != 31) {
+    /* DOS 1:5ffe1..5fff0 materializes this substate predicate. */
+    if (ray_mode != MODE_3_MORT_DE_RAYMAN && ray.main_etat == 2 && !(ray.sub_etat == 31)) {
         IS_RAY_ON_LIANE();
         CAN_RAY_HANG_BLOC();
     }
