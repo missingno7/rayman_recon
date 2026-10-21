@@ -10181,7 +10181,7 @@
      ]
     },
     "sub_38B58": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

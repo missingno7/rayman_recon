@@ -1,4 +1,4 @@
-/* effect.c part 2 (1:28a30..1:29210; sub_* = Rayverse placeholder names, PC-only). Worker c3_effect2; partial candidate, see NOTES.md. */
+/* effect.c part 2 (1:28a30..1:29210; sub_* = Rayverse placeholder names, PC-only). Worker g_effect2; partial candidate, see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
@@ -54,8 +54,10 @@ extern void JumelleFreeArray(void **p);
 /* 1:00045 pushad/popad; input EAX destination, ESI projected item. */
 extern void draw_effect_segment(u8 *destination, u8 *points);
 #pragma aux draw_effect_segment parm [eax] [esi] modify exact []
+/* DOS 1:28b8d..28b94: y_step is stored before this call.
+ * Keep the default call contract: PUSHAD/POPAD does not prove that the
+ * original C declaration advertised EAX preservation. */
 extern void effect_reset_geometry(void);
-#pragma aux effect_reset_geometry modify exact []
 extern void effect_copy_band(u8 *source, u8 *destination, u32 width);
 extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
 extern u8 *EffetBufferNormal;
@@ -110,26 +112,29 @@ void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
     u8 y_step;
     u8 x_step;
     u16 i;
+    s16 speed;
 
+    item = state->items;
     x_step = (u8)(320 / state->columns);
     y_step = (u8)(200 / state->rows);
-    item = state->items;
     effect_reset_geometry();
     state->frame = 0;
     state->frame_limit = max32(1, vertical_speed);
-    state->speed = horizontal_offset >= 0 ?
-                   max32(1, horizontal_offset) :
-                   -max32(1, -horizontal_offset);
+    if (horizontal_offset >= 0)
+        speed = max32(1, horizontal_offset);
+    else
+        speed = -max32(1, -horizontal_offset);
+    state->speed = speed;
 
     for (i = 0; i < state->count; ++i) {
         u16 y;
         u16 x;
 
         x = (i % state->columns) * x_step;
-        y = (i / state->columns) * y_step;
 
         item->x0 = item->x1 = x;
         item->x2 = item->x3 = x + x_step - 1;
+        y = (i / state->columns) * y_step;
         /* DOS 1:28c44..28c67: top corners 0/3, bottom corners 1/2. */
         item->y0 = item->y3 = y;
         item->y1 = item->y2 = y + y_step - 1;
