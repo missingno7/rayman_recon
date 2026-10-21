@@ -136,7 +136,7 @@ void calc_obj_dir(obj_t* obj);
 s16 OBJ_IN_ZONE(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 void makeUturn(obj_t* obj);
-u8 BTYP(s16 tile_x, s16 tile_y);
+s32 BTYP(s16 tile_x, s16 tile_y);
 void calc_btyp_square(obj_t* obj);
 void DO_OBJ_REBOND_EN_X(obj_t* obj);
 u8 calc_btyp(obj_t* obj);
@@ -174,4 +174,5 @@ s16 sinus(s16 x);
 void stop_cd(void);
 void print_once(const char *message);
 #endif
+
 

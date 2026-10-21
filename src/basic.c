@@ -466,7 +466,7 @@ s16 get_center_y(obj_t* obj) {
 
 //1DAC8
 s16 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y) {
-    return block_flags[BTYP((obj->x + center_x) >> 4, (obj->y + center_y) >> 4)].bits.chdir;
+    return block_flags[(u8)BTYP((obj->x + center_x) >> 4, (obj->y + center_y) >> 4)].bits.chdir;
 }
 
 //1DB04
@@ -844,12 +844,17 @@ void makeUturn(obj_t* obj) {
 }
 
 //1E588
-u8 BTYP(s16 tile_x, s16 tile_y) {
-    if (inrange(tile_x, 0, mp.width - 1) && inrange(tile_y, 0, mp.height - 1)) {
-        return mp.map[tile_y * mp.width + tile_x].tile_type;
-    } else {
-        return BTYP_NONE;
-    }
+/* DOS 1:e5f7/e600 returns a full zero-extended value. Keep each
+ * coordinate live only after its guard; callers narrow to a tile byte. */
+s32 BTYP(s16 tile_x, s16 tile_y) {
+    s32 x = tile_x;
+    s32 y;
+    if (!inrange(x, 0, mp.width - 1)) goto outside;
+    y = tile_y;
+    if (!inrange(y, 0, mp.height - 1)) goto outside;
+    return mp.map[y * mp.width + x].tile_type;
+outside:
+    return BTYP_NONE;
 }
 
 //1E608
@@ -874,8 +879,8 @@ void calc_btyp_square(obj_t* obj) {
 
         x = obj->x + obj->offset_bx;
         y = obj->y + obj->offset_by;
-        tile_x = ashr16(x, 4);
         tile_y = ashr16(y, 4);
+        tile_x = ashr16(x, 4);
         tile_x_left = ashr16(x - x_offset, 4);
         tile_x_right = ashr16(x + x_offset, 4);
     }
@@ -884,10 +889,11 @@ void calc_btyp_square(obj_t* obj) {
     obj->btypes[1] = BTYP(tile_x_left, tile_y); // left
 
     // center
-    if (obj->main_etat == 2) {
-        obj->btypes[0] = bloc_floor(BTYP(tile_x, tile_y), x & 15, y & 15);
-    } else {
-        obj->btypes[0] = BTYP(tile_x, tile_y);
+    {
+        s32 center_btyp = obj->main_etat == 2
+        ? bloc_floor((u8)BTYP(tile_x, tile_y), x & 15, y & 15)
+        : (u8)BTYP(tile_x, tile_y);
+        obj->btypes[0] = center_btyp;
     }
 
     obj->btypes[2] = BTYP(tile_x_right, tile_y); // right
