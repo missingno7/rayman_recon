@@ -49,7 +49,6 @@ void allocatePoingBoum(void);
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define ashl16(value, amount) ((s32)(s16)(value) << (amount))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define false 0
 #define true 1
