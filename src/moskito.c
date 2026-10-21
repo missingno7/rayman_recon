@@ -589,7 +589,8 @@ void moskitoDropFruitOnRay(obj_t* obj) {
     x_2 = x_1;
     switch (obj->sub_etat) {
     case 12:
-        distance = ((obj->speed_x - ray.speed_x) * 2) / 16;
+        distance = obj->speed_x;
+        distance = ((distance - ray.speed_x) * 2) / 16;
         x_1 -= distance / 2;
         break;
     case 11:
