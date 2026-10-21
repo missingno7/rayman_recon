@@ -7102,6 +7102,66 @@
     "addr": "1:04bbb",
     "name": "RAYVERSE",
     "evidence": "DOS handwritten helper disassembly; Rayverse symbol name"
+   },
+   "LoadPcxPaletteInVignet": {
+    "addr": "1:37280",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call targets from LOAD_GENERAL_SCREEN and LOAD_OPTIONS_SCREEN at 1:26c79 and 1:26cad."
+   },
+   "set_speaker_on": {
+    "addr": "1:06eaa",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from FIRST_INIT at 1:262d0."
+   },
+   "load_world": {
+    "addr": "1:34de0",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from DEPART_WORLD at 1:2697a."
+   },
+   "load_level": {
+    "addr": "1:35688",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from DEPART_LEVEL at 1:26ae2."
+   },
+   "INIT_FND": {
+    "addr": "1:39098",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call from DEPART_LEVEL at 1:26ae7."
+   },
+   "sub_5BAE0": {
+    "addr": "1:5bae0",
+    "name": "INVENTED",
+    "evidence": "DOS direct call from DEPART_LEVEL at 1:269ab; descriptive name retains the verified address."
+   },
+   "sub_5BF58": {
+    "addr": "1:5bf58",
+    "name": "INVENTED",
+    "evidence": "DOS direct call from DEPART_LEVEL at 1:26b00; descriptive name retains the verified address."
+   },
+   "sub_5BB48": {
+    "addr": "1:5bb48",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls from END_GAME at 1:26d91 and 1:26e0e; descriptive name retains the verified address."
+   },
+   "sub_6F740": {
+    "addr": "1:6f740",
+    "name": "INVENTED",
+    "evidence": "DOS direct call from END_GAME at 1:26e09; helper initializes the DrawBufferNormalIni storage."
+   },
+   "_dos_getvect": {
+    "addr": "1:71331",
+    "name": "WATCOM",
+    "evidence": "DOS helper at 1:71331 executes INT 21h AH=35h and returns vector offset in EAX and selector in EDX."
+   },
+   "_dos_setvect": {
+    "addr": "1:71363",
+    "name": "WATCOM",
+    "evidence": "DOS helper at 1:71363 executes INT 21h AH=25h using AL, EBX offset, and ECX selector."
+   },
+   "sub_6FBB4": {
+    "addr": "1:6fbb4",
+    "name": "INVENTED",
+    "evidence": "Address-based helper name; FIRST_INIT calls 1:6fbb4 twice, and DOS bytes there jump to Watcom malloc at 1:76012. Android lookup for sub_6FBB4 returned no symbol."
    }
   },
   "data": {
@@ -12911,6 +12971,30 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c comment DE74C; DOS word store"
+   },
+   "timer_count": {
+    "addr": "2:4f7c0",
+    "type": "u32",
+    "name": "INVENTED",
+    "evidence": "DOS sub_36FBB increments the dword at 2:4f7c8 and sub_370E8 stores the initial dword value 4 here."
+   },
+   "timer_step": {
+    "addr": "2:4f7c4",
+    "type": "u32",
+    "name": "INVENTED",
+    "evidence": "DOS sub_36FBB and sub_370E8 load/store this 32-bit timer accumulator at 2:4f7c4."
+   },
+   "timer_phase": {
+    "addr": "2:4f7c8",
+    "type": "u32",
+    "name": "INVENTED",
+    "evidence": "DOS sub_36FBB increments and divides this 32-bit counter; sub_370E8 clears it."
+   },
+   "old_timer": {
+    "addr": "2:4f7cc",
+    "type": "void (__interrupt __far *)(void)",
+    "name": "INVENTED",
+    "evidence": "DOS sub_370E8 saves the INT 8 vector offset dword at 2:4f7cc and selector word at 2:4f7d0."
    }
   }
  }

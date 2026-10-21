@@ -8711,7 +8711,7 @@
      ]
     },
     "LoadPlan3InVignet": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -8838,14 +8838,14 @@
      ]
     },
     "LOAD_GENERAL_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "LOAD_OPTIONS_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -8882,14 +8882,14 @@
      ]
     },
     "FIN_GAME_LOOP": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "FIN_DEAD_LOOP": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -8903,7 +8903,7 @@
      ]
     },
     "END_GAME": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -8924,7 +8924,7 @@
      ]
     },
     "START_WORLD_VIGNET": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -9018,6 +9018,18 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_370E8": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_37134": {
+     "status": "STRICT",
+     "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     }

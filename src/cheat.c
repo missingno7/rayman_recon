@@ -1,4 +1,4 @@
-/* 1:25f50..1:27b90: cheat.c + display.c tail (level/vignette loading, init/dead/map loops, PC cheats, exit). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholders); seeded by tools/seed.py, worker tu_cheat. Four interrupt/protected-mode handlers (sub_36FAC..sub_37134) not yet reconstructed (Watcom __interrupt C or assembly: OPEN). */
+/* 1:25f50..1:27b90: cheat.c + display.c tail (level/vignette loading, init/dead/map loops, PC cheats, exit). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholders); seeded by tools/seed.py, worker tu_cheat. Vector wrappers sub_370E8/sub_37134 via Watcom _dos_setvect; the shared ISR body sub_36FAC/sub_36FBB is unresolved (__interrupt emits IRETD, DOS falls through: likely assembly, OPEN). */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <i86.h>
+#include <dos.h>
 
 #define MODE_TEXT 255
 #define MODE_X 1
@@ -19,6 +20,7 @@
 #define SC_SPACE 57
 typedef u8 bool;
 extern u8 *DrawBufferNormal;
+extern u8 *DrawBufferNormalIni;
 extern u8 *EffetBufferNormal;
 extern u8 JeuCracker;
 extern u8 ModeVideoActuel;
@@ -38,15 +40,27 @@ extern u8 text_input_buffer[9];
 void DISPLAY_FOND3(void);
 void DoneMusic(void);
 void InitTextMode(void);
-void LoadPcxOptions(u8* buffer, s32 resource_id, s16* width, s16* height, rgb_palette_t* pal_to_save);
+void LoadPcxOptions(u8* buffer, s32 resource_id, s16* width, s16* height);
+void LoadPcxPaletteInVignet(s16 resource_id, u8* palette);
+void align_mem_desc(mem_t* mem);
+void load_level(mem_t* mem, mem_t* sprites, char* filename);
+void sub_5BAE0(void);
+void sub_5bbe8(void);
+void sub_5BF58(void);
+void INIT_FND(void);
+void free_main_mem(mem_t* mem);
+void JumelleFreeArray(s32** array);
+void sub_5BB48(void);
+void sub_6F740(void);
 void RAY_DEMIRAY(void);
 void Reset_Clavier(void);
 u8 TOUCHE(u8 key);
 s16 but1pressed(void);
 void do_record(record_t *rec);
 s32 clock_ticks(void);
-void *temp_malloc(s32 size);
-void temp_free(void *memory);
+void *unidentified_record_allocator(s32 size);
+void release_record(void *memory);
+void *sub_6FBB4(s32 size);
 s16 CalcSpeed(void);
 u8 confirmation_msg(s32 msg);
 extern void exit();
@@ -55,6 +69,7 @@ u8 get_casse_brique_active(void);
 void load_big_ray(mem_t* buffer);
 void readinput(void);
 u8 sub_38220(s32 a1, s32 a2, u8* a3, u8* a4);
+u8 sub_38208(s32 a1, s32 a2, u8* a3, u8* a4);
 void sub_38258(void);
 void sub_38290(void);
 void textmode(void);
@@ -83,6 +98,7 @@ void FIN_DEAD_LOOP(void);
 void INIT_EXTENSIONS(void);
 void END_WORLD_VIGNET(void);
 s16 LOAD_BIG_RAYMAN(mem_t* mem);
+void __interrupt __far sub_36FAC(void);
 u8 StartButPressed(void);
 u8 PauseButPressed(void);
 u8 ExitButPressed(void);
@@ -112,6 +128,10 @@ extern u8 need_timer;
 extern s16 word_CF7E6;
 extern s16 word_CF7EE;
 extern s16 word_CF7F0;
+extern u32 timer_count;
+extern u32 timer_step;
+extern u32 timer_phase;
+extern void (__interrupt __far *old_timer)(void);
 extern u8 MessageProgram;
 extern u8 * cheat_code_10_wiz;
 extern u8 * cheat_code_10_wiz_alt;
@@ -169,7 +189,7 @@ extern u8 RaymanDansUneMapDuJeu;
 extern u8 VGA_FREQ;
 extern u8 You_Win;
 extern s32 cdTime;
-extern u8 cheat_codes[324];
+extern u8 cheat_codes[325];
 extern u8 chemin_percent;
 extern u8 dans_la_map_monde;
 extern u8 dead_time;
@@ -197,8 +217,8 @@ extern world_info_t t_world_info[24];
 extern s16 word_E0CD0;
 
 void sub_35F70(void) {
-    s32 *times;
     s32 *intervals;
+    s32 *times;
     s32 sum;
     s32 average;
     s32 low_limit;
@@ -206,17 +226,16 @@ void sub_35F70(void) {
     s32 interval;
     s16 i;
     s16 j;
-    s16 outliers;
     u8 valid;
 
-    times = (s32*)temp_malloc(0xfa0);
+    times = (s32*)unidentified_record_allocator(0xfa0);
     if (times != 0) {
         for (i = 0; i < 1000; ++i) {
             for (j = 0; j < 500; ++j) {
             }
             times[i] = clock_ticks();
         }
-        intervals = (s32*)temp_malloc(0xf9c);
+        intervals = (s32*)unidentified_record_allocator(0xf9c);
         if (intervals != 0) {
             valid = 1;
             sum = 0;
@@ -233,25 +252,22 @@ void sub_35F70(void) {
                 average = sum / 999;
                 low_limit = (average * 3) / 4;
                 high_limit = (average * 4) / 3;
-                outliers = 0;
                 for (i = 0; i < 999; ++i) {
                     if (intervals[i] < low_limit || intervals[i] > high_limit) {
-                        ++outliers;
+                        ++valid;
                     }
                 }
-                need_timer = (outliers < 10);
+                need_timer = (valid < 10);
             }
-            temp_free(intervals);
+            release_record(intervals);
         }
-        temp_free(times);
+        release_record(times);
     }
 }
 
 void sub_3609C(void) {
-    s32 start_ticks;
-    s32 end_ticks;
     s16 i;
-    s16 sample_count;
+    s32 start_ticks;
     s16 frame_time;
 
     if (need_timer == 0) {
@@ -262,14 +278,12 @@ void sub_3609C(void) {
     wait_until(start_ticks + 3000);
     synchro();
     start_ticks = clock_ticks();
-    sample_count = VGA_FREQ / 2;
-    for (i = 0; i < sample_count; ++i) {
+    for (i = 0; i < VGA_FREQ / 2; ++i) {
         endsynchro();
         wait_until(clock_ticks() + 3000);
         synchro();
     }
-    end_ticks = clock_ticks();
-    frame_time = (s16)((end_ticks - start_ticks) / i);
+    frame_time = (s16)((clock_ticks() - start_ticks) / i);
     word_CF7F0 = frame_time;
     word_CF7EE = (s16)((frame_time * 31) / 32);
     word_CF7E6 = (s16)(word_CF7EE + display_mode * frame_time);
@@ -279,13 +293,11 @@ void InitPcSoundCard(void) {
     s32 start_ticks;
     s32 end_ticks;
     s32 limit;
-    u8 failed;
-    u8 attempts;
+    u8 failed = 0;
+    u8 attempts = 0;
 
     _disable();
     display_mode = 0;
-    failed = 0;
-    attempts = 0;
     speaker_enable();
     sub_35F70();
     while (need_timer != 0 && failed == 0) {
@@ -322,8 +334,8 @@ void FIRST_INIT(void) {
     gele = 0;
     JoystickPresent();
     sub_4212C(3);
-    DrawBufferNormal = (u8 *)malloc(64064);
-    EffetBufferNormal = (u8*)malloc(128000);
+    DrawBufferNormal = (u8 *)sub_6FBB4(64064);
+    EffetBufferNormal = (u8*)sub_6FBB4(128000);
     if (!DrawBufferNormal || !EffetBufferNormal) {
         FatalError("Memory error in draw_buffer.\n");
     }
@@ -346,10 +358,9 @@ void init_divers_level_PC(u8* a1) {
     }
     *a1 = 255;
     readinput();
-    if (record.current_offset != 0 || record.is_playing || record.is_recording) {
-        return;
+    if (record.current_offset == 0 && (record.is_playing || record.is_recording)) {
+        do_record(&record); // TODO
     }
-    do_record(&record); //TODO
 }
 
 void file_level(s16 level_id, char* filename) {
@@ -380,6 +391,7 @@ void LoadPlan3InVignet(mem_t *mem, s32 resource_id)
     PLAN3BIT = PLAN2BIT;
     plan3bit_length = plan2bit_length;
     plan3bit_nb_bytes = plan2bit_nb_bytes;
+    memcpy(&rvb_plan3, &rvb_pres, 768);
     PLAN2BIT = saved_plan2bit;
     plan2bit_length = saved_plan2bit_length;
     plan2bit_nb_bytes = saved_plan2bit_nb_bytes;
@@ -471,7 +483,7 @@ void SwapPlan2PlanVignInVignet(mem_t *mem, s32 resource_id, s16 vig_index)
 }
 
 void LOAD_VIGNET_GAME(mem_t* mem) {
-    s16 vignet = -1;
+    s32 vignet = -1;
     switch(num_world) {
         case 1: {
             if (num_level == 9) {
@@ -558,7 +570,7 @@ void DEPART_LEVEL(void) {
     if (MusicCdActive) {
         stop_cd();
     }
-    //sub_6BAE0();
+    sub_5BAE0();
     new_world = 0;
     num_world = num_world_choice;
     new_level = 1;
@@ -568,35 +580,43 @@ void DEPART_LEVEL(void) {
         if (byte_CFA2A) {
             s16 text_x;
             s16 text_y;
+            s32 i;
             text_x = 160;
             text_y = 190;
             if (get_casse_brique_active()) {
                 text_x = 240;
                 text_y = 160;
             }
-            memset(draw_buffer, 0, 320*200);
+            for (i = 0; i < (320 * 200) / 4; ++i) {
+                ((u32*)draw_buffer)[i] = 0;
+            }
             start_fade_in(2, &rvb_plan3);
             display_text(language_txt[149], text_x, text_y, 2, 0); // /loading../
             synchro();
             endsynchro();
             SWAP_BUFFERS();
             do {
-                synchro();
                 endsynchro();
+                synchro();
                 do_fade(&rvb_plan3, &current_rvb);
             } while (nb_fade != 0);
         }
 
+        sub_5bbe8();
         if (MusicCdActive) {
             cdTime = 0;
         }
 
         file_level(num_level, level_filename);
-        block_free(&main_mem_level);
+        align_mem_desc(&main_mem_level);
         SpriteWorldBlocksFree(&main_mem_sprite);
         LOAD_VIGNET_GAME(&main_mem_level);
-        load_level(&main_mem_level, num_world, level_filename);
+        load_level(&main_mem_level, &main_mem_sprite, level_filename);
         INIT_FND();
+
+        if (num_world_choice >= 2 && num_level >= 7) {
+            sub_5BF58();
+        }
 
     }
 }
@@ -641,17 +661,17 @@ void Keyflush(void) {
 }
 
 void LOAD_GENERAL_SCREEN(void) {
-    s16 width = 0;
-    s16 height = 0;
-    LoadPcxOptions(EffetBufferNormal, 13, &width, &height, &rvb_plan3);
-    //LoadPcxPaletteInVignet(13, &rvb_plan3); // opening twice no longer needed (we saved the palette in LoadPcxOptions)
+    s16 width;
+    s16 height;
+    LoadPcxOptions(EffetBufferNormal, 13, &width, &height);
+    LoadPcxPaletteInVignet(13, (u8*)&rvb_plan3);
 }
 
 void LOAD_OPTIONS_SCREEN(void) {
-    s16 width = 0;
-    s16 height = 0;
-    LoadPcxOptions(EffetBufferNormal, 12, &width, &height, &rvb_plan3);
-    //LoadPcxPaletteInVignet(12, &rvb_plan3);
+    s16 width;
+    s16 height;
+    LoadPcxOptions(EffetBufferNormal, 12, &width, &height);
+    LoadPcxPaletteInVignet(12, (u8*)&rvb_plan3);
 }
 
 void HANDLE_KEY(u8* a1) {
@@ -682,12 +702,11 @@ void DEPART_DEAD_LOOP(void) {
 
 void FIN_GAME_LOOP(void) {
     if (!fin_du_jeu) {
-        DEPART_INIT_LOOP();
         return;
     }
     doneGameSave();
     block_free(&main_mem_world);
-    block_free(&main_mem_sprite);
+    SpriteFixeBlocksFree(&main_mem_sprite);
 }
 
 void FIN_MAP_LOOP(void) {
@@ -701,11 +720,10 @@ void FIN_MAP_LOOP(void) {
 }
 
 void FIN_DEAD_LOOP(void) {
-    //nullsub
 }
 
 void END_GAME(void) {
-    //sub_6BB48();
+    sub_5BB48();
     InitTextMode();
     if (record.is_recording) {
         Reset_Clavier();
@@ -713,19 +731,18 @@ void END_GAME(void) {
         do_record(&record); // TODO
     }
     if (fin_du_jeu) {
-        block_free(&main_mem_level);
-        block_free(&main_mem_world);
-        block_free(&main_mem_sprite);
-        block_free(&main_mem_fix);
-        //free(DrawBufferNormal); // not needed, backed by global_app_state.game.draw_buffer.memory
+        free_main_mem(&main_mem_level);
+        free_main_mem(&main_mem_world);
+        free_main_mem(&main_mem_sprite);
+        free_main_mem(&main_mem_fix);
+        JumelleFreeArray((s32**)&DrawBufferNormalIni);
         if (FondAutorise != 2) {
-            free(EffetBufferNormal);
+            JumelleFreeArray((s32**)&EffetBufferNormal);
         }
-
     }
-    block_free(&temp_mem_buf);
-    //sub_6BB48();
-    //exit(0);
+    sub_6F740();
+    sub_5BB48();
+    exit(0);
 }
 
 void INIT_EXTENSIONS(void) {
@@ -745,8 +762,8 @@ void DISPLAY_LOADING(void) {
 
 void START_WORLD_VIGNET(void) {
     LOAD_VIGNET_PC(&main_mem_level, num_world_choice);
-    rvb_save = current_rvb;
-    current_rvb = rvb_plan3;
+    memcpy(&rvb_save, &current_rvb, 768);
+    memcpy(&current_rvb, &rvb_plan3, 768);
     start_fade_in(2, &rvb_plan3);
     synchro();
     endsynchro();
@@ -780,13 +797,21 @@ void END_WORLD_VIGNET(void) {
     memcpy(&current_rvb, &rvb_save, 768);
 }
 
-/* sub_36FAC: no seed source */
+/* The two ISR entries share one assembly body: __interrupt emits an IRETD
+   after sub_36FAC's 15-byte prefix, while the DOS body continues at sub_36FBB. */
+void sub_370E8(void)
+{
+    timer_phase = 0;
+    timer_step = 0x40;
+    timer_count = 4;
+    old_timer = _dos_getvect(8);
+    _dos_setvect(8, (void (__interrupt __far *)(void))sub_36FAC);
+}
 
-/* sub_36FBB: no seed source */
-
-/* sub_370E8: no seed source */
-
-/* sub_37134: no seed source */
+void sub_37134(void)
+{
+    _dos_setvect(8, old_timer);
+}
 
 s16 LOAD_BIG_RAYMAN(mem_t* mem) {
     load_big_ray(mem);
@@ -997,7 +1022,7 @@ void PC_init_cheats(void) {
 
 void PC_do_cheats_in_world_map(void) {
     s32 i;
-    u8* world_info_state;
+    world_info_t *world_info_entry;
     if (!need_check_cheats) {
         return;
     }
@@ -1035,10 +1060,11 @@ void PC_do_cheats_in_world_map(void) {
     }
     else if (memcmp(text_input_buffer, cheat_code_unlock_all_levels, 7) == 0 || memcmp(text_input_buffer, cheat_code_unlock_all_levels_alt, 9) == 0) {
         ALL_WORLD = 0;
-        world_info_state = &t_world_info[0].state;
+        world_info_entry = t_world_info;
         for (i = 0; i < 0x1e0; i += 20) {
-            if ((world_info_state[i] & 1) == 0 && world_info_state[i + 2] != world_6_cake) {
-                world_info_state[i] |= 4;
+            world_info_entry = (world_info_t*)((u8*)t_world_info + i);
+            if ((world_info_entry->state & 1) == 0 && world_info_entry->field_E != world_6_cake) {
+                world_info_entry->state |= 4;
                 chemin_percent = 0;
             }
         }
@@ -1046,8 +1072,9 @@ void PC_do_cheats_in_world_map(void) {
         // However, there's an exception: if you are standing on Crystal Palace, Mr Dark's Dare *WILL* unlock!
         if (num_world_choice == 14) {
             for (i = 0; i < 0x1e0; i += 20) {
-                if ((world_info_state[i] & 1) == 0) {
-                    world_info_state[i] |= 4;
+                world_info_entry = (world_info_t*)((u8*)t_world_info + i);
+                if ((world_info_entry->state & 1) == 0) {
+                    world_info_entry->state |= 4;
                     chemin_percent = 0;
                 }
             }
