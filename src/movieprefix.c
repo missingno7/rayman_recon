@@ -4,6 +4,7 @@
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
+#include "inline_helpers.h"
 #include <conio.h>
 #include <i86.h>
 #include <fcntl.h>
@@ -131,7 +132,7 @@ s32 sub_3AA70(u8 *work, char *path);
 s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
               const u8 *chunks, movie_surface_t *surface, s32 *timer);
 s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer);
-void sub_3AFB4(u8 *work, u8 *surface);
+void sub_3AFB4(movie_work_t *work, movie_surface_t *surface);
 s32 sub_3B014(u8 *work, u8 *surface);
 s32 sub_3B0F4(movie_work_t *work);
 s32 sub_3B138(u8 *work, u8 *surface);
@@ -195,13 +196,13 @@ s32 sub_3A238(u8 *surface)
     u8 old_frequency;
 
     memset(surface, 0, 0x11);
-    *(u8 **)(surface + 0) = movie_draw_buffer;
     *(s32 *)(surface + 4) = 320;
+    *(u8 **)(surface + 0) = movie_draw_buffer;
     *(s32 *)(surface + 8) = 200;
     movie_saved_mode = 0x3c;
     old_frequency = VGA_FREQ;
-    movie_saved_frequency = old_frequency;
     VGA_FREQ = 0x3c;
+    movie_saved_frequency = old_frequency;
     set_vga_frequency(0x3c);
     memset(DisplayBufferNormal, 0, 64000);
     memset(movie_video_buffer, 0, 0x300);
@@ -233,7 +234,7 @@ void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, u32 width)
 {
     u8 *dst;
     dst = surface->pixels + y * 320 + x;
-    memcpy(dst, src, width);
+    copy(dst, src, width);
 }
 
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)
@@ -335,9 +336,9 @@ s32 sub_3A4B8(s32 *timer)
 
 s32 sub_3A518(s32 value, s32 *scale)
 {
-    s32 scaled;
-    scaled = value * *scale / 1000;
-    return sub_3A4B8(scale) + scaled;
+    u32 scaled;
+    scaled = (u32)(value * *scale) / 1000;
+    return sub_3A4B8(scale) + (s32)scaled;
 }
 
 s32 sub_3A538(s32 *fd, const char *path)
@@ -364,14 +365,17 @@ s32 sub_3A578(s32 fd, u8 **buffer, u32 count)
     u8 *dst;
     u32 remain;
     u32 part;
+    s32 status;
     dst = *buffer;
     remain = count;
     while (remain != 0) {
-        part = remain;
-        if (part > 0xfff0)
+        if (remain > 0xfff0)
             part = 0xfff0;
-        if (sub_3A55C(fd, dst, part) < 0)
-            return -6;
+        else
+            part = remain;
+        status = sub_3A55C(fd, dst, part);
+        if (status < 0)
+            return status;
         dst += part;
         remain -= part;
     }
@@ -380,20 +384,18 @@ s32 sub_3A578(s32 fd, u8 **buffer, u32 count)
 
 s32 sub_3A5B4(u8 *info)
 {
-    u8 processor;
     s32 status;
 
-    processor = TheProcesseur;
-    if (processor == 4)
+    if (TheProcesseur == 4)
         movie_audio_track = 0;
-    else if (processor < 5)
+    else if (TheProcesseur < 5)
         return -13;
     else
         movie_audio_track = (WindowsLance == 0);
     memset(info, 0, 0x18);
     status = sub_3A488((u32 *)(info + 0x11));
     if (status < 0)
-        goto restore_timer;
+        goto return_status;
     status = sub_3A1C0();
     if (status < 0)
         goto restore_timer;
@@ -404,6 +406,8 @@ s32 sub_3A5B4(u8 *info)
 
 restore_timer:
     sub_3A4A4((s32 *)(info + 0x11));
+
+return_status:
     return status;
 }
 
@@ -421,14 +425,14 @@ void sub_3A634(u8 *info)
 void sub_3A664(const u8 *data, movie_surface_t *surface, s32 x,
                movie_palette_writer_t writer)
 {
-    s32 packets;
+    s16 packets;
     s32 run;
     const u8 *src;
     s32 index;
 
     movie_palette_xmin = 0x100;
     movie_palette_xmax = 0;
-    packets = *(const u16 *)data;
+    packets = *(const s16 *)data;
     src = data + 2;
     index = 0;
     while (--packets >= 0) {
@@ -436,11 +440,11 @@ void sub_3A664(const u8 *data, movie_surface_t *surface, s32 x,
         run = src[1];
         if (run == 0)
             run = 0x100;
-        writer((u32)surface, index, src + 2, run);
+        writer((u32)x, index, src + 2, run);
         src += 2 + run * 3;
         index += run;
     }
-    (void)x;
+    (void)surface;
 }
 
 void sub_3A6D0(const u8 *data, movie_surface_t *surface, s32 x)
@@ -795,20 +799,18 @@ s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer)
     return status;
 }
 
-void sub_3AFB4(u8 *work_bytes, u8 *surface_bytes)
+void sub_3AFB4(movie_work_t *work, movie_surface_t *surface)
 {
-    movie_work_t *work;
-    movie_surface_t *surface;
     s32 dx;
     s32 dy;
 
-    work = (movie_work_t *)work_bytes;
-    surface = (movie_surface_t *)surface_bytes;
-    dx = surface->width - work->width;
+    dx = work->width;
+    dx = sub_3A2C4(surface) - dx;
     if (dx < 0)
         dx = -dx;
     work->x_offset = dx / 2;
-    dy = surface->height - work->height;
+    dy = work->height;
+    dy = sub_3A2C8(surface) - dy;
     if (dy < 0)
         dy = -dy;
     work->y_offset = dy / 2;
@@ -918,12 +920,14 @@ s32 sub_3B138(u8 *work_bytes, u8 *surface_bytes)
 
 void sub_3B260(void)
 {
-    if (CarteSonAutorisee)
-        sub_3E66C();
+    if (!CarteSonAutorisee)
+        return;
+    sub_3E66C();
 }
 
 void sub_3B274(void)
 {
-    if (CarteSonAutorisee)
-        sub_3E6B0();
+    if (!CarteSonAutorisee)
+        return;
+    sub_3E6B0();
 }
