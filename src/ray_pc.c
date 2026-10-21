@@ -65,7 +65,7 @@ void updateLogo(s16 fade_duration, s16 first_count, s16 second_count)
         do_fade(&rvb_pres, &current_rvb);
         ++i;
         if (i == fade_duration) {
-            --first_count;
+            first_count--;
             i = 0;
         }
     }
@@ -83,7 +83,7 @@ void updateLogo(s16 fade_duration, s16 first_count, s16 second_count)
         readinput();
         ++i;
         if (i == fade_duration) {
-            --second_count;
+            second_count--;
             i = 0;
         }
     }
