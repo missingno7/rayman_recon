@@ -88,7 +88,7 @@ enum dos_scancode_enum {
 	SC_F12          = 0x58,
 };
 
-u8 cheat_codes[325] = {
+u8 cheat_codes[324] = {
 #define _(x) x^0x96
         _(SC_BACKSPACE), _(SC_L), _(SC_Q), _(SC_Y), _(SC_Q), _(SC_R), _(SC_B), _(SC_C), _(SC_TAB),
         _(SC_BACKSPACE), _(SC_L), _(SC_A), _(SC_Y), _(SC_A), _(SC_R), _(SC_B), _(SC_C), _(SC_TAB), // [TAB]cbrayal[BACKSPACE] (enter breakout before defeating Mr Dark)
@@ -159,9 +159,9 @@ u8 cheat_codes[325] = {
         0xb1, _(SC_Q), _(SC_R), _(SC_G), _(SC_O), _(SC_R), _(SC_P), _(SC_TAB),
         _(SC_M), _(SC_A), _(SC_R), _(SC_G), _(SC_O), _(SC_R), _(SC_P), _(SC_TAB), // [TAB]program (hidden message)
 
-        0,
 #undef _
 };
+u8 byte_964C8 = 0;   /* INVENTED name; separate byte read/written by effect sub_380A4 (1:28182..1:281c9) */
 
 
 u8 effect_choice = 0; //964C9

@@ -6642,6 +6642,266 @@
     "addr": "1:2efd4",
     "name": "RAYVERSE",
     "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "sub_37B90": {
+    "addr": "1:27b90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37C00": {
+    "addr": "1:27c00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37C40": {
+    "addr": "1:27c40",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37C98": {
+    "addr": "1:27c98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37CDC": {
+    "addr": "1:27cdc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37D4C": {
+    "addr": "1:27d4c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37D90": {
+    "addr": "1:27d90",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37E00": {
+    "addr": "1:27e00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37E44": {
+    "addr": "1:27e44",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37E9C": {
+    "addr": "1:27e9c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37EE0": {
+    "addr": "1:27ee0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37F50": {
+    "addr": "1:27f50",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37F94": {
+    "addr": "1:27f94",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_37FEC": {
+    "addr": "1:27fec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38030": {
+    "addr": "1:28030",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38054": {
+    "addr": "1:28054",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38064": {
+    "addr": "1:28064",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38074": {
+    "addr": "1:28074",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_380A4": {
+    "addr": "1:280a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38208": {
+    "addr": "1:28208",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "SaveScreen": {
+    "addr": "1:282ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "RestoreScreen": {
+    "addr": "1:28320",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "DO_AFFICHE_PAUSE": {
+    "addr": "1:2839c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "dummy_prg": {
+    "addr": "1:28400",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "dummy_scene_func": {
+    "addr": "1:28400",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "Do_Effect_Pause_Simple": {
+    "addr": "1:28408",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "Do_Effect_Pause_unknown": {
+    "addr": "1:28574",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "Do_Effect_Pause": {
+    "addr": "1:28924",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38A30": {
+    "addr": "1:28a30",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38B58": {
+    "addr": "1:28b58",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38DA0": {
+    "addr": "1:28da0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38DCC": {
+    "addr": "1:28dcc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_38ED4": {
+    "addr": "1:28ed4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "sub_391C0": {
+    "addr": "1:291c0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS v1.21 function start"
+   },
+   "effect_helper_6ef5c": {
+    "addr": "1:6ef5c",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37C40 at 1:27c46; target bytes begin a routine prologue"
+   },
+   "effect_helper_6f0e0": {
+    "addr": "1:6f0e0",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37C40 at 1:27c8f; target bytes begin a routine prologue"
+   },
+   "effect_helper_16404": {
+    "addr": "1:16404",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37CDC at 1:27cf6; target bytes begin a routine"
+   },
+   "effect_helper_168c8": {
+    "addr": "1:168c8",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37CDC at 1:27d3f; target bytes begin a routine"
+   },
+   "effect_helper_348a4": {
+    "addr": "1:348a4",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37D90 at 1:27daa; target bytes begin a routine"
+   },
+   "effect_helper_34760": {
+    "addr": "1:34760",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37D90 at 1:27df3; target bytes begin a routine"
+   },
+   "effect_helper_63614": {
+    "addr": "1:63614",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37E44 at 1:27e4a; target bytes begin a routine"
+   },
+   "effect_helper_63838": {
+    "addr": "1:63838",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37E44 at 1:27e93; target bytes begin a routine"
+   },
+   "effect_helper_507f0": {
+    "addr": "1:507f0",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37EE0 at 1:27efa; target bytes begin a routine"
+   },
+   "effect_helper_50aa8": {
+    "addr": "1:50aa8",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37EE0 at 1:27f43; target bytes begin a routine"
+   },
+   "effect_helper_6c8d4": {
+    "addr": "1:6c8d4",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37F94 at 1:27f9a; target bytes begin a routine"
+   },
+   "effect_helper_6c9bc": {
+    "addr": "1:6c9bc",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_37F94 at 1:27fe3; target bytes begin a routine"
+   },
+   "effect_helper_6ee54": {
+    "addr": "1:6ee54",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "effect_helper_1623c": {
+    "addr": "1:1623c",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "effect_helper_346b4": {
+    "addr": "1:346b4",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "effect_helper_634f0": {
+    "addr": "1:634f0",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "effect_helper_50738": {
+    "addr": "1:50738",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "effect_helper_6c7cc": {
+    "addr": "1:6c7cc",
+    "name": "INVENTED",
+    "evidence": "DOS call target from sub_380A4 case dispatcher"
    }
   },
   "data": {
@@ -8298,9 +8558,9 @@
    },
    "cheat_codes": {
     "addr": "2:6384",
-    "type": "u8[325]",
+    "type": "u8[324]",
     "name": "RAYVERSE",
-    "evidence": "DOS bytes at 2:06384; Rayverse table overdeclares by two bytes and four encoded scan-code entries differ"
+    "evidence": "DOS bytes at 2:06384; Rayverse table overdeclares by two bytes and four encoded scan-code entries differ; table ends at 2:64c7 (last 8-byte code); 2:64c8 is a separate byte (byte_964C8)"
    },
    "effect_choice": {
     "addr": "2:64c9",
@@ -12307,6 +12567,18 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "byte_964C8": {
+    "addr": "2:64c8",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS sub_380A4 writes and reads this byte at 1:28182-281c9; Android symbol absent"
+   },
+   "effect_data": {
+    "addr": "2:4f7dc",
+    "type": "effect_state_t *",
+    "name": "INVENTED",
+    "evidence": "DOS sub_38DCC stores and sub_38DA0 loads this pointer at 2:4f7dc; Android symbol absent"
    }
   }
  }

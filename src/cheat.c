@@ -169,7 +169,7 @@ extern u8 RaymanDansUneMapDuJeu;
 extern u8 VGA_FREQ;
 extern u8 You_Win;
 extern s32 cdTime;
-extern u8 cheat_codes[325];
+extern u8 cheat_codes[324];
 extern u8 chemin_percent;
 extern u8 dans_la_map_monde;
 extern u8 dead_time;
