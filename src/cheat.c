@@ -814,13 +814,14 @@ void END_WORLD_VIGNET(void) {
 }
 
 /* DOS sub_36FAC is one 316-byte ISR; sub_36FBB labels its body at +15.
- * This C reconstruction is NEAR: setup, register allocation and extent differ. */
+ * STRICT: shared min32 sites 1:27048, 1:2706c, 1:27090; direct component
+ * expressions preserve the DOS blue-channel allocation and scheduling. */
 /* Timer and palette arithmetic: DOS 1:26fbb..2709f.
  * Signed IDIV and JL/JG prove these existing dword bindings are signed.
  * Helper names are INVENTED (Android lookup: absent). */
 void __interrupt __far sub_36FAC(void)
 {
-    s32 i, component;
+    s32 i;
     inhibit_interrupts();
     ++timer_phase;
     if (timer_phase % 10 != 0) {
@@ -833,12 +834,9 @@ void __interrupt __far sub_36FAC(void)
             timer_count = -timer_count;
         }
         for (i = 1; i < 9; ++i) {
-            component = ((s32)rvb_plan3.colors[i].r * timer_step) >> 6;
-            current_rvb.colors[i].r = component < 63 ? component : 63;
-            component = ((s32)rvb_plan3.colors[i].g * timer_step) >> 6;
-            current_rvb.colors[i].g = component < 63 ? component : 63;
-            component = ((s32)rvb_plan3.colors[i].b * timer_step) >> 6;
-            current_rvb.colors[i].b = component < 63 ? component : 63;
+            current_rvb.colors[i].r = min32(63, ((s32)rvb_plan3.colors[i].r * timer_step) >> 6);
+            current_rvb.colors[i].g = min32(63, ((s32)rvb_plan3.colors[i].g * timer_step) >> 6);
+            current_rvb.colors[i].b = min32(63, ((s32)rvb_plan3.colors[i].b * timer_step) >> 6);
         }
         synchro();
         palette_output(1, 8, &current_rvb);
