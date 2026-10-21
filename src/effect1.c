@@ -1,4 +1,4 @@
-/* effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. */
+/* effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. dummy_prg is a zero-size compiler alias of dummy_scene_func (identical adjacent bodies, docs/COMPILER.md). */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -459,7 +459,7 @@ void DO_AFFICHE_PAUSE(void)
 }
 
 /* The DOS public at 1:28400 aliases dummy_scene_func. */
-s16 dummy_scene_func(u32 par_0)
+s16 dummy_prg(u32 par_0)
 {
     return 1;
 }
