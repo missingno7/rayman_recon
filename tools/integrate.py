@@ -138,6 +138,7 @@ class Writes:
 def copy_into(w, src, dst):
     """Copy contents only (never the worker file's mode, e.g. read-only)."""
     dst = w.touch(dst)
+    dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(src, dst)
     return dst
 
@@ -152,6 +153,7 @@ def parse(argv):
     ap.add_argument("worker_dir")
     ap.add_argument("pairs", nargs="+", metavar="UNIT=FILE.c")
     ap.add_argument("--new", action="store_true")
+    ap.add_argument("--subdir", default="", help="with --new: place new sources under src/SUBDIR/")
     ap.add_argument("--rename", action="append", default=[], metavar="OLD=NEW")
     ap.add_argument("-m", dest="msg", required=True)
     a = ap.parse_args(argv)
@@ -191,7 +193,10 @@ def main(argv):
             raise SystemExit(f"--new: unit {unit} already exists")
         if not a.new and unit not in units:
             raise SystemExit(f"unknown unit {unit} (use --new for a new unit)")
-        dst = ROOT / (f"src/{unit}{Path(fname).suffix}" if a.new else units[unit]["source"])
+        if a.subdir and not IDENT.match(a.subdir):
+            raise SystemExit("bad --subdir")
+        sub = f"{a.subdir}/" if a.subdir else ""
+        dst = ROOT / (f"src/{sub}{unit}{Path(fname).suffix}" if a.new else units[unit]["source"])
         if not a.new and Path(fname).suffix != dst.suffix:
             raise SystemExit(f"{unit}: candidate {fname} and unit source {dst.name} differ in language")
         if not inside(dst, src_dir) or not (wdir / fname).is_file():
@@ -212,13 +217,13 @@ def main(argv):
         for unit, src, dst in plan:
             dst = copy_into(w, src, dst)
             for h in re.findall(r'#include "([^"]+)"', dst.read_text(encoding="utf-8")):
-                hsrc, hdst = wdir / h, src_dir / Path(h).name
+                hsrc, hdst = wdir / h, dst.parent / Path(h).name
                 if h in SHARED or not hsrc.is_file():
                     continue
                 if hdst.exists():
                     if hdst.read_bytes() == hsrc.read_bytes():
                         continue
-                    users = {os.path.normcase(os.path.realpath(p)) for p in src_dir.glob("*.c")
+                    users = {os.path.normcase(os.path.realpath(p)) for p in dst.parent.glob("*.c")
                              if f'#include "{hdst.name}"' in p.read_text(encoding="utf-8", errors="replace")}
                     mine = {os.path.normcase(os.path.realpath(d)) for _, _, d in plan}
                     if not users or not users <= mine:
