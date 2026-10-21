@@ -22,10 +22,6 @@
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
-#ifndef ashl16
-#define ashl16(v, b) ((v) << (b))
-#endif
-
 typedef struct archive_header_t {
     s32 offset;
     u32 size;
@@ -1648,8 +1644,8 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
             {
                 if (unk_1 > 0)
                 {
-                    unk_x_2 = (unk_x_2 << 4) / unk_1;
-                    unk_y_2 = (unk_y_2 << 4) / unk_1;
+                    unk_x_2 = ashl16(unk_x_2, 4) / unk_1;
+                    unk_y_2 = ashl16(unk_y_2, 4) / unk_1;
                 }
 
                 if (ds2_obj->anim_frame == 1)
