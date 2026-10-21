@@ -16548,5 +16548,9 @@
     "type": "temp_mem_entry_t [30]"
    }
   }
+ },
+ "symbols": {
+  "functions": {},
+  "data": {}
  }
 }

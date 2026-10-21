@@ -2263,15 +2263,12 @@ void RAY_IN_THE_AIR(void) {
                     }
                 }
                 if (i != 10) {
-    s16 new_decalage;
-
-                    
+                    /* DOS 1:5fe3d..5fe73: constant first; each arm stores. */
                     if (pos_stack[i - 1] < pos_stack[i]) {
-                        new_decalage = min32(decalage_en_cours, -256);
+                        decalage_en_cours = min32(-256, decalage_en_cours);
                     } else {
-                        new_decalage = max32(decalage_en_cours, 256);
+                        decalage_en_cours = max32(256, decalage_en_cours);
                     }
-                    decalage_en_cours = new_decalage;
                 } else {
                     decalage_en_cours = 0;
                 }
@@ -2288,8 +2285,15 @@ void RAY_IN_THE_AIR(void) {
                 ray.iframes_timer = new_timer;
             }
             if (ray.sub_etat == 17 || ray.sub_etat == 18 || ray.sub_etat == 19) {
-                if (RayEvts.run && Abs(ray.speed_x) >= ashr16(ray.eta[1][3].speed_x_right, 4)) {
-                    set_main_and_sub_etat(&ray, 1, 7);
+                /* DOS 1:5fee2..5ff17: shift before reading horizontal speed.
+                 * run_speed is an INVENTED local name. */
+                s32 run_speed;
+                if (RayEvts.run) {
+                    run_speed = ashr16(ray.eta[1][3].speed_x_right, 4);
+                    if (Abs(ray.speed_x) >= run_speed)
+                        set_main_and_sub_etat(&ray, 1, 7);
+                    else
+                        set_main_and_sub_etat(&ray, 0, 43);
                 } else {
                     set_main_and_sub_etat(&ray, 0, 43);
                 }
@@ -2333,7 +2337,7 @@ void RAY_IN_THE_AIR(void) {
             ray.speed_y = -10;
         }
     }
-    if (num_world == world_2_music && num_level == 15 && (ray.x + 150 > xmapmax) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
+    if (num_world == world_2_music && num_level == 15 && (xmapmax < ray.x + 150) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
         ChangeLevel();
         DO_FADE_OUT();
     }
