@@ -12989,6 +12989,15 @@
      ]
     }
    }
+  },
+  "data_35fc": {
+   "source": "src/data_35fc.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_DATA": "VERIFIED"
+   }
   }
  }
 }
