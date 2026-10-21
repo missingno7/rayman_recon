@@ -5,9 +5,9 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 extern s32 map_time;
@@ -104,8 +104,8 @@ extern void DO_FADE_OUT(void);
 extern void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 extern u8 GET_SPRITE_POS(obj_t *obj, s16 sprite_index, s16 *x, s16 *y, s16 *w, s16 *h);
 extern void calc_obj_pos(obj_t *obj);
-extern s16 inter_box(s32 x1, s32 y1, s32 w1, s32 h1,
-    s16 x2, s16 y2, s32 w2, s32 h2);
+extern s16 inter_box(s16 x1, s16 y1, s16 w1, s16 h1,
+    s16 x2, s16 y2, s16 w2, s16 h2);
 extern void DO_NOVA(obj_t *obj);
 extern void add_alwobj(obj_t *obj);
 extern s16 but0pressed(void);
@@ -117,7 +117,7 @@ extern void GET_RAY_ZDC(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 extern void DO_COLLISIONS(void);
 extern void DO_ANIM(obj_t *obj);
 extern void display_sprite(obj_t *obj, u8 sprite_index, s16 x, s16 y, u8 flipped);
-extern void display_text(const char *text, s16 x, s16 y, u8 font_size, s8 color);
+extern void display_text(const char *text, s16 x, s16 y, u8 font_size, u8 color);
 void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat);
 u8 get_casse_brique_ON(void);
 void set_casse_brique_ON(u8 on);
@@ -603,7 +603,7 @@ u8 collision_briques(obj_t *obj)
                     CBCollis[nb_collis].reflect_x = 0;
                     CBCollis[nb_collis].reflect_y = 0;
                     if (abs_y <= abs_x) {
-                        if (SGN(speed_ball_x) == SGN(dx)) {
+                        if (sgn(speed_ball_x) == sgn(dx)) {
                             reflect_y++;
                             CBCollis[nb_collis].reflect_y = 1;
                         } else {
@@ -612,7 +612,7 @@ u8 collision_briques(obj_t *obj)
                         }
                     }
                     if (abs_x <= abs_y) {
-                        if (SGN(speed_ball_y) == SGN(dy)) {
+                        if (sgn(speed_ball_y) == sgn(dy)) {
                             reflect_x++;
                             CBCollis[nb_collis].reflect_x = 1;
                         } else {
