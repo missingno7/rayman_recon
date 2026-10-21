@@ -10223,83 +10223,6 @@
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
-    "InitData": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "DO_GROS_MOTEUR_NORMAL": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "RAYVERSE_GUIDED",
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "DO_MAIN_LOOP_PC_NORMAL": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "DO_GROS_MOTEUR_X": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "DO_MAIN_LOOP_PC_X": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "init_arg": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "PrintDosInfo": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "InitMemoryVariable": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "RAYVERSE_GUIDED",
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "AllocVariablesAutorisee": {
-     "status": "CODE_BYTES_MATCH",
-     "provenance": [
-      "RAYVERSE_GUIDED",
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "AfficheEntete": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "main_Ray": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "RAYVERSE_GUIDED",
-      "DOS_BINARY_DERIVED"
-     ]
-    },
-    "PcMain": {
-     "status": "NEAR_MATCH",
-     "provenance": [
-      "RAYVERSE_GUIDED",
-      "DOS_BINARY_DERIVED"
-     ]
-    },
     "setBossReachingSpeeds": {
      "status": "NEAR_MATCH",
      "provenance": [
@@ -10317,7 +10240,7 @@
      ]
     },
     "firstFloorBelow": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10325,19 +10248,26 @@
      ]
     },
     "adjustBossScrollLocker": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "setBossScrollLimits": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
-    },
+    }
+   }
+  },
+  "affiche": {
+   "source": "src/affiche.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
     "display2": {
      "status": "NEAR_MATCH",
      "provenance": [
@@ -10361,7 +10291,7 @@
      ]
     },
     "DISPLAY_POING": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10369,7 +10299,7 @@
      ]
     },
     "DISPLAY_CLING": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10385,14 +10315,14 @@
      ]
     },
     "DisplayCrackers": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "DisplayProgrammerMessage": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10407,7 +10337,7 @@
      ]
     },
     "DISPLAY_POINT": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10415,7 +10345,7 @@
      ]
     },
     "DISPLAY_PTS_TO": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10503,7 +10433,7 @@
      ]
     },
     "CLRSCR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10551,7 +10481,7 @@
      ]
     },
     "DISPLAY_OPTIONS_POING": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10572,7 +10502,7 @@
      ]
     },
     "DISPLAY_CONTINUE_SPR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10601,7 +10531,17 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
-    },
+    }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
+   }
+  },
+  "araignee": {
+   "source": "src/araignee.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
     "get_spi_zdc": {
      "status": "STRICT",
      "provenance": [
@@ -10679,6 +10619,93 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   }
+  },
+  "pcmain": {
+   "source": "src/pcmain.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "InitData": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_GROS_MOTEUR_NORMAL": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MAIN_LOOP_PC_NORMAL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_GROS_MOTEUR_X": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MAIN_LOOP_PC_X": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_arg": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PrintDosInfo": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "InitMemoryVariable": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AllocVariablesAutorisee": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "AfficheEntete": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "main_Ray": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "PcMain": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   }
  }

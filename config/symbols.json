@@ -7777,6 +7777,21 @@
     "addr": "1:0c030",
     "name": "RAYVERSE",
     "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "calc_off_fnd": {
+    "addr": "1:391d4",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "Rayverse menu.c //491D4, xref and Android exact name; DOS DO_GROS_MOTEUR_X calls 1:391d4; body switches type_fndscrX and writes the background vertical offset."
+   },
+   "draw_sprite_deform": {
+    "addr": "1:04828",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS AFFICHE_SPRITE_DEFORME target 1:04828; handwritten PUSHA/POPA blitter consumes ESI source, EDI target, ECX geometry. Rayverse lowlevel.c and Android name exist; ABI documented in docs/reference/lowlevel_abi.h."
+   },
+   "DetectCpu": {
+    "addr": "1:0611e",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "DOS PcMain at 1:0842e calls 1:0611e and stores AL to TheProcesseur; Rayverse lowlevel.c and Android exact name. Assembly body leaves CPU class in EAX."
    }
   },
   "data": {
@@ -14150,6 +14165,24 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c CFA1B; Android size 1; DOS PrintDosInfo byte load"
+   },
+   "position_ray": {
+    "addr": "2:3fa9c",
+    "type": "u8",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "Android position_ray .bss size 1; DOS DO_DARD_PLAFOND_ALWAYS 1:0c78e reads byte at 2:3fa9c, DO_SPIDER_PLAFOND stores same byte; neighbour nb_loaded_eta is size 1 at 3fa9b."
+   },
+   "grp_stars": {
+    "addr": "2:399f8",
+    "type": "grp_star_t[30]",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "Android grp_stars .bss size120; DOS display_etoile 1:0ad50 addresses 2:399f8, index *4; starts immediately after SNSEQ_list[256]."
+   },
+   "current_star": {
+    "addr": "2:3f7fc",
+    "type": "s16",
+    "name": "RAYVERSE/ANDROID",
+    "evidence": "Android current_star .bss size2; DOS display_grp_stars 1:0ae95 writes short2:3f7fc, display_etoile -5 load field3f7fa."
    }
   }
  }

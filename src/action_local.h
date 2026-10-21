@@ -2,14 +2,17 @@
 #define TU_ACTION_WORKER_TYPES_H
 
 #include "rtypes.h"
+#include "map.h"
 
 typedef struct vec2b_t {
     u8 width;
     u8 height;
 } vec2b_t;
 
-typedef void (draw_func_t)(s32 x, s32 color, s32 y, vec2b_t size,
+typedef void (draw_func_t)(s32 x, s32 color, s32 y, u32 size,
                            u8 *draw_buffer, u8 *image_data);
+/* DOS assembly sprite entries 1:063e6..06d50 use these six registers. */
+#pragma aux draw_func_t parm [eax] [edx] [ebx] [ecx] [edi] [esi] modify exact [eax ebx ecx edx esi edi]
 typedef void (fplot_func_t)(u8 *draw_buffer, s16 x, s16 y, u8 color);
 
 typedef struct pix_gerbe_item_t {
@@ -42,27 +45,6 @@ typedef struct deform_blit_t {
     s32 source_width;
     s32 source_height;
 } deform_blit_t;
-
-typedef struct display_map_t {
-    s16 x;
-    s16 y;
-    u8 width_in_tiles;
-    u8 height_in_tiles;
-    s16 tile_index;
-} display_map_t;
-
-typedef struct big_map_t {
-    map_tile_t* map;
-    u8** tile_texture_offsets;
-    display_map_t* display_map;
-    u8* map_blocks;
-    u32 field_10;
-    s16 field_14;
-    s16 width;
-    s16 height;
-    s16 field_1A;
-    s16 field_1C;
-} big_map_t;
 
 typedef struct init_data_state_t {
     s16 x;

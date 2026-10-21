@@ -35,4 +35,27 @@ typedef union block_flags_t {
     } bits;
 } block_flags_t;
 
+/* Proposed shared map descriptors; DOS offsets and Android BIG_MAP size32. */
+typedef struct display_map_t {
+    s16 x;
+    s16 y;
+    u8 width_in_tiles;
+    u8 height_in_tiles;
+    s16 tile_index;
+} display_map_t;
+
+typedef struct big_map_t {
+    map_tile_t* map;
+    u8** tile_texture_offsets;
+    display_map_t* display_map;
+    u8* map_blocks;
+    u32 field_10;
+    s16 field_14;
+    s16 width;
+    s16 height;
+    s16 field_1a;
+    s16 field_1c;
+    s16 field_1e;
+} big_map_t;
+
 #endif

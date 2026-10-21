@@ -40,8 +40,14 @@ typedef struct sprite_t {
         u8 raw;
         struct { u8 x : 4; u8 y : 4; } bits;
     } sprite_pos;
-    u8 color;
-    u8 flags;
+    union {
+        u8 color;
+        struct { u8 unused:4; u8 palette_index:4; } color_bits;
+    };
+    union {
+        u8 flags;
+        struct { u8 unused0:2; u8 flip_x:1; u8 unused3:5; } flags_bits;
+    };
 } sprite_t;
 
 typedef struct anim_layer_t {
