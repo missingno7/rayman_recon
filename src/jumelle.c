@@ -1,7 +1,7 @@
 /* jumelle.c (DOS v1.21, 1:32930..1:34580): binoculars/world-map zoom; -fpc. */
 /* Worker candidate. Compile wc106 -zq -oaxt -s -5r -fpc; see NOTES.md.
  * Shared ORIGINAL_INLINE helpers are declared in inline_helpers.h.
- * Local match: 8/19 STRICT; _TEXT remains non-contiguous.
+ * Local match: 12/19 STRICT; _TEXT remains non-contiguous.
  * DisplayJumellesNormal: explicit guarded midpoint-circle recurrences are STRICT.
  * Function/global names RAYVERSE except ChangeRealPosJumelle (ANDROID).
  * Descriptive locals INVENTED. No shared types changed.
@@ -17,8 +17,6 @@
 typedef int bool;
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define Abs(x) ((x) >= 0 ? (x) : -(x))
 
 extern u8 ChangeJumelleSizeOK;
@@ -364,14 +362,12 @@ void CalculVitesseJumelle(void) {
     dx = delta_x - XSpeedJumelle;
     dx = sgn(dx);
     dx += XSpeedJumelle;
-    if (dx > 16) dx = 16;
-    if (dx < -16) dx = -16;
+    dx = max32(min32(dx, 16), -16);
     XSpeedJumelle = dx;
     dy = delta_y - YSpeedJumelle;
     dy = sgn(dy);
     dy += YSpeedJumelle;
-    if (dy > 16) dy = 16;
-    if (dy < -16) dy = -16;
+    dy = max32(min32(dy, 16), -16);
     YSpeedJumelle = dy;
 }
 
@@ -490,13 +486,7 @@ void ChangeDeltaZoomAmpJumelle(s32 a1) {
          ((ModeAutoJumelle & 2) && JumelleZoomAmp != ModeAutoJumelleZoomAmp)) && JumelleEffetAutorise) {
         s32 amplitude = a1 + JumelleZoomAmp;
         s32 bound = 26 * -RayonJumelle + 32150;
-        if (bound > amplitude)
-            bound = amplitude;
-        amplitude = bound;
-        bound = 0;
-        if (bound < amplitude)
-            bound = amplitude;
-        JumelleZoomAmp = bound;
+        JumelleZoomAmp = max32(0, min32(bound, amplitude));
         JumelleZoomActif = 1;
         ParamZoomChange = 1;
         ChangeJumelleVariable();
@@ -560,10 +550,10 @@ void RecaleRayPosInJumelle(void) {
             s32 v14 = ray.screen_y - v13;
             v_scroll_speed = ashr16(v14, 2);
             if (Abs(ray.speed_y) <= Abs(v_scroll_speed)) {
-                s32 v16 = MAX(3, Abs(ray.speed_y));
+                s32 v16 = max32(3, Abs(ray.speed_y));
                 if (v_scroll_speed <= 0) {
                     if (v_scroll_speed != 0) {
-                        v_scroll_speed = MAX(v_scroll_speed, -v16);
+                        v_scroll_speed = max32(v_scroll_speed, -v16);
                     } else if (v14 <= 0) {
                         if (v14 != 0) {
                             v_scroll_speed = -1;
@@ -572,7 +562,7 @@ void RecaleRayPosInJumelle(void) {
                         v_scroll_speed = 1;
                     }
                 } else {
-                    v_scroll_speed = MIN(v_scroll_speed, v16);
+                    v_scroll_speed = min32(v_scroll_speed, v16);
                 }
             }
         } else if (ray.main_etat != 1) {
@@ -692,10 +682,10 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
         }
 
         if (need_scroll_xmap) {
-            xmap += MAX(-1, MIN(1, h_speed));
+            xmap += max32(-1, min32(1, h_speed));
         }
         if (need_scroll_ymap) {
-            ymap += MAX(-1, MIN(1, v_speed));
+            ymap += max32(-1, min32(1, v_speed));
         }
 
         scroll_limit_x = scroll_start_x;
