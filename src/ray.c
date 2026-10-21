@@ -280,8 +280,6 @@ void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 #define flags1_0x10_move_x 0x1000
 #define flags1_0x20_move_y 0x2000
 #define Abs(x) ((s32)(x)>=0?(s32)(x):-(s32)(x))
-#define MIN(x,y) ((s32)(x)<(s32)(y)?(s32)(x):(s32)(y))
-#define MAX(x,y) ((s32)(x)>(s32)(y)?(s32)(x):(s32)(y))
 
 void calc_bhand_typ(void);
 void rayMayLandOnAnObject(u8* param_1, s16 obj_id);
@@ -417,7 +415,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                 unk_y = cur_obj->speed_y;
 
             unk_y = Abs((s16) (unk_y + (cur_obj->follow_y - ray.speed_y))) + 2;
-            unk_y = MAX(unk_y, unk_1);
+            unk_y = max32(unk_y, unk_1);
 
             cur_type = cur_obj->type;
             if (cur_type == TYPE_PI || cur_type == TYPE_HERSE_HAUT || cur_type == TYPE_HERSE_BAS_NEXT) {
@@ -635,14 +633,14 @@ void set_air_speed(u8 main_etat, u8 sub_etat, s16 param_3, u8 param_4) {
 
     eta = &ray.eta[main_etat][sub_etat];
     unk_1 = Abs(param_3) >> 4;
-    unk_1 = MIN(unk_1, 112);
+    unk_1 = min32(unk_1, 112);
     unk_2 = -unk_1; /* TODO: ??? */
 
     if (ray.speed_x > 0) {
         eta->speed_x_left = -16;
-        eta->speed_x_right = MAX(param_4, unk_1);
+        eta->speed_x_right = max32(param_4, unk_1);
     } else if (ray.speed_x < 0) {
-        eta->speed_x_left = MIN(-param_4, unk_2);
+        eta->speed_x_left = min32(-param_4, unk_2);
         eta->speed_x_right = 16;
     } else {
         eta->speed_x_left = -param_4;
@@ -725,9 +723,7 @@ void ray_jump(void) {
         speed_y = ray.speed_y;
         if (ray.follow_id != -1) {
             follow_y = level.objects[ray.follow_id].follow_y;
-            if (speed_y > follow_y) {
-                speed_y = follow_y;
-            }
+            speed_y = min32(speed_y, follow_y);
         } else {
             switch (ray.btypes[0]) {
                 case BTYP_NONE:
@@ -2274,9 +2270,9 @@ void RAY_IN_THE_AIR(void) {
 
                     
                     if (pos_stack[i - 1] < pos_stack[i]) {
-                        new_decalage = MIN(decalage_en_cours, -256);
+                        new_decalage = min32(decalage_en_cours, -256);
                     } else {
-                        new_decalage = MAX(decalage_en_cours, 256);
+                        new_decalage = max32(decalage_en_cours, 256);
                     }
                     decalage_en_cours = new_decalage;
                 } else {
@@ -2291,7 +2287,7 @@ void RAY_IN_THE_AIR(void) {
             } else if (ray.sub_etat == 8) {
     s16 new_timer;
 
-                new_timer = MIN(ray.iframes_timer, 90);
+                new_timer = min32(ray.iframes_timer, 90);
                 ray.iframes_timer = new_timer;
             }
             if (ray.sub_etat == 17 || ray.sub_etat == 18 || ray.sub_etat == 19) {
