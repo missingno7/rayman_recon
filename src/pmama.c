@@ -8,6 +8,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 #ifndef true
 #define true 1
@@ -15,7 +16,6 @@
 #endif
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
 #define Abs(value) ((s32)(value) < 0 ? -(s32)(value) : (s32)(value))
-#define ashr16(value, amount) ((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount)))
 #define ashl16(value, amount) ((s32)(s16)(value) << (amount))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define SCREEN_WIDTH 320
@@ -77,9 +77,9 @@ extern u8 boss_mort;
 extern finbosslevel_t finBosslevel;
 
 void snapToSprite(obj_t *obj, obj_t *target, u8 sprite, s32 x_offs, s32 y_offs);
-u8 BTYP(s32 tile_x, s32 tile_y);
-s32 dist_to_bloc_floor(s16 btyp, s16 x, s16 y);
-u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
+u8 BTYP(s16 tile_x, s16 tile_y);
+s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y);
+s16 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void add_alwobj(obj_t *obj);
 void set_main_and_sub_etat(obj_t *obj, u8 main_etat, u8 sub_etat);
 void PlaySnd(s16 sound, s16 obj_id);
@@ -795,8 +795,9 @@ void lance_couteau_lineaire(obj_t* in_obj) {
 void DO_COU_COMMAND(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     switch (obj->main_etat) {
-        case 0:
-            if (obj->sub_etat == 9) {
+        case 0: {
+            u8 sub_etat = obj->sub_etat;
+            if (sub_etat == 9) {
                 obj->flags.follow_enabled = 1;
                 obj->speed_x = ashr16(obj->speed_x, 1);
                 CALC_MOV_ON_BLOC(obj);
@@ -809,6 +810,8 @@ void DO_COU_COMMAND(obj_t* obj) {
                     set_main_and_sub_etat(obj, 2, 12);
                 }
             }
+            break;
+        }
         default:
             break;
         case 2:
