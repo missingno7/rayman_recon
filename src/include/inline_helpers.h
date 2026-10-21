@@ -142,4 +142,44 @@ void write_movie_palette(u8 *palette);
   "rep outsb" \
   "popad" \
   parm [esi] modify []
+/* ORIGINAL_INLINE (added 2026-10-21, user approval), INVENTED palette_output (Android lookup absent).
+ * Entire identical body: InitPlasma 1:14049..14060,
+ * InitFire 1:14472..14489, SYNCHRO_LOOP_PALETTE 1:3ff0f..3ff26,
+ * start_fade_in 1:2c587..2c59e. ESI palette base, EAX first,
+ * ECX inclusive last. Proofs STRICT: InitPlasma (box), SYNCHRO_LOOP_PALETTE (menu), actualize_palette (frame); build/workers/w8_mine/REPORT.md for proofs and contract limits. */
+void palette_output(s32 first, s32 last, const void *palette);
+#pragma aux palette_output = \
+ "sub ecx,eax" \
+ "inc ecx" \
+ "imul ecx,ecx,3" \
+ "mov dx,03c8h" \
+ "out dx,al" \
+ "imul eax,eax,3" \
+ "add esi,eax" \
+ "cli" \
+ "mov dx,03c9h" \
+ "rep outsb" \
+ "sti" \
+ parm [eax] [ecx] [esi] modify exact [eax ecx edx esi]
+/* ORIGINAL_INLINE (added 2026-10-21, user approval), INVENTED min32/max32 (Android names absent).
+ * min: 1:3310d (jumelle), 1:34609 (effect_prepare_rows).
+ * max: 1:3311a (jumelle), 1:345d6/345e8/345fe (effect_prepare_rows).
+ * EAX first and return; EBX second; signed 32-bit comparison.
+ * There is NO instruction-aligned 32-bit instance in a verified STRICT extent;
+ * previous menu hit is inside 66 CMP AX,BX; special hit is outside extent.
+ * Proofs STRICT: ChangeDeltaSizeJumelle, ChangeDeltaPosX/YJumelleWithoutLimit (jumelle), effect_prepare_rows (effect34580); advertised EBX clobber OPEN ([eax] also passes); build/workers/w8_mine/REPORT.md for contracts, C negatives and full-function proofs. */
+s32 min32(s32 a,s32 b);
+#pragma aux min32 = \
+ "cmp eax,ebx" \
+ "jle short min_end" \
+ "mov eax,ebx" \
+ "min_end:" \
+ parm [eax] [ebx] value [eax] modify exact [eax ebx]
+s32 max32(s32 a,s32 b);
+#pragma aux max32 = \
+ "cmp eax,ebx" \
+ "jge short max_end" \
+ "mov eax,ebx" \
+ "max_end:" \
+ parm [eax] [ebx] value [eax] modify exact [eax ebx]
 #endif
