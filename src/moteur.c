@@ -79,7 +79,7 @@ typedef struct flocon_t {
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define COUNT(x) (sizeof(x)/sizeof((x)[0]))
 #define ashr32(v,b) ((v)<0?-((-(v))>>(b)):((v)>>(b)))
-#define sgn(x) ((x)<0?-1:((x)>0))
+#include "inline_helpers.h"
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 void init_allowed_time(void);
 void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj);
@@ -127,7 +127,7 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old);
 #define ashl16(v, b) ((v) << (b))
 #endif
 #ifndef ashr16
-#define ashr16(v, b) ((v) < 0 ? -((-(v)) >> (b)) : ((v) >> (b)))
+
 #endif
 
 #define ACTIVE_ALIVE 0
@@ -946,7 +946,7 @@ void fades(void) {
     if (map_time == 0) {
         INIT_FADE_IN();
     }
-    if (dead_time >= 32 && dead_time <= display_mode + 33) {
+    if (inrange(dead_time, 32, display_mode + 33)) {
         if (fade == 65) {
             INIT_FADE_OUT();
         }
