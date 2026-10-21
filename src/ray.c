@@ -399,14 +399,17 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
     s16 i;
     u16 cur_type;
     s16 unk_y;
-    s16 unk_1;
     obj_t* cur_obj;
+    s16 unk_1;
 
     /* 5D518 80181D18 -O2 -msoft-float */
 
     
 
-    unk_1 = RayEvts.tiny ? 8 : 4;
+    if (RayEvts.tiny)
+        unk_1 = 8;
+    else
+        unk_1 = 4;
     ray.follow_id = -1;
 
     i = 0;
@@ -1522,26 +1525,38 @@ void RAY_RESPOND_TO_DIR(s16 flip_x) {
     anim_t *sel_anim;
     s32 unk_1;
     s32 to_speed;
+    s16 new_main_etat;
+    s16 new_sub_etat;
 
     switch (ray.main_etat) {
         case 1: // moving
             // NOTE: this section is substantially different in the PS1 and PC versions.
             ++joy_done;
-            if (ray.sub_etat ==  8 || ray.sub_etat == 10) {
+            if (ray.sub_etat == 8 || ray.sub_etat == 10) {
                 s32 v5 = !options_jeu.test_fire1() || ray_on_poelle || !downjoy();
                 if (v5) {
-                    set_main_and_sub_etat(&ray, 0, 47); // stop crawling
+                    new_main_etat = 0;
+                    new_sub_etat = 47;
+                    goto update_moving_state;
                 }
             }
             if (ray.sub_etat == 9 || ray.sub_etat == 11) {
                 s32 v5 = !downjoy() || !options_jeu.test_fire1() || ray_on_poelle;
                 if (v5) {
-                    set_main_and_sub_etat(&ray, 0, 48);
+                    new_main_etat = 0;
+                    new_sub_etat = 48;
+                    goto update_moving_state;
                 }
             }
             if (downjoy() && options_jeu.test_fire1() && !ray_on_poelle && ray.sub_etat == 0) {
-                set_main_and_sub_etat(&ray, 3, 6); // duck
+                new_main_etat = 3;
+                new_sub_etat = 6;
+                goto update_moving_state;
             }
+            goto moving_state_updated;
+        update_moving_state:
+            set_main_and_sub_etat(&ray, new_main_etat, new_sub_etat);
+        moving_state_updated:;
             if (ray.flags.flip_x != (u8)flip_x) {
                 if (ray.sub_etat == 8 || ray.sub_etat == 10) {
                     set_main_and_sub_etat(&ray, 0, 50);
@@ -1585,10 +1600,7 @@ void RAY_RESPOND_TO_DIR(s16 flip_x) {
                     )
             {
                 if (ray.flags.flip_x != (u8)flip_x) {
-                    if (ray_last_ground_btyp != 1)
-                        set_main_and_sub_etat(&ray, 1, 4); // turn around slowly (on slippery blocks)
-                    else
-                        set_main_and_sub_etat(&ray, 1, 0); // walk (turn around instantly)
+                    set_main_and_sub_etat(&ray, 1, ray_last_ground_btyp != 1 ? 4 : 0);
                     ray.flags.flip_x = flip_x;
                 } else {
                     set_main_etat(&ray, 1); // walk
@@ -2520,11 +2532,6 @@ u8 RayEstIlBloque(void) {
                     ani_w -= 12;
                     ani_y += 2;
                 }
-                if (cur_obj->type == TYPE_PI) {
-                    ani_x += 4;
-                    ani_w -= 8;
-                }
-
                 ani_xw = ani_x + ani_w;
                 if (
                         (ray.speed_x <= 0 || unk_x < ani_x - ray.speed_x || unk_x > ani_x) &&
