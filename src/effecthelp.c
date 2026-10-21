@@ -166,20 +166,20 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
     effect5_state_t *state;
     u8 success;
 
+    success = 0;
     effect5_width = 0x100;
     effect5_height = 0xc8;
-    effect5_y_offset = 0;
     effect5_x_offset = 0x20;
-    success = 0;
+    effect5_y_offset = 0;
 
     if (source != 0 && destination != 0) {
         effect5_state = (effect5_state_t *)sub_6FBB4(0x3c);
-        state = effect5_state;
-        if (state != 0) {
+        if (effect5_state != 0) {
+            state = effect5_state;
             state->columns = max32(2, columns);
             state->rows = max32(1, rows);
-            state->count = (u16)(columns * rows);
-            state->point_count = (u16)((columns + 1) * (rows + 1));
+            state->count = (u16)(rows * columns);
+            state->point_count = (u16)((rows + 1) * (columns + 1));
             state->source = source;
             state->destination = destination;
             state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);
@@ -348,8 +348,9 @@ void effect_helper_168c8(void)
     effect5_state_t *state;
     effect5_point_t *points;
     effect5_item_t *item;
-    s32 u0, u1, u2, u3;
-    s32 v0, v1, v2, v3;
+    /* DOS scratch roles at 1:16905..16995 (W-DECL); allocation is still NEAR. */
+    s32 v2, u3, v0, u0;
+    s32 u1, v1, u2, v3;
     u16 i;
 
     state = effect5_state;
@@ -365,14 +366,14 @@ void effect_helper_168c8(void)
         u1 = points[item->point[1]].u - 1;
         v1 = points[item->point[1]].v;
         if ((u0 - u2) * (v3 - v1) < (v0 - v2) * (u3 - u1)) {
-            item->projected[3] = v3;
-            item->projected[7] = v1;
             item->projected[0] = u0;
-            item->projected[4] = u2;
             item->projected[1] = v0;
-            item->projected[5] = v2;
             item->projected[2] = u3;
+            item->projected[3] = v3;
+            item->projected[4] = u2;
+            item->projected[5] = v2;
             item->projected[6] = u1;
+            item->projected[7] = v1;
             draw_effect_segment(state->destination, (u8 *)&item->screen);
         }
         item++;
