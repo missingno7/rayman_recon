@@ -113,6 +113,7 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old);
 
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
 #ifndef MAX_2
 #define MAX_2(x, y) if (x < y) x = y;
 #endif
@@ -331,8 +332,8 @@ extern s16 allowed_time[192];
 #define TYPE_TAMBOUR1 87
 #define TYPE_TAMBOUR2 88
 #define eta_flags_0x10_anim_reverse 16
-extern u16 ray_old_main_etat;
-extern u16 ray_old_sub_etat;
+extern s16 ray_old_main_etat;
+extern s16 ray_old_sub_etat;
 #define TYPE_FALLING_OBJ 8
 #define TYPE_GRAINE 38
 #define TYPE_STONEBOMB3 69
@@ -1566,7 +1567,7 @@ s16 prof_in_bloc(obj_t* obj) {
 
 void do_boing(obj_t *obj, u8 main_etat, u8 sub_etat)
 {
-    if (obj->speed_y < 2)
+    if (obj->speed_y <= 1)
     {
         obj->speed_y = 0;
         set_main_and_sub_etat(obj, main_etat, sub_etat);
@@ -1579,7 +1580,10 @@ void do_boing(obj_t *obj, u8 main_etat, u8 sub_etat)
         {
             switch (obj->btypes[0])
             {
-            case BTYP_NONE:
+            case 8:
+            case 12:
+            case 24:
+            case 25:
                 break;
             case BTYP_SOLID_RIGHT_45:
             case BTYP_SLIPPERY_RIGHT_45:
@@ -2946,14 +2950,16 @@ void recale_ray_pos(void) {
 }
 
 void RAY_TO_THE_RIGHT(void) {
+    s16 border;
     /* 31690 80155E90 -O2 -msoft-float */
     if (ray_mode == MODE_2_RAY_ON_MS && RayCoince(1)) {
         ray.speed_x = 0;
         decalage_en_cours = 0;
     }
     ray.x += ray.speed_x;
-    if (RIGHT_MAP_BORDER < ray.x) {
-        ray.x = RIGHT_MAP_BORDER;
+    border = RIGHT_MAP_BORDER;
+    if (border < ray.x) {
+        ray.x = border;
         ray.speed_x = 0;
         decalage_en_cours = 0;
         if (ray.main_etat != 2) {
@@ -2964,22 +2970,21 @@ void RAY_TO_THE_RIGHT(void) {
 }
 
 void RAY_TO_THE_LEFT(void) {
-    /* 3176C 80155F6C -O2 -msoft-float */
     if (ray_mode == MODE_2_RAY_ON_MS && RayCoince(0)) {
         ray.speed_x = 0;
         decalage_en_cours = 0;
     }
     ray.x += ray.speed_x;
-    if (scroll_x == -1 && ray.x < LEFT_MAP_BORDER) {
-        ray.x = LEFT_MAP_BORDER;
-        ray.speed_x = 0;
-        decalage_en_cours = 0;
-        if (ray.main_etat != 2) {
-            ray.speed_y = 0;
+    if (scroll_x == -1) {
+        s16 border = LEFT_MAP_BORDER;
+        if (ray.x < border) {
+            ray.x = border;
+            decalage_en_cours = 0;
+            if (ray.main_etat != 2) {
+                ray.speed_y = 0;
+            }
         }
     }
-
-
 }
 
 void DO_FIXE(void) {
@@ -3136,19 +3141,19 @@ void correct_link(void) {
 }
 
 void INIT_RAY_BEGIN(void) {
-    status_bar.max_hitp = 2;
-    RayEvts.run = 0;
-    RayEvts.firefly = 0;
-    RayEvts.force_run = 0;
-    RayEvts.reverse = 0;
-    RayEvts.squashed = 0;
     RayEvts.poing = 0;
     RayEvts.hang = 0;
     RayEvts.helico = 0;
     RayEvts.handstand_dash = 0;
     RayEvts.handstand = 0;
     RayEvts.grap = 0;
+    RayEvts.run = 0;
+    RayEvts.firefly = 0;
+    RayEvts.force_run = 0;
+    RayEvts.reverse = 0;
+    RayEvts.squashed = 0;
     ray.flags.hurtbyfist = 0;
+    status_bar.max_hitp = 2;
     status_bar.num_wiz = 0;
     fin_continue = 0;
 }
@@ -3578,17 +3583,17 @@ void INIT_MOTEUR_BEGIN(void) {
     new_world = 1;
     status_bar.lives = 3;
     ray.hit_points = 2;
-    gele = 0;
-    departlevel = 1;
     poing.sub_etat = 1;
+    departlevel = 1;
     nb_continue = 9;
+    gele = 0;
     You_Win = 0;
     set_proj_center(160, 170);
     INIT_RAY_BEGIN();
     scroll_x = -1;
     scroll_y = -1;
-    special_ray_mov_win_x_right = 0;
     special_ray_mov_win_x_left = 0;
+    special_ray_mov_win_x_right = 0;
     fin_de_rayman = 0;
     NumDemo = myRand(5);
     if (DemoRecordWorld[NumDemo] == 5 && DemoRecordMap[NumDemo] == 10) {
@@ -3636,9 +3641,9 @@ void INIT_MOTEUR_LEVEL(s32 a1) {
             nb_wiz_collected = 0;
         }
         correct_gendoor_link(0);
-        ray_mode = MODE_1_RAYMAN;
-        RAY_MODE_SPEED = 16; // This is Rayman's move speed when the free movement cheat is enabled.
         new_level = 0;
+        ray_mode = MODE_1_RAYMAN;
+        RAY_MODE_SPEED = 16;
         build_active_table();
     }
 }
@@ -3744,12 +3749,7 @@ void INIT_MOTEUR_DEAD(void) {
 
 void INIT_RAY_ON_MS(void) {
     if (NewMs) {
-        if (rayman_obj_id == -1) {
-            if (rayOnMsWasThere) {
-                INIT_RAY(1);
-                NewMs = 0;
-            }
-        } else {
+        if (rayman_obj_id != -1) {
             rms = ray;
             ray = level.objects[rayman_obj_id];
             INIT_RAY(1);
@@ -3759,6 +3759,11 @@ void INIT_RAY_ON_MS(void) {
             set_main_and_sub_etat(&ray, 6, 0);
             ray_mode = MODE_2_RAY_ON_MS;
             NewMs = 0;
+        } else {
+            if (rayOnMsWasThere) {
+                INIT_RAY(1);
+                NewMs = 0;
+            }
         }
     }
 }
@@ -3767,8 +3772,8 @@ void DO_MOTEUR(void) {
     if (ModeDemo != 0) {
     s32 has_joystick_input;
 
-        has_joystick_input = 0; // TODO: check input buttons
-        if (ModeDemo == 3 || ModeDemo == 4) {
+        has_joystick_input = inp(0x201);
+        if (!(has_joystick_input & 0x10) || !(has_joystick_input & 0x20) || !(has_joystick_input & 0x40) || !(has_joystick_input & 0x80) || ModeDemo == 3 || ModeDemo == 4) {
             new_world = 1;
             DO_FADE_OUT();
             ModeDemo = 2;
@@ -3786,8 +3791,8 @@ void DO_MOTEUR(void) {
         RIGHT_MAP_BORDER = xmap + 320 - ray.offset_bx - 36;
         LEFT_MAP_BORDER = xmap + 20 - ray.offset_bx;
     } else {
-        RIGHT_MAP_BORDER = Bloc_lim_W2 + xmap - ray.offset_bx - 36;
-        LEFT_MAP_BORDER = Bloc_lim_W1 + xmap + 20 - ray.offset_bx;
+        RIGHT_MAP_BORDER = xmap + Bloc_lim_W2 - ray.offset_bx - 36;
+        LEFT_MAP_BORDER = xmap + Bloc_lim_W1 + 20 - ray.offset_bx;
     }
 
     if (ray.follow_id != -1) {
@@ -3798,10 +3803,10 @@ void DO_MOTEUR(void) {
         DO_LUCIOLE(); //TODO
     }
 
-    if (num_world == world_3_mountain) {
-        ray_wind_force = 0;
-    } else {
+    if (num_world != world_3_mountain) {
         ray_wind_force = weather_wind;
+    } else {
+        ray_wind_force = 0;
     }
 
     DO_OBJECTS();

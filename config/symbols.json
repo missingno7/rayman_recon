@@ -13803,6 +13803,60 @@
     "type": "s16",
     "name": "PS1",
     "evidence": "PS1 dark_phase2.c PosYSin2 (second trajectory); DOS DO_DARK_PHASE2_COMMAND initializes 2:50c16 (1:30cd9); Android symbol PosYSin2 2 bytes; separate from temps_text 2:50c14 (sfin_hybrid)"
+   },
+   "RaymanExeSize": {
+    "addr": "2:3d05c",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size 4; DOS LOAD_ALL_FIX direct reads/stores. See NOTES.md."
+   },
+   "RaymanExeCheckSum1": {
+    "addr": "2:3d070",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size 4; DOS LOAD_ALL_FIX direct reads/stores. See NOTES.md."
+   },
+   "RaymanExeCheckSum2": {
+    "addr": "2:3d068",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size 4; DOS LOAD_ALL_FIX direct reads/stores. See NOTES.md."
+   },
+   "RaymanExeCheckSum3": {
+    "addr": "2:3d06c",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size 4; DOS LOAD_ALL_FIX direct reads/stores. See NOTES.md."
+   },
+   "div_obj": {
+    "addr": "2:3e6ec",
+    "type": "obj_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android size 132; DOS LOAD_ALL_FIX direct reads/stores. See NOTES.md."
+   },
+   "blocks_code": {
+    "addr": "2:3d7c4",
+    "type": "u8 *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android .bss size 4; DOS load_level direct accesses. See NOTES.md."
+   },
+   "gros_patai_block": {
+    "addr": "2:3d7d4",
+    "type": "x_texture_t *",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android .bss size 4; DOS load_level direct accesses. See NOTES.md."
+   },
+   "nb_total_blocks": {
+    "addr": "2:3d058",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android .bss size 4; DOS load_level direct accesses. See NOTES.md."
+   },
+   "no_fnd": {
+    "addr": "2:3fa22",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c address; Android .bss size 1; DOS load_level direct accesses. See NOTES.md."
    }
   }
  }

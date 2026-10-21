@@ -7474,7 +7474,7 @@
      ]
     },
     "do_boing": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7713,7 +7713,7 @@
      ]
     },
     "RAY_TO_THE_RIGHT": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7721,7 +7721,7 @@
      ]
     },
     "RAY_TO_THE_LEFT": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7777,7 +7777,7 @@
      ]
     },
     "INIT_RAY_BEGIN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7833,7 +7833,7 @@
      ]
     },
     "INIT_MOTEUR_BEGIN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7849,7 +7849,7 @@
      ]
     },
     "INIT_MOTEUR_LEVEL": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7881,7 +7881,7 @@
      ]
     },
     "INIT_RAY_ON_MS": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7889,7 +7889,7 @@
      ]
     },
     "DO_MOTEUR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10159,7 +10159,7 @@
      ]
     },
     "LoadPcxPaletteInVignet": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10186,14 +10186,14 @@
      ]
     },
     "LoadPlan2InVignet": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "GetStringTxt": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10213,6 +10213,9 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   }
  }
