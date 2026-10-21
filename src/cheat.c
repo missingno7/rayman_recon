@@ -75,9 +75,9 @@ void Reset_Clavier(void);
 u8 TOUCHE(u8 key);
 s16 but1pressed(void);
 void do_record(record_t *rec);
-u32 clock_ticks(void);
-void *temp_malloc(s32 size);
-void temp_free(void *memory);
+s32 clock_ticks(void);
+u8 *temp_malloc(s32 size);
+void temp_free(u8 *memory);
 void *sub_6FBB4(s32 size);
 s16 CalcSpeed(void);
 u8 confirmation_msg(s32 msg);
@@ -236,7 +236,7 @@ extern s16 word_E0CD0;
 
 void sub_35F70(void) {
     s32 *intervals;
-    u32 *times;
+    s32 *times;
     s32 sum = 0;
     s32 average;
     s32 low_limit;
@@ -268,7 +268,7 @@ void sub_35F70(void) {
                 high_limit = (average * 4) / 3;
                 low_limit = (average * 3) / 4;
                 for (i = 0; i < 999; ++i) {
-                    if (intervals[i] < low_limit || intervals[i] > high_limit) {
+                    if (!inrange(intervals[i], low_limit, high_limit)) {
                         ++valid;
                     }
                 }
@@ -1150,7 +1150,7 @@ void PC_do_cheats(void) {
     else if (memcmp(text_input_buffer, cheat_code_10_wiz, 6) == 0 || memcmp(text_input_buffer, cheat_code_10_wiz_alt, 5) == 0) {
         s32 limit = 99;
         s32 count = status_bar.num_wiz + 10;
-        if (limit > count) {
+        if (count < limit) {
             limit = count;
         }
         status_bar.num_wiz = limit;
