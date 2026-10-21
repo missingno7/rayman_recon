@@ -1,5 +1,5 @@
-/* load object, DOS v1.21. Names RAYVERSE/ANDROID; sfin_load worker candidate.
-   See NOTES.md for STRICT results and unresolved original inline assembly. */
+/* load object, DOS v1.21. Names RAYVERSE/ANDROID; inl_load worker candidate.
+   See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -79,6 +79,56 @@ extern void PLAN0FND_to_bits_planes(u8 *buffer, u16 width, u16 height);
 
 char* GetStringTxt(char* txt, char* out_buf);
 
+/* INVENTED purpose names; only original non-C instructions are inline.
+   Arithmetic and BIOS timer memory accesses remain ordinary C. */
+void load_watch_address(u32 address);
+/* ORIGINAL_INLINE 1:34e10 and 1:34e3f: MOV DR0,EAX (0f 23 c0). */
+#pragma aux load_watch_address = "mov dr0,eax" parm [eax] modify exact [];
+u32 load_watch_control(void);
+/* ORIGINAL_INLINE 1:34e13 and 1:34e42: MOV EAX,DR7 (0f 21 f8). */
+#pragma aux load_watch_control = "mov eax,dr7" value [eax] modify exact [eax];
+void load_set_watch_control(u32 control);
+/* ORIGINAL_INLINE 1:34e1b and 1:34e4a: MOV DR7,EAX (0f 23 f8). */
+#pragma aux load_set_watch_control = "mov dr7,eax" parm [eax] modify exact [];
+void load_enable_interrupts(void);
+/* ORIGINAL_INLINE 1:34e1e and 1:34e2c: STI (fb). */
+#pragma aux load_enable_interrupts = "sti" modify exact [];
+void load_break_world_open(void);
+/* ORIGINAL_INLINE 1:34f5d: INT3 (cc); no GPR changes. */
+#pragma aux load_break_world_open = "int 3" modify exact [];
+void load_break_world_backgrounds(void);
+/* ORIGINAL_INLINE 1:35008: INT3 (cc); no GPR changes. */
+#pragma aux load_break_world_backgrounds = "int 3" modify exact [];
+void load_break_world_eta(void);
+/* ORIGINAL_INLINE 1:35604: INT3 (cc); no GPR changes. */
+#pragma aux load_break_world_eta = "int 3" modify exact [];
+void load_break_level_open(void);
+/* ORIGINAL_INLINE 1:357f1: INT3 (cc); no GPR changes. */
+#pragma aux load_break_level_open = "int 3" modify exact [];
+void load_break_level_map(void);
+/* ORIGINAL_INLINE 1:35e4c: INT3 (cc); no GPR changes. */
+#pragma aux load_break_level_map = "int 3" modify exact [];
+void load_break_level_object(void);
+/* ORIGINAL_INLINE 1:35f25: INT3 (cc); no GPR changes. */
+#pragma aux load_break_level_object = "int 3" modify exact [];
+void load_break_level_close(void);
+/* ORIGINAL_INLINE 1:36054: INT3 (cc); no GPR changes. */
+#pragma aux load_break_level_close = "int 3" modify exact [];
+void load_break_big_ray_animation(void);
+/* ORIGINAL_INLINE 1:36264: INT3 (cc); no GPR changes. */
+#pragma aux load_break_big_ray_animation = "int 3" modify exact [];
+void load_break_big_ray_eta(void);
+/* ORIGINAL_INLINE 1:363c4: INT3 (cc); no GPR changes. */
+#pragma aux load_break_big_ray_eta = "int 3" modify exact [];
+
+void load_break_world_animation(void);
+/* ORIGINAL_INLINE 1:35389: INT3 (cc); no GPR changes. */
+#pragma aux load_break_world_animation = "int 3" modify exact [];
+
+void load_break_fix_eta(void);
+/* ORIGINAL_INLINE 1:3664a: INT3 (cc); no GPR changes. */
+#pragma aux load_break_fix_eta = "int 3" modify exact [];
+
 void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
     s32 i;
     char *full_filename;
@@ -92,8 +142,21 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
     stop_cd();
     sub_5BB78();
     sub_5BB94();
-    /* OPEN: DOS 1:34e0b..34e4d contains inline DR0/DR7 operations,
-       STI and BIOS timer polling. No C replacement is claimed here. */
+    load_watch_address(0x46c);
+    load_set_watch_control(load_watch_control() | 0x30003);
+    /* BIOS data-area timer byte, updated asynchronously by IRQ0.
+       Volatile describes hardware access, rather than a register-allocation aid. */
+    {
+        u8 tick;
+        load_enable_interrupts();
+        tick = *(volatile u8 *)0x46c;
+        while (tick == *(volatile u8 *)0x46c) { }
+        load_enable_interrupts();
+        tick = *(volatile u8 *)0x46c;
+        while (tick == *(volatile u8 *)0x46c) { }
+    }
+    load_watch_address(0);
+    load_set_watch_control(load_watch_control() & 0xde00);
     if (GameModeVideo == MODE_X) {
         PLAN1_BUFFER = block_malloc(mem_world, 71680);
     } else {
@@ -127,6 +190,7 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
         u8 plan0_num_pcx_count;
         s32 des_index;
 
+        load_break_world_open();
         // Header block
         fread(&background_width, 2, 1, fp);
         fread(&background_height, 2, 1, fp);
@@ -141,6 +205,7 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
         fread(&plan0_num_pcx_count, 1, 1, fp);
         fread(&BiosCheckSum, 1, 1, fp);
         fread(&VideoBiosCheckSum, 1, 1, fp);
+        load_break_world_backgrounds();
 
         for (i = 0; i < plan0_num_pcx_count; ++i) {
             s8 pcx_number;
@@ -214,7 +279,7 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
                             wldobj[des_index].animations[i].frames = (anim_frame_t*) block_malloc(mem_world, wldobj[des_index].animations[i].frames_count * sizeof(anim_frame_t));
                             fread(wldobj[des_index].animations[i].frames, sizeof(anim_frame_t), wldobj[des_index].animations[i].frames_count, fp);
                         }
-
+                        load_break_world_animation();
                     }
                 }
             } else {
@@ -268,6 +333,7 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
                 fread(&num_eta_entries, 1, 1, fp);
                 loaded_eta[i][j] = (eta_t*)block_malloc(mem_world, num_eta_entries * sizeof(eta_t));
                 fread(loaded_eta[i][j], sizeof(eta_t), num_eta_entries, fp);
+                load_break_world_eta();
             }
         }
         nb_loaded_eta += nb_fix_eta;
@@ -324,7 +390,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
         FatalError(error_buffer);
         temp_free(error_buffer);
     } else {
-        /* DOS has INT3 here and at the object-processing boundaries. */
+        load_break_level_open();
         fread(&event_offset, 4, 1, fp);
         fread(&texture_offset, 4, 1, fp);
         fread(&mp.width, 2, 1, fp);
@@ -332,7 +398,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
         fread(rvb, 1, sizeof(rvb), fp);
         fread(&last_plan1_palette, 1, 1, fp);
         current_pal_id = 0;
-        current_rvb = rvb[last_plan1_palette];
+        memcpy(&current_rvb, &rvb[last_plan1_palette], sizeof(rgb_palette_t));
         mp.length = mp.width * mp.height;
         mp.map = (map_tile_t *)block_malloc(mem_level, mp.length * sizeof(map_tile_t));
         fread(mp.map, sizeof(map_tile_t), mp.length, fp);
@@ -376,7 +442,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
                 }
             }
             fread(gros_patai_src, 4, 1200, fp);
-            for (i = 0; i < 1200; i++) gros_patai_src[i] += (u32)gros_patai_block;
+            for (i = 0; i < 1200; i++) gros_patai_src[i] = (u32)gros_patai_block + gros_patai_src[i];
             image_offset = ftell(fp);
             fread(blocks_code, 1, x_code_size, fp);
             fread(&checksum, 1, 1, fp);
@@ -401,7 +467,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
             }
             fread(block_add, 4, 1200, fp);
             for (i = 0; i < 1200; i++) {
-                if (block_add[i] != -1) block_add[i] += (s32)blocks_code;
+                if (block_add[i] != -1) block_add[i] = (s32)blocks_code + block_add[i];
                 else block_add[i] = 0;
             }
             fseek(fp, event_offset, 0);
@@ -436,6 +502,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
             }
             construct_MAP(mem_level, &BIG_MAP, MAP_BLOCKS);
         }
+        load_break_level_map();
         fread(&level.nb_objects, 2, 1, fp);
         level.objects = (obj_t *)block_malloc(mem_level, sizeof(obj_t) * level.nb_objects);
         level_obj.obj_ids = (s16 *)block_malloc(mem_level, 2 * level.nb_objects);
@@ -445,6 +512,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
         fread(link_init, 2, level.nb_objects, fp);
         fread(level.objects, sizeof(obj_t), level.nb_objects, fp);
         for (i = 0; i < level.nb_objects; i++) {
+            load_break_level_object();
             level.objects[i].sprites = wldobj[(s16)(s32)level.objects[i].sprites].sprites;
             level.objects[i].animations = wldobj[(s16)(s32)level.objects[i].animations].animations;
             level.objects[i].img_buffer = wldobj[(s16)(s32)level.objects[i].img_buffer].img_buffer;
@@ -460,6 +528,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
                 fread(level.objects[i].cmd_labels, 2, label_count, fp);
             } else level.objects[i].cmd_labels = NULL;
         }
+        load_break_level_close();
         fclose(fp);
     }
     temp_free(full_filename);
@@ -503,7 +572,7 @@ void load_big_ray(mem_t *buffer)
         fread(&wldobj[index].anim_count, 1, 1, fp);
         wldobj[index].animations = (anim_t *)block_malloc(buffer, wldobj[index].anim_count * sizeof(anim_t));
         for (anim_index = 0; anim_index < wldobj[index].anim_count; anim_index++) {
-            /* DOS has an inline INT3 at this loop entry (1:36264). */
+            load_break_big_ray_animation();
             fread(&wldobj[index].animations[anim_index].layers_per_frame, 2, 1, fp);
             fread(&wldobj[index].animations[anim_index].frames_count, 2, 1, fp);
             fread(&wldobj[index].animations[anim_index].frames, 4, 1, fp);
@@ -520,14 +589,14 @@ void load_big_ray(mem_t *buffer)
             fread(&groups, 1, 1, fp);
             loaded_eta[i] = (eta_t **)block_malloc(buffer, groups * sizeof(eta_t *));
             for (j = 0; j < groups; j++) {
-                /* DOS has an inline INT3 at 1:363c4. */
+                load_break_big_ray_eta();
                 fread(&entries, 1, 1, fp);
                 loaded_eta[i][j] = (eta_t *)block_malloc(buffer, entries * sizeof(eta_t));
                 fread(loaded_eta[i][j], sizeof(eta_t), entries, fp);
             }
         }
         wldobj[nb_des].eta = loaded_eta[0];
-        bigray = wldobj[nb_des];
+        memcpy(&bigray, &wldobj[nb_des], sizeof(obj_t));
         nb_des++;
         fclose(fp);
     }
@@ -573,6 +642,7 @@ void LOAD_ALL_FIX(void)
             loaded_eta[index] = (eta_t **)block_malloc(&main_mem_fix, num_eta_groups * sizeof(eta_t *));
             for (i = 0; i < num_eta_groups; i++) {
                 u8 num_eta_entries;
+                load_break_fix_eta();
                 fread(&num_eta_entries, 1, 1, fp);
                 loaded_eta[index][i] = (eta_t *)block_malloc(&main_mem_fix, num_eta_entries * sizeof(eta_t));
                 fread(loaded_eta[index][i], sizeof(eta_t), num_eta_entries, fp);
@@ -639,7 +709,7 @@ void LOAD_ALL_FIX(void)
         }
         fread(&RaymanExeCheckSum3, 4, 1, fp);
         fread(&index, 4, 1, fp);
-        ray = wldobj[index];
+        memcpy(&ray, &wldobj[index], sizeof(obj_t));
         fread(&index, 4, 1, fp);
         alpha.sprites = wldobj[index].sprites;
         alpha.img_buffer = wldobj[index].img_buffer;
@@ -662,9 +732,9 @@ void LOAD_ALL_FIX(void)
             mapobj[i].eta = wldobj[index].eta;
         }
         fread(&index, 4, 1, fp);
-        clockobj = wldobj[index];
+        memcpy(&clockobj, &wldobj[index], sizeof(obj_t));
         fread(&index, 4, 1, fp);
-        div_obj = wldobj[index];
+        memcpy(&div_obj, &wldobj[index], sizeof(obj_t));
         fclose(fp);
     }
     new_sprite_deform = (u32)block_malloc(&main_mem_fix, 0x4b0);
@@ -694,8 +764,7 @@ u8 *LoadPcxInVignet(mem_t *buffer, s32 resource_id, u16 *width, u16 *height)
     strcat(path, "VIGNET.DAT");
     i = 0;
     fp = fopen(path, "rb");
-    while (fp == NULL) {
-        if (i >= 10) break;
+    for (; fp == NULL && i < 10; ) {
         fp = fopen(path, "rb");
         i++;
         sleep(1);
