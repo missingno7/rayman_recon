@@ -2483,7 +2483,7 @@
    "profile": "game",
    "functions": {
     "INIT_TXT_FEE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2498,7 +2498,7 @@
      ]
     },
     "init_fee": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10816,7 +10816,7 @@
      ]
     },
     "DO_SPIDER_PLAFOND_POING_COLLISION": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10839,7 +10839,7 @@
      ]
     },
     "DO_SPIDER_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10903,7 +10903,7 @@
      ]
     },
     "DO_GROS_MOTEUR_X": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

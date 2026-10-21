@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <i86.h>
+#include <io.h>
+#include "original_inline.h"
 
 void display_etoile(s16 x, s16 y);
 void display_text(const char *text, s16 x, s16 y, u8 font_size, u8 color);
@@ -271,7 +273,7 @@ void draw_pluie7_Normal(s16 x, s16 y);
 void draw_pluie6_Normal(s16 x, s16 y);
 void draw_pluie5_Normal(s16 x, s16 y);
 void draw_pluie4_Normal(s16 x, s16 y);
-void InitData(u8 x, u8 y, s16 origin_x, s16 origin_y);
+void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y);
 void update_map(s32 x, s32 y, s32 width, s32 height);
 void calc_off_fnd(void);
 void sub_3C3BC(s16 x, s16 y);
@@ -330,7 +332,7 @@ s16 test_allowed(obj_t* obj, s16 center_x, s16 center_y);
 void InitMemoryVariable(void);
 void wait_milliseconds(u32 duration);
 void AfficheEntete(void);
-int main_Ray(int argc, char** argv);
+void main_Ray(int argc, char** argv);
 void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y);
 s16 testActionEnd(obj_t *obj);
 s16 firstFloorBelow(obj_t* obj);
@@ -365,11 +367,44 @@ void DO_SPIDER_TIR(obj_t *obj);
 void DoSpiderPoingCollision(obj_t* other_obj, s16 sprite);
 void DoSpiderRaymanZDD(obj_t* obj);
 
+/* External handwritten drawing/timer ABIs: docs/reference/lowlevel_abi.h,
+ * proven by DOS callers 1:0723c, 072bf, 073e8, 074b4, 0764e. */
+typedef void (pc_swap_func_t)(u8 *source, u8 *destination, s32 width, s32 height);
+#pragma aux pc_swap_func_t parm [esi] [edi] [ecx] [eax] modify exact []
+extern pc_swap_func_t *Swap_And_Test_Joystick;
+void Swap_To_Screen(u8 *, u8 *, s32, s32);
+#pragma aux Swap_To_Screen parm [esi] [edi] [ecx] [eax] modify exact []
+void clear_borders_Normal(u8 *, s32, s32);
+#pragma aux clear_borders_Normal parm [edi] [ecx] [edx] modify exact []
+void flocon_clipping(s32, s32, s32, s32);
+#pragma aux flocon_clipping parm [eax] [ebx] [ecx] [edx] modify exact []
+s32 clock_ticks(void);
+#pragma aux clock_ticks parm [] value [eax] modify exact [eax]
+s32 wait_until(s32);
+#pragma aux wait_until parm [ebx] value [ecx] modify exact [eax ecx]
+void synchro(void);
+#pragma aux synchro parm [] modify exact []
+void endsynchro(void);
+#pragma aux endsynchro parm [] modify exact []
+void speaker_enable(void);
+#pragma aux speaker_enable parm [] modify exact []
+void free_luciole(void);
+extern u8 is_joypad_mode;
+extern s16 word_CF7E6;
+s16 rightjoy(void), leftjoy(void), downjoy(void), upjoy(void);
+s16 but0pressed(void), but1pressed(void), but2pressed(void), but3pressed(void);
+/* DOS 1:07370 passes ECX=0; dimensions/clipping values are unsigned shorts. */
+void Calcul_Deplacement_Bande(s16 x, u16 width, u16 height, s32 mode);
+void Display_Back_Screen(u16, u16, u16, u16, u16, u16);
+void Display_Sprite_On_Front(u16, u16, u16, u16, u16, u16);
+
 void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y) {
+    s32 offset;
     init_data_state.x = x & 0x0F;
     init_data_state.y = y & 0x0F;
-    init_data_state.c4 = (s32)draw_buffer - init_data_state.x / 4 -
-                        ((init_data_state.y * 5) << 4) + 1;
+    offset = (s32)draw_buffer - init_data_state.x / 4 -
+                        ((init_data_state.y * 5) << 4);
+    init_data_state.c4 = offset + 1;
     if (type_fndscrX)
         init_data_state.c8 = 0;
     else
@@ -399,11 +434,15 @@ void DO_GROS_MOTEUR_NORMAL(u8 need_update_display_map) {
 /* DOS disassembly reconstructs this loop; remaining call ABI work is recorded in NOTES.md. */
 void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
     u8 end_of_frame;
+    u8 display_count;
+    s32 ticks;
+    s32 deadline;
+    s32 offset;
     RaymanDansUneMapDuJeu = 1;
     DoFirstFlocons();
     fin_continue = 0;
     MapTimePause = 0;
-    ProchainEclair = 0;
+    ProchainEclair = 1;
     numero_palette_special = 0;
     if (MusicCdActive)
         TestCdLoop();
@@ -412,35 +451,48 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
         if (use_sync)
             synchro();
         if (need_timer)
-            clock_ticks();
+            ticks = clock_ticks();
+        if (need_timer)
+            deadline = ticks + (u16)word_CF7E6;
         fades();
         if (dead_time >= 32 && !gele)
             DoPaletteSpecialPC();
         DO_SWAP_PALETTE();
-        if (fixon || fixontemp) {
-            if (Mode_Pad == 1 && Main_Control)
+        if (!fixon && !fixontemp) {
+            offset = (Bloc_lim_H1 << 6) + (Bloc_lim_H1 << 8) + Bloc_lim_W1;
+            if (is_joypad_mode == 1 && Main_Control)
+                Swap_And_Test_Joystick(DrawBufferNormal + offset, DisplayBufferNormal + offset,
+                                      Bloc_lim_W2 - Bloc_lim_W1, Bloc_lim_H2 - Bloc_lim_H1);
+            else
+                Swap_To_Screen(DrawBufferNormal + offset, DisplayBufferNormal + offset,
+                               Bloc_lim_W2 - Bloc_lim_W1, Bloc_lim_H2 - Bloc_lim_H1);
+        } else {
+            if (is_joypad_mode == 1 && Main_Control)
                 Swap_And_Test_Joystick(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);
             else
                 Swap_To_Screen(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);
-        } else {
-            Swap_To_Screen(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);
         }
         if (need_timer)
             clock_ticks();
         if (MusicCdActive)
             TestCdLoop();
-        if (Mode_Pad == 0)
+        if (is_joypad_mode == 0)
             readinput();
-        DO_GROS_MOTEUR_NORMAL((u8)display_mode);
+        display_count = display_mode;
+        do {
+            DO_GROS_MOTEUR_NORMAL(0);
+            end_of_frame = !new_level && !new_world && !fin_du_jeu;
+        } while (end_of_frame && --display_count != 255);
         if (need_timer)
             clock_ticks();
         CLEAR_FIXE_LUCIOLE();
         if (BackgroundOn && FondAutorise == 1) {
-            Calcul_Deplacement_Bande(xmap, plan0_width, plan0_height);
+            Calcul_Deplacement_Bande(xmap, plan0_width, plan0_height, 0);
             Display_Back_Screen(plan0_width, plan0_height,
                                 Bloc_lim_W1, Bloc_lim_H1, Bloc_lim_W2, Bloc_lim_H2);
         } else {
-            memset(draw_buffer, 0, 320 * 200);
+            /* DOS 1:073af uses REP STOSD for 16008 dwords (W-COPY OPEN). */
+            memset(draw_buffer, 0, 16008 * 4);
         }
         if (MapAvecPluieOuNeige) {
             flocon_clipping(Bloc_lim_H1, Bloc_lim_H2 - 6,
@@ -449,7 +501,11 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
         }
         DRAW_MAP(DrawBufferNormal, &BIG_MAP);
         display_grp_stars();
+        if (need_timer)
+            clock_ticks();
         DISPLAY_ALL_OBJECTS();
+        if (need_timer)
+            clock_ticks();
         display_pix_gerbes();
         Display_Sprite_On_Front(plan0_width, plan0_height,
                                 Bloc_lim_W1, Bloc_lim_H1, Bloc_lim_W2, Bloc_lim_H2);
@@ -493,26 +549,29 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
             }
         }
         HANDLE_KEY(key_state);
-        end_of_frame = 1;
-        if (need_timer && use_sync && end_of_frame)
-            end_of_frame = 1;
-        endsynchro();
+        if (need_timer && use_sync && end_of_frame && !wait_until(deadline)) {
+            DO_GROS_MOTEUR_NORMAL(1);
+            if (ray.ray_dist != -1)
+                ray.iframes_timer++;
+            free_luciole();
+            if (use_sync)
+                endsynchro();
+        }
     }
     RaymanDansUneMapDuJeu = 0;
 }
 
 void DO_GROS_MOTEUR_X(void) {
-    s32 x_rem;
+    s16 x_rem;
     if (CarteSonAutorisee && gele != 1)
         manage_snd();
     do_record(&record);
-    if (gele)
-        DO_MOTEUR_GELE();
-    else {
+    if (!gele) {
         DO_MOTEUR();
         if (!gele)
             DO_MOTEUR2();
-    }
+    } else
+        DO_MOTEUR_GELE();
     if (!gele) {
         update_map(xmap, ymap, xmap_old, ymap_old);
     }
@@ -520,14 +579,13 @@ void DO_GROS_MOTEUR_X(void) {
         calc_off_fnd();
         if (yp0 < 0)
             yp0 += plan0_height;
-        else
-            yp0 = 0;
-    }
-    if (BackgroundOn) {
-        x_rem = (xmap / 3) % plan0_width;
-        InitData((u8)xmap, (u8)ymap, (s16)x_rem, plan0_width);
+    } else
+        yp0 = 0;
+    if (BackgroundOn && FondAutorise == 1) {
+        x_rem = (xmap / 3) % (u16)plan0_width;
+        InitData(xmap, ymap, (s16)x_rem, yp0);
     } else {
-        InitData((u8)xmap, (u8)ymap, 0, 0);
+        InitData(xmap, ymap, 0, 0);
     }
     sub_3C3BC(xmap, ymap);
 }
@@ -581,7 +639,7 @@ void DO_MAIN_LOOP_PC_X(void) {
         HANDLE_KEY(NULL);
         end_of_frame = 1;
         if (need_timer && use_sync && end_of_frame)
-            wait_until();
+            wait_until(0);
         if (!fin_continue && new_level)
             LoadPlan0InVignet();
         endsynchro();
@@ -714,28 +772,27 @@ void InitMemoryVariable(void) {
         FatalError("Not enough memory.");
     } else if (available_memory < 0x300000) {
         ModeNormalAutorise = 0;
-        ToutSpriteAutorise = 0;
-        FondAutorise = 2;
         JumelleEffetAutorise = 1;
         CarteSonAutorisee = 1;
-        SonLimite = 1;
-        P486 = 1;
         TailleMainMemTmp = 0x17400;
         TailleMainMemWorld = 0x62C00;
-        TailleMainMemLevel = 0x5E000;
-        TailleMainMemSprite = 0x12C000;
+        ToutSpriteAutorise = 0;
+        FondAutorise = 2;
+        SonLimite = 1;
+        P486 = 1;
         TailleMainMemFix = 0x4D800;
+        TailleMainMemSprite = 0x12C000;
+        TailleMainMemLevel = 0x5E000;
     } else {
         ModeNormalAutorise = 1;
-        ToutSpriteAutorise = 1;
-        FondAutorise = 1;
         JumelleEffetAutorise = 1;
         CarteSonAutorisee = 1;
         SonLimite = 0;
-        P486 = 0;
+        ToutSpriteAutorise = 1;
+        FondAutorise = 1;
         TailleMainMemTmp = 0x22000;
-        TailleMainMemWorld = 0xF4C00;
         TailleMainMemLevel = 0x87C00;
+        TailleMainMemWorld = 0xF4C00;
         TailleMainMemSprite = 0xDF400;
         TailleMainMemFix = 0x4D800;
     }
@@ -801,8 +858,8 @@ void AfficheEntete(void) {
     title = "RAYMAN (US) v1.21";
     copyright = "(C) 1994-1995 UBI STUDIOS, FRANCE";
     printf("\n\n");
-    for (second_line = video; second_line != video + 160; second_line += 2)
-        second_line[1] = 0x1E;
+    for (i = 0; i < 80; i++)
+        video[i * 2 + 1] = 0x1E;
     for (i = 0; i < strlen(title); i++)
         video[i * 2] = title[i];
     second_line = video + 160;
@@ -813,17 +870,30 @@ void AfficheEntete(void) {
     }
 }
 
-int main_Ray(int argc, char** argv) {
-    //unlink("C:\\raytmp.tmp");
+/* DOS-only initialization; descriptive helper names below are INVENTED. */
+u8 detect_dos_version(u8 *major, u8 *minor);
+u8 detect_windows(u8 *major, u8 *minor);
+void sub_5BAD8(void);
+extern u8 HVerDos, LVerDos;
+extern char saved_argv[255];
+void main_Ray(int argc, char** argv) {
+    unlink("c:\\raytmp.tmp");
     AfficheEntete();
-    WindowsLance = 131; //detect_windows();
-    HVersionWindows = 4;
-    NVersionWindows = 0;
+    DosDetect = detect_dos_version(&HVerDos, &LVerDos);
+    WindowsLance = detect_windows(&NVersionWindows, &HVersionWindows);
     OptionMusicCdActive = 1;
     MusicCdActive = 1;
+    sub_5BAD8();
+    write_processor_flags(read_processor_flags() & 0xfffefeffUL);
+    write_debug_address0(0);
+    write_debug_address1(0);
+    write_debug_address2(0);
+    write_debug_address3(0);
+    write_debug_status(read_debug_status() & 0xffff1ff0UL);
+    write_debug_control(read_debug_control() & 0xde00);
     init_arg(argc, argv);
+    strcpy(saved_argv, argv[0]);
     PcMain();
-    return 0;
 }
 
 void PcMain(void) {

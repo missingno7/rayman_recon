@@ -51,19 +51,19 @@ void INIT_TXT_FEE(void) {
     display_item_t *item;
 
     for (i = 0; i <= 9; ++i) {
-        item = &text_to_display[i + 1];
+        item = &(text_to_display + 1)[i];
         if (strlen(item->text) != 0) {
-            text_to_display[i + 1].font_size = 2;
-            text_to_display[i + 1].ypos = 188;
-            text_to_display[i + 1].field_D5 = 0;
-            text_to_display[i + 1].is_fond = 0;
-            text_to_display[i + 1].xpos = 150;
-            item->color = 5;
+            (text_to_display + 1)[i].font_size = 2;
+            (text_to_display + 1)[i].xpos = 150;
+            (text_to_display + 1)[i].ypos = 188;
+            (text_to_display + 1)[i].color = 5;
+            (text_to_display + 1)[i].field_D5 = 0;
+            (text_to_display + 1)[i].is_fond = 0;
             INIT_TXT_BOX(item);
-            text_to_display[i + 1].xpos = text_to_display[i + 1].centered_x_pos;
-            text_to_display[i + 1].text[0] = ' ';
+            (text_to_display + 1)[i].xpos = (text_to_display + 1)[i].centered_x_pos;
+            (text_to_display + 1)[i].text[0] = ' ';
         } else {
-            text_to_display[i + 1].field_D5 = 0;
+            (text_to_display + 1)[i].field_D5 = 0;
         }
     }
     display_txt_fee = -1;
@@ -117,7 +117,7 @@ void init_fee(void) {
             strcpy(text_to_display[8].text, language_txt[51]); // /press the $ button to punch/
             strcpy(text_to_display[9].text, language_txt[52]); // /the longer you press/
             strcpy(text_to_display[10].text, language_txt[53]); // /the further you punch/
-            Deter_Option_Caract(text_to_display[8].text, options_jeu.fist, 255);
+            Deter_Option_Caract(text_to_display[8].text, (s16)options_jeu.fist, 255);
             break;
         }
         case 8: {
@@ -146,13 +146,14 @@ void init_fee(void) {
             strcpy(text_to_display[8].text, language_txt[71]); // (empty string)
             strcpy(text_to_display[9].text, language_txt[72]); // /to grab use the $ button/
             strcpy(text_to_display[10].text, language_txt[73]); // (empty string)
-            Deter_Option_Caract(text_to_display[8].text, options_jeu.fist, 255);
+            Deter_Option_Caract(text_to_display[9].text, (s16)options_jeu.fist, 255);
             break;
         }
         }
         break;
     case 2:
-        if (num_level == 11) {
+        switch (num_level) {
+        case 11: {
             is_fee = 1;
             strcpy(text_to_display[1].text, language_txt[74]); // /things are not going to get/
             strcpy(text_to_display[2].text, language_txt[75]); // /any easier for you rayman.../
@@ -164,11 +165,15 @@ void init_fee(void) {
             strcpy(text_to_display[8].text, language_txt[81]); // /now you can use your hair/
             strcpy(text_to_display[9].text, language_txt[82]); // /as a helicopter/
             strcpy(text_to_display[10].text, language_txt[83]); // /to do it press $ twice/
-            Deter_Option_Caract(text_to_display[8].text, options_jeu.jump, 255);
+            Deter_Option_Caract(text_to_display[9].text, (s16)options_jeu.jump, 255);
+            Deter_Option_Caract(text_to_display[10].text, (s16)options_jeu.jump, 255);
+            break;
+        }
         }
         break;
     case 3:
-        if (num_level == 11) {
+        switch (num_level) {
+        case 11: {
             is_fee = 1;
             strcpy(text_to_display[1].text, language_txt[84]); // /things are going to get/
             strcpy(text_to_display[2].text, language_txt[85]); // /really wild from now on rayman/
@@ -180,7 +185,10 @@ void init_fee(void) {
             strcpy(text_to_display[8].text, language_txt[91]); // /to run press $ while walking/
             strcpy(text_to_display[9].text, language_txt[92]); // (empty string)
             strcpy(text_to_display[10].text, language_txt[93]); // (empty string)
-            Deter_Option_Caract(text_to_display[8].text, options_jeu.action, 255);
+            Deter_Option_Caract(text_to_display[8].text, (s16)options_jeu.action, 255);
+            Deter_Option_Caract(text_to_display[9].text, (s16)options_jeu.action, 255);
+            break;
+        }
         }
         break;
     }
@@ -205,13 +213,15 @@ void wait_for_dialogue_fee(obj_t* obj, s16 time) {
 void DO_FEE_ETAPE(obj_t* obj) {
     /* 4E020 80172820 -O2 -msoft-float */
     u8 state = obj->config;
-    u8 cur_txt;
+
+
 
     switch (state) {
-        case 1:
+        case 1: {
+            u8 cur_txt;
             wait_for_dialogue_fee(obj, 100);
             cur_txt = display_txt_fee;
-            if (cur_txt == 5 || text_to_display[cur_txt + 1].text[0] == '\0')
+            if (cur_txt == 5 || (text_to_display + 1)[(s16)cur_txt].text[0] == '\0')
             {
                 skipToLabel(obj, 1, false);
                 obj->config = 0;
@@ -219,8 +229,9 @@ void DO_FEE_ETAPE(obj_t* obj) {
                 obj->timer = 0;
             }
             break;
+        }
         case 2:
-            wait_for_dialogue_fee(obj, 100);
+            wait_for_dialogue_fee(obj, 110);
             if (display_txt_fee == 7) {
                 display_txt_fee = 255;
                 obj->config = 3;
@@ -229,22 +240,24 @@ void DO_FEE_ETAPE(obj_t* obj) {
             break;
         case 3:
             obj->timer++;
-            if (obj->timer >= 51) {
+            if (obj->timer > 50) {
                 obj->config = 4;
                 display_txt_fee = 7;
                 obj->timer = 0;
             }
             break;
-        case 4:
+        case 4: {
+            u8 cur_txt;
             if (horloge[2] != 0)
                 obj->speed_y = -1;
             else
                 obj->speed_y = 0;
 
             cur_txt = display_txt_fee;
-            if (cur_txt < 9 && text_to_display[cur_txt + 1].text[0] != '\0')
+            if (cur_txt < 9 && (text_to_display + 1)[(s16)cur_txt + 1].text[0] != '\0')
                 wait_for_dialogue_fee(obj, 120);
             break;
+        }
         case 0:
         default:
             display_txt_fee = 255;
@@ -284,7 +297,7 @@ void DO_FEE(obj_t* obj) {
     s16 y;
     s16 y_fee;
 
-    png_or_fee = &level.objects[png_or_fee_id];
+    png_or_fee = png_or_fee_id + level.objects;
     old_txt = display_txt_fee;
     switch (obj->sub_etat)
     {
@@ -292,7 +305,7 @@ void DO_FEE(obj_t* obj) {
             if (obj->detect_zone_flag != 0) {
                 if (Abs(ray.x + ray.offset_bx - obj->x + 2) < 3) {
                     ray_main_etat = ray.main_etat;
-                    if (ray_main_etat < 2 || (ray.main_etat == 3 && (ray.sub_etat == 20 || ray.sub_etat == 21))) {
+                    if ((ray_main_etat == 1 || ray_main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 20) || (ray.main_etat == 3 && ray.sub_etat == 21)) {
                         set_sub_etat(obj, 1);
                         skipToLabel(obj, 0, true);
                         set_main_and_sub_etat(&ray, 3, 34);
@@ -315,7 +328,7 @@ void DO_FEE(obj_t* obj) {
         case 2:
         case 3:
             ray_main_etat = ray.main_etat;
-            if (ray_main_etat < 2 || (ray.main_etat == 3 && ray.sub_etat == 34))
+            if ((ray_main_etat == 1 || ray_main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 34))
                 set_main_and_sub_etat(&ray, 3, 35);
             if (ray.main_etat == 3 && ray.sub_etat == 36)
                 ray.anim_frame = -1;
@@ -331,10 +344,9 @@ void DO_FEE(obj_t* obj) {
                 obj->config = 0;
             break;
         case 6:
-            if (ray.main_etat == 3)
+            if (ray.main_etat == 3 && ray.sub_etat == 36)
+                set_sub_etat(&ray, 37);
             {
-                if (ray.sub_etat == 36)
-                    set_sub_etat(&ray, 37);
                 if (ray.main_etat == 3 && ray.sub_etat == 20)
                 {
                     remoteRayXToReach = ray.x;
@@ -354,17 +366,18 @@ void DO_FEE(obj_t* obj) {
         new_txt_fee = 1;
         if (display_txt_fee != 255)
         {
+            png_or_fee->flags.alive = 1;
             if (!png_or_fee->is_active) {
                 add_alwobj(png_or_fee); // added in PC version
             }
             png_or_fee->active_timer = 0;
-            png_or_fee->flags.alive = 1;
-            png_or_fee->flags.flip_x = 1;
             png_or_fee->x = xmap - png_or_fee->offset_bx;
             y_fee = (SCREEN_HEIGHT < 240) ? SCREEN_HEIGHT - 10 : SCREEN_HEIGHT - 20; // added to account for PC/PS1 difference
-            y = ymap - (png_or_fee->offset_by - y_fee);
+            y = ymap + y_fee - png_or_fee->offset_by;
+            png_or_fee->anim_frame = 0;
             png_or_fee->y = y;
             png_or_fee->screen_x = -png_or_fee->offset_bx;
+            png_or_fee->flags.flip_x = 1;
             png_or_fee->screen_y = y_fee - png_or_fee->offset_by;
             old_txt_fee = old_txt;
             png_or_fee->init_x = png_or_fee->x;
@@ -372,9 +385,8 @@ void DO_FEE(obj_t* obj) {
         }
     }
     if (new_txt_fee != 0) {
-        // NOTE: fixed out-of-bounds access: old_txt_fee may be 255!
-        if (old_txt_fee != 255 && text_to_display[old_txt_fee].ypos < SCREEN_HEIGHT + 20) {
-            text_to_display[old_txt_fee].ypos++;
+        if ((text_to_display + 1)[old_txt_fee].ypos < SCREEN_HEIGHT + 20) {
+            (text_to_display + 1)[old_txt_fee].ypos++;
         } else {
             new_txt_fee = 0;
         }
@@ -389,9 +401,9 @@ void DO_FEE(obj_t* obj) {
         png_or_fee->x += 4;
         png_or_fee->screen_x += 4;
         if (png_or_fee->screen_x > 310) {
+            png_or_fee->is_active = 0;
             png_or_fee->anim_frame = 0;
             png_or_fee->flags.alive = 0;
-            png_or_fee->is_active = 0;
         }
     }
 }
@@ -402,25 +414,23 @@ void DoFeeRaymanZDD(obj_t* obj) {
     u8 ray_main_etat;
 
     sub_etat = obj->sub_etat;
-    if (sub_etat != 0) {
-        ray_in_fee_zone = 0;
-    } else {
+    if (sub_etat == 0) {
         ray_main_etat = ray.main_etat;
         if (ray_main_etat == 2) {
-            ray_in_fee_zone = 1;
             ray.speed_x = 0;
             ray.link = 0;
+            ray_in_fee_zone = 1;
             decalage_en_cours = 0;
-        } else if (ray_main_etat == 1 || ray_main_etat == 0 || (ray_main_etat == 3 && ray.sub_etat == 20)) {
-            remoteRayXToReach = (obj->x - ray.offset_bx - 2) & ~1;
-            if (ray.x & 1) {
+        } else if (ray_main_etat == 1 || ray_main_etat == 0 ||
+                   (ray_main_etat == 3 && ray.sub_etat == 20)) {
+            remoteRayXToReach = obj->x - (ray.offset_bx + 2);
+            if (ray.x & 1)
                 remoteRayXToReach |= 1;
-            } else {
+            else
                 remoteRayXToReach &= ~1;
-            }
-            ray_in_fee_zone = 0;
-        } else {
             ray_in_fee_zone = 0;
         }
+    } else {
+        ray_in_fee_zone = 0;
     }
 }

@@ -252,7 +252,7 @@ void DrawBlackBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width);
 void DrawBorderBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width, u16 colors);
 void DrawFondBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width, u8 fond_type);
 void DrawWldPointPlan2Normal(u8* buffer, s32 x, s32 y);
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void InitTextMode(void);
 void AllocVariablesAutorisee(void);
 void* JumelleCalloc(u32 count, u32 size);
@@ -391,32 +391,30 @@ void get_spi_zdc(obj_t *param_1, s16 *param_2, s16 *param_3, s16 *param_4, s16 *
 
 void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
-    u8 sub_etat;
+    s16 cen_x = get_center_x(spipl_obj);
+    s16 cen_y = get_center_y(spipl_obj);
     s16 poing_x; s16 poing_y_1; s16 poing_y_2;
     s16 spipl_x; s16 spipl_y_1; s16 spipl_y_2;
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    s16 spipl_spr_x; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_h;
     u8 new_flip;
-    s16 cen_x = get_center_x(spipl_obj);
-    s16 cen_y = get_center_y(spipl_obj);
 
     if (
         (
             spipl_obj->main_etat == 0 &&
-            (sub_etat = spipl_obj->sub_etat, sub_etat == 27 || sub_etat == 24 || sub_etat == 30 || sub_etat == 11)
+            (spipl_obj->sub_etat == 27 || spipl_obj->sub_etat == 24 || spipl_obj->sub_etat == 30 || spipl_obj->sub_etat == 11)
         ) ||
         (spipl_obj->main_etat == 1 && spipl_obj->sub_etat == 2)
     ) {
         if (poing.is_active) {
-            poing_x = poing_obj->x + poing_obj->offset_bx;
-            poing_y_1 = poing_obj->y + poing_obj->offset_by;
-            poing_y_2 = poing_obj->y + poing_obj->offset_hy;
+            poing_x = (s16)poing_obj->x + poing_obj->offset_bx;
+            poing_y_1 = (s16)poing_obj->y + poing_obj->offset_by;
+            poing_y_2 = (s16)poing_obj->y + poing_obj->offset_hy;
 
-            spipl_x = spipl_obj->x + spipl_obj->offset_bx;
-            spipl_y_1 = spipl_obj->y + spipl_obj->offset_by + 5;
-            spipl_y_2 = spipl_obj->y + spipl_obj->offset_hy - 5;
+            spipl_x = (s16)spipl_obj->x + spipl_obj->offset_bx;
+            spipl_y_1 = (s16)spipl_obj->y + spipl_obj->offset_by + 5;
+            spipl_y_2 = (s16)spipl_obj->y + spipl_obj->offset_hy - 5;
             if (
                 (poing_y_1 <= spipl_y_1 || poing_y_2 <= spipl_y_1) &&
                 (poing_y_1 >= spipl_y_2 || poing_y_2 >= spipl_y_2) &&
@@ -466,15 +464,13 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
             spipl_obj->main_etat == 0 && spipl_obj->sub_etat == 20 &&
             spipl_obj->anim_frame == 27
         ) {
+            s16 spipl_spr_x; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_h;
             i = 0;
             cur_obj = &level.objects[i];
             nb_objs = level.nb_objects;
             while (i < nb_objs) {
                 if ((cur_obj->type == TYPE_DARD_PLAFOND) && !cur_obj->is_active) {
                     GET_SPRITE_POS(spipl_obj, 2, &spipl_spr_x, &spipl_spr_y, &spipl_spr_w, &spipl_spr_h);
-                    cur_obj->speed_x = 0;
-                    cur_obj->speed_y = 32;
-                    cur_obj->cmd_offset = -1;
                     cur_obj->flags.flip_x = 0;
 
                     cur_obj->init_x =
@@ -485,9 +481,12 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
                     cur_obj->y =
                             spipl_spr_y - cur_obj->offset_by + (spipl_spr_h >> 1);
 
+                    cur_obj->speed_x = 0;
+                    cur_obj->speed_y = 32;
                     cur_obj->is_active = 1;
                     cur_obj->flags.alive = 1;
                     add_alwobj(cur_obj);
+                    cur_obj->cmd_offset = -1;
                     cur_obj->flags.read_commands = 1;
                     cur_obj->nb_cmd = 0;
                     if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)
@@ -505,7 +504,7 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     }
 
     if (spipl_obj->main_etat == 0 &&
-        (sub_etat = spipl_obj->sub_etat, sub_etat == 20 || sub_etat == 13 || sub_etat == 23)
+        (spipl_obj->sub_etat == 20 || spipl_obj->sub_etat == 13 || spipl_obj->sub_etat == 23)
     ) {
         new_flip = ray.x > spipl_obj->x;
         spipl_obj->flags.flip_x = new_flip;
@@ -514,8 +513,6 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
 
 void DO_SPIDER_PLAFOND_POING_COLLISION(obj_t* obj, s16 sprite) {
     // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
-    s32 main_etat;
-    u8 new_sub_etat;
 
     if (--obj->hit_points == 0) {
         if (
@@ -530,26 +527,23 @@ void DO_SPIDER_PLAFOND_POING_COLLISION(obj_t* obj, s16 sprite) {
                  obj->sub_etat == 28 || obj->sub_etat == 7)
             )
         ) {
-            new_sub_etat = 19;
+            set_main_and_sub_etat(obj, 0, 19);
         } else {
-            new_sub_etat = 18;
+            set_main_and_sub_etat(obj, 0, 18);
         }
-        set_main_and_sub_etat(obj, 0, new_sub_etat);
         obj->speed_y = -8;
         obj->speed_x = 0;
         obj->flags.read_commands = 0;
     } else {
-        main_etat = obj->main_etat;
-        if ((main_etat == 1 && obj->sub_etat == 2) ||
-            (main_etat == 0 &&
+        if ((obj->main_etat == 1 && obj->sub_etat == 2) ||
+            (obj->main_etat == 0 &&
              (obj->sub_etat == 11 || obj->sub_etat == 29 ||
-              obj->sub_etat == 25 || obj->sub_etat == 26 ||
+              obj->sub_etat == 26 || obj->sub_etat == 25 ||
               obj->sub_etat == 27 || obj->sub_etat == 24 ||
               obj->sub_etat == 30))) {
             set_main_and_sub_etat(obj, 0, 14);
-            obj->speed_y = 0;
-            obj->speed_x = 0;
-        } else if (main_etat == 0 &&
+            obj->speed_x = obj->speed_y = 0;
+        } else if (obj->main_etat == 0 &&
                    (obj->sub_etat == 12 || obj->sub_etat == 13 ||
                     obj->sub_etat == 23 || obj->sub_etat == 20)) {
             if (obj->x < ray.x) {
@@ -574,105 +568,80 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
         (obj->main_etat == 0 && obj->sub_etat == 30) ||
         (obj->main_etat == 1 && obj->sub_etat == 2)
     ) {
-        if (obj->flags.flip_x != (u8)(ray.x > obj->x)) {
+        prev_flip = obj->flags.flip_x != (ray.x > obj->x);
+        if (prev_flip) {
+            obj->speed_x = 0;
             new_flip = ray.x > obj->x;
             obj->flags.flip_x = new_flip;
-            obj->speed_x = 0;
             obj->speed_y = 0;
             set_main_and_sub_etat(obj, 0, 24);
         }
     }
 }
 
+/* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
+ * Abs/Sign/Min/Max spellings are ordinary C; helper lowering remains OPEN. */
+#define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
+#define SPIDER_SIGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
+#define SPIDER_MIN(a,b) ((a) < (b) ? (a) : (b))
+#define SPIDER_MAX(a,b) ((a) > (b) ? (a) : (b))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
-    s16 dx;
-    s16 dy;
-    s16 distance;
-    s16 ray_x;
-    s16 ray_y;
-    s16 obj_x;
-    s16 obj_y;
-    s16 speed_x;
-    s16 speed_y;
-    s16 sign_x;
-    s16 sign_y;
+    s16 dx, dy, distance;
     s16 abs_speed_x;
-    s16 abs_speed_y;
-
-    ray_x = (s16)(ray.x + ray.offset_bx);
-    ray_y = (s16)(ray.y + ray.offset_by);
-    obj_x = (s16)(obj->x + obj->offset_bx);
-    obj_y = (s16)(obj->y + obj->offset_by);
-    if (obj->cmd == 1) {
-        if (ray_x > obj_x)
-            obj->flags.flip_x = 0;
-        else if (ray_x < obj_x)
-            obj->flags.flip_x = 1;
-    } else {
-        dx = (s16)(ray_x - obj_x);
+    s32 speed;
+    if (obj->cmd != 1) {
+        dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
         if (position_ray)
-            dy = (s16)(ray_y - obj_y);
+            dy = (s16)ray.y + ray.offset_by - ((s16)obj->y + obj->offset_by);
         else
-            dy = (s16)(ray.y + ((u8)ray.offset_by >> 1) - obj_y);
-        distance = (s16)(abs(dx) + abs(dy));
-        if (ray_y > (s16)(obj->y + obj->offset_by - obj->offset_hy) &&
-            ((ray_x < obj_x && obj->flags.flip_x) ||
-             (ray_x > obj_x && !obj->flags.flip_x))) {
-            if (distance != 0) {
-                dx = (s16)(((s32)dx << 5) / distance);
-                dy = (s16)(((s32)dy << 5) / distance);
+            dy = ray.y + (ray.offset_by >> 1) - (obj->y + obj->offset_by);
+        distance = SPIDER_ABS((s32)dx) + SPIDER_ABS((s32)dy);
+        if (ray.y + ray.offset_by > obj->y + (obj->offset_by - obj->offset_hy) &&
+            ((ray.x + ray.offset_bx > obj->x + obj->offset_bx && !obj->flags.flip_x) ||
+             (ray.x + ray.offset_bx < obj->x + obj->offset_bx && obj->flags.flip_x))) {
+            if (distance > 0) {
+                dx = ((s32)dx << 5) / distance;
+                dy = ((s32)dy << 5) / distance;
             }
-            speed_y = obj->speed_y;
-            if (dy > speed_y) sign_y = 1;
-            else if (dy < speed_y) sign_y = -1;
-            else sign_y = 0;
-            obj->speed_y = (s16)(speed_y + sign_y);
-            if (obj->speed_y < 0) obj->speed_y = 0;
-            if (obj->speed_y > 32) obj->speed_y = 32;
+            speed = obj->speed_y + SPIDER_SIGN(dy - obj->speed_y);
+            obj->speed_y = SPIDER_MAX(SPIDER_MIN(speed, 32), 0);
             if (obj->speed_y != 0) {
-                speed_x = obj->speed_x;
-                if (dx > speed_x) sign_x = 1;
-                else if (dx < speed_x) sign_x = -1;
-                else sign_x = 0;
-                obj->speed_x = (s16)(speed_x + sign_x);
-                if (obj->speed_x < -32) obj->speed_x = -32;
-                if (obj->speed_x > 32) obj->speed_x = 32;
+                speed = obj->speed_x + SPIDER_SIGN(dx - obj->speed_x);
+                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
             } else if (obj->flags.flip_x) {
-                if (obj->speed_x < dx && obj->speed_x < 32)
-                    ++obj->speed_x;
-                else if (obj->speed_x > dx && obj->speed_x > -32)
-                    --obj->speed_x;
+                speed = obj->speed_x - (dx > obj->speed_x);
+                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
             } else {
-                if (obj->speed_x < dx && obj->speed_x < 32)
-                    ++obj->speed_x;
-                else if (obj->speed_x > dx && obj->speed_x > -32)
-                    --obj->speed_x;
+                speed = obj->speed_x + (dx < obj->speed_x);
+                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
             }
         } else {
-            obj->speed_x = (s16)((obj->speed_x << 1));
-            obj->speed_y = (s16)((obj->speed_y << 1));
-            if (obj->speed_x > 32) obj->speed_x = 32;
-            if (obj->speed_x < -32) obj->speed_x = -32;
-            if (obj->speed_y > 32) obj->speed_y = 32;
-            if (obj->speed_y < -32) obj->speed_y = -32;
+            obj->speed_x = SPIDER_MAX(SPIDER_MIN(obj->speed_x * 2, 32), -32);
+            obj->speed_y = SPIDER_MIN(obj->speed_y * 2, 32);
         }
-        if (obj->speed_x == 0 && obj->speed_y == 0)
-            obj->speed_x = obj->flags.flip_x ? -1 : 1;
-        abs_speed_x = (s16)abs(obj->speed_x);
-        abs_speed_y = (s16)abs(obj->speed_y);
-        if (abs_speed_x * 3 < abs_speed_y * 4)
-            obj->anim_frame = 0;
-        else if (abs_speed_y * 3 < abs_speed_x * 4)
-            obj->anim_frame = 9;
-        else if (obj->speed_x < 0)
-            obj->anim_frame = 10;
-        else
-            obj->anim_frame = 11;
-        if (obj->speed_x > 0 && obj->flags.flip_x)
+    } else {
+        if (ray.x + ray.offset_bx > obj->x + obj->offset_bx)
             obj->flags.flip_x = 0;
-        else if (obj->speed_x < 0 && !obj->flags.flip_x)
+        else if (ray.x + ray.offset_bx < obj->x + obj->offset_bx)
             obj->flags.flip_x = 1;
     }
+    if (obj->speed_x == 0 && obj->speed_y == 0)
+        obj->speed_x = obj->flags.flip_x ? -1 : 1;
+    abs_speed_x = SPIDER_ABS((s32)obj->speed_x);
+    if (abs_speed_x * 3 < obj->speed_y)
+        obj->anim_frame = 0;
+    else if (abs_speed_x * 4 < obj->speed_y * 3)
+        obj->anim_frame = 0;
+    else if (abs_speed_x * 3 < obj->speed_y * 4)
+        obj->anim_frame = 11;
+    else if (abs_speed_x < obj->speed_y * 3)
+        obj->anim_frame = 10;
+    else
+        obj->anim_frame = 9;
+    if (obj->speed_x > 0 && obj->flags.flip_x)
+        obj->flags.flip_x = 0;
+    else if (obj->speed_x < 0 && !obj->flags.flip_x)
+        obj->flags.flip_x = 1;
 }
 
 void DO_SPIDER_COMMAND(obj_t* obj) {
@@ -725,7 +694,7 @@ void DO_SPIDER_COMMAND(obj_t* obj) {
                         TEST_FIN_BLOC(obj);
                     break;
                 case 1:
-                    if (!(block_flags[calc_typ_travd(obj, 0)] >> BLOCK_FULLY_SOLID & 1))
+                    if (!(block_flags[calc_typ_travd(obj, 0)] & 1))
                         SET_X_SPEED(obj);
                     else
                         obj->speed_x = 0;
