@@ -7407,6 +7407,41 @@
     "addr": "1:037e4",
     "name": "INVENTED",
     "evidence": "Hand-written assembly ABI proven by docs/reference/lowlevel_abi.h and DOS body; callee of sub_3BE20."
+   },
+   "sub_5BB78": {
+    "addr": "1:5bb78",
+    "name": "INVENTED",
+    "evidence": "Direct DOS call from load_big_ray at 1:360a3; standalone callee confirmed by disassembly at 1:5bb78"
+   },
+   "sub_5BB94": {
+    "addr": "1:5bb94",
+    "name": "INVENTED",
+    "evidence": "Direct DOS call from load_world at 1:34e06; callee address from DOS disassembly"
+   },
+   "LoadPlan0InVignet": {
+    "addr": "1:373d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation 1:473d0; DOS function boundary 1:373d0"
+   },
+   "GetStringTxt": {
+    "addr": "1:37dd8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocate_PLAN0": {
+    "addr": "1:37bb0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse load.c address annotation; DOS function boundary 1:37bb0"
+   },
+   "LoadPcxInVignet": {
+    "addr": "1:36d68",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse load.c address annotation; DOS function boundary 1:36d68"
+   },
+   "PLAN0FND_to_bits_planes": {
+    "addr": "1:37c10",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse load.c address annotation; DOS function boundary 1:37c10"
    }
   },
   "data": {
@@ -13516,6 +13551,108 @@
     "type": "u32",
     "name": "ANDROID",
     "evidence": "Android plan0bit_nb_bytes size4 .bss; DOS 1:2beab passes dword as row stride to plan0 renderer 1:3257; Rayverse dword_CD7F4."
+   },
+   "PLAN2": {
+    "addr": "2:3d804",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD804; Android size 4"
+   },
+   "TailleMainMemLevel": {
+    "addr": "2:3d844",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD844; Android .bss size 4; DOS passes this size to init_memory at 1:364ef"
+   },
+   "TailleMainMemSprite": {
+    "addr": "2:3d848",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD848; Android .bss size 4; DOS reads this size at 1:364d4"
+   },
+   "TailleMainMemFix": {
+    "addr": "2:3d898",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD898; Android .bss size 4; DOS passes this size to init_memory at 1:3650f"
+   },
+   "TailleMainMemWorld": {
+    "addr": "2:3d89c",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD89C; Android .bss size 4; DOS passes this size to init_memory at 1:364ff"
+   },
+   "plan0_width": {
+    "addr": "2:3f7de",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7DE; Android size 2"
+   },
+   "plan0_height": {
+    "addr": "2:3f7e4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7E4; Android size 2"
+   },
+   "PLAN0": {
+    "addr": "2:3d800",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD800; Android .bss size 4"
+   },
+   "Plan0NumPcx": {
+    "addr": "2:4ef47",
+    "type": "s8[10]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CEF47; Android .bss size 10"
+   },
+   "BiosCheckSum": {
+    "addr": "2:3fa2b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA2B; Android .bss size 1"
+   },
+   "VideoBiosCheckSum": {
+    "addr": "2:3fa28",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA28; Android .bss size 1"
+   },
+   "nb_loaded_eta": {
+    "addr": "2:3fa9b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA9B; Android .bss size 1"
+   },
+   "nb_fix_eta": {
+    "addr": "2:3fa9a",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA9A; Android .bss size 1"
+   },
+   "loaded_eta": {
+    "addr": "2:3ce48",
+    "type": "eta_t**[100]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CCE48; Android .bss size 400"
+   },
+   "wldobj": {
+    "addr": "2:50d18",
+    "type": "obj_t[100]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0D18 converts to obj2 2:50d18; DOS load_big_ray uses 0x84-byte object strides and member offset 0x28; Android .bss size 13200; shared obj_t is 132 bytes"
+   },
+   "ToutSpriteAutorise": {
+    "addr": "2:3fa18",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA18; Android .bss size 1"
+   },
+   "new_sprite_deform": {
+    "addr": "2:3d7bc",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD7BC; Android .bss size 4; DOS LOAD_ALL_FIX stores block_malloc result at 1:36d40"
    }
   }
  }
