@@ -410,11 +410,11 @@ def main(argv):
         if "--install" in opts:
             inst = opts["--install"]
         else:
-            prof = wcc.profile(opts.get("--profile", "game"))
+            prof = wcc.profile(opts.get("--profile", "asm" if src.suffix.lower() == ".asm" else "game"))
             inst, flags = prof["install"], list(prof["flags"]) + flags
         out = BUILD / "match" / f"{src.stem}.{os.getpid()}.obj"
         out.parent.mkdir(parents=True, exist_ok=True)
-        rc, text = wcc.compile_c(src.resolve(), out, flags, inst)
+        rc, text = wcc.build(src.resolve(), out, flags, inst)
         if rc:
             print(text)
             return 2

@@ -19,7 +19,10 @@ Hard rules
   target verified. Masked / approximate equality is never STRICT. Never weaken `tools/match.py` to fit a candidate;
   if a check looks wrong, prove it with independent evidence and report it.
 - No inline asm, `#pragma aux` byte tricks, `_emit`, copied bytes, artificial dead code or volatile hacks to force
-  bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first).
+  bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first):
+  `.asm` units (profile `asm`, pinned WASM through tools/wcc.py `build`, checked by the same match.py/verify.py).
+  Readable instructions, symbolic labels and typed DB/DW/DD data only - never copied code bytes, INCBIN or padding
+  invented to hide a mismatch; every CODE segment starts with a public (whole contribution compared).
   Allowed: `#pragma aux NAME parm [...] value [...] modify [...]` that only declares the register ABI of an external
   hand-written assembly routine (e.g. DisplayAnyPictureNormal, proven from its DOS callers) - no code in pragmas.
   Allowed (user decision 2026-10-21), evidence-gated: a Watcom `#pragma aux NAME = ...` inline-code sequence ONLY

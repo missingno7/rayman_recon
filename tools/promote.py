@@ -162,7 +162,8 @@ def default_provenance(fname):
 
 def register_unit(name, src, oracle, prov):
     units = load_json(CONFIG / "units.json")
-    units["units"].setdefault(name, {"source": src, "oracle": oracle, "profile": "game", "functions": {}})
+    units["units"].setdefault(name, {"source": src, "oracle": oracle, "profile": "asm" if src.lower().endswith(".asm") else "game",
+                                        "functions": {}})
     dump_json(CONFIG / "units.json", units)
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "verify.py"), "--accept", name], cwd=ROOT)
     units = load_json(CONFIG / "units.json")

@@ -18,7 +18,13 @@
     "BINW/WCC386.EXE": "a257b6a25a95f02b404c4571839297af0a8cd941479f4dd19149ea949fd88c42",
     "BINNT/WLINK.EXE": "b552cbf3627c7f4228dd8769c766047cf1ecb1d290fd3708b34b0e0589753ea3",
     "LIB386/DOS/CLIB3R.LIB": "ab66fffd9a3bc898d949921bab9f584e566fa13fd9eedb111df7b801f452ff38",
-    "LIB386/MATH387R.LIB": "52b07a575abdd7685d05cf0924697bdf3959486240a5a879cdb05e74ee8f5e71"
+    "LIB386/MATH387R.LIB": "52b07a575abdd7685d05cf0924697bdf3959486240a5a879cdb05e74ee8f5e71",
+    "BINNT/WASM.EXE": "b533dd0b4685cd6e1b32a4dcb2e83624a5bf36d61453af6d171527602c049d7e",
+    "BINW/WASM.EXE": "3a1dd9a2b11918ae103919a5f68e11655f961ba698277307b2abf3f995a37667"
+   },
+   "wasm": {
+    "nt": "BINNT/WASM.EXE",
+    "payload": "BINW/WASM.EXE"
    }
   },
   "wc105": {
@@ -37,7 +43,13 @@
     "BINNT/WCC386.EXE": "115de0dd01c6513f53f12632be3956b43bf7360e46a5ae100ce33134df479469",
     "BINW/WCC386.EXE": "1b97a68f7b8a3efd89b05f64ce99836b1e533f398699305f96dc423254939d6a",
     "BINNT/WLINK.EXE": "545ed057ca6e7fa9b102c81cc9bba16aa0ec220b99e4328a9332f102ffe90b79",
-    "LIB386/DOS/CLIB3R.LIB": "151fc7d895b171145466f77b1624d27952fa631971b0fc33d479e02eda3bbcc8"
+    "LIB386/DOS/CLIB3R.LIB": "151fc7d895b171145466f77b1624d27952fa631971b0fc33d479e02eda3bbcc8",
+    "BINNT/WASM.EXE": "115de0dd01c6513f53f12632be3956b43bf7360e46a5ae100ce33134df479469",
+    "BINW/WASM.EXE": "06c5bb2488d3b5f936d01c1006712ba618c8c802e1cecb8372db16d5e75adad8"
+   },
+   "wasm": {
+    "nt": "BINNT/WASM.EXE",
+    "payload": "BINW/WASM.EXE"
    }
   },
   "wc100a": {
@@ -93,6 +105,15 @@
     "-fpc"
    ],
    "status": "STRONG for -oa -ot -s -5r on GOG v1.21 rand TU (2 STRICT functions); -on/-oe undetermined (-oneatx/-otexan equally STRICT there); compiler release: 10.6 tested, 10.0/10.0a/10.6 code-identical on myRand probes; runtime libs = 10.6 (libscan). See docs/COMPILER.md. -fpc PROVEN by jumelle InitMatriceJumelle (software FP, CLIB3R __FD* helpers + MATH3R exp); neutral for all integer units."
+  },
+  "asm": {
+   "install": "wc106",
+   "flags": [
+    "-zq",
+    "-3r",
+    "-bt=dos"
+   ],
+   "status": "WASM 10.6 reproduces the low-level block encodings (build/workers/w5_asmscope/REPORT.md: 10.5/10.6 and -3r/-5r give identical bytes on the probes); historical assembler identity OPEN. Used for .asm units (hand-written assembly only, AGENTS.md)."
   }
  }
 }

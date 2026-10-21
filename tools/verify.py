@@ -43,7 +43,7 @@ def verify_unit(name, unit, images):
     out.mkdir(parents=True)
     prof = wcc.profile(unit["profile"])
     obj = out / (Path(unit["source"]).stem + ".obj")
-    rc, text = wcc.compile_c(ROOT / unit["source"], obj, prof["flags"], prof["install"])
+    rc, text = wcc.build(ROOT / unit["source"], obj, prof["flags"], prof["install"])
     if rc:
         return None, f"compile failed:\n{text}"
     if unit["oracle"] not in images:

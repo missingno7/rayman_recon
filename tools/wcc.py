@@ -35,14 +35,16 @@ def profile(name):
     return load_json(CONFIG / "toolchain.json")["profiles"][name]
 
 
-def compile_c(src, out, flags, inst="wc106", extra_include=()):
+def compile_c(src, out, flags, inst="wc106", extra_include=(), tool="wcc386"):
     ent, base = install(inst)
     tmp = BUILD / "tmp" / f"wcc{os.getpid()}"
     tmp.mkdir(parents=True, exist_ok=True)
     inc = [str(base / "H")] + [str(p) for p in extra_include] + [str(ROOT / "src" / "include")]
     env = {"SYSTEMROOT": os.environ.get("SYSTEMROOT", "C:\\Windows"), "WATCOM": str(base),
            "INCLUDE": ";".join(inc), "PATH": str(base / "BINNT"), "TMP": str(tmp), "TEMP": str(tmp)}
-    exe = base / ent["wcc386"]["nt"]
+    if tool not in ent:
+        raise SystemExit(f"{inst}: no pinned {tool}")
+    exe = base / ent[tool]["nt"]
     # Watcom accepts '/' as an option prefix: always pass absolute backslash paths.
     cmd = [str(exe)] + list(flags) + [str(Path(src).resolve()), f"-fo={Path(out).resolve()}"]
     try:
@@ -52,6 +54,26 @@ def compile_c(src, out, flags, inst="wc106", extra_include=()):
             f.unlink()
         tmp.rmdir()
     return r.returncode, r.stdout + r.stderr
+
+
+def build(src, out, flags, inst="wc106"):
+    """Compile a .c unit with wcc386 or assemble a hand-written .asm unit with the pinned WASM of the same install.
+
+    .asm rule (checked here, never in the comparator): every CODE segment must have a public at offset 0, so the
+    per-public extents compare the whole contribution, including embedded data between routines."""
+    if Path(src).suffix.lower() != ".asm":
+        return compile_c(src, out, flags, inst)
+    rc, text = compile_c(src, out, flags, inst, tool="wasm")
+    if rc:
+        return rc, text
+    import omf
+    for m in omf.load(out):
+        for si, seg in enumerate(m.segments):            # 1-based OMF indices; slot 0 is unused
+            if seg is None or seg.cls.upper() != "CODE" or not seg.size:
+                continue
+            if not any(s == si and o == 0 for _, s, o, _ in m.publics):
+                return 1, text + f"\n{src}: CODE segment {seg.name} has no public at offset 0 (uncompared prefix)"
+    return 0, text
 
 
 def main(argv):
