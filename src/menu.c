@@ -2020,11 +2020,11 @@ void INIT_GRAPHIC_SCREEN(void) {
         options.sound_volume = 2;
     }
 
-    options.Frequence = (s16)SizeScreen;
-    options.fixon = Frequence;
-    options.BackgroundOn = (s16)fixon;
-    options.ScrollDiffOn = BackgroundOptionOn;
-    options.field_E = ScrollDiffOn;
+    options.SizeScreen = (s16)SizeScreen;
+    options.Frequence = Frequence;
+    options.fixon = (s16)fixon;
+    options.BackgroundOn = BackgroundOptionOn;
+    options.ScrollDiffOn = ScrollDiffOn;
     VideoSpeed = (s16)CalcSpeed();
     InitParamGraphicsScreen();
 }
@@ -2964,9 +2964,8 @@ s16 display_box_msg_prg(u32 a1) {
 
 /* DOS 1:3f904; menu.c:1255 */
 void display_box_msg(display_item_t* box) {
-    void (*affiche_screen)(void) = pAFFICHE_SCREEN;
     dialog_display_item_ptr = box;
-    if (affiche_screen) {
+    if (pAFFICHE_SCREEN) {
         pAFFICHE_SCREEN();
     }
     endsynchro();

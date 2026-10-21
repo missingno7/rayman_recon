@@ -9269,7 +9269,7 @@
      ]
     },
     "display_box_msg": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9462,7 +9462,7 @@
      ]
     },
     "INIT_GRAPHIC_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
