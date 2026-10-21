@@ -213,9 +213,16 @@ def main(argv):
                 if h in SHARED or not hsrc.is_file():
                     continue
                 if hdst.exists():
-                    if hdst.read_bytes() != hsrc.read_bytes():
-                        raise SystemExit(f"local header {hdst.name} exists in src/ with different content; "
-                                         "reconcile it first (it may belong to another unit)")
+                    if hdst.read_bytes() == hsrc.read_bytes():
+                        continue
+                    users = {os.path.normcase(os.path.realpath(p)) for p in src_dir.glob("*.c")
+                             if f'#include "{hdst.name}"' in p.read_text(encoding="utf-8", errors="replace")}
+                    mine = {os.path.normcase(os.path.realpath(d)) for _, _, d in plan}
+                    if not users or not users <= mine:
+                        raise SystemExit(f"local header {hdst.name} exists in src/ with different content and is "
+                                         f"included by units outside this run; reconcile it first")
+                    copy_into(w, hsrc, hdst)                  # private to the units replaced in this run
+                    print(f"  local header {h} updated (used only by this run's units)")
                     continue
                 copy_into(w, hsrc, hdst)
                 print(f"  local header {h} -> src/")
