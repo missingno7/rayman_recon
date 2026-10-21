@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #define PC
 typedef s32 ObjType;
 typedef unsigned char bool;
@@ -51,15 +52,16 @@ void DoPlatformPoingCollision(obj_t* obj, s16 sprite);
 
 void DO_SPECIAL_PLATFORM(obj_t* obj) {
     /* 3FFAC 801647AC -O2 -msoft-float */
-    s16 obj_type;
     s16 plat_x; s16 plat_y; s16 plat_w; s16 plat_h;
     u8 unk_2;
     u16 test_1;
+    s32 speed_threshold;
     s16 unk_1;
     u8 is_rolling_speed;
     if (RayEvts.tiny) unk_1 = 0x100;
     else unk_1 = 0x200;
-    is_rolling_speed = Abs(decalage_en_cours) > unk_1;
+    speed_threshold = unk_1;
+    is_rolling_speed = Abs(decalage_en_cours) > speed_threshold;
 
     switch (obj->type)
     {
@@ -86,19 +88,18 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     set_main_and_sub_etat(&ray, 0, 0);
                     ray_jump();
                     obj->ray_dist = 10000;
-                    jump_time = 12;
                     ray.speed_y -= 3;
-                    obj_type = obj->type;
-                    if (obj_type == TYPE_MARK_AUTOJUMP_PLAT)
+                    jump_time = 12;
+                    if (obj->type == TYPE_MARK_AUTOJUMP_PLAT)
                         set_main_and_sub_etat(obj, 0, 17);
-                    else if (obj_type == TYPE_CAISSE_CLAIRE)
+                    else if (obj->type == TYPE_CAISSE_CLAIRE)
                     {
                         if (!(obj->main_etat == 0 && obj->sub_etat == 2))
                             set_main_and_sub_etat(obj, 0, 1);
                         else
                             set_main_and_sub_etat(obj, 0, 3);
                     }
-                    else if (obj_type == TYPE_GOMME)
+                    else if (obj->type == TYPE_GOMME)
                     {
                         if (obj->main_etat == 0 && obj->sub_etat == 0)
                         {
@@ -302,7 +303,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                         if (ray.main_etat == 2)
                             obj->ray_dist = 10000;
 
-                        if (!(obj->speed_y < -2 || obj->speed_y > 2))
+                        if (inrange(obj->speed_y, -2, 2))
                             ray.speed_y -= 2;
                         else if (obj->speed_y < -2) {
                             ray.speed_y += obj->speed_y - 2;
@@ -370,7 +371,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                         if (ray.main_etat == 2)
                             obj->ray_dist = 10000;
 
-                        if (!(obj->speed_y < -2 || obj->speed_y > 2))
+                        if (inrange(obj->speed_y, -2, 2))
                             ray.speed_y -= 2;
                         else if (obj->speed_y < -2) {
                             ray.speed_y += obj->speed_y;
