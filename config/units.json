@@ -11075,7 +11075,7 @@
      ]
     },
     "sub_194f4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11123,7 +11123,7 @@
      ]
     },
     "sub_19ac8": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11141,7 +11141,7 @@
      ]
     },
     "sub_19b9c": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11183,7 +11183,7 @@
      ]
     },
     "sub_19d30": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11213,31 +11213,31 @@
      ]
     },
     "sub_19f10": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "sub_19fa0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "sub_1a02c": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "sub_1a0e4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "sub_1a158": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11249,7 +11249,7 @@
      ]
     },
     "sub_1a280": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11315,7 +11315,7 @@
      ]
     },
     "sub_1a440": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11375,7 +11375,7 @@
      ]
     },
     "sub_1a6c4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11393,7 +11393,7 @@
      ]
     },
     "sub_1a734": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
