@@ -9976,7 +9976,7 @@
    "profile": "game",
    "functions": {
     "rayman_sound_fatal_error": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10148,7 +10148,7 @@
      ]
     },
     "OBJ_IN_COL_ZDC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -10231,7 +10231,7 @@
      ]
     },
     "sub_3E66C": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -10276,7 +10276,7 @@
      ]
     },
     "KeyOn": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

@@ -1,7 +1,7 @@
 /* 1:2e580..1:31ab0: hifi.c + hybrid.c, names RAYVERSE/ANDROID/PS1.
- * Worker sfin_hybrid: see NOTES.md for measured matches and unresolved layout.
- * The accepted PosYSin1 binding and missing PosYSin2 require correction by the
- * integrator; see header_proposal.md. No shifted aliases are used here.
+ * Worker w2_hybrid: see NOTES.md for measured matches and unresolved layout.
+ * The two Y-sine bindings are already corrected in the accepted configuration.
+ * FreeDetectDriver ends a probable hifi object before hybrid's paragraph boundary.
  */
 #include "obj.h"
 #include "game.h"
@@ -254,7 +254,7 @@ extern s32 sub_7367D(s32 device_id, s32 timeout, s32 __far *port,
     void __far *init_data, void __far *driver_data);
 extern s32 sub_7363D(void);
 extern s32 sub_73F3D(s32 driver, s32 enabled, s32 flags);
-extern s16 sub_743F7(s32 driver, dos_sound_request_t __far *request);
+extern s32 sub_743F7(s32 driver, dos_sound_request_t __far *request);
 extern s32 sub_74A10(s32 driver, s16 voice);
 extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
 extern s32 sub_7512E(s32 driver, s16 voice, s32 pan);
@@ -270,7 +270,7 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
     bnk_header_t *headers, u8 **data);
 void LoadBnkFixe(void);
 s32 LoadBnkWorld(s16 world);
-s16 KeyOn(s16 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan);
+s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan);
 void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note);
 void KeyVol(s16 voice, s16 volume, s16 pan);
 void DigiMusicDone(void);
@@ -299,7 +299,13 @@ void sub_3E6B0(void)
         sub_71C74(0);
 }
 
+/* INVENTED helper name. ORIGINAL_INLINE: 1:2e6f4, BIOS video service. EAX is its input/output;
+ * the DOS caller preserves the message in EDX across this exact INT 10h. */
+void sound_set_video_mode(s32 mode);
+#pragma aux sound_set_video_mode = "int 10h" parm [eax] modify [eax];
+
 void rayman_sound_fatal_error(const char* message) {
+    sound_set_video_mode(3);
     printf("Rayman sound says fatal error :\n%s\n", message);
     exit(-1);
 }
@@ -357,6 +363,7 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
     u32 size, i;
     u8 check;
     u8 *bytes, *end;
+    u8 *sample;
     u8 *new_data;
 
     stop_cd();
@@ -391,11 +398,15 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
     fread(new_data, 1, size, data_file);
     fclose(data_file);
     check = snd8b_data_infos[data_index].checksum_byte;
-    bytes = new_data;
-    for (i = 0; i < size; i++) {
-        check -= *bytes;
-        *bytes ^= snd8b_data_infos[data_index].xor_byte;
-        bytes++;
+    i = 0;
+    if (size != 0) {
+        sample = new_data;
+        do {
+            check -= *sample;
+            *sample ^= snd8b_data_infos[data_index].xor_byte;
+            sample++;
+            i++;
+        } while (i < size);
     }
     if (check != 0)
         rayman_sound_fatal_error("Load error in sndd8b.dat.\n");
@@ -428,17 +439,17 @@ s32 LoadBnkWorld(s16 world)
     }
 }
 
-s16 KeyOn(s16 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
+s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
 {
     dos_sound_request_t request = {0};
     s16 voice;
 
     request.volume = ((s32)volume * 0x7fff) / 0x7f;
+    request.flags |= 0x720;
     request.pan = ((s32)pan * 0xffff) / 0x7f;
     request.sample_rate = ((s32)pitchTab[note]) << 8;
-    request.flags |= 0x720;
 
-    if (bank == 0) {
+    if ((s16)bank == 0) {
         request.data = (u8 __far *)bnkHeaderFixe[(s16)prog].offset;
         request.size = bnkHeaderFixe[(s16)prog].size;
         if (bnkHeaderFixe[(s16)prog].field_C != 0) {
@@ -460,11 +471,10 @@ s16 KeyOn(s16 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
     if (request.size != 0) {
         voice = sub_743F7(sound_driver_handle,
             (dos_sound_request_t __far *)&request);
-        if (voice == -1 || voice >= 0x20)
-            voice = -1;
-    } else
-        voice = -1;
-    return voice;
+        if (voice != -1 && voice < 0x20)
+            return voice;
+    }
+    return -1;
 }
 
 void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note)
@@ -936,22 +946,19 @@ void doBBF2command(obj_t *bbf2_obj)
     s16 spr_x; s16 spr_y_1; s16 spr_w; s16 spr_h;
     s16 spr_y_2;
     s16 bbf2_y_1;
-    s32 bbf2_y_2;
-    s32 ray_center_x;
     s16 bbf2_y_3;
     s16 var_v1;
     u16 unk_2;
 
     if (!(bbf2_obj->main_etat == 0 && bbf2_obj->sub_etat == 2))
     {
-        ray_center_x = ray.x + 8;
         if (bbf2_obj->type == TYPE_HYB_BBF2_D)
         {
             if (BBF2DEsk == 0)
             {
                 YPosBBF2D =
                     YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
-                    ((ray_center_x + ray.offset_bx - xmap) >> 1);
+                    (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
             }
             else
             {
@@ -978,7 +985,7 @@ void doBBF2command(obj_t *bbf2_obj)
                     {
                                 YPosBBF2D =
                             YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
-                            ((ray_center_x + ray.offset_bx - xmap) >> 1);
+                            (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
                     }
                 }
                 BBF2DEsk--;
@@ -991,7 +998,7 @@ void doBBF2command(obj_t *bbf2_obj)
             {
                 YPosBBF2G =
                     NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
-                    ((ray_center_x + ray.offset_bx - xmap) >> 1);
+                    (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
             }
             else
             {
@@ -1018,7 +1025,7 @@ void doBBF2command(obj_t *bbf2_obj)
                     {
                                 YPosBBF2G =
                             NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
-                            ((ray_center_x + ray.offset_bx - xmap) >> 1);
+                            (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
                     }
                 }
                 BBF2GEsk--;
@@ -1026,10 +1033,9 @@ void doBBF2command(obj_t *bbf2_obj)
             unk_2 = YPosBBF2G - (bbf2_obj->y + 150);
         }
 
-        bbf2_y_2 = bbf2_obj->y;
         if (
-            ((bbf2_y_2 > ymap + 50) && (s16)unk_2 > 0) ||
-            ((bbf2_y_2 < ymap - 150) && (s16)unk_2 < 0)
+            ((bbf2_obj->y > ymap + 50) && (s16)unk_2 > 0) ||
+            ((bbf2_obj->y < ymap - 150) && (s16)unk_2 < 0)
         )
         {
             unk_2 = 0;
@@ -1219,11 +1225,15 @@ void DoHybBBF2LasRaymanCollision(obj_t *obj)
 
 s16 OBJ_IN_COL_ZDC(obj_t *obj1, obj_t *obj2)
 {
-    s16 x1; s16 y1; s16 w1;
-    s16 x2; s16 y2; s16 w2;
-    s16 h;
-    zdc_t *zdc1 = get_zdc(obj1, 0);
-    zdc_t *zdc2 = get_zdc(obj2, 0);
+    /* Declaration order reproduces the DOS pointer spills and coordinate slots
+     * at 1:3018c..1:301e4; keep the independent sprite outputs distinct. */
+    zdc_t *zdc1;
+    zdc_t *zdc2;
+    s16 w1; s16 w2; s16 h;
+    s16 x1; s16 y1; s16 x2;
+    s16 y2;
+    zdc1 = get_zdc(obj1, 0);
+    zdc2 = get_zdc(obj2, 0);
 
     GET_SPRITE_POS(obj1, zdc1->sprite, &x1, &y1, &w1, &h);
     GET_SPRITE_POS(obj2, zdc2->sprite, &x2, &y2, &w2, &h);
@@ -1464,8 +1474,9 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
         phase_dark2 = 11;
         break;
     case 11:
+        /* 1:30a5b reads map_tile_t +2 (tile_type), not texture bits. */
         if (ToonJustGivePoing == 1 &&
-            block_flags[mp.map[ray.ray_dist].texture_id >> 10].bits.solid &&
+            block_flags[mp.map[ray.ray_dist].tile_type].bits.solid &&
             !(ray.main_etat == 3 && ray.sub_etat == 23))
         {
             ToonJustGivePoing = 2;
@@ -1537,6 +1548,7 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
             }
             else if (YText < -20)
             {
+                TextDark2_Affiche = 0;
                 temps_text = 0;
                 XText = SCREEN_WIDTH / 2;
                 YText = -10;
