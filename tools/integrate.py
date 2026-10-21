@@ -266,6 +266,10 @@ def main(argv):
         code, out = git("add", "--", *paths)
         if code:
             raise SystemExit("git add failed:\n" + out)
+        if not git("diff", "--cached", "--quiet", "--", *paths)[0]:
+            print("  no changes: the candidate equals the accepted state; nothing to commit")
+            committed = True
+            return 0
         attempted = True
         code, out = git("commit", "-q", "-m", a.msg + "\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
                         "--", *paths)
