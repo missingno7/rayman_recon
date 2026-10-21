@@ -26,28 +26,21 @@ s16 myRand(s16 max);
 
 #define GO_SPEED 20
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
-#define ashr16(value, amount) \
-    ((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount)))
+#include "inline_helpers.h"
 
 void DO_BAT_FLASH(s16 in_x, s16 in_y)
 {
     s16 fire_par_3;
     s16 unk_1;
-    s16 unk_x;
-    s16 unk_y;
     s16 diff_x;
     s16 diff_y;
     u8 x_gt_0;
     u8 y_gt_0;
-    u8 half_shift;
 
-    unk_x = in_x;
-    unk_y = in_y;
-    diff_x = ray_zdc_x + (ray_zdc_w >> 1) - unk_x;
-    diff_y = ray_zdc_h + (ray_zdc_y >> 1) - unk_y;
+    diff_x = ray_zdc_x + (ray_zdc_w >> 1) - in_x;
+    diff_y = ray_zdc_h + (ray_zdc_y >> 1) - in_y;
     x_gt_0 = diff_x > 0;
     y_gt_0 = diff_y > 0;
-    half_shift = 1;
 
     if (!x_gt_0)
         diff_x = -diff_x;
@@ -55,8 +48,8 @@ void DO_BAT_FLASH(s16 in_x, s16 in_y)
         diff_y = -diff_y;
 
     if (diff_x > 200) {
-        diff_x = ashr16(diff_x, half_shift);
-        diff_y = ashr16(diff_y, half_shift);
+        diff_x = ashr16(diff_x, 1);
+        diff_y = ashr16(diff_y, 1);
     }
 
     if (diff_y == 0) {
@@ -93,7 +86,7 @@ void DO_BAT_FLASH(s16 in_x, s16 in_y)
         }
     }
 
-    DO_REDEYE_FIRE(unk_x, unk_y, fire_par_3);
+    DO_REDEYE_FIRE(in_x, in_y, fire_par_3);
 }
 
 void DO_BAT_LEFT_FLASH(obj_t *obj)

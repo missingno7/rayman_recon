@@ -226,7 +226,7 @@
    "profile": "game",
    "functions": {
     "DO_BAT_FLASH": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
