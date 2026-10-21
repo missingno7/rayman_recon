@@ -1,6 +1,6 @@
 /*
  * Mr Sax boss (GOG v1.21 object 1:65840-1:678f0). File name invented (Rayverse saxo.c). Names: Rayverse/Android.
- * Worker candidate: 20/25 STRICT; _TEXT contiguous; remaining evidence in NOTES.md.
+ * Worker candidate: 22/25 STRICT; _TEXT contiguous; remaining evidence in NOTES.md.
  */
 #include "obj.h"
 #include "game.h"
@@ -622,42 +622,12 @@ void SetSaxoCollNoteBox(obj_t* obj) {
 //76614
 void DO_SAXO_COMMAND(obj_t* obj) {
     /* 51E0C 8017660C -O2 -msoft-float */
-    s16 sp18;
-    s16 sp1A;
-    s16 temp_a0;
-    s16 temp_v0_2;
-    s16 temp_v1_7;
-    s16 new_speed_x;
-    s16 var_a0_2;
-    s16 var_v0;
-    s16 var_v0_2;
-    s16 var_v1;
-    s16 var_v1_2;
-    s16 var_v1_3;
-    s32 temp_lo_1;
-    s32 temp_lo_2;
+    s16 x_pos;
+    s16 distance;
     u8 prev_dir;
-    s32 temp_v1_9;
-    u16 temp_v0;
-    u16 temp_v0_3;
-    s16 temp_v1_1;
-    u32 temp_a3;
-    u8 temp_a1;
-    s16 temp_s2;
-    s16 temp_v1_2;
-    u8 temp_v1_3;
-    u8 temp_v1_4;
-    u8 temp_v1_5;
-    u8 temp_v1_6;
-    int new_var;
-    s16 *speed_y;
 
     saxoCanAttak();
     SetSaxoEventPos(obj);
-//    new_var = 0x20;
-//    scrollLocked = 1;
-//    Sax.x_pos = obj->x;
-//    Sax.y_pos = obj->y;
     SetSaxoCollNoteBox(obj);
     if (obj->hit_points < 1 && Phase != 100) {
         Sax.coup = 0;
@@ -692,13 +662,13 @@ void DO_SAXO_COMMAND(obj_t* obj) {
         }
     }
 
-    temp_v1_1 = obj->x;
+    x_pos = obj->x;
     switch (Phase)
     {
         case 0:
             if ((obj->main_etat != 0) || (obj->sub_etat != 0))
             {
-                if ((ray.x < (temp_v1_1 + 220)) && (temp_v1_1 < (ray.x + 110)))
+                if ((ray.x < (x_pos + 220)) && ((ray.x + 110) > x_pos))
                 {
                     WaitForAnim = 1;
                 }
@@ -743,7 +713,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                     break;
                 case 2:
                     if (FinAnim) {
-                        if (WaitForFinAtan < 2) {
+                        if (WaitForFinAtan <= 1) {
                             switch (attaque.next_note) {
                                 case 0:
                                 case 1:
@@ -905,13 +875,14 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                         case 10:
                             obj->gravity_value_2 = 5;
                             obj->gravity_value_1 = 0;
-                            /* DOS 1:66e5a..66e7f: signed short distance, absolute value, > 100. */
-                            var_a0_2 = obj->x - (s16)(ray.x - 0x30);
-                            if (var_a0_2 < 0)
-                                var_a0_2 = -var_a0_2;
-                            if (var_a0_2 > 100)
+                            /* DOS 1:66e5a..66e7f: narrow both coordinates before the
+                             * short distance; then absolute value and > 100. */
+                            distance = (s16)obj->x + 0x30 - (s16)ray.x;
+                            if (distance < 0)
+                                distance = -distance;
+                            if (distance > 100)
                             {
-                                obj->speed_y = var_a0_2 / 20;
+                                obj->speed_y = distance / 20;
                                 if (obj->speed_y > 9)
                                 {
                                     obj->speed_y = 9;
@@ -924,7 +895,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
                             }
                             else
                             {
-                                obj->speed_y = var_a0_2 / (s32) 10;
+                                obj->speed_y = distance / (s32) 10;
                                 if (obj->speed_y > 9)
                                 {
                                     obj->speed_y = 9;
@@ -981,8 +952,7 @@ void DO_SAXO_COMMAND(obj_t* obj) {
             break;
     }
 
-    temp_v1_9 = obj->x + obj->offset_bx + obj->speed_x;
-    if (!inrange(temp_v1_9, 0, xmapmax + 303)) // NOTE: 319 changed to 303 in PC version
+    if (!inrange(obj->x + obj->offset_bx + obj->speed_x, 0, xmapmax + 303)) // NOTE: 319 changed to 303 in PC version
     {
         obj->speed_x = 0;
     }
