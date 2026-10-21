@@ -29,7 +29,10 @@ Hard rules
   for instructions plain C cannot generate (debug/control registers DR0-DR7/CRn, INT n/INT3, STI/CLI, IN/OUT and
   port string ops, LGDT-class system instructions), when the DOS bytes show them inline inside a C function. Each
   pragma: the exact instruction sequence from the DOS disassembly (cite address), its register effects declared,
-  one pragma per sequence, named after its purpose, and a comment marking it ORIGINAL_INLINE. Otherwise never use
+  one pragma per sequence, named after its purpose, and a comment marking it ORIGINAL_INLINE. The same gate covers
+  inline code whose BEHAVIOUR C cannot express even though each instruction could be (user decision 2026-10-21):
+  self-modifying code and stack-pointer tricks inside a C function (e.g. menu INIT_GENERAL_CHOICE 1:39eb5..39edf),
+  with the mechanism PROVEN from the DOS bytes (writers, targets) at the cited site. Otherwise never use
   an inline pragma for anything C can express (arithmetic, loads/stores, calls, branches) or to patch register
   allocation - with ONE exception (user decision 2026-10-21, ai_decomp review): original inline helpers. A
   C-expressible sequence may be an ORIGINAL_INLINE helper only when its exact DOS bytes recur with fixed registers
