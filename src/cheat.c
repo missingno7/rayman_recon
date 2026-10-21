@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* cheat object, DOS v1.21, worker w4_cheatload. Names inherited RAYVERSE/ANDROID;
  * sub_* names are reference placeholders. Timer ISR reconstructed from DOS.
  * Partial candidate: see NOTES.md for remaining byte/layout differences. */
@@ -603,9 +604,7 @@ void DEPART_LEVEL(void) {
                 text_y = 160;
             }
             start_fade_in(2, &rvb_plan3);
-            for (i = 0; i < (320 * 200) / 4; ++i) {
-                ((u32*)draw_buffer)[i] = 0;
-            }
+            fill(draw_buffer);
             display_text(language_txt[149], text_x, text_y, 2, 0); // /loading../
             synchro();
             endsynchro();
