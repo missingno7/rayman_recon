@@ -12,8 +12,6 @@ extern obj_type_flags_t flags[262];
 
 #define TYPE_DARK_SORT 215
 #define TYPE_VITRAIL 247
-#define ashl16(value, amount) ((s32)(value) << (amount))
-
 typedef struct vitraux_info_t {
     s16 x_pos;
     s16 y_pos;
