@@ -1,4 +1,4 @@
-/* 1:2b4d0..1:2e580: frame.c tail (fades, palettes, plan3) + guetteur.c (pirate lookout); split candidate 1:2db40 (STRONG). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_frame. Pragmas declare assembly-routine register ABIs only. 20 functions not yet reconstructed. */
+/* 1:2b4d0..1:2e580: frame.c tail (fades, palettes, plan3, video modes, map building) + guetteur.c (pirate lookout); split candidate 1:2db40 (STRONG). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_frame. Pragmas declare assembly-routine register ABIs only. 3 renderer functions not yet reconstructed. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -11,8 +11,50 @@ typedef void draw_func_t(s32 x, s32 sprite_field_A, s32 y, vec2b_t size, u8 *dra
 typedef void fplot_func_t(u8 *buffer, s32 x, s32 y, u8 color);
 typedef void void_func_t(void);
 extern u8 *smap;
+extern u8 use_sync;
+extern u8 *unk_ptr_3d840;
+extern u32 gros_patai_src[1200];
+extern s32 planar_copy_offset;
+extern u8 type_fndscrX;
+extern map_data_t mp;
+extern u8 *MAP_BLOCKS;
+extern u8 *PLAN1_BUFFER;
+extern u32 PLAN1_BUFFER_START_POINTER;
+extern s32 plan0bit_length;
+extern u8 *PLAN0BIT;
+extern s32 plan2bit_length;
+extern u8 *PLAN2BIT;
+extern s32 plan2bit_nb_bytes;
+extern rgb_palette_t *rvb_special;
+extern s16 numero_palette_special;
+extern s32 CompteurEclair;
+extern u8 saved_vga_registers[6];
+extern u8 VGA_FREQ;
+extern u8 need_timer;
+extern u8 in_pause;
+typedef void block_copy_t(u8 *source, u8 *dest);
+typedef void block_clear_t(u8 *dest);
+#pragma aux block_copy_t parm [esi] [edi]
+#pragma aux block_clear_t parm [edi]
+extern block_copy_t block_copy;
+extern block_clear_t block_clear;
+typedef void display_anypicture_t(s32 height, s32 stride_and_plane, s32 source_width, u8 *source, u8 *dest);
+#pragma aux display_anypicture_t parm [eax] [edx] [ecx] [esi] [edi]
+extern display_anypicture_t display_anypicture;
+extern void speaker_enable(void);
+extern s32 clock_ticks(void);
+extern scene_func_t dummy_prg;
 u8 *unidentified_record_allocator(s32 size);
 void release_record(u8 *buffer);
+typedef void delay_500_t(s32 milliseconds);
+#pragma aux delay_500_t parm [eax]
+extern delay_500_t wait_milliseconds;
+typedef void bios_wait_timer_t(s32 high, s32 low);
+#pragma aux bios_wait_timer_t parm [ecx] [edx]
+extern bios_wait_timer_t bios_wait_timer;
+typedef void copy_dwords_t(u32 *source, u32 *dest, s32 count);
+#pragma aux copy_dwords_t parm [esi] [edi] [ecx]
+extern copy_dwords_t copy_dwords;
 #ifndef SGN
 #define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
 #endif
@@ -131,6 +173,25 @@ extern draw_func_t DrawSpriteColorNormal;
 extern draw_func_t DrawSpriteColorFlipNormal;
 extern draw_func_t DrawSpriteNormal;
 extern draw_func_t DrawSpriteFlipNormal;
+extern draw_func_t DrawSpriteNoClipX;
+extern draw_func_t DrawSpriteFlipNoClipX;
+extern draw_func_t DrawSpriteColorX;
+extern draw_func_t DrawSpriteColorFlipX;
+extern draw_func_t DrawSpriteX;
+extern draw_func_t DrawSpriteFlipX;
+extern void_func_t mode_x_effect_2b3d;
+extern void_func_t mode_x_effect_2c00;
+extern void_func_t mode_x_effect_2c59;
+extern void_func_t mode_x_effect_2d08;
+extern void_func_t mode_x_effect_2bb7;
+extern void_func_t mode_x_effect_2dfb;
+extern void_func_t mode_x_effect_300f;
+extern void_func_t mode_x_effect_2da9;
+extern void_func_t mode_x_effect_2cbf;
+extern void_func_t mode_x_effect_2e9c;
+extern void_func_t mode_x_effect_2f0c;
+extern fplot_func_t fplot_mode_x_2b86;
+extern void InitModeX(void);
 extern void_func_t draw_flocon1_Normal;
 extern void_func_t draw_flocon2_Normal;
 extern void_func_t draw_flocon3_Normal;
@@ -200,11 +261,68 @@ void SWAP_BUFFERS(void) {
     }
 }
 
-/* sub_3B580: no seed source */
+void sub_3B580(void) {
+    if (use_sync)
+        endsynchro();
+    if (display_buffer == (u8*)0xa0500) {
+        draw_buffer = display_buffer;
+        display_buffer = (u8*)0xa6500;
+    } else {
+        display_buffer = (u8*)0xa0500;
+        draw_buffer = (u8*)0xa6500;
+    }
+    select_display_buffer(display_buffer);
+    if (use_sync)
+        synchro();
+}
 
-/* sub_3B5E8: no seed source */
+s32 sub_3B5E8(void) {
+    s32 iterations = 0;
+    u8 *ready = unk_ptr_3d840;
+    do {
+        *ready = 0;
+        bios_wait_timer(7, 0xa120);
+        copy_dwords((u32*)0, (u32*)0xa0000, 0x3fff);
+        ++iterations;
+    } while (*ready == 0);
+    return iterations / 8;
+}
 
-/* calc_gros_type: no seed source */
+void calc_gros_type(void) {
+    s32 map_offset;
+    for (map_offset = 0; map_offset < mp.length; map_offset += 6) {
+        map_tile_t *tile = (map_tile_t*)((u8*)mp.map + map_offset);
+        u16 texture_id = tile->texture_id;
+        {
+            u8 *pixels = MAP_BLOCKS + 0x2800 +
+                (texture_id / 40) * 16 * 640 + (texture_id % 40) * 16;
+            s32 x;
+            s32 y;
+            s32 any_nonzero = 0;
+            s32 all_nonzero = 1;
+            for (y = 0; y < 16; ++y) {
+                for (x = 0; x < 16; ++x) {
+                    u8 pixel = pixels[y * 640 + x];
+                    if (pixel != 0)
+                        any_nonzero = 1;
+                    else
+                        all_nonzero = 0;
+                }
+            }
+            if (all_nonzero)
+                tile->transparency = 0;
+            else if (!any_nonzero)
+                tile->transparency = 1;
+            else
+                tile->transparency = 2;
+        }
+        if (tile->texture_id == 0 && tile->transparency != 1)
+            tile->transparency = 1;
+        if (tile->texture_id >= 0x4b0)
+            tile->texture_id = 0;
+        smap[tile->texture_id] = tile->transparency;
+    }
+}
 
 u8 find_in_map(s16 x, s16 y) {
     return smap[(y >> 4) * 40 + (x >> 4)];
@@ -221,21 +339,189 @@ void end_find_in_map(void) {
     release_record(smap);
 }
 
-/* build_map: no seed source */
+void build_map(s16 x, s16 y) {
+    s32 plane;
+    s32 plane_offset = planar_copy_offset;
+    s32 start_tile = ((s32)(y >> 4) * mp.width) + (x >> 4);
+    u8 *buffer = PLAN1_BUFFER;
+    PLAN1_BUFFER_START_POINTER = (u32)buffer;
+    if (type_fndscrX != 0)
+        plane_offset = 1;
+    for (plane = 0; plane < 4; ++plane) {
+        s32 row;
+        map_tile_t *row_tile = mp.map + start_tile;
+        u8 *row_dest = buffer;
+        for (row = 0; row < 14; ++row) {
+            s32 col;
+            map_tile_t *tile = row_tile;
+            u8 *dest = row_dest;
+            for (col = 0; col < 20; ++col) {
+                if ((s16)tile->texture_id >= 0 &&
+                    tile->texture_id < 0x4b0 && tile->transparency == 0) {
+                    u8 *source = (u8*)gros_patai_src[tile->texture_id] + plane_offset;
+                    block_copy(source, dest);
+                } else {
+                    block_clear(dest);
+                }
+                ++tile;
+                dest += 4;
+            }
+            row_tile += mp.width;
+            row_dest += 0x500;
+        }
+        buffer += 0x4600;
+        plane_offset *= 2;
+        if (plane_offset == 16)
+            plane_offset = 1;
+    }
+}
 
-/* build_line_map: no seed source */
+void build_line_map(void *buffer, s16 x, s16 y, s16 row) {
+    s32 xoff = (s16)x >> 4;
+    s32 yoff = (s16)y >> 4;
+    s32 source_row = ((u32)buffer - (u32)PLAN1_BUFFER) / 0x50;
+    map_tile_t *tile = mp.map + yoff * mp.width + xoff;
+    u8 *dest = PLAN1_BUFFER + (yoff * mp.width + xoff) * 6;
+    s32 r;
+    for (r = 0; r < 14; ++r) {
+        s32 col;
+        map_tile_t *cur = tile;
+        u8 *out = dest;
+        for (col = 0; col < 20; ++col) {
+            if ((s16)cur->texture_id >= 0 && cur->texture_id < 0x4b0 && cur->transparency == 0) {
+                u8 *src = (u8 *)gros_patai_src[cur->texture_id] + source_row * 0x280 + row;
+                block_copy(src, out);
+            }
+            cur++;
+            out += 4;
+        }
+        tile += mp.width;
+        dest += 0x4600;
+    }
+}
 
-/* build_column_map: no seed source */
+void build_column_map(void *buffer, s16 x, s16 y, s16 column) {
+    s32 xoff = (s16)x >> 4;
+    s32 yoff = (s16)y >> 4;
+    s32 source_row = ((u32)buffer - (u32)PLAN1_BUFFER) / 0x50;
+    map_tile_t *tile = mp.map + yoff * mp.width + xoff;
+    u8 *dest = PLAN1_BUFFER + (yoff * mp.width + xoff) * 6;
+    s32 r;
+    for (r = 0; r < 14; ++r) {
+        s32 col;
+        map_tile_t *cur = tile;
+        u8 *out = dest;
+        for (col = 0; col < 20; ++col) {
+            if ((s16)cur->texture_id >= 0 && cur->texture_id < 0x4b0 && cur->transparency == 0) {
+                u8 *src = (u8 *)gros_patai_src[cur->texture_id] + source_row * 0x280 + column;
+                block_copy(src, out);
+            }
+            cur++;
+            out += 4;
+        }
+        tile += mp.width;
+        dest += 0x4600;
+    }
+}
 
-/* update_map: no seed source */
+void update_map(s16 x1, s16 y1, s16 x2, s16 y2) {
+    s16 dx = (s16)((x2 & 0xfff0) - (x1 & 0xfff0));
+    s16 dy = (s16)((y2 & 0xfff0) - (y1 & 0xfff0));
+    if (dx == 0 && dy == 0)
+        return;
+    if (dx > 0) build_column_map(PLAN1_BUFFER, x2, y1, 0x130);
+    else if (dx < 0) build_column_map(PLAN1_BUFFER, x2, y1, 0x130);
+    if (dy > 0) build_line_map(PLAN1_BUFFER, x1, y2, 0xb0);
+    else if (dy < 0) build_line_map(PLAN1_BUFFER, x1, y2, 0xb0);
+}
 
-/* sub_3BE20: no seed source */
+/* sub_3BE20: entry stack local values and renderer-call layout still being reconstructed */
+/* sub_3BEE0: renderer-call structure and map wrap logic still being reconstructed */
 
-/* sub_3BEE0: no seed source */
+void GetVideoRegister(void) {
+    saved_vga_registers[0] = (u8)inp(0x3cc);
+    outp(0x3d4, 0x10);
+    saved_vga_registers[1] = (u8)inp(0x3d5);
+    outp(0x3d4, 0x11);
+    saved_vga_registers[2] = (u8)inp(0x3d5);
+    outp(0x3d4, 6);
+    saved_vga_registers[3] = (u8)inp(0x3d5);
+    outp(0x3d4, 7);
+    saved_vga_registers[4] = (u8)inp(0x3d5);
+    outp(0x3d4, 0x16);
+    saved_vga_registers[5] = (u8)inp(0x3d5);
+}
 
-/* set_vga_frequency: no seed source */
+void SetVideoRegister(void) {
+    outp(0x3c2, saved_vga_registers[0]);
+    outp(0x3d4, 0x10);
+    outp(0x3d5, saved_vga_registers[1]);
+    outp(0x3d4, 0x11);
+    outp(0x3d5, saved_vga_registers[2]);
+    outp(0x3d4, 6);
+    outp(0x3d5, saved_vga_registers[3]);
+    outp(0x3d4, 7);
+    outp(0x3d5, saved_vga_registers[4]);
+    outp(0x3d4, 0x16);
+    outp(0x3d5, saved_vga_registers[5]);
+}
 
-/* GetVideoRegister: no seed source */
+void set_vga_frequency(u8 freq) {
+    register u8 current_freq = freq;
+    int value;
+    SetVideoRegister();
+    if (current_freq == 100) {
+        value = inp(0x3cc);
+        value |= 8;
+        value &= 0xfb;
+        outp(0x3c2, value);
+    } else if (current_freq == 80) {
+        value = inp(0x3cc);
+        value |= 4;
+        value &= 0xf7;
+        outp(0x3c2, value);
+    } else if (current_freq == 70) {
+        value = inp(0x3cc);
+        value &= 0xf3;
+        outp(0x3c2, value);
+    } else if (current_freq == 60) {
+        outp(0x3c2, 0x63);
+        outp(0x3d4, 0x11);
+        value = inp(0x3d5) & 0x7f;
+        outp(0x3d5, value);
+        outp(0x3d4, 6);
+        outp(0x3d5, 0x0c);
+        outp(0x3d4, 7);
+        value = inp(0x3d5);
+        value &= 0xde;
+        value |= 0x20;
+        outp(0x3d5, value);
+        outp(0x3d4, 0x16);
+        outp(0x3d5, 0xff);
+        outp(0x3d4, 0x10);
+        outp(0x3d5, 0xc4);
+        outp(0x3d4, 0x11);
+    }
+    if (current_freq == 50) {
+        outp(0x3d4, 0x11);
+        value = inp(0x3d5) & 0x7f;
+        outp(0x3d5, value);
+        outp(0x3d4, 6);
+        outp(0x3d5, 0x74);
+        outp(0x3d4, 7);
+        value = inp(0x3d5);
+        value &= 0xde;
+        value |= 0x20;
+        outp(0x3d5, value);
+        outp(0x3d4, 0x16);
+        outp(0x3d5, 0xff);
+        outp(0x3d4, 0x10);
+        outp(0x3d5, 0xfc);
+        outp(0x3d4, 0x11);
+    }
+    VGA_FREQ = current_freq;
+    wait_milliseconds(500);
+}
 
 /* SetVideoRegister: no seed source */
 
@@ -288,6 +574,15 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
     fade_speed = speed;
 }
 
+#define WRITE_PALETTE_BYTES(palette_ptr, color_count) \
+    do { \
+        s32 palette_byte; \
+        u8 *palette_data = (u8*)(palette_ptr); \
+        outp(0x3c8, 0); \
+        for (palette_byte = 0; palette_byte < (color_count) * 3; ++palette_byte) \
+            outp(0x3c9, palette_data[palette_byte]); \
+    } while (0)
+
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
     if (nb_fade > 0) {
         s32 i;
@@ -311,7 +606,7 @@ void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
             u16 temp = rvb_fade[i] >> 6;
             ((u8*)dest_pal->colors)[i] = (u8)temp;
         }
-        SetPalette(&current_rvb, 0, 256);
+        WRITE_PALETTE_BYTES(&current_rvb, 256);
         if (nb_fade == 0) fade |= 0x40;
     }
 }
@@ -332,12 +627,22 @@ void actualize_palette(u8 new_pal_id) {
         memcpy(&current_rvb, &rvb[new_pal_id], sizeof(current_rvb));
         set_fade_palette(&current_rvb);
         if (fade == 65) {
-            SetPalette(&current_rvb, 0, 256);
+            WRITE_PALETTE_BYTES(&current_rvb, 256);
         }
     }
 }
 
-/* cyclage_palette: no seed source */
+void cyclage_palette(s16 palette_id, s16 first_color, s16 last_color) {
+    s16 i;
+    rgb_t first = rvb[palette_id].colors[first_color];
+    for (i = first_color; i < last_color; ++i)
+        rvb[palette_id].colors[i] = rvb[palette_id].colors[i + 1];
+    rvb[palette_id].colors[last_color] = first;
+    memcpy(&current_rvb, &rvb[palette_id], sizeof(current_rvb));
+    set_fade_palette(&current_rvb);
+    if (nb_fade == 0)
+        nb_fade = 1;
+}
 
 void DO_SWAP_PALETTE(void) {
     s32 i;
@@ -458,9 +763,65 @@ void EFFACE_VIDEO(void) {
     }
 }
 
-/* SYNCHRO_LOOP: no seed source */
+void SYNCHRO_LOOP(scene_func_t scene_func) {
+    s16 scene_ended = 0;
+    u8 do_fade = 1;
+    u32 timer = 0;
+    speaker_enable();
+    do {
+        if (ModeVideoActuel == MODE_X) {
+            endsynchro();
+            SWAP_BUFFERS();
+            synchro();
+            if ((u8)scene_ended != need_timer)
+                timer = (u32)clock_ticks();
+            if (do_fade == 0)
+                DO_FADE();
+        } else {
+            endsynchro();
+            synchro();
+            if ((u8)scene_ended != need_timer)
+                timer = (u32)clock_ticks();
+            if (do_fade == 0)
+                DO_FADE();
+            SWAP_BUFFERS();
+        }
+        scene_ended = scene_func(timer);
+        do_fade = (u8)scene_ended;
+    } while (scene_ended == 0);
+    if (scene_func != dummy_prg)
+        in_pause = 0;
+}
 
-/* DISPLAY_ANYSIZE_PICTURE: no seed source */
+void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
+                             s16 x, s16 y, s16 height, s16 width) {
+    s32 source_length;
+    s32 source_stride;
+    s32 width_was_defaulted = 0;
+    s32 source_plane = (u8)source_x & 3;
+    s32 source_column = (s16)source_x >> 2;
+    u8 *source;
+    u8 *dest;
+    if (image == PLAN2BIT) {
+        source_length = plan2bit_length;
+        source_stride = plan2bit_nb_bytes;
+    } else {
+        source_length = plan3bit_length;
+        source_stride = plan3bit_nb_bytes;
+    }
+    if (width == 0) {
+        width = (s16)source_stride;
+        width_was_defaulted = 1;
+    }
+    if (height == 0)
+        height = (s16)((source_length >> 2) / width - 4);
+    if (width_was_defaulted)
+        width = (s16)(width >> 2);
+    source = (u8 *)image + source_plane * (source_length >> 2) + source_width * source_stride + source_column;
+    dest = draw_buffer + y * 80 + (x >> 2);
+    display_anypicture(height, ((1 << source_plane) << 8) + source_stride,
+                       source_length >> 2, source, dest);
+}
 
 void SAVE_PALETTE(rgb_palette_t* palette) {
     save_current_pal = current_pal_id;
@@ -528,13 +889,147 @@ void DISPLAY_FOND_MENU(void) {
     }
 }
 
-/* InitPaletteSpecialPC: no seed source */
+#define clip_palette_component(value) ((value) > 63 ? 63 : (u8)(value))
 
-/* DoFadePaletteSpecialPC: no seed source */
+void InitPaletteSpecialPC(void) {
+    s32 i;
+    CompteurEclair = 0;
+    if ((num_world == 1 && num_level == 9) ||
+        (num_world == 2 && num_level == 4) ||
+        (num_world == 4 && num_level == 9)) {
+        for (i = 0; i < 256; ++i) {
+            rgb_t src = rvb[0].colors[i];
+            rvb_special[15].colors[i] = src;
+            rvb_special[0].colors[i].r = clip_palette_component((4 * src.r) / 8);
+            rvb_special[0].colors[i].g = clip_palette_component((4 * src.g) / 8);
+            rvb_special[0].colors[i].b = clip_palette_component((4 * src.b) / 5);
+            rvb_special[5].colors[i].r = clip_palette_component((4 * src.r) / 3);
+            rvb_special[5].colors[i].g = clip_palette_component((4 * src.g) / 3);
+            rvb_special[5].colors[i].b = clip_palette_component((4 * src.b) / 3);
+            rvb_special[7].colors[i].r = clip_palette_component((4 * src.r) / 6);
+            rvb_special[7].colors[i].g = clip_palette_component((4 * src.g) / 6);
+            rvb_special[7].colors[i].b = clip_palette_component(src.b);
+            rvb_special[10].colors[i].r = clip_palette_component(2 * src.r);
+            rvb_special[10].colors[i].g = clip_palette_component(2 * src.g);
+            rvb_special[10].colors[i].b = clip_palette_component(2 * src.b);
+            rvb_special[14].colors[i].r = clip_palette_component((4 * src.r) / 8);
+            rvb_special[14].colors[i].g = clip_palette_component((4 * src.g) / 8);
+            rvb_special[14].colors[i].b = clip_palette_component((4 * src.b) / 5);
+            rvb[0].colors[i] = rvb_special[0].colors[i];
+        }
+        DoFadePaletteSpecialPC(0, 5);
+        DoFadePaletteSpecialPC(5, 7);
+        DoFadePaletteSpecialPC(7, 10);
+        DoFadePaletteSpecialPC(10, 14);
+        numero_palette_special = 0;
+        ProchainEclair = (s16)(myRand(200) + 1);
+    } else if (num_world == 5 && num_level == 4) {
+        for (i = 0; i < 255; ++i) {
+            rgb_t src = rvb[0].colors[i];
+            rvb_special[15].colors[i] = src;
+            rvb_special[0].colors[i].r = clip_palette_component(src.r);
+            rvb_special[0].colors[i].g = clip_palette_component((77 * src.g) / 100);
+            rvb_special[0].colors[i].b = clip_palette_component((12 * src.b) / 100);
+            rvb_special[14].colors[i] = rvb_special[0].colors[i];
+            rvb[0].colors[i] = rvb_special[0].colors[i];
+        }
+        DoFadePaletteSpecialPC(0, 14);
+        for (i = 128; i <= 174; ++i) {
+            rgb_t src = rvb[0].colors[i];
+            rvb_special[9].colors[i].r = clip_palette_component((84 * src.r) / 100);
+            rvb_special[9].colors[i].g = clip_palette_component((62 * src.g) / 100);
+            rvb_special[9].colors[i].b = clip_palette_component((12 * src.b) / 100);
+            rvb[0].colors[i] = rvb_special[9].colors[i];
+        }
+        DoFadePaletteSpecialPC(0, 9);
+        DoFadePaletteSpecialPC(9, 14);
+    }
+}
 
-/* DoPaletteSpecialPC: no seed source */
+void DoFadePaletteSpecialPC(s16 start, s16 end) {
+    s32 p;
+    s32 i;
+    s32 denom = end - start;
+    if (start + 1 >= end)
+        return;
+    for (p = start + 1; p < end; ++p) {
+        s32 from_weight = end - p;
+        s32 to_weight = p - start;
+        for (i = 0; i < 256; ++i) {
+            rgb_t from = rvb_special[start].colors[i];
+            rgb_t to = rvb_special[end].colors[i];
+            rvb_special[p].colors[i].r = clip_palette_component((from.r * from_weight + to.r * to_weight) / denom);
+            rvb_special[p].colors[i].g = clip_palette_component((from.g * from_weight + to.g * to_weight) / denom);
+            rvb_special[p].colors[i].b = clip_palette_component((from.b * from_weight + to.b * to_weight) / denom);
+        }
+    }
+}
 
-/* InitModeXWithFrequency: no seed source */
+void DoPaletteSpecialPC(void) {
+    if (fade & 0x40) {
+        if (num_world == 5 && num_level == 4) {
+            if (horloge[5] != 0) {
+                if (numero_palette_special == 0)
+                    numero_palette_special = 1;
+            } else {
+                WRITE_PALETTE_BYTES(&rvb_special[numero_palette_special], 255);
+                ++numero_palette_special;
+            }
+            if (numero_palette_special == 15)
+                numero_palette_special = 0;
+        } else if ((num_world == 1 && num_level == 9) ||
+                   (num_world == 2 && num_level == 4) ||
+                   (num_world == 4 && num_level == 9)) {
+            ++CompteurEclair;
+            if (CompteurEclair >= ProchainEclair || numero_palette_special != 0) {
+                WRITE_PALETTE_BYTES(&rvb_special[numero_palette_special], 255);
+                if (numero_palette_special == 0) {
+                    PlaySnd_old(195);
+                    ++numero_palette_special;
+                } else if (CompteurEclair % 2 == 0) {
+                    ++numero_palette_special;
+                }
+                if (numero_palette_special == 15) {
+                    CompteurEclair = 0;
+                    numero_palette_special = 0;
+                    ProchainEclair = (s16)(myRand(400) + 1);
+                }
+            }
+        }
+    }
+}
+#undef clip_palette_component
+#undef WRITE_PALETTE_BYTES
+
+void InitModeXWithFrequency(u8 freq) {
+    if (ModeVideoActuel == MODE_TEXT) {
+        InitFirstModeVideo();
+        GetVideoRegister();
+    }
+    if (ModeVideoActuel != MODE_X) {
+        InitModeX();
+        set_vga_frequency(freq);
+        ModeVideoActuel = MODE_X;
+        DrawSpriteNormalEtX = &DrawSpriteX;
+        DrawSpriteFlipNormalEtX = &DrawSpriteFlipX;
+        DrawSpriteNoClipNormalEtX = &DrawSpriteNoClipX;
+        DrawSpriteColorNormalEtX = &DrawSpriteColorX;
+        DrawSpriteColorFlipNormalEtX = &DrawSpriteColorFlipX;
+        draw_buffer = (u8 *)0xa0500;
+        drawflocon5NormalETX = &mode_x_effect_2b3d;
+        drawflocon2NormalETX = &mode_x_effect_2c00;
+        drawflocon4NormalETX = &mode_x_effect_2d08;
+        drawflocon1NormalETX = &mode_x_effect_2bb7;
+        drawflocon7NormalETX = &mode_x_effect_2dfb;
+        fplotNormalETX = &fplot_mode_x_2b86;
+        drawpluie7NormalETX = &mode_x_effect_300f;
+        drawpluie5NormalETX = &mode_x_effect_2da9;
+        drawpluie4NormalETX = &mode_x_effect_2cbf;
+        drawpluie6NormalETX = &mode_x_effect_2e9c;
+        drawflocon6NormalETX = &mode_x_effect_2f0c;
+        drawflocon3NormalETX = &mode_x_effect_2c59;
+    }
+}
 
 void InitTextMode(void) {
     textmode();

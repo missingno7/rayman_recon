@@ -6902,6 +6902,131 @@
     "addr": "1:6c7cc",
     "name": "INVENTED",
     "evidence": "DOS call target from sub_380A4 case dispatcher"
+   },
+   "bios_wait_timer": {
+    "addr": "1:0273a",
+    "name": "INVENTED",
+    "evidence": "DOS target at 1:0273a saves EAX/ES, invokes INT 15h AH=83; caller at sub_3B5E8 sets ECX=7 and EDX=0xa120"
+   },
+   "copy_dwords": {
+    "addr": "1:02737",
+    "name": "INVENTED",
+    "evidence": "DOS target at 1:02737 is REP MOVSD; caller sets ESI source, EDI destination and ECX count"
+   },
+   "block_clear": {
+    "addr": "1:0471d",
+    "name": "RAYVERSE",
+    "evidence": "DOS helper disassembly at 1:0471d clears the 16x16 block destination through EDI; build_map callers pass EDI"
+   },
+   "block_copy": {
+    "addr": "1:04765",
+    "name": "RAYVERSE",
+    "evidence": "DOS helper disassembly at 1:04765 copies the 16x16 block from ESI to EDI; build_map callers pass both"
+   },
+   "wait_milliseconds": {
+    "addr": "1:7009e",
+    "name": "INVENTED",
+    "evidence": "DOS set_vga_frequency ends with a direct call after EAX=500; the bound target begins at 1:7009e"
+   },
+   "display_anypicture": {
+    "addr": "1:027a2",
+    "name": "RAYVERSE",
+    "evidence": "DOS DISPLAY_ANYSIZE_PICTURE directly calls this planar image routine with source/destination register arguments"
+   },
+   "InitModeX": {
+    "addr": "1:046b8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; InitModeXWithFrequency calls this directly"
+   },
+   "DrawSpriteFlipNoClipX": {
+    "addr": "1:063e6",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "DrawSpriteX": {
+    "addr": "1:063f2",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "DrawSpriteNoClipX": {
+    "addr": "1:06559",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "DrawSpriteFlipX": {
+    "addr": "1:06565",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "DrawSpriteColorX": {
+    "addr": "1:066df",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "DrawSpriteColorFlipX": {
+    "addr": "1:06876",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c DOS address annotation; immediate function address in InitModeXWithFrequency"
+   },
+   "mode_x_effect_2b3d": {
+    "addr": "1:02b3d",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2c00": {
+    "addr": "1:02c00",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2c59": {
+    "addr": "1:02c59",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2d08": {
+    "addr": "1:02d08",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2bb7": {
+    "addr": "1:02bb7",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2dfb": {
+    "addr": "1:02dfb",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_300f": {
+    "addr": "1:0300f",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2da9": {
+    "addr": "1:02da9",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2cbf": {
+    "addr": "1:02cbf",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2e9c": {
+    "addr": "1:02e9c",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "mode_x_effect_2f0c": {
+    "addr": "1:02f0c",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "fplot_mode_x_2b86": {
+    "addr": "1:02b86",
+    "name": "INVENTED",
+    "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
    }
   },
   "data": {
@@ -12579,6 +12704,60 @@
     "type": "effect_state_t *",
     "name": "INVENTED",
     "evidence": "DOS sub_38DCC stores and sub_38DA0 loads this pointer at 2:4f7dc; Android symbol absent"
+   },
+   "unk_ptr_3d840": {
+    "addr": "2:3d840",
+    "name": "INVENTED",
+    "type": "u8 *",
+    "evidence": "DOS sub_3B5E8 loads pointer at this address and reads its first byte; four-byte address field inferred from dword load"
+   },
+   "gros_patai_src": {
+    "addr": "2:32fa8",
+    "name": "RAYVERSE",
+    "type": "u32[1200]",
+    "evidence": "Rayverse data.c //C2FA8; Android reports a 4800-byte .bss object; DOS map drawing indexes it by texture id"
+   },
+   "PLAN1_BUFFER": {
+    "addr": "2:3d838",
+    "name": "RAYVERSE",
+    "type": "u8 *",
+    "evidence": "Rayverse data.c //CD838; Android reports 4-byte .bss object; DOS map routines load the pointer here"
+   },
+   "PLAN1_BUFFER_START_POINTER": {
+    "addr": "2:3d834",
+    "name": "RAYVERSE",
+    "type": "u32",
+    "evidence": "Rayverse data.c //CD834; Android reports 4-byte .bss object; DOS build_map stores the buffer start here"
+   },
+   "plan0bit_length": {
+    "addr": "2:3d808",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "Rayverse data.c //CD808; Android reports 4-byte .bss object; DOS display routines load its dword length"
+   },
+   "PLAN0BIT": {
+    "addr": "2:3d824",
+    "name": "RAYVERSE",
+    "type": "u8 *",
+    "evidence": "Rayverse data.c //CD824; Android reports 4-byte .bss object; DOS display routines load this pointer"
+   },
+   "CompteurEclair": {
+    "addr": "2:4fae0",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "Rayverse data.c //DFAE0; Android reports 4-byte .bss object; DOS special-palette functions increment and compare it"
+   },
+   "saved_vga_registers": {
+    "addr": "2:4fae8",
+    "name": "INVENTED",
+    "type": "u8[6]",
+    "evidence": "INVENTED: DOS GetVideoRegister stores six bytes at consecutive addresses 2:4fae8..2:4faed and SetVideoRegister reads the same six bytes"
+   },
+   "planar_copy_offset": {
+    "addr": "2:321d4",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS build_map loads this dword as the initial copy-plane offset, doubles it after each plane, and resets it at 16."
    }
   }
  }
