@@ -9703,7 +9703,7 @@
      ]
     },
     "Do_Effect_Pause_Simple": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9715,7 +9715,7 @@
      ]
     },
     "Do_Effect_Pause": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -10325,7 +10325,7 @@
      ]
     },
     "sub_38DA0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -10343,7 +10343,7 @@
      ]
     },
     "sub_391C0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
