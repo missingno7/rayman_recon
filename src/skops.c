@@ -295,55 +295,48 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
         }
 
     } else {
-        // type_scroll == 1
+        /* Vertical bands: DOS 1:680ba..1:68324. */
         for (i = 0; i < NbBande; ++i) {
-            s16 v24_4 = plan_height - Bande[i].field_6 - h1;
-            if (Bande[i].offset + Bande[i].length > w1 && Bande[i].offset < w2) {
-                if (Bande[i].length != 0) {
-                    s16 v67 = Bande[i].length;
-                    u8* source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 * plan_width + h1 * plan_width;
-                    u8* dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
-                    s16 v14;
-                    s16 v15;
-                    s16 v18;
-                    if (Bande[i].offset + Bande[i].length <= w2) {
-                        if (Bande[i].offset < w1) {
-                            source_buffer_pos += w1 - Bande[i].offset;
-                            dest_buffer_pos += w1 - Bande[i].offset;
-                            v67 = Bande[i].length + Bande[i].offset - w1;
-                        }
-                    } else if (Bande[i].offset >= w1) {
-                        v67 = w2 - Bande[i].offset;
-                    } else {
-                        source_buffer_pos += w1 - Bande[i].offset;
-                        dest_buffer_pos += w1 - Bande[i].offset;
-                        v67 = w2 - w1;
-                    }
-                    v14 = h2 - h1;
-                    v15 = plan_height - Bande[i].field_6 - h1;
-                    if (v15 > v14) {
-                        v15 = v14;
-                    }
-                    if (v15 <= 0) {
-                        source_buffer_pos -= plan_width * v15;
-                        v18 = v14;
-                    } else {
-                        Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, v15, v67);
-                        source_buffer_pos = Bande[i].source_buffer_pos;
-                        dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1 + SCREEN_WIDTH * v15;
-                        v18 = v14 - v15;
-                    }
-                    if (Bande[i].offset < w1) {
-                        source_buffer_pos += w1 - Bande[i].offset;
-                        dest_buffer_pos += w1 - Bande[i].offset;
-                    }
-                    if (v14 < v18) {
-                        v18 = v14;
-                    }
-                    if (v18 > 0) {
-                        Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, v18, v67);
-                    }
+            u8 *source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 * plan_width + h1 * plan_width;
+            u8 *dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
+            s16 draw_width = Bande[i].length;
+            s16 draw_height = plan_height - Bande[i].field_6 - h1;
+            s16 band_start = Bande[i].offset;
+            s16 band_end = band_start + draw_width;
+
+            if (band_end > w1 && band_start < w2 && draw_width != 0) {
+                if (band_start < w1 && band_end > w2) {
+                    draw_width = w2 - w1;
+                    source_buffer_pos += w1 - band_start;
+                    dest_buffer_pos += w1 - band_start;
+                } else if (band_start < w1) {
+                    source_buffer_pos += w1 - band_start;
+                    dest_buffer_pos += w1 - band_start;
+                    draw_width -= w1 - band_start;
+                } else if (band_end > w2) {
+                    draw_width -= band_end - w2;
                 }
+                if (draw_height > h2 - h1)
+                    draw_height = h2 - h1;
+                if (draw_height > 0) {
+                    Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, draw_height, draw_width);
+                    source_buffer_pos = Bande[i].source_buffer_pos;
+                    dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * draw_height + SCREEN_WIDTH * h1;
+                    draw_height = h2 - h1 - draw_height;
+                } else {
+                    /* DOS 1:6825a..1:682a8 resets both pointers before common X clipping. */
+                    source_buffer_pos = Bande[i].source_buffer_pos + (h1 - (plan_height - Bande[i].field_6)) * plan_width;
+                    dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
+                    draw_height = h2 - h1;
+                }
+                if (band_start < w1) {
+                    source_buffer_pos += w1 - band_start;
+                    dest_buffer_pos += w1 - band_start;
+                }
+                if (draw_height > h2 - h1)
+                    draw_height = h2 - h1;
+                if (draw_height > 0)
+                    Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, draw_height, draw_width);
             }
         }
         for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
