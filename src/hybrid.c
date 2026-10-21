@@ -6,6 +6,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,14 +22,8 @@
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
-#ifndef SGN
-#define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
-#endif
 #ifndef ashl16
 #define ashl16(v, b) ((v) << (b))
-#endif
-#ifndef ashr16
-#define ashr16(v, b) ((s16)(v) < 0 ? (s16)(-((-(s16)(v)) >> (b))) : (s16)((s16)(v) >> (b)))
 #endif
 
 typedef struct archive_header_t {
@@ -185,11 +180,11 @@ extern u8 SonLimite;
 void DO_NOVA(obj_t* obj);
 void DO_ONE_CMD(obj_t* obj);
 void RAY_DEMIRAY(void);
-void calc_obj_dir(obj_t* obj);
+s16 calc_obj_dir(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 void obj_hurt(obj_t *obj);
 void RAY_HIT(u8 hurt, obj_t *obj);
-void display_text_sin(const char* text, s16 x, s16 y, s16 font_size, s16 color, s16 a6);
+void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u8 color);
 void stop_cd(void);
 s16 firstFloorBelow(obj_t* obj);
 void setBossReachingSpeeds(obj_t* obj, u8 timer, u8 accuracyX, u8 accuracyY);
@@ -198,7 +193,7 @@ void rayman_sound_fatal_error(const char* message);
 void add_alwobj(obj_t *obj);
 u8 EOA(obj_t *obj);
 void SET_X_SPEED(obj_t *obj);
-void set_sub_etat(obj_t *obj, u8 sub_etat);
+s32 set_sub_etat(obj_t *obj, u8 sub_etat);
 void goto_phase3(obj_t *obj);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 zdc_t *get_zdc(obj_t *obj, s16 index);
@@ -259,8 +254,8 @@ extern s32 sub_74A10(s32 driver, s16 voice);
 extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
 extern s32 sub_7512E(s32 driver, s16 voice, s32 pan);
 extern s32 sub_754E3(s32 driver, s16 voice);
-extern u8 *sub_6FBB4(u32 size);
-extern void JumelleFreeArray(void **address);
+extern void *sub_6FBB4(s32 size);
+extern void JumelleFreeArray(s32 **address);
 
 void sub_3E66C(void);
 void sub_3E6B0(void);
@@ -389,7 +384,7 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
         rayman_sound_fatal_error("Fichier data introuvable.\n");
     size = snd8b_data_infos[data_index].size;
     if (*data != 0)
-        JumelleFreeArray((void **)data);
+        JumelleFreeArray((s32 **)data);
     new_data = sub_6FBB4(size);
     if (new_data == 0)
         rayman_sound_fatal_error("M\x82moire insuffisante pour charger les samples.\n");
@@ -508,7 +503,7 @@ void DigiMusicDone(void)
 void LoadTchatchPerdu(void)
 {
     FILE *file;
-    s32 size;
+    u32 size;
     u32 i;
     u8 check;
     s32 bank = 6;
@@ -518,7 +513,7 @@ void LoadTchatchPerdu(void)
     if (file == 0)
         rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
     size = sndvig_infos[bank].size;
-    ptrTchatch = sub_6FBB4((u32)size);
+    ptrTchatch = sub_6FBB4(size);
     if (ptrTchatch == 0) {
         fclose(file);
         return;
@@ -543,7 +538,7 @@ void PlayTchatch(s32 sound, s32 volume)
     dos_sound_request_t request = {0};
     s32 bank;
     FILE *file;
-    s32 size;
+    u32 size;
     u32 i;
     u8 check;
     s16 voice;
@@ -568,8 +563,8 @@ void PlayTchatch(s32 sound, s32 volume)
             rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
         size = sndvig_infos[bank].size;
         if (ptrTchatch != 0)
-            JumelleFreeArray((void **)&ptrTchatch);
-        ptrTchatch = sub_6FBB4((u32)size);
+            JumelleFreeArray((s32 **)&ptrTchatch);
+        ptrTchatch = sub_6FBB4(size);
         if (ptrTchatch == 0) {
             fclose(file);
             return;
@@ -601,7 +596,7 @@ void FreeTchatchVignette(void)
 {
     while (sub_754E3(sound_driver_handle, sound_voice_id) != 1)
         ;
-    JumelleFreeArray((void **)&ptrTchatch);
+    JumelleFreeArray((s32 **)&ptrTchatch);
     ptrTchatch = 0;
 }
 
@@ -1045,8 +1040,10 @@ void doBBF2command(obj_t *bbf2_obj)
         var_v1 = (s16)unk_2;
         if (var_v1 != 0)
         {
+            s32 speed_step = sgn(((s16)unk_2) - bbf2_obj->speed_y) +
+                bbf2_obj->speed_y;
             bbf2_obj->speed_y = MAX_1(-48, MIN_1(48,
-                SGN(((s16)unk_2) - bbf2_obj->speed_y) + bbf2_obj->speed_y));
+                speed_step));
         }
     }
 
@@ -1311,14 +1308,7 @@ void DO_DARK2_AFFICHE_TEXT(void)
                 else
                 {
                     delta = expsin[final_pass_n];
-                    if (delta >= 0)
-                        delta >>= shift;
-                    else
-                        {
-                        delta = -delta;
-                        delta >>= shift;
-                        delta = -delta;
-                    }
+                    delta = ashr16(delta, shift);
                     if (delta != 255)
                     {
                         final_pass_x += delta;
@@ -1666,8 +1656,8 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                 {
                     if (ds2_obj->iframes_timer != 0)
                     {
-                        dark2_rayon_dx_1 += SGN(unk_x_2 - dark2_rayon_dx_1);
-                        dark2_rayon_dy_1 += SGN(unk_y_2 - dark2_rayon_dy_1);
+                        dark2_rayon_dx_1 += sgn(unk_x_2 - dark2_rayon_dx_1);
+                        dark2_rayon_dy_1 += sgn(unk_y_2 - dark2_rayon_dy_1);
                         allocate_DARK2_SORT(ds2_obj->x + dark2_rayon_dx_1,
                             ds2_obj->y + dark2_rayon_dy_1,
                             ds2_obj->sub_etat, ds2_obj->iframes_timer);
@@ -1675,8 +1665,8 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                     }
                     else
                     {
-                        dark2_rayon_dx_2 += SGN(unk_x_2 - dark2_rayon_dx_2);
-                        dark2_rayon_dy_2 += SGN(unk_y_2 - dark2_rayon_dy_2);
+                        dark2_rayon_dx_2 += sgn(unk_x_2 - dark2_rayon_dx_2);
+                        dark2_rayon_dy_2 += sgn(unk_y_2 - dark2_rayon_dy_2);
                         allocate_DARK2_SORT(ds2_obj->x + dark2_rayon_dx_2,
                             ds2_obj->y + dark2_rayon_dy_2,
                             ds2_obj->sub_etat, ds2_obj->iframes_timer);
@@ -1917,6 +1907,9 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
     obj_t *poing_obj_2;
     s16 dist;
     obj_t *unk_obj;
+    obj_t *linked_obj;
+    s32 speed_y_step;
+    s32 speed_x_step;
 
     poing_obj_1 = poing_obj;
     if (d2fly_obj->hit_points == 0)
@@ -1935,24 +1928,22 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
     replace level.objects[d2fly_obj->link] ???
     look at ToonDonnePoing?
     */
-    if (
-        d2fly_obj->param != 0 &&
-        level.objects[d2fly_obj->link].param != 0
-    )
+    if (d2fly_obj->param != 0 &&
+        (linked_obj = &level.objects[d2fly_obj->link])->param != 0)
     {
         if (d2fly_obj->is_active)
         {
-            if (level.objects[d2fly_obj->link].is_active)
+            if (linked_obj->is_active)
             {
                 poing_obj_1->x = 
                     ((
                         d2fly_obj->x + d2fly_obj->offset_bx +
-                        level.objects[d2fly_obj->link].x + level.objects[d2fly_obj->link].offset_bx
+                        linked_obj->x + linked_obj->offset_bx
                     ) >> 1) - poing_obj_1->offset_bx;
                 poing_obj_1->y =
                     ((
                         d2fly_obj->y + d2fly_obj->offset_by +
-                        level.objects[d2fly_obj->link].y + level.objects[d2fly_obj->link].offset_by
+                        linked_obj->y + linked_obj->offset_by
                     ) >> 1) - poing_obj_1->offset_by;
             }
             else
@@ -1963,10 +1954,10 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
         }
         else
         {
-            if (level.objects[d2fly_obj->link].is_active)
+            if (linked_obj->is_active)
             {
-                poing_obj_1->x = (level.objects[d2fly_obj->link].offset_bx + level.objects[d2fly_obj->link].x) - poing_obj_1->offset_bx;
-                poing_obj_1->y = (level.objects[d2fly_obj->link].offset_by + level.objects[d2fly_obj->link].y) - poing_obj_1->offset_by;
+                poing_obj_1->x = (linked_obj->offset_bx + linked_obj->x) - poing_obj_1->offset_bx;
+                poing_obj_1->y = (linked_obj->offset_by + linked_obj->y) - poing_obj_1->offset_by;
                 /*temp_v0 = &level.objects[d2fly_obj->link];
                 poing_obj->y = (temp_v0->offset_by + temp_v0->y) - poing_obj->offset_by;*/
             }
@@ -2009,10 +2000,10 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
         diff_y = ashl16(diff_y, 5) / dist;
     }
 
-    d2fly_obj->speed_y = MAX_1(-40, MIN_1(40,
-        SGN(diff_y - d2fly_obj->speed_y) + d2fly_obj->speed_y));
-    d2fly_obj->speed_x = MAX_1(-40, MIN_1(40,
-        SGN(diff_x - d2fly_obj->speed_x) + d2fly_obj->speed_x));
+    speed_y_step = sgn(diff_y - d2fly_obj->speed_y) + d2fly_obj->speed_y;
+    d2fly_obj->speed_y = MAX_1(-40, MIN_1(40, speed_y_step));
+    speed_x_step = sgn(diff_x - d2fly_obj->speed_x) + d2fly_obj->speed_x;
+    d2fly_obj->speed_x = MAX_1(-40, MIN_1(40, speed_x_step));
 
     if (d2fly_obj->speed_x > 0 && !(d2fly_obj->flags.flip_x))
         d2fly_obj->flags.flip_x = 1;
