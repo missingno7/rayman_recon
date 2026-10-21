@@ -1,4 +1,4 @@
-/* input.c (1:31ab0..1:32930: keyboard/joystick/demo record). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholder names); worker gfin_input finishing candidate. See NOTES.md for measured statuses. */
+/* input.c (1:31ab0..1:32930: keyboard/joystick/demo record). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholder names); workers gfin_input and w2_smallA finishing candidate. See NOTES.md for measured statuses. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -499,10 +499,22 @@ void sub_42408(u8 buttons)
         joy_buttonA2 = 1;
     if (buttons & 8)
         joy_buttonA2 = 1;
-    joy_rec_left = (buttons & 0x10) ? 1 : 0;
-    joy_rec_right = (buttons & 0x20) ? 1 : 0;
-    joy_rec_up = (buttons & 0x40) ? 1 : 0;
-    joy_rec_down = (buttons & 0x80) ? 1 : 0;
+    if (buttons & 0x10)
+        joy_rec_left = 1;
+    else
+        joy_rec_left = 0;
+    if (buttons & 0x20)
+        joy_rec_right = 1;
+    else
+        joy_rec_right = 0;
+    if (buttons & 0x40)
+        joy_rec_up = 1;
+    else
+        joy_rec_up = 0;
+    if (buttons & 0x80)
+        joy_rec_down = 1;
+    else
+        joy_rec_down = 0;
 }
 
 void do_record(record_t *rec)
@@ -546,6 +558,14 @@ void do_record(record_t *rec)
     }
 }
 
+/* ORIGINAL_INLINE: DOS 1:325b1 / 1:326fa, immediate PIC-mask input.
+   Primitive name INVENTED; IN only, AL output. */
+u8 read_pic_mask(void);
+#pragma aux read_pic_mask = "in al,21h" value [al] modify exact [al]
+/* ORIGINAL_INLINE: DOS 1:325b5 / 1:326fe, immediate PIC-mask output. */
+void write_pic_mask(u8 mask);
+#pragma aux write_pic_mask = "out 21h,al" parm [al] modify exact []
+
 void __interrupt __far PC_keyboard_interrupt_handler(void)
 {
     u8 scancode;
@@ -556,8 +576,8 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
 
     v3 = 0;
     _disable();
-    value = (u8)inp(0x21);
-    outp(0x21, value | 2);
+    value = read_pic_mask();
+    write_pic_mask(value | 2);
     scancode = (u8)inp(0x60);
 
     if (ModeDemo == 1 && (fade & 0x40) != 0) {
@@ -567,7 +587,7 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
             ModeDemo = 3;
     }
 
-    if (!(scancode & 0x80) && (scancode ^ 0x96) != text_input_buffer[0]) {
+    if (!(scancode & 0x80) && text_input_buffer[0] != (scancode ^ 0x96)) {
         need_check_cheats = 1;
         for (i = 8; i > 0; --i)
             text_input_buffer[i] = text_input_buffer[i - 1];
@@ -613,8 +633,8 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
     outp(0x61, value | 0x80);
     outp(0x61, value);
     outp(0x20, 0x20);
-    value = (u8)inp(0x21);
-    outp(0x21, value & 0xfd);
+    value = read_pic_mask();
+    write_pic_mask(value & 0xfd);
     _enable();
 }
 

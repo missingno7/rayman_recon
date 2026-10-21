@@ -88,6 +88,17 @@ void DO_TRP_COMMAND(obj_t *obj)
         case GO_WAIT:
             CALC_MOV_ON_BLOC(obj);
             break;
+        /* DOS 1:6e44f..6e457: keep the reference-source upper empty cases. */
+        case GO_X:
+        case GO_Y:
+        case RESERVED_GO_SKIP:
+        case RESERVED_GO_GOTO:
+        case RESERVED_GO_GOSUB:
+        case RESERVED_GO_GOTOT:
+        case RESERVED_GO_GOTOF:
+        case RESERVED_GO_SKIPT:
+        case RESERVED_GO_SKIPF:
+        case GO_NOP:
         default:
             break;
         }
@@ -134,16 +145,14 @@ void trompetteWind(obj_t *obj, u8 a2)
 
 void DO_TRP_ATTAK(obj_t *obj)
 {
-    u8 sub_etat;
 
     if (obj->timer != 0)
         obj->timer--;
 
     if (obj->main_etat == 0) {
-        sub_etat = obj->sub_etat;
-        if ((sub_etat == 2 && obj->anim_frame >= 10) || sub_etat == 4)
+        if ((obj->sub_etat == 2 && obj->anim_frame >= 10) || obj->sub_etat == 4)
             trompetteWind(obj, 0);
-        else if ((sub_etat == 6 && obj->anim_frame >= 10) || sub_etat == 7)
+        else if ((obj->sub_etat == 6 && obj->anim_frame >= 10) || obj->sub_etat == 7)
             trompetteWind(obj, 1);
     }
 }

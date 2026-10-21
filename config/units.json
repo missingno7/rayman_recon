@@ -362,7 +362,7 @@
    "profile": "game",
    "functions": {
     "DO_TRP_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -376,7 +376,7 @@
      ]
     },
     "DO_TRP_ATTAK": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -5874,7 +5874,7 @@
      ]
     },
     "sub_42408": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
