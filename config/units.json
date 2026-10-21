@@ -11796,8 +11796,8 @@
     }
    }
   },
-  "pal6f200": {
-   "source": "src\\pal6f200.c",
+  "dosprobe": {
+   "source": "src/dosprobe.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
