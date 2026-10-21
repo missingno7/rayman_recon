@@ -1,6 +1,7 @@
 /* Worker candidate for the unnamed DOS effect block 1:15e60..1:16a20.
  * All semantic names here are INVENTED; the oracle controls every address and byte. */
 #include "rtypes.h"
+#include "inline_helpers.h"
 #include <math.h>
 
 typedef struct effect5_point {
@@ -55,15 +56,13 @@ extern s16 effect5_height;
 extern s16 effect5_x_offset;
 extern s16 effect5_y_offset;
 extern u8 *EffetBufferNormal;
-extern void *sub_6FBB4(s32 size);
+extern void *sub_6FBB4(u32 size);
 extern void JumelleFreeArray(void **p);
 extern void effect_copy_band(u8 *source, u8 *destination, u32 width);
 extern void effect_reset_geometry(void);
 extern void draw_effect_segment(u8 *destination, u8 *item);
 #pragma aux draw_effect_segment parm [eax] [esi] modify exact []
 extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
-
-#define EFFECT_MAX(a,b) ((s32)(a) < (s32)(b) ? (s32)(b) : (s32)(a))
 
 void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
 {
@@ -83,30 +82,17 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     u8 height_step;
     u16 x;
     u16 y;
-    s32 clamped;
 
     state = effect5_state;
     effect_reset_geometry();
     state->frame = 0;
-    clamped = 1;
-    if (frame_limit > clamped) clamped = frame_limit;
-    state->frame_limit = clamped;
+    state->frame_limit = max32(1, frame_limit);
     if (speed >= 0) {
-        clamped = 1;
-        if (speed > clamped) clamped = speed;
+        state->speed = max32(1, speed);
     } else {
-        clamped = 1;
-        if (-speed > clamped) clamped = -speed;
-        clamped = -clamped;
+        state->speed = -max32(1, -speed);
     }
-    state->speed = clamped;
-    clamped = radius;
-    if (clamped > 70) clamped = 70;
-    {
-        s32 minimum = 40;
-        if (minimum < clamped) minimum = clamped;
-        state->radius = minimum;
-    }
+    state->radius = max32(40, min32(radius, 70));
     latitude_step = 3.141592654 / state->rows;
     longitude_step = (2 * 3.141592654) / state->columns;
     point = state->points;
@@ -190,8 +176,8 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
         effect5_state = (effect5_state_t *)sub_6FBB4(0x3c);
         state = effect5_state;
         if (state != 0) {
-            state->columns = EFFECT_MAX(2, columns);
-            state->rows = EFFECT_MAX(1, rows);
+            state->columns = max32(2, columns);
+            state->rows = max32(1, rows);
             state->count = (u16)(columns * rows);
             state->point_count = (u16)((columns + 1) * (rows + 1));
             state->source = source;
