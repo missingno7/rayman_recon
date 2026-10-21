@@ -8362,6 +8362,11 @@
     "addr": "1:0456e",
     "name": "INVENTED",
     "evidence": "DOS calls 1:07a5a; standalone handwritten PUSHA/POPA body at 1:0456e. ABI in docs/reference/lowlevel_abi.h. Android exact name absent."
+   },
+   "LOAD_FND": {
+    "addr": "1:38ef0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse menu.c; DOS public at 1:38ef0"
    }
   },
   "data": {
@@ -15210,6 +15215,18 @@
     "name": "INVENTED",
     "type": "s32",
     "evidence": "DOS 1:6fe4/6ff4 and 1:700a dword stores; 1:2bef2/2befc reads; camera offsets from 1:6f80..7082"
+   },
+   "sp_y": {
+    "addr": "2:540a9",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E40A9; Android size 1; DOS byte load at 1:3923a"
+   },
+   "type_fnd": {
+    "addr": "2:3fa21",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA21; Android size 1; DOS byte store/load at 1:3919c and 1:391de"
    }
   }
  }

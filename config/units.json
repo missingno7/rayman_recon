@@ -11840,6 +11840,33 @@
      ]
     }
    }
+  },
+  "fnd": {
+   "source": "src\\fnd.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "LOAD_FND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_FND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "calc_off_fnd": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
