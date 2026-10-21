@@ -98,7 +98,7 @@ similarity; REFS_LAYOUT functions are skipped (they follow the layout).
 27 workers: 20 sol-high finishing passes over every NEAR pool (census brief with rule hints, prototype lookup and
 the W-LAYOUT drift line), 6 Luna-xhigh first passes on unnamed ranges, 1 cdaudio continuation. Integrated with
 `tools/integrate.py` (gate before every commit; 0 regressions throughout).
-- STRICT 939 -> 1022 (+83). Finishing passes: menu +15, sound +5, ray +4, hybrid +4, pcmain/araignee/fee +5,
+- STRICT reached 1022 (about +90: sum of the per-unit gains listed here). Finishing passes: menu +15, sound +5, ray +4, hybrid +4, pcmain/araignee/fee +5,
   mite/luciole/poing +8 (validation pass), skops +2, moteur +2, effect1 +2, blacktoon +2, trumpet +2, others +1;
   no gain: jumelle, pmama, box, basic, meremix rest, special, dark, display, save, breakout, worldmap, stoneman.
 - New units from unnamed ranges: cdaudio 10, cdsave 13/17, savecodec 8/14, effecthelp 1/5, dosmem 1/3,
