@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 typedef struct pix_gerbe_item_t {
     s16 x_pos;
@@ -74,12 +75,11 @@ typedef struct flocon_t {
     u8 field_7;
 
 } flocon_t;
-#define Abs(x) abs(x)
+#define Abs(x) ((s32)(x) < 0 ? -(s32)(x) : (s32)(x))
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define COUNT(x) (sizeof(x)/sizeof((x)[0]))
 #define ashr32(v,b) ((v)<0?-((-(v))>>(b)):((v)>>(b)))
-#define sgn(x) ((x)<0?-1:((x)>0))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 void init_allowed_time(void);
 void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj);
@@ -713,8 +713,8 @@ void DoFirstFlocons(void) {
 
 void add_one_floc(void)
 {
-    s16 unk_1;
     s16 i;
+    s16 unk_1;
     s16 done;
 
     unk_1 = myRand(511);
@@ -846,8 +846,6 @@ void init_flocons(void) {
 void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     s16 unk_x_1;
     s16 unk_y_1;
-    s32 remove_1;
-    s32 remove_2;
     s16 unk_x_2;
     s16 unk_y_2;
     s16 i;
@@ -875,10 +873,8 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     VENT_Y += 4;
     unk_x_1 = VENT_X / 4;
     unk_y_1 = VENT_Y / 4;
-    remove_1 = VENT_X - (VENT_X / 4 * 4);
-    unk_x_2 = remove_1;
-    remove_2 = VENT_Y - (VENT_Y / 4 * 4);
-    unk_y_2 = remove_2;
+    unk_x_2 = VENT_X % 4;
+    unk_y_2 = VENT_Y % 4;
     if (Abs(unk_x_2) == 1 && horloge[4] == 0)
         unk_x_1 += sgn(VENT_X);
 
@@ -898,9 +894,7 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
         unk_y_1 += sgn(VENT_Y);
 
     set_proj_center(SCREEN_WIDTH / 2, 170);
-    i = 0;
-    unk_1 = -64;
-    while (unk_1 < 32 * 6)
+    for (unk_1 = -64, i = 0; unk_1 < 32 * 6; i++, unk_1 += 32)
     {
         flc_i_1 = floc_ind[i];
         unk_y_3 = y_old - y;
@@ -932,8 +926,6 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
             cur_floc++;
             flc_i_2++;
         }
-        unk_1 += 32;
-        i++;
     }
 
     VENT_Y = prev_vy;
