@@ -16540,6 +16540,12 @@
     "name": "RAYVERSE",
     "evidence": "STRONG: Android TabFreq .data size 20; APK pointer-target strings match the complete ordered DOS sequence. DOS has 5 consecutive symbolic pointer fixups.",
     "size": 20
+   },
+   "temp_mem": {
+    "addr": "2:39688",
+    "name": "ANDROID",
+    "evidence": "DOS 1:6f747 clears 0x168 bytes at 2:39688; 1:6f7a4 uses stride 12, 1:6f7c6 stops at 30; fields capacity+0, buffer+4, allocated+8. Android temp_mem is .bss size 360; allocator-table identity independent of BSS ordering.",
+    "type": "temp_mem_entry_t [30]"
    }
   }
  }
