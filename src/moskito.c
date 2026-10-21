@@ -152,9 +152,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
     obj_t *cur_obj;
     s16 i;
     u8 prev_flip_x;
-    s32 temp_s0_2;
     s16 unk_2;
-    u8 curAct_tmp_1;
     s16 nb_obj;
     s32 midpoint_sum;
 
@@ -205,6 +203,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 mstMustLeaveScreenToProceed = false;
                 break;
             case 12:
+            {
+                u8 curAct_tmp_1;
                 curAct_tmp_1 = moskitoActionSequences[bossEncounter][currentBossAction++];
                 currentBossAction = 0;
                 if (curAct_tmp_1 == bossEncounter)
@@ -213,6 +213,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
 
                 currentBossActionIsOver = false;
                 break;
+            }
             case 25: // end of dying sequence
                 if (mst_obj->init_hit_points == 5) {
                     ChangeLevel();
@@ -296,7 +297,6 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 currentBossActionIsOver = false;
                 break;
             case 26: // at top of screen (after recovering from hit), turn around
-                /* TODO: temp_s0_2? */
                 if (mst_obj->main_etat == 0 && mst_obj->sub_etat == 20)
                 {
                     calc_obj_dir(mst_obj);
@@ -306,18 +306,21 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 }
                 else
                 {
-                    /* DOS 1:443d5..443f8: wide snapshot, distinct from the byte saved in case 13. */
-                    temp_s0_2 = mst_obj->flags.flip_x;
+                    s32 flip_snapshot;
+                    /* DOS 1:443d5..443f8: wide snapshot; case 13 saves a byte.
+                     * DOS 1:44437..44459: the animation count has a separate lifetime. */
+                    flip_snapshot = mst_obj->flags.flip_x;
                     calc_obj_dir(mst_obj);
-                    if ((mst_obj->flags.flip_x) != temp_s0_2)
+                    if ((mst_obj->flags.flip_x) != flip_snapshot)
                     {
-                        mst_obj->flags.flip_x = temp_s0_2;
+                        s32 anim_frames;
+                        mst_obj->flags.flip_x = flip_snapshot;
                         set_main_and_sub_etat(mst_obj, 0, 0); // NOTE: different from PS1 version? (sub etat 21 is invalid)
-                        temp_s0_2 = vblToEOA(mst_obj, 1);
+                        anim_frames = vblToEOA(mst_obj, 1);
                         set_main_and_sub_etat(mst_obj, 0, 1);
                         skipToLabel(mst_obj, 1, true);
+                        mst_obj->nb_cmd = anim_frames + mst_obj->nb_cmd;
                         currentBossActionIsOver = false;
-                        mst_obj->nb_cmd = temp_s0_2 + mst_obj->nb_cmd;
                     }
                 }
                 break;
@@ -747,7 +750,6 @@ void changeMoskitoPhase(obj_t* obj) {
 void doMoskitoHit(obj_t* obj, s16 sprite) {
     /* 7151C 80195D1C -O2 -msoft-float */
     u8 act_next;
-    u8 hp;
     s32 dividend;
     s32 divisor;
 
@@ -765,10 +767,11 @@ void doMoskitoHit(obj_t* obj, s16 sprite) {
                 )
             mstMustLeaveScreenToProceed = true;
 
-        hp = obj->hit_points;
-        if (hp != 0)
+        /* DOS 1:4519d..451ad: the byte HP test feeds the promoted denominator.
+         * Direct field expressions reproduce the allocation; an hp local changes it. */
+        if (obj->hit_points != 0)
         {
-            divisor = hp;
+            divisor = obj->hit_points;
             divisor += obj->init_hit_points;
             dividend = obj->init_hit_points * 0xc000 / 12;
             bossSpeedFactor = (dividend / divisor) + 0x4000;
