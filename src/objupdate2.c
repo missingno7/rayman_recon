@@ -1,5 +1,5 @@
 /* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
- * Worker h_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
+ * Worker d_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
  * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -1223,22 +1223,18 @@ void DoAudioStartRaymanCollision(obj_t* obj) {
 
 void DO_SLOPEY_PLAT_CMD(obj_t *obj)
 {
-    s16 sprite_x;
-    s16 sprite_h;
-    s16 sprite_y;
-    s16 sprite_w;
     s16 sign;
-    s16 dist;
     sign = (s16)sgn((s8)obj->hit_points);
     if (ray.follow_id != obj->id) {
         if (horloge[10] == 0 && obj->hit_points != 0)
             obj->hit_points -= sign;
     } else if (horloge[8] == 0) {
+        s16 sprite_x, sprite_y, sprite_w, sprite_h;
         GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h);
         sprite_y += obj->offset_hy;
-        dist = ray.x + ray.offset_bx - (sprite_x + (sprite_w >> 1));
-        dist = ashr16(dist, 3);
-        obj->hit_points -= dist;
+        /* DOS 1:532f9 overwrites the height output with the horizontal distance. */
+        sprite_h = ray.x + ray.offset_bx - (sprite_x + (sprite_w >> 1));
+        obj->hit_points -= ashr16(sprite_h, 3);
         if (iabs((s8)obj->hit_points) >= 16)
             obj->hit_points = sign * 15;
     }
