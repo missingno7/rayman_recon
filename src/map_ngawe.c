@@ -3,6 +3,7 @@
 #include "game.h"
 #include "map.h"
 #include "lowlevel.h"
+#include "inline_helpers.h"
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
@@ -40,13 +41,13 @@ extern void clear_memory(u8 *buffer, s32 color, s32 length);
 u8 BTYP(s16 tile_x, s16 tile_y);
 void CALC_MOV_ON_BLOC(obj_t* obj);
 void DO_NOVA(obj_t* obj);
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void SET_X_SPEED(obj_t* obj);
 void add_alwobj(obj_t* obj);
 void calc_obj_dir(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 u8 calc_typ_travd(obj_t* obj, u8 a2);
-s32 instantSpeed(s16 speed);
+s16 instantSpeed(s16 speed);
 void obj_hurt(obj_t* target);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
@@ -77,7 +78,8 @@ void DRAW_MAP(u8 *draw_buf, big_map_t *big_map)
 
     display_map = big_map->display_map;
     if (display_map->height_in_tiles > 1 && display_map->width_in_tiles > 1) {
-        draw_buf += display_map->x + 320 * display_map->y;
+        draw_buf += display_map->x + (display_map->y << 8);
+        draw_buf += display_map->y << 6;
         tile_index = display_map->tile_index;
         x = start_x = display_map->x;
         y = start_y = display_map->y;
@@ -180,7 +182,7 @@ void ngaweTriesToGrabShip(obj_t *obj)
         GET_SPRITE_POS(ship, 2, &ship_x, &ship_y, &ship_w, &ship_h);
         obj->x = ship_x + 21;
         ship_h = ship_y - 67;
-        in_range = (obj->y >= ship_h - obj->speed_y) && (obj->y <= ship_h + obj->speed_y);
+        in_range = inrange(obj->y, ship_h - obj->speed_y, ship_h + obj->speed_y);
         if (in_range)
             set_main_and_sub_etat(obj, 2, 2);
     }
