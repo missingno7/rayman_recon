@@ -1,6 +1,6 @@
 /* Original pcmain object 1:06f80..1:08890, GOG DOS v1.21.
  * Names RAYVERSE/ANDROID except names explicitly marked INVENTED.
- * Partial matching reconstruction; see this worker's NOTES.md for open blocks. */
+ * Partial matching reconstruction; see NOTES.md for remaining byte differences. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -439,6 +439,7 @@ extern u8 input_mode;
 
 void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y) {
     s32 offset;
+    s32 mask; /* INVENTED local: keep the computed plane mask separate from its store. */
     init_data_state.x = x & 0x0F;
     init_data_state.y = y & 0x0F;
     offset = (s32)draw_buffer - init_data_state.x / 4 -
@@ -452,7 +453,8 @@ void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y) {
     init_data_state.d0 = (s32)PLAN0BIT + init_data_state.c8 / 4 +
         init_data_state.c8 % 4 * ((u32)plan0bit_length >> 2) +
         init_data_state.cc * plan0bit_nb_bytes;
-    planar_copy_offset = 1 << (3 - (init_data_state.x & 3));
+    mask = 1 << (3 - (init_data_state.x & 3));
+    planar_copy_offset = mask;
 }
 
 void DO_GROS_MOTEUR_NORMAL(u8 need_update_display_map) {
@@ -498,7 +500,7 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
             DoPaletteSpecialPC();
         DO_SWAP_PALETTE();
         if (!fixon && !fixontemp) {
-            offset = (Bloc_lim_H1 << 6) + (Bloc_lim_H1 << 8) + Bloc_lim_W1;
+            offset = (Bloc_lim_H1 << 8) + (Bloc_lim_H1 << 6) + Bloc_lim_W1;
             if (is_joypad_mode == 1 && Main_Control)
                 Swap_And_Test_Joystick(DrawBufferNormal + offset, DisplayBufferNormal + offset,
                                       Bloc_lim_W2 - Bloc_lim_W1, Bloc_lim_H2 - Bloc_lim_H1);
@@ -590,7 +592,7 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
         HANDLE_KEY(key_state);
         if (need_timer && use_sync && end_of_frame && !wait_until(deadline)) {
             DO_GROS_MOTEUR_NORMAL(1);
-            if (ray.ray_dist != -1)
+            if (ray.iframes_timer != -1)
                 ray.iframes_timer++;
             free_luciole();
             if (use_sync)
@@ -882,15 +884,15 @@ void InitMemoryVariable(void) {
         ModeNormalAutorise = 0;
         JumelleEffetAutorise = 1;
         CarteSonAutorisee = 1;
-        TailleMainMemTmp = 0x17400;
-        TailleMainMemWorld = 0x62C00;
-        ToutSpriteAutorise = 0;
-        FondAutorise = 2;
         SonLimite = 1;
+        ToutSpriteAutorise = 0;
         P486 = 1;
+        FondAutorise = 2;
+        TailleMainMemTmp = 0x17400;
         TailleMainMemFix = 0x4D800;
-        TailleMainMemSprite = 0x12C000;
+        TailleMainMemWorld = 0x62C00;
         TailleMainMemLevel = 0x5E000;
+        TailleMainMemSprite = 0x12C000;
     } else {
         ModeNormalAutorise = 1;
         JumelleEffetAutorise = 1;
@@ -899,10 +901,10 @@ void InitMemoryVariable(void) {
         ToutSpriteAutorise = 1;
         FondAutorise = 1;
         TailleMainMemTmp = 0x22000;
-        TailleMainMemLevel = 0x87C00;
-        TailleMainMemWorld = 0xF4C00;
-        TailleMainMemSprite = 0xDF400;
         TailleMainMemFix = 0x4D800;
+        TailleMainMemWorld = 0xF4C00;
+        TailleMainMemLevel = 0x87C00;
+        TailleMainMemSprite = 0xDF400;
     }
 
     {
@@ -932,11 +934,9 @@ void InitMemoryVariable(void) {
         printf("\n");
         printf("save path : %s\n", demo_video_mem);
     }
-    for (i = 0; i < 40; i++) {
-        if (TOUCHE(1))
-            break;
+    /* DOS 1:081ec..08225: key test belongs to the loop condition. */
+    for (i = 0; i < 40 && !TOUCHE(1); i++)
         wait_milliseconds(100);
-    }
     RESET_ALL_TOUCHE();
     printf("\n");
     AllocVariablesAutorisee();
@@ -958,8 +958,9 @@ void AfficheEntete(void) {
     u8* video;
     const char* title;
     const char* copyright;
-    u8* second_line;
+    u8 *second_line;
     s32 i;
+    s32 j;
 
     InitTextMode();
     video = (u8*)0xB8000;
@@ -971,10 +972,9 @@ void AfficheEntete(void) {
     for (i = 0; i < strlen(title); i++)
         video[i * 2] = title[i];
     second_line = video + 160;
-    for (i = 0; i < strlen(copyright); i++) {
-        second_line[-(s32)(2 * strlen(copyright)) + i * 2] =
-            copyright[i];
-        second_line[-(s32)(2 * strlen(copyright)) + i * 2 + 1] |= 0x80;
+    for (j = 0; j < strlen(copyright); j++) {
+        (second_line - 2 * strlen(copyright))[j * 2] = copyright[j];
+        (second_line - 2 * strlen(copyright))[j * 2 + 1] |= 0x80;
     }
 }
 
