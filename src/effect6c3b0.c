@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* DOS-derived PC-only radial distortion, 1:6c3b0..1:6ca90.
  * Function/state names are INVENTED (inherited from w2_gap6).
  * NEAR candidate: see NOTES.md for remaining byte/layout differences. */
@@ -142,25 +143,18 @@ u8 effect_helper_6c7cc(u16 x, u16 y, u16 radius, s16 speed,
                        u16 step, u8 *screen, u8 *output)
 {
     effect_state_6c_t *state;
-    s32 bytes;
     u8 success;
+    s32 bytes;
 
     success = 0;
     if (screen != 0 && output != 0) {
         state = (effect_state_6c_t *)sub_6FBB4(0x20);
         effect_state_6c = state;
         if (state != 0) {
-            {
-                s32 upper = 48;
-                s32 requested = radius;
-                s32 lower = 8;
-                if (upper < requested) requested = upper;
-                if (requested > lower) lower = requested;
-                state->radius = lower;
-            }
+            state->radius = max32(8, min32(radius, 48));
             state->width = (u16)(state->radius * 2 + 1);
             state->height = (u16)(state->radius * 2 + 1);
-            memcpy(EffetBufferNormal, screen, 0xfa00);
+            copy_guarded(screen, EffetBufferNormal, 0xfa00);
             state->screen = EffetBufferNormal;
             state->output = output;
             bytes = (s32)state->height * state->width * 2;
@@ -214,19 +208,17 @@ void effect_helper_6c9bc(void)
     u8 *map = state->map;
     s32 x;
     s32 y;
-    s32 row;
-    s32 column;
     s32 stride;
 
-    memcpy(state->output, state->screen, 0xfa00);
+    copy_guarded(state->screen, state->output, 0xfa00);
     x = state->x - state->radius;
     y = state->y - state->radius;
     x = x + y * 320;
     source = state->screen + x;
     destination = state->output + x;
     stride = 320 - state->width;
-    for (row = 0; row < state->height; ++row) {
-        for (column = 0; column < state->width; ++column) {
+    for (y = 0; y < state->height; ++y) {
+        for (x = 0; x < state->width; ++x) {
             s32 dy = (s8)map[1];
             s32 dx = (s8)map[0];
             s32 offset = dx + dy * 320;

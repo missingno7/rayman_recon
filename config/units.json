@@ -12915,7 +12915,7 @@
      ]
     },
     "effect_helper_634f0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -12940,13 +12940,13 @@
    "profile": "game",
    "functions": {
     "effect_copy_band": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "effect_copy_pause_band": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

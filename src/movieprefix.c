@@ -224,8 +224,8 @@ void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color)
 void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
     u8 *dst;
-    dst = surface->pixels + y * 320 + x;
-    copy(dst, src, width);
+    dst = x + y * 320 + surface->pixels;
+    copy_guarded(src, dst, width);
 }
 
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)

@@ -117,7 +117,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v11;
                     } while (--count);
                 } else {
-                    copy(v10, v11, v58);
+                    copy(v11, v10, v58);
                 }
             }
 
@@ -134,7 +134,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v11;
                     } while (--count);
                 } else {
-                    copy(v10, v11, v58);
+                    copy(v11, v10, v58);
                 }
             }
         }
@@ -184,7 +184,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v30;
                     } while (--count);
                 } else {
-                    copy(v29, v30, v60);
+                    copy(v30, v29, v60);
                 }
             }
 
@@ -201,7 +201,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v35;
                     } while (--count);
                 } else {
-                    copy(v36, v35, v59);
+                    copy(v35, v36, v59);
                 }
             }
         }
@@ -223,7 +223,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v42;
                     } while (--count);
                 } else {
-                    copy(v41, v42, v60);
+                    copy(v42, v41, v60);
                 }
             }
 
@@ -239,7 +239,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v24;
                     } while (--count);
                 } else {
-                    copy(v18, v24, v59);
+                    copy(v24, v18, v59);
                 }
             }
         }

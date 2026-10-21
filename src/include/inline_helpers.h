@@ -81,23 +81,23 @@ void fill(void *destination);
   "rep stosd" \
   parm [edi] modify exact [eax ecx edi]
 
-/* ORIGINAL_INLINE, INVENTED name (Android absent).
- * DOS 1:346f7 (effect_helper_346b4), 1:2881c (Do_Effect_Pause_unknown),
- * 1:32a54 (plot2linejumelle). Complete UNGUARDED sequence below.
- * EAX finishes as byte count; ESI/EDI advance by byte count; ECX becomes 0.
- * EDX/EBX survive 1:6e39e and 1:6e3e9; EBP survives 1:34838.
- * PROVISIONAL original advertised contract: physical clobbers are exact,
- * but full-function proofs remain NEAR in effect34580/effect1/jumelle.
- * Adding EBX gives effect_helper_346b4 STRICT, contradicting live EBX in
- * the band-copy callers. Original source shape / per-unit ABI remains OPEN.
- * Do not integrate as a universally matching contract yet.
- * The guarded 19-byte variant (JE before REP MOVSD) is a separate variant.
- * EDI destination, ESI source, ECX byte count; void; DF cleared.
- * Destroys EAX,ECX,ESI,EDI. Bytes (entire helper):
- * fc 89 c8 83 e1 03 74 02 f3 a4 89 c1 c1 e9 02 f3 a5.
- * Proofs: effect_helper_346b4/effect_helper_34760 (NEAR),
- * Do_Effect_Pause_unknown (NEAR), plot2linejumelle (NEAR). */
-void copy(void *destination, const void *source, u32 count);
+/* ORIGINAL_INLINE, INVENTED name (Android lookup absent).
+ * Complete 17-byte body, including CLD. Oracle sites: 1:6e39e and 1:6e3e9
+ * (effect_copy_band/effect_copy_pause_band), 1:635b5 (effect_helper_634f0).
+ * Source ESI, destination EDI, byte count ECX. Source-FIRST C interface:
+ * all six formal-argument orders were tested on both band functions; only
+ * [esi] [edi] [ecx] closes both complete functions (contracts.json).
+ * Physical/validated compiler clobbers: EAX,ECX,ESI,EDI and flags; clears DF.
+ * EAX=count; ECX=0; ESI/EDI advance count bytes; memory is written.
+ * EBX and EDX remain live at BOTH band sites (subsequent ADDs without reload),
+ * EBP remains live across 1:635b5 (subsequent state member accesses).
+ * Full-function STRICT: effect_copy_band (76), effect_copy_pause_band (73),
+ * effect_helper_634f0 (292). Fresh audit: 0 previous STRICT losses.
+ * No result is consumed: void and the historical return declaration are not
+ * uniquely determined by these callers. See REPORT.md for remaining callers.
+ * Do NOT add EBX for effect_helper_346b4 alone: both band proofs regress.
+ * Bytes: fc 89 c8 83 e1 03 74 02 f3 a4 89 c1 c1 e9 02 f3 a5. */
+void copy(const void *source, void *destination, u32 count);
 #pragma aux copy = \
   "cld" \
   "mov eax,ecx" \
@@ -108,7 +108,7 @@ void copy(void *destination, const void *source, u32 count);
   "mov ecx,eax" \
   "shr ecx,2" \
   "rep movsd" \
-  parm [edi] [esi] [ecx] modify exact [eax ecx esi edi]
+  parm [esi] [edi] [ecx] modify exact [eax ecx esi edi]
 /* ORIGINAL_INLINE: DOS 1:54ffb (convertspeed), 1:6e63e (trompetteWind),
  * 1:0c881/0c894 (DO_DARD_PLAFOND_ALWAYS), 1:238b2/238c5 (DO_DARK_SORT_COMMAND).
  * Entire body: 98 d3 e0. AX signed input, CL count, EAX signed result.

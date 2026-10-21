@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* DOS v1.21 1:633e0..1:63b80, partial worker candidate.
  * Public/state/field names are INVENTED and retain the canonical bindings.
  * DOS evidence and rejected hypotheses: NOTES.md. No shared headers changed.
@@ -82,21 +83,17 @@ u8 effect_helper_634f0(u16 width, s16 amount, u8 *source, u8 *destination)
 {
     effect_state_t *state;
     u8 success;
-    s32 clamped_width;
 
     success = 0;
     if (source != 0 && destination != 0) {
         state = (effect_state_t *)sub_6FBB4(0x30);
         effect_state_55760 = state;
         if (state != 0) {
-            clamped_width = width;
-            clamped_width = MIN(40, clamped_width);
-            clamped_width = MAX(8, clamped_width);
-            state->width = clamped_width;
-            state->span = clamped_width * 2;
+            state->width = max32(8, min32(width, 40));
+            state->span = state->width * 2;
             state->period1 = (u16)((double)state->width * 3.14159265359);
             state->period2 = (u16)(3.14159265359 * (double)state->width * 0.5);
-            memcpy(EffetBufferNormal, source, 64000);
+            copy(source, EffetBufferNormal, 64000);
             state->source = EffetBufferNormal;
             state->destination = destination;
             state->table = (s32 *)sub_6FBB4((u32)state->span * 4);

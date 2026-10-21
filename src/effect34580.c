@@ -69,7 +69,7 @@ u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)
         state = current_rows();
         if (state != 0) {
             state->count = 200;
-            copy(EffetBufferNormal, screen, 0xfa00);
+            copy(screen, EffetBufferNormal, 0xfa00);
             state->screen = EffetBufferNormal;
             state->destination = (u8 *)destination;
             state->entries = (effect_span_t *)sub_6FBB4(state->count * sizeof(effect_span_t));
@@ -115,7 +115,7 @@ void effect_helper_34760(void)
                 if (width > 0) {
                     u8 *source = state->screen + source_y * 320 + source_x;
                     u8 *destination = state->destination + destination_y * 320 + destination_x;
-                    copy(destination, source, width);
+                    copy(source, destination, width);
                 }
             }
         }

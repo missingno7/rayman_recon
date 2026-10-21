@@ -615,7 +615,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
             /* DOS 1:28810 and 1:288f2 read destination before source. */
             u8 *display = DisplayBufferNormal;
             u8 *draw = DrawBufferNormal;
-            copy(display, draw, 0xfa00);
+            copy(draw, display, 0xfa00);
         }
         for (;;) {
             if (TOUCHE(0x36) != 0 && TOUCHE(0x2a) != 0)
@@ -646,7 +646,7 @@ finalize:
             /* DOS 1:28810 and 1:288f2 read destination before source. */
             u8 *display = DisplayBufferNormal;
             u8 *draw = DrawBufferNormal;
-            copy(display, draw, 0xfa00);
+            copy(draw, display, 0xfa00);
         }
     }
     return (in_pause == 0);
