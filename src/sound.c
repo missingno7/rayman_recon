@@ -53,7 +53,7 @@ extern u8 phaseCd;
 void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 void KeyOff(u32 voice_id, u8 bank, u8 prog, u8 tone, u8 note);
 void KeyVol(s32 voice_id, s32 volume, s32 pan);
-s16 KeyOn(u8 bank, u8 prog, u8 tone, u8 note, u8 volume, u8 pan);
+s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan);
 void PlayTchatch(s32 snd, s32 volume);
 void start_cd_bbdead(void);
 u8 sub_19790(void);
@@ -167,6 +167,7 @@ void InitSnd(void) {
         SetVolumeSound(options_jeu.sound_volume * 127 / 20);
         raj_env_stereo(options_jeu.is_stereo);
     }
+    return;
 }
 
 s16 last_snd(s16 obj_id) {
@@ -200,8 +201,8 @@ s16 get_pile_obj(s16 obj_id) {
         cur_pile_snd = pile_snd;
         index = 0;
         while (cur_pile_snd->obj != obj_id && index < pt_pile_snd) {
-            ++cur_pile_snd;
             ++index;
+            ++cur_pile_snd;
         }
         if (index == pt_pile_snd)
             index = -1;
@@ -358,7 +359,10 @@ u8 snd_in_pile_snd(s16 snd) {
             ++index;
             cur_snd += 12;
         }
-        index = index != pt_pile_snd;
+        if (index == pt_pile_snd)
+            index = 0;
+        else
+            index = 1;
     }
     return index;
 }
@@ -374,7 +378,7 @@ s32 vol_l(s16 a1, s16 a2) {
 }
 
 void PlaySnd(s16 snd, s16 obj_id) {
-    s16 sound_to_interrupt;
+    s32 sound_to_interrupt;
     s16 voice_id;
     voice_t *voice;
     sound_table_entry_t *sound;
@@ -480,27 +484,11 @@ void PlaySnd(s16 snd, s16 obj_id) {
                 tone = hard_sound_table[245].tone;
                 note = hard_sound_table[245].note;
                 break;
-            // It seems these are PS1 only:
-            /*case 55:
-                prog = -1;
-                if ((s16) PS1_SongIsPlaying(0xc) == 0)
-                {
-                    PS1_PlaySnd(0xc, 0);
-                }
-                break;
+            case 55:
             case 57:
-                prog = -1;
-                PS1_StopPlayingSnd(0xc);
-                break;
             case 103:
                 prog = -1;
-                if (SsIsEos(PS1_SepInfos[22].access_num, PS1_SepInfos[22].seq_num) == 0)
-                {
-                    PS1_PlaySnd(0x16, 0);
-                    D_801CEFCC = 1;
-                    D_801CEFCE = obj_id;
-                }
-                break;*/
+                break;
             default:
                 prog = hard_sound_table[snd].prog;
                 tone = hard_sound_table[snd].tone;
@@ -508,7 +496,7 @@ void PlaySnd(s16 snd, s16 obj_id) {
                 break;
         }
 
-        if (prog != -1 && prog != 255) {
+        if (prog != -1 && (u8)prog != 255) {
             erase_pile_snd(obj_id);
             voll = vol_l(Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd); // NOTE: has no effect?
             volr = vol_r(Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd); // NOTE: has no effect?
@@ -527,9 +515,6 @@ void PlaySnd(s16 snd, s16 obj_id) {
                     }
                 }
             } else {
-                // NOTE: I don't yet know what causes the sound to be emitted in this code path.
-                // So, I added this for now (delete again when it's figured out).
-                KeyOn(bank_to_use[snd], prog, tone, note, Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd);
 //                printf("Debug: snd %d, prog %d, tone %d, note %d, vol %d, pan %d\n", snd, prog, tone, note, Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd);
 
                 nettoie_pile_snd();
@@ -582,8 +567,8 @@ void PlaySnd(s16 snd, s16 obj_id) {
 void PlaySnd_old(s16 sound_id) {
     s16 voice_index = -1;
     if (CarteSonAutorisee) {
-        u8 prog = hard_sound_table[sound_id].prog;
-        if (prog != 255) {
+        s32 prog = hard_sound_table[sound_id].prog;
+        if (prog != -1 && hard_sound_table[sound_id].prog != 255) {
             voice_index = KeyOn(bank_to_use[sound_id], prog,
                                 hard_sound_table[sound_id].tone,
                                 hard_sound_table[sound_id].note,
@@ -612,7 +597,7 @@ void setvol(s16 obj_id, u8 unused) {
     s32 vol_both;
     s32 volume;
     s16 snd;
-    s16 prog;
+    s32 prog;
     u8 tone;
     u8 note;
 
@@ -639,8 +624,8 @@ void setvol(s16 obj_id, u8 unused) {
             prog = pile_snd[unk_pile].prog;
             tone = (u8)pile_snd[unk_pile].tone;
             note = (u8)pile_snd[unk_pile].note;
-            voice_ind = KeyOn(bank_to_use[snd], (u8)prog, tone, note,
-                              (u8)volume, (u8)pile_snd[unk_pile].pan);
+            voice_ind = KeyOn(bank_to_use[snd], prog, tone, note,
+                              (s16)volume, pile_snd[unk_pile].pan);
             if (voice_ind != -1) {
                 erase_voice_table(obj_id);
                 voice_table[voice_ind].obj = obj_id;
@@ -683,7 +668,7 @@ void setvol(s16 obj_id, u8 unused) {
     voice_ind = get_voice_obj(obj_id);
     if (voice_ind != -1) {
         snd = voice_table[voice_ind].snd;
-        if (obj_id == -1 || obj_id == rayman_obj_id || snd == 0xcc)
+        if (obj_id == -1)
             unk_vol = 127;
         else
             unk_vol = get_vol_snd(level.objects + obj_id);
@@ -723,21 +708,17 @@ void setpan(s16 obj_id, u8 unused) {
 }
 
 void manage_snd(void) {
-    s16 i;
+    s32 i;
     s16 obj_id;
     s16 snd;
     s16 stk_index;
-    voice_t *voice;
-    pile_snd_t *pile;
 
     if (CarteSonAutorisee) {
-        voice = voice_table;
         i = 0;
         do {
-            obj_id = voice->obj;
-            snd = voice->snd;
-            if (((obj_id >= 0 &&
-                  (obj_id >= level.nb_objects || level.objects[obj_id].is_active == 0)) ||
+            obj_id = voice_table[i].obj;
+            snd = voice_table[i].snd;
+            if (((obj_id >= 0 && level.objects[obj_id].is_active == 0) ||
                  (obj_id == -2 && snd != -1)) &&
                 (sound_table[snd] & 0x10) != 0) {
                 KeyOff(i, bank_to_use[snd], hard_sound_table[snd].prog,
@@ -748,40 +729,35 @@ void manage_snd(void) {
                     ++stk_index;
                 if (stk_index < 20)
                     stk_snd[stk_index] = -1;
-                voice->obj = -2;
-                voice->snd = -1;
+                voice_table[i].obj = -2;
+                voice_table[i].snd = -1;
             }
-            obj_id = voice->obj;
-            if (obj_id >= 0 && obj_id < level.nb_objects &&
-                level.objects[obj_id].is_active != 0) {
+            obj_id = voice_table[i].obj;
+            if (obj_id >= 0 && level.objects[obj_id].is_active != 0) {
                 setvol(obj_id, 0);
                 setpan(obj_id, 0);
             }
             ++i;
-            ++voice;
         } while (i < 32);
 
-        pile = pile_snd;
         i = 0;
         while (i < pt_pile_snd) {
-            obj_id = pile->obj;
+            obj_id = pile_snd[i].obj;
             if (level.nb_objects > obj_id && level.objects[obj_id].is_active != 0) {
                 setvol(obj_id, 0);
                 setpan(obj_id, 0);
             }
             ++i;
-            ++pile;
         }
     }
 }
 
 void mute_snd_bouclant(void) {
     s16 i;
-    s16 snd;
     if (CarteSonAutorisee) {
         for (i = 0; i < 32; ++i) {
-            snd = voice_table[i].snd;
-            if (snd == 6 || snd == 245 || snd == 2 || (sound_table[snd] & 0x10) != 0)
+            if (voice_table[i].snd == 6 || voice_table[i].snd == 245 || voice_table[i].snd == 2 ||
+                (sound_table[voice_table[i].snd] & 0x10) != 0)
                 KeyVol(i, 0, 0);
         }
     }
@@ -834,28 +810,25 @@ void PlayTchatchVignette(s32 snd) {
 }
 
 void TestCdLoop(void) {
-    s32 track_index;
     u32 elapsed;
     u32 duration;
     if (cdTime == 0) {
         sub_2748(&cdTimeStart);
-        track_index = 22 * (num_world - 1) + num_level - 1;
-        AudioTrackCommand(mapCd[track_index]);
+        AudioTrackCommand(((u8 *)mapCd - 1)[22 * (num_world - 1) + num_level]);
         phaseCd = 0;
         cdTime = 1;
     } else if (cdTime != -1) {
         sub_2748(&cdTimeEnd);
         elapsed = (u32)(cdTimeEnd - cdTimeStart);
         cdTime = (elapsed * 10) / 182;
-        track_index = 22 * (num_world - 1) + num_level - 1;
-        duration = (u32)timeCd[track_index];
+        duration = *(u32 *)(mapCd + 0x80 +
+                            4 * (22 * (num_world - 1) + num_level));
         cdTime += 2;
         if ((u32)cdTime >= duration) {
             if (flagCDPlay != 0) {
                 if (flagCDPlay >= 4) {
                     sub_2748(&cdTimeStart);
-                    track_index = 22 * (num_world - 1) + num_level - 1;
-                    sub_1a654(mapCd[track_index]);
+                    sub_1a654(((u8 *)mapCd - 1)[22 * (num_world - 1) + num_level]);
                     flagCDPlay = 0;
                     phaseCd = !phaseCd;
                     cdTime = 1;
