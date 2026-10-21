@@ -61,6 +61,23 @@ Only then shape the body:
 - Byte-forcing constructs (dead redundant init, empty cases, scratch clobbers, type-forcing block-scope externs)
   make bytes match but are rejected.
 
+## Original inline helpers (ORIGINAL_INLINE, user decision 2026-10-21)
+Five fixed-register byte sequences recur across the game and never occur in a STRICT function (counts against the
+oracle, `python scratch/helpers_sites.py -v`): plain C never produces them (constant shifts through CL, constant bounds
+loaded into registers, identical registers and jump distances at every site, materialised 0/1 results). They are
+original inline helpers, declared once in src/include/inline_helpers.h (contracts and proofs:
+build/workers/w6_helpers/REPORT.md; source of the finding: the ai_decomp review handoff, section 1).
+| helper | DOS bytes (core) | sites / functions | contract | proof |
+|---|---|---|---|---|
+| ashr16 (shift toward zero) | `66 85 c0 78 05 66 d3 f8 eb 09 66 f7 d8 66 d3 f8 66 f7 d8` | 58 / 29 | AX value, CL count -> AX; `modify exact [ax cx]` (`[ax cl]` fails: frame) | DO_BAT_FLASH, frapsol STRICT |
+| inrange (signed inclusive) | `39 d8 7c 0b 39 c8 7f 07 b8 01 00 00 00 eb 02 31 c0` | 44 / 26 | EAX in [EBX, ECX] -> EAX 0/1; `modify exact [eax ebx ecx]` | fades, mereDenisCanAttak STRICT |
+| sgn | `83 f8 00 74 09 b8 01 00 00 00 7f 02 f7 d8` | 46 / 22 | EAX -> -1/0/1; `modify exact [eax]` | DoPoissonBleuRaymanZDD, DO_SURF_CHANGE_HAIRS STRICT |
+| fill (64000-byte zero, no CLD) | `b8 00 00 00 00 b9 80 3e 00 00 f3 ab` | 11 / 9 | EDI; `modify exact [eax ecx edi]` | 4 effect1 functions, DEPART_LEVEL, confirmation_msg STRICT |
+| copy (CLD; bytes then dwords) | `fc 89 c8 83 e1 03 74 02 f3 a4 89 c1 c1 e9 02 f3 a5` | 15 / 10 | EDI, ESI, ECX; advertised clobbers OPEN | bytes reproduce; full functions still NEAR |
+Rules: use the header as declared (no per-unit redefinitions, no new helper pragmas); the CL/bounds setup is caller
+code. Negative: the clamp family (`39 d8 7e 02 89 d8`) is reproduced by ordinary C - not a helper.
+First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, ray, effect1, menu, cheat, 0 losses.
+
 ## Evidence log (established facts, with their proofs)
 - **Watcom C, 32-bit flat, register calling convention** [PROVEN]: args in EAX, EDX, EBX, ECX; callee saves used
   registers (`push ebx/ecx/edx`); symbols `name_` for functions, `_name` for data (OMF from wcc386 matches).
