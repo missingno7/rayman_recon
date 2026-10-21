@@ -594,10 +594,10 @@ void RAY_TO_THE_RIGHT(void);
 void RAY_TO_THE_LEFT(void);
 void DO_FIXE(void);
 void deactivate_ship_links(void);
-s32 linkListHoldsAGendoor(obj_t *obj);
+s16 linkListHoldsAGendoor(obj_t *obj);
 void suppressFromLinkList(obj_t* obj);
 void INIT_RAY_BEGIN(void);
-s32 is_icy_pente(u8 btyp);
+s16 is_icy_pente(u8 btyp);
 void DO_PLACE_RAY(void);
 void DO_AUTO_SCROLL(void);
 void INIT_MOTEUR_BEGIN(void);
@@ -673,13 +673,13 @@ extern void RAY_TO_THE_RIGHT(void);
 extern void RAY_TO_THE_LEFT(void);
 extern void DO_FIXE(void);
 extern void deactivate_ship_links(void);
-extern s32 linkListHoldsAGendoor(obj_t *obj);
+extern s16 linkListHoldsAGendoor(obj_t *obj);
 extern void correct_gendoor_link(u8 a1);
 extern void suppressFromLinkList(obj_t* obj);
 extern void correct_link(void);
 extern void INIT_RAY_BEGIN(void);
 extern void INIT_RAY(u8 new_lvl);
-extern s32 is_icy_pente(u8 btyp);
+extern s16 is_icy_pente(u8 btyp);
 extern void STOPPE_RAY_EN_XY(void);
 extern void DO_PLACE_RAY(void);
 extern void DO_AUTO_SCROLL(void);
@@ -2696,9 +2696,8 @@ void RECALE_ALL_OBJECTS(void)
 s16 RayCoince(s16 dir) {
     s16 x_pos;
     s16 y_pos;
-    s32 pos_to_check;
     s32 map_ind;
-    u8 res;
+    s32 res;
 
     /* 30A64 80155264 -O2 -msoft-float */
 
@@ -2713,54 +2712,50 @@ s16 RayCoince(s16 dir) {
     switch (dir)
     {
         case 2:
-            pos_to_check = y_pos - (y_pos / 16 * 16);
-            if ((s16) pos_to_check < 3)
+            if (y_pos % 16 < 3)
             {
                 map_ind = (x_pos >> 4) + (mp.width * (y_pos >> 4));
-                if (block_flags[mp.map[map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[++map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[++map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[++map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[++map_ind].tile_type].raw & 1)
                     res = 1;
             }
             break;
         case 3:
-            pos_to_check = y_pos - (y_pos / 16 * 16);
-            if ((s16) pos_to_check > 12)
+            if (y_pos % 16 > 12)
             {
                 map_ind = (x_pos >> 4) + (mp.width * ((y_pos + 16 * 4) >> 4));
-                if (block_flags[mp.map[map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[++map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[++map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[++map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[++map_ind].tile_type].raw & 1)
                     res = 1;
             }
             break;
         case 0:
-            pos_to_check = x_pos - (x_pos / 16 * 16);
-            if ((s16) pos_to_check < 3)
+            if (x_pos % 16 < 3)
             {
                 map_ind = ((x_pos >> 4) + (mp.width * ((y_pos + 16) >> 4))) - 1;
-                if (block_flags[mp.map[map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw & 1)
                     res = 1;
             }
             break;
         case 1:
-            pos_to_check = x_pos - (x_pos / 16 * 16);
-            if ((s16) pos_to_check > 12)
+            if (x_pos % 16 > 12)
             {
                 map_ind = ((x_pos >> 4) + (mp.width * ((y_pos + 16) >> 4))) + 3;
-                if (block_flags[mp.map[map_ind].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw & 1)
                     res = 1;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw >> BLOCK_FULLY_SOLID & 1)
+                if (block_flags[mp.map[map_ind += mp.width].tile_type].raw & 1)
                     res = 1;
             }
             break;
@@ -3030,7 +3025,7 @@ void deactivate_ship_links(void) {
     }
 }
 
-s32 linkListHoldsAGendoor(obj_t *obj)
+s16 linkListHoldsAGendoor(obj_t *obj)
 {
     u8 res;
     s16 linked;
@@ -3106,15 +3101,15 @@ void suppressFromLinkList(obj_t* obj) {
 
     id = obj->id;
     linked_id = link_init[id];
-    if (id != linked_id) {
+    if (linked_id != id) {
         do {
             id = linked_id;
             linked_id = link_init[id];
         } while (linked_id != obj->id);
     }
     link_init[id] = link_init[obj->id];
-    if (link_init[id] == id) {
-        level.objects[link_init[id]].link_has_gendoor = 0;
+    if (id == link_init[id]) {
+        level.objects[id].link_has_gendoor = 0;
     }
     link_init[obj->id] = obj->id;
     obj->link_has_gendoor = 0;
@@ -3283,7 +3278,7 @@ void INIT_RAY(u8 new_lvl) {
     }
 }
 
-s32 is_icy_pente(u8 btyp) {
+s16 is_icy_pente(u8 btyp) {
     s32 result;
 
     result = (block_flags[btyp].raw & 0x40) != 0 && (block_flags[btyp].raw & 8) != 0;
