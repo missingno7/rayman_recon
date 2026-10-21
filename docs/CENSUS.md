@@ -118,5 +118,5 @@ blocs +2 (calc_typ_trav size flipped bloc_floor), worldmap +2, effect1 +2, map_n
 ray_pc complete, movie complete. 14 units became contiguous without new STRICT (bbmont, special, stoneman, ufo,
 objupdate4, araignee, ...): their remaining NEAR functions are now body-shape only. Structural finding: hybrid was two
 original objects (11 zero bytes at 1:2f035..2f040) - split into hifi + hybrid (FreeDetectDriver STRICT). New compiler
-fact: unused prefix vs postfix short decrement differ (ray_pc). Measured: the drift-first brief gained in ~45% of units,
-versus ~25% for the preceding helper/finishing passes on the same pools.
+fact: unused prefix vs postfix short decrement differ (ray_pc). Measured: the drift-first brief gained STRICT in 23 of 52 units (44%),
+versus about a third of units in the preceding helper pass.
