@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d5_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker g_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -1495,7 +1495,8 @@ void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
     s16 sprite_x, sprite_y;
     s16 x0, y0, x1, y1, x2, y2;
     anim = obj->animations + obj->anim_index;
-    layers = anim->layers + obj->anim_frame * (anim->layers_per_frame & 0x3fff);
+    /* DOS 1:0bc02..0bc10: extend the layer count before loading the frame. */
+    layers = anim->layers + (anim->layers_per_frame & 0x3fff) * obj->anim_frame;
     if (obj->flags.follow_enabled) {
         GET_SPRITE_POS(obj, obj->follow_sprite, &follow_x, &follow_y, &follow_w, &follow_h);
         center_x = follow_x - xmap + 8 + (follow_w >> 1);
