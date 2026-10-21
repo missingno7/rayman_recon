@@ -24,7 +24,7 @@ typedef struct world_info_t {       /* src/cage.c */
     u8 index_down;
     u8 index_left;
     u8 index_right;
-    u8 state;
+    union { u8 state; struct { u8 is_unlocked:1; u8 state_bit1:1; u8 is_unlocking:1; u8 state_rest:5; }; };  /* bits PROVEN: save storeWorldInfoAcces */
     u8 nb_cages;
     u8 world;
     u8 level;
@@ -205,5 +205,10 @@ typedef struct font_t {             /* alpha 2:3e6e0, alpha2 2:3edc8, alpha_numb
     u8 *img_buffer;
     s16 nb_sprites;
 } font_t;
+
+typedef union world_info_save_t {   /* wi_save_zone[24] packed world flags; name INVENTED, layout PROVEN (save) */
+    u8 raw;
+    struct { u8 is_unlocked:1; u8 is_unlocking:1; u8 nb_cages:3; u8 unused:3; };
+} world_info_save_t;
 
 #endif

@@ -8944,7 +8944,7 @@
    "wi_save_zone": {
     "addr": "2:3af88",
     "name": "RAYVERSE",
-    "type": "u8[24]",
+    "type": "world_info_save_t[24]",
     "evidence": "external/rayverse/src/data.c:2541 comment CAF88; DOS obj2 offset 3af88"
    },
    "save_zone": {

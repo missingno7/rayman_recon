@@ -1,4 +1,8 @@
-/* save.c (1:63b80..1:65840: game/options save, save zone, bonus bookkeeping). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_save. See config/units.json for statuses. */
+/* save object (DOS v1.21, 1:63b80..1:65837; following zeros are linker padding).
+ * Names RAYVERSE/ANDROID, seeded by tu_save; finishing candidate by gfin_save.
+ * Worker status and unresolved differences: NOTES.md. Shared bitfield proposal:
+ * header_proposal.md. No shared headers or accepted units were changed.
+ */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -29,11 +33,12 @@ extern s16 VENT_X, VENT_Y;
 extern poing_t poing;
 extern u8 dead_time, current_pal_id;
 extern world_info_t t_world_info[24];
-extern u8 wi_save_zone[24];
+extern world_info_save_t wi_save_zone[24];
 extern obj_t rms;
 extern obj_t *poing_obj;
 extern s16 decalage_en_cours, ray_wind_force;
 extern u8 gerbe;
+extern s16 h_scroll_speed, v_scroll_speed;
 /* DOS CheminSauvegarde, Rayverse data.c //CCFDC; config's old label is reused
    at the same start, with its true 100-byte character-array type. */
 extern char demo_video_mem[100];
@@ -99,7 +104,7 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
     s16 j;
     obj_t *cur_obj;
     s16 nb_objs;
-    s32 unk_1;
+    s16 unk_1;
     s32 unk_2;
 
     save_state->status_bar_tings = status_bar.num_wiz;
@@ -125,7 +130,7 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
     }
 
     memcpy(save_state->link_init, link_init, level.nb_objects * sizeof(u16));
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 5U; i++)
         save_state->ray_coll_btype[i] = ray.btypes[i];
 
     save_state->ray_anim_index = ray.anim_index;
@@ -163,16 +168,19 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
 
 void restoreGameState(save_state_t *save_state)
 {
-    s32 i;
-    s32 obj_id;
+    s16 i;
+    s16 obj_id;
     s32 bit;
     obj_t *obj;
-    u16 type;
-    int need_check_triggered;
+    s16 nb_objs;
+    s16 index;
+    obj_t *save_obj;
 
     if (save_state->is_just_saved) {
-        if (RayEvts.tiny)
+        if (RayEvts.tiny) {
             ray = rms;
+            RayEvts.tiny = 0;
+        }
 
         status_bar.num_wiz = save_state->status_bar_tings;
         xmap = save_state->x_map;
@@ -190,21 +198,24 @@ void restoreGameState(save_state_t *save_state)
         }
 
         if (save_state->save_obj_id != -1) {
-            obj = level.objects + save_state->save_obj_id;
-            obj->x = save_state->save_obj_x_pos;
-            obj->y = save_state->save_obj_y_pos;
-            obj->detect_zone_flag = save_state->save_obj_detect_zone_flag;
-            obj->flags.hurtbyfist = save_state->save_obj_flag_1;
+            save_obj = level.objects + save_state->save_obj_id;
+            save_obj->x = save_state->save_obj_x_pos;
+            save_obj->y = save_state->save_obj_y_pos;
+            save_obj->detect_zone_flag = save_state->save_obj_detect_zone_flag;
+            save_obj->flags.hurtbyfist = save_state->save_obj_flag_1;
         }
 
         if (save_state == (save_state_t *)&save1) {
             for (i = 0; i < level.nb_objects; i++) {
                 link_init[i] = save_state->link_init[i];
-                level.objects[i].link_has_gendoor = (link_init[i] != i);
+                if (link_init[i] != i)
+                    level.objects[i].link_has_gendoor = 1;
+                else
+                    level.objects[i].link_has_gendoor = 0;
             }
         }
 
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 5U; i++)
             ray.btypes[i] = save_state->ray_coll_btype[i];
 
         ray.anim_index = save_state->ray_anim_index;
@@ -214,15 +225,15 @@ void restoreGameState(save_state_t *save_state)
 
         if (save_state == (save_state_t *)&save1) {
             switch (save_state->poing_sub_etat) {
+            case 5:
+            case 12:
+                save_state->poing_sub_etat = 3;
+                break;
             case 1:
             case 3:
             case 8:
             case 10:
                 save_state->poing_sub_etat = 1;
-                break;
-            case 5:
-            case 12:
-                save_state->poing_sub_etat = 3;
                 break;
             }
         }
@@ -242,28 +253,27 @@ void restoreGameState(save_state_t *save_state)
         VENT_Y = save_state->vent_y;
         ray.flags.alive = 1;
 
-        for (obj_id = 0; obj_id < level.nb_objects; obj_id++) {
-            obj = level.objects + obj_id;
-            type = obj->type;
-            if (type == 3 || type == 13 || type == 15 || type == 59 ||
-                type == 36 || type == 66 || type == 62 || type == 99) {
+        h_scroll_speed = 0;
+        v_scroll_speed = 0;
+        obj_id = 0;
+        obj = level.objects;
+        nb_objs = level.nb_objects;
+        while (obj_id < nb_objs) {
+            if (obj->type == 3 || obj->type == 13 || obj->type == 15 || obj->type == 59 ||
+                obj->type == 36 || obj->type == 66 || obj->type == 62 || obj->type == 99) {
                 obj->flags.alive = 0;
-            } else if (type != 141 && type != 164) {
-                if (type == 179 || type == 242) {
-                    obj->field_1C = 1;
-                    need_check_triggered = 1;
-                } else {
-                    need_check_triggered = 0;
-                }
-                if (!need_check_triggered)
-                    continue;
-            }
+            } else if (obj->type == 141 || obj->type == 164 ||
+                       ((obj->type == 179 || obj->type == 242) ? (obj->field_1C = 1) : 0)) {
 
-            bit = 1 << (obj_id & 0x1f);
-            if ((bit & save_state->triggered_objects[obj_id >> 5]) == 0)
-                obj->flags.alive = 0;
-            else
-                obj->flags.alive = 1;
+                index = obj_id >> 5;
+                bit = 1 << (obj_id & 0x1f);
+                if ((bit & save_state->triggered_objects[index]) != 0)
+                    obj->flags.alive = 1;
+                else
+                    obj->flags.alive = 0;
+            }
+            obj_id++;
+            obj++;
         }
 
         gerbe = 0;
@@ -311,9 +321,9 @@ void storeWorldInfoAcces(void)
 {
     s16 i;
     for (i = 0; i < 24; i++) {
-        wi_save_zone[i] = (wi_save_zone[i] & ~1) | (t_world_info[i].state & 1);
-        wi_save_zone[i] = (wi_save_zone[i] & ~2) | ((t_world_info[i].state & 4) >> 1);
-        wi_save_zone[i] = (wi_save_zone[i] & ~0x1c) | ((t_world_info[i].nb_cages & 7) << 2);
+        wi_save_zone[i].is_unlocked = t_world_info[i].is_unlocked;
+        wi_save_zone[i].is_unlocking = t_world_info[i].is_unlocking;
+        wi_save_zone[i].nb_cages = t_world_info[i].nb_cages;
     }
 }
 
@@ -321,9 +331,9 @@ void retrieveWorldInfoAccess(void)
 {
     s16 i;
     for (i = 0; i < 24; i++) {
-        t_world_info[i].state = (t_world_info[i].state & ~1) | (wi_save_zone[i] & 1);
-        t_world_info[i].state = (t_world_info[i].state & ~4) | (((u8)(wi_save_zone[i] << 6) >> 7) * 4);
-        t_world_info[i].nb_cages = (u8)(wi_save_zone[i] << 3) >> 5;
+        t_world_info[i].is_unlocked = wi_save_zone[i].is_unlocked;
+        t_world_info[i].is_unlocking = wi_save_zone[i].is_unlocking;
+        t_world_info[i].nb_cages = wi_save_zone[i].nb_cages;
     }
 }
 
@@ -472,7 +482,8 @@ u8 LoadGameOnDisk(u8 which_save)
             ywldmapsave = 0;
         } else
             error = 1;
-    }
+    } else
+        error = 1;
 
     destination = fopen(temporary, "wb");
     if (destination != NULL) {
@@ -481,8 +492,6 @@ u8 LoadGameOnDisk(u8 which_save)
     }
     unlink(temporary);
 
-    if (JeuCracker)
-        save_ray[which_save - 1][0] = '\0';
     return error;
 }
 
@@ -494,9 +503,8 @@ u8 LoadInfoGame(u8 which_save)
     s16 fd;
     FILE *source;
     FILE *destination;
-    u8 cages;
-    s32 i;
     u8 error;
+    s32 i;
 
     strcpy(filename, demo_video_mem);
     strcat(filename, "RAYMAN");
@@ -522,7 +530,10 @@ u8 LoadInfoGame(u8 which_save)
     }
 
     if (error == 0) {
-        if (file_size(temporary) == 0xa7a) {
+        if (file_size(temporary) != 0xa7a)
+            error = 1;
+    }
+    if (error == 0) {
             fd = (s16)open(temporary, O_RDONLY | O_BINARY,
                            S_IREAD | S_IWRITE);
             if (fd != -1) {
@@ -535,19 +546,16 @@ u8 LoadInfoGame(u8 which_save)
             close(fd);
 
             LoadInfoRay[which_save - 1].continues = nb_continue;
-            cages = 0;
+            LoadInfoRay[which_save - 1].cages = 0;
             for (i = 0; i < 24; i++)
-                cages += (wi_save_zone[i] >> 2) & 7;
-            LoadInfoRay[which_save - 1].cages = cages;
+                LoadInfoRay[which_save - 1].cages += wi_save_zone[i].nb_cages;
             LoadInfoRay[which_save - 1].lives = (u8)status_bar.lives;
             LoadInfoRay[which_save - 1].tings = status_bar.num_wiz;
-            error = 0;
             } else {
                 error = 1;
             }
-        } else {
-            error = 1;
-        }
+    } else {
+        error = 1;
     }
 
     destination = fopen(temporary, "wb");
@@ -567,7 +575,7 @@ u8 SaveOptionsOnDisk(void)
     char filename[120];
     s16 fd;
     u8 saved_frequency;
-    s16 i;
+    u8 i;
 
     saved_frequency = Frequence;
     strcpy(filename, demo_video_mem);
@@ -606,7 +614,7 @@ u8 SaveOptionsOnDisk(void)
     if (write(fd, &GameModeVideo, 1) <= 0) return 0;
     if (write(fd, &byte_93fa20, 1) <= 0) return 0;
     if (write(fd, &SizeScreen, 1) <= 0) return 0;
-    if (saved_frequency != 0 && saved_frequency != 1 && saved_frequency != 2)
+    if (saved_frequency != 1 && saved_frequency != 0 && saved_frequency != 2)
         saved_frequency = 0;
     if (write(fd, &saved_frequency, 1) <= 0) return 0;
     if (write(fd, &fixon, 1) <= 0) return 0;
@@ -629,7 +637,7 @@ u8 LoadOptionsOnDisk(void)
     char filename[120];
     s16 fd;
     s32 length;
-    s16 i;
+    u8 i;
 
     strcpy(filename, demo_video_mem);
     strcat(filename, "RAYMAN.CFG");
@@ -643,12 +651,12 @@ u8 LoadOptionsOnDisk(void)
     lseek(fd, 0, SEEK_SET);
 
     if (read(fd, &language, 1) == -1) return 0;
-    if (read(fd, &Port, 4) <= 0) return 0;
-    if (read(fd, &Irq, 4) <= 0) return 0;
-    if (read(fd, &Dma, 4) <= 0) return 0;
-    if (read(fd, &Param, 4) <= 0) return 0;
-    if (read(fd, &DeviceID, 4) <= 0) return 0;
-    if (read(fd, &NumCard, 1) <= 0) return 0;
+    if (read(fd, &Port, 4) == -1) return 0;
+    if (read(fd, &Irq, 4) == -1) return 0;
+    if (read(fd, &Dma, 4) == -1) return 0;
+    if (read(fd, &Param, 4) == -1) return 0;
+    if (read(fd, &DeviceID, 4) == -1) return 0;
+    if (read(fd, &NumCard, 1) == -1) return 0;
     if (read(fd, &options_jeu.jump, 2) <= 0) return 0;
     if (read(fd, &options_jeu.fist, 2) <= 0) return 0;
     if (read(fd, &options_jeu.field_14, 2) <= 0) return 0;
@@ -665,7 +673,6 @@ u8 LoadOptionsOnDisk(void)
     if (read(fd, &xpadcentre, 2) <= 0) return 0;
     if (read(fd, &ypadcentre, 2) <= 0) return 0;
     for (i = 0; i < 4; i++) {
-        notbut[i] = 0;
         if (read(fd, &notbut[i], 1) <= 0) return 0;
     }
     for (i = 0; i < 7; i++)
