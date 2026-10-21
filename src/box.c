@@ -1,12 +1,13 @@
 /* box.c (1:13f30..1:14e90: plasma/fire boxes, gauges, palette/capture helpers; PC-only). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_box. ABI pragmas describe external assembly; the marked ORIGINAL_INLINE pragmas contain only proven port/interrupt instructions. */
-/* Worker sfin_box: five STRICT functions; remaining bodies are DOS-informed NEAR candidates.
- * See NOTES.md for measured status and unresolved source-shape differences. */
+/* d_box: preserve the five accepted STRICT functions. CalcTab uses intrinsic sin
+ * and one expression: one remaining reciprocal byte differs. See NOTES.md. */
 #include "game.h"
 #include "rtypes.h"
 #include <conio.h>
 #include <math.h>
 #include <string.h>
-#pragma function(sqrt, sin)
+/* CalcTab: sqrt uses the ordinary entry; sin keeps the software intrinsic ABI. */
+#pragma function(sqrt)
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
@@ -80,10 +81,9 @@ void CalcTab(void)
     for (j = 0; j < 128; ++j) {
         s16 i;
         for (i = 0; i < 128; ++i) {
-            double v = (u8)sqrt((64 - j) * (64 - j) + (64 - i) * (64 - i));
-            v *= (1.0 / 9.5);
-            v = sin(v);
-            byte_DA43C[128 * j + i] = (v + 1.0) * 40.0;
+            byte_DA43C[128 * j + i] =
+                (sin((u8)sqrt((64 - j) * (64 - j) + (64 - i) * (64 - i))
+                     * (1.0 / 9.5)) + 1.0) * 40.0;
         }
     }
 }
