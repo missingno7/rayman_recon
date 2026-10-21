@@ -4,6 +4,7 @@
  */
 #include "obj.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 /* Rayverse layout; Android symbol reports 20 bytes, DOS accesses confirm fields at +0x0e and +0x10. */
 typedef struct poing_t {
@@ -31,7 +32,6 @@ typedef struct poing_t {
 #define MAX_2(x, y) if (x < y) x = y;
 #define MIN_2(x, y) if (x > y) x = y
 #define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
-#define SGN(x) ((s32)(x) == 0 ? 0 : ((s32)(x) < 0 ? -1 : 1))
 
 extern obj_t ray;
 extern obj_t *poing_obj;
@@ -42,13 +42,13 @@ extern block_flags_t block_flags[64];
 u8 EOA(obj_t *obj);
 void SET_X_SPEED(obj_t *obj);
 void CALC_MOV_ON_BLOC(obj_t *obj);
-void set_sub_etat(obj_t *obj, u8 sub_etat);
+s32 set_sub_etat(obj_t *obj, u8 sub_etat);
 void set_main_etat(obj_t *obj, u8 etat);
 void set_main_and_sub_etat(obj_t *obj, u8 etat, u8 sub_etat);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void obj_hurt(obj_t *obj);
 u8 calc_typ_travd(obj_t *obj, u8 a2);
-void calc_obj_dir(obj_t *obj);
+s16 calc_obj_dir(obj_t *obj);
 s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 void makeUturn(obj_t *obj);
 u8 BTYP(s16 tile_x, s16 tile_y);
@@ -182,12 +182,6 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
 //53068
 void DO_MIT_ATTAK(obj_t *obj)
 {
-    s16 distance;
-    s16 ray_distance;
-    s32 abs_distance;
-    s32 abs_ray_distance;
-    s16 diff_y;
-
     if (obj->main_etat == 0 && obj->sub_etat == 10) {
         if (obj->follow_id > 50)
             obj->follow_id -= 50;
@@ -202,11 +196,15 @@ void DO_MIT_ATTAK(obj_t *obj)
             if (obj->gravity_value_2 != 0 && obj->speed_y >= 0)
                 obj->speed_y = obj->speed_y - 1;
         } else if (obj->sub_etat == 4) {
-            abs_distance = obj->x - obj->follow_x;
-            if (abs_distance < 0) abs_distance = -abs_distance;
+            s16 distance;
+            s16 ray_distance;
+            s32 abs_distance;
+            s32 abs_ray_distance;
+            s16 diff_y;
+
+            abs_distance = ABS(obj->x - obj->follow_x);
             distance = abs_distance;
-            abs_ray_distance = ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10;
-            if (abs_ray_distance < 0) abs_ray_distance = -abs_ray_distance;
+            abs_ray_distance = ABS(ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10);
             ray_distance = abs_ray_distance;
             if (distance > obj->config || (distance > ray_distance && obj->config == 140)) {
                 if (obj->config == 140 && ray_distance < 140)
@@ -267,7 +265,6 @@ void DO_MIT_ATTAK(obj_t *obj)
 //53320
 u8 IS_MIT_PAF(obj_t* obj) {
     /* 4B154 8016F954 -O2 -msoft-float */
-    s32 unk_x_3;
     s16 spd_x;
     u8 res = false;
 
@@ -296,9 +293,9 @@ u8 IS_MIT_PAF(obj_t* obj) {
                 obj->speed_y = 0;
                 if (obj->follow_id >= 500)
                 {
+                    s32 unk_x_3;
                     unk_x_3 = obj->x - obj->follow_x;
-                    if (unk_x_3 < 0)
-                        unk_x_3 = -unk_x_3;
+                    unk_x_3 = ABS(unk_x_3);
 
                     if ((s16)unk_x_3 < 8) {
                         if (!obj->flags.flip_x)
@@ -329,7 +326,9 @@ void DO_MIT_COMMAND(obj_t* obj) {
     s16 esquive_x;
     u8 prev_flip_x;
     s32 diff_y_base;
-    eta_t* obj_eta = &obj->eta[obj->main_etat][obj->sub_etat];
+    s32 main_index = obj->main_etat;
+    eta_t *eta_row = obj->eta[main_index];
+    eta_t* obj_eta = &eta_row[obj->sub_etat];
 
     if (!IS_MIT_PAF(obj)) {
         if (obj->follow_id >= 500) {
@@ -575,9 +574,9 @@ void DoMite2PoingCollision(obj_t* obj, s16 sprite) {
 //53A68
 void DO_MITE2_ESQUIVE(obj_t* mit2_obj) {
     /* 3C96C 8016116C -O2 -msoft-float */
-    s16 diff_y;
     s16 unk_1;
     s16 diff_x;
+    s16 diff_y;
 
     if (poing.is_active || poing.is_charging) {
         calc_esquive_poing(mit2_obj, &diff_x, &diff_y, &unk_1);
@@ -586,7 +585,7 @@ void DO_MITE2_ESQUIVE(obj_t* mit2_obj) {
                         (!(mit2_obj->flags.flip_x) && diff_x < 0) ||
                         (mit2_obj->flags.flip_x && diff_x > 0)
                 ) &&
-                SGN(mit2_obj->speed_x) == -SGN(poing_obj->speed_x)
+                sgn(mit2_obj->speed_x) == -sgn(poing_obj->speed_x)
         ) {
             mit2_obj->speed_x = 0;
             mit2_obj->speed_y = 0;
