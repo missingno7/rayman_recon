@@ -4,6 +4,7 @@
  */
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 
 #define true 1
 #define false 0
@@ -40,16 +41,16 @@ void set_main_and_sub_etat(obj_t *obj, u8 etat, u8 sub_etat);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 u8 calc_typ_travd(obj_t *obj, u8 a2);
 void obj_hurt(obj_t *obj);
-void set_sub_etat(obj_t *obj, u8 sub_etat);
+s32 set_sub_etat(obj_t *obj, u8 sub_etat);
 s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 s16 test_allowed(obj_t *obj, s16 center_x, s16 center_y);
-u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
-void calc_obj_dir(obj_t *obj);
+s16 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
+s16 calc_obj_dir(obj_t *obj);
 void Projectil_to_RM(obj_t *obj, s16 *out_spd_x, s16 *out_spd_y, s16 new_spd_x, s16 new_spd_y);
 void calc_obj_pos(obj_t *obj);
 void add_alwobj(obj_t *obj);
 void PlaySnd_old(s16 sound_id);
-void PlaySnd(s16 sound_id, s16 obj_id);
+void PlaySnd(s32 sound_id, s32 obj_id);
 obj_t *allocateExplosion(obj_t *obj);
 
 
@@ -499,13 +500,13 @@ void DO_STONE_EXPLOSION(obj_t* obj, s16 sprite) {
 }
 
 //7D4E4
-void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
+void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
     /* 388C4 8015D0C4 -O2 -msoft-float */
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    u8 stmn_frame;
     s16 speed;
+    s32 speed_x;
     s16 stmn_spr;
     s16 stmn_x; s16 stmn_y; s16 stmn_w; s16 stmn_h;
 
@@ -523,12 +524,17 @@ void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
 
                 cur_obj->speed_y = param_2;
                 speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
-                cur_obj->speed_x = cur_obj->flags.flip_x ? speed : -speed;
+                if (cur_obj->flags.flip_x)
+                    speed_x = (s32)speed;
+                else {
+                    speed_x = (s32)speed;
+                    speed_x = -speed_x;
+                }
+                cur_obj->speed_x = (s16)speed_x;
 
-                stmn_frame = stmn_obj->anim_frame;
-                if (((s32)stmn_frame >= 53 && (s32)stmn_frame <= 122) ? 1 : 0)
+                if (inrange((s32)stmn_obj->anim_frame, 53, 122))
                     stmn_spr = 3;
-                else if (((s32)stmn_frame >= 123 && (s32)stmn_frame <= 144) ? 1 : 0)
+                else if (inrange((s32)stmn_obj->anim_frame, 123, 144))
                     stmn_spr = 0;
                 else
                     stmn_spr = -1;
@@ -570,7 +576,13 @@ void allocateStonemanStone(obj_t* stmn_obj, s16 param_2, u8 param_3) {
 
                 cur_obj->speed_y = param_2;
                 speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
-                cur_obj->speed_x = cur_obj->flags.flip_x ? speed : -speed;
+                if (cur_obj->flags.flip_x)
+                    speed_x = (s32)speed;
+                else {
+                    speed_x = (s32)speed;
+                    speed_x = -speed_x;
+                }
+                cur_obj->speed_x = (s16)speed_x;
 
                 GET_SPRITE_POS(stmn_obj, 7, &stmn_x, &stmn_y, &stmn_w, &stmn_h);
                 cur_obj->x = stmn_x + stmn_w - cur_obj->offset_bx;
@@ -655,6 +667,7 @@ void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
     s16 sprite;
     s16 spr_x; s16 spr_y; s16 spr_w; s16 spr_h;
     s16 spd_x; s16 spd_y;
+    s16 speed;
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
     s16 nb_objs = level.nb_objects;
@@ -669,10 +682,10 @@ void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
 
             sprite = -1;
             if (stwmn_obj->main_etat == 0 && stwmn_obj->sub_etat == 13) {
-                if (((s32)stwmn_obj->anim_frame >= 52 && (s32)stwmn_obj->anim_frame <= 101) ? 1 : 0)
+                if (inrange((s32)stwmn_obj->anim_frame, 52, 101))
                     sprite = 3;
             } else if (stwmn_obj->main_etat == 0 && stwmn_obj->sub_etat == 9) {
-                if (((s32)stwmn_obj->anim_frame >= 16 && (s32)stwmn_obj->anim_frame <= 55) ? 1 : 0)
+                if (inrange((s32)stwmn_obj->anim_frame, 16, 55))
                     sprite = 3;
             }
 
@@ -701,8 +714,8 @@ void allocateStonewomanStone(obj_t* stwmn_obj, s16 param_2) {
                 cur_obj->init_x = cur_obj->x;
                 cur_obj->init_y = cur_obj->y;
                 if (param_2 != 2) {
-                    spd_x = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
-                    spd_x = cur_obj->flags.flip_x ? spd_x : -spd_x;
+                    speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                    spd_x = cur_obj->flags.flip_x ? speed : -speed;
                     SET_X_SPEED(cur_obj);
                     set_sub_etat(cur_obj, 0);
                 } else {
