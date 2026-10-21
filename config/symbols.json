@@ -8297,6 +8297,11 @@
     "addr": "1:1a734",
     "name": "INVENTED",
     "evidence": "DOS entry at 1:1a734, established from direct caller and/or aligned post-ret boundary; semantics checked against DOS instructions."
+   },
+   "empty_handler_5bad4": {
+    "addr": "1:5bad4",
+    "name": "INVENTED",
+    "evidence": "DOS 1:5bad2 mov eax,eax alignment followed by ret at 1:5bad4; W-LAYOUT shared empty return, as audiocd. Android name lookup absent."
    }
   },
   "data": {

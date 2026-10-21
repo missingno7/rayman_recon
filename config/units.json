@@ -11594,7 +11594,7 @@
      ]
     },
     "save_interrupt_vectors": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11648,19 +11648,19 @@
      ]
     },
     "check_cd_for_save": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "verify_cdrom_response": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "wait_for_cdrom_response": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11672,6 +11672,12 @@
      ]
     },
     "sub_5BF58": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "empty_handler_5bad4": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
