@@ -389,16 +389,14 @@ void get_spi_zdc(obj_t *param_1, s16 *param_2, s16 *param_3, s16 *param_4, s16 *
 
 void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
-    s16 poing_x;
-    s16 spipl_x;
-    s16 cen_x;
-    s16 cen_y;
-    s16 poing_y_1; s16 poing_y_2;
-    s16 spipl_y_1; s16 spipl_y_2;
+    s16 poing_x; s16 poing_y_2; s16 poing_y_1;
+    s16 spipl_x; s16 spipl_y_1; s16 spipl_y_2;
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    u8 new_flip;
+    s16 spipl_spr_x; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_h;
+    s16 cen_x;
+    s16 cen_y;
 
     cen_x = get_center_x(spipl_obj);
     cen_y = get_center_y(spipl_obj);
@@ -434,7 +432,7 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
 
     if (spipl_obj->main_etat == 1 && spipl_obj->sub_etat == 2) {
         SET_X_SPEED(spipl_obj);
-        if (block_flags[calc_typ_travd(spipl_obj, 0)] >> BLOCK_FULLY_SOLID & 1) {
+        if (block_flags[calc_typ_travd(spipl_obj, 0)] & 1) {
             spipl_obj->flags.flip_x = 1 - spipl_obj->flags.flip_x;
             set_main_and_sub_etat(spipl_obj, 0, 24);
             SET_X_SPEED(spipl_obj);
@@ -467,7 +465,6 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
             spipl_obj->main_etat == 0 && spipl_obj->sub_etat == 20 &&
             spipl_obj->anim_frame == 27
         ) {
-            s16 spipl_spr_x; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_h;
             i = 0;
             cur_obj = &level.objects[i];
             nb_objs = level.nb_objects;
@@ -509,8 +506,7 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     if (spipl_obj->main_etat == 0 &&
         (spipl_obj->sub_etat == 20 || spipl_obj->sub_etat == 13 || spipl_obj->sub_etat == 23)
     ) {
-        new_flip = ray.x > spipl_obj->x;
-        spipl_obj->flags.flip_x = new_flip;
+        spipl_obj->flags.flip_x = ray.x > spipl_obj->x;
     }
 }
 
@@ -562,7 +558,7 @@ void DO_SPIDER_PLAFOND_POING_COLLISION(obj_t* obj, s16 sprite) {
 void SPIDER_PLAFOND_REACT(obj_t* obj) {
     // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
     s32 prev_flip;
-    u8 new_flip;
+    s32 new_flip;
 
     if (obj->main_etat == 0 && (obj->sub_etat == 13 || obj->sub_etat == 12))
         set_sub_etat(obj, 20);
@@ -573,9 +569,10 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
     ) {
         prev_flip = obj->flags.flip_x != (ray.x > obj->x);
         if (prev_flip) {
-            obj->speed_x = 0;
+            obj_flags_t *flags = &obj->flags;
             new_flip = ray.x > obj->x;
-            obj->flags.flip_x = new_flip;
+            flags->flip_x = new_flip;
+            obj->speed_x = 0;
             obj->speed_y = 0;
             set_main_and_sub_etat(obj, 0, 24);
         }
@@ -583,14 +580,13 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 }
 
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
- * Abs/Sign/Min/Max spellings are ordinary C; helper lowering remains OPEN. */
+ * Shared ashl16/sgn cores are present; clamp/register lowering remains OPEN.
+ * Bound/value locals restore the 872-byte extent; this body remains NEAR. */
 #define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
-#define SPIDER_MIN(a,b) ((a) < (b) ? (a) : (b))
-#define SPIDER_MAX(a,b) ((a) > (b) ? (a) : (b))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
     s16 dx, dy, distance;
     s16 abs_speed_x;
-    s32 speed;
+    s32 speed, bound;
     if (obj->cmd != 1) {
         dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
         if (position_ray)
@@ -605,33 +601,55 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
                 dx = ashl16(dx, 5) / distance;
                 dy = ashl16(dy, 5) / distance;
             }
-            speed = obj->speed_y + sgn(dy - obj->speed_y);
-            if (speed > 32) speed = 32;
-            if (speed < 0) speed = 0;
+            bound = 32;
+            speed = sgn(dy - obj->speed_y) + obj->speed_y;
+            if (speed <= bound) bound = speed;
+            speed = bound;
+            bound = 0;
+            if (speed >= bound) bound = speed;
+            speed = bound;
             obj->speed_y = speed;
             if (obj->speed_y != 0) {
-                speed = obj->speed_x + sgn(dx - obj->speed_x);
-                if (speed > 32) speed = 32;
-                if (speed < -32) speed = -32;
+                bound = 32;
+                speed = sgn(dx - obj->speed_x) + obj->speed_x;
+                if (speed <= bound) bound = speed;
+                speed = bound;
+                bound = -32;
+                if (speed >= bound) bound = speed;
+                speed = bound;
                 obj->speed_x = speed;
             } else if (obj->flags.flip_x) {
                 speed = obj->speed_x - (dx > obj->speed_x);
-                if (speed > 32) speed = 32;
-                if (speed < -32) speed = -32;
+                bound = 32;
+                if (speed <= bound) bound = speed;
+                speed = bound;
+                bound = -32;
+                if (speed >= bound) bound = speed;
+                speed = bound;
                 obj->speed_x = speed;
             } else {
                 speed = obj->speed_x + (dx < obj->speed_x);
-                if (speed > 32) speed = 32;
-                if (speed < -32) speed = -32;
+                bound = 32;
+                if (speed <= bound) bound = speed;
+                speed = bound;
+                bound = -32;
+                if (speed >= bound) bound = speed;
+                speed = bound;
                 obj->speed_x = speed;
             }
         } else {
             speed = obj->speed_x * 2;
-            if (speed > 32) speed = 32;
-            if (speed < -32) speed = -32;
+            bound = 32;
+            if (speed <= bound) bound = speed;
+            speed = bound;
+            bound = -32;
+            if (speed >= bound) bound = speed;
+            speed = bound;
             obj->speed_x = speed;
             speed = obj->speed_y * 2;
-            if (speed > 32) speed = 32;
+            bound = 32;
+            if (speed <= bound) bound = speed;
+            speed = bound;
             obj->speed_y = speed;
         }
     } else {
