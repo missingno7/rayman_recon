@@ -8617,6 +8617,16 @@
     "addr": "1:70552",
     "name": "WATCOM",
     "evidence": "libscan: MATH3R.LIB exact+sites match, public sqrt+0x12 (build/workers/w3_gap6a/math_library.txt); register entry called by CalcTab at 1:13f66."
+   },
+   "effect_helper_6c3b0": {
+    "addr": "1:6c3b0",
+    "name": "INVENTED",
+    "evidence": "Internal DOS call from 1:6c8ba; candidate body follows the ordinary Watcom register ABI and math/map writes at 1:6c3b0..6c799"
+   },
+   "IF@DATAN2": {
+    "addr": "1:75f19",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "PROVEN MATH3R.LIB exact+sites match by tools/libscan.py; public atan2+0x25 (see math_library.txt). Same-address aliases in library module are proven."
    }
   },
   "data": {
@@ -15747,6 +15757,12 @@
     "type": "u32[2]",
     "name": "INVENTED",
     "evidence": "Object-1 mutable state span 1:066d7..066df is identified in w5_asmscope/REPORT.md. DOS writes the first dword at 1:066fe from saved_sprite_width and reads it at 1:06775/0686a; the second is written at 1:06741 and read at 1:0676f. Two contiguous dword slots; internal names invented."
+   },
+   "effect_state_6c": {
+    "addr": "2:57460",
+    "type": "effect_state_6c_t *",
+    "name": "INVENTED",
+    "evidence": "DOS references a 32-bit pointer at 2:57460; 1:6c7cc allocates 0x20 bytes for its pointee, and Android lookup for effect_state_6c returned no symbol"
    }
   }
  }

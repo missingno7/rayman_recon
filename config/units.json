@@ -12952,6 +12952,43 @@
      ]
     }
    }
+  },
+  "effect6c3b0": {
+   "source": "src/effect6c3b0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "effect_helper_6c3b0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_cleanup_6c7a0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_6c7cc": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_6c8d4": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_6c9bc": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
