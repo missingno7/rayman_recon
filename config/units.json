@@ -10480,14 +10480,14 @@
      ]
     },
     "display_flocons_behind": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "display_flocons_before": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"

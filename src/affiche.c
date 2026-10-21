@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d3_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d4_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -827,37 +827,45 @@ extern snow_draw_t *drawpluie4NormalETX;
 extern snow_draw_t *drawpluie5NormalETX;
 extern snow_draw_t *drawpluie6NormalETX;
 extern snow_draw_t *drawpluie7NormalETX;
+/* STRICT: DOS 1:09d2c..09f08. Counter setup and depth induction follow DOS. */
 void display_flocons_behind(void) {
+    snow_draw_t *draw_func;
+    s16 layer;
+    s16 depth;
     s16 previous_center_y;
     s16 previous_center_x;
-    s16 depth = 32;
-    s16 group = 3;
-    s16 multiplier;
+    s16 group;
+    u16 size_index;
     s16 center_x;
     s16 center_y;
+    s16 multiplier;
+    s16 first_index;
     s16 end_index;
     s16 index;
-    u16 size_index = 4;
-    s16 layer = 6;
     flocon_t *entry;
-    snow_draw_t *draw_func;
-    previous_center_y = PROJ_CENTER_Y;
     previous_center_x = PROJ_CENTER_X;
+    previous_center_y = PROJ_CENTER_Y;
     set_proj_center(160, 170);
-    do {
+    layer = 6;
+    group = 3;
+    depth = 32;
+    size_index = 4;
+    for (; depth < 192; depth += 32) {
         multiplier = 0x10000 / (depth + 256);
         center_x = PROJ_CENTER_X - ((multiplier * PROJ_CENTER_X) >> 8);
         center_y = PROJ_CENTER_Y - ((multiplier * PROJ_CENTER_Y) >> 8);
-        --layer;
         --size_index;
+        --layer;
         entry = flocon_tab + floc_ind[group];
-        end_index = nb_floc[group] + floc_ind[group];
+        first_index = floc_ind[group];
+        end_index = nb_floc[group] + first_index;
         if (num_world != 1) {
+            /* DOS jump table 1:09d1c: 0->flocon1, 1->flocon2, 2->flocon3, 3->flocon4. */
             switch (size_index) {
-            case 0: draw_func = drawflocon4NormalETX; break;
-            case 1: draw_func = drawflocon3NormalETX; break;
-            case 2: draw_func = drawflocon2NormalETX; break;
-            case 3: draw_func = drawflocon1NormalETX; break;
+            case 3: draw_func = drawflocon4NormalETX; break;
+            case 2: draw_func = drawflocon3NormalETX; break;
+            case 1: draw_func = drawflocon2NormalETX; break;
+            case 0: draw_func = drawflocon1NormalETX; break;
             default: draw_func = drawflocon5NormalETX; break;
             }
         } else {
@@ -865,15 +873,19 @@ void display_flocons_behind(void) {
             else if (layer > 2) draw_func = drawpluie5NormalETX;
             else draw_func = drawpluie4NormalETX;
         }
-        for (index = floc_ind[group]; index < end_index; ++index, ++entry)
-            draw_func(draw_buffer, ((multiplier * entry->field_0) >> 8) + center_x,
-                      ((entry->field_2 * multiplier) >> 8) + center_y);
+        for (index = first_index; index < end_index; ++index) {
+            s32 x, y;
+            y = ((entry->field_2 * multiplier) >> 8) + center_y;
+            x = ((multiplier * entry->field_0) >> 8) + center_x;
+            ++entry;
+            draw_func(draw_buffer, x, y);
+        }
         ++group;
-        depth += 32;
-    } while (depth < 192);
-    PROJ_CENTER_Y = previous_center_y;
+    }
     PROJ_CENTER_X = previous_center_x;
+    PROJ_CENTER_Y = previous_center_y;
 }
+/* STRICT: DOS 1:09f08..0a110. Keep depth update in the for induction clause. */
 void display_flocons_before(void) {
     s16 previous_center_x;
     s16 previous_center_y;
@@ -891,7 +903,7 @@ void display_flocons_before(void) {
     set_proj_center(160, 170);
     group = 0;
     depth = -64;
-    do {
+    for (; depth < 32; depth += 32) {
         entry = flocon_tab + floc_ind[group];
         multiplier = 0x10000 / (depth + 256);
         center_x = PROJ_CENTER_X - ((multiplier * PROJ_CENTER_X) >> 8);
@@ -920,8 +932,7 @@ void display_flocons_before(void) {
                     ((entry->field_2 * multiplier) >> 8) + center_y);
         }
         ++group;
-        depth += 32;
-    } while (depth < 32);
+    }
     PROJ_CENTER_X = previous_center_x;
     PROJ_CENTER_Y = previous_center_y;
 }
