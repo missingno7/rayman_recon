@@ -68,7 +68,10 @@ Shared root causes found and fixed:
 | census-guided moskito (22 min) | **5 of 11 (45%)**, 3 -> 8/14 |
 | census-guided input (12 min) | **6 of 10 (60%)**, 21 -> 27/31 (one more rejected: forced typed-ternary form) |
 | census-guided jumelle (9 min, second pass, PC-only FP code) | **1 of 13 (8%)**, 6 -> 7/19 |
-| **guided total (11 passes)** | **113 of 206 (55%)** vs 46% unguided; weakest where no reference C exists (breakout, jumelle) |
+| census-guided ray (21 min) | **5 of 36 (14%)**, 15 -> 20/51 (eta_t bit views PROVEN) |
+| census-guided save (21 min) | **5 of 12 (42%)**, 4 -> 9/16 (world_info bit views PROVEN) |
+| census-guided skops (35 min) | **11 of 21 (52%)**, 7 -> 18/28 |
+| **guided total (14 passes)** | **134 of 275 (49%)** vs 46% unguided; strongest on units with PS1/Rayverse bodies and logic gaps, weakest on large first-pass residues (ray) and PC-only code (breakout, jumelle) |
 The worldmap pass shows the upper end: the brief told it which functions were logic gaps (missing calls/guards/
 globals) and which were pure shape, so it did not search shape on logic gaps or vice versa.
 
