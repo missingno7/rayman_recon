@@ -31,4 +31,15 @@ s32 wait_until(s32 target);
 void speaker_enable(void);
 #pragma aux speaker_enable parm [] modify exact []
 
+/* Tile blitters 1:04e64/1:05041/1:053c6/1:0555e: ESI source, EDI destination (+EAX/EBX clip x/y); preserve
+   registers - map_ngawe DRAW_MAP (docs/reference/lowlevel_abi.h) */
+void Display_Bloc(u8 *source, u8 *dest);
+#pragma aux Display_Bloc parm [esi] [edi] modify exact []
+void Display_Bloc_Plein(u8 *source, u8 *dest);
+#pragma aux Display_Bloc_Plein parm [esi] [edi] modify exact []
+void Display_Bloc_Clippe(u8 *source, u8 *dest, s32 x, s32 y);
+#pragma aux Display_Bloc_Clippe parm [esi] [edi] [eax] [ebx] modify exact []
+void Display_Bloc_Plein_Clippe(u8 *source, u8 *dest, s32 x, s32 y);
+#pragma aux Display_Bloc_Plein_Clippe parm [esi] [edi] [eax] [ebx] modify exact []
+
 #endif

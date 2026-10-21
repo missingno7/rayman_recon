@@ -41,7 +41,7 @@ typedef struct display_map_t {
     s16 y;
     u8 width_in_tiles;
     u8 height_in_tiles;
-    s16 tile_index;
+    u16 tile_index;
 } display_map_t;
 
 typedef struct big_map_t {

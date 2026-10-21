@@ -1,4 +1,5 @@
-/* map.c (1:4c4a0..1:4d230). Names RAYVERSE; seeded by tools/seed.py, worker tu_map. See config/units.json for statuses. */
+/* map.c (1:4c4a0..1:4d230). Function names RAYVERSE; local names INVENTED.
+   Worker sfin_map: candidate statuses and DOS evidence in NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -35,16 +36,13 @@ extern s16 ymapmaxini;
 extern u8 *Scroll_Masque[20];
 extern s32 block_add[1200];
 extern u32 nb_blocks_plein;
+extern u32 nb_total_blocks;
 extern s32 BufferNormalDeplt;
 extern u8 *DrawBufferNormal;
 extern u8 *DrawBufferNormalIni;
 extern u8 *draw_buffer;
 extern obj_t *ScrollDiffSprites;
 extern u8 *block_malloc(mem_t *mem, s32 size);
-extern void Display_Bloc_Plein_Clippe(s16 x, s16 y, s16 width, s16 height, u8 *buffer, u8 *tiles);
-extern void Display_Bloc_Clippe(s16 x, s16 y, s16 width, s16 height, u8 *buffer, u8 *tiles);
-extern void Display_Bloc_Plein(s16 x, s16 y, u8 *buffer, u8 *tiles);
-extern void Display_Bloc(s16 x, s16 y, u8 *buffer, u8 *tiles);
 extern void Copy_Plan0Diff_To_Buf(u8 *source, u8 *dest, s32 width, s32 height, s32 draw_width);
 void set_default_Bloc_clipping(void);
 void set_xymapini(void);
@@ -53,135 +51,128 @@ void recaleRaysurlesBords(void);
 void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax);
 void update_display_map(big_map_t *map);
 
-u32 deter_vide_plein_panach(u8 *blocks, s16 width)
+u32 deter_vide_plein_panach(u8 *blocks, u16 width)
 {
     u32 empty_count;
-    s32 y;
+    u32 y;
     u8 *column;
     u8 *end;
+    u8 empty_pixel;
 
     empty_count = 0;
     end = blocks + 16;
     y = 0;
     do {
         column = blocks;
-        while (column != end) {
-            if (*(column + y * width) == 0)
+        do {
+            if ((empty_pixel = *(column + y * width)) == 0)
                 empty_count++;
             column++;
-        }
+        } while (column != end);
         y++;
     } while (y < 16);
     return empty_count;
 }
 
-void deter_nb_blocks(u8 *blocks, s16 width, s16 height, s32 *full_count, s32 *partial_count)
+void deter_nb_blocks(u8 *blocks, u16 width, u16 height, u32 *full_count, u32 *partial_count)
 {
-    s32 y;
-    s32 x;
-    s32 empty_count;
-
-    y = 0;
-    do {
-        x = 0;
-        if (y == 0)
-            x = 16;
-        do {
+    u32 y, x, empty_count;
+    for (y = 0; y < height; y += 16) {
+        for (x = 0; x < width; x += 16) {
+            if (x == 0 && y == 0)
+                x += 16;
             empty_count = deter_vide_plein_panach(blocks + x + y * width, width);
-            if (empty_count != 256) {
-                if (empty_count == 0)
-                    (*full_count)++;
-                else
-                    (*partial_count)++;
-            }
-            x += 16;
-        } while (x < width);
-        y += 16;
-    } while (y < height);
+            if (empty_count == 256)
+                break;
+            if (empty_count == 0)
+                (*full_count)++;
+            else
+                (*partial_count)++;
+        }
+        if (empty_count == 256)
+            break;
+    }
 }
 
-u8 *Copy_Blocks(mem_t *mem, u8 *blocks, s16 width, s16 height)
+u8 *Copy_Blocks(mem_t *mem, u8 *blocks, u16 width, u16 height)
 {
-    s32 width_in_tiles;
-    s32 height_in_tiles;
-    s32 full_count;
-    s32 partial_count;
-    s32 total_count;
-    s32 tile_x;
+    u32 width_in_tiles;
+    u32 height_in_tiles;
+    u32 partial_count;
+    u32 tile_x;
     s32 tile_y;
-    s32 tile_index;
+    u32 tile_count = 0;
     s32 row;
-    s32 col;
-    s32 empty_count;
-    s32 nonzero_count;
-    s32 row_flags;
+    u32 empty_count;
+    u8 nonzero_count;
+    u8 pixel;
+    u32 row_flags;
     u8 *result;
     u8 *full_block;
     u8 *partial_block;
+    u8 *dest;
+    u8 *mask;
     u8 *source;
+    u8 *end;
+    u32 *flags;
 
-    width_in_tiles = width >> 4;
-    height_in_tiles = height >> 4;
-    full_count = 1;
+    nb_blocks_plein = 1;
     partial_count = 0;
-    deter_nb_blocks(blocks, width, height, &full_count, &partial_count);
-    total_count = full_count + partial_count;
-    nb_blocks_plein = full_count;
-    result = block_malloc(mem, full_count * 288 + partial_count * 544 + 32);
+    width_in_tiles = width / 16;
+    height_in_tiles = height / 16;
+    deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count);
+    nb_total_blocks = nb_blocks_plein + partial_count;
+    result = block_malloc(mem, nb_blocks_plein * 288 + partial_count * 544 + 32);
     full_block = result;
-    partial_block = result + full_count * 288;
-    tile_index = 0;
-
+    partial_block = result + nb_blocks_plein * 288;
     for (tile_y = 0; tile_y < height_in_tiles; tile_y++) {
+        if (tile_count > nb_total_blocks)
+            break;
         for (tile_x = 0; tile_x < width_in_tiles; tile_x++) {
-            if (tile_index < total_count) {
-                source = blocks + 16 + tile_y * width + tile_x * 16;
-                empty_count = deter_vide_plein_panach(source, width);
-                if (empty_count == 0 || empty_count == 256) {
-                    block_add[tile_index] = full_block - result;
-                    row_flags = 0;
-                    for (row = 0; row < 16; row++) {
-                        nonzero_count = 0;
-                        for (col = 0; col < 16; col++) {
-                            full_block[row * 16 + col] = source[row * width + col];
-                            if (source[row * width + col] != 0)
-                                nonzero_count++;
-                        }
-                        if (nonzero_count == 0)
-                            row_flags++;
-                        else if (nonzero_count == 16)
-                            row_flags += 2;
-                        if (row < 15)
-                            row_flags <<= 2;
-                    }
-                    *(u32 *)(full_block + 256) = row_flags;
-                    full_block += 288;
-                } else {
-                    block_add[tile_index] = partial_block - result;
-                    row_flags = 0;
-                    for (row = 0; row < 16; row++) {
-                        nonzero_count = 0;
-                        for (col = 0; col < 16; col++) {
-                            partial_block[row * 16 + col] = source[row * width + col];
-                            if (source[row * width + col] == 0)
-                                partial_block[256 + row * 16 + col] = 0xff;
-                            else {
-                                nonzero_count++;
-                                partial_block[256 + row * 16 + col] = 0;
-                            }
-                        }
-                        if (nonzero_count == 0)
-                            row_flags++;
-                        else if (nonzero_count == 16)
-                            row_flags += 2;
-                        if (row < 15)
-                            row_flags <<= 2;
-                    }
-                    *(u32 *)(partial_block + 512) = row_flags;
-                    partial_block += 544;
-                }
-                tile_index++;
+            tile_count++;
+            if (tile_count > nb_total_blocks)
+                break;
+            empty_count = deter_vide_plein_panach(blocks + tile_x * 16 + tile_y * 16 * width, width);
+            if (empty_count == 0 || empty_count == 256) {
+                dest = full_block;
+                full_block += 288;
+                flags = (u32 *)(dest + 256);
+            } else {
+                dest = partial_block;
+                partial_block += 544;
+                mask = dest + 256;
+                flags = (u32 *)(dest + 512);
             }
+            block_add[tile_x + tile_y * width_in_tiles] = dest - result;
+            end = blocks + tile_x * 16 + 16;
+            row_flags = 0;
+            for (row = 0; row < 16; row++) {
+                nonzero_count = 0;
+                source = blocks + tile_x * 16;
+                do {
+                    pixel = source[(row + tile_y * 16) * width];
+                    *dest = pixel;
+                    if (empty_count < 256 && empty_count != 0) {
+                        if (pixel == 0)
+                            *mask = 0xff;
+                        else {
+                            nonzero_count++;
+                            *mask = 0;
+                        }
+                        mask++;
+                    } else if (pixel != 0)
+                        nonzero_count++;
+                    source++;
+                    dest++;
+                } while (source != end);
+                if (nonzero_count == 0)
+                    row_flags++;
+                else if (nonzero_count == 16)
+                    row_flags += 2;
+                if (row < 15)
+                    row_flags <<= 2;
+            }
+            *flags = row_flags;
         }
     }
     return result;
@@ -229,13 +220,17 @@ void update_display_map(big_map_t *map)
     s32 x;
     s32 v6;
     s32 v7;
+    s16 clip_x;
+    s16 clip_y;
 
     display_map = map->display_map;
     x = xmap + Bloc_lim_W1 - 8;
     y = ymap + Bloc_lim_H1;
     display_map->tile_index = map->width * (y >> 4) + (x >> 4);
-    display_map->x = Bloc_lim_W1 - (x & 0xf);
-    display_map->y = Bloc_lim_H1 - (y & 0xf);
+    clip_x = Bloc_lim_W1;
+    display_map->x = clip_x - (x & 0xf);
+    clip_y = Bloc_lim_H1;
+    display_map->y = clip_y - (y & 0xf);
     v6 = Bloc_lim_W2 - display_map->x;
     v7 = Bloc_lim_H2 - display_map->y;
     display_map->width_in_tiles = (v6 >> 4) + ((v6 & 0xf) != 0);
@@ -287,7 +282,8 @@ void set_xymap(void) {
 
 void set_whmap(s32 delta_w, s32 delta_h, big_map_t *map)
 {
-    s16 adjusted_xmapmax;
+    u16 clip_w;
+    u16 clip_h;
 
     Bloc_lim_H1 += delta_h;
     Bloc_lim_H2 -= delta_h;
@@ -308,14 +304,13 @@ void set_whmap(s32 delta_w, s32 delta_h, big_map_t *map)
         scroll_end_x += delta_w;
         if (scroll_start_x > 12)
             scroll_start_x = 12;
-        if (scroll_end_x < xmapmaxini)
+        if (scroll_end_x < xmapmaxini + 8)
             scroll_end_x = xmapmaxini + 8;
-        adjusted_xmapmax = xmapmax + delta_w;
-        if (adjusted_xmapmax < xmapmaxini)
-            adjusted_xmapmax = xmapmaxini;
-        if (adjusted_xmapmax < xmap)
-            adjusted_xmapmax = xmap;
-        xmapmax = adjusted_xmapmax;
+        xmapmax += delta_w;
+        if (xmapmax < xmapmaxini)
+            xmapmax = xmapmaxini;
+        if (xmapmax < xmap)
+            xmapmax = xmap;
     }
 
     if (Bloc_lim_H1 >= 0) {
@@ -332,59 +327,51 @@ void set_whmap(s32 delta_w, s32 delta_h, big_map_t *map)
             ymapmax = ymap;
     }
 
-    if (bossScrollStartX != 0) {
-        bossScrollStartX = scroll_start_x;
-        bossScrollEndX = scroll_end_x;
-    }
-    if (map->width <= 20 && Bloc_lim_W1 == 4) {
-        scroll_start_x = scroll_end_x;
-        xmap = scroll_end_x;
-    }
     set_xymap();
-    if (scrollLocked && !((num_world == world_3_mountain && num_level == 10) ||
-                          (num_world == world_2_music && num_level == 15))) {
-        scroll_end_x = xmap;
-        scroll_start_x = xmap;
-    }
-    if (xmapmax + Bloc_lim_W2 > 16 * map->width)
-        xmapmax = 16 * map->width - Bloc_lim_W2;
-    if (ymapmax + Bloc_lim_H2 > 16 * map->height)
-        ymapmax = 16 * map->height - Bloc_lim_H2;
+    clip_w = Bloc_lim_W2;
+    clip_h = Bloc_lim_H2;
+    if (xmapmax + clip_w > 16 * map->width)
+        xmapmax = 16 * map->width - clip_w;
+    if (ymapmax + clip_h > 16 * map->height)
+        ymapmax = 16 * map->height - clip_h;
 }
 
 void recaleRaysurlesBords(void) {
     if (ray.x + ray.offset_bx <= xmap + Bloc_lim_W1 +16) {
-        ray.x = xmap + Bloc_lim_W1 - ray.offset_bx + 16;
+        ray.x = Bloc_lim_W1 - ray.offset_bx + 16 + xmap;
         ray.screen_x = ray.x - scroll_start_x + 8;
     }
-    if (ray.x + ray.offset_bx >= xmap + Bloc_lim_W2 - 23) {
-        ray.x = xmap + Bloc_lim_W2 - 32;
+    if (ray.x + ray.offset_bx > xmap + Bloc_lim_W2 - 24) {
+        ray.x = xmap + Bloc_lim_W2 - 24 - ray.offset_bx - 8;
         ray.screen_x = ray.x - xmap + 8;
     }
 }
 
 void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax) {
-    s32 delta_W1 = xmin - Bloc_lim_W1;
-    s32 delta_W2 = Bloc_lim_W2 - xmax;
-    s32 delta_H1 = ymin - Bloc_lim_H1;
-    s32 delta_H2 = Bloc_lim_H2 - ymax;
+    s32 may_lock;
+    u16 clip_w;
+    u16 clip_h;
+    s16 delta_W1 = xmin - (s16)Bloc_lim_W1;
+    s16 delta_W2 = (s16)Bloc_lim_W2 - xmax;
+    s16 delta_H1 = ymin - (s16)Bloc_lim_H1;
+    s16 delta_H2 = (s16)Bloc_lim_H2 - ymax;
 
     Bloc_lim_H1 = ymin;
     Bloc_lim_H2 = ymax;
     Bloc_lim_W1 = xmin;
     Bloc_lim_W2 = xmax;
 
-    if (ymax > 200) {
+    if (Bloc_lim_H2 > 200) {
         Bloc_lim_H2 = 200;
     }
-    if (ymin < 0) {
+    if (Bloc_lim_H1 < 0) {
         Bloc_lim_H1 = 0;
     }
-    if (xmax > 320) {
+    if (Bloc_lim_W2 > 320) {
         Bloc_lim_W2 = 320;
     }
-    if (xmin < 0) {
-        Bloc_lim_W1 = 0;
+    if (Bloc_lim_W1 < 4) {
+        Bloc_lim_W1 = 4;
     }
 
     if (Bloc_lim_W1 >= 4) {
@@ -393,7 +380,7 @@ void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax) {
         if (scroll_start_x > 12) {
             scroll_start_x = 12;
         }
-        if (scroll_end_x < xmapmaxini) {
+        if (scroll_end_x < xmapmaxini + 8) {
             scroll_end_x = xmapmaxini + 8;
         }
         xmapmax += delta_W2;
@@ -433,18 +420,21 @@ void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax) {
     }
     set_xymap();
     if (scrollLocked) {
-        if (!((num_world == world_3_mountain && num_level == 10) || (num_world == world_2_music && num_level == 15))) {
-            scroll_end_x = xmap;
-            scroll_start_x = xmap;
+        may_lock = num_world != world_3_mountain || num_level != 10;
+        if (may_lock) {
+            may_lock = num_world != world_2_music || num_level != 15;
+            if (may_lock) {
+                scroll_end_x = xmap;
+                scroll_start_x = xmap;
+            }
         }
     }
-
-    if (xmapmax + Bloc_lim_W2 > 16 * mp.width) {
-        xmapmax = 16 * mp.width - Bloc_lim_W2;
-    }
-    if (ymapmax + Bloc_lim_H2 > 16 * mp.height) {
-        ymapmax = 16 * mp.height - Bloc_lim_H2;
-    }
+    clip_w = Bloc_lim_W2;
+    clip_h = Bloc_lim_H2;
+    if (xmapmax + clip_w > 16 * mp.width)
+        xmapmax = 16 * mp.width - clip_w;
+    if (ymapmax + clip_h > 16 * mp.height)
+        ymapmax = 16 * mp.height - clip_h;
     Bloc_lim_W1_Aff = Bloc_lim_W1;
     Bloc_lim_W2_Aff = Bloc_lim_W2;
     Bloc_lim_H1_Aff = Bloc_lim_H1;
@@ -456,29 +446,36 @@ void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax) {
 
 void MaskScrollDiffSprites(mem_t *buffer)
 {
-    s32 i;
-    s32 y;
-    s32 x;
-    s32 nb_sprites;
-    sprite_t *sprite;
+    u32 i;
+    u32 y;
+    u32 x;
+    s16 nb_sprites;
     u8 *mask;
     u8 *image;
+    u8 pixel;
 
     nb_sprites = ScrollDiffSprites->nb_sprites;
     for (i = 1; i < nb_sprites; i++) {
-        sprite = ScrollDiffSprites->sprites + i;
-        Scroll_Masque[i] = block_malloc(buffer, sprite->outer_width * sprite->outer_height);
-        mask = Scroll_Masque[i];
+        sprite_t *sprite = ScrollDiffSprites->sprites + i;
+        s16 height;
+        s16 width = sprite->outer_width;
+        height = sprite->outer_height;
+        /* DOS 1:4d197..4d1a4: odd widths become zero at the signed-word conversion.
+           Android MaskScrollDiffSprites confirms the zero allocation size for odd widths. */
+        if (width & 1)
+            width &= 0x10000;
+        Scroll_Masque[i] = block_malloc(buffer, width * height);
         image = ScrollDiffSprites->img_buffer + sprite->offset_in_atlas;
-        for (y = 0; y < sprite->outer_height; y++) {
+        mask = Scroll_Masque[i];
+        for (y = 0; y < height; y++) {
             for (x = 0; x < sprite->outer_width; x++) {
-                if (image[x] == 0)
-                    mask[x] = 0xff;
+                if ((pixel = *image) == 0)
+                    *mask = 0xff;
                 else
-                    mask[x] = 0;
+                    *mask = 0;
+                image++;
+                mask++;
             }
-            image += sprite->outer_width;
-            mask += sprite->outer_width;
         }
     }
 }
