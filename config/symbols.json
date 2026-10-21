@@ -8302,6 +8302,11 @@
     "addr": "1:711d6",
     "name": "WATCOM",
     "evidence": "Watcom vprintf: 1:711d6 takes (format EAX, va_list EDX) and calls __fprtf_ (1:761a0) with the fixed stream 2:2d9de; no FILE* parameter, so not fprintf. C vprintf() in savecodec report_save_codec_error references vprintf_ here (STRICT)."
+   },
+   "effect_helper_6ec80": {
+    "addr": "1:6ec80",
+    "name": "INVENTED",
+    "evidence": "Internal DOS call from 1:6ef44; conventional register-save prologue and C grid/table writes at 1:6ec80..6ee26"
    }
   },
   "data": {
@@ -15114,6 +15119,12 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c declaration word_DE8BC //DE8BC; DOS code reads and writes a 16-bit status word."
+   },
+   "effect_state_6e": {
+    "addr": "2:57464",
+    "type": "effect_state_6e_t *",
+    "name": "INVENTED",
+    "evidence": "DOS references a 32-bit pointer at 2:57464; 1:6ee54 allocates 0xbc bytes for its pointee, and Android lookup for effect_state_6e returned no symbol"
    }
   }
  }
