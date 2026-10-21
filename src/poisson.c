@@ -15,7 +15,7 @@ extern obj_t ray;
 #define SCREEN_HEIGHT 200
 #define TYPE_FISH 10
 #define TYPE_10_FISH 10
-#define SIGNUM(value) ((value) == 0 ? 0 : ((value) > 0 ? 1 : -1))
+#include "inline_helpers.h"
 
 void DO_ONE_CMD(obj_t *obj);
 s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
@@ -248,8 +248,8 @@ void DoPoissonBleuRaymanZDD(obj_t *obj)
     if (!state_ok)
         return;
 
-    if ((SIGNUM(ray.x + ray.offset_bx - obj->x - obj->offset_bx) >= 0 && obj->flags.flip_x) ||
-        (SIGNUM(ray.x + ray.offset_bx - obj->x - obj->offset_bx) < 0 && !obj->flags.flip_x)) {
+    if ((sgn(ray.x + ray.offset_bx - obj->x - obj->offset_bx) >= 0 && obj->flags.flip_x) ||
+        (sgn(ray.x + ray.offset_bx - obj->x - obj->offset_bx) < 0 && !obj->flags.flip_x)) {
         if (obj->flags.flip_x)
             obj->speed_x = 3;
         else
