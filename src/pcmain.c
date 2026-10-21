@@ -1,4 +1,6 @@
-/* 1:06f80..1:0cee0: action.c, affiche.c, araignee.c, pcmain.c (init, main loops, display, spider); four original objects by DOS boundaries (build/workers/tu_action/source_objects.md) - kept in one file until split. Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_action. */
+/* Original pcmain object 1:06f80..1:08890, GOG DOS v1.21.
+ * Names RAYVERSE/ANDROID except names explicitly marked INVENTED.
+ * Partial matching reconstruction; see this worker's NOTES.md for open blocks. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -9,6 +11,7 @@
 #include <stdio.h>
 #include <i86.h>
 #include <io.h>
+#include <conio.h>
 #include "original_inline.h"
 
 void display_etoile(s16 x, s16 y);
@@ -179,7 +182,7 @@ extern u8 BackgroundOn;
 extern s16 plan0_width;
 extern s16 plan0_height;
 extern s16 yp0;
-extern s16 VGA_FREQ;
+extern u8 VGA_FREQ;
 extern s16 During_The_Menu;
 extern u8 fin_de_rayman;
 extern u8 fin_du_jeu;
@@ -281,7 +284,7 @@ void init_arg(s32 argc, char** argv);
 void PrintDosInfo(void);
 void PcMain(void);
 void DO_MAIN_LOOP_PC_NORMAL(u8* key_state);
-void DO_MAIN_LOOP_PC_X(void);
+void DO_MAIN_LOOP_PC_X(u8* key_state);
 void DO_GROS_MOTEUR_X(void);
 void DISPLAY_SAVE_SPRITES(s16 x, s16 save_index);
 void DISPLAY_OPTIONS_POING(void);
@@ -328,6 +331,7 @@ void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 void sprite_clipping(s32 xmin, s32 xmax, s32 ymin, s32 ymax);
+#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]
 s16 test_allowed(obj_t* obj, s16 center_x, s16 center_y);
 void InitMemoryVariable(void);
 void wait_milliseconds(u32 duration);
@@ -369,7 +373,7 @@ void DoSpiderRaymanZDD(obj_t* obj);
 
 /* External handwritten drawing/timer ABIs: docs/reference/lowlevel_abi.h,
  * proven by DOS callers 1:0723c, 072bf, 073e8, 074b4, 0764e. */
-typedef void (pc_swap_func_t)(u8 *source, u8 *destination, s32 width, s32 height);
+typedef s32 (pc_swap_func_t)(u8 *source, u8 *destination, s32 width, s32 height);
 #pragma aux pc_swap_func_t parm [esi] [edi] [ecx] [eax] modify exact []
 extern pc_swap_func_t *Swap_And_Test_Joystick;
 void Swap_To_Screen(u8 *, u8 *, s32, s32);
@@ -393,10 +397,45 @@ extern u8 is_joypad_mode;
 extern s16 word_CF7E6;
 s16 rightjoy(void), leftjoy(void), downjoy(void), upjoy(void);
 s16 but0pressed(void), but1pressed(void), but2pressed(void), but3pressed(void);
-/* DOS 1:07370 passes ECX=0; dimensions/clipping values are unsigned shorts. */
-void Calcul_Deplacement_Bande(s16 x, u16 width, u16 height, s32 mode);
+/* DOS 1:687e8 saves ECX and consumes EAX/EDX/EBX: three arguments.
+ * The caller hoists ECX=0 for Display_Back_Screen across this call. */
+void Calcul_Deplacement_Bande(s16 x, u16 width, u16 height);
 void Display_Back_Screen(u16, u16, u16, u16, u16, u16);
 void Display_Sprite_On_Front(u16, u16, u16, u16, u16, u16);
+void sub_3B580(void);
+u8 TOUCHE(u8 key);
+u8 get_casse_brique_ON(void);
+u8 get_casse_brique_active(void);
+void set_casse_brique_ON(u8 value);
+void build_map(s16 x, s16 y);
+void sub_3BE20(s16 x, s16 y);
+void sub_3BEE0(s16 x, s16 y);
+void LoadPlan0InVignet(s32 resource_id);
+u8 *allocate_PLAN0(mem_t *mem_world, u16 width, u16 height);
+extern s8 Plan0NumPcx[10];
+extern u8 no_fnd;
+extern u8 *PLAN0;
+extern s32 cdTime;
+/* Handwritten callees: docs/reference/lowlevel_abi.h, and DOS 1:07a54..07aba. */
+void asm_04504(u8 *buffer);
+#pragma aux asm_04504 parm [edi] modify exact []
+void asm_0456e(u8 *buffer);
+#pragma aux asm_0456e parm [edi] modify exact []
+void sub_1268A(u8 *source, s32 row_stride, u32 plane_stride);
+#pragma aux sub_1268A parm [esi] [ebx] [edx] modify exact [ebx ecx esi edi]
+s32 DetectCpu(void);
+#pragma aux DetectCpu parm [] value [eax] modify exact [eax ebx ecx]
+void sub_5BB78(void);
+void sub_5BB94(void);
+void sub_5BAE0(void);
+void verify_mscdex(void);
+void check_saved_drive_letter(void);
+u8 verify_cdrom_response(void);
+void InitPcSoundCard(void);
+void ToDoAtExit(void);
+void DoEffectBloodOut(void);
+s32 playVideo(const char *path, const char *filename, u8 video_id);
+extern u8 input_mode;
 
 void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y) {
     s32 offset;
@@ -487,7 +526,7 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
             clock_ticks();
         CLEAR_FIXE_LUCIOLE();
         if (BackgroundOn && FondAutorise == 1) {
-            Calcul_Deplacement_Bande(xmap, plan0_width, plan0_height, 0);
+            Calcul_Deplacement_Bande(xmap, plan0_width, plan0_height);
             Display_Back_Screen(plan0_width, plan0_height,
                                 Bloc_lim_W1, Bloc_lim_H1, Bloc_lim_W2, Bloc_lim_H2);
         } else {
@@ -590,41 +629,66 @@ void DO_GROS_MOTEUR_X(void) {
     sub_3C3BC(xmap, ymap);
 }
 
-void DO_MAIN_LOOP_PC_X(void) {
+/* DOS 1:077e0..07cb5: the VGA path has its own background reload policy. */
+void DO_MAIN_LOOP_PC_X(u8* key_state) {
     u8 end_of_frame;
+    u8 reload_background = 0;
+    u8 display_count;
+    s32 ticks;
+    s32 deadline;
+    RaymanDansUneMapDuJeu = 1;
     DoFirstFlocons();
+    fin_continue = 0;
+    MapTimePause = 0;
+    ProchainEclair = 1;
+    numero_palette_special = 0;
     if (MusicCdActive)
         TestCdLoop();
     while (dead_time != 0 && !new_level && !new_world && ModeDemo != 2) {
         speaker_enable();
-        if (use_sync)
-            synchro();
+        sub_3B580();
         if (need_timer)
-            clock_ticks();
+            ticks = clock_ticks();
+        if (need_timer)
+            deadline = ticks + (u16)word_CF7E6;
         fades();
         if (dead_time >= 32 && !gele)
             DoPaletteSpecialPC();
         DO_SWAP_PALETTE();
         if (MusicCdActive)
             TestCdLoop();
-        build_map();
+        if (map_time == 1)
+            build_map(xmap, ymap);
+        readinput();
+        display_count = display_mode;
+        do {
+            DO_GROS_MOTEUR_X();
+            end_of_frame = !new_level && !new_world && !fin_du_jeu;
+        } while (end_of_frame && --display_count != 255);
         if (need_timer)
             clock_ticks();
-        if (Mode_Pad == 0)
-            readinput();
-        DO_GROS_MOTEUR_X();
-        if (need_timer)
-            clock_ticks();
-        sub_3BE20();
-        if (BackgroundOn)
-            sub_3BEE0();
-        display_grp_stars();
-        DISPLAY_ALL_OBJECTS();
-        display_pix_gerbes();
-        if (MapAvecPluieOuNeige) {
-            display_flocons_behind();
-            display_flocons_before();
+        if (BackgroundOn && FondAutorise == 1)
+            sub_3BE20(xmap, ymap);
+        else if (BackgroundOn && FondAutorise == 2)
+            sub_3BE20(xmap, ymap);
+        else {
+            /* DOS 1:07995..079aa uses OUT DX,AX and REP STOSD, 4000 dwords.
+             * Port I/O is intrinsic; the fill's exact plain-C lowering is OPEN. */
+            outpw(0x3ce, 0x0a04);
+            memset(draw_buffer, 0, 4000 * 4);
         }
+        if (MapAvecPluieOuNeige)
+            display_flocons_behind();
+        sub_3BEE0(xmap, ymap);
+        display_grp_stars();
+        if (need_timer)
+            clock_ticks();
+        DISPLAY_ALL_OBJECTS();
+        if (need_timer)
+            clock_ticks();
+        display_pix_gerbes();
+        if (MapAvecPluieOuNeige)
+            display_flocons_before();
         if (is_fee)
             DISPLAY_TEXT_FEE();
         else
@@ -634,16 +698,60 @@ void DO_MAIN_LOOP_PC_X(void) {
         if (MessageProgram)
             DisplayProgrammerMessage();
         display_time(left_time);
-        if (Vignet_To_Display)
+        if (P486)
+            asm_0456e(draw_buffer);
+        else
+            asm_04504(draw_buffer);
+        if (Vignet_To_Display) {
             DISPLAY_GAME_VIGNET();
-        HANDLE_KEY(NULL);
-        end_of_frame = 1;
-        if (need_timer && use_sync && end_of_frame)
-            wait_until(0);
-        if (!fin_continue && new_level)
-            LoadPlan0InVignet();
-        endsynchro();
+            if (BackgroundOn && FondAutorise == 2)
+                reload_background = 1;
+            else if (BackgroundOn && P486 == 1)
+                sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);
+        }
+        if (TOUCHE(SC_ESCAPE) && nb_fade == 0 &&
+            !get_casse_brique_ON() && !ModeDemo) {
+            DO_OPTIONS_IN_GAME();
+            if (BackgroundOn && FondAutorise == 2)
+                reload_background = 1;
+        }
+        if (get_casse_brique_ON() && !get_casse_brique_active()) {
+            set_casse_brique_ON(0);
+            RESET_TOUCHE(SC_ESCAPE);
+        }
+        if (reload_background) {
+            if (Plan0NumPcx[(s8)no_fnd] != -1) {
+                stop_cd();
+                PLAN0 = allocate_PLAN0(NULL, 0, 0);
+                LoadPlan0InVignet(Plan0NumPcx[(s8)no_fnd]);
+                sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);
+                cdTime = 0;
+            }
+            reload_background = 0;
+        }
+        if (rightjoy() || leftjoy() || downjoy() || upjoy() ||
+            but0pressed() || but1pressed() || but2pressed() || but3pressed())
+            MapTimePause = 0;
+        ++MapTimePause;
+        if (MapTimePause >= 21600)
+            in_pause = 1;
+        if (in_pause && !GoMenu) {
+            if (fade == 65) {
+                Do_Effect_Pause();
+                MapTimePause = 0;
+            } else
+                in_pause = 0;
+        }
+        HANDLE_KEY(key_state);
+        if (need_timer && use_sync && end_of_frame && !wait_until(deadline)) {
+            DO_GROS_MOTEUR_X();
+            if (ray.iframes_timer != -1)
+                ++ray.iframes_timer;
+            if (use_sync)
+                endsynchro();
+        }
     }
+    RaymanDansUneMapDuJeu = 0;
 }
 
 void init_arg(s32 argc, char** argv) {
@@ -897,12 +1005,27 @@ void main_Ray(int argc, char** argv) {
 }
 
 void PcMain(void) {
-    u8 level_init;
+    u8 level_init = 0;
     TheProcesseur = DetectCpu();
-    PrintDosInfo();
+    sub_5BB78();
+    sub_5BB94();
+    /* OPEN: DOS 1:08442..08481 debug-register/timer block is not reconstructed.
+     * It arms DR0/DR7 and waits for two BIOS tick changes, then disarms them.
+     * Do not replace its memory reads or arithmetic with pragma code. */
+    sub_5BAE0();
+    MakeMyRand(1);
+    printf("CD ROM's Initialization.\n");
     InitMusic();
+    input_mode = 1;
     Init_Clavier();
+    atexit(ToDoAtExit);
+    OptionMusicCdActive = MusicCdActive;
+    verify_mscdex();
+    check_saved_drive_letter();
+    if (verify_cdrom_response())
+        MusicCdActive = OptionMusicCdActive;
     InitMemoryVariable();
+    sub_5BAE0();
     sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
     INIT_MOTEUR_BEGIN();
     FIRST_INIT();
@@ -911,15 +1034,17 @@ void PcMain(void) {
     INIT_EXTENSIONS();
     LOAD_CONFIG();
     PC_init_cheats();
+    InitPcSoundCard();
     NBRE_SAVE = 3;
     if (MusicCdActive)
         stop_cd();
-    level_init = 0;
     while (!fin_de_rayman) {
         DEPART_INIT_LOOP();
         INIT_WORLD_INFO();
         set_default_Bloc_clipping();
         DO_NEW_MENUS();
+        if (!fin_de_rayman && !ModeDemo && Frequence != 'F')
+            playVideo(demo_video_mem, "intro.dat", 20);
         while (!fin_du_jeu && status_bar.lives > -1 && new_world) {
             MakeMyRand(1);
             SPECIAL_INIT();
@@ -927,7 +1052,7 @@ void PcMain(void) {
             DO_WORLD_MAP();
             sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
             DEPART_WORLD();
-            if (!SonLimite)
+            if (CarteSonAutorisee && !SonLimite)
                 LoadBnkWorld(num_world_choice);
             while (!fin_du_jeu && !new_world && new_level) {
                 WaitNSynchro(5);
@@ -949,22 +1074,25 @@ void PcMain(void) {
                     INIT_RAY_ON_MS();
                     START_LEVEL_ANIM();
                     BackgroundOn = IsBackgroundOn();
-                    if (GameModeVideo != MODE_NORMAL) {
-                        default_sprite_clipping();
-                        InitModeXWithFrequency(VGA_FREQ);
-                        NewFrequency(Frequence);
-                        During_The_Menu = 0;
-                        DO_MAIN_LOOP_PC_X();
-                        During_The_Menu = 1;
-                    } else {
+                    if (GameModeVideo == MODE_NORMAL) {
                         InitClipping();
                         InitModeNormalWithFrequency(VGA_FREQ);
                         NewFrequency(Frequence);
                         INIT_GAME_MODE_NORMAL();
                         During_The_Menu = 0;
-                        DO_MAIN_LOOP_PC_NORMAL(NULL);
+                        DO_MAIN_LOOP_PC_NORMAL(&level_init);
                         During_The_Menu = 1;
                         FIN_GAME_MODE_NORMAL();
+                    } else {
+                        default_sprite_clipping();
+                        InitModeXWithFrequency(VGA_FREQ);
+                        NewFrequency(Frequence);
+                        build_map(xmap, ymap);
+                        if (P486 == 1)
+                            sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);
+                        During_The_Menu = 0;
+                        DO_MAIN_LOOP_PC_X(&level_init);
+                        During_The_Menu = 1;
                     }
                     if (CarteSonAutorisee)
                         stop_all_snd();
@@ -992,6 +1120,7 @@ void PcMain(void) {
         if (ModeDemo)
             FinDemoJeu();
     }
+    DoEffectBloodOut();
     if (CarteSonAutorisee) {
         stop_all_snd();
         DigiMusicDone();

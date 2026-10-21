@@ -8352,6 +8352,16 @@
     "addr": "1:04493",
     "name": "INVENTED",
     "evidence": "DOS external assembly; see local frame.c and callback_audit.json for ABI"
+   },
+   "asm_04504": {
+    "addr": "1:04504",
+    "name": "INVENTED",
+    "evidence": "DOS calls 1:07a67; standalone handwritten PUSHA/POPA body at 1:04504. ABI in docs/reference/lowlevel_abi.h. Android exact name absent."
+   },
+   "asm_0456e": {
+    "addr": "1:0456e",
+    "name": "INVENTED",
+    "evidence": "DOS calls 1:07a5a; standalone handwritten PUSHA/POPA body at 1:0456e. ABI in docs/reference/lowlevel_abi.h. Android exact name absent."
    }
   },
   "data": {
