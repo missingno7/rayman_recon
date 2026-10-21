@@ -913,28 +913,26 @@ void DO_SKO_PHASE_1(obj_t *obj)
 {
     s16 main_etat = obj->main_etat;
     s16 sub_etat = obj->sub_etat;
-    switch (main_etat) { case 0:
-      switch (sub_etat) {
-      case 4:
-       if (obj->anim_frame == 27 && screen_trembling == 0) {
-        screen_trembling = 1;
-        sko_nb_frap++;
-        if (ray.main_etat == 5)
-        {
-            set_main_etat(&ray, 2);
-            set_sub_etat(&ray, 2);
+
+    if (main_etat == 0) {
+        /* DOS 1:69aa9..69ab3 uses unsigned lower/upper guards for state 4. */
+        if ((u16)sub_etat >= 4 && (u16)sub_etat <= 4) {
+            if (obj->anim_frame == 27 && screen_trembling == 0) {
+                screen_trembling = 1;
+                sko_nb_frap++;
+                if (ray.main_etat == 5) {
+                    set_main_etat(&ray, 2);
+                    set_sub_etat(&ray, 2);
+                }
+                if (sko_nb_frap == 3) {
+                    sko_rayon_on = 0;
+                    sko_phase++;
+                    skipToLabel(obj, 6, 1);
+                    sko_nb_frap = 0;
+                    obj->anim_frame = 0;
+                }
+            }
         }
-        if (sko_nb_frap == 3)
-        {
-            sko_rayon_on = 0;
-            sko_phase++;
-            skipToLabel(obj, 6, 1);
-            sko_nb_frap = 0;
-            obj->anim_frame = 0;
-        }
-       }
-       break;
-      }
     }
 }
 
