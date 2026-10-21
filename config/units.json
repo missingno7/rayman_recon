@@ -5145,7 +5145,7 @@
      ]
     },
     "ngaweTriesToGrabShip": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -5193,7 +5193,7 @@
      ]
     },
     "DO_ONE_NGW_RING_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

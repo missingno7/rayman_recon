@@ -85,16 +85,20 @@ void DRAW_MAP(u8 *draw_buf, big_map_t *big_map)
         y = start_y = display_map->y;
         row_index = tile_index;
         row_buffer = draw_buf;
-        for (tile_x = 0; tile_x < display_map->width_in_tiles; tile_x++) {
-            if (big_map->map[tile_index].transparency != 0) {
-                if (big_map->map[tile_index].transparency == 1)
-                    Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, x, y);
-                else
-                    Display_Bloc_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, x, y);
+        {
+            /* Separate top-row index lifetime; later rows use tile_index. */
+            u32 top_index = tile_index;
+            for (tile_x = 0; tile_x < display_map->width_in_tiles; tile_x++) {
+                if (big_map->map[top_index].transparency != 0) {
+                    if (big_map->map[top_index].transparency == 1)
+                        Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[top_index], draw_buf, x, y);
+                    else
+                        Display_Bloc_Clippe(big_map->tile_texture_offsets[top_index], draw_buf, x, y);
+                }
+                draw_buf += 16;
+                x += 16;
+                top_index++;
             }
-            draw_buf += 16;
-            x += 16;
-            tile_index++;
         }
         row_buffer += 5120;
         row_index += big_map->width;
@@ -171,7 +175,7 @@ void ngaweFollowsShip(obj_t *obj)
 
 void ngaweTriesToGrabShip(obj_t *obj)
 {
-    s16 ship_h; s16 ship_w; s16 ship_y; s16 ship_x;
+    s16 ship_w; s16 ship_y; s16 ship_h; s16 ship_x;
 
     obj_t *ship;
     s32 in_range;
@@ -393,7 +397,9 @@ void DO_NGW_POING_COLLISION(obj_t* ngw_obj, s16 sprite) {
 void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s32 distance;
-    obj_t *unk_obj = &level.objects[ring_obj->param];
+    /* DOS 1:4dd6c keeps the object array base in ECX through the command dispatch. */
+    obj_t *objects = level.objects;
+    obj_t *unk_obj = &objects[ring_obj->param];
 
     if (!(unk_obj->is_active)) {
         ring_obj->flags.alive = 0;
@@ -419,13 +425,15 @@ void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
     }
 
     ring_obj->flags.command_test = 0;
-    if (ring_obj->cmd == GO_SPEED) {
+    /* DOS 1:4de0d loads the command before dispatching its single handled case. */
+    switch (ring_obj->cmd) {
+    case GO_SPEED:
         ring_obj->speed_x = ring_obj->iframes_timer;
         if (ring_obj->follow_id != 0) {
             ring_obj->speed_y = ring_obj->follow_id;
         } else {
             if (ring_obj->flags.hurtbyfist) {
-                unk_obj = &level.objects[ring_obj->param];
+                unk_obj = &objects[ring_obj->param];
                 ring_obj->link = (unk_obj->offset_bx + (s16)unk_obj->x) - (s16)ring_obj->x - ring_obj->offset_bx;
                 ring_obj->speed_y =
                         (
@@ -437,9 +445,9 @@ void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
                 }
 
                 distance = ring_obj->link;
-            if (distance < 0)
-                distance = -distance;
-            ring_obj->link = distance;
+                if (distance < 0)
+                    distance = -distance;
+                ring_obj->link = distance;
             }
             distance = ring_obj->speed_x;
             if (distance < 0)
