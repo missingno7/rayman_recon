@@ -4,7 +4,6 @@
 #include "map.h"
 #include "lowlevel.h"
 #include "inline_helpers.h"
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
 typedef struct vec2b_t {
@@ -227,7 +226,7 @@ void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 param_3) {
             unk_1 =
                     (cur_obj->flags.flip_x ? 1 : -1) *
                     (s16) (ray.offset_bx + ray.x - cur_obj->x - cur_obj->offset_bx);
-            unk_1 = MAX(0, (s32)unk_1) + 15;
+            unk_1 = max32((s32)unk_1, 0) + 15;
             cur_obj->link = unk_1;
 
             cur_obj->flags.hurtbyfist = 0;
