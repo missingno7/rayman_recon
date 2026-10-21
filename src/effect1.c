@@ -1,5 +1,5 @@
 #include "inline_helpers.h"
-/* Worker w2_effect; partial finishing candidate, see NOTES.md.
+/* Worker d_effect1; partial finishing candidate, see NOTES.md.
  * effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. dummy_prg is a zero-size compiler alias of dummy_scene_func (identical adjacent bodies, docs/COMPILER.md). */
 #include "obj.h"
 #include "game.h"
@@ -21,8 +21,10 @@ extern s16 myRand(s16 max);
 extern u8 sub_38DCC(u16 x, u16 y, s16 scale, u16 width, u8 *arg5, u8 *arg6);
 extern u8 effect_helper_6ee54(u16 a1, u16 a2, s16 a3, u16 a4, u8 *a5, u8 *a6);
 extern u8 effect_helper_1623c(u16 a1, u16 a2, u16 a3, s16 a4, u16 a5, u8 *a6, u8 *a7);
-extern u8 effect_helper_346b4(u8 a1, s16 a2);
-extern u8 effect_helper_634f0(u8 a1, s16 a2);
+/* DOS 1:346c2..346d0 consumes both EBX source and ECX destination. */
+extern u8 effect_helper_346b4(u8 a1, s16 a2, u8 *source, u8 *destination);
+/* DOS 1:634fd..63512 consumes both pointers; 1:63538 reads the u16 first argument. */
+extern u8 effect_helper_634f0(u16 a1, s16 a2, u8 *source, u8 *destination);
 extern u8 effect_helper_50738(u8 a1, s16 a2, u8 *a3, u8 *a4);
 extern u8 effect_helper_6c7cc(u16 a1, u16 a2, u16 a3, s16 a4, u16 a5, u8 *a6, u8 *a7);
 extern rgb_palette_t rvb_plan3;
@@ -305,27 +307,23 @@ u8 sub_38074(void)
 
 u8 sub_380A4(u8 effect, u8 value, u8 *arg3, u8 *arg4)
 {
-    u8 effect_local;
-    u8 value_local;
     s16 scale = 1;
 
-    effect_local = effect;
-    value_local = value;
 
-    if (effect_local == 9) {
-        effect_local = sub_38030();
-        if (effect_local == 2 || effect_local == 4)
-            value_local = sub_38054();
-        else if (effect_local == 6)
-            value_local = sub_38064();
+    if (effect == 9) {
+        effect = sub_38030();
+        if (effect == 2 || effect == 4)
+            value = sub_38054();
+        else if (effect == 6)
+            value = sub_38064();
     }
-    if (effect_local == 4)
-        effect_local = 2;
+    if (effect == 4)
+        effect = 2;
 
     scale *= (s16)(s8)byte_964CA;
-    byte_964C8 = value_local;
-    effect_choice = effect_local;
-    switch (effect_local) {
+    byte_964C8 = value;
+    effect_choice = effect;
+    switch (effect) {
     case 1:
         return sub_38DCC(8, 8, scale, 120, arg3, arg4);
     case 3:
@@ -333,17 +331,15 @@ u8 sub_380A4(u8 effect, u8 value, u8 *arg3, u8 *arg4)
     case 5:
         return effect_helper_1623c(20, 8, 61, scale * 2, 50, arg3, arg4);
     case 2:
-        if (value_local == 13 || value_local == 100) {
-            value_local = sub_38054();
-            byte_964C8 = value_local;
+        if (value == 13 || value == 100) {
+            byte_964C8 = sub_38054();
         }
-        return effect_helper_346b4(byte_964C8, scale * 2);
+        return effect_helper_346b4(byte_964C8, scale * 2, arg3, arg4);
     case 8:
-        return effect_helper_634f0(22, scale * 2);
+        return effect_helper_634f0(22, scale * 2, arg3, arg4);
     case 6:
-        if (value_local == 16 || value_local == 100) {
-            value_local = sub_38064();
-            byte_964C8 = value_local;
+        if (value == 16 || value == 100) {
+            byte_964C8 = sub_38064();
         }
         return effect_helper_50738(byte_964C8, scale * 4, arg3, arg4);
     case 7:
@@ -544,9 +540,12 @@ void Do_Effect_Pause_Simple(void)
 s16 Do_Effect_Pause_unknown(u32 par_0)
 {
     u8 effect;
+    s32 duration;
 
     PC_do_cheats();
-    if (VGA_FREQ * 7 > effect_pause_count) {
+    /* Keep the cadence calculation for both initial-phase comparisons. */
+    duration = VGA_FREQ * 7;
+    if (effect_pause_count < duration) {
         ++effect_pause_count;
         effect_copy_pause_band(EffetBufferNormal, DrawBufferNormal, 0xa0);
         effect_copy_pause_band(EffetBufferNormal + 0xc800,
@@ -563,7 +562,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
         if (effect_pause_bloque == 0)
             DO_AFFICHE_PAUSE();
         goto finalize;
-    } else if (effect_pause_count == VGA_FREQ * 7) {
+    } else if (effect_pause_count == duration) {
         ++effect_pause_count;
         effect_pause_timer = 0;
         effect_pause_bloque = 0;
@@ -612,7 +611,12 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
                                DrawBufferNormal + 0xa0, 0xa0);
         endsynchro();
         synchro();
-        copy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
+        {
+            /* DOS 1:28810 and 1:288f2 read destination before source. */
+            u8 *display = DisplayBufferNormal;
+            u8 *draw = DrawBufferNormal;
+            copy(display, draw, 0xfa00);
+        }
         for (;;) {
             if (TOUCHE(0x36) != 0 && TOUCHE(0x2a) != 0)
                 break;
@@ -638,7 +642,12 @@ finalize:
                                DrawBufferNormal + 0xa0, 0xa0);
         endsynchro();
         synchro();
-        copy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
+        {
+            /* DOS 1:28810 and 1:288f2 read destination before source. */
+            u8 *display = DisplayBufferNormal;
+            u8 *draw = DrawBufferNormal;
+            copy(display, draw, 0xfa00);
+        }
     }
     return (in_pause == 0);
 }
