@@ -1,5 +1,5 @@
 /* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
- * Worker d_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
+ * Worker c_objupdate2: 49/51 STRICT, contiguous _TEXT; see NOTES.md.
  * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -398,9 +398,14 @@ void DoTarzanPoingCollision(obj_t* obj, s16 sprite) {
 
 void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s16 xspeed, s16 yspeed)
 {
-    s16 event_index = 0;
-    obj_t *spawned = level.objects;
-    s16 nb_objects = level.nb_objects;
+    s16 event_index;
+    obj_t *spawned;
+    s16 nb_objects;
+
+    event_index = 0;
+    /* Indexed initialisation preserves the DOS register schedule at 1:51a14. */
+    spawned = &level.objects[event_index];
+    nb_objects = level.nb_objects;
 
     while (event_index < nb_objects) {
         if (((spawned->type == TYPE_0_BADGUY1 && which_enemy == 1) ||
@@ -413,7 +418,7 @@ void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s16 xspeed, s16 yspee
             spawned->active_timer = 0;
             set_main_and_sub_etat(spawned, 2, 2);
             spawned->active_flag = 1;
-            spawned->x = tentacle_obj->offset_bx + (tentacle_obj->x - spawned->offset_bx);
+            spawned->x = tentacle_obj->x + tentacle_obj->offset_bx - spawned->offset_bx;
             spawned->y = tentacle_obj->y - (spawned->offset_by >> 2);
             calc_obj_dir(spawned);
             spawned->speed_y = yspeed;
