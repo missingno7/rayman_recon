@@ -3,6 +3,7 @@
  * Status per function: config/units.json.
  */
 #include "obj.h"
+#include "inline_helpers.h"
 
 extern obj_t ray;
 extern obj_t *poing_obj;
@@ -17,8 +18,8 @@ void set_main_and_sub_etat(obj_t *obj, u8 main_etat, u8 sub_etat);
 void SET_X_SPEED(obj_t *obj);
 void CALC_MOV_ON_BLOC(obj_t *obj);
 void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
-s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1,
-              s16 x_2, s16 y_2, s32 w_2, s32 h_2);
+s16 inter_box(s16 x_1, s16 y_1, s16 w_1, s16 h_1,
+              s16 x_2, s16 y_2, s16 w_2, s16 h_2);
 void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void recale_position(obj_t *obj);
 void obj_hurt(obj_t *obj);
@@ -56,8 +57,6 @@ void DO_TRP_ATTAK(obj_t *obj);
 #define RESERVED_GO_SKIPF 29
 #define GO_NOP 30
 
-#define ashr16(value, amount) \
-    ((s16)((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount))))
 #define ashl16(value, amount) ((value) << (amount))
 
 void DO_TRP_COMMAND(obj_t *obj)
@@ -109,9 +108,9 @@ void DO_TRP_COMMAND(obj_t *obj)
 void trompetteWind(obj_t *obj, u8 a2)
 {
     s16 trp_w;
+    s16 trp_x;
     s16 trp_h;
     s16 trp_y;
-    s16 trp_x;
     s16 unk_1;
 
     obj->timer = 100;
@@ -124,10 +123,10 @@ void trompetteWind(obj_t *obj, u8 a2)
     trp_w += 92;
     trp_h = ashr16(trp_h, 1) + 2;
     trp_y += ashr16(trp_h, 2);
-    if (inter_box(ray_zdc_x, ray_zdc_y, ray_zdc_w, ray_zdc_h,
+    if (inter_box(ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y,
                   trp_x, trp_y, trp_w, trp_h)) {
         ashr16(ray_zdc_w, 1);
-        ashr16(ray_zdc_h, 1);
+        ashr16(ray_zdc_y, 1);
         unk_1 = 7;
         if ((!obj->flags.flip_x && a2 == 0) ||
             (obj->flags.flip_x && a2 == 1))
