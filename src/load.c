@@ -1,4 +1,4 @@
-/* load object, DOS v1.21. Names RAYVERSE/ANDROID; c2_load worker candidate.
+/* load object, DOS v1.21. Names RAYVERSE/ANDROID; g_load worker candidate.
    See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
 #include "game.h"
@@ -363,11 +363,12 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
     };
     char *full_filename, *error_buffer;
     FILE *fp;
-    s32 event_offset, texture_offset, texture_data_size, image_offset;
+    s32 event_offset, texture_data_size;
     u32 x_texture_count, x_code_size;
+    s32 texture_offset, image_offset;
     s32 i;
     u32 retry_index;
-    u8 background_static, background_scroll, checksum;
+    u8 background_static, checksum, background_scroll;
     u16 cmd_count, label_count;
     extern u16 path_has_changed;
     extern s16 num_world;
