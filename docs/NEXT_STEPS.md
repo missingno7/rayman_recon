@@ -24,3 +24,11 @@
    acquire PMODE/W 1.22 PMWLITE.EXE, then test on a trivial WLINK-built LE whether it is deterministic and whether
    our decoder round-trips its output. Only then ask whether decoded oracle objects re-compress to the original
    stream (packer reproducibility before link work, as in earlier projects).
+
+## Open user decisions (2026-10-22)
+- **Abs helper** (build/workers/r_abs/NOTES.md, proposed.h): `test eax,eax; jge; neg eax` as ORIGINAL_INLINE `Abs` closes
+  dark DARK_phase1, DO_DARK_SORT_COMMAND and hybrid doMOSAMScommand (0 losses; Android has a real 10-byte `Abs`), but the
+  same core is produced by plain C in 26 STRICT functions, so the AGENTS.md helper gate is not literally met.
+- **Link stage**: acquire PMODE/W 1.22 PMWLITE and test determinism (first step only).
+Wave 7/8 yield (2026-10-22): 29 finishing passes on exhausted NEAR pools gave +7 STRICT; whole-object/new-unit work
+(sysutils +12) and BSS/data fragments gave the larger gains. Remaining NEAR are dominated by register/stack allocation.

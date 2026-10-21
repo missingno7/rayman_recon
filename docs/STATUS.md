@@ -7,10 +7,10 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1372 recorded STRICT, 261,067 code bytes** (57.0% of game code 1:00000-1:6fbe6), C + hand-written assembly: 299 NEAR; `python tools/status.py` for the per-unit table |
+| function-level STRICT | **1385 recorded STRICT, 262,197 code bytes** (57.3% of game code 1:00000-1:6fbe6), C + hand-written assembly: 301 NEAR; every game code range now has a unit (new: sysutils 1:6f3b0 replacing block_malloc/init_memory/sprite_blocks, blood 1:13800); `python tools/status.py` for the per-unit table |
 | whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
-| data closure | **47,069 bytes VERIFIED** `_DATA`/`CONST` (incl. the 5.2 KB ObjectsFonctions table, gap blocks, menu/savecodec/block_malloc CONST); game `_DATA` gaps left: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets |
-| BSS | order rule PROVEN; layout VERIFIED **148,699 of 152,302 game-BSS bytes (97.6%)**, 2:3218a..2:57478; runtime (CLIB) BSS starts at 2:57478 (PROVEN, atexit `_BSS`). Fragments in src/bss/ are layout units, not original TU boundaries; 3.6 KB OPEN |
+| data closure | **47,143 bytes VERIFIED** `_DATA`/`CONST` (incl. the 5.2 KB ObjectsFonctions table, gap blocks, menu/savecodec/block_malloc CONST); game `_DATA` gaps left: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets |
+| BSS | order rule PROVEN; layout VERIFIED **148,811 of 152,302 game-BSS bytes (97.7%)**, 2:3218a..2:57478; runtime (CLIB) BSS starts at 2:57478 (PROVEN, atexit `_BSS`). Fragments in src/bss/ are layout units, not original TU boundaries; 3.6 KB OPEN |
 | linked binary / packed EXE | not started (by design; first step only: PMODE/W 1.22 PMWLITE determinism, docs/NEXT_STEPS.md) |
 
 Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
