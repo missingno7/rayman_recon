@@ -1097,11 +1097,27 @@ void allocateLandingSmoke(obj_t* in_obj) {
 s32 instantSpeed(s16 speed) {
     s32 spd_shr;
     s32 spd_abs_max;
+    s32 product;
+    s32 remainder;
+    s32 shifted_product;
+    s32 shifted_remainder;
+    s32 shift_amount;
 
     spd_shr = ashr16(speed, 4);
     spd_abs_max = Abs(speed) & 0xF;
     if (spd_abs_max != 0) {
-        spd_shr += sgn(speed) * (ashr32(map_time * spd_abs_max, 4) - ashr32(map_time * spd_abs_max - spd_abs_max, 4));
+        shift_amount = 4;
+        product = map_time * spd_abs_max;
+        remainder = product - spd_abs_max;
+        if (product != 0)
+            shifted_product = product >> shift_amount;
+        else
+            shifted_product = -((-product) >> shift_amount);
+        if (remainder != 0)
+            shifted_remainder = remainder >> shift_amount;
+        else
+            shifted_remainder = -((-remainder) >> shift_amount);
+        spd_shr += sgn(speed) * (shifted_product - shifted_remainder);
     }
     return spd_shr;
 }
@@ -3537,8 +3553,6 @@ void INIT_MOTEUR(u8 new_lvl) {
         saved_tings = status_bar.num_wiz;
         restoreGameState(&save1);
         status_bar.num_wiz = saved_tings;
-    } else {
-        actualize_palette(0); // NOTE: Added to prevent wrong palette being used at start of level (is there a bug elsewhere?)
     }
     if (departlevel) {
         nb_wiz_collected = 0;
