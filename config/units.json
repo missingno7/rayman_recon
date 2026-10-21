@@ -11159,6 +11159,68 @@
      ]
     }
    }
+  },
+  "dosmem": {
+   "source": "src\\dosmem.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "dos_allocate_conventional_block": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "dos_free_conventional_block": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_564f8": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "effect50350": {
+   "source": "src\\effect50350.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "effect_activate": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_cleanup_506fc": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_50738": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_507f0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_50aa8": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

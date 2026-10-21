@@ -8002,6 +8002,21 @@
     "addr": "1:70899",
     "name": "INVENTED",
     "evidence": "Census identifies DOS 1:70899 as sin; tested as the target for Watcom IF@DSIN calls from the mesh candidate"
+   },
+   "effect_prepare_rows": {
+    "addr": "1:345b0",
+    "name": "INVENTED",
+    "evidence": "C helper at the beginning of the 1:34580..1:34d90 DOS span; initializes the row-effect state and dispatches the 12-entry width table."
+   },
+   "dos_allocate_conventional_block": {
+    "addr": "1:56460",
+    "name": "INVENTED",
+    "evidence": "DOS DPMI function 0100 wrapper at 1:56460; caller at 1:197fb passes size in AX and an output pointer in EDX."
+   },
+   "dos_free_conventional_block": {
+    "addr": "1:564c4",
+    "name": "INVENTED",
+    "evidence": "DOS DPMI function 0101 wrapper at 1:564c4; input handle in AX."
    }
   },
   "data": {
@@ -14556,6 +14571,24 @@
     "type": "s16",
     "name": "INVENTED",
     "evidence": "DOS effect helper stores zero at 2:4e75a; -5 short-load form accounts for apparent references at +2"
+   },
+   "dword_E0D14": {
+    "addr": "2:50d14",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/data.c:3237 //E0D14; DOS reads/writes a 4-byte allocated-state pointer at 1:345ba, 1:34688, and 1:346b4."
+   },
+   "dword_E4DA8": {
+    "addr": "2:54da8",
+    "type": "u32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/data.c:3295 //E4DA8; DOS reads/writes a 4-byte allocated-state pointer at 1:50398 and 1:50738."
+   },
+   "dpmi_workspace": {
+    "addr": "2:54e1c",
+    "type": "u8[92]",
+    "name": "INVENTED",
+    "evidence": "DOS DPMI register workspace directly referenced from 1:56464 through 1:56660; extends to the next named data at 2:54e78."
    }
   }
  }
