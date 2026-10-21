@@ -40,17 +40,20 @@ def dump_json(path, obj):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + f".{os.getpid()}.tmp")   # per-process: concurrent writers must not collide
-    with open(tmp, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(obj, f, indent=1, sort_keys=False)
-        f.write("\n")
-    for attempt in range(20):          # Windows: a concurrent reader can hold the target open briefly
-        try:
-            os.replace(tmp, path)
-            return
-        except PermissionError:
-            if attempt == 19:
-                raise
-            time.sleep(0.25)
+    try:
+        with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(obj, f, indent=1, sort_keys=False)
+            f.write("\n")
+        for attempt in range(20):          # Windows: a concurrent reader can hold the target open briefly
+            try:
+                os.replace(tmp, path)
+                return
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.25)
+    finally:
+        tmp.unlink(missing_ok=True)        # only this writer's own sidecar (after a successful replace it is gone)
 
 
 def oracle(name):

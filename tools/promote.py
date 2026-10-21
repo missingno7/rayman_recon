@@ -121,6 +121,9 @@ def merge_symbols(overlay, renames):
                 ent = dict(ent, addr=norm(ent["addr"]))
                 if oname != name and oname in claims and claims[oname][1] != ent["addr"]:
                     raise SystemExit(f"conflict: {oname} already claimed by {claims[oname][0]} at {claims[oname][1]}")
+                if oname != name and name not in claims:
+                    raise SystemExit(f"--rename {oname}={name}: {name} is not bound; a rename must target an existing "
+                                     "binding at the same address (the old name is then recorded as its alias)")
                 if name in claims:
                     if claims[name][1] != ent["addr"]:
                         raise SystemExit(f"conflict: {name} claimed by {claims[name][0]} at {claims[name][1]}, "

@@ -176,6 +176,10 @@ def main(argv):
     if code or out.strip():
         raise SystemExit("src/ or config/ has uncommitted or untracked changes; commit or move them first:\n" + out)
     code, head0 = git("rev-parse", "HEAD")
+    if code:
+        raise SystemExit("cannot read HEAD:\n" + head0)
+    head0 = head0.strip()
+    (ROOT / "build" / "tmp").mkdir(parents=True, exist_ok=True)
     units = load_json(ROOT / "config" / "units.json")["units"]
     cfg_path = ROOT / "config" / "symbols.json"
     src_dir = ROOT / "src"
@@ -189,14 +193,17 @@ def main(argv):
         dst = ROOT / (f"src/{unit}.c" if a.new else units[unit]["source"])
         if not inside(dst, src_dir) or not (wdir / fname).is_file():
             raise SystemExit(f"{unit}: destination {dst} outside src/ or candidate {wdir / fname} missing")
-        rp = os.path.normcase(os.path.realpath(dst))
-        if rp in seen:
+        ids = {os.path.normcase(os.path.realpath(dst))}
+        if dst.exists():                                  # hard links: same file under another name
+            st = os.stat(dst)
+            ids.add((st.st_dev, st.st_ino))
+        if ids & seen:
             raise SystemExit(f"{unit}: destination {dst} already written by another pair in this run")
-        seen.add(rp)
+        seen |= ids
         plan.append((unit, wdir / fname, dst))
     w = Writes()
     ovtmp = None
-    committed = False
+    committed = attempted = False
     try:
         targets = []
         for unit, src, dst in plan:
@@ -252,6 +259,7 @@ def main(argv):
         code, out = git("add", "--", *paths)
         if code:
             raise SystemExit("git add failed:\n" + out)
+        attempted = True
         code, out = git("commit", "-q", "-m", a.msg + "\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
                         "--", *paths)
         if code:
@@ -259,14 +267,24 @@ def main(argv):
         committed = True
         print("  committed")
     except BaseException as e:
-        if not committed:
-            _, head1 = git("rev-parse", "HEAD")
-            committed = head1 != head0                    # interrupted after git created the commit
+        if attempted and not committed:                   # interrupted while git commit ran: did it land?
+            try:
+                c1, head1 = git("rev-parse", "HEAD")
+                c2, parent = git("rev-parse", "HEAD^")
+                committed = (not c1 and not c2 and head1.strip() != head0 and parent.strip() == head0
+                             and not git("diff", "--quiet", "HEAD", "--", *w.paths())[0])
+            except BaseException:
+                committed = False
+            if committed:
+                print("  committed (interrupted afterwards)")
+                return 0
         if committed:
-            print("  committed (interrupted afterwards)")
             return 0
         errors = w.restore()
-        git("reset", "-q", "--", *w.paths())
+        if w.orig:                                        # never an unrestricted reset
+            code, out = git("reset", "-q", "--", *w.paths())
+            if code:
+                errors.append("git reset of the written paths failed: " + out.strip())
         print(e if isinstance(e, SystemExit) else repr(e))
         if errors:
             print("RESTORE ERRORS:\n  " + "\n  ".join(errors))

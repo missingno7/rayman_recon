@@ -81,6 +81,23 @@ class IntegrateBindingTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             promote.merge_symbols(ov(self.tmp / "b.json", "IF@DSIN", "1:70899", "libscan"), {})
 
+    def test_promote_rename_to_unbound_target_refused(self):
+        # re-review R1: a rename onto a name that is not bound yet would drop the old claim
+        with self.assertRaises(SystemExit):
+            promote.merge_symbols(ov(self.tmp / "a.json", "IF@DSIN", "1:70800", "libscan"), {"IF@DSIN": "new_name"})
+        self.assertNotIn("new_name", self.bound())
+
+    def test_json_writer_leaves_no_sidecar(self):
+        # re-review R7: an interrupted dump must not leave config/<file>.<pid>.tmp behind
+        import common
+
+        class Boom:
+            pass
+        target = self.tmp / "x.json"
+        with self.assertRaises(TypeError):
+            common.dump_json(target, {"a": Boom()})
+        self.assertEqual([p.name for p in self.tmp.iterdir() if p.name.startswith("x.json")], [])
+
     def test_two_new_names_at_one_address_refused(self):
         # review R8: duplicates inside one overlay
         p = self.tmp / "d.json"
