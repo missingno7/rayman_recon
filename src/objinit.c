@@ -1,4 +1,4 @@
-/* objinit.c (1:4e160..1:50350). Names RAYVERSE; seeded by tools/seed.py, worker tu_objupd3. */
+/* objinit.c (1:4e160..1:50350). Names RAYVERSE; seeded by tools/seed.py, worker tu_objupd3; finishing pass d_objinit. */
 #include "obj.h"
 #include "game.h"
 extern obj_type_flags_t flags[262];
@@ -302,10 +302,6 @@ u8 Prio(obj_t* obj) {
 
     switch (obj->type)
     {
-        case TYPE_149_CLE_SOL: // Changed from 2 to 1 in the PC version
-        case TYPE_157_EAU:
-        case TYPE_197_MEDAILLON_TOON:
-            return 1;
         case TYPE_30_AUDIOSTART:
         case TYPE_98_SPACE_MAMA:
         case TYPE_204_BLACK_RAY:
@@ -321,8 +317,14 @@ u8 Prio(obj_t* obj) {
         case TYPE_181_SCROLL_SAX:
         case TYPE_199_BB1_VIT:
             return 0;
+        case TYPE_149_CLE_SOL: // Changed from 2 to 1 in the PC version
+        case TYPE_157_EAU:
+        case TYPE_197_MEDAILLON_TOON:
+            return 1;
         case TYPE_147_MST_SCROLL:
-            return (obj->hit_points == 0) ? 2 : 0;
+            if (obj->hit_points == 0)
+                return 2;
+            return 0;
         case TYPE_11_BOUM:
         case TYPE_19_SPLASH:
         case TYPE_21_PHOTOGRAPHE:
@@ -356,8 +358,9 @@ u8 Prio(obj_t* obj) {
         case TYPE_248_SKO_PINCE:
             return 2;
         case TYPE_123_BLACKTOON1:
-            return (num_world == 1 && num_level == 14) ? 3 : 2; // Changed from always 2 in the PC version
-            break;
+            if (num_world == 1 && num_level == 14)
+                return 3;
+            return 2; // Changed from always 2 in the PC version
         case TYPE_28_ONOFF_PLAT:
         case TYPE_44_CLASH:
         case TYPE_46_BB1:
@@ -388,7 +391,8 @@ u8 Prio(obj_t* obj) {
         case TYPE_249_RIDEAU:
             return 3;
         case TYPE_253_PLANCHES:
-            return (bonus_map != -1) ? 4 : 7;
+            /* 1:4e612: load [bateau_obj_id - 2], SAR 16 (-5 short load). */
+            return (bateau_obj_id != -1) ? 4 : 7;
         case TYPE_7_MORNINGSTAR:
         case TYPE_20_GENEBADGUY:
         case TYPE_96_TOTEM: // Added in PC version
@@ -413,6 +417,15 @@ u8 Prio(obj_t* obj) {
         case TYPE_88_TAMBOUR2:
         case TYPE_252_VAGUE_DERRIERE:
             return 7;
+        /* DOS range 192..194: 1:4e2d6..4e2e7. */
+        case TYPE_192_SMA_GRAND_LASER:
+        case TYPE_193_SMA_BOMB:
+        case TYPE_194_SMA_BOMB_CHIP:
+            return 4;
+        /* Explicit dispatch boundaries: 1:4e177 and 1:4e1f1. */
+        case TYPE_196_DARD_PLAFOND:
+        case TYPE_244_SMA_PETIT_LASER:
+            break;
         default:
             break;
     }
@@ -901,16 +914,16 @@ void INIT_OBJECTS(u8 a1) {
                 obj->is_active = 0;
             } break;
             case TYPE_231_HYB_BBF2_D: {
-                found_bbf2_droite = obj->id;
                 obj->param = 0;
                 moskitomama_droite_obj_id = obj->id;
                 obj->flags.alive = 0;
                 obj->is_active = 0;
+                found_bbf2_droite = obj->id;
             } break;
             case TYPE_232_HYB_BBF2_G: {
-                found_bbf2_gauche = obj->id;
-                obj->param = 0;
                 moskitomama_gauche_obj_id = obj->id;
+                obj->param = 0;
+                found_bbf2_gauche = obj->id;
                 obj->flags.flip_x = 1;
                 obj->flags.alive = 0;
                 obj->is_active = 0;
@@ -921,15 +934,13 @@ void INIT_OBJECTS(u8 a1) {
             } break;
             case TYPE_219_CORDE: {
                 obj->hit_points = obj->init_hit_points >> 2;
-                if (num_world != -1) {
-                    // NOTE: this code does nothing, obj->y is overwritten by obj->init_y later (bug in the game?)
-                    obj_t* pierre_a_corde = level.objects + num_world;
-                    if (obj->x < pierre_a_corde->x) {
-                        obj->y = pierre_a_corde->y + 112;
+                if (pierreAcorde_obj_id != -1) {
+                    if (obj->x < level.objects[pierreAcorde_obj_id].x) {
+                        obj->y = level.objects[pierreAcorde_obj_id].y + 112;
                     } else {
-                        obj->y = pierre_a_corde->y + 120;
+                        obj->y = level.objects[pierreAcorde_obj_id].y + 120;
                     }
-                    obj->y = obj->init_y; // ?
+                    obj->y = obj->init_y;
                 }
             } break;
             case TYPE_179_HERSE_BAS_NEXT:
@@ -950,20 +961,18 @@ void INIT_OBJECTS(u8 a1) {
                     } else {
                         obj->param = obj->x;
                         obj->hit_points = 0;
-                        if (num_world == world_3_mountain && num_level == 7) {
-                            obj->sub_speed = 0;
-                        } else {
-                            obj->y = eau_obj_id + (SCREEN_HEIGHT - 80);
-                            if (num_world == world_5_cave && num_level == 8) {
-                                obj->y = eau_obj_id + Bloc_lim_H2 - 80;
-                            } else if (num_world == world_4_image) {
-                                obj->y = eau_obj_id + (SCREEN_HEIGHT - 70);
-                            }
+                        if (num_world != world_3_mountain || num_level != 7) {
+                            obj->y = ymapmax + (SCREEN_HEIGHT - 80);
                             obj->init_y = ymapmax + (SCREEN_HEIGHT - 80);
-                            if (num_world == 5 && num_level == 8)
-                                obj->init_y = ymapmax + (s16)Bloc_lim_H2 - 80;
-                            else if (num_world == 4)
+                            if (num_world == world_5_cave && num_level == 8) {
+                                obj->y = ymapmax + Bloc_lim_H2 - 80;
+                                obj->init_y = ymapmax + Bloc_lim_H2 - 80;
+                            } else if (num_world == world_4_image) {
+                                obj->y = ymapmax + (SCREEN_HEIGHT - 70);
                                 obj->init_y = ymapmax + (SCREEN_HEIGHT - 70);
+                            }
+                        } else {
+                            obj->sub_speed = 0;
                         }
                     }
                     obj->is_active = 1;
@@ -972,40 +981,36 @@ void INIT_OBJECTS(u8 a1) {
                     obj->iframes_timer = 0;
                     calc_obj_pos(obj);
                 } else {
-                    if (eau_obj_id == -1 || num_world == world_1_jungle) {
-                        obj->flags.alive = 0;
-                        obj->is_active = 0;
-                    } else {
-                        obj_t* eau;
+                    if (eau_obj_id != -1 && num_world != world_1_jungle) {
+                        obj->flags.flip_x = 0;
                         obj->speed_y = 0;
                         obj->speed_x = 0;
-                        obj->flags.flip_x = 0;
-                        eau = level.objects + eau_obj_id;
-                        eau->param += 101;
-                        obj->x = eau->param;
-                        obj->y = eau->y;
-                        if (num_world == world_3_mountain && num_level == 7) {
-                            obj->init_y = obj->y;
-                            obj->sub_speed = 0;
-                        } else {
+                        obj->x = (level.objects[eau_obj_id].param += 101);
+                        obj->y = level.objects[eau_obj_id].y;
+                        if (num_world != world_3_mountain || num_level != 7) {
                             obj->init_y = ymapmax + (SCREEN_HEIGHT - 80);
                             if (num_world == world_4_image) {
                                 obj->init_y = ymapmax + (SCREEN_HEIGHT - 70);
                             }
                             if (num_world == world_5_cave && num_level == 8) {
-                                obj->y = eau->y + eau_obj_id - obj->id; //TODO: fix this (doesn't seem right)
+                                obj->y = eau_obj_id + level.objects[eau_obj_id].y - obj->id;
                                 obj->init_y = obj->y;
                             }
+                        } else {
+                            obj->init_y = obj->y;
+                            obj->sub_speed = 0;
                         }
                         calc_obj_pos(obj);
-                        obj->flags.alive = 1;
                         obj->is_active = 1;
-                        ++eau->hit_points;
-                        obj->sub_etat = eau->hit_points;
+                        obj->flags.alive = 1;
+                        obj->sub_etat = ++level.objects[eau_obj_id].hit_points;
                         if (obj->sub_etat > 3) {
                             obj->sub_etat -= 4;
                         }
                         obj->iframes_timer = 0;
+                    } else {
+                        obj->flags.alive = 0;
+                        obj->is_active = 0;
                     }
                 }
             } break;
@@ -1037,16 +1042,20 @@ void INIT_OBJECTS(u8 a1) {
                 if (save1.is_just_saved && !bonus_map) {
                     obj->flags.alive = 0;
                 }
-                if (obj->main_etat == 0) {
-                    obj->timer = 0;
-                    obj->is_active = 0;
-                } else if (obj->main_etat == 5) {
-                    obj->timer = 30;
+                switch (obj->main_etat) {
+                    case 0:
+                        obj->timer = 0;
+                        obj->is_active = 0;
+                        break;
+                    case 5:
+                        obj->timer = 30;
+                        break;
                 }
             } break;
             case TYPE_64_SCROLL: {
-                scroll_obj_id[NumScrollObj++] = i;
+                scroll_obj_id[NumScrollObj] = i;
                 obj->y = obj->init_y;
+                NumScrollObj++;
                 obj->x = obj->init_x;
                 if (NumScrollObj >= 50) {
                     FatalError("Augmenter MAX_NB_SCROLL_PER_MAP");
@@ -1054,11 +1063,8 @@ void INIT_OBJECTS(u8 a1) {
                 obj->flags.alive = 0;
             } break;
             case TYPE_19_SPLASH:
-            case TYPE_203_SMA_WEAPON:
-            case TYPE_224_STOSKO_PINCE:
-            case TYPE_238_POING_FEE: {
                 obj->flags.alive = 0;
-            } break;
+                break;
             case TYPE_9_BADGUY2:
             case TYPE_165_BADGUY3: {
                 obj->eta[2][2].sound_index = 0;
@@ -1075,12 +1081,12 @@ void INIT_OBJECTS(u8 a1) {
                 black_fist_obj_id = obj->id;
             } break;
             case TYPE_94_POING: {
-                obj->flags.alive = 0;
                 obj->init_sub_etat = poing.sub_etat;
-                obj->sub_etat = poing.sub_etat;
                 poing_obj_id = i;
-                poing_obj = &level.objects[fee_obj_id];
+                obj->sub_etat = poing.sub_etat;
+                poing_obj = &level.objects[poing_obj_id];
                 obj->init_flag = 7;
+                obj->flags.alive = 0;
             } break;
             case TYPE_11_BOUM: {
                 sbar_obj_id = i;
@@ -1092,8 +1098,10 @@ void INIT_OBJECTS(u8 a1) {
             } break;
             case TYPE_39_NEN_GRAINE: {
                 obj->iframes_timer = 0;
-                obj->flags.alive = 0;
-            } break;
+            } /* falls through to clear alive */
+            case TYPE_203_SMA_WEAPON:
+            case TYPE_224_STOSKO_PINCE:
+            case TYPE_238_POING_FEE:
             case TYPE_38_GRAINE: {
                 obj->flags.alive = 0;
             } break;
@@ -1145,8 +1153,8 @@ void INIT_OBJECTS(u8 a1) {
             case TYPE_215_DARK_SORT:
             case TYPE_233_HYB_BBF2_LAS:
             case TYPE_244_SMA_PETIT_LASER: {
-                obj->flags.alive = 0;
                 obj->is_active = 0;
+                obj->flags.alive = 0;
                 obj->init_flag = 7;
             } break;
             case TYPE_3_LIDOLPINK: {
@@ -1162,18 +1170,18 @@ void INIT_OBJECTS(u8 a1) {
                 obj->flags.alive = 0;
                 obj->init_flag = 7;
                 obj->animations = ray.animations;
-                black_ray_obj_id = i;
+                black_ray_obj_id = obj->id;
             } break;
             case TYPE_190_COUTEAU: {
                 obj->follow_id = 1;
                 obj->is_active = 0;
                 obj->init_flag = 7;
                 obj->flags.alive = 0;
-                obj->iframes_timer = 1;
+                obj->iframes_timer = obj->follow_id;
             } break;
             case TYPE_10_FISH: {
-                if (i > 0) {
-                    obj_t* prev_obj = level.objects + i - 1;
+                if (i >= 1) {
+                    obj_t* prev_obj = &level.objects[i - 1];
                     obj->flags.alive = 1;
                     if (prev_obj->type == TYPE_10_FISH && prev_obj->x == obj->x) {
                         obj->flags.alive = 0;
@@ -1191,7 +1199,7 @@ void INIT_OBJECTS(u8 a1) {
                     set_sub_etat(obj, 10);
                     obj->init_sub_etat = 10;
                 }
-            } break;
+            } /* falls through to init_flag */
             case TYPE_82_JAUGEUP:
             case TYPE_109_PI:
             case TYPE_142_ONEUP:
@@ -1224,11 +1232,9 @@ void INIT_OBJECTS(u8 a1) {
             } break;
             case TYPE_32_DARK_PHASE2: {
                 obj->flags.alive = 0;
+                obj->x = obj->init_x = 0;
+                obj->y = obj->init_y = 0;
                 obj->is_active = 0;
-                obj->init_x = 0;
-                obj->x = 0;
-                obj->init_y = 0;
-                obj->y = 0;
             } break;
         }
 
@@ -1249,8 +1255,8 @@ void INIT_OBJECTS(u8 a1) {
         if (bonus_map && obj->type == TYPE_161_WIZ) {
             ++nb_wiz;
         }
-        ++i;
         ++obj;
+        ++i;
     }
 
     // Link moskitomama objects to each other
