@@ -1,5 +1,5 @@
 /* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
- * Worker d2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Worker c2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
  * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
  */
 #include "obj.h"
@@ -948,18 +948,23 @@ void casse_brique_play(obj_t *obj)
                 PlaySnd_old(45);
                 upscreen = 1;
             }
-        } else if (ray.screen_y + 64 < y + 8) {
-            if (ray.speed_x != 0 && ray_face_brik(x) &&
-                ((ray.main_etat == 0 && ray.sub_etat == 4) ||
-                (ray.main_etat == 1 && ray.main_etat == ray.sub_etat))) {
-                set_main_and_sub_etat(&ray, 3, 17);
-            } else if (200 - YOFFSETCB <= y) {
-                set_main_and_sub_etat(obj, 0, 3);
-                obj->display_prio = 0;
-                speed_ball_null(obj);
-                if (InvadersMode == 1) InvadersMode = 2;
-            } else collision_rayman(obj);
-        } else if (collision_briques(obj) == 0) collision_rayman(obj);
+        } else {
+            s32 ray_bottom = ray.screen_y + 64;
+            if (y + 8 > ray_bottom) {
+                if (ray.speed_x != 0 && ray_face_brik(x) &&
+                    ((ray.main_etat == 0 && ray.sub_etat == 4) ||
+                    (ray.main_etat == 1 && ray.main_etat == ray.sub_etat))) {
+                    set_main_and_sub_etat(&ray, 3, 17);
+                } else if (200 - YOFFSETCB <= y) {
+                    set_main_and_sub_etat(obj, 0, 3);
+                    obj->display_prio = 0;
+                    speed_ball_null(obj);
+                    if (InvadersMode == 1) InvadersMode = 2;
+                } else collision_rayman(obj);
+            } else if (collision_briques(obj) == 0) {
+                collision_rayman(obj);
+            }
+        }
         move_ball(obj);
         do_bonus();
     }
