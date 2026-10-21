@@ -176,6 +176,12 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   Negatives (no fix): assignment-in-condition, value widths, liveness after the test, compound updates. Evidence:
   build/workers/r_testreg/REPORT.md. Do not re-probe these spellings.
 
+- **Register/stack-slot allocation residue** [OPEN, r_regalloc 2026-10-21]: 46 probes over 15 residues in 8 units found
+  no rule with two cross-unit STRICT proofs: no universal EBX/ESI/EDI/ECX order, no source-level slot formula. The
+  later Open Watcom allocator ranks conflicts by estimated savings (bld/cg/c/regalloc.c) - consistent with the
+  observations, not proof of 10.6's costs. Further declaration permutations repeat the documented dead end; a new
+  discriminator needs the 10.6 allocator's cost/tie behaviour. Evidence: build/workers/r_regalloc/REPORT.md.
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
   evidence (e.g. an FP function whose residue changes under `-on`: box CalcTab 71 -> 64 diffs, still NEAR).
