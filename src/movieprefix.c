@@ -25,7 +25,7 @@ typedef struct movie_work_t {
     u16 height;
     u16 depth;
     u16 flags;
-    u32 speed;
+    s32 speed;
     u8 reserved14[0x3c];
     u32 data_offset;
     u32 current_offset;
@@ -42,9 +42,14 @@ typedef struct movie_work_t {
 typedef struct movie_frame_header_t {
     u32 size;
     u16 magic;
-    u16 chunks;
+    s16 chunks;
     u8 reserved[8];
 } movie_frame_header_t;
+
+typedef struct movie_chunk_t {
+    u32 size;
+    u16 type;
+} movie_chunk_t;
 
 typedef void (*movie_palette_writer_t)(u32, s32, const u8 *, s32);
 
@@ -68,7 +73,8 @@ extern u8 *movie_draw_buffer;
 extern s8 movie_audio_track;
 extern u8 movie_audio_enabled;
 extern u8 movie_audio_state;
-extern u8 movie_audio_counter;
+/* Signed index/sentinel: DOS 1:2ad12 reads [2:64dc-3], then SAR 24. */
+extern s8 movie_audio_counter;
 extern s32 movie_audio_limits[5][4];
 extern s32 movie_next_tick;
 
@@ -76,9 +82,9 @@ extern void set_vga_frequency(u8 frequency);
 extern u8 AudioStatusByte(void);
 extern void sub_1a5b8(s32 state);
 extern u16 sub_1a02c(u8 command, u8 *track, u8 *minute, u8 *second, u8 *frame);
-extern void sub_1a4ac(u8 command, u8 track, u8 minute, u8 second);
-extern void effect_set_audio_status(u8 status);
-extern void effect_restore_audio_status(u8 status);
+extern void sub_1a4ac(s32 command, u8 track, u8 minute, u8 second);
+extern void effect_set_audio_status(s32 status);
+extern void effect_restore_audio_status(s32 status);
 extern void endsynchro(void);
 extern void synchro(void);
 extern void readinput(void);
@@ -104,7 +110,7 @@ void sub_3A2AC(void);
 s32 sub_3A2C4(movie_surface_t *surface);
 s32 sub_3A2C8(movie_surface_t *surface);
 void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color);
-void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, u32 width);
+void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width);
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width);
 void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width);
 void sub_3A3B8(u32 context, s32 x, const u8 *rgb, s32 count);
@@ -118,24 +124,24 @@ s32 sub_3A55C(s32 fd, void *buffer, u32 count);
 s32 sub_3A578(s32 fd, u8 **buffer, u32 count);
 s32 sub_3A5B4(u8 *info);
 void sub_3A634(u8 *info);
-void sub_3A664(const u8 *data, movie_surface_t *surface, s32 x,
+void sub_3A664(const u8 *data, movie_work_t *work, movie_surface_t *surface,
                movie_palette_writer_t writer);
-void sub_3A6D0(const u8 *data, movie_surface_t *surface, s32 x);
-void sub_3A6E0(const u8 *data, movie_surface_t *surface, s32 x);
-void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias);
-void sub_3A7B4(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias);
-void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias);
+void sub_3A6D0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
+void sub_3A6E0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
+void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
+void sub_3A7B4(const u8 *data, movie_work_t *work, movie_surface_t *surface);
+void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
 void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface);
 void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface);
 void sub_3AA4C(u8 *work);
-s32 sub_3AA70(u8 *work, char *path);
+s32 sub_3AA70(movie_work_t *work, char *path);
 s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
               const u8 *chunks, movie_surface_t *surface, s32 *timer);
 s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer);
 void sub_3AFB4(movie_work_t *work, movie_surface_t *surface);
-s32 sub_3B014(u8 *work, u8 *surface);
+s32 sub_3B014(movie_work_t *work, movie_surface_t *surface);
 s32 sub_3B0F4(movie_work_t *work);
-s32 sub_3B138(u8 *work, u8 *surface);
+s32 sub_3B138(movie_work_t *work, movie_surface_t *surface);
 void sub_3B260(void);
 void sub_3B274(void);
 
@@ -230,7 +236,7 @@ void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color)
     surface->pixels[y * surface->width + x] = color;
 }
 
-void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, u32 width)
+void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
     u8 *dst;
     dst = surface->pixels + y * 320 + x;
@@ -253,7 +259,7 @@ void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width)
 {
     u16 *dst;
     u32 i;
-    dst = (u16 *)(surface->pixels + (y * 320 + x) * 2);
+    dst = (u16 *)(surface->pixels + y * 320 + x);
     i = 0;
     while (i < width) {
         dst[i] = color;
@@ -264,43 +270,41 @@ void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width)
 void sub_3A3B8(u32 context, s32 x, const u8 *rgb, s32 count)
 {
     s32 i;
-    s32 offset;
+    s32 end;
     (void)context;
-    offset = x * 3;
-    i = 0;
-    while (i < count) {
-        movie_video_buffer[offset] = rgb[0] >> 2;
-        movie_video_buffer[offset + 1] = rgb[1] >> 2;
-        movie_video_buffer[offset + 2] = rgb[2] >> 2;
+    end = x + count;
+    i = x;
+    while (i < end) {
+        movie_video_buffer[i * 3] = rgb[0] >> 2;
+        movie_video_buffer[i * 3 + 1] = rgb[1] >> 2;
+        movie_video_buffer[i * 3 + 2] = rgb[2] >> 2;
         rgb += 3;
-        offset += 3;
         ++i;
     }
     if (x < movie_palette_xmin)
         movie_palette_xmin = x;
-    if (x + count > movie_palette_xmax)
-        movie_palette_xmax = x + count;
+    if (end > movie_palette_xmax)
+        movie_palette_xmax = end;
 }
 
 void sub_3A428(u32 context, s32 x, const u8 *rgb, s32 count)
 {
     s32 i;
-    s32 offset;
+    s32 end;
     (void)context;
-    offset = x * 3;
-    i = 0;
-    while (i < count) {
-        movie_video_buffer[offset] = rgb[0];
-        movie_video_buffer[offset + 1] = rgb[1];
-        movie_video_buffer[offset + 2] = rgb[2];
+    end = x + count;
+    i = x;
+    while (i < end) {
+        movie_video_buffer[i * 3] = rgb[0];
+        movie_video_buffer[i * 3 + 1] = rgb[1];
+        movie_video_buffer[i * 3 + 2] = rgb[2];
         rgb += 3;
-        offset += 3;
         ++i;
     }
     if (x < movie_palette_xmin)
         movie_palette_xmin = x;
-    if (x + count > movie_palette_xmax)
-        movie_palette_xmax = x + count;
+    if (end > movie_palette_xmax)
+        movie_palette_xmax = end;
 }
 
 s32 sub_3A488(u32 *timer)
@@ -324,14 +328,19 @@ s32 sub_3A4B8(s32 *timer)
 {
     union REGS regs;
     u8 pit_count;
+    s32 low;
+    s32 high;
+    s32 upper;
     (void)timer;
     regs.h.ah = 0;
     int386(0x1a, &regs, &regs);
     outp(0x43, 0);
     inp(0x40);
-    pit_count = (u8)inp(0x40);
-    return ((s32)regs.h.cl << 24) + ((s32)regs.h.dl << 16) +
-           ((s32)regs.h.dh << 8) - pit_count;
+    pit_count = -(u8)inp(0x40);
+    low = regs.h.dl;
+    high = regs.h.dh;
+    upper = regs.h.cl;
+    return pit_count + ((upper << 24) + (((high << 8) + low) << 8));
 }
 
 s32 sub_3A518(s32 value, s32 *scale)
@@ -422,7 +431,7 @@ void sub_3A634(u8 *info)
     (void)info;
 }
 
-void sub_3A664(const u8 *data, movie_surface_t *surface, s32 x,
+void sub_3A664(const u8 *data, movie_work_t *work, movie_surface_t *surface,
                movie_palette_writer_t writer)
 {
     s16 packets;
@@ -430,149 +439,159 @@ void sub_3A664(const u8 *data, movie_surface_t *surface, s32 x,
     const u8 *src;
     s32 index;
 
+    index = 0;
+    movie_palette_xmax = index;
     movie_palette_xmin = 0x100;
-    movie_palette_xmax = 0;
     packets = *(const s16 *)data;
     src = data + 2;
-    index = 0;
     while (--packets >= 0) {
-        index += src[0];
-        run = src[1];
+        index += *src++;
+        run = *src++;
         if (run == 0)
             run = 0x100;
-        writer((u32)x, index, src + 2, run);
-        src += 2 + run * 3;
+        writer((u32)surface, index, src, run);
+        src += run * 3;
         index += run;
     }
-    (void)surface;
+    (void)work;
 }
 
-void sub_3A6D0(const u8 *data, movie_surface_t *surface, s32 x)
+void sub_3A6D0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    sub_3A664(data, surface, x, sub_3A3B8);
+    sub_3A664(data, work, surface, sub_3A3B8);
 }
 
-void sub_3A6E0(const u8 *data, movie_surface_t *surface, s32 x)
+void sub_3A6E0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    sub_3A664(data, surface, x, sub_3A428);
+    sub_3A664(data, work, surface, sub_3A428);
 }
 
-void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias)
+void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
     const u8 *src;
     s32 rows;
     s32 x;
     s32 y;
     s32 right;
-    s32 count;
-    u8 color;
+    s32 width;
+    s8 count;
 
     src = data;
     rows = work->height;
-    x = work->x_offset + x_bias;
+    width = work->width;
+    right = width + work->x_offset;
     y = work->y_offset;
-    right = work->x_offset + work->width;
     while (--rows >= 0) {
-        while (x < right) {
+        count = 0;
+        ++src; /* BRUN packet count is not used; decode to the row width. */
+        x = work->x_offset;
+        while ((x += count) < right) {
             count = (s8)*src++;
-            if (count < 0) {
-                count = -count;
-                color = *src++;
-                sub_3A30C(surface, x, y, color, count);
+            if (count >= 0) {
+                sub_3A30C(surface, x, y, *src++, count);
             } else {
+                count = -count;
                 sub_3A2D8(surface, x, y, src, count);
                 src += count;
             }
-            x += count;
-        }
-        ++y;
-        x = work->x_offset + x_bias;
-    }
-}
-
-void sub_3A7B4(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias)
-{
-    const u8 *src;
-    s32 lines;
-    s32 packets;
-    s32 x;
-    s32 y;
-    s32 count;
-    s32 skip;
-    u8 value;
-
-    y = work->y_offset + *(const s16 *)data;
-    lines = *(const u16 *)(data + 2);
-    src = data + 4;
-    while (--lines >= 0) {
-        packets = (s8)*src++;
-        x = work->x_offset + x_bias;
-        while (--packets >= 0) {
-            skip = *src++;
-            x += skip;
-            count = (s8)*src++;
-            if (count < 0) {
-                count = -count;
-                value = *src++;
-                sub_3A30C(surface, x, y, value, count);
-            } else {
-                sub_3A2D8(surface, x, y, src, count);
-                src += count;
-            }
-            x += count;
         }
         ++y;
     }
 }
 
-void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface, s8 x_bias)
+void sub_3A7B4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    const u8 *src;
-    s32 lines;
-    s32 packets;
-    s32 x;
-    s32 y;
     s32 run;
-    s32 skip;
-    u16 color;
+    const u8 *src;
+    s16 lines;
+    u8 packets;
+    s32 x_base;
+    s32 x;
+    s32 y;
+    s8 count;
 
-    lines = *(const u16 *)data;
-    src = data + 2;
-    x = work->x_offset + x_bias;
-    y = work->y_offset + work->height - 1;
+    src = data + 4;
+    x_base = work->x_offset;
+    y = *(const s16 *)data + work->y_offset;
+    data += 2;
+    lines = *(const s16 *)data;
     while (--lines >= 0) {
+        x = x_base;
+        packets = *src++;
+        while (packets > 0) {
+            x += *src++;
+            count = (s8)*src++;
+            if (count < 0) {
+                count = -count;
+                run = count;
+                sub_3A30C(surface, x, y, *src++, run);
+                --packets;
+                x += run;
+            } else {
+                run = count;
+                sub_3A2D8(surface, x, y, src, run);
+                x += run;
+                --packets;
+                src += count;
+            }
+        }
+        ++y;
+    }
+}
+
+void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
+{
+    const u8 *src;
+    s32 x_base;
+    s32 right;
+    s32 x;
+    s32 y;
+    s16 lines;
+    s16 packets;
+    s32 run;
+
+    x_base = work->x_offset;
+    y = work->y_offset;
+    right = x_base + work->width - 1;
+    lines = *(const s16 *)data;
+    src = data + 2;
+    do {
+read_packets:
         packets = *(const s16 *)src;
         src += 2;
         if (packets < 0) {
-            skip = (s8)(packets >> 8);
-            if (skip & 0x40) {
-                y -= (s8)(packets >> 8);
+            if (packets & 0x4000) {
+                y -= packets;
+                goto read_packets;
+            }
+            /* DOS 1:2a907..2a91a passes opcode low byte, right, y low byte. */
+            sub_3A2CC(surface, (u8)packets, right, (u8)y);
+            packets = *(const s16 *)src;
+            src += 2;
+            if (packets == 0) {
+                ++y;
+                --lines;
                 continue;
             }
-            color = *(const u16 *)src;
-            src += 2;
-            sub_3A2CC(surface, x, y, (u8)color);
-            x += 2;
-        } else {
-            while (--packets >= 0) {
-                skip = *src++;
-                x += skip;
-                run = (s8)*src++;
-                if (run >= 0) {
-                    sub_3A2D8(surface, x, y, src, run);
-                    src += run;
-                } else {
-                    run = -run;
-                    color = *(const u16 *)src;
-                    src += 2;
-                    sub_3A34C(surface, x, y, color, run);
-                }
+        }
+        x = x_base;
+        do {
+            x += *src++;
+            run = (s8)*src++ * 2;
+            if (run >= 0) {
+                sub_3A2D8(surface, x, y, src, run);
+                x += run;
+                src += run;
+            } else {
+                run = -run;
+                sub_3A34C(surface, x, y, *(const u16 *)src, run >> 1);
+                src += 2;
                 x += run;
             }
-        }
+        } while (--packets != 0);
         ++y;
-        x = work->x_offset + x_bias;
-    }
+        --lines;
+    } while (lines > 0);
 }
 
 void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
@@ -618,16 +637,13 @@ void sub_3AA4C(u8 *work_bytes)
     memset(work_bytes, 0, 0x99);
 }
 
-s32 sub_3AA70(u8 *work_bytes, char *path)
+s32 sub_3AA70(movie_work_t *work, char *path)
 {
-    movie_work_t *work;
     s32 status;
-
-    work = (movie_work_t *)work_bytes;
     memset(work, 0, 0x99);
     status = sub_3A538(&work->fd, path);
     if (status < 0)
-        return status;
+        goto open_error;
     status = sub_3A55C(work->fd, work, 0x80);
     if (status < 0)
         goto read_error;
@@ -649,8 +665,8 @@ s32 sub_3AA70(u8 *work_bytes, char *path)
         if (work->file_size == 12) {
             work->data_offset = 12;
             work->speed = 5;
-            movie_palette_flag = 1;
             lseek(work->fd, work->data_offset, 0);
+            movie_palette_flag = 1;
         } else {
             work->data_offset = 0x80;
         }
@@ -660,14 +676,14 @@ s32 sub_3AA70(u8 *work_bytes, char *path)
         goto version_error;
     }
 
-size_error:
-    sub_3AA4C(work);
-    return -3;
 version_error:
-    sub_3AA4C(work);
-    return -11;
+    status = -11;
+    goto read_error;
+size_error:
+    status = -3;
 read_error:
     sub_3AA4C(work);
+open_error:
     return status;
 }
 
@@ -675,13 +691,10 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
               const u8 *chunks, movie_surface_t *surface, s32 *timer)
 {
     const u8 *chunk;
-    u32 chunk_count;
-    u32 i;
-    u16 type;
-    u16 size;
+    const movie_chunk_t *record;
+    s32 i;
     s32 start;
-    s32 elapsed;
-    s32 audio_device;
+    u8 audio_device;
     u16 query_status;
     u8 cd_frame;
     u8 second;
@@ -689,59 +702,65 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
     u8 track;
 
     chunk = chunks;
-    chunk_count = frame->chunks;
     i = 0;
-    while (i < chunk_count) {
-        size = *(const u16 *)chunk;
-        type = *(const u16 *)(chunk + 4);
-        switch (type) {
+    for (; i < frame->chunks; ++i) {
+        record = (const movie_chunk_t *)chunk;
+        chunk += record->size;
+        switch (record->type) {
         case 4:
+        case 11:
             movie_playback_state = 1;
-            if (size == 4)
-                sub_3A6D0(chunk + 6, surface, 0);
+            if (record->type == 4)
+                sub_3A6D0((const u8 *)record + 6, work, surface);
             else
-                sub_3A6E0(chunk + 6, surface, 0);
-            break;
-        case 5:
-            if (size == 7)
-                sub_3A8A0(chunk + 6, work, surface, 0);
-            else
-                sub_3A7B4(chunk + 6, work, surface, 0);
-            break;
-        case 6:
-            sub_3A9F4(chunk + 6, work, surface);
+                sub_3A6E0((const u8 *)record + 6, work, surface);
             break;
         case 7:
-            sub_3A6F0(chunk + 6, work, surface, 0);
+        case 12:
+            if (record->type == 7)
+                sub_3A8A0((const u8 *)record + 6, work, surface);
+            else
+                sub_3A7B4((const u8 *)record + 6, work, surface);
             break;
-        case 8:
-            sub_3AA08(chunk + 6, work, surface);
+        case 13:
+            sub_3A9F4((const u8 *)record + 6, work, surface);
+            break;
+        case 15:
+            sub_3A6F0((const u8 *)record + 6, work, surface);
+            break;
+        case 16:
+            sub_3AA08((const u8 *)record + 6, work, surface);
             break;
         }
-        chunk += size;
-        ++i;
     }
 
-    if (work->sound_mode && MusicCdActive && movie_audio_state != 2 && movie_audio_track != -1) {
+    if (work->sound_mode > 0 && MusicCdActive && movie_audio_state != 2 && movie_audio_counter != -1) {
         audio_device = AudioStatusByte();
-        if (playing_intro_video && movie_audio_state == 0) {
-            if (work->frame_index >= movie_audio_limits[(u8)movie_audio_track][2] &&
-                work->frame_index < movie_audio_limits[(u8)movie_audio_track][3]) {
-                query_status = sub_1a02c((u8)audio_device, &track,
-                                         &minute, &second, &cd_frame);
-                if (query_status == 0x100) {
-                    start = ((s32)minute << 16) + ((s32)second << 8) + cd_frame;
-                    if (start >= movie_audio_limits[(u8)movie_audio_track][0]) {
-                        effect_set_audio_status((u8)audio_device);
-                        movie_audio_state = 1;
-                        ++movie_audio_counter;
+        if (playing_intro_video) {
+            if (movie_audio_state == 0) {
+                if (work->frame_index >= movie_audio_limits[movie_audio_counter][2] &&
+                    work->frame_index < movie_audio_limits[movie_audio_counter][3]) {
+                    query_status = sub_1a02c(audio_device, &track,
+                                             &minute, &second, &cd_frame);
+                    if (query_status == 0x100) {
+                        start = ((s32)minute << 16) + ((s32)second << 8) + cd_frame;
+                        if (start >= movie_audio_limits[movie_audio_counter][0]) {
+                            effect_set_audio_status(audio_device);
+                            movie_audio_state = 1;
+                            ++movie_audio_counter;
+                        }
                     }
+                } else if (work->frame_index == movie_audio_limits[movie_audio_counter][3]) {
+                    ++movie_audio_counter;
                 }
-            } else if (work->frame_index == movie_audio_limits[(u8)movie_audio_track][3]) {
-                ++movie_audio_counter;
+                if (movie_audio_counter == 5)
+                    movie_audio_counter = -1;
+            } else if (work->frame_index >= movie_audio_limits[movie_audio_counter][1]) {
+                effect_restore_audio_status(audio_device);
+                movie_audio_state = 0;
             }
-        } else if (movie_audio_state != 0 && work->frame_index >= movie_audio_limits[(u8)movie_audio_track][1]) {
-            effect_restore_audio_status((u8)audio_device);
+        } else if (movie_audio_state != 0) {
+            effect_restore_audio_status(audio_device);
             movie_audio_state = 0;
         }
     } else {
@@ -749,10 +768,9 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
     }
 
     if (movie_audio_enabled) {
-        while (work->frame_index != 1) {
-            start = sub_3A4B8(timer);
-            if (start > movie_next_tick)
-                break;
+        if (work->frame_index != 1) {
+            while ((u32)sub_3A4B8(timer) <= (u32)movie_next_tick) {
+            }
         }
         endsynchro();
         synchro();
@@ -762,95 +780,88 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
             movie_next_tick = sub_3A518(125, timer);
     }
 
-    if (movie_playback_state) {
+    if (movie_audio_enabled) {
+        s32 width;
+        u8 *dst;
+        const u8 *src;
         if (movie_playback_state == 1) {
-            movie_playback_state = 0;
             write_movie_palette(movie_video_buffer);
+            movie_playback_state = 0;
         }
-        sub_3AA08(movie_video_buffer, work, surface);
-        movie_audio_enabled = movie_audio_track != 0;
+        dst = DisplayBufferNormal + work->surface_offset;
+        src = surface->pixels + work->surface_offset;
+        width = work->width;
+        i = work->height;
+        do {
+            memcpy(dst, src, width);
+            dst += 320;
+            src += 320;
+        } while (--i != 0);
     }
+    if (movie_audio_track != 0)
+        movie_audio_enabled = 1;
+    else
+        movie_audio_enabled ^= 1;
     return 0;
 }
 
 s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer)
 {
     movie_frame_header_t header;
-    u32 size;
+    s32 size;
     u8 *buffer;
     s32 status;
 
     ++work->frame_index;
     status = sub_3A55C(work->fd, &header, sizeof(header));
-    if (status < 0)
-        return status;
-    if (header.magic != 0xf1fa)
-        return -4;
-    size = header.size - sizeof(header);
-    if ((s32)size > 0) {
-        buffer = EffetBufferNormal;
-        status = sub_3A578(work->fd, &buffer, size);
-        if (status < 0)
-            return status;
-        status = sub_3ABE4(work, &header, EffetBufferNormal, surface, timer);
-    } else {
-        status = sub_3ABE4(work, &header, (const u8 *)&header, surface, timer);
+    if (status >= 0) {
+        if (header.magic == 0xf1fa) {
+            size = header.size - sizeof(header);
+            if (size > 0) {
+                buffer = EffetBufferNormal;
+                status = sub_3A578(work->fd, &buffer, size);
+                if (status >= 0)
+                    status = sub_3ABE4(work, &header, buffer, surface, timer);
+            } else {
+                status = sub_3ABE4(work, &header, 0, surface, timer);
+            }
+        } else {
+            status = -4;
+        }
     }
     return status;
 }
 
 void sub_3AFB4(movie_work_t *work, movie_surface_t *surface)
 {
-    s32 dx;
-    s32 dy;
-
-    dx = work->width;
-    dx = sub_3A2C4(surface) - dx;
-    if (dx < 0)
-        dx = -dx;
-    work->x_offset = dx / 2;
-    dy = work->height;
-    dy = sub_3A2C8(surface) - dy;
-    if (dy < 0)
-        dy = -dy;
-    work->y_offset = dy / 2;
-    work->surface_offset = work->y_offset * 320 + work->x_offset;
+    work->x_offset = (sub_3A2C4(surface) - work->width) / 2;
+    work->y_offset = (sub_3A2C8(surface) - work->height) / 2;
+    work->surface_offset = work->x_offset + work->y_offset * 320;
 }
 
-s32 sub_3B014(u8 *work_bytes, u8 *surface_bytes)
+s32 sub_3B014(movie_work_t *work, movie_surface_t *surface)
 {
-    movie_work_t *work;
-    movie_surface_t *surface;
     s32 *timer;
     s32 status;
     s32 i;
-    s32 key;
-
-    work = (movie_work_t *)work_bytes;
-    surface = (movie_surface_t *)surface_bytes;
-    timer = (s32 *)(surface_bytes + 0x11);
 
     movie_audio_state = 0;
-    if (work->sound_mode && MusicCdActive) {
+    if (work->sound_mode > 0 && MusicCdActive) {
         sub_1a5b8(AudioStatusByte());
-        sub_1a4ac(AudioStatusByte(), 0, 0, 0);
+        sub_1a4ac(AudioStatusByte(), work->sound_mode, 0, 0);
         effect_set_audio_status(AudioStatusByte());
         movie_audio_state = 1;
     }
+    timer = (s32 *)((u8 *)surface + 0x11);
     i = 0;
     movie_audio_counter = 0;
-    status = 0;
-    while (i < work->frame_count) {
+    for (; i < work->frame_count; ++i) {
         readinput();
-        key = but0pressed() || but1pressed() || but2pressed() || but3pressed();
-        if (!key)
-            key = TOUCHE(0x39);
-        if (key)
+        if (but0pressed() || but1pressed() || but2pressed() || but3pressed() || TOUCHE(0x39))
             return 0;
         status = sub_3AF20(work, surface, timer);
         if (status < 0)
             break;
-        ++i;
     }
     return status;
 }
@@ -863,8 +874,6 @@ s32 sub_3B0F4(movie_work_t *work)
 
     offset = work->data_offset;
     status = lseek(work->fd, offset, 0);
-    if (status < 0)
-        return -6;
     status = sub_3A55C(work->fd, &header, 16);
     if (status < 0)
         return status;
@@ -872,50 +881,39 @@ s32 sub_3B0F4(movie_work_t *work)
     return 0;
 }
 
-s32 sub_3B138(u8 *work_bytes, u8 *surface_bytes)
+s32 sub_3B138(movie_work_t *work, movie_surface_t *surface)
 {
-    movie_work_t *work;
-    movie_surface_t *surface;
     s32 *timer;
     s32 status;
     s32 i;
-    s32 key;
 
-    work = (movie_work_t *)work_bytes;
-    surface = (movie_surface_t *)surface_bytes;
-    timer = (s32 *)(surface_bytes + 0x11);
-
-    status = sub_3B0F4(work);
-    if (status < 0)
-        return status;
+    sub_3B0F4(work);
     lseek(work->fd, work->data_offset, 0);
+    timer = (s32 *)((u8 *)surface + 0x11);
     status = sub_3AF20(work, surface, timer);
     if (status < 0)
         return status;
-    lseek(work->fd, work->current_offset, 0);
-    work->frame_index = 1;
-    movie_audio_state = 0;
-    if (work->sound_mode && MusicCdActive) {
-        sub_1a5b8(AudioStatusByte());
-        sub_1a4ac(AudioStatusByte(), 0, 0, 0);
-        effect_set_audio_status(AudioStatusByte());
-        movie_audio_state = 1;
+    for (;;) {
+        work->frame_index = 1;
+        lseek(work->fd, work->current_offset, 0);
+        movie_audio_state = 0;
+        if (work->sound_mode > 0 && MusicCdActive) {
+            sub_1a5b8(AudioStatusByte());
+            sub_1a4ac(AudioStatusByte(), work->sound_mode, 0, 0);
+            effect_set_audio_status(AudioStatusByte());
+            movie_audio_state = 1;
+        }
+        movie_audio_counter = 0;
+        i = 0;
+        for (; i < work->frame_count; ++i) {
+            status = sub_3AF20(work, surface, timer);
+            if (status < 0)
+                return status;
+            readinput();
+            if (but0pressed() || but1pressed() || but2pressed() || but3pressed() || TOUCHE(0x39))
+                return 0;
+        }
     }
-    movie_audio_counter = 0;
-    i = 0;
-    while (i < work->frame_count) {
-        status = sub_3AF20(work, surface, timer);
-        if (status < 0)
-            return status;
-        readinput();
-        key = but0pressed() || but1pressed() || but2pressed() || but3pressed();
-        if (!key)
-            key = TOUCHE(0x39);
-        if (key)
-            return 0;
-        ++i;
-    }
-    return status;
 }
 
 void sub_3B260(void)
