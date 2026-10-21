@@ -53,6 +53,7 @@ extern s16 RMrepere;
 extern s16 screen_trembling2;
 extern s16 ray_zdc_x;
 extern s16 ray_zdc_y;
+extern s16 ray_zdc_h;
 extern s16 ray_zdc_w;
 extern s16 scroll_end_x;
 extern s16 scroll_end_y;
@@ -395,7 +396,7 @@ void allocateDog(obj_t* bb1_obj) {
 
 void allocateTir(obj_t* bb1_obj, s16 param_2) {
     /* 58278 8017CA78 -O2 -msoft-float */
-    s16 sprite_ind;
+    s32 sprite_ind;
     s16 y; s16 h; s16 x; s16 w;
     s32 new_x_1;
     s32 bb1_x;
@@ -650,7 +651,7 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical
     s16 new_spd_x;
     s32 new_x;
-    s16 x; s16 w; s16 h; s16 y;
+    s16 x; s16 y; s16 w; s16 h;
     s16 nb_objs;
     s16 i = 0;
     obj_t* cur_obj;
@@ -1206,7 +1207,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
         FinAnim = 1;
     else
         FinAnim = 0;
-    if (((u8) Phase < 2) && (obj->main_etat != 2) && (ray_zdc_x - temp_s2 >= -16 && ray_zdc_x - temp_s2 <= 16) && (ray_zdc_y < (temp_s3 - 32))) {
+    if (((u8) Phase < 2) && (obj->main_etat != 2) && (ray_zdc_x - temp_s2 >= -16 && ray_zdc_x - temp_s2 <= 16) && (ray_zdc_h < (temp_s3 - 32))) {
         set_main_and_sub_etat(obj, 0, 16);
         obj->speed_x = 0;
         obj->speed_y = 0;
@@ -1312,7 +1313,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
         case 3:
             scroll_end_x = MAX(scroll_end_x, 5580);
 
-            if (((temp_s2 + 32) < ray_zdc_x) && (bb1.field1_0x2 == -1) && (temp_s3 < ray_zdc_y))
+            if (((temp_s2 + 32) < ray_zdc_x) && (bb1.field1_0x2 == -1) && (temp_s3 < ray_zdc_h))
             {
                 if (bb1.speed_x != -1)
                 {
@@ -1326,7 +1327,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                         if (++obj->param == 200)
                         {
                             bb1.speed_x = 1;
-                            set_main_and_sub_etat(obj, 1, 0);
+                            BB2_MARCHE(obj);
                             bb1.field1_0x2 = 0;
                             obj->param = 255;
                         }
@@ -1363,7 +1364,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                 }
                 if ((obj->main_etat != 2) && (ray_zdc_x - temp_s2 >= -16 && ray_zdc_x - temp_s2 <= 16))
                 {
-                    if (ray_zdc_y < (temp_s3 - 32))
+                    if (ray_zdc_h < (temp_s3 - 32))
                     {
                         set_main_and_sub_etat(obj, 0U, 16);
                         obj->speed_y = 0;
@@ -1387,14 +1388,14 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                 if ((obj->main_etat == 2) && (obj->sub_etat == 2))
                 {
                     bb1.speed_x = 1;
-                    set_main_and_sub_etat(obj, 1, 0);
+                    BB2_MARCHE(obj);
                 }
                 else if ((obj->main_etat == 0) && (obj->sub_etat == 5))
                 {
                     if (++bb1.sprite6_x < 3)
                     {
                         bb1.speed_x = 1;
-                        set_main_and_sub_etat(obj, 1, 0);
+                        BB2_MARCHE(obj);
                     }
                     else
                     {
