@@ -21,9 +21,6 @@ void display_text(const char *text, s16 x, s16 y, u8 font_size, u8 color);
 #ifndef MIN_1
 #define MIN_1(x, y) ((x) < (y) ? (x) : (y))
 #endif
-#ifndef ashl16
-#define ashl16(v, b) ((v) << (b))
-#endif
 
 #define BLOCK_FULLY_SOLID 0
 #define BLOCK_SIZE 16
@@ -605,8 +602,8 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
             ((ray.x + ray.offset_bx > obj->x + obj->offset_bx && !obj->flags.flip_x) ||
              (ray.x + ray.offset_bx < obj->x + obj->offset_bx && obj->flags.flip_x))) {
             if (distance > 0) {
-                dx = ((s32)dx << 5) / distance;
-                dy = ((s32)dy << 5) / distance;
+                dx = ashl16(dx, 5) / distance;
+                dy = ashl16(dy, 5) / distance;
             }
             speed = obj->speed_y + sgn(dy - obj->speed_y);
             if (speed > 32) speed = 32;
