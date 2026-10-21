@@ -1,7 +1,7 @@
 #include "inline_helpers.h"
 /* box.c: DOS v1.21 object 1:13f30..1:14e90. Names RAYVERSE/ANDROID.
- * Worker c3_box: six preserved STRICT functions; eight remain NEAR.
- * ClearBorder and gauge source-shape improvements are documented in NOTES.md. */
+ * Worker g_box: nine STRICT functions; five remain NEAR.
+ * Recovered source-shape evidence and negative results are in NOTES.md. */
 #include "game.h"
 #include "rtypes.h"
 #include <conio.h>
@@ -160,7 +160,8 @@ void PlasmaBox(s16 x, s16 y, s16 width, s16 height, u8 a5)
 
 void InitFire(void)
 {
-    s16 i;
+    /* Reuse i for the palette and row loops: DOS 1:1448e..144af. */
+    s16 i, j;
 
     MakeMyRand(1);
     if (menuEtape == 0)
@@ -173,19 +174,15 @@ void InitFire(void)
         rvb[0].colors[plasma_palette_color_index + i].b = pal[i].g >> 2;
     }
     BOX_SET_PALETTE(plasma_palette_color_index, plasma_palette_color_index + 15);
-    {
-        s16 y;
-        for (y = 0; y < 70; ++y) {
-            s16 x;
-            for (x = 0; x < 300; ++x)
-                p1[y][x] = plasma_palette_color_index;
-        }
+    for (i = 0; i < 70; ++i) {
+        for (j = 0; j < 300; ++j)
+            p1[i][j] = plasma_palette_color_index;
     }
 }
 
 void Fire(s16 x, s16 y, s16 width, s16 height)
 {
-    u8 *pos = draw_buffer + x + SCREEN_WIDTH * y;
+    u8 *pos = (u8 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);
     s16 color = plasma_palette_color_index;
     s16 i;
     MakeMyRand(0);
@@ -198,12 +195,13 @@ void Fire(s16 x, s16 y, s16 width, s16 height)
     for (i = 1; i < height + 2; ++i) {
         s16 j;
         for (j = 0; j < width; ++j) {
+            /* DOS 1:145be and 1:14684 accumulate into the second load. */
             if (j == 0) {
-                p1[i - 1][j] = (p1[i - 1][width - 1] + p1[i][j] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
+                p1[i - 1][j] = (p1[i][j] + p1[i - 1][width - 1] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
             } else if (j == width - 1) {
                 p1[i - 1][j] = (p1[i][j - 1] + p1[i][j] + p1[i + 1][0] + p1[i + 1][j]) >> 2;
             } else {
-                p1[i - 1][j] = (p1[i][j - 1] + p1[i][j] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
+                p1[i - 1][j] = (p1[i][j] + p1[i][j - 1] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
             }
         }
     }
@@ -324,7 +322,8 @@ void CadreTrans(s16 x, s16 y, s16 w, s16 h)
     x += 4 - (x & 3);
     w += 4 - (w & 3);
     skip = (320 - w) >> 2;
-    pos = (u32 *)(draw_buffer + x + SCREEN_WIDTH * y);
+    /* Integer address arithmetic: DOS 1:14ad9..14b0d. */
+    pos = (u32 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);
     old_w = w;
     w >>= 2;
     for (j = 0; j < h; ++j) {
@@ -403,16 +402,15 @@ void gauge(s16 x, s16 y, s16 width, s16 height, s16 min_value, s16 max_value, s1
 
 void ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
 {
-    u8 *pos = draw_buffer;
+    /* Integer screen addresses: DOS 1:14ddf..14e3d. */
+    u8 *pos = (u8 *)((u32)draw_buffer + lim_H1 * SCREEN_WIDTH);
     s16 y;
     s32 bottom_count;
     u8 *bottom;
-    pos += lim_H1 * SCREEN_WIDTH;
     memset(draw_buffer, 0, lim_H1 * SCREEN_WIDTH);
     /* DOS 1:14e0b..14e3d computes the bottom count and a separate pointer. */
     bottom_count = (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH;
-    bottom = draw_buffer;
-    bottom += lim_H2 * SCREEN_WIDTH;
+    bottom = (u8 *)((u32)draw_buffer + lim_H2 * SCREEN_WIDTH);
     memset(bottom, 0, bottom_count);
     for (y = lim_H1; y < lim_H2; ++y) {
         s16 x;
