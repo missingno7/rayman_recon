@@ -179,7 +179,7 @@ void select_display_buffer(u8 *buffer);
 #pragma aux DisplayBufferModeNormal parm [esi] [edi]
 #pragma aux display_emptypicture parm [edi] [ecx]
 #pragma aux ClearDrawAndDisplayBufferNormal parm [edi] [esi]
-void ClearBorder(s32 h1, s32 h2, s32 w1, s32 w2);
+void ClearBorder(s16 h1, s16 h2, s16 w1, s16 w2);
 void InitFirstModeVideo(void);
 void InitModeNormal(void);
 void GetVideoRegister(void);
@@ -223,7 +223,7 @@ extern void_func_t draw_pluie7_Normal;
 extern fplot_func_t fplot_Normal;
 void BombExplosion(obj_t* obj);
 void ClearDrawAndDisplayBufferNormal(u8* draw_buf, u8* display_buf);
-u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+void GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void PlaySnd_old(s16 sound_id);
 void SetPalette(rgb_palette_t* palette, u8 first_color, s32 num_colors);
 void add_alwobj(obj_t* obj);
@@ -233,7 +233,7 @@ void endsynchro(void);
 short myRand(short max);
 void obj_hurt(obj_t* target);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
-s32 set_sub_etat(obj_t* obj, u8 sub_etat);
+void set_sub_etat(obj_t* obj, u8 sub_etat);
 u8 skipOneCommand(obj_t *obj);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, s32 y_offs);
@@ -391,15 +391,16 @@ void build_map(s16 x, s16 y) {
 }
 
 void build_line_map(void *buffer, s16 x, s16 y, s16 row) {
+    u8 *base = (u8*)buffer;
     map_tile_t *start = mp.map + ((y >> 4) * mp.width + (x >> 4));
-    s32 position = ((u32)buffer - (u32)PLAN1_BUFFER) % 80;
+    s32 position = ((u32)base - (u32)PLAN1_BUFFER) % 80;
     s32 plane;
     s32 dest_offset;
     start += (row / 13) * mp.width;
     dest_offset = 0;
     for (plane = 0; plane != 256; plane += 64) {
         map_tile_t *tile = start;
-        u8 *dest = (u8*)buffer + dest_offset;
+        u8 *dest = base + dest_offset;
         s32 column = position;
         s16 pixel;
         for (pixel = 0; pixel < 320; pixel += 16) {
