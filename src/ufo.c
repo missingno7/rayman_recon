@@ -41,9 +41,11 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
     s16 block_index;
     s16 active_index;
     obj_t *indicator;
-    s16 speed_x;
     s16 speed_y;
-    s32 maximum_speed;
+    s16 speed_x;
+    /* Only the final maximum is short. Keep the Abs inputs/results promoted:
+     * DOS 1:6e8ed..6e912; the short result is retained in a dword stack slot. */
+    s16 maximum_speed;
 
     ufo_idc_obj->flags.flip_x = 0;
     if (
@@ -58,15 +60,14 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
         {
             if (indicator->type != TYPE_INDICATOR)
                 continue;
-            if ((s16)(((indicator->x + indicator->offset_bx) >> 4) +
-                (((indicator->offset_by + indicator->y) >> 4) * mp.width)) != block_index)
+            if ((s16)((mp.width * ((indicator->offset_by + indicator->y) >> 4)) +
+                ((indicator->x + indicator->offset_bx) >> 4)) != block_index)
                 continue;
             speed_y = ufo_idc_obj->speed_y;
             speed_x = ufo_idc_obj->speed_x;
             {
                 s32 abs_y = Abs((s32)speed_y);
-                maximum_speed = Abs((s32)speed_x);
-                maximum_speed = max32(maximum_speed, abs_y);
+                maximum_speed = max32(Abs((s32)speed_x), abs_y);
             }
             switch (indicator->sub_etat)
             {
@@ -231,13 +232,15 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
                 }
                 else if (speed_y == 0)
                 {
-                /* DOS case 3 enters this shared body at 1:6eb00. */
-                case 3:
                     speed_x = 0;
                     speed_y = -maximum_speed;
                 }
                 break;
 
+            case 3:
+                speed_x = 0;
+                speed_y = -maximum_speed;
+                break;
             case 7:
                 if (speed_x == 0)
                 {
