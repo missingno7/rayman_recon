@@ -7992,6 +7992,16 @@
     "addr": "1:5bad8",
     "name": "INVENTED",
     "evidence": "DOS main_Ray 1:08388..083bb calls; callee bodies inspected. Android name check did not find original symbol."
+   },
+   "effect_helper_15e60": {
+    "addr": "1:15e60",
+    "name": "INVENTED",
+    "evidence": "DOS helper at 1:15e60 initializes the effect mesh and is called by effect_helper_1623c; no matching Android name identified"
+   },
+   "IF@DSIN": {
+    "addr": "1:70899",
+    "name": "INVENTED",
+    "evidence": "Census identifies DOS 1:70899 as sin; tested as the target for Watcom IF@DSIN calls from the mesh candidate"
    }
   },
   "data": {
@@ -14516,6 +14526,36 @@
     "type": "char[255]",
     "name": "RAYVERSE",
     "evidence": "DOS main_Ray strcpy destination 1:083ef; Rayverse data.c CF8F6; next horloge at 3f9f5 bounds 255 bytes. Android name absent."
+   },
+   "effect5_state": {
+    "addr": "2:4e750",
+    "type": "effect5_state_t *",
+    "name": "INVENTED",
+    "evidence": "DOS effect helpers load/store a 32-bit state pointer at 2:4e750; pointed fields are accessed through a 0x3c-byte state allocation"
+   },
+   "effect5_width": {
+    "addr": "2:4e754",
+    "type": "s16",
+    "name": "INVENTED",
+    "evidence": "DOS effect helper stores 256 at 2:4e754 and accesses the neighboring word as an independent short global"
+   },
+   "effect5_height": {
+    "addr": "2:4e756",
+    "type": "s16",
+    "name": "INVENTED",
+    "evidence": "DOS effect helper stores 200 at 2:4e756; -5 short-load form accounts for apparent references at +2"
+   },
+   "effect5_x_offset": {
+    "addr": "2:4e758",
+    "type": "s16",
+    "name": "INVENTED",
+    "evidence": "DOS effect helper stores 32 at 2:4e758; -5 short-load form accounts for apparent references at +2"
+   },
+   "effect5_y_offset": {
+    "addr": "2:4e75a",
+    "type": "s16",
+    "name": "INVENTED",
+    "evidence": "DOS effect helper stores zero at 2:4e75a; -5 short-load form accounts for apparent references at +2"
    }
   }
  }
