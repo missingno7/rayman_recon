@@ -582,14 +582,17 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
  * Nested shared min32/max32 calls reproduce the clamp-bound setup, notably
  * 1:0c91a..0c94c and 1:0c955..0c987. Extent is 872 bytes; body remains NEAR. */
-#define SPIDER_ABS(x) ((x) < 0 ? -(x) : (x))
+#define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
     s16 dx, dy, distance;
     s16 abs_speed_x;
     if (obj->cmd != 1) {
         dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
-        if (position_ray)
-            dy = (s16)ray.y + ray.offset_by - ((s16)obj->y + obj->offset_by);
+        if (position_ray) {
+            /* DOS 1:0c79a..0c7b8: retain the narrow trajectory subtraction. */
+            dy = (s16)ray.y + ray.offset_by;
+            dy -= (s16)obj->y + obj->offset_by;
+        }
         else
             dy = ray.y + (ray.offset_by >> 1) - (obj->y + obj->offset_by);
         distance = SPIDER_ABS((s32)dx) + SPIDER_ABS((s32)dy);
