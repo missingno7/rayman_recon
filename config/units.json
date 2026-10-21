@@ -9050,7 +9050,7 @@
    "profile": "game",
    "functions": {
     "check_key_table": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9078,7 +9078,7 @@
      ]
     },
     "set_special_key_descriptions": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9099,7 +9099,7 @@
      ]
     },
     "AFFICHE_ECRAN_GENERAL": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9134,7 +9134,7 @@
      ]
     },
     "DO_COMMANDE_OPTIONS": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -9149,14 +9149,14 @@
      ]
     },
     "menu_prg": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "DO_MENU": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9316,7 +9316,7 @@
      ]
     },
     "INIT_KEY_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9376,7 +9376,7 @@
      ]
     },
     "INIT_PAD_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9406,7 +9406,7 @@
      ]
     },
     "InitParamGraphicsScreen": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9436,13 +9436,13 @@
      ]
     },
     "END_GRAPHIC_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "INIT_VIDEOMODE_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9466,7 +9466,7 @@
      ]
     },
     "END_VIDEOMODE_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9478,7 +9478,7 @@
      ]
     },
     "AFFICHE_CALIBRATE_JOYSTICK": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9502,7 +9502,7 @@
      ]
     },
     "MAIN_CALIBRATE_JOYSTICK": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9526,6 +9526,10 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED",
+    "_DATA": "VERIFIED"
    }
   },
   "effect1": {

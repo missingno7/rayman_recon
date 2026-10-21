@@ -14256,6 +14256,12 @@
     "size": 4,
     "name": "RAYVERSE",
     "evidence": "Android .bss size 4; INIT_OBJECTS TYPE81 indexed word writes after pos_stack end and before scroll_obj_id true start"
+   },
+   "sEND_SCREEN": {
+    "addr": "2:54cc0",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CC0; Android object .bss size 4; DOS MAIN_CALIBRATE_JOYSTICK 1:3f0b3/3f0bd saves pEND_SCREEN here, 1:3f0f9/3f104 restores it"
    }
   }
  }
