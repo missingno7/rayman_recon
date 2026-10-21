@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d2_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -543,28 +543,24 @@ u8 sprite_of_ref(obj_t *obj, u8 reference);
 
 void display_bar_boss(obj_t *boss_obj)
 {
-    s32 x_offset;
+    /* DOS 1:091a8..093a8: short scaled widths and x offset, wide y offset.
+       The blank-width and x-offset stack slots are [esp] and [esp+4]. */
     s32 y_offset;
-    u8 hp;
-    u8 init_hp;
-    s32 pixel_width;
-    s32 lost_width;
-    s32 blank_width;
+    s16 lost_width;
+    s16 blank_width;
+    s16 x_offset;
     u8 icon;
     if (GameModeVideo == MODE_NORMAL) {
         x_offset = 4;
         y_offset = 0;
     } else {
         x_offset = 8;
-        y_offset = P486 == 1 ? 8 : 0;
+        if (P486 == 1) y_offset = 8; else y_offset = 0;
     }
     if (scrollLocked) {
-        hp = boss_obj->hit_points;
-        if (hp != 0) {
-            init_hp = boss_obj->init_hit_points;
-            pixel_width = 6;
-            lost_width = (init_hp - hp) * pixel_width;
-            blank_width = (29 - init_hp) * pixel_width;
+        if (boss_obj->hit_points != 0) {
+            lost_width = (boss_obj->init_hit_points - boss_obj->hit_points) * 6;
+            blank_width = (29 - boss_obj->init_hit_points) * 6;
             display_sprite(poing_obj, 61,
                 Bloc_lim_W1 - 4 + x_offset + 20 - lost_width - blank_width,
                 Bloc_lim_H2 - 19 - y_offset, 1);
@@ -705,6 +701,8 @@ void DISPLAY_PTS_TO_PLAN2(s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s1
 }
 
 void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
+    /* NEAR: explicit palette snapshot recovers the 312-byte DOS extent.
+       Projection lifetimes and stack placement remain unresolved. */
     u16 begin;
     u16 end;
     u16 i;
@@ -715,6 +713,7 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     s16 proj_y;
     s32 proj_height;
     u32 packed_size;
+    s32 color;
     anim_layer_t *current;
     u8* image_data;
     anim_t* anim = &obj->animations[obj->anim_index];
@@ -738,8 +737,9 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
             proj_x = get_proj_x(obj->scale, x);
             proj_height = get_proj_dist(obj->scale, sprite->outer_height);
             packed_size = (u16)((proj_height << 8) + get_proj_dist(obj->scale, sprite->outer_width));
-            image_data = obj->img_buffer + sprite->offset_in_atlas;
-            DrawSpriteNormalEtX(proj_x, sprite->color_bits.palette_index, proj_y, packed_size,
+            image_data = sprite->offset_in_atlas + obj->img_buffer;
+            color = sprite->color_bits.palette_index;
+            DrawSpriteNormalEtX(proj_x, color, proj_y, packed_size,
                                 draw_buf, image_data);
         }
     }
