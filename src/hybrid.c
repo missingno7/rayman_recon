@@ -1,15 +1,10 @@
-/* 1:2e580..1:31ab0: hifi.c + hybrid.c, names RAYVERSE/ANDROID/PS1.
- * Worker w2_hybrid: see NOTES.md for measured matches and unresolved layout.
- * The two Y-sine bindings are already corrected in the accepted configuration.
- * FreeDetectDriver ends a probable hifi object before hybrid's paragraph boundary.
- */
+/* hybrid.c: split at original object boundary 1:2f040. Names RAYVERSE/ANDROID/PS1. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #ifndef FLG
 #define FLG(x) (1 << x)
 #endif
@@ -22,47 +17,6 @@
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
-typedef struct archive_header_t {
-    s32 offset;
-    u32 size;
-    u8 xor_byte;
-    u8 checksum_byte;
-    u8 pad[2];
-} archive_header_t;
-
-typedef struct bnk_header_t {
-    u8 *offset;
-    u32 size;
-    u32 field_8;
-    u32 field_C;
-} bnk_header_t;
-
-typedef struct dos_sound_config_t {
-    u32 reserved_00[4];
-    s32 timeout;
-    u32 reserved_14[2];
-    void __far *callback;
-    u16 pad_22;
-} dos_sound_config_t;
-
-typedef struct dos_sound_request_t {
-    u8 __far *data;
-    u16 pointer_pad;
-    u32 size;
-    s32 field_0c;
-    u32 field_10;
-    s32 volume;
-    u32 field_18[4];
-    u32 flags;
-    u32 field_2c;
-    u32 field_30;
-    u32 field_34;
-    s32 sample_rate;
-    u32 field_3c;
-    s32 pan;
-    u32 reserved[12];
-} dos_sound_request_t;
-
 #define GO_LEFT 0
 #define GO_NOP 30
 #define GO_RIGHT 1
@@ -80,6 +34,7 @@ typedef struct dos_sound_request_t {
 #define TYPE_HYB_BBF2_G 232
 #define TYPE_HYB_BBF2_LAS 233
 #define TYPE_STOSKO_PINCE 224
+
 extern u8 BBF2DEsk;
 extern u8 BBF2GEsk;
 extern obj_t *TirBBF2D;
@@ -117,12 +72,6 @@ extern u8 bossReachingTimer;
 extern s32 bossSpeedFactor;
 extern s16 bossXToReach;
 extern s16 bossYToReach;
-extern s32 current_device_id;
-extern char current_device_name[100];
-extern s32 current_dma;
-extern s32 current_irq;
-extern s32 current_param;
-extern s32 current_port;
 extern s16 flamme_droite_id;
 extern s16 flamme_gauche_id;
 extern u8 flammes_actives;
@@ -137,7 +86,6 @@ extern s16 moskitomama_droite_obj_id;
 extern s16 moskitomama_gauche_obj_id;
 extern s16 moskitosaxo_obj_id;
 extern obj_t *poing_obj;
-extern s16 poing_obj_id;
 extern obj_t ray;
 extern poing_t poing;
 extern s16 remoteRayXToReach;
@@ -156,23 +104,6 @@ extern char *language_txt[300];
 extern s16 xmap;
 extern s16 xmapmax;
 extern s16 ymap;
-extern archive_header_t snd8b_header_infos[7];
-extern archive_header_t snd8b_data_infos[7];
-extern archive_header_t sndvig_infos[9];
-extern bnk_header_t bnkHeaderFixe[128];
-extern bnk_header_t bnkHeaderWorld[128];
-extern u8 *bnkDataFixe;
-extern u8 *bnkDataWorld;
-extern u8 *ptrTchatch;
-extern u8 *TchachPerduPtr;
-extern s32 TchachPerduSize;
-extern s16 pitchTab[128];
-extern s32 sound_driver_handle;
-extern s32 sound_detect_handle;
-extern s16 sound_voice_id;
-extern dos_sound_config_t sound_config;
-extern u8 CarteSonAutorisee;
-extern u8 SonLimite;
 void DO_NOVA(obj_t* obj);
 void DO_ONE_CMD(obj_t* obj);
 void RAY_DEMIRAY(void);
@@ -181,11 +112,9 @@ void calc_obj_pos(obj_t* obj);
 void obj_hurt(obj_t *obj);
 void RAY_HIT(u8 hurt, obj_t *obj);
 void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u8 color);
-void stop_cd(void);
 s16 firstFloorBelow(obj_t* obj);
 void setBossReachingSpeeds(obj_t* obj, u8 timer, u8 accuracyX, u8 accuracyY);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
-void rayman_sound_fatal_error(const char* message);
 void add_alwobj(obj_t *obj);
 u8 EOA(obj_t *obj);
 void SET_X_SPEED(obj_t *obj);
@@ -196,17 +125,6 @@ zdc_t *get_zdc(obj_t *obj, s16 index);
 s16 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 s16 inter_box(s32 x1, s32 y1, s32 w1, s32 h1,
     s16 x2, s16 y2, s32 w2, s32 h2);
-void SetPort_(u16 port);
-void SetIrq(s32 irq);
-void SetDma(s32 dma);
-void SetParam(s32 param);
-void SetDeviceID(s32 device_id);
-char* GetDeviceName(void);
-s32 *GetPort(void);
-s32 *GetIrq(void);
-s32 *GetDma(void);
-s32 *GetParam(void);
-s32 *GetDeviceID_Ray(void);
 void allocateSTOSKO(void);
 void allocateMOSKITOMAMA(void);
 void allocateMOSKITOSAXO(void);
@@ -229,421 +147,6 @@ void AllocateFlammes(s16 param_1);
 void AllocateToons(void);
 void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj);
 void ToonDonnePoing(obj_t *d2fly_obj);
-
-/* Address-identified routines in the DOS sound and file-driver modules. */
-extern s32 sub_71B0F(s32 driver);
-extern s32 sub_71B98(s32 a1, s32 a2);
-extern s32 sub_71CAE(s32 a1, void __far *callback, void __far *a5);
-extern s32 sub_71C74(s32 a1);
-extern s32 sub_72033(s32 handle);
-extern s32 sub_7234F(s32 a1, s16 a2);
-extern s32 sub_7293D(const char __far *name, void __far *buffer);
-extern s32 sub_72DB5(s32 __far *value);
-extern s32 sub_72499(void);
-extern s32 sub_735C4(s32 a1, s32 a2, s32 a3);
-extern s32 sub_7367D(s32 device_id, s32 timeout, s32 __far *port,
-    void __far *init_data, void __far *driver_data);
-extern s32 sub_7363D(void);
-extern s32 sub_73F3D(s32 driver, s32 enabled, s32 flags);
-extern s32 sub_743F7(s32 driver, dos_sound_request_t __far *request);
-extern s32 sub_74A10(s32 driver, s16 voice);
-extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
-extern s32 sub_7512E(s32 driver, s16 voice, s32 pan);
-extern s32 sub_754E3(s32 driver, s16 voice);
-extern void *sub_6FBB4(s32 size);
-extern void JumelleFreeArray(s32 **address);
-
-void sub_3E66C(void);
-void sub_3E6B0(void);
-s32 sub_3E710(void);
-s32 sub_3E780(void);
-s32 LoadBnkFile(s32 header_index, s32 data_index,
-    bnk_header_t *headers, u8 **data);
-void LoadBnkFixe(void);
-s32 LoadBnkWorld(s16 world);
-s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan);
-void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note);
-void KeyVol(s16 voice, s16 volume, s16 pan);
-void DigiMusicDone(void);
-void LoadTchatchPerdu(void);
-void PlayTchatch(s32 sound, s32 volume);
-void FreeTchatchVignette(void);
-void FreeDetectDriver(void);
-
-void sub_3E66C(void)
-{
-    s16 voice;
-
-    for (voice = 0; voice <= 32; voice++)
-        KeyOff(voice, 0, 0, 0, 0);
-    while (sub_71B0F(sound_driver_handle) != 0)
-        ;
-    sub_72033(sound_detect_handle);
-    sub_71C74(0);
-}
-
-void sub_3E6B0(void)
-{
-    sub_71B98(0xff00, 0);
-    if (sub_71CAE(0x28, sound_config.callback,
-            (void __far *)&sound_detect_handle) != 0)
-        sub_71C74(0);
-}
-
-/* INVENTED helper name. ORIGINAL_INLINE: 1:2e6f4, BIOS video service. EAX is its input/output;
- * the DOS caller preserves the message in EDX across this exact INT 10h. */
-void sound_set_video_mode(s32 mode);
-#pragma aux sound_set_video_mode = "int 10h" parm [eax] modify [eax];
-
-void rayman_sound_fatal_error(const char* message) {
-    sound_set_video_mode(3);
-    printf("Rayman sound says fatal error :\n%s\n", message);
-    exit(-1);
-}
-
-s32 sub_3E710(void)
-{
-    s32 probe;
-
-    if (sub_7234F(0, 0) != 0)
-        return 1;
-    if (sub_7293D((const char __far *)current_device_name,
-            (void __far *)&probe) != 0) {
-        sub_72499();
-        return 2;
-    }
-    if (sub_72DB5((s32 __far *)&current_port) != 0) {
-        sub_72499();
-        return 3;
-    }
-    sub_72499();
-    return 0;
-}
-
-s32 sub_3E780(void)
-{
-    s32 result;
-
-    sub_735C4(0, 0, 0);
-    sub_71B98(0xff00, 0);
-    sound_config.timeout = 10000;
-    result = sub_7367D(current_device_id, sound_config.timeout,
-        (s32 __far *)&current_port,
-        (void __far *)&sound_config,
-        (void __far *)&sound_driver_handle);
-    if (result != 0) {
-        sub_71C74(0);
-        sub_7363D();
-        return 1;
-    }
-    result = sub_71CAE(0x28, sound_config.callback,
-        (void __far *)&sound_detect_handle);
-    if (result != 0) {
-        sub_71C74(0);
-        sub_73F3D(sound_driver_handle, 1, 1);
-        return 2;
-    }
-    return 0;
-}
-
-s32 LoadBnkFile(s32 header_index, s32 data_index,
-    bnk_header_t *headers, u8 **data)
-{
-    FILE *header_file;
-    FILE *data_file;
-    u32 size, i;
-    u8 check;
-    u8 *end, *bytes;
-    u8 *sample;
-    u8 *new_data;
-
-    stop_cd();
-    header_file = fopen("SNDH8B.DAT", "rb");
-    if (header_file == 0)
-        rayman_sound_fatal_error("Fichier header introuvable (SNDH8B.DAT).\n");
-    fseek(header_file, snd8b_header_infos[header_index].offset, SEEK_SET);
-    fread(headers, 0x10, 0x80, header_file);
-    fclose(header_file);
-    bytes = (u8 *)headers;
-    check = snd8b_header_infos[header_index].checksum_byte;
-    end = bytes + 0x800;
-    do {
-        check -= *bytes;
-        *bytes ^= snd8b_header_infos[header_index].xor_byte;
-        bytes++;
-    } while (bytes != end);
-    if (check != 0)
-        rayman_sound_fatal_error("Load error in sndh8b.dat.\n");
-    stop_cd();
-    data_file = fopen("SNDD8B.DAT", "rb");
-    if (data_file == 0)
-        rayman_sound_fatal_error("Fichier data introuvable.\n");
-    size = snd8b_data_infos[data_index].size;
-    if (*data != 0)
-        JumelleFreeArray((s32 **)data);
-    new_data = sub_6FBB4(size);
-    if (new_data == 0)
-        rayman_sound_fatal_error("M\x82moire insuffisante pour charger les samples.\n");
-    *data = new_data;
-    fseek(data_file, snd8b_data_infos[data_index].offset, SEEK_SET);
-    fread(new_data, 1, size, data_file);
-    fclose(data_file);
-    check = snd8b_data_infos[data_index].checksum_byte;
-    i = 0;
-    if (size > 0) {
-        sample = new_data;
-        do {
-            check -= *sample;
-            *sample ^= snd8b_data_infos[data_index].xor_byte;
-            sample++;
-            i++;
-        } while (i < size);
-    }
-    if (check != 0)
-        rayman_sound_fatal_error("Load error in sndd8b.dat.\n");
-    bytes = (u8 *)headers;
-    end = bytes + 0x800;
-    do {
-        *(u32 *)bytes += (u32)new_data;
-        bytes += 0x10;
-    } while (bytes != end);
-    return 0;
-}
-
-void LoadBnkFixe(void)
-{
-    if (CarteSonAutorisee && !SonLimite)
-        LoadTchatchPerdu();
-    LoadBnkFile(2, 2, bnkHeaderFixe, &bnkDataFixe);
-}
-
-s32 LoadBnkWorld(s16 world)
-{
-    switch (world) {
-    case 1: return LoadBnkFile(4, 4, bnkHeaderWorld, &bnkDataWorld);
-    case 2: return LoadBnkFile(6, 6, bnkHeaderWorld, &bnkDataWorld);
-    case 3: return LoadBnkFile(5, 5, bnkHeaderWorld, &bnkDataWorld);
-    case 4: return LoadBnkFile(3, 3, bnkHeaderWorld, &bnkDataWorld);
-    case 5: return LoadBnkFile(1, 1, bnkHeaderWorld, &bnkDataWorld);
-    case 6: return LoadBnkFile(0, 0, bnkHeaderWorld, &bnkDataWorld);
-    default: return 0;
-    }
-}
-
-s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
-{
-    dos_sound_request_t request = {0};
-    s16 voice;
-
-    request.volume = ((s32)volume * 0x7fff) / 0x7f;
-    request.flags |= 0x720;
-    request.pan = ((s32)pan * 0xffff) / 0x7f;
-    request.sample_rate = ((s32)pitchTab[note]) << 8;
-
-    if ((s16)bank == 0) {
-        request.data = (u8 __far *)bnkHeaderFixe[(s16)prog].offset;
-        request.size = bnkHeaderFixe[(s16)prog].size;
-        if (bnkHeaderFixe[(s16)prog].field_C != 0) {
-            request.flags |= 0x4760;
-            request.field_30 = bnkHeaderFixe[(s16)prog].field_8;
-            request.field_34 = bnkHeaderFixe[(s16)prog].field_C;
-            request.field_0c = -1;
-        }
-    } else {
-        request.data = (u8 __far *)bnkHeaderWorld[(s16)prog].offset;
-        request.size = bnkHeaderWorld[(s16)prog].size;
-        if (bnkHeaderWorld[(s16)prog].field_C != 0) {
-            request.flags |= 0x4760;
-            request.field_30 = bnkHeaderWorld[(s16)prog].field_8;
-            request.field_34 = bnkHeaderWorld[(s16)prog].field_C;
-            request.field_0c = -1;
-        }
-    }
-    if (request.size != 0) {
-        voice = sub_743F7(sound_driver_handle,
-            (dos_sound_request_t __far *)&request);
-        if (voice != -1 && voice < 0x20)
-            return voice;
-    }
-    return -1;
-}
-
-void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note)
-{
-    sub_74A10(sound_driver_handle, voice);
-}
-
-void KeyVol(s16 voice, s16 volume, s16 pan)
-{
-    s32 scaled_volume;
-    s32 scaled_pan;
-
-    scaled_volume = ((s32)volume * 0x7fff) / 0x7f;
-    sub_74E8B(sound_driver_handle, voice, scaled_volume);
-    scaled_pan = ((s32)pan * 0xffff) / 0x7f;
-    sub_7512E(sound_driver_handle, voice, scaled_pan);
-}
-
-void DigiMusicDone(void)
-{
-    s16 voice;
-
-    for (voice = 0; voice <= 32; voice++)
-        KeyOff(voice, 0, 0, 0, 0);
-    sub_72033(sound_detect_handle);
-    sub_71C74(0);
-    sub_73F3D(sound_driver_handle, 1, 1);
-    sub_7363D();
-}
-
-void LoadTchatchPerdu(void)
-{
-    FILE *file;
-    u32 size;
-    u32 i;
-    u8 check;
-    s32 bank = 6;
-
-    stop_cd();
-    file = fopen("sndvig.dat", "rb");
-    if (file == 0)
-        rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
-    size = sndvig_infos[bank].size;
-    ptrTchatch = sub_6FBB4(size);
-    if (ptrTchatch == 0) {
-        fclose(file);
-        return;
-    }
-    fseek(file, sndvig_infos[bank].offset, SEEK_SET);
-    fread(ptrTchatch, 1, size, file);
-    fclose(file);
-    check = sndvig_infos[bank].checksum_byte;
-    for (i = 0; i < size; i++) {
-        check -= ptrTchatch[i];
-        ptrTchatch[i] ^= sndvig_infos[bank].xor_byte;
-    }
-    if (check != 0)
-        rayman_sound_fatal_error("Load error in sndvig.dat.\n");
-    TchachPerduPtr = ptrTchatch;
-    TchachPerduSize = size;
-    ptrTchatch = 0;
-}
-
-void PlayTchatch(s32 sound, s32 volume)
-{
-    dos_sound_request_t request = {0};
-    s32 bank;
-    FILE *file;
-    u32 size;
-    u32 i;
-    u8 check;
-    s16 voice;
-
-    request.volume = (volume * 0x7fff) / 0x7f;
-    ((u8 *)&request)[0x29] |= 1;
-    switch (sound) {
-    case 1: bank = 8; break;
-    case 6: bank = 7; break;
-    case 2: bank = 5; break;
-    case 7: bank = 1; break;
-    case 4: bank = 0; break;
-    case 3: bank = 2; break;
-    case 8: bank = 6; break;
-    case 5:
-    case 9: bank = 3; break;
-    }
-    if (bank != 6) {
-        stop_cd();
-        file = fopen("sndvig.dat", "rb");
-        if (file == 0)
-            rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
-        size = sndvig_infos[bank].size;
-        if (ptrTchatch != 0)
-            JumelleFreeArray((s32 **)&ptrTchatch);
-        ptrTchatch = sub_6FBB4(size);
-        if (ptrTchatch == 0) {
-            fclose(file);
-            return;
-        }
-        fseek(file, sndvig_infos[bank].offset, SEEK_SET);
-        fread(ptrTchatch, 1, size, file);
-        fclose(file);
-        check = sndvig_infos[bank].checksum_byte;
-        for (i = 0; i < size; i++) {
-            check -= ptrTchatch[i];
-            ptrTchatch[i] ^= sndvig_infos[bank].xor_byte;
-        }
-        if (check != 0)
-            rayman_sound_fatal_error("Load error in sndvig.dat.\n");
-        request.data = (u8 __far *)ptrTchatch;
-        request.size = size;
-        request.flags |= 0x80;
-    } else {
-        request.data = (u8 __far *)TchachPerduPtr;
-        request.size = TchachPerduSize;
-        request.flags |= 0x80;
-    }
-    voice = sub_743F7(sound_driver_handle,
-        (dos_sound_request_t __far *)&request);
-    sound_voice_id = voice;
-}
-
-void FreeTchatchVignette(void)
-{
-    while (sub_754E3(sound_driver_handle, sound_voice_id) != 1)
-        ;
-    JumelleFreeArray((s32 **)&ptrTchatch);
-    ptrTchatch = 0;
-}
-
-void SetPort_(u16 port) {
-    current_port = port;
-}
-
-void SetIrq(s32 irq) {
-    current_irq = irq;
-}
-
-void SetDma(s32 dma) {
-    current_dma = dma;
-}
-
-void SetParam(s32 param) {
-    current_param = param;
-}
-
-void SetDeviceID(s32 device_id) {
-    current_device_id = device_id;
-}
-
-char* GetDeviceName(void) {
-    return current_device_name;
-}
-
-s32 *GetPort(void) {
-    return &current_port;
-}
-
-s32 *GetIrq(void) {
-    return &current_irq;
-}
-
-s32 *GetDma(void) {
-    return &current_dma;
-}
-
-s32 *GetParam(void) {
-    return &current_param;
-}
-
-s32 *GetDeviceID_Ray(void) {
-    return &current_device_id;
-}
-
-void FreeDetectDriver(void)
-{
-    sub_72499();
-}
 
 void allocateSTOSKO(void)
 {
