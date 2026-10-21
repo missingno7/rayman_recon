@@ -12232,6 +12232,116 @@
      ]
     }
    }
+  },
+  "lowlevel_04ab7": {
+   "source": "src\\lowlevel_04ab7.asm",
+   "oracle": "gog_v121_us",
+   "profile": "asm",
+   "functions": {
+    "DisplayBufferModeNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DrawWldPointPlan2Normal": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DrawBlackBoxNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DrawFondBoxNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DrawBorderBoxNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DisplayAnyPictureNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "ClearDrawAndDisplayBufferNormal": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "N_CLRSCR": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Swap_To_Screen": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "clear_borders_Normal": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Copy_Plan0Diff_To_Buf": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "asm_04d55": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Display_Bloc": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Display_Bloc_Plein": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Display_Bloc_Clippe": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Display_Bloc_Plein_Clippe": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

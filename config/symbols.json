@@ -8592,6 +8592,11 @@
     "addr": "1:02b30",
     "name": "INVENTED",
     "evidence": "DOS disassembly at 1:02b30..1:02b3c independently shows a complete callable helper ending in RET; called by draw_borderbox at 1:03227 and 1:03241."
+   },
+   "asm_04d55": {
+    "addr": "1:04d55",
+    "name": "INVENTED",
+    "evidence": "INVENTED: address-anchored DOS CFG at 1:04d55 begins a standalone PUSHAD body after the RET at 1:04d54; it has independent dimension guards and ends with RET at 1:04e63. routine_spans.json identifies 1:04d55..04e64 as a distinct candidate span. No external entry reference was found."
    }
   },
   "data": {
