@@ -72,7 +72,8 @@ u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)
             copy(screen, EffetBufferNormal, 0xfa00);
             state->screen = EffetBufferNormal;
             state->destination = (u8 *)destination;
-            state->entries = (effect_span_t *)sub_6FBB4(state->count * sizeof(effect_span_t));
+            screen = (u8 *)sub_6FBB4(state->count * sizeof(effect_span_t));
+            state->entries = (effect_span_t *)screen;
             if (state->entries != 0)
                 okay = 1;
         }
