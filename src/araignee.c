@@ -394,7 +394,7 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    s16 spipl_spr_x; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_h;
+    s16 spipl_spr_h; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_x;
     s16 cen_x;
     s16 cen_y;
 
@@ -486,8 +486,8 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
                     cur_obj->is_active = 1;
                     cur_obj->flags.alive = 1;
                     add_alwobj(cur_obj);
-                    cur_obj->cmd_offset = -1;
                     cur_obj->flags.read_commands = 1;
+                    cur_obj->cmd_offset = -1;
                     cur_obj->nb_cmd = 0;
                     if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)
                         position_ray = 1;
@@ -580,12 +580,12 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 }
 
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
- * Shared ashl16/sgn/min32/max32 cores are present; other body shape remains NEAR. */
-#define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
+ * Nested shared min32/max32 calls reproduce the clamp-bound setup, notably
+ * 1:0c91a..0c94c and 1:0c955..0c987. Extent is 872 bytes; body remains NEAR. */
+#define SPIDER_ABS(x) ((x) < 0 ? -(x) : (x))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
     s16 dx, dy, distance;
     s16 abs_speed_x;
-    s32 speed, bound;
     if (obj->cmd != 1) {
         dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
         if (position_ray)
@@ -600,45 +600,17 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
                 dx = ashl16(dx, 5) / distance;
                 dy = ashl16(dy, 5) / distance;
             }
-            bound = 32;
-            speed = sgn(dy - obj->speed_y) + obj->speed_y;
-            speed = min32(speed, bound);
-            bound = 0;
-            speed = max32(speed, bound);
-            obj->speed_y = speed;
+            obj->speed_y = max32(min32(sgn(dy - obj->speed_y) + obj->speed_y, 32), 0);
             if (obj->speed_y != 0) {
-                bound = 32;
-                speed = sgn(dx - obj->speed_x) + obj->speed_x;
-                speed = min32(speed, bound);
-                bound = -32;
-                speed = max32(speed, bound);
-                obj->speed_x = speed;
+                obj->speed_x = max32(min32(sgn(dx - obj->speed_x) + obj->speed_x, 32), -32);
             } else if (obj->flags.flip_x) {
-                speed = obj->speed_x - (dx > obj->speed_x);
-                bound = 32;
-                speed = min32(speed, bound);
-                bound = -32;
-                speed = max32(speed, bound);
-                obj->speed_x = speed;
+                obj->speed_x = max32(min32(obj->speed_x - (dx > obj->speed_x), 32), -32);
             } else {
-                speed = obj->speed_x + (dx < obj->speed_x);
-                bound = 32;
-                speed = min32(speed, bound);
-                bound = -32;
-                speed = max32(speed, bound);
-                obj->speed_x = speed;
+                obj->speed_x = max32(min32(obj->speed_x + (dx < obj->speed_x), 32), -32);
             }
         } else {
-            speed = obj->speed_x * 2;
-            bound = 32;
-            speed = min32(speed, bound);
-            bound = -32;
-            speed = max32(speed, bound);
-            obj->speed_x = speed;
-            speed = obj->speed_y * 2;
-            bound = 32;
-            speed = min32(speed, bound);
-            obj->speed_y = speed;
+            obj->speed_x = max32(min32(obj->speed_x * 2, 32), -32);
+            obj->speed_y = min32(obj->speed_y * 2, 32);
         }
     } else {
         if (ray.x + ray.offset_bx > obj->x + obj->offset_bx)
