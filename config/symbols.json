@@ -7804,9 +7804,9 @@
     "evidence": "Invented helper name for DOS routine at 1:71256; callers pass signed value in EAX, radix in EBX, and destination in EDX; routine returns destination in EAX. Android x86 symbol lookup found no itoa function."
    },
    "sqrt": {
-    "addr": "1:70552",
-    "name": "RAYVERSE",
-    "evidence": "CalcTab call at 1:13f66; negative-input check, x87 fsqrt path and software-sqrt path at 1:70552..705ab. Standard C math function, also in Rayverse CalcTab."
+    "addr": "1:70540",
+    "name": "WATCOM",
+    "evidence": "Watcom MATH3R sqrt stack wrapper: push edx; call; call 1:70552 (IF@DSQRT); call; pop edx; ret (1:70540..70551); libscan places IF@DSQRT at sqrt+0x12."
    },
    "draw_blackbox": {
     "addr": "1:03125",
@@ -8612,6 +8612,11 @@
     "addr": "1:06323",
     "name": "RAYVERSE",
     "evidence": "Rayverse external/rayverse/src/lowlevel.c //16323; DOS helper entry 1:06323 is directly called by sprite entries 1:06883, 1:06b08, 1:06b88, and 1:06c96."
+   },
+   "IF@DSQRT": {
+    "addr": "1:70552",
+    "name": "WATCOM",
+    "evidence": "libscan: MATH3R.LIB exact+sites match, public sqrt+0x12 (build/workers/w3_gap6a/math_library.txt); register entry called by CalcTab at 1:13f66."
    }
   },
   "data": {

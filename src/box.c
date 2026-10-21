@@ -8,7 +8,7 @@
 #include <math.h>
 #include <string.h>
 /* CalcTab: sqrt uses the ordinary entry; sin keeps the software intrinsic ABI. */
-#pragma function(sqrt)
+/* sqrt: intrinsic register entry IF@DSQRT (1:70552), like sin */
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
