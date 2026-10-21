@@ -149,8 +149,6 @@ s16 Get_PosLave_Y(void);
 void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
     s16 cumulative_length;
     s16 i;
-    u8 type_scroll;
-    u16 length;
 
     /* Screen tables are read from their separately bound data objects. */
     Num_Fond = fnd;
@@ -174,17 +172,17 @@ void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
 
     NbBande = Tab_NbBande[10 * (num_world - 1) + Num_Fond];
 
+    i = 0;
     cumulative_length = 0;
-    for (i = 0; i < NbBande;) {
+    for (; i < NbBande;) {
+        Bande[i].offset = cumulative_length;
         Bande[i].length = Def_Bande[num_world - 1][Num_Fond][i].length;
         Bande[i].field_8 = Def_Bande[num_world - 1][Num_Fond][i].field_2;
         Bande[i].field_9 = Def_Bande[num_world - 1][Num_Fond][i].field_4;
         Bande[i].field_4 = Def_Bande[num_world - 1][Num_Fond][i].field_6;
         Bande[i].field_6 = 0;
         Bande[i].field_14 = 0;
-        Bande[i].offset = cumulative_length;
-        type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
-        if (type_scroll == 0 || type_scroll == 2) {
+        if (Type_Scroll[10 * (num_world - 1) + Num_Fond] == 0 || Type_Scroll[10 * (num_world - 1) + Num_Fond] == 2) {
             Bande[i].source_buffer_pos = source_buf + cumulative_length * width;
             Bande[i].draw_buffer_pos = dest_buf + cumulative_length * 320;
         } else {
@@ -192,9 +190,8 @@ void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
             Bande[i].draw_buffer_pos = dest_buf + cumulative_length;
         }
 
-        length = Bande[i].length;
+        cumulative_length += Bande[i].length;
         ++i;
-        cumulative_length += length;
     }
 
     NbSprite = Tab_NbSprite[10 * (num_world - 1) + Num_Fond];
@@ -206,39 +203,41 @@ void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
 }
 
 void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2) {
-    s16 y;
     s16 v68;
     u16 i;
     u16 sprite_index;
     u16 size;
     u8 type_scroll;
+    s16 draw_width;
+    s16 excess_height;
 
-    y = h1;
-    type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
+    type_scroll = Type_Scroll[Num_Fond + 10 * (num_world - 1)];
     if (type_scroll == 0 || type_scroll == 2) {
+        draw_width = w2 - w1;
+        excess_height = plan_height - SCREEN_HEIGHT;
         if (num_world == world_4_image && (num_level == 4 || num_level == 11)) {
             obj_t* rideau = level.objects + rideau_obj_id;
             if (rideau->is_active) {
                 if (h1 < rideau->y - 110 - (SCREEN_HEIGHT - h2)) {
-                    y = rideau->y - 110 - (SCREEN_HEIGHT - h2);
-                    if (y < 0) {
-                        y = 0;
+                    h1 = rideau->y - 110 - (SCREEN_HEIGHT - h2);
+                    if ((s16)h1 < 0) {
+                        h1 = 0;
                     }
                 }
-                if (y >= h2) {
-                    y = h2 - 1;
+                if (h1 >= h2) {
+                    h1 = h2 - 1;
                 }
             }
         }
-        if (type_scroll != 0) {
-            v68 = plan_height - h2;
+        if (Type_Scroll[10 * (num_world - 1) + Num_Fond] != 0) {
+            v68 = excess_height + (SCREEN_HEIGHT - h2);
         } else if (num_world == world_3_mountain && num_level == 10) {
-            v68 = SCREEN_HEIGHT - h2 + (ymap >> 1) + 11;
+            v68 = (ymap >> 1) + (SCREEN_HEIGHT - h2) + 11;
         } else {
             v68 = Val_Add_Scroll_Y + ymap / Val_Div_Scroll_Y;
         }
-        if (v68 > SCREEN_HEIGHT - h2 + (plan_height - SCREEN_HEIGHT)) {
-            v68 = plan_height - h2;
+        if (v68 > SCREEN_HEIGHT - h2 + excess_height) {
+            v68 = excess_height + (SCREEN_HEIGHT - h2);
         }
         for (i = 0; i < NbBande; ++i) {
             u8* source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 + w1;
@@ -248,19 +247,24 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
             s16 v36 = Bande[i].length + v34;
             if (v34 < 0 && v36 > 0 && Bande[i].length != 0) {
                 draw_height = v36;
-                dest_buffer_pos -= SCREEN_WIDTH * v34;
-                source_buffer_pos -= plan_width * v34;
+                dest_buffer_pos += SCREEN_WIDTH * -(s32)v34;
+                source_buffer_pos += plan_width * -(s32)v34;
                 v34 = 0;
             }
-            if (y < v36 && v34 < h2) {
-                if (y <= v34) {
-                    if (h2 < v36) {
-                        draw_height = h2 - v34;
-                    }
-                    Copy_Plan0_To_Buf(source_buffer_pos - BufferNormalDeplt, dest_buffer_pos, plan_width, draw_height, w2 - w1);
-                } else {
-                    Copy_Plan0_To_Buf(source_buffer_pos + (y - v34) * plan_width - BufferNormalDeplt, dest_buffer_pos + SCREEN_WIDTH * (y - v34), plan_width, draw_height - (y - v34), w2 - w1);
+            if (h1 < v36 && v34 < h2) {
+                /* DOS 1:67e53..1:67e82 clips a band spanning both viewport edges. */
+                if (h1 > v34 && v36 > h2) {
+                    source_buffer_pos += (h1 - v34) * plan_width;
+                    dest_buffer_pos += SCREEN_WIDTH * (h1 - v34);
+                    draw_height = h2 - h1;
+                } else if (h1 > v34) {
+                    source_buffer_pos += (h1 - v34) * plan_width;
+                    dest_buffer_pos += SCREEN_WIDTH * (h1 - v34);
+                    draw_height -= h1 - v34;
+                } else if (v36 > h2) {
+                    draw_height = h2 - v34;
                 }
+                Copy_Plan0_To_Buf(source_buffer_pos - BufferNormalDeplt, dest_buffer_pos, plan_width, draw_height, draw_width);
             }
         }
         plan_width /= 2;
@@ -430,81 +434,67 @@ void Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u1
 
 void Calcul_Deplacement_Bande(s16 x, u16 plan_width, u16 plan_height) {
     u16 i;
-    u8 type_scroll = Type_Scroll[10 * (num_world - 1) + Num_Fond];
-    if (type_scroll != 0) {
-        if (type_scroll == 1) {
-            for (i = 0; i < NbBande; ++i) {
-                if (Bande[i].length != 0) {
-                    if (Bande[i].field_4 != 0) {
-                        if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
-                            Bande[i].field_14 = (Bande[i].field_9 + Bande[i].field_14) % (16 * plan_height);
-                            if (Bande[i].field_4 != 1) {
-                                Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
-                                Bande[i].field_6 += Bande[i].field_14 >> 4;
-                                Bande[i].field_6 = Bande[i].field_6 % plan_height;
-                            } else {
-                                Bande[i].field_6 = Bande[i].field_14 >> 4;
-                            }
-                        } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
-                            if (Bande[i].field_9 > Bande[i].field_14) {
-                                Bande[i].field_14 += 16 * plan_height;
-                            }
-                            Bande[i].field_14 -= Bande[i].field_9;
-                            if (Bande[i].field_4 != 2) {
-                                Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
-                                Bande[i].field_6 += Bande[i].field_14 >> 4;
-                                Bande[i].field_6 = Bande[i].field_6 % plan_height;
-                            } else {
-                                Bande[i].field_6 = Bande[i].field_14 >> 4;
-                            }
-                        }
-                    } else {
-                        Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
-                    }
-                } else {
-                    Bande[i].field_6 = (2 * ymap) % plan_height;
-                }
-            }
-        }
-    } else {
-        // type_scroll == 0
+    if (Type_Scroll[10 * (num_world - 1) + Num_Fond] == 0) {
         plan_width /= 2;
-        if (NbBande != 0) {
-            for (i = 0; i < NbBande; ++i) {
-                if (Bande[i].length != 0) {
-                    if (Bande[i].field_4 != 0) {
-                        if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
-                            Bande[i].field_14 = (Bande[i].field_9 + Bande[i].field_14) % (16 * plan_width);
-                            if (Bande[i].field_4 != 1) {
-                                Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
-                                Bande[i].field_6 += Bande[i].field_14 >> 4;
-                                Bande[i].field_6 = Bande[i].field_6 % plan_width;
-                            } else {
-                                Bande[i].field_6 = Bande[i].field_14 >> 4;
-                            }
-                        } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
-                            if (Bande[i].field_9 > Bande[i].field_14) {
-                                Bande[i].field_14 += 16 * plan_width;
-                            }
-                            Bande[i].field_14 -= Bande[i].field_9;
-                            if (Bande[i].field_4 != 2) {
-                                Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
-                                Bande[i].field_6 += Bande[i].field_14 >> 4;
-                                Bande[i].field_6 = Bande[i].field_6 % plan_width;
-                            } else {
-                                Bande[i].field_6 = Bande[i].field_14 >> 4;
-                            }
-                        }
-                    } else {
-                        Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
-                    }
+        for (i = 0; i < NbBande; ++i) {
+            if (Bande[i].length == 0) {
+                Bande[i].field_6 = (2 * x) % plan_width;
+            } else if (Bande[i].field_4 == 0) {
+                Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
+            } else if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
+                Bande[i].field_14 = (Bande[i].field_14 + Bande[i].field_9) % (16 * plan_width);
+                if (Bande[i].field_4 == 1) {
+                    Bande[i].field_6 = Bande[i].field_14 >> 4;
                 } else {
-                    Bande[i].field_6 = (2 * x) % plan_width;
+                    Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
+                    Bande[i].field_6 += Bande[i].field_14 >> 4;
+                    Bande[i].field_6 %= plan_width;
+                }
+            } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
+                if (Bande[i].field_9 > Bande[i].field_14) {
+                    Bande[i].field_14 += 16 * plan_width;
+                }
+                Bande[i].field_14 -= Bande[i].field_9;
+                if (Bande[i].field_4 == 2) {
+                    Bande[i].field_6 = Bande[i].field_14 >> 4;
+                } else {
+                    Bande[i].field_6 = (x + plan_width * Bande[i].field_8) / Bande[i].field_8 % plan_width;
+                    Bande[i].field_6 += Bande[i].field_14 >> 4;
+                    Bande[i].field_6 %= plan_width;
                 }
             }
         }
         if (num_world == world_5_cave && num_level == 10) {
             Do_Effet_Chaleur(plan_width, plan_height);
+        }
+    } else if (Type_Scroll[10 * (num_world - 1) + Num_Fond] == 1) {
+        for (i = 0; i < NbBande; ++i) {
+            if (Bande[i].length == 0) {
+                Bande[i].field_6 = (2 * ymap) % plan_height;
+            } else if (Bande[i].field_4 == 0) {
+                Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
+            } else if (Bande[i].field_4 == 1 || Bande[i].field_4 == 4) {
+                Bande[i].field_14 = (Bande[i].field_14 + Bande[i].field_9) % (16 * plan_height);
+                if (Bande[i].field_4 == 1) {
+                    Bande[i].field_6 = Bande[i].field_14 >> 4;
+                } else {
+                    Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
+                    Bande[i].field_6 += Bande[i].field_14 >> 4;
+                    Bande[i].field_6 %= plan_height;
+                }
+            } else if (Bande[i].field_4 == 2 || Bande[i].field_4 == 5) {
+                if (Bande[i].field_9 > Bande[i].field_14) {
+                    Bande[i].field_14 += 16 * plan_height;
+                }
+                Bande[i].field_14 -= Bande[i].field_9;
+                if (Bande[i].field_4 == 2) {
+                    Bande[i].field_6 = Bande[i].field_14 >> 4;
+                } else {
+                    Bande[i].field_6 = (ymap + plan_height * Bande[i].field_8) / Bande[i].field_8 % plan_height;
+                    Bande[i].field_6 += Bande[i].field_14 >> 4;
+                    Bande[i].field_6 %= plan_height;
+                }
+            }
         }
     }
 }

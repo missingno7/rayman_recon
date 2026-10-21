@@ -1,4 +1,4 @@
-/* bbmont.c (1:100b0..1:13030). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_bbmont. finish pass fin_bbmont; see config/units.json. */
+/* bbmont.c (1:100b0..1:13030). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_bbmont. worker w2_bbskops candidate; measured results in NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -574,6 +574,7 @@ void DO_BBL_COMMAND(obj_t* obj) {
     s16 unk_x;
     s32 tile_x;
     s32 tile_y;
+    map_tile_t *map;
 
     if (PierreDoitExploser) {
         DO_PI_EXPLOSION2(obj);
@@ -599,7 +600,9 @@ void DO_BBL_COMMAND(obj_t* obj) {
 
     tile_x = (obj->x + obj->offset_bx + unk_x) >> 4;
     tile_y = (obj->y + 40) >> 4;
-    if (block_flags[mp.map[(s16)(tile_x + mp.width * tile_y)].tile_type] & (1 << BLOCK_FLAG_4)) {
+    tile_x += mp.width * tile_y;
+    map = mp.map;
+    if (block_flags[map[(s16)tile_x].tile_type] & (1 << BLOCK_FLAG_4)) {
         switch (obj->param) {
             case 1:
                 PlaySnd(200, obj->id);
@@ -650,8 +653,9 @@ void DO_BBL_COMMAND(obj_t* obj) {
 void BBMONT_ECLAIR(obj_t* bb1_obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical
     s16 new_spd_x;
+    eta_t **eta_rows;
     s32 new_x;
-    s16 x; s16 y; s16 w; s16 h;
+    s16 x; s16 h; s16 y; s16 w;
     s16 nb_objs;
     s16 i = 0;
     obj_t* cur_obj;
@@ -663,8 +667,9 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
             if (cur_obj->type == TYPE_ECLAIR && !cur_obj->is_active) {
                 cur_obj->flags.flip_x = bb1_obj->flags.flip_x;
                 cur_obj->speed_y = 0;
-                cur_obj->speed_x = cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
-                if (!cur_obj->flags.flip_x) cur_obj->speed_x = -cur_obj->speed_x;
+                eta_rows = cur_obj->eta;
+                new_spd_x = eta_rows[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
+                cur_obj->speed_x = cur_obj->flags.flip_x ? new_spd_x : -new_spd_x;
                 GET_SPRITE_POS(bb1_obj, 10, &x, &y, &w, &h);
                 new_x = (x + w) - cur_obj->offset_bx;
                 cur_obj->x = new_x + (bb1_obj->flags.flip_x ? 16 : -16);
@@ -1411,34 +1416,25 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     obj->speed_y = 0;
                     obj->speed_x = 0;
                     /* see also: makeUturn() case TYPE_SPIDER_PLAFOND */
-                    obj->flags.flip_x = !obj->flags.flip_x;
+                    obj->flags.flip_x = 1 - obj->flags.flip_x;
                     set_main_and_sub_etat(obj, 0, 5);
                 }
             }
-            if ((temp_s2 - (ray_zdc_x + ((s16) ray_zdc_w >> 1))) >= 0)
-            {
-                if ((temp_s2 - (ray_zdc_x + ((s16) ray_zdc_w >> 1))) > 250)
-                {
-                    goto block_172;
-                }
-                return;
-            }
-            if (((ray_zdc_x + ((s16) ray_zdc_w >> 1)) - temp_s2) > 250)
-            {
-                block_172:
-                obj->flags.alive = 0;
+            if (Abs((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 250) {
+                obj->is_active = 0;
                 IsBossThere = 0;
                 Phase = 0;
+                obj->flags.alive = 0;
                 scroll_end_x = xmapmax;
                 scroll_end_y = ymapmax;
-                obj->is_active = 0;
             }
             break;
         case 5:
             if (bb1.field1_0x2 < 0)
             {
                 ++bb1.field1_0x2;
-                scroll_end_y = (bb1.field1_0x2 == -1) ? ymapmax : bb1.sprite6_y - horloge[5];
+                /* DOS 1:1284b..1:12857 branches on zero after the increment. */
+                scroll_end_y = (bb1.field1_0x2 == 0) ? ymapmax : bb1.sprite6_y - horloge[5];
             }
 
             // NOTE: this part is fixed for the PC version. Not necessarily matching for the PS1 version.
@@ -1474,28 +1470,18 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     {
                         obj->speed_y = 0;
                         obj->speed_x = 0;
-                        obj->flags.flip_x = !obj->flags.flip_x;
+                        obj->flags.flip_x = 1 - obj->flags.flip_x;
                         set_main_and_sub_etat(obj, 0, 5);
                     }
                 }
             }
-            if ((temp_s2 - (ray_zdc_x + ((s16) ray_zdc_w >> 1))) >= 0)
-            {
-                if ((temp_s2 - (ray_zdc_x + ((s16) ray_zdc_w >> 1))) > 400)
-                {
-                    goto block_173;
-                }
-                return;
-            }
-            if (((ray_zdc_x + ((s16) ray_zdc_w >> 1)) - temp_s2) > 400)
-            {
-                block_173:
-                obj->flags.alive = 0;
+            if (Abs((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 400) {
+                obj->is_active = 0;
                 IsBossThere = 0;
                 Phase = 0;
+                obj->flags.alive = 0;
                 scroll_end_x = xmapmax;
                 scroll_end_y = ymapmax;
-                obj->is_active = 0;
             }
             break;
     }
