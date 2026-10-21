@@ -284,7 +284,7 @@ void SetDma(s32 dma);
 void SetIrq(s32 irq);
 void SetPalette(rgb_palette_t* palette, u8 first_color, s32 num_colors);
 void SetParam(s32 param);
-void SetPort_(s32 port);
+void SetPort_(u16 port);   /* W-PROTO: as declared in hybrid (definition) */
 void SetVolumeSound(s16 volume);
 bool ValidButPressed(void);
 void readinput_center_joystick(s16* xcentre, s16* ycentre);
