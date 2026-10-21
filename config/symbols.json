@@ -15531,6 +15531,76 @@
     "type": "s32",
     "name": "INVENTED",
     "evidence": "DOS dword timer reference at 1:2ae3e and store at 1:2ae72."
+   },
+   "ll_state_00010": {
+    "addr": "2:0010",
+    "type": "u32",
+    "size": 4,
+    "name": "INVENTED",
+    "evidence": "DOS object2 low-level prefix; data_refs.json: 1:000c1 dword store and 1:00638 dword load."
+   },
+   "record_table_00014": {
+    "addr": "2:0014",
+    "type": "u8[200][32]",
+    "size": 6400,
+    "name": "INVENTED",
+    "evidence": "DOS refs at 1:00028 and 1:00663..1:00678 establish base and 32-byte record stride; all 200 initial records checked in obj2.bin against ffffh,0 then 28 zero bytes."
+   },
+   "rasterizer_state_01914": {
+    "addr": "2:1914",
+    "type": "u8[70]",
+    "size": 70,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json has rasterizer accesses across 2:01914..2:0194a; opaque 70-byte range only, internal global/field partition remains OPEN."
+   },
+   "saved_vga_registers_0196a": {
+    "addr": "2:196a",
+    "type": "u8[6]",
+    "size": 6,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: six byte stores/loads at 1:0460d..1:04713; grouped span 2:0196a..2:01970."
+   },
+   "row_offsets_320_01b00": {
+    "addr": "2:1b00",
+    "type": "u32[200]",
+    "size": 800,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: indexed dword reads at 1:0560a and peers; data_tables.json verifies all 200 entries equal 320*i."
+   },
+   "row_offsets_80_01e20": {
+    "addr": "2:1e20",
+    "type": "u32[200]",
+    "size": 800,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: indexed dword reads at 1:0640a and peers; data_tables.json verifies all 200 entries equal 80*i."
+   },
+   "lowlevel_timer_02148": {
+    "addr": "2:2148",
+    "type": "u32",
+    "size": 4,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: direct dword stores/loads at 1:06ecf, 1:06edd, 1:06f11, 1:06f31."
+   },
+   "lowlevel_timer_02150": {
+    "addr": "2:2150",
+    "type": "u32",
+    "size": 4,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: direct dword store/load/compare at 1:06ebe, 1:06f1b, 1:06f49."
+   },
+   "lowlevel_timer_02154": {
+    "addr": "2:2154",
+    "type": "u32",
+    "size": 4,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: direct dword store/add/read at 1:06eb4, 1:06f43, 1:06f4e."
+   },
+   "lowlevel_timer_02158": {
+    "addr": "2:2158",
+    "type": "u32",
+    "size": 4,
+    "name": "INVENTED",
+    "evidence": "DOS data_refs.json: direct dword store/load at 1:06eaa, 1:06f25, 1:06f54."
    }
   }
  }

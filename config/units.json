@@ -12159,6 +12159,17 @@
      ]
     }
    }
+  },
+  "lowlevel_data": {
+   "source": "src\\lowlevel_data.asm",
+   "oracle": "gog_v121_us",
+   "profile": "asm",
+   "functions": {},
+   "segments": {
+    "_DATA": "VERIFIED",
+    "_DATA2": "VERIFIED",
+    "_DATA3": "VERIFIED"
+   }
   }
  }
 }
