@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker sfin_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker w2_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -870,41 +870,46 @@ void display_flocons_behind(void) {
     PROJ_CENTER_X = previous_center_x;
 }
 void display_flocons_before(void) {
-    s16 previous_center_y;
     s16 previous_center_x;
-    s16 depth;
+    s16 previous_center_y;
     s16 group;
+    s16 depth;
     s16 multiplier;
-    s16 center_x;
     s16 center_y;
+    s16 snow6_index;
     s16 end_index;
-    s16 index;
+    s16 first_index;
     flocon_t *entry;
-    previous_center_y = PROJ_CENTER_Y;
+    s16 snow7_index, center_x, rain_index;
     previous_center_x = PROJ_CENTER_X;
+    previous_center_y = PROJ_CENTER_Y;
     set_proj_center(160, 170);
-    depth = -64;
     group = 0;
+    depth = -64;
     do {
         entry = flocon_tab + floc_ind[group];
         multiplier = 0x10000 / (depth + 256);
         center_x = PROJ_CENTER_X - ((multiplier * PROJ_CENTER_X) >> 8);
         center_y = PROJ_CENTER_Y - ((multiplier * PROJ_CENTER_Y) >> 8);
-        end_index = nb_floc[group] + floc_ind[group];
+        first_index = floc_ind[group];
+        end_index = nb_floc[group] + first_index;
         if (num_world != 1) {
             if (group == 0) {
-                for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+                
+                for (snow6_index = first_index; snow6_index < end_index; ++snow6_index, ++entry)
                     drawflocon6NormalETX(draw_buffer,
                         ((multiplier * entry->field_0) >> 8) + center_x,
                         ((entry->field_2 * multiplier) >> 8) + center_y);
             } else {
-                for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+                
+                for (snow7_index = first_index; snow7_index < end_index; ++snow7_index, ++entry)
                     drawflocon7NormalETX(draw_buffer,
                         ((multiplier * entry->field_0) >> 8) + center_x,
                         ((entry->field_2 * multiplier) >> 8) + center_y);
             }
         } else {
-            for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+            
+            for (rain_index = first_index; rain_index < end_index; ++rain_index, ++entry)
                 drawpluie7NormalETX(draw_buffer,
                     ((multiplier * entry->field_0) >> 8) + center_x,
                     ((entry->field_2 * multiplier) >> 8) + center_y);
@@ -912,8 +917,8 @@ void display_flocons_before(void) {
         ++group;
         depth += 32;
     } while (depth < 32);
-    PROJ_CENTER_Y = previous_center_y;
     PROJ_CENTER_X = previous_center_x;
+    PROJ_CENTER_Y = previous_center_y;
 }
 
 void display_pix_gerbes(void) {
@@ -1406,13 +1411,13 @@ void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
     s16 max_y;
     s32 width;
     s32 dx1;
-    s32 dy1;
-    s32 dx2;
     s32 dy2;
+    s32 dx2;
+    s32 dy1;
     s32 xstep1;
+    s32 rowstep2;
     s32 xstep2;
     s32 rowstep1;
-    s32 rowstep2;
     min_x = x0;
     max_x = x3;
     if (x1 < x0) { min_x = x1; max_x = x2; }
@@ -1448,12 +1453,12 @@ void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
     geometry.dy_2 = dy2;
     geometry.dest_width = width;
     geometry.dest_height = max_y - min_y;
-    geometry.dest_offset = (y0 - min_y) * width + x0 - min_x;
+    geometry.dest_offset = (x0 - min_x) + (y0 - min_y) * width;
     geometry.source_width = sprite->outer_width;
     geometry.source_height = sprite->outer_height;
     draw_sprite_deform(image + sprite->offset_in_atlas, new_sprite_deform, &geometry);
     DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,
-        (u16)(((max_y - min_y) << 8) + (max_x - min_x)), draw_buffer, new_sprite_deform);
+        (u16)((max_x - min_x) + ((max_y - min_y) << 8)), draw_buffer, new_sprite_deform);
 }
 
 void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
@@ -1513,9 +1518,9 @@ void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
 
 void DISPLAY_DEFORM_SPRITE(sprite_t* sprite, u8* image, s16 x, s16 y,
                            s16 angle, s16 scale_x, s16 scale_y) {
-    s16 center_x;
-    s16 center_y;
-    s16 x0, y0, x1, y1, x2, y2;
+    /* DOS 1:0bea8: scalar declaration order determines the address-taken corner slots. */
+    s16 center_x, y0, x1, y1, center_y, x0, x2, y2;
+    s16 x3, y3;
     center_x = x + sprite->sprite_pos.bits.x + (sprite->inner_width >> 1);
     center_y = y + sprite->sprite_pos.bits.y + 1 + (sprite->inner_height >> 1);
     x0 = x - center_x;
@@ -1533,8 +1538,11 @@ void DISPLAY_DEFORM_SPRITE(sprite_t* sprite, u8* image, s16 x, s16 y,
     y0 += center_y;
     y1 += center_y;
     y2 += center_y;
+    /* DOS 1:0bfc5..0bfe8 computes both fourth-corner coordinates before argument setup. */
+    x3 = (x1 - x0) + x2;
+    y3 = (y1 - y0) + y2;
     AFFICHE_SPRITE_DEFORME(sprite, image, x0, y0, x1, y1, x2, y2,
-                         (x1 - x0) + x2, (y1 - y0) + y2);
+                         x3, y3);
 }
 
 void CALCUL_DEFORMATION(s16* x, s16* y, s16 angle, s16 scale_x, s16 scale_y) {

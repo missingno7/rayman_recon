@@ -10778,7 +10778,7 @@
      ]
     },
     "DISPLAY_DEFORM_SPRITE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
