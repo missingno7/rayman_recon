@@ -4,6 +4,7 @@
  */
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 
 extern obj_t ray;
 extern obj_t *poing_obj;
@@ -48,8 +49,6 @@ void allocatePoingBoum(void);
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define ashr16(value, amount) \
-    (((s16)(value) < 0) ? -((-(s16)(value)) >> (amount)) : ((s16)(value) >> (amount)))
 #define ashl16(value, amount) ((s32)(s16)(value) << (amount))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define false 0
@@ -99,6 +98,7 @@ void RAY_THROW_FIST(void)
 {
     s32 unk_1;
     s16 unk_2;
+    eta_t *eta_row;
 
     if (ray.main_etat == 2 && (ray.sub_etat == 25 || ray.sub_etat == 26))
         set_sub_etat(&ray, 29);
@@ -126,9 +126,10 @@ void RAY_THROW_FIST(void)
     poing_obj->anim_frame = 0;
     poing_obj->follow_id = -1;
     set_main_and_sub_etat(poing_obj, poing_obj->init_main_etat, poing_obj->init_sub_etat);
-    poing_obj->anim_index = poing_obj->eta[poing_obj->main_etat][poing_obj->sub_etat].anim_index;
+    eta_row = poing_obj->eta[poing_obj->main_etat];
+    poing_obj->anim_index = eta_row[poing_obj->sub_etat].anim_index;
     poing_obj->x = ray_zdc_x + (ray_zdc_w >> 1) - poing_obj->offset_bx;
-    poing_obj->x -= 5 * (ray.flags.flip_x ? 1 : -1);
+    poing_obj->x += (ray.flags.flip_x ? -5 : 5);
     poing.damage = ashr16(poing.charge, 4) + 1;
 
     switch (poing_obj->init_sub_etat) {
@@ -243,6 +244,7 @@ void alter_fist_speed(obj_t *obj)
 {
     u8 accel_x = 0;
     s32 abs_spd_x;
+
     abs_spd_x = obj->speed_x;
     if (abs_spd_x < 0)
         abs_spd_x = -abs_spd_x;
@@ -293,7 +295,9 @@ void DO_POING(obj_t *obj)
             } else if (poing.is_returning == 0) {
                 alter_fist_speed(obj);
             } else if (poing.is_returning == 1) {
-                if (Abs((s32)obj->speed_x) < poing.speed_x)
+                s32 return_speed = poing.speed_x;
+
+                if (Abs((s32)obj->speed_x) < return_speed)
                     alter_fist_speed(obj);
 
                 ray_diff_x = ray_zdc_x + (ray_zdc_w >> 1) - obj->offset_bx;
@@ -324,12 +328,8 @@ void DO_POING(obj_t *obj)
                     obj->speed_y = unk_y_1 * obj->speed_x;
 
                     {
-                        s32 max_y = MAX(poing.y_16, ray_diff_y);
-                        s32 min_y = MIN(poing.y_16, ray_diff_y);
-                        s32 within;
                         unk_1 = obj->speed_y + poing.y_16;
-                        within = unk_1 >= min_y && unk_1 <= max_y;
-                        if (within)
+                        if (inrange(unk_1, MIN(poing.y_16, ray_diff_y), MAX(poing.y_16, ray_diff_y)))
                             obj->speed_y >>= 4;
                         else
                             obj->speed_y = (ray_diff_y - poing.y_16) >> 4;
