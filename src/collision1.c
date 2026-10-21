@@ -1,6 +1,6 @@
 /*
  * Collision engine, first object (GOG v1.21 1:1b2d0-1:1f1e0). File name invented (Rayverse collision.c).
- * Names: Rayverse/Android. Worker status: 25/37 STRICT; see NOTES.md.
+ * Names: Rayverse/Android. Worker status: 26/37 STRICT; see NOTES.md.
  * Whole-object layout remains unresolved. No promotion is claimed.
  */
 #include "obj.h"
@@ -1210,18 +1210,16 @@ s16 COLL_RAY_PIC(void) {
 //2DA98
 void COLL_RAY_BLK_MORTEL(void) {
     if ((ray.y + ray.offset_by) < (mp.height * 16)) {
-        u8 btyp = mp.map[ray.ray_dist].tile_type;
-        if (btyp == BTYP_SPIKES) {
+        if (mp.map[ray.ray_dist].tile_type == BTYP_SPIKES) {
             set_main_and_sub_etat(&ray, 3, 32);
             if (dead_time != 1) {
                 dead_time = 1;
                 stop_all_snd();
                 start_cd_perdu();
             }
-            { s32 next_y = ray.y + 5;
             ray.speed_y = 0;
             ray.speed_x = 0;
-            ray.y = next_y; }
+            ray.y += 5;
         } else if (ray.btypes[3] == BTYP_SPIKES) {
             set_main_and_sub_etat(&ray, 3, 32);
             if (dead_time != 1) {
@@ -1231,7 +1229,7 @@ void COLL_RAY_BLK_MORTEL(void) {
             }
             ray.speed_y = 0;
             ray.speed_x = 0;
-        } else if (btyp == BTYP_CLIFF) {
+        } else if (mp.map[ray.ray_dist].tile_type == BTYP_CLIFF) {
             set_main_and_sub_etat(&ray, 2, 31);
             scroll_end_y = ymap;
             scroll_start_y = ymap;
