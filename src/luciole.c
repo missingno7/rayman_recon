@@ -240,7 +240,8 @@ void Display_and_free_luciole(u8 *draw_buf)
 
         old_y_luc = y_luc;
         old_x_luc = x_luc;
-        aff_luciole(x_luc, y_luc, rayon_luciole - 4, draw_buf);
+        /* DOS 1:3896f/38999: EDX = x_luc, EAX = y_luc (short loads at -2). */
+        aff_luciole(y_luc, x_luc, rayon_luciole - 4, draw_buf);
 
         Bloc_lim_H1 = Bloc_lim_H1_Glob;
         Bloc_lim_H2 = Bloc_lim_H2_Glob;
