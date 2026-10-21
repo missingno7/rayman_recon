@@ -123,9 +123,6 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old);
 #ifndef MIN_3
 #define MIN_3(x, y) if (y < x) x = y;
 #endif
-#ifndef ashl16
-#define ashl16(v, b) ((v) << (b))
-#endif
 #define ACTIVE_ALIVE 0
 #define ACTIVE_DEAD 1
 #define BLOCK_FULLY_SOLID 0
