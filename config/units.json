@@ -2704,7 +2704,7 @@
      ]
     },
     "goto_phase5": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

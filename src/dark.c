@@ -5,6 +5,7 @@
  */
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 extern obj_type_flags_t flags[262];
 #include <stdlib.h>
 #include <stdlib.h>
@@ -12,7 +13,6 @@ extern obj_type_flags_t flags[262];
 #define TYPE_DARK_SORT 215
 #define TYPE_VITRAIL 247
 #define ashl16(value, amount) ((s32)(value) << (amount))
-#define SGN(value) ((value) >= 0 ? ((value) > 0 ? 1 : 0) : -1)
 
 typedef struct vitraux_info_t {
     s16 x_pos;
@@ -72,7 +72,7 @@ s16 firstFloorBelow(obj_t *obj);
 u8 EOA(obj_t *obj);
 void set_sub_etat(obj_t *obj, u8 sub_etat);
 void set_main_and_sub_etat(obj_t *obj, u8 etat, u8 sub_etat);
-u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
+s16 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void add_alwobj(obj_t *obj);
 void DO_NOVA(obj_t *obj);
 void DO_NOVA2(obj_t *obj);
@@ -351,7 +351,7 @@ void DO_DARK_COMMAND(obj_t *mr_drk_obj)
         GET_SPRITE_POS(mr_drk_obj, 3, &dark_x, &dark_y, &dark_w, &dark_h);
         dark_rayon_dx = -5;
         dark_rayon_dy = 0;
-        sort_x = dark_x + (dark_w >> 1) - 96;
+        sort_x = (dark_w >> 1) + dark_x - 96;
         sort_y = dark_y + (dark_h >> 1) - 128;
         switch (mr_drk_obj->sub_etat) {
         case 8:
@@ -484,8 +484,8 @@ void DO_DARK_SORT_COMMAND(obj_t *ds_obj)
             diff_y = ashl16(diff_y, 4) / dist;
         }
         if (horloge[2] == 0) {
-            dark_rayon_dx += SGN(diff_x - dark_rayon_dx);
-            dark_rayon_dy += SGN(diff_y - dark_rayon_dy);
+            dark_rayon_dx += sgn(diff_x - dark_rayon_dx);
+            dark_rayon_dy += sgn(diff_y - dark_rayon_dy);
             allocate_DARK_SORT((s16)ds_obj->x + dark_rayon_dx, (s16)ds_obj->y + dark_rayon_dy,
                 ds_obj->sub_etat, ds_obj->iframes_timer);
             ds_obj->hit_points = 0;
@@ -709,15 +709,18 @@ void goto_phase5(obj_t *mr_drk_obj)
         DO_NOVA(&ray);
         RAY_DEMIRAY();
     }
-    mr_drk_obj->init_x = mr_drk_obj->x = 0;
-    mr_drk_obj->param = 0;
-    final_pass_x = -60;
-    final_pass_a = 0;
-    final_pass_f = 0;
-    mr_drk_obj->init_y = mr_drk_obj->y = ymap - mr_drk_obj->offset_by - 20;
-    mr_drk_obj->flags.alive = 0;
-    mr_drk_obj->is_active = 0;
-    final_pass_n = 0;
+    {
+        s32 target_y = ymap;
+        mr_drk_obj->init_x = mr_drk_obj->x = 0;
+        mr_drk_obj->param = 0;
+        mr_drk_obj->flags.alive = 0;
+        final_pass_x = -60;
+        final_pass_a = 0;
+        final_pass_f = 0;
+        mr_drk_obj->init_y = mr_drk_obj->y = target_y - mr_drk_obj->offset_by - 20;
+        mr_drk_obj->is_active = 0;
+        final_pass_n = 0;
+    }
     fin_boss = 1;
     finBosslevel.mr_dark = 1;
     TextDark2_Affiche = 1;
