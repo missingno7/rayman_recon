@@ -439,28 +439,21 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                         case TYPE_TIBETAIN_2:
                             PlaySnd(110, cur_obj->id);
                             break;
+                        /* DOS 1:5c45c..5c4e6 joins the sound call. Conditional
+                         * arguments give the DOS 2124-byte extent; body remains NEAR. */
                         case TYPE_PLATFORM:
-                            if (num_world == 1 || num_world == 4)
-                                PlaySnd(19, -1);
-                            else
-                                PlaySnd(242, -1);
+                            PlaySnd((num_world == 1 || num_world == 4) ? 19 : 242, -1);
                             break;
                         case TYPE_FALLPLAT:
                         case TYPE_LIFTPLAT:
-                            if (num_world == 4 || num_world == 5)
-                                PlaySnd(19, -1);
-                            else
-                                PlaySnd(242, -1);
+                            PlaySnd((num_world == 4 || num_world == 5) ? 19 : 242, -1);
                             break;
                         case TYPE_MOVE_PLAT:
                         case TYPE_CRUMBLE_PLAT:
                         case TYPE_BOING_PLAT:
                         case TYPE_ONOFF_PLAT:
                         case TYPE_MOVE_START_NUA:
-                            if (num_world == 4)
-                                PlaySnd(19, -1);
-                            else
-                                PlaySnd(242, -1);
+                            PlaySnd((num_world == 4) ? 19 : 242, -1);
                             break;
                         case TYPE_TIBETAIN:
                         case TYPE_MARACAS:
@@ -1900,6 +1893,9 @@ void SET_RAY_BALANCE(void) {
 }
 
 void RAY_GOING_BALANCE(obj_t* obj) {
+    /* DOS 1:5f384 and 1:5f4a1 return at 1:5f4f6; these paths
+     * do not write follow_y. The 95 store belongs to the unresolved
+     * terminal block at 1:5f4be..5f4f6, behind contradictory flags. */
     /* 619C0 801861C0 -O2 -msoft-float */
     s16 sine_angle;
     s16 cosine_angle;
@@ -1955,12 +1951,8 @@ void RAY_GOING_BALANCE(obj_t* obj) {
             if (ray.gravity_value_1 >= 3) {
                 ray.gravity_value_1 = 0;
                 ray.speed_y++;
-            } else {
-                obj->follow_y = 95;
             }
         }
-    } else {
-        obj->follow_y = 95;
     }
 }
 
