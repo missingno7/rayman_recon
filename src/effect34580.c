@@ -14,23 +14,16 @@ void effect_prepare_rows(u8 mode, s16 direction)
 {
     effect_rows_t *state = current_rows();
     effect_span_t *span = state->entries;
-    s32 amount;
+    s16 amount;
     u8 i;
 
     state->position = 0;
-    if (direction >= 0) {
-        amount = 1;
-        amount = amount >= direction ? amount : direction;
-    } else {
-        amount = 1;
-        amount = amount >= -direction ? amount : -direction;
-        amount = -amount;
-    }
+    if (direction >= 0)
+        amount = max32(1, direction);
+    else
+        amount = -max32(1, -direction);
     state->direction = amount;
-    amount = 1;
-    amount = amount >= mode ? amount : mode;
-    amount = amount <= 12 ? amount : 12;
-    state->mode = amount;
+    state->mode = min32(max32(1, mode), 12);
     for (i = 0; i < state->count; ++i, ++span) {
         span->width = 0;
         span->destination_y = i;
