@@ -7887,6 +7887,81 @@
     "addr": "1:61e40",
     "name": "RAYVERSE",
     "evidence": "Android original symbol: empty, between InitSnd and last_snd; DOS aligned shared RET at 61e40."
+   },
+   "DO_CYMBAL_COMMAND": {
+    "addr": "1:21f00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/cymbal.c //31F00; tools/tumap.py boundary and DOS entry"
+   },
+   "DO_2_PARTS_CYMBAL": {
+    "addr": "1:22280",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/cymbal.c //32280; tools/tumap.py boundary and DOS entry"
+   },
+   "DO_COLL_RAY_CYMBALE": {
+    "addr": "1:22738",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/cymbal.c //32738; tools/tumap.py boundary and DOS entry"
+   },
+   "reverse_save_byte": {
+    "addr": "1:21848",
+    "name": "INVENTED",
+    "evidence": "DOS loop at 1:21848 reverses the eight input bits; semantic peer is not assigned an Android symbol."
+   },
+   "read_save_header_byte": {
+    "addr": "1:21884",
+    "name": "INVENTED",
+    "evidence": "DOS fread of one stream byte followed by XOR 0x53 at 1:21884."
+   },
+   "write_save_header_byte": {
+    "addr": "1:218ac",
+    "name": "INVENTED",
+    "evidence": "DOS seeks stream to offset zero, XORs one byte with 0x53, then fwrite at 1:218ac."
+   },
+   "read_save_header_size": {
+    "addr": "1:218e0",
+    "name": "INVENTED",
+    "evidence": "DOS fread of one dword followed by XOR 0x54555657 at 1:218e0."
+   },
+   "write_save_header_size": {
+    "addr": "1:21910",
+    "name": "INVENTED",
+    "evidence": "DOS XORs a dword with 0x54555657 and fwrite at 1:21910."
+   },
+   "read_save_raw_byte": {
+    "addr": "1:2193c",
+    "name": "INVENTED",
+    "evidence": "DOS buffered getc path at 1:2193c increments the raw-byte count at 2:6328."
+   },
+   "write_save_encoded_byte": {
+    "addr": "1:21984",
+    "name": "INVENTED",
+    "evidence": "DOS encodes one byte using the rolling key, updates checksum, then buffered putc at 1:21984."
+   },
+   "read_save_encoded_byte": {
+    "addr": "1:21a10",
+    "name": "INVENTED",
+    "evidence": "DOS buffered getc path at 1:21a10 reverses the rolling XOR encoding and updates checksum."
+   },
+   "write_save_raw_byte": {
+    "addr": "1:21a8c",
+    "name": "INVENTED",
+    "evidence": "DOS decrements remaining raw size then buffered putc at 1:21a8c."
+   },
+   "reset_save_codec": {
+    "addr": "1:21afc",
+    "name": "INVENTED",
+    "evidence": "DOS initializes the 256 by 8 history table and resets counters/key at 1:21afc."
+   },
+   "report_save_codec_error": {
+    "addr": "1:21ec0",
+    "name": "INVENTED",
+    "evidence": "DOS prints the fatal prefix and selected save error text, then sets 2:6318 at 1:21ec0."
+   },
+   "fprintf_": {
+    "addr": "1:711d6",
+    "name": "INVENTED",
+    "evidence": "DOS helper at 1:711d6 forwards format and varargs registers to __fprtf_ with stderr FILE object (1:711d7..711e5); C fprintf maps to this helper."
    }
   },
   "data": {
@@ -14351,6 +14426,54 @@
     "type": "u8",
     "name": "INVENTED",
     "evidence": "DOS code reads and writes one byte at 2:4ef00."
+   },
+   "sav_error_status": {
+    "addr": "2:6318",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte return/store at 1:21840, 1:21b48, 1:21d28 and 1:21ec0; Android VerifyCheckSumInSave is a likely semantic name match."
+   },
+   "sav_codec_error": {
+    "addr": "2:6320",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte reads/writes at 1:21afc, 1:21b48 and 1:21d28."
+   },
+   "sav_codec_key": {
+    "addr": "2:6321",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte key initialized to 0x57 and incremented at 1:21afc, 1:21984 and 1:21a10."
+   },
+   "sav_encoded_count": {
+    "addr": "2:6324",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS dword counter reset at 1:21afc and incremented by encoded-byte routines at 1:21984 and 1:21a10."
+   },
+   "sav_raw_count": {
+    "addr": "2:6328",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS dword raw-byte count/remaining-size field reset, incremented, decremented, and header-written at 1:21afc, 1:2193c, 1:21a8c, 1:21b48 and 1:21d28."
+   },
+   "sav_big_window": {
+    "addr": "2:4ef04",
+    "type": "u8[256][8]",
+    "name": "INVENTED",
+    "evidence": "DOS initializer and codec loops address 2048 bytes beginning 2:4ef04; 1:21afc initializes each row to its row index."
+   },
+   "sav_window": {
+    "addr": "2:4f704",
+    "type": "u8[8]",
+    "name": "INVENTED",
+    "evidence": "DOS codec accesses eight bytes beginning 2:4f704 at 1:21b48 and 1:21d28."
+   },
+   "sav_checksum": {
+    "addr": "2:4f70c",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS checksum byte initialized and accumulated at 1:21b48, 1:21d28, 1:21984 and 1:21a10."
    }
   }
  }
