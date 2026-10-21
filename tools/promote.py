@@ -86,7 +86,22 @@ RUNTIME = re.compile(r"^(IF@|__)")                       # compiler-generated / 
 RUNTIME_EVIDENCE = re.compile(r"libscan|\.LIB\b|probe", re.I)
 
 
+def claim_index(have):
+    """name -> (canonical name, address) for every canonical name and recorded alias of one section; refuses an
+    index in which one name is claimed at two addresses."""
+    claims = {}
+    for k, v in have.items():
+        for n in [k] + list(v.get("aliases", [])):
+            c = (k, norm(v["addr"]))
+            if n in claims and claims[n][1] != c[1]:
+                raise SystemExit(f"contradictory bindings: {n} claimed by {claims[n][0]} at {claims[n][1]} and by "
+                                 f"{k} at {c[1]}")
+            claims.setdefault(n, c)
+    return claims
+
+
 def merge_symbols(overlay, renames):
+    """Merge an overlay. A rename OLD=NEW onto an existing NEW at the same address records OLD as NEW's alias."""
     canon = load_json(CONFIG / "symbols.json")
     ov = load_json(overlay)
     added = 0
@@ -97,18 +112,22 @@ def merge_symbols(overlay, renames):
         for sec in ("functions", "data"):
             have = dst.setdefault(sec, {})
             by_addr = {norm(v["addr"]): k for k, v in have.items()}
-            alias = {a: (k, norm(v["addr"])) for k, v in have.items() for a in v.get("aliases", [])}
-            for name, ent in secs.get(sec, {}).items():
-                name = renames.get(name, name)
+            claims = claim_index(have)
+            for oname, ent in secs.get(sec, {}).items():
+                if "aliases" in ent:
+                    raise SystemExit(f"overlay entry {oname} carries aliases; only tools/integrate.py --rename "
+                                     "records aliases")
+                name = renames.get(oname, oname)
                 ent = dict(ent, addr=norm(ent["addr"]))
-                if name in alias:          # recorded alias of an existing binding (tools/integrate.py --rename)
-                    if alias[name][1] != ent["addr"]:
-                        raise SystemExit(f"conflict: {name} is an alias of {alias[name][0]} at {alias[name][1]}, "
+                if oname != name and oname in claims and claims[oname][1] != ent["addr"]:
+                    raise SystemExit(f"conflict: {oname} already claimed by {claims[oname][0]} at {claims[oname][1]}")
+                if name in claims:
+                    if claims[name][1] != ent["addr"]:
+                        raise SystemExit(f"conflict: {name} claimed by {claims[name][0]} at {claims[name][1]}, "
                                          f"overlay {ent['addr']}")
-                    continue
-                if name in have:
-                    if norm(have[name]["addr"]) != ent["addr"]:
-                        raise SystemExit(f"conflict: {name} bound to {have[name]['addr']}, overlay {ent['addr']}")
+                    if oname != name and oname not in claims:      # explicit rename: keep the old name claimed
+                        have[claims[name][0]].setdefault("aliases", []).append(oname)
+                        claims[oname] = claims[name]
                     continue
                 if ent["addr"] in by_addr:
                     raise SystemExit(f"conflict: {ent['addr']} already bound as {by_addr[ent['addr']]}, overlay {name}")
@@ -116,6 +135,8 @@ def merge_symbols(overlay, renames):
                     raise SystemExit(f"refusing runtime/compiler name {name}: needs library-member or compile-probe "
                                      "evidence (libscan, .LIB member, probe), not 'the target of my own call'")
                 have[name] = ent
+                by_addr[ent["addr"]] = name
+                claims[name] = (name, ent["addr"])
                 added += 1
     bad = overlaps(canon) + android_mismatches(canon)
     if bad:

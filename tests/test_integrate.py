@@ -64,6 +64,61 @@ class IntegrateBindingTests(unittest.TestCase):
         promote.merge_symbols(ov(self.tmp / "d.json", "IF@DCOS", "1:70899", "libscan: MATH3R.LIB sincos+0x26c"), {})
         self.assertEqual(self.bound()["IF@DCOS"]["addr"], "1:70899")
 
+    def test_alias_cannot_move(self):
+        # review R1: an established alias must not be re-recorded onto another binding at another address
+        promote.merge_symbols(ov(self.tmp / "c.json", "cos", "1:70899"), {})
+        a = ov(self.tmp / "a.json", "IF@DSIN", "1:70872", "libscan MATH3R.LIB member")
+        integrate.apply_renames(a, [], {"IF@DSIN": "sin"}, self.cfg)
+        b = ov(self.tmp / "b.json", "IF@DSIN", "1:70899", "libscan MATH3R.LIB member")
+        with self.assertRaises(SystemExit):
+            integrate.apply_renames(b, [], {"IF@DSIN": "cos"}, self.cfg)
+        self.assertNotIn("aliases", self.bound()["cos"])
+
+    def test_promote_rename_records_alias(self):
+        # review R1: the public promote --rename path must keep the old name claimed too
+        promote.merge_symbols(ov(self.tmp / "a.json", "IF@DSIN", "1:70872", "libscan"), {"IF@DSIN": "sin"})
+        self.assertEqual(self.bound()["sin"]["aliases"], ["IF@DSIN"])
+        with self.assertRaises(SystemExit):
+            promote.merge_symbols(ov(self.tmp / "b.json", "IF@DSIN", "1:70899", "libscan"), {})
+
+    def test_two_new_names_at_one_address_refused(self):
+        # review R8: duplicates inside one overlay
+        p = self.tmp / "d.json"
+        p.write_text(json.dumps({"gog_v121_us": {"functions": {"a": {"addr": "1:12345"}, "b": {"addr": "1:12345"}},
+                                                 "data": {}}}))
+        with self.assertRaises(SystemExit):
+            promote.merge_symbols(p, {})
+        self.assertNotIn("a", self.bound())
+
+    def test_overlay_may_not_carry_aliases(self):
+        p = self.tmp / "e.json"
+        p.write_text(json.dumps({"gog_v121_us": {"functions": {"x": {"addr": "1:1", "aliases": ["sin"]}},
+                                                 "data": {}}}))
+        with self.assertRaises(SystemExit):
+            promote.merge_symbols(p, {})
+
+    def test_cli_rejects_unsafe_pairs(self):
+        # review R5/R11: path-escaping unit names and a second value after --rename are refused before any write
+        for argv in (["w", "../outside=u.c", "--new", "-m", "x"], ["w", "u=../u.c", "-m", "x"],
+                     ["w", "u=u.c", "--rename", "A=B", "C=D.c", "-m", "x"]):
+            with self.assertRaises(SystemExit):
+                integrate.parse(argv)
+
+    def test_readonly_destination_restored(self):
+        # review R2: a read-only file must not defeat rollback
+        import os
+        import stat
+        f = self.tmp / "ro.c"
+        f.write_text("ORIGINAL")
+        os.chmod(f, stat.S_IREAD)
+        w = integrate.Writes()
+        w.touch(f)
+        f.write_text("CANDIDATE")
+        os.chmod(f, stat.S_IREAD)
+        self.assertEqual(w.restore(), [])
+        self.assertEqual(f.read_text(), "ORIGINAL")
+        os.chmod(f, stat.S_IWRITE | stat.S_IREAD)
+
     def test_failure_restores_only_written_files(self):
         keep = self.tmp / "other_agent.c"           # not written by this run: must survive a restore
         keep.write_text("work in progress")
