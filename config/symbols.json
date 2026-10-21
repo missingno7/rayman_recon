@@ -7532,6 +7532,251 @@
     "addr": "1:754e3",
     "name": "INVENTED",
     "evidence": "DOS disassembly call target at 1:754e3; address-based helper label."
+   },
+   "PcMain": {
+    "addr": "1:08420",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "get_avail_memory": {
+    "addr": "1:6f3b0",
+    "name": "INVENTED",
+    "evidence": "DOS InitMemoryVariable calls this zero-argument helper and uses its EAX result as available bytes; disassembly ends with load from 2:32190 and RET"
+   },
+   "DrawFondBoxNormal": {
+    "addr": "1:04b2c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "AfficheEntete": {
+    "addr": "1:08290",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_CLING": {
+    "addr": "1:09060",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "display_bar_boss": {
+    "addr": "1:091a8",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DoSpiderPoingCollision": {
+    "addr": "1:0cdb0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_TEXT_FEE": {
+    "addr": "1:0af1c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_POING": {
+    "addr": "1:09048",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DISPLAY_POINT": {
+    "addr": "1:09864",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_PTS_TO": {
+    "addr": "1:0987c",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "init_arg": {
+    "addr": "1:07cb8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_SPIDER_PLAFOND": {
+    "addr": "1:0c160",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "allocateDard": {
+    "addr": "1:0cc50",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "display_grp_stars": {
+    "addr": "1:0ae50",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "AllocVariablesAutorisee": {
+    "addr": "1:08228",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_DARD_PLAFOND_ALWAYS": {
+    "addr": "1:0c75c",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "main_Ray": {
+    "addr": "1:0836c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DisplayCrackers": {
+    "addr": "1:093a8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "display_etoile": {
+    "addr": "1:0ad38",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "display_flocons_behind": {
+    "addr": "1:09d2c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "InitMemoryVariable": {
+    "addr": "1:07f00",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "adjustBossScrollLocker": {
+    "addr": "1:08b4c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "display_flocons_before": {
+    "addr": "1:09f08",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_SPIDER_TIR": {
+    "addr": "1:0cc24",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DisplayProgrammerMessage": {
+    "addr": "1:093e4",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "SPIDER_PLAFOND_REACT": {
+    "addr": "1:0c6a0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "InitData": {
+    "addr": "1:06f80",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_SPIDER_COMMAND": {
+    "addr": "1:0cac4",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DrawWldPointPlan2Normal": {
+    "addr": "1:04ac1",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SPIDER_PLAFOND_POING_COLLISION": {
+    "addr": "1:0c588",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DoSpiderRaymanZDD": {
+    "addr": "1:0ce70",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "display_time": {
+    "addr": "1:0b56c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_GROS_MOTEUR_NORMAL": {
+    "addr": "1:07084",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_MAIN_LOOP_PC_NORMAL": {
+    "addr": "1:070e0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_GROS_MOTEUR_X": {
+    "addr": "1:076a8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DO_MAIN_LOOP_PC_X": {
+    "addr": "1:077e0",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "PrintDosInfo": {
+    "addr": "1:07dd8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "display_sprite_NoClip": {
+    "addr": "1:08f7c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_FIXE": {
+    "addr": "1:09420",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DISPLAY_CYMBALE": {
+    "addr": "1:098f4",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DISPLAY_ALL_OBJECTS": {
+    "addr": "1:09a2c",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "display_pix_gerbes": {
+    "addr": "1:0a110",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DISPLAY_OPTIONS_POING": {
+    "addr": "1:0b4ac",
+    "name": "PS1",
+    "evidence": "tools/disasm.py exact function header; ps1 name"
+   },
+   "DISPLAY_YESNO_POING": {
+    "addr": "1:0b53c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "AFFICHE_SPRITE_DEFORME": {
+    "addr": "1:0b944",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_DEFORMATION": {
+    "addr": "1:0bbc4",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "DISPLAY_DEFORM_SPRITE": {
+    "addr": "1:0bea8",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
+   },
+   "CALCUL_DEFORMATION": {
+    "addr": "1:0c030",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name"
    }
   },
   "data": {
@@ -13857,6 +14102,54 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c address; Android .bss size 1; DOS load_level direct accesses. See NOTES.md."
+   },
+   "HVersionWindows": {
+    "addr": "2:3fa0e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA0E; Android size 1; DOS InitMemoryVariable byte accesses"
+   },
+   "NVersionWindows": {
+    "addr": "2:3fa0f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA0F; Android size 1; DOS InitMemoryVariable byte accesses"
+   },
+   "TheProcesseur": {
+    "addr": "2:3fa26",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA26; Android size 1; DOS InitMemoryVariable byte loads"
+   },
+   "cb_ball_obj_id": {
+    "addr": "2:3f814",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c s16 cb_ball_obj_id at CF814; Android symbol size 2; DOS DISPLAY_FIXE short load from CF812 plus sar 16 confirms true start CF814"
+   },
+   "init_data_state": {
+    "addr": "2:321c0",
+    "type": "init_data_state_t",
+    "name": "INVENTED",
+    "evidence": "DOS InitData stores x/y shorts at +0/+2 and dwords at +4/+8/+0xc/+0x10; true contiguous start is 2:321c0, ending at planar_copy_offset 2:321d4"
+   },
+   "DosDetect": {
+    "addr": "2:3fa11",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA11; Android size 1; DOS PrintDosInfo byte load"
+   },
+   "HVerDos": {
+    "addr": "2:3fa16",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA16; Android size 1; DOS PrintDosInfo byte load"
+   },
+   "LVerDos": {
+    "addr": "2:3fa1b",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c CFA1B; Android size 1; DOS PrintDosInfo byte load"
    }
   }
  }
