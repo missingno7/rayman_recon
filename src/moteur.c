@@ -126,10 +126,6 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old);
 #ifndef ashl16
 #define ashl16(v, b) ((v) << (b))
 #endif
-#ifndef ashr16
-
-#endif
-
 #define ACTIVE_ALIVE 0
 #define ACTIVE_DEAD 1
 #define BLOCK_FULLY_SOLID 0
@@ -425,6 +421,7 @@ extern obj_t *lidol_source_obj;
 extern u8 lidol_to_allocate;
 extern u8 ray_Suphelico_bis;
 extern s16 ray_zdc_h;
+extern s16 ray_zdc_y;
 #define world_1_jungle 1
 extern u8 ModeDemo;
 extern u8 fin_dark;
@@ -1123,7 +1120,7 @@ void SET_X_SPEED(obj_t* obj) {
             xspeed = eta->speed_x_left * horloge_index;
         }
         if (obj->type == TYPE_23_RAYMAN && RayEvts.tiny) {
-            xspeed /= 2;
+            xspeed = ashr16((s16)xspeed, 1);
         }
     }
     obj->speed_x = (s16)xspeed;
@@ -1220,12 +1217,6 @@ u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4)
             case TYPE_DESTROYING_DOOR:
                 if (((u16) (obj->y - 50) > 320) || !IsBossThere)
                 {
-                    if (ray.follow_id == obj->id)
-                    {
-                        ray.follow_id = -1;
-                        obj->ray_dist = 1000;
-                        set_main_and_sub_etat(&ray, 2, 2);
-                    }
                     unk_1 = 2;
                 }
                 else
@@ -1827,7 +1818,7 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
         else if (obj->speed_x < 0)
             obj->speed_x += accel_x;
 
-        if (obj->speed_x >= -speed_x_bnd && obj->speed_x <= speed_x_bnd)
+        if (inrange(obj->speed_x, -speed_x_bnd, speed_x_bnd))
             obj->speed_x = 0;
 
         under = underSlope(obj);
@@ -2434,7 +2425,7 @@ void MOVE_OBJECT(obj_t* obj) {
                 x2 = x1 + dx;
                 y = obj->y + obj->offset_by - 8;
                 if ((!(block_flags[BTYP(x1 >> 4, y >> 4)].raw & 0x10) && (block_flags[BTYP(x2 >> 4, y >> 4)].raw & 0x10)) ||
-                        x2 < 0 || (x2 > xmapmax + SCREEN_WIDTH - 16)) {
+                        !inrange(x2, 0, xmapmax + SCREEN_WIDTH - 16)) {
                     dx = -dx;
                     obj->speed_x = -obj->speed_x;
                 }
@@ -2675,11 +2666,12 @@ void RECALE_ALL_OBJECTS(void)
     i = 0;
     cur_obj = &level.objects[actobj.objects[0]];
 
-    while (i < actobj.num_active_objects)
-    {
-        calc_obj_pos(cur_obj);
-        i++;
-        cur_obj = &level.objects[actobj.objects[i]];
+    if (i < actobj.num_active_objects) {
+        do {
+            i++;
+            calc_obj_pos(cur_obj);
+            cur_obj = level.objects + actobj.objects[i];
+        } while (i < actobj.num_active_objects);
     }
 
     if (ray.follow_id != -1)
@@ -2689,6 +2681,12 @@ void RECALE_ALL_OBJECTS(void)
         {
             GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &x, &y, &w, &h);
             ray.y = y + cur_obj->offset_hy - ray.offset_by;
+            if (cur_obj->type == 254) {
+                s32 dx;
+
+                dx = (ray.x + ray.offset_bx) - ((x >> 1) + w);
+                ray.y -= ashr16((s16)((s8)cur_obj->change_anim_mode * dx), 4);
+            }
             calc_obj_pos(&ray);
         }
     }
@@ -2821,7 +2819,7 @@ void recale_ray_pos(void) {
     if (scroll_y == -1) {
     s16 unk_y_1;
 
-        unk_y_1 = ((ray_zdc_h >> 1) - ray.offset_by) + 114; // 136 in the PS1 version
+        unk_y_1 = ((ray_zdc_y >> 1) - ray.offset_by) + 114; // 136 in the PS1 version
         if ((ray.main_etat == 2 && !(ray.sub_etat == 15 && ray_Suphelico_bis)) || screen_trembling) {
             if ((ymap != scroll_end_y && (unk_y_1 < ray.screen_y - ray.speed_y) && ray.speed_y > 0) ||
                 (ymap != scroll_start_y && (-ray.offset_hy - 16 >= ray.screen_y) && ray.speed_y < 0))
@@ -3228,7 +3226,7 @@ void INIT_RAY(u8 new_lvl) {
 
     if (level.objects && level.nb_objects > 0) {
     obj_t * obj;
-    s32 i;
+        s32 i;
     s32 found;
 
         obj = level.objects;
@@ -3273,9 +3271,11 @@ void INIT_RAY(u8 new_lvl) {
     } else {
     s32 i;
 
- for (i = 0; i < 5; ++i) {
-            ray.btypes[i] = 0;
-        }
+        i = 0;
+        do {
+            ++i;
+            ray.btypes[i - 1] = 0;
+        } while (i < 5);
     }
 }
 
@@ -3451,10 +3451,17 @@ void DO_AUTO_SCROLL(void) {
 }
 
 void INIT_MOTEUR(u8 new_lvl) {
-    s32 i;
+    s16 i;
+    obj_t *obj;
 
- for (i = 0; i < level.nb_objects; ++i) {
-        level.objects[i].field_1C = 0;
+    i = 0;
+    obj = level.objects;
+    if (i < level.nb_objects) {
+        do {
+            ++obj;
+            ++i;
+            obj[-1].field_1C = 0;
+        } while (i < level.nb_objects);
     }
 
     memset(pix_gerbe, 0, sizeof(pix_gerbe));
