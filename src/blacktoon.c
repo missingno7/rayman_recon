@@ -252,7 +252,8 @@ void DoBlackToonRaymanZDD(obj_t* obj) {
             break;
         case 4:
             if (ray.main_etat != 2) {
-                s16 blkt_x, blkt_y, blkt_w, blkt_h;
+                /* DOS output slots: H +0, Y +4, W +8, X +12. */
+                s16 blkt_h, blkt_x, blkt_y, blkt_w;
                 GET_ANIM_POS(obj, &blkt_x, &blkt_y, &blkt_w, &blkt_h);
                 blkt_y -= obj->detect_zone + blkt_h;
                 blkt_x -= blkt_w >> 1;
@@ -261,9 +262,10 @@ void DoBlackToonRaymanZDD(obj_t* obj) {
                 if (obj->main_etat == 1 && obj->sub_etat == 0
                         && inter_box(blkt_x, blkt_y, blkt_w, blkt_h, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y)
                 ) {
-                    calc_obj_dir(obj);
-                    obj->param = ray_zdc_y - obj->offset_hy;
+                    /* DOS 1:136d6 reads 2:3f862, the existing ray_zdc_h binding. */
+                    obj->param = ray_zdc_h - obj->offset_hy;
                     if (obj->param < obj->y - 16) {
+                        calc_obj_dir(obj);
                         skipToLabel(obj, 4, true);
                         obj->gravity_value_1 = 0;
                         obj->gravity_value_2 = 6;

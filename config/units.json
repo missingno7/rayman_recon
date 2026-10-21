@@ -588,7 +588,7 @@
      ]
     },
     "DoBlackToonPoingCollision": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -596,7 +596,7 @@
      ]
     },
     "DoBlackToonRaymanZDD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
