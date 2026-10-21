@@ -12170,6 +12170,49 @@
     "_DATA2": "VERIFIED",
     "_DATA3": "VERIFIED"
    }
+  },
+  "lowlevel_03125": {
+   "source": "src\\lowlevel_03125.asm",
+   "oracle": "gog_v121_us",
+   "profile": "asm",
+   "functions": {
+    "draw_blackbox": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "draw_borderbox": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "asm_03257": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "asm_037e4": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "asm_03912": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "asm_03ea1": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

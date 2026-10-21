@@ -8587,6 +8587,11 @@
     "addr": "1:2b0f4",
     "name": "INVENTED",
     "evidence": "Address-derived label; frame-header read at DOS 1:2b0f4..2b135."
+   },
+   "asm_02b30": {
+    "addr": "1:02b30",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly at 1:02b30..1:02b3c independently shows a complete callable helper ending in RET; called by draw_borderbox at 1:03227 and 1:03241."
    }
   },
   "data": {
@@ -15601,6 +15606,18 @@
     "size": 4,
     "name": "INVENTED",
     "evidence": "DOS data_refs.json: direct dword store/load at 1:06eaa, 1:06f25, 1:06f54."
+   },
+   "mask_0311d": {
+    "addr": "1:0311d",
+    "type": "u8[4]",
+    "name": "INVENTED",
+    "evidence": "DOS byte read at 1:03159 indexes this table by EAX&3; address fixup is 1:0315b. Four-byte extent follows the proven 0..3 index range."
+   },
+   "mask_03121": {
+    "addr": "1:03121",
+    "type": "u8[4]",
+    "name": "INVENTED",
+    "evidence": "DOS byte reads at 1:0316d and 1:031d7 index this table by ECX&3/EAX&3; address fixups at 1:0316f and 1:031d9. Four-byte extent follows the proven 0..3 index range."
    }
   }
  }
