@@ -1,6 +1,6 @@
 /*
  * Collision engine, first object (GOG v1.21 1:1b2d0-1:1f1e0). File name invented (Rayverse collision.c).
- * Names: Rayverse/Android. Worker status: 24/37 STRICT; see NOTES.md.
+ * Names: Rayverse/Android. Worker status: 25/37 STRICT; see NOTES.md.
  * Whole-object layout remains unresolved. No promotion is claimed.
  */
 #include "obj.h"
@@ -205,7 +205,7 @@ s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1, s16 x_2, s16 y_2, s32 w_2, s32
 //2B48C
 void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
     s16 anim_x; s16 anim_y; s16 anim_w; s16 anim_h;
-    s32 inset;
+    s16 inset;
     s16 old_flip_x;
     s16 bc_x_pos;
     s16 new_x;
