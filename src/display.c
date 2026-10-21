@@ -1,4 +1,4 @@
-/* display: original object 1:240f0..1:25f49. Worker gfin_display; see NOTES.md for measured status.
+/* display: original object 1:240f0..1:25f49. Worker c3_display; see NOTES.md for measured status.
  * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_t are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -61,7 +61,7 @@ void END_LOADER_ANIM(void);
 void DO_GROS_RAYMAN(void);
 s32 loader_anim_prg(u32 a1);
 void START_LEVEL_ANIM(void);
-s16 saisie_nom_prg(u32 a1);
+s16 saisie_nom_prg(s16 a1);
 s16 selection_save_option_prg(u32 a1);
 void DO_SAVE_CHOICE(void);
 void AFFICHE_ECRAN_SAVE(void);
@@ -296,7 +296,9 @@ void DO_CONTINUE(void)
     }
 }
 
-s16 saisie_nom_prg(u32 a1)
+/* The incoming callback value is discarded; the word formal is reused for completion.
+ * DOS 1:242b2..242cf computes it before the optional name restoration. */
+s16 saisie_nom_prg(s16 a1)
 {
     readinput();
     button_released = ButtonReleasedSav3;
@@ -318,20 +320,14 @@ s16 saisie_nom_prg(u32 a1)
         sortie_save = 1;
 
     {
-        u8 done;
-        if (fin_saisie_nom != 0)
-            done = 1;
-        else if (MENU_RETURN != 0)
-            done = 1;
-        else
-            done = 0;
+        a1 = fin_saisie_nom || MENU_RETURN;
         if (MENU_RETURN) {
             if (action == 1)
                 strcpy(save_ray[fichier_selectionne - 1], save_ray_copy);
             else
                 strcpy(save_ray[fichier_selectionne - 1], "");
         }
-        return done;
+        return a1;
     }
 }
 
@@ -1135,3 +1131,4 @@ void PouvoirsParMap(u8 world, u8 level)
     finBosslevel.helped_musician = world < 3 || (world == 3 && level <= 6) ? 0 : 1;
     finBosslevel.helped_joe_2 = world < 5 || (world == 5 && level <= 6) ? 0 : 1;
 }
+
