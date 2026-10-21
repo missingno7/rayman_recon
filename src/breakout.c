@@ -1086,8 +1086,6 @@ void DO_CB_BRIK_COMMAND(obj_t *obj)
 
 void DO_RAY_CASSE_BRIQUE(void)
 {
-    s32 speed;
-    s32 limit;
     if ((ray.main_etat == 0 && ray.sub_etat == 4) ||
         (ray.main_etat == 1 && ray.main_etat == ray.sub_etat)) {
         if (rightjoy()) {
@@ -1099,10 +1097,7 @@ void DO_RAY_CASSE_BRIQUE(void)
                 set_main_and_sub_etat(&ray, 1, 1);
                 ray.speed_x = 16;
             } else {
-                speed = ray.speed_x + 1;
-                limit = 47;
-                if (limit > speed) limit = speed;
-                ray.speed_x = limit;
+                ray.speed_x = min32(47, ray.speed_x + 1);
             }
         } else if (leftjoy()) {
             if (ray.flags.flip_x) {
@@ -1113,23 +1108,14 @@ void DO_RAY_CASSE_BRIQUE(void)
                 set_main_and_sub_etat(&ray, 1, 1);
                 ray.speed_x = -16;
             } else {
-                speed = ray.speed_x - 1;
-                limit = -47;
-                if (limit < speed) limit = speed;
-                ray.speed_x = limit;
+                ray.speed_x = max32(-47, ray.speed_x - 1);
             }
         } else {
             if (ray.speed_x > 0) {
-                speed = ray.speed_x - 1;
-                limit = 0;
-                if (limit < speed) limit = speed;
-                ray.speed_x = limit;
+                ray.speed_x = max32(0, ray.speed_x - 1);
             }
             else if (ray.speed_x < 0) {
-                speed = ray.speed_x + 1;
-                limit = 0;
-                if (limit > speed) limit = speed;
-                ray.speed_x = limit;
+                ray.speed_x = min32(0, ray.speed_x + 1);
             }
             if (ABS((s32)ray.speed_x) < 16) set_main_and_sub_etat(&ray, 0, 4);
         }
