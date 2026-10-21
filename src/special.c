@@ -771,10 +771,10 @@ obj_t* oldest_planted(void) {
         cnt_1++;
     }
 
-    cnt_2 = 0;
-    unk_1 = ng_ids[cnt_2];
+    unk_1 = ng_ids[0];
     cur_obj = &level.objects[unk_1];
     cnt_1 = unk_1;
+    cnt_2 = 0;
     while (cnt_2 < LEN(ng_ids)) {
         if (level.objects[cnt_1].iframes_timer > level.objects[unk_1].iframes_timer) {
             unk_1 = cnt_1;
