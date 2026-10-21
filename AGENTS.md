@@ -22,6 +22,12 @@ Hard rules
   bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first).
   Allowed: `#pragma aux NAME parm [...] value [...] modify [...]` that only declares the register ABI of an external
   hand-written assembly routine (e.g. DisplayAnyPictureNormal, proven from its DOS callers) - no code in pragmas.
+  Allowed (user decision 2026-10-21), evidence-gated: a Watcom `#pragma aux NAME = ...` inline-code sequence ONLY
+  for instructions plain C cannot generate (debug/control registers DR0-DR7/CRn, INT n/INT3, STI/CLI, IN/OUT and
+  port string ops, LGDT-class system instructions), when the DOS bytes show them inline inside a C function. Each
+  pragma: the exact instruction sequence from the DOS disassembly (cite address), its register effects declared,
+  one pragma per sequence, named after its purpose, and a comment marking it ORIGINAL_INLINE. Never use an inline
+  pragma for anything C can express (arithmetic, loads/stores, calls, branches) or to patch register allocation.
 - Bind every global at its true start with its true type (one address = one symbol). wcc386 -5 loads a `short`
   as `mov r,[x-2]; sar r,16` (fixup field -2) by itself; never declare a wider type or a shifted alias to get bytes.
 - Zero regression: `python tools/verify.py` must stay at 0 regressions; `python -m unittest discover -s tests` must
