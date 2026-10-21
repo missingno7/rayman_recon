@@ -8427,6 +8427,166 @@
     "addr": "1:2b274",
     "name": "INVENTED",
     "evidence": "DOS call target 1:2b495; address-derived local name because no Rayverse or Android symbol was identified"
+   },
+   "sub_3A1C0": {
+    "addr": "1:2a1c0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; entry decoded at DOS 1:2a1c0."
+   },
+   "sub_3A1E0": {
+    "addr": "1:2a1e0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; entry decoded at DOS 1:2a1e0."
+   },
+   "sub_3A1EC": {
+    "addr": "1:2a1ec",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; BIOS int386 call at DOS 1:2a203."
+   },
+   "sub_3A214": {
+    "addr": "1:2a214",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; BIOS int386 call at DOS 1:2a228."
+   },
+   "sub_3A238": {
+    "addr": "1:2a238",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; video initialization entry at DOS 1:2a238."
+   },
+   "sub_3A2AC": {
+    "addr": "1:2a2ac",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; tail dispatch to set_vga_frequency at DOS 1:2a2bd."
+   },
+   "sub_3A2C4": {
+    "addr": "1:2a2c4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; returns field at argument offset +4."
+   },
+   "sub_3A2C8": {
+    "addr": "1:2a2c8",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; returns field at argument offset +8."
+   },
+   "sub_3A2CC": {
+    "addr": "1:2a2cc",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; pixel store at DOS 1:2a2d4."
+   },
+   "sub_3A2D8": {
+    "addr": "1:2a2d8",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; row copy and ret 4 at DOS 1:2a307."
+   },
+   "sub_3A30C": {
+    "addr": "1:2a30c",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; row fill and ret 4 at DOS 1:2a349."
+   },
+   "sub_3A34C": {
+    "addr": "1:2a34c",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; 16-bit row fill at DOS 1:2a34c..2a3b5."
+   },
+   "sub_3A3B8": {
+    "addr": "1:2a3b8",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; palette scaling and bounds updates at DOS 1:2a3b8..2a426."
+   },
+   "sub_3A428": {
+    "addr": "1:2a428",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; palette copy and bounds updates at DOS 1:2a428..2a487."
+   },
+   "sub_3A488": {
+    "addr": "1:2a488",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; timer port sequence at DOS 1:2a488..2a4a3."
+   },
+   "sub_3A4A4": {
+    "addr": "1:2a4a4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; timer port sequence at DOS 1:2a4a4..2a4b7."
+   },
+   "sub_3A4B8": {
+    "addr": "1:2a4b8",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; BIOS int 1Ah and PIT reads at DOS 1:2a4b8..2a514."
+   },
+   "sub_3A518": {
+    "addr": "1:2a518",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; multiply/divide and timer call at DOS 1:2a518..2a535."
+   },
+   "sub_3A538": {
+    "addr": "1:2a538",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; open call at DOS 1:2a541."
+   },
+   "sub_3A55C": {
+    "addr": "1:2a55c",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; _dos_read call at DOS 1:2a565."
+   },
+   "sub_3A578": {
+    "addr": "1:2a578",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; chunked read loop at DOS 1:2a586..2a5b2."
+   },
+   "sub_3A664": {
+    "addr": "1:2a664",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; callback loop and palette bounds at DOS 1:2a664..2a6cd."
+   },
+   "sub_3A6D0": {
+    "addr": "1:2a6d0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; callback target 1:2a3b8 at DOS 1:2a6d1."
+   },
+   "sub_3A6E0": {
+    "addr": "1:2a6e0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; callback target 1:2a428 at DOS 1:2a6e1."
+   },
+   "sub_3A6F0": {
+    "addr": "1:2a6f0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; encoded scanline decoder at DOS 1:2a6f0..2a7b2."
+   },
+   "sub_3A7B4": {
+    "addr": "1:2a7b4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; packet scanline decoder at DOS 1:2a7b4..2a89e."
+   },
+   "sub_3A8A0": {
+    "addr": "1:2a8a0",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; delta scanline decoder at DOS 1:2a8a0..2a99f."
+   },
+   "sub_3A9F4": {
+    "addr": "1:2a9f4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; 0x3e80-dword clear loop at DOS 1:2a9f4..2aa04."
+   },
+   "sub_3AA08": {
+    "addr": "1:2aa08",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; row copy loop at DOS 1:2aa08..2aa49."
+   },
+   "sub_3ABE4": {
+    "addr": "1:2abe4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; chunk dispatch and audio/video work at DOS 1:2abe4..2af1a."
+   },
+   "sub_3AF20": {
+    "addr": "1:2af20",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; frame header read and decode call at DOS 1:2af20..2afb0."
+   },
+   "sub_3B0F4": {
+    "addr": "1:2b0f4",
+    "name": "INVENTED",
+    "evidence": "Address-derived label; frame-header read at DOS 1:2b0f4..2b135."
    }
   },
   "data": {
@@ -15299,6 +15459,78 @@
     "type": "u8",
     "name": "INVENTED",
     "evidence": "DOS 1:2b323..1:2b325 writes a zero byte; true one-byte type from instruction width, name is address-purpose inference."
+   },
+   "movie_saved_frequency": {
+    "addr": "2:64d8",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte stores/loads at 1:2a26d..2a27e; object2 byte at 2:064d8 is 0x3c."
+   },
+   "movie_audio_track": {
+    "addr": "2:64d9",
+    "type": "s8",
+    "name": "INVENTED",
+    "evidence": "DOS sign-extends the byte at 2:064d9 via sar eax,24 at 1:2ace1; byte-sized state."
+   },
+   "movie_audio_enabled": {
+    "addr": "2:64da",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte tests/stores at 1:2a23..2af0b; object2 byte at 2:064da."
+   },
+   "movie_audio_state": {
+    "addr": "2:64db",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte state tests/stores at 1:2ac d4..2ae14 and 1:2b028..2b1d8."
+   },
+   "movie_audio_counter": {
+    "addr": "2:64dc",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte increments/tests at 1:2ad99..2adca and 1:2b083..2b1e2."
+   },
+   "movie_audio_limits": {
+    "addr": "2:64e0",
+    "type": "s32[5][4]",
+    "name": "INVENTED",
+    "evidence": "DOS accesses four dwords at 16-byte row stride from 2:064e0; object2 bytes confirm five 16-byte rows end at 2:06530."
+   },
+   "movie_saved_mode": {
+    "addr": "2:6530",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte store at 1:2a265; object2 byte at 2:06530 is 0x3c."
+   },
+   "movie_palette_flag": {
+    "addr": "2:6531",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS byte stores at 1:2ab0f and 1:2ab53."
+   },
+   "movie_palette_xmin": {
+    "addr": "2:6534",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS dword compare/store at 1:2a408..2a410; initialization to 0x100 at 1:2a67b."
+   },
+   "movie_palette_xmax": {
+    "addr": "2:6538",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS dword compare/store at 1:2a416..2a41e; initialization to 0 at 1:2a67b."
+   },
+   "movie_draw_buffer": {
+    "addr": "2:653c",
+    "type": "u8*",
+    "name": "INVENTED",
+    "evidence": "DOS dword pointer store from DrawBufferNormal at 1:2a1c8 and load at 1:2a258."
+   },
+   "movie_next_tick": {
+    "addr": "2:6544",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS dword timer reference at 1:2ae3e and store at 1:2ae72."
    }
   }
  }
