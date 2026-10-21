@@ -1,4 +1,4 @@
-/* 1:25f50..1:27b90: cheat.c + display.c tail (level/vignette loading, init/dead/map loops, PC cheats, exit). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholders); seeded by tools/seed.py, worker tu_cheat. Vector wrappers sub_370E8/sub_37134 via Watcom _dos_setvect; the shared ISR body sub_36FAC/sub_36FBB is unresolved (__interrupt emits IRETD, DOS falls through: likely assembly, OPEN). */
+/* 1:25f50..1:27b90: cheat.c + display.c tail (level/vignette loading, init/dead/map loops, PC cheats, exit). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholders); seeded by tools/seed.py, worker tu_cheat. Vector wrappers sub_370E8/sub_37134 via Watcom _dos_setvect. Missing ISR and inline interrupt/clear spans prevent object closure; see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -57,9 +57,9 @@ void Reset_Clavier(void);
 u8 TOUCHE(u8 key);
 s16 but1pressed(void);
 void do_record(record_t *rec);
-s32 clock_ticks(void);
-void *unidentified_record_allocator(s32 size);
-void release_record(void *memory);
+u32 clock_ticks(void);
+void *temp_malloc(s32 size);
+void temp_free(void *memory);
 void *sub_6FBB4(s32 size);
 s16 CalcSpeed(void);
 u8 confirmation_msg(s32 msg);
@@ -123,11 +123,11 @@ extern rgb_palette_t current_rvb;
 extern u16 nb_fade;
 extern void start_fade_in(s16 speed, rgb_palette_t *palette);
 extern void do_fade(rgb_palette_t *from, rgb_palette_t *to);
-extern s16 display_mode;
+extern u16 display_mode;
 extern u8 need_timer;
-extern s16 word_CF7E6;
-extern s16 word_CF7EE;
-extern s16 word_CF7F0;
+extern u16 word_CF7E6;
+extern u16 word_CF7EE;
+extern u16 word_CF7F0;
 extern u32 timer_count;
 extern u32 timer_step;
 extern u32 timer_phase;
@@ -218,57 +218,54 @@ extern s16 word_E0CD0;
 
 void sub_35F70(void) {
     s32 *intervals;
-    s32 *times;
-    s32 sum;
+    u32 *times;
+    s32 sum = 0;
     s32 average;
     s32 low_limit;
     s32 high_limit;
-    s32 interval;
     s16 i;
     s16 j;
     u8 valid;
 
-    times = (s32*)unidentified_record_allocator(0xfa0);
+    times = (u32*)temp_malloc(0xfa0);
     if (times != 0) {
         for (i = 0; i < 1000; ++i) {
             for (j = 0; j < 500; ++j) {
             }
             times[i] = clock_ticks();
         }
-        intervals = (s32*)unidentified_record_allocator(0xf9c);
+        intervals = (s32*)temp_malloc(0xf9c);
         if (intervals != 0) {
             valid = 1;
-            sum = 0;
             for (i = 0; i < 999; ++i) {
-                interval = times[i + 1] - times[i];
-                intervals[i] = interval;
-                if (interval <= 0) {
+                intervals[i] = times[i + 1] - times[i];
+                if (intervals[i] <= 0) {
                     valid = 0;
                     break;
                 }
-                sum += interval;
+                sum += intervals[i];
             }
             if (valid) {
                 average = sum / 999;
-                low_limit = (average * 3) / 4;
                 high_limit = (average * 4) / 3;
+                low_limit = (average * 3) / 4;
                 for (i = 0; i < 999; ++i) {
                     if (intervals[i] < low_limit || intervals[i] > high_limit) {
                         ++valid;
                     }
                 }
-                need_timer = (valid < 10);
             }
-            release_record(intervals);
+            need_timer = (valid < 10);
+            temp_free(intervals);
         }
-        release_record(times);
+        temp_free(times);
     }
 }
 
 void sub_3609C(void) {
     s16 i;
-    s32 start_ticks;
-    s16 frame_time;
+    u32 start_ticks;
+    u32 product;
 
     if (need_timer == 0) {
         return;
@@ -283,15 +280,15 @@ void sub_3609C(void) {
         wait_until(clock_ticks() + 3000);
         synchro();
     }
-    frame_time = (s16)((clock_ticks() - start_ticks) / i);
-    word_CF7F0 = frame_time;
-    word_CF7EE = (s16)((frame_time * 31) / 32);
-    word_CF7E6 = (s16)(word_CF7EE + display_mode * frame_time);
+    word_CF7F0 = (u16)((clock_ticks() - start_ticks) / i);
+    word_CF7EE = (word_CF7F0 * 31U) / 32;
+    product = display_mode * (u32)word_CF7F0;
+    word_CF7E6 = word_CF7EE + product;
 }
 
 void InitPcSoundCard(void) {
-    s32 start_ticks;
-    s32 end_ticks;
+    u32 start_ticks;
+    u32 end_ticks;
     s32 limit;
     u8 failed = 0;
     u8 attempts = 0;
@@ -340,10 +337,10 @@ void FIRST_INIT(void) {
         FatalError("Memory error in draw_buffer.\n");
     }
     InitMatriceJumelle();
-    if (Frequence == 70) {
-        VGA_FREQ = Frequence;
-    } else {
+    if (Frequence != 70) {
         VGA_FREQ = 60;
+    } else {
+        VGA_FREQ = Frequence;
     }
     InitModeNormalWithFrequency(VGA_FREQ);
     use_sync = 1;
@@ -503,7 +500,8 @@ void LOAD_VIGNET_GAME(mem_t* mem) {
         case 5: {
             if (num_level == 3) {
                 vignet = 67;
-            } else if (num_level == 11) {
+            }
+            if (num_level == 11) {
                 vignet = 51;
             }
         } break;
@@ -518,10 +516,10 @@ void LOAD_VIGNET_GAME(mem_t* mem) {
     }
 }
 
-void LOAD_CREDITS_VIGNET(mem_t *mem1, mem_t *mem2, s16 unused)
+void LOAD_CREDITS_VIGNET(mem_t *mem1, mem_t *mem2)
 {
     s32 vignette_ids[8] = {52, 58, 55, 53, 56, 54, 59, 57};
-    s32 i;
+    u32 i;
 
     for (i = 0; i <= 3; ++i)
         SwapPlan2PlanVignInVignet(mem1, vignette_ids[i], (s16)i);
@@ -539,17 +537,17 @@ void DEPART_WORLD(void) {
     if (FondAutorise == 2) {
         P486 = 1;
     }
-    if (num_world_choice == num_world) {
+    if (num_world_choice != num_world) {
+        num_level = 0;
+        new_world = 1;
+        new_level = 1;
+    } else {
         if (get_casse_brique_active()) {
             num_level = 0;
             new_world = 1;
         } else {
             new_world = 0;
         }
-        new_level = 1;
-    } else {
-        num_level = 0;
-        new_world = 1;
         new_level = 1;
     }
     if (You_Win == 1 && num_world_choice == world_6_cake) {
@@ -571,8 +569,8 @@ void DEPART_LEVEL(void) {
         stop_cd();
     }
     sub_5BAE0();
-    new_world = 0;
     num_world = num_world_choice;
+    new_world = 0;
     new_level = 1;
     num_level = num_level_choice;
     if (!fin_du_jeu) {
@@ -587,19 +585,19 @@ void DEPART_LEVEL(void) {
                 text_x = 240;
                 text_y = 160;
             }
+            start_fade_in(2, &rvb_plan3);
             for (i = 0; i < (320 * 200) / 4; ++i) {
                 ((u32*)draw_buffer)[i] = 0;
             }
-            start_fade_in(2, &rvb_plan3);
             display_text(language_txt[149], text_x, text_y, 2, 0); // /loading../
             synchro();
             endsynchro();
             SWAP_BUFFERS();
-            do {
+            while (nb_fade != 0) {
                 endsynchro();
                 synchro();
                 do_fade(&rvb_plan3, &current_rvb);
-            } while (nb_fade != 0);
+            }
         }
 
         sub_5bbe8();
@@ -614,7 +612,7 @@ void DEPART_LEVEL(void) {
         load_level(&main_mem_level, &main_mem_sprite, level_filename);
         INIT_FND();
 
-        if (num_world_choice >= 2 && num_level >= 7) {
+        if (num_world >= 2 && num_level >= 7) {
             sub_5BF58();
         }
 
@@ -710,11 +708,13 @@ void FIN_GAME_LOOP(void) {
 }
 
 void FIN_MAP_LOOP(void) {
+    s32 cracked = JeuCracker;
     if (RayEvts.tiny) {
         RAY_DEMIRAY();
     }
-    textmode();
-    if (JeuCracker) {
+    if (cracked) {
+        /* DOS uses inline INT 10h / INT 21h here; ordinary calls remain NEAR. */
+        textmode();
         exit(0);
     }
 }
@@ -797,8 +797,8 @@ void END_WORLD_VIGNET(void) {
     memcpy(&current_rvb, &rvb_save, 768);
 }
 
-/* The two ISR entries share one assembly body: __interrupt emits an IRETD
-   after sub_36FAC's 15-byte prefix, while the DOS body continues at sub_36FBB. */
+/* sub_36FAC is one 316-byte interrupt handler.  sub_36FBB labels its C body
+   after the 15-byte compiler prefix.  Its inline DAC output remains unresolved. */
 void sub_370E8(void)
 {
     timer_phase = 0;
@@ -912,60 +912,7 @@ void PC_clear_text_input_buffer(void) {
 }
 
 void PC_init_cheats(void) {
-#if 0
-    // debug: decode cheat code table (see data.c)
-    u8 decoded_cheat_codes[327];
-    for (s32 i = 0; i < sizeof(cheat_codes); ++i) {
-        decoded_cheat_codes[i] = cheat_codes[i] ^ 0x96;
-    }
 
-    u8 letters[] = {SC_A, SC_B, SC_C, SC_D, SC_E, SC_F, SC_G, SC_H, SC_I, SC_J, SC_K, SC_L, SC_M, SC_N, SC_O,
-                    SC_P, SC_Q, SC_R, SC_S, SC_T, SC_U, SC_V, SC_W, SC_X, SC_Y, SC_Z};
-    u8 numbers[] = {SC_0, SC_1, SC_2, SC_3, SC_4, SC_5, SC_6, SC_7, SC_8, SC_9};
-
-    s32 num_lines = (327 / 10) + 1;
-    for (s32 line = 0; line < num_lines; ++line) {
-        s32 i = line * 10;
-        s32 line_len = (327 - i >= 10) ? 10 : 327 - i;
-        for (s32 j = 0; j < line_len; ++j) {
-            u8 c = decoded_cheat_codes[i+j];
-            bool printed = 0;
-            for (s32 k = 0; k < COUNT(letters); ++k) {
-                if (c == letters[k]) {
-                    printf("_(SC_%c), ", 'A'+k);
-                    printed = 1;
-                    break;
-                }
-            }
-            if (!printed) {
-                for (s32 k = 0; k < COUNT(numbers); ++k) {
-                    if (c == numbers[k]) {
-                        printf("_(SC_%c), ", '0'+k);
-                        printed = 1;
-                        break;
-                    }
-                }
-            }
-            if (!printed && c == SC_TAB) {
-                printf("_(SC_TAB), ");
-                printed = 1;
-            }
-            if (!printed && c == SC_BACKSPACE) {
-                printf("_(SC_BACKSPACE), ");
-                printed = 1;
-            }
-            if (!printed && c == SC_SPACE) {
-                printf("_(SC_SPACE), ");
-                printed = 1;
-            }
-            if (!printed) {
-                printf("_(0x%x), ", c);
-//                printf("%d, ", cheat_codes[i+j]);
-            }
-        }
-        putc('\n', stdout);
-    }
-#endif
 
 
     if (language == 1 /* french keyboard layout */) {
@@ -1022,7 +969,6 @@ void PC_init_cheats(void) {
 
 void PC_do_cheats_in_world_map(void) {
     s32 i;
-    world_info_t *world_info_entry;
     if (!need_check_cheats) {
         return;
     }
@@ -1041,15 +987,17 @@ void PC_do_cheats_in_world_map(void) {
         set_casse_brique_active();
     }
     else if (memcmp(text_input_buffer, cheat_code_lens, 4) == 0) {
-        if (JumAmpDefMul) {
-            JumAmpDefMul = 0;
-            JumAmpDefPlus = 0;
-        } else {
+        if (!JumAmpDefMul) {
             JumAmpDefMul = 26;
             JumAmpDefPlus = 32150;
+            JumelleZoomActif = 1;
+            ParamZoomChange = 1;
+        } else {
+            JumAmpDefMul = 0;
+            JumAmpDefPlus = 0;
+            JumelleZoomActif = 1;
+            ParamZoomChange = 1;
         }
-        JumelleZoomActif = 1;
-        ParamZoomChange = 1;
     }
     else if (memcmp(text_input_buffer, cheat_code_all_powers, 5) == 0 || memcmp(text_input_buffer, cheat_code_all_powers_alt, 7) == 0) {
         RayEvts.poing = 1;
@@ -1060,21 +1008,18 @@ void PC_do_cheats_in_world_map(void) {
     }
     else if (memcmp(text_input_buffer, cheat_code_unlock_all_levels, 7) == 0 || memcmp(text_input_buffer, cheat_code_unlock_all_levels_alt, 9) == 0) {
         ALL_WORLD = 0;
-        world_info_entry = t_world_info;
-        for (i = 0; i < 0x1e0; i += 20) {
-            world_info_entry = (world_info_t*)((u8*)t_world_info + i);
-            if ((world_info_entry->state & 1) == 0 && world_info_entry->field_E != world_6_cake) {
-                world_info_entry->state |= 4;
+        for (i = 0; i < 24; ++i) {
+            if (!t_world_info[i].is_unlocked && t_world_info[i].world != world_6_cake) {
+                t_world_info[i].is_unlocking = 1;
                 chemin_percent = 0;
             }
         }
         // This cheat will normally not unlock Mr Dark's Dare.
         // However, there's an exception: if you are standing on Crystal Palace, Mr Dark's Dare *WILL* unlock!
         if (num_world_choice == 14) {
-            for (i = 0; i < 0x1e0; i += 20) {
-                world_info_entry = (world_info_t*)((u8*)t_world_info + i);
-                if ((world_info_entry->state & 1) == 0) {
-                    world_info_entry->state |= 4;
+            for (i = 0; i < 24; ++i) {
+                    if (!t_world_info[i].is_unlocked) {
+                    t_world_info[i].is_unlocking = 1;
                     chemin_percent = 0;
                 }
             }
@@ -1088,11 +1033,11 @@ void PC_do_cheats_in_world_map(void) {
             if (Frequence != 80) {
                 saved_frequence = Frequence;
             }
-            Frequence = 80;
-            NewFrequency(80);
+            Frequence = 100;
+            NewFrequency(100);
         } else {
             Frequence = saved_frequence;
-            NewFrequency(saved_frequence);
+            NewFrequency(Frequence);
         }
     }
     else if (memcmp(text_input_buffer, cheat_code_freq80, 6) == 0) {
@@ -1100,11 +1045,11 @@ void PC_do_cheats_in_world_map(void) {
             if (Frequence != 100) {
                 saved_frequence = Frequence;
             }
-            Frequence = 100;
-            NewFrequency(100);
+            Frequence = 80;
+            NewFrequency(80);
         } else {
             Frequence = saved_frequence;
-            NewFrequency(saved_frequence);
+            NewFrequency(Frequence);
         }
     }
 }
@@ -1134,16 +1079,23 @@ void PC_do_cheats(void) {
             RayEvts.run = 1;
         }
     }
-    else if (memcmp(text_input_buffer, cheat_code_golden_fist, 8) == 0 || memcmp(text_input_buffer, cheat_code_golden_fist_alt, 5) == 0) {
+    else if (memcmp(text_input_buffer, cheat_code_golden_fist, 8) == 0 || memcmp(text_input_buffer, cheat_code_golden_fist_alt, 8) == 0) {
         if (!RayEvts.squashed && RayEvts.poing) {
+            u8 state;
             poing_obj->init_sub_etat = 12;
-            poing.sub_etat = poing_obj->init_sub_etat;
-            save1.poing_sub_etat = poing_obj->init_sub_etat;
-            poing_obj->sub_etat = poing_obj->init_sub_etat;
+            state = poing_obj->init_sub_etat;
+            poing.sub_etat = state;
+            save1.poing_sub_etat = state;
+            poing_obj->sub_etat = state;
         }
     }
     else if (memcmp(text_input_buffer, cheat_code_10_wiz, 6) == 0 || memcmp(text_input_buffer, cheat_code_10_wiz_alt, 5) == 0) {
-        status_bar.num_wiz = (status_bar.num_wiz + 10 < 99) ? status_bar.num_wiz + 10 : 99;
+        s32 limit = 99;
+        s32 count = status_bar.num_wiz + 10;
+        if (limit > count) {
+            limit = count;
+        }
+        status_bar.num_wiz = limit;
     }
     else if (memcmp(text_input_buffer, cheat_code_win_map, 6) == 0 || memcmp(text_input_buffer, cheat_code_win_map_alt, 6) == 0) {
         if (ray.main_etat == 0 && ray.speed_x == 0 && ray.speed_y == 0 && ray.follow_id == -1) {
@@ -1151,12 +1103,12 @@ void PC_do_cheats(void) {
         }
     }
     else if (memcmp(text_input_buffer, cheat_code_free_movement, 9) == 0) {
-        ray.follow_id = -1;
         ray_mode = -ray_mode;
+        ray.follow_id = -1;
         dead_time = 64;
         set_main_and_sub_etat(&ray, 2, 2);
     }
-    else if (memcmp(text_input_buffer, cheat_code_programmer_message, 9) == 0) {
+    else if (memcmp(text_input_buffer, cheat_code_programmer_message, 8) == 0) {
         MessageProgram = 1 - MessageProgram;
     }
 
