@@ -93,40 +93,27 @@ s16 bloc_floor(s16 btype, s16 x, s16 y) {
     }
 }
 
-u8 calc_typ_trav(obj_t* obj, u8 a2) {
-    /* 6E710 80192F10 -O2 -msoft-float */
-    s16 temp_v0_0;
-    s16 temp_v0_2;
-    s16 temp_v0_3;
-    s16 temp_v1_0;
-    s16 var_a0_2;
-    s32 temp_a0;
-    s32 temp_s0;
-    s32 var_a0_0;
-    s32 var_s0_1;
-    s32 var_s0_2;
-    s32 var_s2;
-    u8 var_s3_2;
-    s32 var_v0_1;
-    s32 var_v0_2;
-    s16 temp_s1;
-    u8 temp_v1_2;
-    u8 var_s3_1;
-    s16 test_3;
+u8 calc_typ_trav(obj_t* obj, u8 height) {
+    /* Local names INVENTED. DOS extent 1:14f60..151f8, STRICT. */
+    s16 y;
+    s16 x;
+    s16 inset;
+    s32 step;
+    u8 hits;
+    s32 result;
+    u8 btype;
 
-    var_s3_1 = a2;
-    var_v0_1 = 0;
-    var_s0_1 = 0;
+    result = 0;
+    inset = 0;
     if ((obj->type == TYPE_23_RAYMAN) && RayEvts.tiny) {
-        var_s3_1 = ashr16(a2, 1);
-        if (var_s3_1 == 0 && !(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) {
-            var_s3_1 = 1;
+        height = ashr16(height, 1);
+        if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) {
+            height = height ? height : 1;
         }
     }
-    temp_v1_0 = obj->offset_bx + (u16) obj->x;
-    temp_v0_0 = obj->offset_by + (u16) obj->y;
-    var_v0_2 = 0 << 0x10;
-    switch (BTYP((s32) temp_v1_0 >> 4, (s32) temp_v0_0 >> 4))
+    y = obj->offset_by + (u16) obj->y;
+    x = obj->offset_bx + (u16) obj->x;
+    switch (BTYP((s32) x >> 4, (s32) y >> 4))
     {
         case BTYP_NONE:
         case BTYP_CHDIR:
@@ -134,20 +121,20 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
         case BTYP_WATER:
         case BTYP_SPIKES:
         case BTYP_CLIFF:
-            var_s0_1 += 8 - (u16) obj->speed_y;
+            inset += 8 - obj->speed_y;
             break;
         case BTYP_SOLID_RIGHT_45:
         case BTYP_SLIPPERY_RIGHT_45:
             if (obj->speed_x >= 0)
             {
-                var_s0_1 += 0x11;
+                inset += 0x11;
             }
             break;
         case BTYP_SOLID_LEFT_45:
         case BTYP_SLIPPERY_LEFT_45:
             if (obj->speed_x <= 0)
             {
-                var_s0_1 += 0x11;
+                inset += 0x11;
             }
             break;
         case BTYP_SOLID_RIGHT1_30:
@@ -156,11 +143,11 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
         case BTYP_SLIPPERY_RIGHT2_30:
             if (obj->speed_x >= 0)
             {
-                var_s0_1 += 0x11;
+                inset += 0x11;
             }
             else
             {
-                var_s0_1 += 2;
+                inset += 2;
             }
             break;
         case BTYP_SOLID_LEFT1_30:
@@ -169,36 +156,21 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
         case BTYP_SLIPPERY_LEFT2_30:
             if (obj->speed_x <= 0)
             {
-                var_s0_1 += 0x11;
+                inset += 0x11;
             }
             else
             {
-                var_s0_1 += 2;
+                inset += 2;
             }
             break;
         case BTYP_RESSORT:
         case BTYP_SOLID_PASSTHROUGH:
         case BTYP_SOLID:
         case BTYP_SLIPPERY:
-            temp_v1_2 = obj->btypes[0];
-            if ((s32) temp_v1_2 >= 2)
-            {
-                if ((s32) temp_v1_2 >= 4)
-                {
-                    if ((s32) temp_v1_2 <= 0x13)
-                    {
-                        if ((s32) temp_v1_2 >= 0x12)
-                        {
-                            var_s0_1 += 8;
-                        }
-                    }
-                }
-                else
-                {
-                    var_s0_1 += 8;
-                }
-            }
-            switch (BTYP(temp_v1_0 >> 4, (temp_v0_0 - 0x10) >> 4))
+            btype = obj->btypes[0];
+            if (btype >= 2 && (btype <= 3 || (btype >= 18 && btype <= 19)))
+                inset += 8;
+            switch (BTYP(x >> 4, (y - 0x10) >> 4))
             {
                 case BTYP_NONE:
                 case BTYP_CHDIR:
@@ -206,20 +178,20 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
                 case BTYP_WATER:
                 case BTYP_SPIKES:
                 case BTYP_CLIFF:
-                    var_s0_1 += 9;
+                    inset += 9;
                     break;
                 case BTYP_SOLID_RIGHT_45:
                 case BTYP_SLIPPERY_RIGHT_45:
                     if (obj->speed_x >= 0)
                     {
-                        var_s0_1 += 0x19;
+                        inset += 0x19;
                     }
                     break;
                 case BTYP_SOLID_LEFT_45:
                 case BTYP_SLIPPERY_LEFT_45:
                     if (obj->speed_x <= 0)
                     {
-                        var_s0_1 += 0x19;
+                        inset += 0x19;
                     }
                     break;
                 case BTYP_SOLID_RIGHT1_30:
@@ -228,11 +200,11 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
                 case BTYP_SLIPPERY_RIGHT2_30:
                     if (obj->speed_x >= 0)
                     {
-                        var_s0_1 += 0x11;
+                        inset += 0x11;
                     }
                     else
                     {
-                        var_s0_1 += 2;
+                        inset += 2;
                     }
                     break;
                 case BTYP_SOLID_LEFT1_30:
@@ -241,18 +213,18 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
                 case BTYP_SLIPPERY_LEFT2_30:
                     if (obj->speed_x <= 0)
                     {
-                        var_s0_1 += 0x11;
+                        inset += 0x11;
                     }
                     else
                     {
-                        var_s0_1 += 2;
+                        inset += 2;
                     }
                     break;
                 case BTYP_LIANE:
-                    var_s0_1 += 1;
+                    inset += 1;
                     break;
                 default:
-                    var_s0_1 += 8;
+                    inset += 8;
                     break;
             }
             break;
@@ -269,29 +241,28 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
             /* on android default case has 0 */
             break;
     }
-    temp_s0 = (s16) var_s0_1;
-    var_s3_1 = var_s3_1 - ashr16(temp_s0, 4U);
-    if ((var_s3_1) > 0x80U)
+    height = height - ashr16(inset, 4U);
+    if ((height) > 0x80U)
     {
-        var_s3_1 = 0;
+        height = 0;
     }
-    ashr16(temp_v1_0, 4U);
-    ashr16(temp_v0_0 - temp_s0, 4U);
-    var_s0_2 = 0;
-    var_s2 = 0;
-    while (var_s3_1 >= var_s0_2) {
-        if ((MURDUR(temp_v1_0, (temp_v0_0 - temp_s0) - ((var_s3_1 - var_s0_2) * 0x10))) != 0)
+    /* Original discarded helper calls: DOS 1:15183 and 1:1519c. */
+    ashr16(x, 4U);
+    ashr16(y - inset, 4U);
+    step = 0;
+    hits = 0;
+    for (; step <= height; step++) {
+        if ((MURDUR(x, (y - inset) - ((height - step) * 0x10))) != 0)
         {
-            var_s2 += 1;
+            hits += 1;
         }
-        var_s0_2 += 1;
     }
 
-    if (var_s2 & 0xFF)
+    if (hits)
     {
-        var_v0_1 = 0x0000000F;
+        result = 0x0000000F;
     }
-    return var_v0_1;
+    return result;
 }
 
 u8 calc_typ_travd(obj_t* obj, u8 a2) {
