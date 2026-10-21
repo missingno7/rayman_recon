@@ -1,9 +1,10 @@
 /* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
- * Worker gfin_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
+ * Worker h_objupdate2: 48/51 STRICT, contiguous _TEXT; see NOTES.md.
  * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <stdlib.h>
 
 #define iabs(x) ((s32)(x) < 0 ? -(s32)(x) : (s32)(x))
@@ -85,21 +86,21 @@ void DO_NOVA(obj_t* obj);
 void DO_ONE_CMD(obj_t* obj);
 u8 EOA(obj_t *obj);
 void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
-u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 s16 GetY(s16 x);  /* DOS caller DO_BOUEE_JOE_COMMAND needs s16 (PROVEN by match); src/special.c still defines s32 GetY (NEAR, OPEN) */
 void INIT_FADE_OUT(void);
 s16 NOVA_STATUS_BAR(void);
 void PlaySnd(s16 snd, s16 obj_id);
-void Reset_air_speed(s16 mode);
+void Reset_air_speed(u8 mode);
 void RAY_DEMIRAY(void);
 void allocateSupHelico(obj_t *obj);
 void SET_X_SPEED(obj_t* obj);
 void add_alwobj(obj_t* obj);
 void calc_esquive_poing(obj_t* mit_obj, s16* out_diff_x, s16* out_diff_y, s16* out_unk);
-void calc_obj_dir(obj_t* obj);
+s16 calc_obj_dir(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 void correct_gendoor_link(s16 value);
-void fin_poing_follow(s16 value);
+void fin_poing_follow(u8 value);
 void fix_numlevel(obj_t *obj);
 void restoreGameState(save_state_t *state);
 void restore_gendoor_link(void);
@@ -116,7 +117,7 @@ void DO_INTERACT_PLAT(obj_t *obj);
 void manage_snd_event(void);
 void obj_hurt(obj_t* target);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
-void set_sub_etat(obj_t* obj, u8 sub_etat);
+s32 set_sub_etat(obj_t* obj, u8 sub_etat);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 void start_pix_gerbe(s16 x, s16 y);
 void take_bonus(s16 obj_id);
@@ -684,7 +685,9 @@ void DoSignPostRaymanCollision(obj_t* obj) {
 
 void TEST_SIGNPOST(void)
 {
-    if (ray.main_etat == 2 && ray.sub_etat != 8) {
+    s32 sub_not_8;
+
+    if (ray.main_etat == 2 && (sub_not_8 = ray.sub_etat != 8)) {
         if (ray.speed_x != 0 && decalage_en_cours == 0)
             ray.x -= ray.speed_x;
 
@@ -1226,26 +1229,15 @@ void DO_SLOPEY_PLAT_CMD(obj_t *obj)
     s16 sprite_w;
     s16 sign;
     s16 dist;
-    u8 shift;
-    s32 value;
-
-    value = (s8)obj->hit_points;
-    sign = value > 0 ? 1 : (value < 0 ? -1 : 0);
-    if (obj->id != ray.follow_id) {
+    sign = (s16)sgn((s8)obj->hit_points);
+    if (ray.follow_id != obj->id) {
         if (horloge[10] == 0 && obj->hit_points != 0)
             obj->hit_points -= sign;
     } else if (horloge[8] == 0) {
         GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h);
         sprite_y += obj->offset_hy;
         dist = ray.x + ray.offset_bx - (sprite_x + (sprite_w >> 1));
-        shift = 3;
-        if (dist >= 0)
-            dist >>= shift;
-        else {
-            dist = -dist;
-            dist >>= shift;
-            dist = -dist;
-        }
+        dist = ashr16(dist, 3);
         obj->hit_points -= dist;
         if (iabs((s8)obj->hit_points) >= 16)
             obj->hit_points = sign * 15;
