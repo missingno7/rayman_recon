@@ -1062,7 +1062,7 @@ void DISPLAY_FOND_MENU(void) {
     }
 }
 
-#define clip_palette_component(value) (63 < (value) ? 63 : (value))
+#define clip_palette_component(value) min32((value), 63)
 
 void InitPaletteSpecialPC(void) {
     s32 i;
@@ -1107,9 +1107,9 @@ void InitPaletteSpecialPC(void) {
             rvb_special[0].colors[i].r = clip_palette_component(rvb[0].colors[i].r);
             rvb_special[0].colors[i].g = clip_palette_component((77 * rvb[0].colors[i].g) / 100);
             rvb_special[0].colors[i].b = clip_palette_component((12 * rvb[0].colors[i].b) / 100);
-            rvb_special[14].colors[i].r = rvb_special[0].colors[i].r;
-            rvb_special[14].colors[i].g = rvb_special[0].colors[i].g;
-            rvb_special[14].colors[i].b = rvb_special[0].colors[i].b;
+            rvb_special[14].colors[i].r = clip_palette_component(rvb_special[0].colors[i].r);
+            rvb_special[14].colors[i].g = clip_palette_component(rvb_special[0].colors[i].g);
+            rvb_special[14].colors[i].b = clip_palette_component(rvb_special[0].colors[i].b);
             rvb[0].colors[i].r = rvb_special[0].colors[i].r;
             rvb[0].colors[i].g = rvb_special[0].colors[i].g;
             rvb[0].colors[i].b = rvb_special[0].colors[i].b;
