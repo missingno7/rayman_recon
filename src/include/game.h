@@ -95,9 +95,9 @@ typedef struct save_state_t {
     s16 ray_screen_x;
     s16 ray_screen_y;
     u16 ray_flip_x;
-    s16 save_obj_id;
-    s16 save_obj_x_pos;
+    s16 save_obj_x_pos;               /* +0x42..+0x46 order PROVEN by DOS saveGameState 1:63c27..1:63c50 */
     s16 save_obj_y_pos;
+    s16 save_obj_id;
     u16 link_init[256];
     u8 save_obj_detect_zone_flag;
     u8 save_obj_flag_1;

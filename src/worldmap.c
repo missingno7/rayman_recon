@@ -1346,7 +1346,7 @@ void MAIN_CONTINUE_PRG(void)
     case 28:
         if (ray.anim_frame > 40) {
             fin_continue = 1;
-            save1.save_obj_y_pos = -1;
+            save1.save_obj_id = -1;
         }
         if (ray.anim_frame > 16)
             ray.speed_x = 0;
@@ -1424,7 +1424,7 @@ void MAIN_NO_MORE_CONTINUE_PRG(void)
 
     if (PROC_EXIT) {
         fin_continue = 1;
-        save1.save_obj_y_pos = -1;
+        save1.save_obj_id = -1;
     }
 }
 

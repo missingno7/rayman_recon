@@ -5097,6 +5097,96 @@
     "addr": "1:06e0d",
     "name": "RAYVERSE",
     "evidence": "DOS direct calls from Display_Back_Screen at 1:67f3d, 1:67f8a, 1:6826e, 1:682b6, 1:685ec, 1:6864b"
+   },
+   "doneGameSave": {
+    "addr": "1:63b80",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "reset_save_zone_level": {
+    "addr": "1:64250",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "initGameSave": {
+    "addr": "1:63b80",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "get_offset_in_safe_zone": {
+    "addr": "1:641c8",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "storeWorldInfoAcces": {
+    "addr": "1:642e0",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "retrieveWorldInfoAccess": {
+    "addr": "1:6435c",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "file_size": {
+    "addr": "1:643c8",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "SaveOptionsOnDisk": {
+    "addr": "1:64cc8",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "LoadOptionsOnDisk": {
+    "addr": "1:65268",
+    "name": "RAYVERSE",
+    "evidence": "xref + disassembly"
+   },
+   "actualize_palette": {
+    "addr": "1:2c6f8",
+    "name": "RAYVERSE",
+    "evidence": "xref"
+   },
+   "GetPort": {
+    "addr": "1:2f008",
+    "name": "RAYVERSE",
+    "evidence": "DOS SaveOptionsOnDisk call + Android x86 SaveOptionsOnDisk label"
+   },
+   "GetIrq": {
+    "addr": "1:2f010",
+    "name": "RAYVERSE",
+    "evidence": "DOS SaveOptionsOnDisk call + Android x86 SaveOptionsOnDisk label"
+   },
+   "GetDma": {
+    "addr": "1:2f018",
+    "name": "RAYVERSE",
+    "evidence": "DOS SaveOptionsOnDisk call + Android x86 SaveOptionsOnDisk label"
+   },
+   "GetParam": {
+    "addr": "1:2f020",
+    "name": "RAYVERSE",
+    "evidence": "DOS SaveOptionsOnDisk call + Android x86 SaveOptionsOnDisk label"
+   },
+   "GetDeviceID_Ray": {
+    "addr": "1:2f028",
+    "name": "RAYVERSE",
+    "evidence": "DOS SaveOptionsOnDisk call + Android x86 SaveOptionsOnDisk label"
+   },
+   "sub_21b48": {
+    "addr": "1:21b48",
+    "name": "INVENTED",
+    "evidence": "DOS SaveGameOnDisk opens source/destination streams and calls this helper; it processes the save stream before status byte is read at 1:21840"
+   },
+   "sub_21d28": {
+    "addr": "1:21d28",
+    "name": "INVENTED",
+    "evidence": "DOS LoadGameOnDisk and LoadInfoGame call this inverse stream processor; followed by status getter 1:21840"
+   },
+   "sub_21840": {
+    "addr": "1:21840",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly returns byte at 2:6318; callers use it as save transform status"
    }
   },
   "data": {
@@ -9778,6 +9868,78 @@
     "name": "INVENTED",
     "type": "u8",
     "evidence": "DOS byte comparison at 1:68ea1; semantic identity OPEN"
+   },
+   "nb_floc": {
+    "addr": "2:3aeb0",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAEB0; Android size 16"
+   },
+   "VENT_X": {
+    "addr": "2:3f82a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF82A; Android size 2"
+   },
+   "VENT_Y": {
+    "addr": "2:3f828",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF828; Android size 2"
+   },
+   "Port": {
+    "addr": "2:3d040",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD040; Android size 4"
+   },
+   "DeviceID": {
+    "addr": "2:3d044",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD044; Android size 4"
+   },
+   "Irq": {
+    "addr": "2:3d048",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD048; Android size 4"
+   },
+   "Param": {
+    "addr": "2:3d04c",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD04C; Android size 4"
+   },
+   "Dma": {
+    "addr": "2:3d050",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD050; Android size 4"
+   },
+   "Mode_Pad": {
+    "addr": "2:3fa1c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA1C; Android size 1"
+   },
+   "Port_Pad": {
+    "addr": "2:3fa1e",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA1E; Android size 1"
+   },
+   "ScrollDiffOn": {
+    "addr": "2:3fa1f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA1F; Android size 1"
+   },
+   "NumCard": {
+    "addr": "2:3fa25",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA25; DOS SaveOptionsOnDisk writes one byte at 2:3fa25; Android size 1"
    }
   }
  }
