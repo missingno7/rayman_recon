@@ -8602,6 +8602,16 @@
     "addr": "1:02640",
     "name": "INVENTED",
     "evidence": "Required public at CODE offset 0 for this slice; the address-anchored CFG shows a routine from 1:02640 through RET at 1:02689. No Android symbol (python tools/android.py asm_02640) and no external entry reference in entry_refs.json."
+   },
+   "clip_sprite_on_screen": {
+    "addr": "1:0626d",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/lowlevel.c //1626D; DOS helper entry 1:0626d is directly called by sprite entries 1:066ec, 1:06a24, 1:06a9d, and 1:06bf7."
+   },
+   "clip_sprite_on_screen_flipped": {
+    "addr": "1:06323",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse external/rayverse/src/lowlevel.c //16323; DOS helper entry 1:06323 is directly called by sprite entries 1:06883, 1:06b08, 1:06b88, and 1:06c96."
    }
   },
   "data": {
@@ -15697,6 +15707,41 @@
     "name": "INVENTED",
     "type": "uint32_t",
     "evidence": "PROVEN DOS access/dataflow: 000d3..000d6 stores clipped max_y-min_y+1; 02632 decrements and 02638 branches while nonzero. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "XMIN": {
+    "addr": "1:06184",
+    "size": 4,
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c:344 address //16184 and initializer 8; Android XMIN is a 4-byte object. DOS object-1 state is initialized/read at 1:06184 and used as the left clipping limit."
+   },
+   "XMAX": {
+    "addr": "1:06188",
+    "size": 4,
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c:345 address //16188 and initializer 312; Android XMAX is a 4-byte object. DOS clipping code reads 1:06188 as the right limit."
+   },
+   "YMIN": {
+    "addr": "1:0618c",
+    "size": 4,
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c:346 address //1618C and initializer 0; Android YMIN is a 4-byte object. DOS clipping code reads 1:0618c as the top limit."
+   },
+   "YMAX": {
+    "addr": "1:06190",
+    "size": 4,
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse lowlevel.c:347 address //16190 and initializer 200; Android YMAX is a 4-byte object. DOS clipping code reads 1:06190 as the bottom limit."
+   },
+   "mode_x_sprite_state": {
+    "addr": "1:066d7",
+    "size": 8,
+    "type": "u32[2]",
+    "name": "INVENTED",
+    "evidence": "Object-1 mutable state span 1:066d7..066df is identified in w5_asmscope/REPORT.md. DOS writes the first dword at 1:066fe from saved_sprite_width and reads it at 1:06775/0686a; the second is written at 1:06741 and read at 1:0676f. Two contiguous dword slots; internal names invented."
    }
   }
  }
