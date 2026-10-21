@@ -109,4 +109,21 @@ void copy(void *destination, const void *source, u32 count);
   "shr ecx,2" \
   "rep movsd" \
   parm [edi] [esi] [ecx] modify exact [eax ecx esi edi]
+/* ORIGINAL_INLINE: DOS 1:54ffb (convertspeed), 1:6e63e (trompetteWind),
+ * 1:0c881/0c894 (DO_DARD_PLAFOND_ALWAYS), 1:238b2/238c5 (DO_DARK_SORT_COMMAND).
+ * Entire body: 98 d3 e0. AX signed input, CL count, EAX signed result.
+ * Physical writes: EAX and flags. CL is advertised destroyed: repeated
+ * loads at 1:0c88e and 1:238bf, despite no physical count-register change.
+ * Validated compiler contract: modify exact [eax cx]. CL-only and full ECX
+ * lists also pass the two proofs; the historical advertised width remains
+ * OPEN. Do not claim these two closures uniquely recover that width.
+ * STRICT: convertspeed (pmama), trompetteWind (trumpet), zero old STRICT losses.
+ * Added 2026-10-21 (user approval); derivation build/workers/w6_shl/REPORT.md.
+ * This narrow helper does not cover the bare-SHL ashl32 variant.
+ */
+s32 ashl16(s16 value, u8 shift);
+#pragma aux ashl16 = \
+  "cwde" \
+  "shl eax,cl" \
+  parm [ax] [cl] value [eax] modify exact [eax cx]
 #endif
