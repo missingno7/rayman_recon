@@ -305,8 +305,8 @@ u8 sub_38074(void)
 
 u8 sub_380A4(u8 effect, u8 value, u8 *arg3, u8 *arg4)
 {
-    u8 value_local;
     u8 effect_local;
+    u8 value_local;
     s16 scale = 1;
 
     effect_local = effect;
@@ -546,7 +546,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
     u8 effect;
 
     PC_do_cheats();
-    if (effect_pause_count < VGA_FREQ * 7) {
+    if (VGA_FREQ * 7 > effect_pause_count) {
         ++effect_pause_count;
         effect_copy_pause_band(EffetBufferNormal, DrawBufferNormal, 0xa0);
         effect_copy_pause_band(EffetBufferNormal + 0xc800,
