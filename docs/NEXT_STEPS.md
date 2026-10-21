@@ -1,18 +1,17 @@
-# Next steps (ordered by measured value)
+# Next steps (ordered by measured value, 2026-10-21)
 
-1. **Census-guided finishing passes on every first-pass unit** (docs/CENSUS.md: guided passes solved 87% / 50% of
-   NEAR functions vs ~46% unguided). Per unit: `python tools/census.py && python tools/census.py --brief UNIT`, worker
-   brief = build/workers/TEMPLATE_FINISH.md + the census section. Largest open pools: collision2 (24 NEAR), basic (22),
-   breakout (20), display (18), objupdate2 (17), meredenis (15), jumelle (13), moskito (11), input (10), bbmont (10).
-2. **New objects**: `tools/seed.py draft START END` first (unchanged), then the census-guided pass. Untouched:
-   `python tools/tumap.py --list` (menu/misc_source, moteur/neige, frame/guetteur, hifi/hybrid, load, box, effect,
-   cheat, action/pcmain, skops (3 PS1-recovered bindings ready), lowlevel assembly).
-3. **Layout closure**: REFS_LAYOUT functions (23) flip once earlier functions in their object have the right size;
-   prioritise the last NEAR function before them in each object.
-4. **Hand-written assembly ABIs**: when a unit calling a low-level routine is integrated, move its proven entry from
-   docs/reference/lowlevel_abi.h into src/include/lowlevel.h and check the call sites.
-5. **Data**: ObjectsFonctions/t_world_info pointer tables (targets now largely bound); central BSS declaration order;
-   `_DATA` object boundaries.
-6. Open compiler questions: `-oi`/`-ol`/`-om` non-discriminating so far; the DOS `CLD; REP MOVSB` copy idiom in
-   jumelle; eta_t flags bit-view (collision1 GET_OBJ_ZDC proposal, OPEN).
+1. **Low-level assembly block 1:00000-1:06f80** (~28 KB, the largest unreconstructed code): hand-written assembly
+   (ABIs proven, docs/reference/lowlevel_abi.h). Needs an assembly reconstruction path: identify the assembler
+   (Watcom WASM 10.x vs TASM/MASM from object-format and encoding evidence), then a matcher mode that assembles a
+   .asm unit and compares it under the same STRICT rules. Scope before starting; reconstruct as assembly only.
+2. **Movie prefix 1:2a1c0-1:2b288** (34 anonymous routines; worker w5_flc decides C vs assembly).
+3. **Finishing passes only with new evidence.** Most NEAR pools have had >=2 sol passes; wave-4 passes on exhausted
+   units returned in 3-9 minutes with no gain (effect1/2, cymbal/save/display, affiche, pcfee). Re-open a unit when a
+   new compiler fact appears (docs/COMPILER.md evidence log) or a layout fix lands before its NEAR functions.
+   Largest pools: moteur 32, menu 28, ray 25, frame 22, breakout 17, affiche 16, basic 13, collision1 13.
+4. **Layout closure**: each census brief names the first size-drifting function per object (W-LAYOUT); fixing it is
+   the cheapest way to flip REFS_LAYOUT functions. fnd: matching INIT_FND also fixes LOAD_FND's jump table.
+5. **OPEN compiler questions** with the widest payoff: the F3 `rep movs`/`rep stos` copy sequence (jumelle, effect1/2,
+   six effect objects; not a 10.5/10.6 difference), clamp lowering in the effect objects, materialised booleans.
+6. **Data**: ObjectsFonctions/t_world_info pointer tables; central BSS declaration order; `_DATA` object boundaries.
 7. Link stage (WLINK object order = tumap order) and v1.12 cross-version classification - later.
