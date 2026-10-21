@@ -1,5 +1,5 @@
 #include "inline_helpers.h"
-/* Worker d_effect1; partial finishing candidate, see NOTES.md.
+/* Worker d2_effect1; contiguous partial finishing candidate, see NOTES.md.
  * effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. dummy_prg is a zero-size compiler alias of dummy_scene_func (identical adjacent bodies, docs/COMPILER.md). */
 #include "obj.h"
 #include "game.h"
@@ -545,7 +545,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
     PC_do_cheats();
     /* Keep the cadence calculation for both initial-phase comparisons. */
     duration = VGA_FREQ * 7;
-    if (effect_pause_count < duration) {
+    if (duration > effect_pause_count) {
         ++effect_pause_count;
         effect_copy_pause_band(EffetBufferNormal, DrawBufferNormal, 0xa0);
         effect_copy_pause_band(EffetBufferNormal + 0xc800,
