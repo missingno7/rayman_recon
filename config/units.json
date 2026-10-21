@@ -11392,7 +11392,7 @@
      ]
     },
     "reverse_save_byte": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11428,7 +11428,7 @@
      ]
     },
     "write_save_encoded_byte": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11440,7 +11440,7 @@
      ]
     },
     "write_save_raw_byte": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11452,23 +11452,26 @@
      ]
     },
     "sub_21b48": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "sub_21d28": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
     "report_save_codec_error": {
-     "status": "NEAR_MATCH",
+     "status": "CODE_BYTES_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
    }
   },
   "effecthelp": {
