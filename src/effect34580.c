@@ -142,10 +142,9 @@ u16 effect_helper_348a4(void)
     switch (state->mode) {
     case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
         {
-            s32 source_offset;
-            s32 destination_x;
-            s32 source_x;
-            s32 width;
+            s16 source_offset;
+            s16 destination_x;
+            s16 source_x;
             if (state->mode == 1 || state->mode == 2 || state->mode == 8)
                 source_offset = distance;
             else source_offset = 0;
@@ -157,22 +156,23 @@ u16 effect_helper_348a4(void)
             if (state->mode == 7 || state->mode == 8 || state->mode == 6)
                 source_x = distance;
             else source_x = 0;
-            width = (state->mode == 1 || state->mode == 5) ? 0 : -distance;
-            width += 320;
+            if (state->mode == 1 || state->mode == 5) distance = 0;
+            else distance = -distance;
+            distance += 320;
             span = state->entries;
             for (i = 0; i < 200; ++i, ++span) {
                 span->destination_x = destination_x;
                 span->destination_y = i;
                 span->source_x = source_x;
-                span->width = width;
+                span->width = distance;
                 span->source_y = source_offset + i;
             }
         }
         break;
     case 10:
         {
-            s32 even_y = distance;
-            s32 odd_y = -distance;
+            s16 even_y = distance;
+            s16 odd_y = -distance;
             for (i = 0, j = 1; i < 200; i += 2, j += 2) {
                 span[i].destination_x = span[j].destination_x =
                     span[i].source_x = span[j].source_x = 0;
@@ -188,24 +188,25 @@ u16 effect_helper_348a4(void)
         break;
     case 11:
         {
-            s32 width = 320 - distance;
+            s16 width = 320 - distance;
             for (i = 0, j = 1; i < 200; i += 2, j += 2) {
                 span[i].destination_x = span[j].source_x = 0;
                 span[i].destination_y = span[i].source_y = i;
-                span[j].destination_x = span[i].source_x = distance;
+                span[i].source_x = span[j].destination_x = distance;
                 span[i].width = span[j].width = width;
                 span[j].destination_y = span[j].source_y = j;
             }
         }
         break;
     case 9:
-        for (i = 0; i < 200; ++i) span[i].width = 0;
+        for (i = 0; i < 200; ++i) state->entries[i].width = 0;
+        span = state->entries;
         {
-            s32 width = 320 - 2 * distance;
-            s32 source_y = 199 - distance;
+            s16 width = 320 - 2 * distance;
+            s16 source_y = 199 - distance;
             for (i = 0, j = 199; i < 100 - distance; ++i, --j) {
-                span[j].destination_x = span[j].source_x =
-                    span[i].source_y = span[i].destination_x = span[i].source_x = i + distance;
+                span[i].destination_x = span[i].source_x = span[i].source_y =
+                    span[j].destination_x = span[j].source_x = i + distance;
                 span[i].destination_y = i;
                 span[j].destination_y = j;
                 span[j].source_y = source_y;
@@ -216,21 +217,21 @@ u16 effect_helper_348a4(void)
         }
         effect_helper_34760();
         {
-            s32 width = -distance;
+            s16 width = -distance;
             for (i = 0, j = 199; i < 100; ++i, --j) {
                 span[i].destination_x = span[j].destination_x = 0;
-                span[j].source_x = span[i].source_x = distance;
+                span[i].source_x = span[j].source_x = distance;
                 span[i].destination_y = span[i].source_y = i;
                 span[i].width = span[j].width = width;
-                span[j].source_y = span[j].destination_y = j;
+                span[j].destination_y = span[j].source_y = j;
                 ++width;
             }
         }
         effect_helper_34760();
         {
-            s32 destination_x = 320 + distance;
-            s32 source_x = 320;
-            s32 destination_y = 200;
+            s16 destination_x = 320 + distance;
+            s16 source_x = 320;
+            s16 destination_y = 200;
             for (i = 0, j = 199; i < 100; ++i, --j) {
                 span[i].destination_x = span[j].destination_x = destination_x;
                 span[i].destination_y = span[i].source_y = i;
@@ -247,11 +248,11 @@ u16 effect_helper_348a4(void)
     case 12:
         {
             s16 vertical = (200 - distance) >> 1;
-            s32 horizontal = (320 - distance) >> 1;
+            s16 horizontal = (320 - distance) >> 1;
             span = state->entries;
             for (i = 0; i < 200; ++i, ++span) {
-                span->source_y = span->destination_y = i;
-                span->source_x = span->destination_x = horizontal;
+                span->destination_y = span->source_y = i;
+                span->destination_x = span->source_x = horizontal;
                 if (i >= vertical && 200 - vertical >= i) span->width = distance;
                 else span->width = 0;
             }
