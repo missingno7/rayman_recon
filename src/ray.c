@@ -1893,12 +1893,9 @@ void SET_RAY_BALANCE(void) {
 }
 
 void RAY_GOING_BALANCE(obj_t* obj) {
-    /* DOS 1:5f384 and 1:5f4a1 return at 1:5f4f6; these paths
-     * do not write follow_y. The 95 store belongs to the unresolved
-     * terminal block at 1:5f4be..5f4f6, behind contradictory flags. */
     /* 619C0 801861C0 -O2 -msoft-float */
-    s16 sine_angle;
     s16 cosine_angle;
+    s16 sine_angle;
     s32 unk_3;
     s32 unk_4;
     s16 angle;
@@ -1931,20 +1928,18 @@ void RAY_GOING_BALANCE(obj_t* obj) {
             }
 
             abs_sinus_cosinus(angle + 128, &sine_angle, &cosine_angle);
-            if (sine_angle > 2) {
-                if (cosine_angle > 2) {
-                    unk_3 = (diff_x << 9) / cosine_angle;
-                    unk_4 = (diff_y << 9) / sine_angle;
-                    follow_y = (unk_3 + unk_4) >> 1;
-                } else {
-                    follow_y = diff_y;
-                }
-            } else {
+            if (sine_angle > 2 && cosine_angle > 2) {
+                unk_3 = ashl32(diff_x, 9) / cosine_angle;
+                unk_4 = ashl32(diff_y, 9) / sine_angle;
+                follow_y = (unk_3 + unk_4) >> 1;
+            } else if (sine_angle <= 2) {
                 follow_y = diff_x;
+            } else {
+                follow_y = diff_y;
             }
             obj->follow_y = follow_y;
         }
-        else {
+        else if (dist <= 4512U) {
             ray.speed_x = 0;
             ray.gravity_value_1++;
             ray.speed_y -= obj->speed_y;
@@ -1952,6 +1947,16 @@ void RAY_GOING_BALANCE(obj_t* obj) {
                 ray.gravity_value_1 = 0;
                 ray.speed_y++;
             }
+        } else {
+            /* DOS 1:5f46c JA and 1:5f4be..5f4f6: authentic terminal
+             * branch, retained despite its contradictory distance predicate. */
+            set_sub_etat(&ray, 1);
+            ray.speed_y = 0;
+            ray.speed_x = 0;
+            decalage_en_cours = 0;
+            obj->timer = 0;
+            button_released = 1;
+            obj->follow_y = 95;
         }
     }
 }

@@ -269,8 +269,8 @@ void set_ball_pos(obj_t *obj, s16 x, s16 y)
     new_y = y;
     obj->x = new_x;
     obj->y = new_y;
-    ball_x = new_x << 8;
-    ball_y = new_y << 8;
+    ball_x = ashl32(new_x,8);
+    ball_y = ashl32(new_y,8);
 }
 
 s16 angle_direction(s16 x, s16 y)

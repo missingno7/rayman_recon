@@ -5415,7 +5415,7 @@
      ]
     },
     "set_ball_pos": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -6786,7 +6786,7 @@
      ]
     },
     "RAY_GOING_BALANCE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
