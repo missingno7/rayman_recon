@@ -155,6 +155,10 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   W-LAYOUT: a function's DOS extent may include another function's cold return - measure extents from the disassembly,
   not from symbol spacing. Probes: build/workers/w4_cdaudio (before_pool_probe.c, pool_location_probe, pool_nested).
 
+- **Unused prefix vs postfix decrement of a short differ** [PROVEN, ray_pc 2026-10-21]: a statement `--x;` and `x--;`
+  on an s16 whose value is unused compile to different code under the game profile; DOS updateLogo (1:61940) needs the
+  postfix form (312 -> 304 bytes, STRICT). Treat `++x/x++` spelling as a shape choice to read off the DOS bytes (W-TEMP).
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
   evidence (e.g. an FP function whose residue changes under `-on`: box CalcTab 71 -> 64 diffs, still NEAR).
