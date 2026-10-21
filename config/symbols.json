@@ -15763,6 +15763,783 @@
     "type": "effect_state_6c_t *",
     "name": "INVENTED",
     "evidence": "DOS references a 32-bit pointer at 2:57460; 1:6c7cc allocates 0x20 bytes for its pointee, and Android lookup for effect_state_6c returned no symbol"
+   },
+   "dt_str_empty": {
+    "addr": "2:2fea8",
+    "type": "char[1]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '' at 2:2fea8; oracle pointer relocation at 2:04d6c targets its first character.",
+    "size": 1
+   },
+   "dt_str_michel_ancel": {
+    "addr": "2:2feac",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/michel ancel/' at 2:2feac; oracle pointer relocation at 2:051ec targets its first character.",
+    "size": 15
+   },
+   "dt_str_frederic_houde": {
+    "addr": "2:2febc",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/frederic houde/' at 2:2febc; oracle pointer relocation at 2:051f8 targets its first character.",
+    "size": 17
+   },
+   "dt_str_alexandra_steible": {
+    "addr": "2:2fed0",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/alexandra steible/' at 2:2fed0; oracle pointer relocation at 2:05210 targets its first character.",
+    "size": 20
+   },
+   "dt_str_serge_hascoet": {
+    "addr": "2:2fee4",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/serge hascoet/' at 2:2fee4; oracle pointer relocation at 2:05234 targets its first character.",
+    "size": 16
+   },
+   "dt_str_bruno_bouvret": {
+    "addr": "2:2fef4",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/bruno bouvret/' at 2:2fef4; oracle pointer relocation at 2:0524c targets its first character.",
+    "size": 16
+   },
+   "dt_str_gunther_galipot": {
+    "addr": "2:2ff04",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/gunther galipot/' at 2:2ff04; oracle pointer relocation at 2:05258 targets its first character.",
+    "size": 18
+   },
+   "dt_str_sacha_gentilhomme": {
+    "addr": "2:2ff18",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sacha gentilhomme/' at 2:2ff18; oracle pointer relocation at 2:05264 targets its first character.",
+    "size": 20
+   },
+   "dt_str_michael_guez": {
+    "addr": "2:2ff2c",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/michael guez/' at 2:2ff2c; oracle pointer relocation at 2:05270 targets its first character.",
+    "size": 15
+   },
+   "dt_str_christophe_thibaut": {
+    "addr": "2:2ff3c",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christophe thibaut/' at 2:2ff3c; oracle pointer relocation at 2:0527c targets its first character.",
+    "size": 21
+   },
+   "dt_str_kamal_aitmihoub": {
+    "addr": "2:2ff54",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/kamal aitmihoub/' at 2:2ff54; oracle pointer relocation at 2:052ac targets its first character.",
+    "size": 18
+   },
+   "dt_str_david_gilson": {
+    "addr": "2:2ff68",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/david gilson/' at 2:2ff68; oracle pointer relocation at 2:052b8 targets its first character.",
+    "size": 15
+   },
+   "dt_str_sophie_esturgie": {
+    "addr": "2:2ff78",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sophie esturgie/' at 2:2ff78; oracle pointer relocation at 2:052c4 targets its first character.",
+    "size": 18
+   },
+   "dt_str_jacques_exertie": {
+    "addr": "2:2ff8c",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/jacques exertie/' at 2:2ff8c; oracle pointer relocation at 2:052d0 targets its first character.",
+    "size": 18
+   },
+   "dt_str_gregoire_pons": {
+    "addr": "2:2ffa0",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/gregoire pons/' at 2:2ffa0; oracle pointer relocation at 2:052dc targets its first character.",
+    "size": 16
+   },
+   "dt_str_veronique_rondello": {
+    "addr": "2:2ffb0",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/veronique rondello/' at 2:2ffb0; oracle pointer relocation at 2:052e8 targets its first character.",
+    "size": 21
+   },
+   "dt_str_beatrice_sauterau": {
+    "addr": "2:2ffc8",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/beatrice sauterau/' at 2:2ffc8; oracle pointer relocation at 2:052f4 targets its first character.",
+    "size": 20
+   },
+   "dt_str_philippe_vindolet": {
+    "addr": "2:2ffdc",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/philippe vindolet' at 2:2ffdc; oracle pointer relocation at 2:05300 targets its first character.",
+    "size": 19
+   },
+   "dt_str_christian_volckman": {
+    "addr": "2:2fff0",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christian volckman/' at 2:2fff0; oracle pointer relocation at 2:0530c targets its first character.",
+    "size": 21
+   },
+   "dt_str_eric_pelatan": {
+    "addr": "2:30008",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/eric pelatan/' at 2:30008; oracle pointer relocation at 2:05324 targets its first character.",
+    "size": 15
+   },
+   "dt_str_sylvaine_jenny": {
+    "addr": "2:30018",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sylvaine jenny/' at 2:30018; oracle pointer relocation at 2:05330 targets its first character.",
+    "size": 17
+   },
+   "dt_str_jean_christophe_alessandri": {
+    "addr": "2:3002c",
+    "type": "char[29]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/jean christophe alessandri/' at 2:3002c; oracle pointer relocation at 2:05348 targets its first character.",
+    "size": 29
+   },
+   "dt_str_sophie_ancel": {
+    "addr": "2:3004c",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sophie ancel/' at 2:3004c; oracle pointer relocation at 2:05354 targets its first character.",
+    "size": 15
+   },
+   "dt_str_olivier_bechard": {
+    "addr": "2:3005c",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier bechard/' at 2:3005c; oracle pointer relocation at 2:05360 targets its first character.",
+    "size": 18
+   },
+   "dt_str_nicolas_bocquillon": {
+    "addr": "2:30070",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/nicolas bocquillon/' at 2:30070; oracle pointer relocation at 2:0536c targets its first character.",
+    "size": 21
+   },
+   "dt_str_jean_marc_geffroy": {
+    "addr": "2:30088",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/jean marc geffroy/' at 2:30088; oracle pointer relocation at 2:05378 targets its first character.",
+    "size": 20
+   },
+   "dt_str_laurent_rettig": {
+    "addr": "2:3009c",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/laurent rettig/' at 2:3009c; oracle pointer relocation at 2:05384 targets its first character.",
+    "size": 17
+   },
+   "dt_str_olivier_soleil": {
+    "addr": "2:300b0",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier soleil/' at 2:300b0; oracle pointer relocation at 2:05390 targets its first character.",
+    "size": 17
+   },
+   "dt_str_bertrand_helias": {
+    "addr": "2:300c4",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/bertrand helias/' at 2:300c4; oracle pointer relocation at 2:053a8 targets its first character.",
+    "size": 18
+   },
+   "dt_str_yann_le_tensorer": {
+    "addr": "2:300d8",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/yann le tensorer/' at 2:300d8; oracle pointer relocation at 2:053b4 targets its first character.",
+    "size": 19
+   },
+   "dt_str_daniel_palix": {
+    "addr": "2:300ec",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/daniel palix/' at 2:300ec; oracle pointer relocation at 2:053c0 targets its first character.",
+    "size": 15
+   },
+   "dt_str_cyril_cauchois": {
+    "addr": "2:300fc",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/cyril cauchois/' at 2:300fc; oracle pointer relocation at 2:053d8 targets its first character.",
+    "size": 17
+   },
+   "dt_str_olivier_couvreur": {
+    "addr": "2:30110",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier couvreur/' at 2:30110; oracle pointer relocation at 2:053e4 targets its first character.",
+    "size": 19
+   },
+   "dt_str_antoine_dodens": {
+    "addr": "2:30124",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/antoine dodens/' at 2:30124; oracle pointer relocation at 2:053f0 targets its first character.",
+    "size": 17
+   },
+   "dt_str_antonio_ferreira": {
+    "addr": "2:30138",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/antonio ferreira/' at 2:30138; oracle pointer relocation at 2:053fc targets its first character.",
+    "size": 19
+   },
+   "dt_str_philippe_fuentes": {
+    "addr": "2:3014c",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/philippe fuentes/' at 2:3014c; oracle pointer relocation at 2:05408 targets its first character.",
+    "size": 19
+   },
+   "dt_str_benoit_germain": {
+    "addr": "2:30160",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/benoit germain/' at 2:30160; oracle pointer relocation at 2:05414 targets its first character.",
+    "size": 17
+   },
+   "dt_str_christophe_giraud": {
+    "addr": "2:30174",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christophe giraud/' at 2:30174; oracle pointer relocation at 2:05420 targets its first character.",
+    "size": 20
+   },
+   "dt_str_francois_mahieu": {
+    "addr": "2:30188",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/francois mahieu/' at 2:30188; oracle pointer relocation at 2:05438 targets its first character.",
+    "size": 18
+   },
+   "dt_str_christian_mihalache": {
+    "addr": "2:3019c",
+    "type": "char[22]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christian mihalache/' at 2:3019c; oracle pointer relocation at 2:05444 targets its first character.",
+    "size": 22
+   },
+   "dt_str_sebastien_morin": {
+    "addr": "2:301b4",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sebastien morin/' at 2:301b4; oracle pointer relocation at 2:05450 targets its first character.",
+    "size": 18
+   },
+   "dt_str_bogdan_radusi": {
+    "addr": "2:301c8",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/bogdan radusi/' at 2:301c8; oracle pointer relocation at 2:0545c targets its first character.",
+    "size": 16
+   },
+   "dt_str_daniel_raviart": {
+    "addr": "2:301d8",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/daniel raviart/' at 2:301d8; oracle pointer relocation at 2:05468 targets its first character.",
+    "size": 17
+   },
+   "dt_str_olivier_rozier": {
+    "addr": "2:301ec",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier rozier/' at 2:301ec; oracle pointer relocation at 2:05474 targets its first character.",
+    "size": 17
+   },
+   "dt_str_jozef_skrabo": {
+    "addr": "2:30200",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/jozef skrabo/' at 2:30200; oracle pointer relocation at 2:05480 targets its first character.",
+    "size": 15
+   },
+   "dt_str_gilles_vanwalleghem": {
+    "addr": "2:30210",
+    "type": "char[22]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/gilles vanwalleghem/' at 2:30210; oracle pointer relocation at 2:0548c targets its first character.",
+    "size": 22
+   },
+   "dt_str_stephane_bellanger": {
+    "addr": "2:30228",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/stephane bellanger/' at 2:30228; oracle pointer relocation at 2:054a4 targets its first character.",
+    "size": 21
+   },
+   "dt_str_didier_lord": {
+    "addr": "2:30240",
+    "type": "char[14]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/didier lord/' at 2:30240; oracle pointer relocation at 2:054b0 targets its first character.",
+    "size": 14
+   },
+   "dt_str_olivier_amiaud": {
+    "addr": "2:30250",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier amiaud/' at 2:30250; oracle pointer relocation at 2:054c8 targets its first character.",
+    "size": 17
+   },
+   "dt_str_sylvain_brunet": {
+    "addr": "2:30264",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/sylvain brunet/' at 2:30264; oracle pointer relocation at 2:054d4 targets its first character.",
+    "size": 17
+   },
+   "dt_str_nathalie_drouet": {
+    "addr": "2:30278",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/nathalie drouet/' at 2:30278; oracle pointer relocation at 2:054e0 targets its first character.",
+    "size": 18
+   },
+   "dt_str_dominique_dumont": {
+    "addr": "2:3028c",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/dominique dumont/' at 2:3028c; oracle pointer relocation at 2:054ec targets its first character.",
+    "size": 19
+   },
+   "dt_str_kamel_feunas": {
+    "addr": "2:302a0",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/kamel feunas/' at 2:302a0; oracle pointer relocation at 2:054f8 targets its first character.",
+    "size": 15
+   },
+   "dt_str_remy_gazel": {
+    "addr": "2:302b0",
+    "type": "char[13]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/remy gazel/' at 2:302b0; oracle pointer relocation at 2:05504 targets its first character.",
+    "size": 13
+   },
+   "dt_str_didier_leglise": {
+    "addr": "2:302c0",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/didier leglise/' at 2:302c0; oracle pointer relocation at 2:05510 targets its first character.",
+    "size": 17
+   },
+   "dt_str_jean_marc_litchmann": {
+    "addr": "2:302d4",
+    "type": "char[22]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/jean marc litchmann/' at 2:302d4; oracle pointer relocation at 2:0551c targets its first character.",
+    "size": 22
+   },
+   "dt_str_frederic_louvre": {
+    "addr": "2:302ec",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/frederic louvre/' at 2:302ec; oracle pointer relocation at 2:05528 targets its first character.",
+    "size": 18
+   },
+   "dt_str_guillaume_michel": {
+    "addr": "2:30300",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/guillaume michel/' at 2:30300; oracle pointer relocation at 2:05534 targets its first character.",
+    "size": 19
+   },
+   "dt_str_olivier_mortier": {
+    "addr": "2:30314",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/olivier mortier/' at 2:30314; oracle pointer relocation at 2:05540 targets its first character.",
+    "size": 18
+   },
+   "dt_str_frederic_prados": {
+    "addr": "2:30328",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/frederic prados/' at 2:30328; oracle pointer relocation at 2:0554c targets its first character.",
+    "size": 18
+   },
+   "dt_str_stephane_ronse": {
+    "addr": "2:3033c",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/stephane ronse/' at 2:3033c; oracle pointer relocation at 2:05558 targets its first character.",
+    "size": 17
+   },
+   "dt_str_rene_de_wael": {
+    "addr": "2:30350",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/rene de wael/' at 2:30350; oracle pointer relocation at 2:05564 targets its first character.",
+    "size": 15
+   },
+   "dt_str_emmanuelle_cosso": {
+    "addr": "2:30360",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/emmanuelle cosso/' at 2:30360; oracle pointer relocation at 2:0557c targets its first character.",
+    "size": 19
+   },
+   "dt_str_mitsuyuki_bando": {
+    "addr": "2:30374",
+    "type": "char[18]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/mitsuyuki bando/' at 2:30374; oracle pointer relocation at 2:05594 targets its first character.",
+    "size": 18
+   },
+   "dt_str_chris_benard": {
+    "addr": "2:30388",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/chris benard/' at 2:30388; oracle pointer relocation at 2:055a0 targets its first character.",
+    "size": 15
+   },
+   "dt_str_patrice_dozier": {
+    "addr": "2:30398",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/patrice dozier/' at 2:30398; oracle pointer relocation at 2:055ac targets its first character.",
+    "size": 17
+   },
+   "dt_str_douglas_rand": {
+    "addr": "2:303ac",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/douglas rand/' at 2:303ac; oracle pointer relocation at 2:055b8 targets its first character.",
+    "size": 15
+   },
+   "dt_str_steven_perkinson": {
+    "addr": "2:303bc",
+    "type": "char[19]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/steven perkinson/' at 2:303bc; oracle pointer relocation at 2:055c4 targets its first character.",
+    "size": 19
+   },
+   "dt_str_christian_stonner": {
+    "addr": "2:303d0",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christian stonner/' at 2:303d0; oracle pointer relocation at 2:055d0 targets its first character.",
+    "size": 20
+   },
+   "dt_str_bruno_barone": {
+    "addr": "2:303e4",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/bruno barone/' at 2:303e4; oracle pointer relocation at 2:05600 targets its first character.",
+    "size": 15
+   },
+   "dt_str_thomas_belmont": {
+    "addr": "2:303f4",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/thomas belmont/' at 2:303f4; oracle pointer relocation at 2:0560c targets its first character.",
+    "size": 17
+   },
+   "dt_str_christophe_cavelan": {
+    "addr": "2:30408",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/christophe cavelan/' at 2:30408; oracle pointer relocation at 2:05630 targets its first character.",
+    "size": 21
+   },
+   "dt_str_marc_gioan": {
+    "addr": "2:30420",
+    "type": "char[13]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/marc gioan/' at 2:30420; oracle pointer relocation at 2:05654 targets its first character.",
+    "size": 13
+   },
+   "dt_str_benoit_macon": {
+    "addr": "2:30430",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/benoit macon/' at 2:30430; oracle pointer relocation at 2:0566c targets its first character.",
+    "size": 15
+   },
+   "dt_str_lionel_rico": {
+    "addr": "2:30440",
+    "type": "char[14]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/lionel rico/' at 2:30440; oracle pointer relocation at 2:05678 targets its first character.",
+    "size": 14
+   },
+   "dt_str_emmanuel_texandier": {
+    "addr": "2:30450",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/emmanuel texandier/' at 2:30450; oracle pointer relocation at 2:05684 targets its first character.",
+    "size": 21
+   },
+   "dt_str_dorian_thibaut": {
+    "addr": "2:30468",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/dorian thibaut/' at 2:30468; oracle pointer relocation at 2:0569c targets its first character.",
+    "size": 17
+   },
+   "dt_str_agnes_haegel": {
+    "addr": "2:3047c",
+    "type": "char[15]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/agnes haegel/' at 2:3047c; oracle pointer relocation at 2:056b4 targets its first character.",
+    "size": 15
+   },
+   "dt_str_ludimedia_gerard_guillemot": {
+    "addr": "2:3048c",
+    "type": "char[31]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/ludimedia : gerard guillemot/' at 2:3048c; oracle pointer relocation at 2:056cc targets its first character.",
+    "size": 31
+   },
+   "dt_str_ubi_studios_michel_guillemot": {
+    "addr": "2:304ac",
+    "type": "char[33]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/ubi studios : michel guillemot/' at 2:304ac; oracle pointer relocation at 2:056e4 targets its first character.",
+    "size": 33
+   },
+   "dt_str_ubi_soft_yves_guillemot": {
+    "addr": "2:304d0",
+    "type": "char[29]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '/ubi soft :  yves guillemot/' at 2:304d0; oracle pointer relocation at 2:056fc targets its first character.",
+    "size": 29
+   },
+   "dt_str_rayman": {
+    "addr": "2:304f0",
+    "type": "char[7]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'rayman' at 2:304f0; oracle pointer relocation at 2:0572c targets its first character.",
+    "size": 7
+   },
+   "dt_str_write_protect_violation": {
+    "addr": "2:30a30",
+    "type": "char[24]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Write Protect Violation' at 2:30a30; oracle pointer relocation at 2:062d8 targets its first character.",
+    "size": 24
+   },
+   "dt_str_unknown_unit": {
+    "addr": "2:30a48",
+    "type": "char[13]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Unknown unit' at 2:30a48; oracle pointer relocation at 2:062dc targets its first character.",
+    "size": 13
+   },
+   "dt_str_drive_not_ready": {
+    "addr": "2:30a58",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Drive not ready' at 2:30a58; oracle pointer relocation at 2:062e0 targets its first character.",
+    "size": 16
+   },
+   "dt_str_unknown_command": {
+    "addr": "2:30a68",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Unknown command' at 2:30a68; oracle pointer relocation at 2:062e4 targets its first character.",
+    "size": 16
+   },
+   "dt_str_crc_error": {
+    "addr": "2:30a78",
+    "type": "char[10]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'CRC error' at 2:30a78; oracle pointer relocation at 2:062e8 targets its first character.",
+    "size": 10
+   },
+   "dt_str_bad_drive_request_structure_length": {
+    "addr": "2:30a84",
+    "type": "char[35]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Bad drive request structure length' at 2:30a84; oracle pointer relocation at 2:062ec targets its first character.",
+    "size": 35
+   },
+   "dt_str_seek_error": {
+    "addr": "2:30aa8",
+    "type": "char[11]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Seek error' at 2:30aa8; oracle pointer relocation at 2:062f0 targets its first character.",
+    "size": 11
+   },
+   "dt_str_unknown_media": {
+    "addr": "2:30ab4",
+    "type": "char[14]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Unknown media' at 2:30ab4; oracle pointer relocation at 2:062f4 targets its first character.",
+    "size": 14
+   },
+   "dt_str_sector_not_found": {
+    "addr": "2:30ac4",
+    "type": "char[17]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Sector not found' at 2:30ac4; oracle pointer relocation at 2:062f8 targets its first character.",
+    "size": 17
+   },
+   "dt_str_printer_out_of_paper": {
+    "addr": "2:30ad8",
+    "type": "char[21]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Printer out of paper' at 2:30ad8; oracle pointer relocation at 2:062fc targets its first character.",
+    "size": 21
+   },
+   "dt_str_write_fault": {
+    "addr": "2:30af0",
+    "type": "char[12]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Write fault' at 2:30af0; oracle pointer relocation at 2:06300 targets its first character.",
+    "size": 12
+   },
+   "dt_str_read_fault": {
+    "addr": "2:30afc",
+    "type": "char[11]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Read fault' at 2:30afc; oracle pointer relocation at 2:06304 targets its first character.",
+    "size": 11
+   },
+   "dt_str_general_failure": {
+    "addr": "2:30b08",
+    "type": "char[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'General failure' at 2:30b08; oracle pointer relocation at 2:06308 targets its first character.",
+    "size": 16
+   },
+   "dt_str_reserved": {
+    "addr": "2:30b18",
+    "type": "char[9]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Reserved' at 2:30b18; oracle pointer relocation at 2:0630c targets its first character.",
+    "size": 9
+   },
+   "dt_str_invalid_disk_change": {
+    "addr": "2:30b24",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Invalid disk change' at 2:30b24; oracle pointer relocation at 2:06314 targets its first character.",
+    "size": 20
+   },
+   "dos_error_messages": {
+    "addr": "2:62d8",
+    "type": "char *[16]",
+    "name": "INVENTED",
+    "evidence": "PROVEN pointer array: 16 contiguous off32 relocations to DOS critical-error messages (Write Protect Violation through Invalid disk change); no Android counterpart found.",
+    "size": 64
+   },
+   "dt_str_differential_method": {
+    "addr": "2:30bac",
+    "type": "char[20]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'Differential method' at 2:30bac; oracle pointer relocation at 2:0631c targets its first character.",
+    "size": 20
+   },
+   "sav_codec_method": {
+    "addr": "2:631c",
+    "type": "char *",
+    "name": "INVENTED",
+    "evidence": "PROVEN off32 relocation at 2:0631c to literal Differential method; pointer type from fixup, no direct DOS use found.",
+    "size": 4
+   },
+   "dt_str_320x200": {
+    "addr": "2:3110c",
+    "type": "char[8]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '320x200' at 2:3110c; oracle pointer relocation at 2:0683c targets its first character.",
+    "size": 8
+   },
+   "dt_str_312x196": {
+    "addr": "2:31114",
+    "type": "char[8]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '312x196' at 2:31114; oracle pointer relocation at 2:06840 targets its first character.",
+    "size": 8
+   },
+   "dt_str_304x192": {
+    "addr": "2:3111c",
+    "type": "char[8]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '304x192' at 2:3111c; oracle pointer relocation at 2:06844 targets its first character.",
+    "size": 8
+   },
+   "dt_str_300x188": {
+    "addr": "2:31124",
+    "type": "char[8]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '300x188' at 2:31124; oracle pointer relocation at 2:06848 targets its first character.",
+    "size": 8
+   },
+   "TabScreenSize": {
+    "addr": "2:683c",
+    "type": "char *[4]",
+    "name": "RAYVERSE",
+    "evidence": "STRONG: Android TabScreenSize .data size 16; APK pointer-target strings match the complete ordered DOS sequence. DOS has 4 consecutive symbolic pointer fixups.",
+    "size": 16
+   },
+   "dt_str_60": {
+    "addr": "2:3112c",
+    "type": "char[3]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '60' at 2:3112c; oracle pointer relocation at 2:0686c targets its first character.",
+    "size": 3
+   },
+   "dt_str_50": {
+    "addr": "2:31130",
+    "type": "char[3]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '50' at 2:31130; oracle pointer relocation at 2:06870 targets its first character.",
+    "size": 3
+   },
+   "dt_str_30": {
+    "addr": "2:31134",
+    "type": "char[3]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '30' at 2:31134; oracle pointer relocation at 2:06874 targets its first character.",
+    "size": 3
+   },
+   "dt_str_25": {
+    "addr": "2:31138",
+    "type": "char[3]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal '25' at 2:31138; oracle pointer relocation at 2:06878 targets its first character.",
+    "size": 3
+   },
+   "dt_str_mode_dieu": {
+    "addr": "2:3113c",
+    "type": "char[10]",
+    "name": "INVENTED",
+    "evidence": "PROVEN: NUL-terminated literal 'mode dieu' at 2:3113c; oracle pointer relocation at 2:0687c targets its first character.",
+    "size": 10
+   },
+   "TabFreq": {
+    "addr": "2:686c",
+    "type": "char *[5]",
+    "name": "RAYVERSE",
+    "evidence": "STRONG: Android TabFreq .data size 20; APK pointer-target strings match the complete ordered DOS sequence. DOS has 5 consecutive symbolic pointer fixups.",
+    "size": 20
    }
   }
  }
