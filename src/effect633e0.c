@@ -5,9 +5,8 @@
  */
 #include <string.h>
 #include <math.h>
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define ABS(x) ((x) < 0 ? -(x) : (x))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 #include "rtypes.h"
 
 typedef struct effect_state {
@@ -40,30 +39,26 @@ extern double effect_math_curve(double value);
 void effect_update_table_633e0(s16 amount)
 {
     effect_state_t *state;
-    s32 magnitude;
+    s32 width;
     s16 y;
 
     state = effect_state_55760;
     state->pos_x = 0;
+    /* DOS 1:633fa..6341a: shared max helper; keep the short step in amount. */
     if (amount >= 0) {
-        s32 requested = amount;
-        magnitude = 1;
-        if (requested > magnitude)
-            magnitude = requested;
-        magnitude = -magnitude;
+        amount = max32(1, amount);
+        amount = -amount;
     } else {
-        s32 requested = -(s32)amount;
-        magnitude = 1;
-        if (requested > magnitude)
-            magnitude = requested;
+        amount = max32(1, -(s32)amount);
     }
-    state->delta = magnitude;
+    state->delta = amount;
     state->mode = state->delta > 0 ? 0 : 3;
     state->initialized = 0;
 
-    for (y = -state->width; y < state->width; ++y) {
-        s32 width = state->width;
-        double scale = (double)width;
+    for (y = -state->width; y < state->width; y++) {
+        double scale;
+        width = state->width;
+        scale = (double)width;
         state->table[width + y] = (s32)(effect_math_curve((double)y / scale) * scale);
     }
 }
@@ -112,7 +107,6 @@ u8 effect_helper_634f0(u16 width, s16 amount, u8 *source, u8 *destination)
 s16 effect_helper_63614(void)
 {
     effect_state_t *state;
-    double difference;
 
     state = effect_state_55760;
     switch (state->mode) {
@@ -132,6 +126,8 @@ s16 effect_helper_63614(void)
         state->field_10 = state->field_14 - state->period2;
         break;
     case 1:
+    {
+        double difference;
         if (state->initialized == 0) {
             if (state->delta > 0) {
                 state->field_04 = state->field_14;
@@ -144,12 +140,15 @@ s16 effect_helper_63614(void)
         }
         difference = (double)(state->field_04 - state->field_14);
         if (difference <= (double)state->period1) {
-            state->field_0c = (s32)(cos(difference / (double)state->width) * (double)state->width);
+            difference /= (double)state->width;
+            difference = cos(difference);
+            state->field_0c = (s32)(difference * (double)state->width);
         } else {
             state->field_0c = -(s32)state->width;
         }
         state->field_10 = 319 - (state->field_04 - state->field_14);
         break;
+    }
     case 2:
         if (state->initialized == 0) {
             if (state->delta > 0) {
