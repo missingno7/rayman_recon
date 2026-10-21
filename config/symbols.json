@@ -5707,6 +5707,296 @@
     "addr": "1:1a654",
     "name": "INVENTED",
     "evidence": "DOS call target from TestCdLoop; no name established"
+   },
+   "PAR_REACT_TO_RAY_IN_ZONE": {
+    "addr": "1:2e4b4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "set_fade_palette": {
+    "addr": "1:2c520",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "display_emptypicture": {
+    "addr": "1:02783",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PAR_POING_COLLISION": {
+    "addr": "1:2e398",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "fade_out": {
+    "addr": "1:2c6bc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "do_fade": {
+    "addr": "1:2c5cc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "hasGuetteurABomb": {
+    "addr": "1:2de28",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "allocatePirateGuetteurBomb": {
+    "addr": "1:2dea0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "textmode": {
+    "addr": "1:047e7",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "start_fade_out": {
+    "addr": "1:2c5a4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "clear_palette": {
+    "addr": "1:2c4fc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "start_fade_in": {
+    "addr": "1:2c54c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PAR_BOMB_COMMAND": {
+    "addr": "1:2e550",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "ClearDrawAndDisplayBufferNormal": {
+    "addr": "1:04c6b",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PAR_TIR": {
+    "addr": "1:2e1ac",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "sub_3B580": {
+    "addr": "1:2b580",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:51"
+   },
+   "sub_3B5E8": {
+    "addr": "1:2b5e8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:56"
+   },
+   "calc_gros_type": {
+    "addr": "1:2b64c",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:61"
+   },
+   "find_in_map": {
+    "addr": "1:2b7d4",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:66"
+   },
+   "init_find_in_map": {
+    "addr": "1:2b804",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:71"
+   },
+   "end_find_in_map": {
+    "addr": "1:2b838",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:76"
+   },
+   "build_map": {
+    "addr": "1:2b844",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:81"
+   },
+   "build_line_map": {
+    "addr": "1:2b948",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:86"
+   },
+   "build_column_map": {
+    "addr": "1:2ba64",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:91"
+   },
+   "update_map": {
+    "addr": "1:2bb84",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:96"
+   },
+   "sub_3BE20": {
+    "addr": "1:2be20",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:101"
+   },
+   "sub_3BEE0": {
+    "addr": "1:2bee0",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:106"
+   },
+   "set_vga_frequency": {
+    "addr": "1:2c194",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:111"
+   },
+   "GetVideoRegister": {
+    "addr": "1:2c2d0",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:126"
+   },
+   "SetVideoRegister": {
+    "addr": "1:2c34c",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:131"
+   },
+   "sub_3C3BC": {
+    "addr": "1:2c3bc",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:136"
+   },
+   "DO_SWAP_PALETTE": {
+    "addr": "1:2c8c8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:231"
+   },
+   "DISPLAY_ANYSIZE_PICTURE": {
+    "addr": "1:2cbe8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:365"
+   },
+   "DISPLAY_FOND_MENU": {
+    "addr": "1:2ce20",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:407"
+   },
+   "InitPaletteSpecialPC": {
+    "addr": "1:2cf70",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:449"
+   },
+   "DoFadePaletteSpecialPC": {
+    "addr": "1:2d54c",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:533"
+   },
+   "DoPaletteSpecialPC": {
+    "addr": "1:2d704",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation frame.c:555"
+   },
+   "DO_ONE_PAR_COMMAND": {
+    "addr": "1:2dbb8",
+    "name": "RAYVERSE",
+    "evidence": "DOS v1.21 xref; Rayverse address annotation guetteur.c:29"
+   },
+   "DisplayBufferModeNormal": {
+    "addr": "1:04ab7",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in SWAP_BUFFERS at 1:2b573; Rayverse lowlevel.c name"
+   },
+   "select_display_buffer": {
+    "addr": "1:045f1",
+    "name": "RAYVERSE",
+    "evidence": "DOS call target in SWAP_BUFFERS at 1:2b51a; Rayverse lowlevel.c select_display_buffer stub; DOS call passes display buffer in EAX, and callee writes VGA CRTC start-address register"
+   },
+   "ClearBorder": {
+    "addr": "1:14dcc",
+    "name": "RAYVERSE",
+    "evidence": "DOS direct call in DISPLAY_FOND_MENU at 1:2cea1; target prologue confirms four register parameters"
+   },
+   "InitFirstModeVideo": {
+    "addr": "1:045fc",
+    "name": "RAYVERSE",
+    "evidence": "DOS call in InitModeNormalWithFrequency at 1:2d9f5; Rayverse lowlevel.c name"
+   },
+   "InitModeNormal": {
+    "addr": "1:0465f",
+    "name": "RAYVERSE",
+    "evidence": "DOS call in InitModeNormalWithFrequency at 1:2da0c; Rayverse lowlevel.c name"
+   },
+   "DrawSpriteNormalNoClip": {
+    "addr": "1:06a18",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da4e"
+   },
+   "DrawSpriteFlipNormalNoClip": {
+    "addr": "1:06afc",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da1d"
+   },
+   "DrawSpriteColorNormal": {
+    "addr": "1:06bea",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da33"
+   },
+   "DrawSpriteColorFlipNormal": {
+    "addr": "1:06c89",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da42"
+   },
+   "draw_flocon1_Normal": {
+    "addr": "1:05670",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da89"
+   },
+   "draw_flocon2_Normal": {
+    "addr": "1:056a0",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2daad"
+   },
+   "draw_flocon3_Normal": {
+    "addr": "1:056dc",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2d98e"
+   },
+   "draw_flocon4_Normal": {
+    "addr": "1:05725",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da93; same address also serves the Rayverse pluie4 alias"
+   },
+   "draw_flocon5_Normal": {
+    "addr": "1:05640",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2dad0"
+   },
+   "draw_flocon6_Normal": {
+    "addr": "1:0587d",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2daea"
+   },
+   "draw_flocon7_Normal": {
+    "addr": "1:057df",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2da98"
+   },
+   "draw_pluie5_Normal": {
+    "addr": "1:057a6",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2daef"
+   },
+   "draw_pluie6_Normal": {
+    "addr": "1:05830",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2dad5"
+   },
+   "draw_pluie7_Normal": {
+    "addr": "1:058f4",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2db06"
+   },
+   "fplot_Normal": {
+    "addr": "1:05609",
+    "name": "RAYVERSE",
+    "evidence": "DOS function-pointer constant loaded at 1:2daa8"
    }
   },
   "data": {
@@ -10682,6 +10972,174 @@
     "type": "s32",
     "name": "RAYVERSE",
     "evidence": "DOS dword reads/writes at 2:3d870"
+   },
+   "fade_speed": {
+    "addr": "2:3f7ea",
+    "name": "RAYVERSE",
+    "type": "s16",
+    "evidence": "Rayverse data.c //CF7EA; DOS word store in start_fade_in/out"
+   },
+   "save_current_pal": {
+    "addr": "2:3fa4d",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "Rayverse data.c //CFA4D; DOS byte store in SAVE_PALETTE/RESTORE_PALETTE"
+   },
+   "PLANVIGBIT": {
+    "addr": "2:35528",
+    "name": "RAYVERSE",
+    "type": "u8 *[7]",
+    "evidence": "Rayverse data.c comment C5528; seven 4-byte pointers, Android size 28"
+   },
+   "planVigbit_length": {
+    "addr": "2:35548",
+    "name": "RAYVERSE",
+    "type": "s32[7]",
+    "evidence": "Rayverse data.c comment C5548; seven dwords, Android size 28"
+   },
+   "planVigbit_nb_bytes": {
+    "addr": "2:36d68",
+    "name": "RAYVERSE",
+    "type": "s32[7]",
+    "evidence": "Rayverse data.c comment C6D68; seven dwords, Android size 28"
+   },
+   "PLAN3BIT": {
+    "addr": "2:3d82c",
+    "name": "RAYVERSE",
+    "type": "u8 *",
+    "evidence": "Rayverse data.c comment CD82C; DOS word-plan pointer load/store"
+   },
+   "plan3bit_length": {
+    "addr": "2:3d820",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "Rayverse data.c comment CD820; DOS dword load/store"
+   },
+   "plan3bit_nb_bytes": {
+    "addr": "2:3d7f0",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "Rayverse data.c comment CD7F0; DOS dword load/store"
+   },
+   "PLANTMPBIT": {
+    "addr": "2:3d7c0",
+    "name": "RAYVERSE",
+    "type": "u8 *",
+    "evidence": "Rayverse data.c comment CD7C0; DOS dword pointer load/store"
+   },
+   "plantmp_length": {
+    "addr": "2:3d7c8",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "DOS SAVE_PLAN3/RESTORE_PLAN3 dword load/store at 2:3d7c8"
+   },
+   "plantmp_nb_bytes": {
+    "addr": "2:3d7cc",
+    "name": "RAYVERSE",
+    "type": "s32",
+    "evidence": "DOS SAVE_PLAN3/RESTORE_PLAN3 dword load/store at 2:3d7cc"
+   },
+   "last_plan1_palette": {
+    "addr": "2:3fa83",
+    "name": "RAYVERSE",
+    "type": "u8",
+    "evidence": "Rayverse data.c comment CFA83; DOS DO_SWAP_PALETTE byte test"
+   },
+   "DrawSpriteNoClipNormalEtX": {
+    "addr": "2:3d0f4",
+    "name": "RAYVERSE",
+    "type": "draw_func_t*",
+    "evidence": "Rayverse data.c //CD0F4; Android symbol size 4"
+   },
+   "DrawSpriteFlipNoClipNormalEtX": {
+    "addr": "2:3d114",
+    "name": "RAYVERSE",
+    "type": "draw_func_t*",
+    "evidence": "Rayverse data.c //CD114; Android symbol size 4"
+   },
+   "DrawSpriteColorFlipNormalEtX": {
+    "addr": "2:3d11c",
+    "name": "RAYVERSE",
+    "type": "draw_func_t*",
+    "evidence": "Rayverse data.c //CD11C; Android symbol size 4"
+   },
+   "drawflocon1NormalETX": {
+    "addr": "2:3d110",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD110; Android symbol size 4"
+   },
+   "drawflocon2NormalETX": {
+    "addr": "2:3d108",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD108; Android symbol size 4"
+   },
+   "drawflocon3NormalETX": {
+    "addr": "2:3d12c",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD12C; Android symbol size 4"
+   },
+   "drawflocon4NormalETX": {
+    "addr": "2:3d0e8",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0E8; Android symbol size 4"
+   },
+   "drawflocon5NormalETX": {
+    "addr": "2:3d104",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD104; Android symbol size 4"
+   },
+   "drawflocon6NormalETX": {
+    "addr": "2:3d0b8",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0B8; Android symbol size 4"
+   },
+   "drawflocon7NormalETX": {
+    "addr": "2:3d0bc",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0BC; Android symbol size 4"
+   },
+   "drawpluie4NormalETX": {
+    "addr": "2:3d0d8",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0D8; Android symbol size 4"
+   },
+   "drawpluie5NormalETX": {
+    "addr": "2:3d0e0",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0E0; Android symbol size 4"
+   },
+   "drawpluie6NormalETX": {
+    "addr": "2:3d0f0",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0F0; Android symbol size 4"
+   },
+   "drawpluie7NormalETX": {
+    "addr": "2:3d0d4",
+    "name": "RAYVERSE",
+    "type": "void_func_t*",
+    "evidence": "Rayverse data.c //CD0D4; Android symbol size 4"
+   },
+   "fplotNormalETX": {
+    "addr": "2:3d100",
+    "name": "RAYVERSE",
+    "type": "fplot_func_t*",
+    "evidence": "Rayverse data.c //CD100; Android symbol size 4"
+   },
+   "smap": {
+    "addr": "2:4fae4",
+    "name": "RAYVERSE",
+    "type": "u8 *",
+    "evidence": "Rayverse data.c //DFAE4; Android symbol size 4"
    }
   }
  }
