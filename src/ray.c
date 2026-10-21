@@ -154,7 +154,7 @@ void snifRayIsDead(obj_t* obj);
 void rayfallsinwater(void);
 void RAY_HURT(void);
 void RepousseRay(void);
-u8 RayEstIlBloque(void);
+s16 RayEstIlBloque(void);
 void RAY_SURF(void);
 void DO_SURF_CHANGE_HAIRS(void);
 void DO_PIEDS_RAYMAN(obj_t *obj);
@@ -370,7 +370,7 @@ void IS_RAY_ON_LIANE(void) {
     /* 5D3AC 80181BAC -O2 -msoft-float */
     s16 speed_y;
 
-    if (ray.main_etat != 2 || ray.timer == 0) {
+    if (!(ray.main_etat == 2 && ray.timer != 0)) {
         if (jump_time > 10) {
             speed_y = ray.speed_y;
             ray.speed_y = 0;
@@ -2477,9 +2477,9 @@ void RepousseRay(void)
     }
 }
 
-u8 RayEstIlBloque(void) {
+s16 RayEstIlBloque(void) {
     s16 unk_x;
-    s16 unk_h;
+    s32 unk_h;
     s16 i;
     s16 ani_x;
     s16 ani_y;
@@ -2492,7 +2492,7 @@ u8 RayEstIlBloque(void) {
     s16 ani_xw;
     s16 ani_yh;
     s16 unk_y;
-    u8 res;
+    s32 res;
 
     /* 636B4 80187EB4 -O2 -msoft-float */
     
@@ -2534,19 +2534,19 @@ u8 RayEstIlBloque(void) {
                 }
                 ani_xw = ani_x + ani_w;
                 if (
-                        (ray.speed_x <= 0 || unk_x < ani_x - ray.speed_x || unk_x > ani_x) &&
-                        (unk_x < ani_xw + ray.speed_x || unk_x > ani_xw)
+                        (ray.speed_x <= 0 || !(unk_x >= ani_x - ray.speed_x && unk_x <= ani_x + ray.speed_x)) &&
+                        !(unk_x >= ani_xw + ray.speed_x && unk_x <= ani_xw - ray.speed_x)
                         )
                     goto block_30;
 
                 ani_yh = ani_y + ani_h;
                 unk_y = ray_zdc_y;
                 if (
-                        (unk_y < ani_y || unk_y > ani_yh) &&
-                        (unk_y += unk_h, (unk_y < ani_y || unk_y > ani_yh)) &&
-                        (unk_y += unk_h, (unk_y < ani_y || unk_y > ani_yh)) &&
-                        (unk_y += unk_h, (unk_y < ani_y || unk_y > ani_yh)) &&
-                        (unk_y += unk_h, (unk_y < ani_y || unk_y > ani_yh))
+                        !(unk_y >= ani_y && unk_y <= ani_yh) &&
+                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
+                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
+                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
+                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh))
                         )
                     goto block_30;
 
@@ -2933,14 +2933,6 @@ void DO_RAYMAN(void) {
                 button_released = 1;
             }
             RAY_RESPOND_TO_ALL_DIRS();
-        }
-
-        // NOTE: added null check for star_ray_der and star_ray_dev
-        // This seems to occur if RayEvts.reverse is set but the TYPE_202_RAY_ETOILES is missing from the level?
-        // In that case, star_ray_der and star_ray_dev are not set in obj_init
-        // TODO: maybe be even more robust?
-        if (!(star_ray_der && star_ray_dev)) {
-            RayEvts.reverse = 0;
         }
 
         if (RayEvts.reverse != 0) {
