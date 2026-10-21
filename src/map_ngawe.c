@@ -193,7 +193,8 @@ void ngaweTriesToGrabShip(obj_t *obj)
 
 void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 param_3) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s16 ngw_x; s16 ngw_h; s16 ngw_y; s16 ngw_w;
+    /* DOS 1:4d7a2..4d7bb: w=esp, h=esp+4, x=esp+0xc, y=esp+0x10. */
+    s16 ngw_y; s16 ngw_w; s16 ngw_x; s16 ngw_h;
     s16 unk_1;
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
@@ -222,10 +223,10 @@ void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 param_3) {
             add_alwobj(cur_obj);
             cur_obj->flags.flag_0x40 = 0;
 
-            /* see FLIP_X_SGN macro? */
+            /* DOS 1:4d84f..4d87b narrows the distance before the flip product. */
             unk_1 =
-                    (cur_obj->flags.flip_x ? 1 : -1) *
-                    (s16) (ray.offset_bx + ray.x - cur_obj->x - cur_obj->offset_bx);
+                    (s16) (ray.offset_bx + (s16)ray.x - (s16)cur_obj->x - cur_obj->offset_bx);
+            unk_1 *= (cur_obj->flags.flip_x ? 1 : -1);
             unk_1 = max32((s32)unk_1, 0) + 15;
             cur_obj->link = unk_1;
 
