@@ -5602,7 +5602,7 @@
      ]
     },
     "ChangeDeltaSizeJumelle": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -5616,14 +5616,14 @@
      ]
     },
     "ChangeDeltaPosXJumelleWithoutLimit": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "ChangeDeltaPosYJumelleWithoutLimit": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

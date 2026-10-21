@@ -341,14 +341,7 @@ void DefaultJumelleVariable(void) {
 }
 
 void ChangeDeltaSizeJumelle(s32 delta_size) {
-    s32 radius = RayonJumelle + delta_size, bound = 64;
-    if (bound > radius)
-        bound = radius;
-    radius = bound;
-    bound = 25;
-    if (bound < radius)
-        bound = radius;
-    RayonJumelle = bound;
+    RayonJumelle = max32(25, min32(64, RayonJumelle + delta_size));
     ChangeJumelleVariable();
     if (JumelleZoomActif)
         ChangeDeltaZoomAmpJumelle(delta_size > 0 ? -65 : 65);
@@ -383,17 +376,14 @@ void CalculVitesseJumelle(void) {
 }
 
 void ChangeDeltaPosXJumelleWithoutLimit(s32 delta_pos_x) {
-    if (16 <= delta_pos_x)
-        delta_pos_x = 16;
-    if (-16 >= delta_pos_x)
-        delta_pos_x = -16;
+    delta_pos_x = max32(-16, min32(16, delta_pos_x));
 
     if (ModeAutoJumelle & 1) {
-        Xmap16 = (PositionJumelleX16 & 0xF) | (Xmap16 & ~0xF);
-        Xmap16 = MAX(16 * scroll_start_x, MIN(16 * scroll_end_x, delta_pos_x + Xmap16));
+        Xmap16 = (Xmap16 & ~0xF) | (PositionJumelleX16 & 0xF);
+        Xmap16 = max32(16 * scroll_start_x, min32(16 * scroll_end_x, delta_pos_x + Xmap16));
         xmap = Xmap16 >> 4;
     } else {
-        xmap = MAX(scroll_start_x, MIN(scroll_end_x, xmap + (delta_pos_x >> 4)));
+        xmap = max32(scroll_start_x, min32(scroll_end_x, xmap + (delta_pos_x >> 4)));
     }
 
     PositionJumelleX16 += delta_pos_x;
@@ -402,17 +392,14 @@ void ChangeDeltaPosXJumelleWithoutLimit(s32 delta_pos_x) {
 }
 
 void ChangeDeltaPosYJumelleWithoutLimit(s32 delta_pos_y) {
-    if (16 <= delta_pos_y)
-        delta_pos_y = 16;
-    if (-16 >= delta_pos_y)
-        delta_pos_y = -16;
+    delta_pos_y = max32(-16, min32(16, delta_pos_y));
 
     if (ModeAutoJumelle & 1) {
-        Ymap16 = (PositionJumelleY16 & 0xF) | (Ymap16 & ~0xF);
-        Ymap16 = MAX(16 * scroll_start_y, MIN(16 * scroll_end_y, delta_pos_y + Ymap16));
+        Ymap16 = (Ymap16 & ~0xF) | (PositionJumelleY16 & 0xF);
+        Ymap16 = max32(16 * scroll_start_y, min32(16 * scroll_end_y, delta_pos_y + Ymap16));
         ymap = Ymap16 >> 4;
     } else {
-        ymap = MAX(scroll_start_y, MIN(scroll_end_y, ymap + (delta_pos_y >> 4)));
+        ymap = max32(scroll_start_y, min32(scroll_end_y, ymap + (delta_pos_y >> 4)));
     }
 
     PositionJumelleY16 += delta_pos_y;
@@ -422,10 +409,7 @@ void ChangeDeltaPosYJumelleWithoutLimit(s32 delta_pos_y) {
 
 s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
     bool changed;
-    if (16 <= delta_pos_x)
-        delta_pos_x = 16;
-    if (-16 >= delta_pos_x)
-        delta_pos_x = -16;
+    delta_pos_x = max32(-16, min32(16, delta_pos_x));
 
     changed = 0;
     if (((xmap != scroll_start_x && xmap != scroll_end_x) ||
@@ -434,11 +418,11 @@ s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
         JumellePosX > RayonJumelle / 3 && JumellePosX < 320 - RayonJumelle / 3
     ) {
         if (ModeAutoJumelle & 1) {
-            Xmap16 = (PositionJumelleX16 & 0xF) | (Xmap16 & ~0xF);
-            Xmap16 = MAX(16 * scroll_start_x, MIN(16 * scroll_end_x, delta_pos_x + Xmap16));
+            Xmap16 = (Xmap16 & ~0xF) | (PositionJumelleX16 & 0xF);
+            Xmap16 = max32(16 * scroll_start_x, min32(16 * scroll_end_x, delta_pos_x + Xmap16));
             xmap = Xmap16 >> 4;
         } else {
-            xmap = MAX(scroll_start_x, MIN(scroll_end_x, xmap + (delta_pos_x >> 4)));
+            xmap = max32(scroll_start_x, min32(scroll_end_x, xmap + (delta_pos_x >> 4)));
         }
 
         PositionJumelleX16 += delta_pos_x;
@@ -453,10 +437,7 @@ s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
 
 s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
     bool changed;
-    if (16 <= delta_pos_y)
-        delta_pos_y = 16;
-    if (-16 >= delta_pos_y)
-        delta_pos_y = -16;
+    delta_pos_y = max32(-16, min32(16, delta_pos_y));
 
     changed = 0;
     if (((ymap != scroll_start_y && ymap != scroll_end_y) ||
@@ -465,11 +446,11 @@ s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
         JumellePosY > RayonJumelle / 3 && JumellePosY < 200 - RayonJumelle / 3
             ) {
         if (ModeAutoJumelle & 1) {
-            Ymap16 = (PositionJumelleY16 & 0xF) | (Ymap16 & ~0xF);
-            Ymap16 = MAX(16 * scroll_start_y, MIN(16 * scroll_end_y, delta_pos_y + Ymap16));
+            Ymap16 = (Ymap16 & ~0xF) | (PositionJumelleY16 & 0xF);
+            Ymap16 = max32(16 * scroll_start_y, min32(16 * scroll_end_y, delta_pos_y + Ymap16));
             ymap = Ymap16 >> 4;
         } else {
-            ymap = MAX(scroll_start_y, MIN(scroll_end_y, ymap + (delta_pos_y >> 4)));
+            ymap = max32(scroll_start_y, min32(scroll_end_y, ymap + (delta_pos_y >> 4)));
         }
 
         PositionJumelleY16 += delta_pos_y;
