@@ -1,6 +1,6 @@
 /*
  * Fireflies (GOG v1.21 object 1:384c0-1:38ef0). File name invented (Rayverse luciole.c; stubs there, bodies from
- * the binary and PS1). Names: Rayverse/Android. Status per function: config/units.json.
+ * the binary and PS1). Names: Rayverse/Android. Worker results: NOTES.md.
  */
 #include <string.h>
 
@@ -94,37 +94,29 @@ void CLEAR_FIXE_LUCIOLE(void)
 
 void set_luciole(s32 a1, s32 a2)
 {
-    s32 x1;
-    s32 x2;
-    s32 y1;
-    s32 y2;
 
-    x1 = a1 - rayon_luciole;
-    x2 = a1 + rayon_luciole;
-    y1 = a2 - rayon_luciole;
-    y2 = a2 + rayon_luciole;
+    Bloc_lim_W1_Aff = a1 - rayon_luciole;
+    Bloc_lim_W2_Aff = a1 + rayon_luciole;
+    Bloc_lim_H1_Aff = a2 - rayon_luciole;
+    Bloc_lim_H2_Aff = a2 + rayon_luciole;
 
-    if (y1 < Bloc_lim_H1_Glob)
-        y1 = Bloc_lim_H1_Glob;
-    if (y1 > Bloc_lim_H2_Glob)
-        y1 = Bloc_lim_H2_Glob;
-    if (x1 < Bloc_lim_W1_Glob)
-        x1 = Bloc_lim_W1_Glob;
-    if (x1 > Bloc_lim_W2_Glob)
-        x1 = Bloc_lim_W2_Glob;
-    if (y2 > Bloc_lim_H2_Glob)
-        y2 = Bloc_lim_H2_Glob;
-    if (y2 < Bloc_lim_H1_Glob)
-        y2 = Bloc_lim_H1_Glob;
-    if (x2 > Bloc_lim_W2_Glob)
-        x2 = Bloc_lim_W2_Glob;
-    if (x2 < Bloc_lim_W1_Glob)
-        x2 = Bloc_lim_W1_Glob;
+    if (Bloc_lim_H1_Aff < Bloc_lim_H1_Glob)
+        Bloc_lim_H1_Aff = Bloc_lim_H1_Glob;
+    if (Bloc_lim_H1_Aff > Bloc_lim_H2_Glob)
+        Bloc_lim_H1_Aff = Bloc_lim_H2_Glob;
+    if (Bloc_lim_W1_Aff < Bloc_lim_W1_Glob)
+        Bloc_lim_W1_Aff = Bloc_lim_W1_Glob;
+    if (Bloc_lim_W1_Aff > Bloc_lim_W2_Glob)
+        Bloc_lim_W1_Aff = Bloc_lim_W2_Glob;
+    if (Bloc_lim_H2_Aff > Bloc_lim_H2_Glob)
+        Bloc_lim_H2_Aff = Bloc_lim_H2_Glob;
+    if (Bloc_lim_H2_Aff < Bloc_lim_H1_Glob)
+        Bloc_lim_H2_Aff = Bloc_lim_H1_Glob;
+    if (Bloc_lim_W2_Aff > Bloc_lim_W2_Glob)
+        Bloc_lim_W2_Aff = Bloc_lim_W2_Glob;
+    if (Bloc_lim_W2_Aff < Bloc_lim_W1_Glob)
+        Bloc_lim_W2_Aff = Bloc_lim_W1_Glob;
 
-    Bloc_lim_H1_Aff = y1;
-    Bloc_lim_H2_Aff = y2;
-    Bloc_lim_W2_Aff = x2;
-    Bloc_lim_W1_Aff = x1;
 }
 
 void init_aff_luciole(s32 a1, s32 a2)
@@ -203,27 +195,21 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
 
 void aff_luciole(s32 a1, s32 a2, s32 a3, u8 *draw_buf)
 {
+    s32 x;
     s32 i;
     s32 y;
-    s32 d;
-    s32 err;
-    s32 x;
 
-    i = 0;
-    y = a3;
-    while (i <= ADDLUCLIP) {
+    for (i = 0, y = a3; i <= ADDLUCLIP; ++i, ++y) {
         plot2line(a1, a2, 0, y, draw_buf);
-        ++i;
-        ++y;
     }
 
     x = a3;
+    i = 0;
+    y = 0;
     if (x >= 0) {
-        i = 0;
-        d = 1;
-        err = 2 * x - 1;
-        y = 0;
-        while (i <= x) {
+        s32 d = 1;
+        s32 err = 2 * x - 1;
+        do {
             plot2line(a1, a2, i, x, draw_buf);
             plot2line(a1, a2, x, i, draw_buf);
             ++i;
@@ -234,7 +220,7 @@ void aff_luciole(s32 a1, s32 a2, s32 a3, u8 *draw_buf)
                 y -= err;
                 err -= 2;
             }
-        }
+        } while (i <= x);
     }
 }
 
@@ -245,12 +231,8 @@ void Display_and_free_luciole(u8 *draw_buf)
         s32 dy;
         s32 distance;
 
-        dx = old_x_luc - x_luc;
-        if (dx < 0)
-            dx = -dx;
-        dy = old_y_luc - y_luc;
-        if (dy < 0)
-            dy = -dy;
+        dx = ((old_x_luc - x_luc) >= 0 ? old_x_luc - x_luc : -(old_x_luc - x_luc));
+        dy = ((old_y_luc - y_luc) >= 0 ? old_y_luc - y_luc : -(old_y_luc - y_luc));
         distance = dy;
         if (distance < dx)
             distance = dx;
@@ -258,7 +240,7 @@ void Display_and_free_luciole(u8 *draw_buf)
 
         old_y_luc = y_luc;
         old_x_luc = x_luc;
-        aff_luciole(y_luc, x_luc, rayon_luciole - 4, draw_buf);
+        aff_luciole(x_luc, y_luc, rayon_luciole - 4, draw_buf);
 
         Bloc_lim_H1 = Bloc_lim_H1_Glob;
         Bloc_lim_H2 = Bloc_lim_H2_Glob;
@@ -279,21 +261,22 @@ void free_luciole(void)
 
 void INIT_LUCIOLE(void)
 {
-    s16 x = ray.x + ray.offset_bx;
-    s16 y = ray.y + ray.offset_hy - 16;
     u8 i;
-
-    y_luc = x - xmap + 8;
-    x_luc = y - ymap;
-    n_ray = 0;
-    for (i = 0; i < 4; ++i) {
-        x_ray[i] = x;
-        y_ray[i] = y;
-    }
-    x_main_luc = x;
-    y_main_luc = y;
+    x_main_luc = ray.x + ray.offset_bx;
+    y_main_luc = ray.y + ray.offset_hy - 16;
     vx_luc = 0;
     vy_luc = 0;
+
+
+    y_luc = x_main_luc - xmap + 8;
+    x_luc = y_main_luc - ymap;
+    old_y_luc = y_luc;
+    old_x_luc = x_luc;
+    for (i = 0; i < 4; ++i) {
+        x_ray[i] = x_main_luc;
+        y_ray[i] = y_main_luc;
+    }
+    n_ray = 0;
     if (GameModeVideo == 0)
         init_aff_luciole(y_luc, x_luc);
 }
@@ -304,9 +287,10 @@ void DO_LUCIOLE(void)
     s16 spr_y;
     s16 spr_w;
     s16 spr_h;
-    register s32 old_x;
-    register s32 old_y;
-    register s16 delta;
+    s16 old_y;
+    s16 old_x;
+    s16 delta_y;
+    s16 delta;
 
     if (ray_mode != 3 &&
         !(ray.main_etat == 2 && ray.sub_etat == 9) &&
@@ -315,9 +299,9 @@ void DO_LUCIOLE(void)
             rayon_luciole = ((512 - cosinus(rotationtxt)) * 54) >> 9;
             if (rotationtxt < 128)
                 rotationtxt += 2;
-        } else if (horloge[2] != 0) {
+        } else if (horloge[2] >= 1) {
             rayon_luciole--;
-        } else {
+        } else if (horloge[2] < 1) {
             rayon_luciole++;
         }
 
@@ -339,15 +323,15 @@ void DO_LUCIOLE(void)
         delta = old_x - x_main_luc - vx_luc;
         if (delta != 0)
             delta = delta > 0 ? 1 : -1;
+        delta_y = old_y - y_main_luc - vy_luc;
+        if (delta_y != 0)
+            delta_y = delta_y > 0 ? 1 : -1;
         vx_luc += delta;
         if (vx_luc > 8)
             vx_luc = 8;
         if (vx_luc < -8)
             vx_luc = -8;
-        delta = old_y - y_main_luc - vy_luc;
-        if (delta != 0)
-            delta = delta > 0 ? 1 : -1;
-        vy_luc += delta;
+        vy_luc += delta_y;
         if (vy_luc > 8)
             vy_luc = 8;
         if (vy_luc < -8)

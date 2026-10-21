@@ -1,6 +1,6 @@
 /*
  * Rayman's fist (GOG v1.21 object 1:56670-1:57100). File name invented (Rayverse poing.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: measured statuses and remaining differences are in NOTES.md.
  */
 #include "obj.h"
 #include "game.h"
@@ -109,17 +109,17 @@ void RAY_THROW_FIST(void)
 
     if (ray.main_etat == 0) {
         if (ray.flags.flip_x)
-            decalage_en_cours -= poing.charge * 16;
+            decalage_en_cours -= poing.charge * 1024 / 64;
         else
-            decalage_en_cours += poing.charge * 16;
+            decalage_en_cours += poing.charge * 1024 / 64;
     }
     poing.is_charging = false;
-    poing.is_active = true;
     poing.is_boum = false;
     poing.is_returning = false;
     poing_obj->flags.flip_x = ray.flags.flip_x;
     poing_obj->flags.alive = 1;
     poing_obj->is_active = 1;
+    poing.is_active = true;
     del_alwobj(poing_obj_id);
     add_alwobj(poing_obj);
     poing_obj->speed_y = 0;
@@ -149,25 +149,30 @@ void RAY_THROW_FIST(void)
         break;
     }
 
-    if (ray.flags.flip_x ? decalage_en_cours > 0 : decalage_en_cours < 0)
-        poing.speed_x += MAX(Abs(ray.speed_x) - 5, 0);
+    if ((ray.flags.flip_x && decalage_en_cours > 0) ||
+        (!ray.flags.flip_x && decalage_en_cours < 0))
+    {
+        unk_1 = Abs((s32)ray.speed_x) - 5;
+        if (unk_1 < 0)
+            unk_1 = 0;
+        poing.speed_x += unk_1;
+    }
 
     poing.speed_x = MIN(poing.speed_x, 16);
 
     if (poing_obj->flags.flip_x) {
-        poing_obj->x += 11;
         poing_obj->speed_x = poing.speed_x;
+        poing_obj->x += 11;
     } else {
-        poing_obj->x -= 11;
         poing_obj->speed_x = -poing.speed_x;
+        poing_obj->x -= 11;
     }
-    unk_1 = -40;
-    poing.field_A = (poing.charge * 130 / 64) - (poing.speed_x * 3 + unk_1);
+    poing.field_A = (poing.charge * 130 / 64) + 40 - poing.speed_x * 3;
     unk_2 = ashl16(poing.charge, 8);
-    poing.charge = unk_2;
     poing.field_4 = unk_2;
+    poing.charge = unk_2;
     poing.field_A = unk_2 * poing.speed_x / poing.field_A;
-    poing_obj->y = ray_zdc_y + (ray_zdc_h >> 1) - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
+    poing_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
     poing.y_16 = ashl16(poing_obj->y, 4);
     CALC_FIST_POS();
 }
@@ -176,9 +181,10 @@ void RAY_PREPARE_FIST(void)
 {
     if (get_eta(&ray)->flags & 2) {
         if (ray.main_etat == 2) {
-            eta_t *eta = ray.eta[ray.main_etat];
-            u8 anim_speed = (ray.speed_y > 0) ? eta[2].anim_index : eta[0].anim_speed;
-            eta[13].anim_speed = (eta[13].anim_speed & 0xF) | (anim_speed & 0xF0);
+            if (ray.speed_y > 0)
+                ray.eta[2][13].anim_speed_bits.high = ray.eta[2][2].anim_speed_bits.high;
+            else
+                ray.eta[2][13].anim_speed_bits.high = ray.eta[2][0].anim_speed_bits.high;
             poing.charge = 32;
             RAY_THROW_FIST();
             helico_time = -1;
@@ -187,9 +193,9 @@ void RAY_PREPARE_FIST(void)
         } else {
             RAY_STOP();
             set_sub_etat(&ray, 11);
-            poing.charge = 5;
             poing.is_charging = 1;
             compteur_attente = 0;
+            poing.charge = 5;
         }
     }
 }
@@ -213,10 +219,10 @@ void fin_poing_follow(u8 a1)
             s32 unk_y;
 
             unk_obj->x = ray.x + ray.offset_bx - unk_obj->offset_bx;
-            ray_y = ray_zdc_y + (ray_zdc_h >> 1);
-            unk_y = ((unk_obj->offset_by + unk_obj->offset_hy) >> 1) + 5;
-            unk_obj->y = ray_y - unk_y;
-        } else {
+            /* DOS 1:56c66/1:56c6c: these bound names have reversed vertical roles. */
+            unk_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - 5 -
+                ((unk_obj->offset_by + unk_obj->offset_hy) >> 1);
+        } else if (!a1) {
             unk_obj->x = unk_obj->init_x;
             unk_obj->y = unk_obj->init_y;
         }
@@ -235,26 +241,21 @@ void POING_FOLLOW(obj_t *obj)
 
 void alter_fist_speed(obj_t *obj)
 {
-    obj_t *saved_obj;
-    u8 accel_x;
+    u8 accel_x = 0;
     s32 abs_spd_x;
-
-    saved_obj = obj;
-    abs_spd_x = saved_obj->speed_x;
+    abs_spd_x = obj->speed_x;
     if (abs_spd_x < 0)
         abs_spd_x = -abs_spd_x;
-
     if (abs_spd_x >= 11)
         accel_x = 2;
-    else if (abs_spd_x >= 8)
+    else if (Abs((s32)obj->speed_x) >= 8)
         accel_x = 1;
+    else if (horloge[2] != 0)
+        accel_x = 1;
+    if (obj->flags.flip_x)
+        obj->speed_x -= accel_x;
     else
-        accel_x = horloge[2] != 0;
-
-    if (saved_obj->flags.flip_x)
-        saved_obj->speed_x -= accel_x;
-    else
-        saved_obj->speed_x += accel_x;
+        obj->speed_x += accel_x;
 }
 
 void switch_off_fist(void)
@@ -292,20 +293,28 @@ void DO_POING(obj_t *obj)
             } else if (poing.is_returning == 0) {
                 alter_fist_speed(obj);
             } else if (poing.is_returning == 1) {
-                if (Abs(obj->speed_x) < poing.speed_x)
+                if (Abs((s32)obj->speed_x) < poing.speed_x)
                     alter_fist_speed(obj);
 
                 ray_diff_x = ray_zdc_x + (ray_zdc_w >> 1) - obj->offset_bx;
-                ray_diff_x += 11 * (obj->flags.flip_x ? 1 : -1);
+                if (obj->flags.flip_x)
+                    ray_diff_x += 11;
+                else
+                    ray_diff_x -= 11;
 
-                if (ray.main_etat == 4)
-                    ray_diff_x += 11 * (obj->flags.flip_x ? 1 : -1);
+                if (ray.main_etat == 4) {
+                    if (obj->flags.flip_x)
+                        ray_diff_x += 11;
+                    else
+                        ray_diff_x -= 11;
+                }
 
                 ray_diff_y =
-                    (ray_zdc_y + (ray_zdc_h >> 1) -
+                    (ray_zdc_h + (ray_zdc_y >> 1) -
                      ((obj->offset_by + obj->offset_hy) >> 1)) * 16;
 
-                if (obj->flags.flip_x ? ray_diff_x >= obj->x : ray_diff_x <= obj->x)
+                if ((obj->flags.flip_x && ray_diff_x >= obj->x) ||
+                    (!obj->flags.flip_x && ray_diff_x <= obj->x))
                     switch_off_fist();
                 else {
                     unk_x_1 = ray_diff_x - obj->x;
@@ -314,18 +323,27 @@ void DO_POING(obj_t *obj)
                         unk_y_1 = unk_y_1 / unk_x_1;
                     obj->speed_y = unk_y_1 * obj->speed_x;
 
-                    unk_1 = obj->speed_y + poing.y_16;
-                    if (unk_1 >= MIN(poing.y_16, ray_diff_y) &&
-                        unk_1 <= MAX(poing.y_16, ray_diff_y))
-                        obj->speed_y >>= 4;
-                    else
-                        obj->speed_y = (ray_diff_y - poing.y_16) >> 4;
+                    {
+                        s32 max_y = MAX(poing.y_16, ray_diff_y);
+                        s32 min_y = MIN(poing.y_16, ray_diff_y);
+                        s32 within;
+                        unk_1 = obj->speed_y + poing.y_16;
+                        within = unk_1 >= min_y && unk_1 <= max_y;
+                        if (within)
+                            obj->speed_y >>= 4;
+                        else
+                            obj->speed_y = (ray_diff_y - poing.y_16) >> 4;
+                    }
                 }
             }
 
             if (!poing.is_boum && poing.is_active)
                 DO_POING_COLLISION();
         } else {
+            if (poing.is_boum && !poing.is_returning) {
+                fist_U_turn(true);
+                obj->anim_index = obj->eta[obj->main_etat][obj->sub_etat].anim_index;
+            }
             poing.is_returning = true;
             if (obj->flags.flip_x)
                 obj->speed_x--;
@@ -343,15 +361,14 @@ void allocatePoingBoum(void)
     obj_t *obj;
     s16 i;
     s16 nb_objs;
+    s16 anim_x, anim_y, anim_w, anim_h;
+    s16 poing_x, poing_y, poing_w, poing_h;
 
     i = 0;
     obj = level.objects + i;
     nb_objs = level.nb_objects;
     while (i < nb_objs) {
         if (obj->type == TYPE_11_BOUM && !obj->is_active) {
-            s16 anim_x, anim_y, anim_w, anim_h;
-            s16 poing_x, poing_y, poing_w, poing_h;
-
             add_alwobj(obj);
             GET_SPRITE_POS(poing_obj, 0, &poing_x, &poing_y, &poing_w, &poing_h);
             GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h);

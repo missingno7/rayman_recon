@@ -1,8 +1,9 @@
 /*
  * Mite enemies (GOG v1.21 object 1:42d30-1:43bc0). File name invented (Rayverse mite.c). Names: Rayverse/Android.
- * Status per function: config/units.json.
+ * Worker candidate: measured statuses and remaining differences are in NOTES.md.
  */
 #include "obj.h"
+#include "map.h"
 
 /* Rayverse layout; Android symbol reports 20 bytes, DOS accesses confirm fields at +0x0e and +0x10. */
 typedef struct poing_t {
@@ -36,7 +37,7 @@ extern obj_t ray;
 extern obj_t *poing_obj;
 extern poing_t poing;
 extern s16 ymap;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 
 u8 EOA(obj_t *obj);
 void SET_X_SPEED(obj_t *obj);
@@ -48,9 +49,10 @@ void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void obj_hurt(obj_t *obj);
 u8 calc_typ_travd(obj_t *obj, u8 a2);
 void calc_obj_dir(obj_t *obj);
-u8 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
+s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 void makeUturn(obj_t *obj);
-u8 BTYP(s32 tile_x, s32 tile_y);
+u8 BTYP(s16 tile_x, s16 tile_y);
+void DO_MITE2_ESQUIVE(obj_t *obj);
 void calc_esquive_poing(obj_t *obj, s16 *diff_x, s16 *diff_y, s16 *unk);
 //52D30
 void mite_esquive_poing(obj_t* mit_obj, s16* out_diff_x) {
@@ -137,7 +139,7 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
 
     if (obj->main_etat == 2 || obj->main_etat == 1) {
         if (ray_over_mit(obj, a2)) {
-            if (obj->main_etat == 2 && obj->speed_y < -2 && obj->sub_etat != 0)
+            if (obj->main_etat == 2 && obj->speed_y < -2 && (obj->sub_etat != 0 ? true : false))
                 obj->speed_y++;
             else
                 HAS_MIT_JUMP(obj);
@@ -163,11 +165,9 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
         }
 
         if (obj->main_etat == 1) {
-            eta = &obj->eta[obj->main_etat][obj->sub_etat];
-            unk_1 =
+            obj->eta[obj->main_etat][obj->sub_etat].flags_bits.bit4 = (
                     (!(obj->flags.flip_x) && obj->speed_x > 0) ||
-                    (obj->flags.flip_x && obj->speed_x < 0);
-            eta->flags = (eta->flags & ~0x10) | (unk_1 << 4);
+                    (obj->flags.flip_x && obj->speed_x < 0)) ? true : false;
         }
 
         if (obj->speed_x > 4)
@@ -180,199 +180,87 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
 }
 
 //53068
-void DO_MIT_ATTAK(obj_t* obj) {
-    /* 4ACFC 8016F4FC -O2 -msoft-float */
+void DO_MIT_ATTAK(obj_t *obj)
+{
+    s16 distance;
+    s16 ray_distance;
+    s32 abs_distance;
+    s32 abs_ray_distance;
+    s16 diff_y;
 
-    // TODO(Falcury): needs clean-up and checking
-
-    s16 temp_a0_1;
-    s16 temp_a1;
-    s16 temp_v0_1;
-    s16 temp_v0_2;
-    s16 temp_v0_3;
-    s16 temp_v0_4;
-    s16 temp_v0_5;
-    s16 temp_v0_6;
-    s16 temp_v1_1;
-    s16 temp_v1_2;
-    s16 var_v0_1;
-    s16 var_v0_2;
-    s16 var_v0_4;
-    s16 var_v1_1;
-    s16 var_v1_2;
-    s32 var_v0_3;
-    s32 var_v0_5;
-    s16 new_var;
-
-    if ((obj->main_etat == 0) && (obj->sub_etat == 10)) {
-        temp_v0_1 = obj->follow_id;
-        if (temp_v0_1 > 50) {
-            obj->follow_id = temp_v0_1 - 50;
-        }
-    }
-    else if (HAS_MIT_JUMP(obj))
-    {
-        if (obj->sub_etat != 1 && obj->follow_id == 500) {
+    if (obj->main_etat == 0 && obj->sub_etat == 10) {
+        if (obj->follow_id > 50)
+            obj->follow_id -= 50;
+    } else if (HAS_MIT_JUMP(obj)) {
+        if ((obj->sub_etat != 1 ? true : false) && obj->follow_id == 500) {
             obj->config = 140;
-            obj->speed_y = 0;
             obj->follow_x = obj->x;
             ++obj->follow_id;
+            obj->speed_y = 0;
             set_sub_etat(obj, 3);
         } else if (obj->sub_etat == 3) {
-            if (obj->gravity_value_2 != 0) {
-                if (obj->speed_y >= 0) {
-                    --obj->speed_y;
-                    return;
-                }
-            }
+            if (obj->gravity_value_2 != 0 && obj->speed_y >= 0)
+                obj->speed_y = obj->speed_y - 1;
         } else if (obj->sub_etat == 4) {
-            temp_v0_3 = obj->x;
-            temp_v1_1 = obj->follow_x;
-            if ((temp_v0_3 - temp_v1_1) >= 0)
-            {
-                var_v0_1 = temp_v0_3 - temp_v1_1;
-            }
-            else
-            {
-                var_v0_1 = temp_v1_1 - temp_v0_3;
-            }
-            temp_a0_1 = obj->follow_x;
-            if (((((ray.x + ray.offset_bx) - temp_a0_1) - obj->offset_bx) - 10) >= 0)
-            {
-                var_v1_1 = (((ray.x + ray.offset_bx) - temp_a0_1) - obj->offset_bx) - 10;
-            }
-            else
-            {
-                new_var = ray.x; /* flip order of ray.x and ray.offset_bx? see DO_STONEWOMAN_COMMAND */
-                var_v1_1 = 10 - (((ray.offset_bx + new_var) - temp_a0_1) - obj->offset_bx);
-            }
-            if (obj->config < var_v0_1 || ((var_v1_1 < var_v0_1) && obj->config == 140))
-            {
-                if ((obj->config == 140) && (var_v1_1 < 140))
-                {
-                    obj->config = (u8) var_v1_1;
-                }
-                if (obj->gravity_value_2 == 1)
-                {
+            abs_distance = obj->x - obj->follow_x;
+            if (abs_distance < 0) abs_distance = -abs_distance;
+            distance = abs_distance;
+            abs_ray_distance = ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10;
+            if (abs_ray_distance < 0) abs_ray_distance = -abs_ray_distance;
+            ray_distance = abs_ray_distance;
+            if (distance > obj->config || (distance > ray_distance && obj->config == 140)) {
+                if (obj->config == 140 && ray_distance < 140)
+                    obj->config = ray_distance;
+                if (obj->gravity_value_2 == 1) {
                     if (!obj->flags.flip_x)
-                    {
-                        var_v0_2 = (u16) obj->speed_x + 1;
-                    }
+                        ++obj->speed_x;
                     else
-                    {
-                        var_v0_2 = (u16) obj->speed_x - 1;
-                    }
-                    obj->speed_x = var_v0_2;
+                        --obj->speed_x;
                 }
-                if (obj->gravity_value_1 == 1)
-                {
-                    temp_v0_4 = obj->speed_y;
-                    if (temp_v0_4 >= -1)
-                    {
-                        obj->speed_y = temp_v0_4 - 1;
-                    }
-                }
-            }
-            else
-            {
-                temp_v1_2 = ((obj->offset_by + (u16) obj->y) - ray.y) - ray.offset_by;
-                /*
-                if
-                (obj->speed_x <= 0 && obj->flags.flip_x && obj->speed_x >= 0)
-                with obj->speed_x = -4: obj->speed_x <= 0 && !(obj->flags.flip_x)
-                (obj->speed_x > 0 && obj->flags.flip_x)
-
-                else
-                (obj->speed_x <= 0 && obj->flags.flip_x && obj->speed_x < 0)
-                (obj->speed_x > 0 && !(obj->flags.flip_x)) ||
-
-                similar with DO_CLOWN_TNT3_COMMAND?
-                */
-                if (obj->speed_x <= 0)
-                {
-                    if (obj->flags.flip_x)
-                    {
-                        if (obj->speed_x < 0)
-                        {
-                            goto block_47;
-                        }
-                        else
-                            goto block_37;
-                    }
-                    else
-                    {
+                if (obj->gravity_value_1 == 1 && obj->speed_y > -2)
+                    --obj->speed_y;
+            } else {
+                diff_y = obj->offset_by + (s16)obj->y - (s16)ray.y - ray.offset_by;
+                if ((obj->speed_x <= 0 && !obj->flags.flip_x) ||
+                    (obj->speed_x >= 0 && obj->flags.flip_x)) {
+                    if (!obj->flags.flip_x)
                         obj->speed_x = -4;
-                        goto block_40;
-                    }
-                }
-                block_37:
-                if (obj->flags.flip_x)
-                {
-                    obj->speed_x = 4;
-                    block_40:
-                    if (temp_v1_2 >= 0xB)
-                    {
+                    else
+                        obj->speed_x = 4;
+                    if (diff_y > 10)
                         obj->speed_y = -1;
-                    }
-                    else if (temp_v1_2 < -0x14)
-                    {
+                    else if (diff_y < -20)
                         obj->speed_y = 2;
-                    }
-                    else if (temp_v1_2 < -10)
-                    {
+                    else if (diff_y < -10)
                         obj->speed_y = 1;
-                    }
                     else
-                    {
                         obj->speed_y = 0;
-                    }
-                }
-                else
-                {
-                    block_47:
-                    if (((temp_v1_2) >= -9) && (ray.main_etat == 0))
-                    {
+                } else {
+                    if (diff_y > -10 && ray.main_etat == 0)
                         obj->speed_y = 0;
-                    }
                     else
-                    {
                         obj->speed_y = 1;
+                    if ((distance < 8 && !obj->flags.flip_x) ||
+                        (distance > 8 && obj->flags.flip_x)) {
+                        --obj->speed_x;
+                        MAX_2(obj->speed_x, -4);
+                    } else {
+                        ++obj->speed_x;
+                        MIN_2(obj->speed_x, 4);
                     }
-                    if (
-                            (var_v0_1 < 8 && ((!(obj->flags.flip_x)))) ||
-                            ((var_v0_1 > 8) && (obj->flags.flip_x))
-                            )
-                    {
-                        if (--obj->speed_x < -4)
-                        {
-                            obj->speed_x = -4;
-                        }
-                    }
-                    else
-                    {
-                        if (++obj->speed_x > 4)
-                        {
-                            obj->speed_x = 4;
-                        }
-                    }
-                    if ((obj->speed_x == 0) && (var_v0_1 < 8))
-                    {
+                    if (obj->speed_x == 0 && distance < 8) {
                         obj->follow_id = 0;
-                        set_sub_etat(obj, 0U);
+                        set_sub_etat(obj, 0);
                     }
                 }
             }
-            if (block_flags[calc_typ_travd(obj, 0)] & 1)
-            {
-                var_v1_2 = 1;
+            if (block_flags[calc_typ_travd(obj, false)].bits.unused0) {
                 if (obj->speed_x > 0)
-                {
-                    var_v1_2 = -1;
-                }
-                obj->speed_x = var_v1_2;
+                    obj->speed_x = -1;
+                else
+                    obj->speed_x = 1;
             }
         }
-
     }
 }
 
@@ -439,8 +327,8 @@ void DO_MIT_COMMAND(obj_t* obj) {
     s16 diff_x_2;
     s16 diff_y_1;
     s16 esquive_x;
-    s32 prev_flip_x;
-    s32 new_var;
+    u8 prev_flip_x;
+    s32 diff_y_base;
     eta_t* obj_eta = &obj->eta[obj->main_etat][obj->sub_etat];
 
     if (!IS_MIT_PAF(obj)) {
@@ -457,9 +345,10 @@ void DO_MIT_COMMAND(obj_t* obj) {
 
             if (obj->detect_zone_flag != 0)
             {
-                diff_x_1 = (ray.x + ray.offset_bx) - obj->x - obj->offset_bx;
+                diff_x_1 = ((s16)ray.x + ray.offset_bx) - (s16)obj->x - obj->offset_bx;
                 diff_x_2 = ABS(diff_x_1) >> 1;
-                diff_y_1 = (obj->y + obj->offset_by) - ray.y - ray.offset_by;
+                diff_y_base = obj->offset_by + (s16)obj->y - (s16)ray.y;
+                diff_y_1 = diff_y_base - ray.offset_by;
                 obj->follow_id++;
                 if (ray_over_mit(obj, diff_x_1))
                 {
@@ -507,13 +396,10 @@ void DO_MIT_COMMAND(obj_t* obj) {
                             obj->speed_x = 0;
                             break;
                         case 1:
-                            /* TODO: ??? */
-                            if (
-                                    !(
-                                            obj->main_etat == 2 ||
-                                            (obj->main_etat == 0 && (obj->sub_etat == 9 || (obj->sub_etat == (new_var = 0x0A)) || obj->sub_etat == 0x0B))
-                                    )
-                                    )
+                            if (obj->main_etat != 2 &&
+                                !(obj->main_etat == 0 && obj->sub_etat == 9) &&
+                                !(obj->main_etat == 0 && obj->sub_etat == 10) &&
+                                !(obj->main_etat == 0 && obj->sub_etat == 11))
                                 set_main_and_sub_etat(obj, 1, 0);
                             break;
                         case 2:
@@ -577,10 +463,10 @@ void DO_MIT_COMMAND(obj_t* obj) {
                 }
             }
 
-            if (block_flags[obj->btypes[3]] >> BLOCK_FULLY_SOLID & 1)
+            if (block_flags[obj->btypes[3]].bits.unused0)
                 obj->speed_y = 0;
 
-            if (block_flags[calc_typ_travd(obj, false)] >> BLOCK_FULLY_SOLID & 1)
+            if (block_flags[calc_typ_travd(obj, false)].bits.unused0)
                 obj->speed_x = 0;
 
             if (obj->main_etat != 2)
@@ -618,10 +504,10 @@ void DO_MITE2_COMMAND(obj_t* obj) {
         DO_MITE2_ESQUIVE(obj);
         if (obj->follow_id != 0 && HAS_MIT_JUMP(obj))
         {
-            if (!obj->flags.flip_x)
-                obj->speed_x = -2;
-            else
+            if (obj->flags.flip_x)
                 obj->speed_x = 2;
+            else
+                obj->speed_x = -2;
         }
 
         if (obj->main_etat != 2)
@@ -641,21 +527,21 @@ void DO_MITE2_COMMAND(obj_t* obj) {
             if (
                     block_flags[
                             BTYP((obj->x + obj->offset_bx) >> 4, (obj->y + obj->offset_hy) >> 4)
-                    ] >> BLOCK_FULLY_SOLID & 1 &&
+                    ].bits.unused0 &&
                     obj->speed_y < 0
                     )
                 obj->speed_y = 1;
         }
         else
         {
-            if (!(block_flags[obj->btypes[4]] >> BLOCK_SOLID & 1))
+            if (!(block_flags[obj->btypes[4]].bits.solid))
             {
                 set_main_and_sub_etat(obj, 2, 0);
                 skipToLabel(obj, 7, true);
             }
         }
 
-        if (block_flags[unk_1] & 1)
+        if (block_flags[unk_1].bits.unused0)
         {
             if (obj->main_etat == 1)
                 makeUturn(obj);

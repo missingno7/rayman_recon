@@ -644,7 +644,7 @@
      ]
     },
     "RAY_PREPARE_FIST": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -660,7 +660,7 @@
      ]
     },
     "fin_poing_follow": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -700,7 +700,7 @@
      ]
     },
     "allocatePoingBoum": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -1281,7 +1281,7 @@
      ]
     },
     "fix_mit_Xspeed": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -1316,7 +1316,7 @@
      ]
     },
     "DO_MITE2_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -2073,7 +2073,7 @@
      ]
     },
     "set_luciole": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -2115,14 +2115,14 @@
      ]
     },
     "INIT_LUCIOLE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
     },
     "DO_LUCIOLE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
