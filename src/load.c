@@ -1,4 +1,4 @@
-/* load object, DOS v1.21. Names RAYVERSE/ANDROID; d_load worker candidate.
+/* load object, DOS v1.21. Names RAYVERSE/ANDROID; c2_load worker candidate.
    See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
 #include "game.h"
@@ -725,13 +725,16 @@ void LOAD_ALL_FIX(void)
         raylittle.img_buffer = wldobj[index].img_buffer;
         raylittle.nb_sprites = wldobj[index].nb_sprites;
         fread(&index, 4, 1, fp);
-        for (i = 0; i < 24; i++) {
-            mapobj[i].sprites = wldobj[index].sprites;
-            mapobj[i].animations = wldobj[index].animations;
-            mapobj[i].nb_sprites = wldobj[index].nb_sprites;
-            mapobj[i].anim_count = wldobj[index].anim_count;
-            mapobj[i].img_buffer = wldobj[index].img_buffer;
-            mapobj[i].eta = wldobj[index].eta;
+        {
+            u8 *atlas = wldobj[index].img_buffer;
+            for (i = 0; i < 24; i++) {
+                mapobj[i].sprites = wldobj[index].sprites;
+                mapobj[i].animations = wldobj[index].animations;
+                mapobj[i].nb_sprites = wldobj[index].nb_sprites;
+                mapobj[i].anim_count = wldobj[index].anim_count;
+                mapobj[i].img_buffer = atlas;
+                mapobj[i].eta = wldobj[index].eta;
+            }
         }
         fread(&index, 4, 1, fp);
         memcpy(&clockobj, &wldobj[index], sizeof(obj_t));
