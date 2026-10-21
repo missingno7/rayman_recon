@@ -9,6 +9,21 @@
 #include <i86.h>
 #include <dos.h>
 
+
+/* Helper names below are INVENTED (Android symbol queries: absent).
+ * ORIGINAL_INLINE: DOS 1:26d81, INT 10h; AX selects video service/mode. */
+void video_interrupt(u32 service);
+#pragma aux video_interrupt = "int 10h" parm [eax] modify exact []
+/* ORIGINAL_INLINE: DOS 1:26d88, INT 21h process exit. */
+void terminate_interrupt(u32 service);
+#pragma aux terminate_interrupt = "int 21h" parm [eax] modify exact []
+/* ORIGINAL_INLINE: DOS 1:26164, CLI; no general register changes. */
+void inhibit_interrupts(void);
+#pragma aux inhibit_interrupts = "cli" modify exact []
+/* ORIGINAL_INLINE: DOS 1:26222, STI, with no CLD or register changes. */
+void permit_interrupts(void);
+#pragma aux permit_interrupts = "sti" modify exact []
+
 #define MODE_TEXT 255
 #define MODE_X 1
 #define MODE_5_CASSE_BRIQUE 5
@@ -293,11 +308,11 @@ void InitPcSoundCard(void) {
     u8 failed = 0;
     u8 attempts = 0;
 
-    _disable();
+    inhibit_interrupts();
     display_mode = 0;
     speaker_enable();
     sub_35F70();
-    while (need_timer != 0 && failed == 0) {
+    if (need_timer != 0) while (failed == 0) {
         sub_3609C();
         endsynchro();
         start_ticks = clock_ticks();
@@ -319,7 +334,7 @@ void InitPcSoundCard(void) {
             failed = 1;
         }
     }
-    _enable();
+    permit_interrupts();
 }
 
 void FIRST_INIT(void) {
@@ -713,9 +728,9 @@ void FIN_MAP_LOOP(void) {
         RAY_DEMIRAY();
     }
     if (cracked) {
-        /* DOS uses inline INT 10h / INT 21h here; ordinary calls remain NEAR. */
-        textmode();
-        exit(0);
+        /* Inline interrupts are exact; the preceding predicate remains NEAR. */
+        video_interrupt(3);
+        terminate_interrupt(0x4c00);
     }
 }
 
