@@ -87,6 +87,8 @@ extern s16 ray_mode;
 extern u8 ray_on_poelle;
 extern u8 ray_se_noie;
 extern s16 ray_wind_force;
+/* Legacy RAYVERSE bindings: ray_zdc_h is vertical position (2:3f862),
+ * ray_zdc_y is height (2:3f876). DOS GET_RAY_ZDC 1:0dd3f..0dd50. */
 extern s16 ray_zdc_h;
 extern s16 ray_zdc_w;
 extern s16 ray_zdc_x;
@@ -1894,10 +1896,10 @@ void SET_RAY_BALANCE(void) {
     ray.link = 0;
     compteur_attente = 0; // added in PC/Android
     ray.follow_id = -1;
+    ray.gravity_value_1 = 0;
+    ray.gravity_value_2 = 0;
     decalage_en_cours = 0;
     ray.speed_y = 0;
-    ray.gravity_value_2 = 0;
-    ray.gravity_value_1 = 0;
     button_released = 1;
 }
 
@@ -2172,7 +2174,7 @@ void RAY_IN_THE_AIR(void) {
     }
     ++jump_time;
 
-    anim_speed = eta[ray.main_etat][ray.sub_etat].anim_speed >> 4;
+    anim_speed = ray.eta[ray.main_etat][ray.sub_etat].anim_speed_bits.high;
     if (anim_speed != 11 && anim_speed != 10) {
         ++ray.gravity_value_1;
         if (ray.gravity_value_1 >= 3) {
@@ -2232,13 +2234,10 @@ void RAY_IN_THE_AIR(void) {
     if ((ray.sub_etat != 17 && ray.sub_etat != 0 && ray.sub_etat != 9 && ray.sub_etat != 31) &&
             (ray.sub_etat != 13 || ray.speed_y >= 0) && jump_time >= 3 && ray_mode != MODE_3_MORT_DE_RAYMAN
     ) {
-    u8 bf;
-
-        bf = block_flags[ray.btypes[0]].raw;
-        if (bf & 2) {
+        if (block_flags[ray.btypes[0]].raw & 2) {
             // Rayman lands on a block
-            if (bf & 0x40) {
-                if (bf & 0x80) {
+            if (block_flags[ray.btypes[0]].raw & 0x40) {
+                if (block_flags[ray.btypes[0]].raw & 0x80) {
                     decalage_en_cours += 16 * ray.speed_y;
                 } else {
                     decalage_en_cours -= 16 * ray.speed_y;
@@ -2364,10 +2363,10 @@ void snifRayIsDead(obj_t* obj) {
 void rayfallsinwater(void)
 {
     set_main_and_sub_etat(&ray, 3, 22);
-    decalage_en_cours = 0;
     ray.anim_frame = 0;
     ray.speed_y = 0;
     ray.speed_x = 0;
+    decalage_en_cours = 0;
     if (ray_on_poelle)
         ray.x -= h_scroll_speed;
     h_scroll_speed = 0;
@@ -2406,9 +2405,7 @@ u8 RAY_DEAD(void) {
                 (ray.main_etat == 3 && (ray.sub_etat == 22 || ray.sub_etat == 32) && EOA(&ray))
         ) {
             --dead_time;
-            if (dead_time != 0 || fin_du_jeu) {
-                ray.follow_id = -1;
-            } else {
+            if (dead_time == 0 && !fin_du_jeu) {
                 ray.hit_points = 2;
                 if (ray.is_active) {
                     ray.is_active = 0;
@@ -2416,13 +2413,15 @@ u8 RAY_DEAD(void) {
                     dead_time = 64;
                     snifRayIsDead(&ray);
                     if (status_bar.lives < 0) {
-                        ray.hit_points = 0;
                         fin_du_jeu = 1;
+                        ray.hit_points = 0;
                         status_bar.lives = 0;
                     }
                 }
                 status_bar.max_hitp = ray.hit_points;
                 ray.iframes_timer = 90;
+            } else {
+                ray.follow_id = -1;
             }
         }
     }
@@ -2507,7 +2506,7 @@ s16 RayEstIlBloque(void) {
     if (ray.speed_x != 0)
     {
         unk_x = ray_zdc_x + (ray.speed_x > 0 ? ray_zdc_w : 0);
-        unk_h = ray_zdc_h >> 2;
+        unk_h = ray_zdc_y >> 2;
 
         i = 0;
         cur_obj = &level.objects[actobj.objects[i]];
@@ -2540,7 +2539,7 @@ s16 RayEstIlBloque(void) {
                     goto block_30;
 
                 ani_yh = ani_y + ani_h;
-                unk_y = ray_zdc_y;
+                unk_y = ray_zdc_h;
                 if (
                         !(unk_y >= ani_y && unk_y <= ani_yh) &&
                         (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
@@ -2651,9 +2650,9 @@ void DO_MORT_DE_RAY(void) {
     }
     if (EOA(&ray) || !(ray.main_etat == 2 && ray.sub_etat == 8)) {
         snifRayIsDead(&ray);
+        ray.flags.alive = 0;
         dead_time = 128;
         gerbe = 1;
-        ray.flags.alive = 0;
         if (status_bar.lives >= 0) {
             ray.hit_points = 2;
             status_bar.max_hitp = 2;
@@ -2755,6 +2754,7 @@ void RAY_RESPOND_TO_ALL_DIRS(void) {
 }
 
 void DO_RAY_ON_MS(void) {
+    s16 ray_x, ray_y;
     /* 339AC 801581AC -O2 -msoft-float */
     v_scroll_speed = 0;
     h_scroll_speed = 0;
@@ -2763,7 +2763,9 @@ void DO_RAY_ON_MS(void) {
 
     if (++ray.gravity_value_1 > 3)
         ray.gravity_value_1 = 0;
-    ray.ray_dist = ((s16) (ray.offset_bx + ray.x) >> 4) + ((s16) (ray.offset_by + ray.y) >> 4) * mp.width;
+    ray_x = ray.x + ray.offset_bx;
+    ray_y = ray.y + ray.offset_by;
+    ray.ray_dist = (ray_y >> 4) * mp.width + (ray_x >> 4);
     if ((ray.screen_x + ray.offset_bx + 30) < 0 ||
             (ray.screen_y + ray.offset_by + 20) < 0 ||
             ray.screen_x > 290 || ray.screen_y > 200
@@ -2772,7 +2774,7 @@ void DO_RAY_ON_MS(void) {
         RAY_HURT();
     }
 
-    if (ray.iframes_timer == -1 && get_eta(&ray)->flags & 8 && COLL_RAY_PIC()) {
+    if (ray.iframes_timer == -1 && ray.eta[ray.main_etat][ray.sub_etat].flags & 8 && COLL_RAY_PIC()) {
         RAY_HIT(1, NULL);
     }
 
@@ -2781,7 +2783,7 @@ void DO_RAY_ON_MS(void) {
     if (ray.follow_id == -1)
         calc_btyp(&ray);
 
-    if (ray.main_etat != 3 && (ray.main_etat != 6 || ray.sub_etat != 14))
+    if (ray.main_etat != 3 && !(ray.main_etat == 6 && ray.sub_etat == 14))
     {
         if (
                 options_jeu.test_fire0() &&
@@ -2819,7 +2821,7 @@ void DO_RAY_ON_MS(void) {
             ray.speed_x = 0;
         if (ray.screen_y < 3 && ray.speed_y < 0)
             ray.speed_y = 0;
-        if ((ray.screen_y + ray.offset_by >= 190) && ray.speed_y > 0)
+        if ((ray.screen_y + ray.offset_by > 190) && ray.speed_y > 0)
             ray.speed_y = 0;
     }
     if (ray.speed_y > 0)
@@ -2834,7 +2836,7 @@ void DO_RAY_ON_MS(void) {
         DO_ANIM(&ray);
 
     if (!new_world && !new_level) { // NOTE: this condition was added in the PC version
-        GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_y, &ray_zdc_w, &ray_zdc_h);
+        GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_h, &ray_zdc_w, &ray_zdc_y);
         DO_COLLISIONS();
     }
 }
@@ -3001,7 +3003,7 @@ void DO_RAYMAN(void) {
             DO_SURF_CHANGE_HAIRS();
         }
 
-        GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_y, &ray_zdc_w, &ray_zdc_h);
+        GET_RAY_ZDC(&ray, &ray_zdc_x, &ray_zdc_h, &ray_zdc_w, &ray_zdc_y);
         DO_COLLISIONS();
         if (fin_boss) {
             TEST_SIGNPOST();

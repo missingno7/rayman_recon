@@ -6772,7 +6772,7 @@
      ]
     },
     "SET_RAY_BALANCE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6852,7 +6852,7 @@
      ]
     },
     "rayfallsinwater": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6860,7 +6860,7 @@
      ]
     },
     "RAY_DEAD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6924,7 +6924,7 @@
      ]
     },
     "DO_MORT_DE_RAY": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
