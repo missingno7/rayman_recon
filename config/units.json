@@ -11867,6 +11867,42 @@
      ]
     }
    }
+  },
+  "movie": {
+   "source": "src\\movie.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "display_movie_frames": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "playVideo2": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "playVideo": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "playVideo_alt": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   },
+   "segments": {
+    "CONST": "VERIFIED"
+   }
   }
  }
 }
