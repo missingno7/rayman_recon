@@ -1,7 +1,7 @@
 #include "inline_helpers.h"
 /* box.c: DOS v1.21 object 1:13f30..1:14e90. Names RAYVERSE/ANDROID.
- * Worker c_box: six preserved STRICT functions; CalcTab and InitFire remain
- * NEAR. See NOTES.md for exact differences and rejected hypotheses. */
+ * Worker c3_box: six preserved STRICT functions; eight remain NEAR.
+ * ClearBorder and gauge source-shape improvements are documented in NOTES.md. */
 #include "game.h"
 #include "rtypes.h"
 #include <conio.h>
@@ -369,12 +369,16 @@ void InitGauge(void)
 
 void gauge(s16 x, s16 y, s16 width, s16 height, s16 min_value, s16 max_value, s16 value)
 {
-    u8 *pos = draw_buffer + x + 1 + SCREEN_WIDTH * (y + 1);
+    u8 *pos = draw_buffer;
     s16 step;
     s16 fill;
     u8 row, col, color, run;
-    if (value > max_value) value = max_value;
-    if (value < min_value) value = 0;
+    pos += x;
+    ++pos;
+    pos += SCREEN_WIDTH * (y + 1);
+    /* DOS 1:14c97..14ca9 merges the two subtractions after a three-way clamp. */
+    if (value > max_value) value = max_value - min_value;
+    else if (value < min_value) value = 0;
     else value -= min_value;
     step = max32(width >> 3, 8);
     fill = x + 1 + value * (s16)(width - step - 3) / (max_value - min_value);
@@ -399,11 +403,17 @@ void gauge(s16 x, s16 y, s16 width, s16 height, s16 min_value, s16 max_value, s1
 
 void ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
 {
-    u8 *pos;
+    u8 *pos = draw_buffer;
     s16 y;
+    s32 bottom_count;
+    u8 *bottom;
+    pos += lim_H1 * SCREEN_WIDTH;
     memset(draw_buffer, 0, lim_H1 * SCREEN_WIDTH);
-    pos = draw_buffer + lim_H1 * SCREEN_WIDTH;
-    memset(draw_buffer + lim_H2 * SCREEN_WIDTH, 0, (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH);
+    /* DOS 1:14e0b..14e3d computes the bottom count and a separate pointer. */
+    bottom_count = (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH;
+    bottom = draw_buffer;
+    bottom += lim_H2 * SCREEN_WIDTH;
+    memset(bottom, 0, bottom_count);
     for (y = lim_H1; y < lim_H2; ++y) {
         s16 x;
         for (x = 0; x < lim_W1; ++x)
