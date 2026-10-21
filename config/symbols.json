@@ -13691,10 +13691,10 @@
     "evidence": "Rayverse data.c //CD800; Android .bss size 4"
    },
    "Plan0NumPcx": {
-    "addr": "2:4ef47",
+    "addr": "2:3ef48",
     "type": "s8[10]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //CEF47; Android .bss size 10"
+    "evidence": "DOS: load_world initializes ten bytes 2:3ef48..2:3ef51 and reads element 0 via mov eax,[2:3ef45]; sar eax,24 (1:35659); Android size 10; next bound status_bar 2:3ef52. Was mis-bound at 2:4ef47 (Rayverse //CEF47 converted with +0x10000)."
    },
    "BiosCheckSum": {
     "addr": "2:3fa2b",
