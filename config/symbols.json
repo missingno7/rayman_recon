@@ -7872,6 +7872,21 @@
     "addr": "1:19400",
     "name": "INVENTED",
     "evidence": "Address-based name; normalizes a high-bit status word as shown at 1:19400."
+   },
+   "set_stereo": {
+    "addr": "1:61c0c",
+    "name": "RAYVERSE",
+    "evidence": "Android original symbol: empty, between SetVolumeSound and set_mono/stop_all_snd; DOS aligned shared RET at 61c0c. Watcom identical empty-body alias."
+   },
+   "set_mono": {
+    "addr": "1:61c0c",
+    "name": "RAYVERSE",
+    "evidence": "Android original symbol: empty, immediately after set_stereo; DOS aligned shared RET at 61c0c. Watcom identical empty-body alias."
+   },
+   "EndSound": {
+    "addr": "1:61e40",
+    "name": "RAYVERSE",
+    "evidence": "Android original symbol: empty, between InitSnd and last_snd; DOS aligned shared RET at 61e40."
    }
   },
   "data": {
