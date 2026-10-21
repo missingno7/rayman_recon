@@ -24,9 +24,6 @@
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
-#ifndef ashl16
-#define ashl16(v, b) ((s32)(s16)(v) << (b))
-#endif
 
 #define BLOCK_FLAG_4 4
 #define BLOCK_SOLID 1
