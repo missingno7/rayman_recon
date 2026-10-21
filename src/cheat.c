@@ -818,13 +818,6 @@ void END_WORLD_VIGNET(void) {
 /* Timer and palette arithmetic: DOS 1:26fbb..2709f.
  * Signed IDIV and JL/JG prove these existing dword bindings are signed.
  * Helper names are INVENTED (Android lookup: absent). */
-void palette_write_index(u16 port, u8 index);
-/* ORIGINAL_INLINE: DOS 1:270bf, OUT DX,AL; no general-register effects. */
-#pragma aux palette_write_index = "out dx,al" parm [dx] [al] modify exact []
-void palette_write_components(u16 port, const u8 *components, u32 count);
-/* ORIGINAL_INLINE: DOS 1:270ca, REP OUTSB; ESI advances and ECX becomes zero. */
-#pragma aux palette_write_components = "rep outsb" parm [dx] [esi] [ecx] modify exact [esi ecx]
-
 void __interrupt __far sub_36FAC(void)
 {
     s32 i, component;
@@ -848,10 +841,7 @@ void __interrupt __far sub_36FAC(void)
             current_rvb.colors[i].b = component < 63 ? component : 63;
         }
         synchro();
-        palette_write_index(0x3c8, 1);
-        inhibit_interrupts();
-        palette_write_components(0x3c9, (const u8 *)&current_rvb.colors[1], 8 * 3);
-        permit_interrupts();
+        palette_output(1, 8, &current_rvb);
     }
     _chain_intr(old_timer);
     _enable();
@@ -1150,9 +1140,7 @@ void PC_do_cheats(void) {
     else if (memcmp(text_input_buffer, cheat_code_10_wiz, 6) == 0 || memcmp(text_input_buffer, cheat_code_10_wiz_alt, 5) == 0) {
         s32 limit = 99;
         s32 count = status_bar.num_wiz + 10;
-        if (count < limit) {
-            limit = count;
-        }
+        limit = min32(limit, count);
         status_bar.num_wiz = limit;
     }
     else if (memcmp(text_input_buffer, cheat_code_win_map, 6) == 0 || memcmp(text_input_buffer, cheat_code_win_map_alt, 6) == 0) {
