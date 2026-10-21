@@ -15564,7 +15564,10 @@
     "type": "u32[200]",
     "size": 800,
     "name": "INVENTED",
-    "evidence": "DOS data_refs.json: indexed dword reads at 1:0640a and peers; data_tables.json verifies all 200 entries equal 80*i."
+    "evidence": "DOS data_refs.json: indexed dword reads at 1:0640a and peers; data_tables.json verifies all 200 entries equal 80*i.",
+    "aliases": [
+     "ModeXRowOffsets"
+    ]
    },
    "lowlevel_timer_02148": {
     "addr": "2:2148",
