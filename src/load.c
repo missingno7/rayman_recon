@@ -1,4 +1,4 @@
-/* load object, DOS v1.21. Names RAYVERSE/ANDROID; inl_load worker candidate.
+/* load object, DOS v1.21. Names RAYVERSE/ANDROID; w2_loadcoll2 worker candidate.
    See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
 #include "game.h"
@@ -942,8 +942,10 @@ void LoadPlan0InVignet(s32 resource_id)
         height = header.max_y - header.min_y + 1;
         line_bytes = header.bytes_per_line;
         if (FondAutorise == 2) {
-            compressed = DrawBufferNormal;
-            destination = EffetBufferNormal;
+            /* DOS 1:37585..375e2: read compressed data into EffetBufferNormal;
+               DrawBufferNormal is the decoded output. */
+            compressed = EffetBufferNormal;
+            destination = DrawBufferNormal;
             if (data_size > 128000) {
                 data_size = 128000;
                 truncated = 1;
@@ -973,8 +975,8 @@ void LoadPlan0InVignet(s32 resource_id)
             height = header.max_y - header.min_y + 1;
             line_bytes = header.bytes_per_line;
             if (FondAutorise == 2) {
-                compressed = DrawBufferNormal;
-                destination = EffetBufferNormal;
+                compressed = EffetBufferNormal;
+                destination = DrawBufferNormal;
                 if (data_size > 128000) {
                     data_size = 128000;
                     truncated = 1;

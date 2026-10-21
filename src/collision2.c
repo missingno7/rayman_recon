@@ -853,31 +853,23 @@ void DO_EAU_QUI_MONTE(obj_t* obj) {
 //3076C
 void allocateOtherPosts(obj_t* her_bh_obj) {
     obj_t *cur_obj;
-    s32 unk_1;
-    s32 x_offset;
     s16 cur_id = link_init[her_bh_obj->id];
     u8 her_bh_frames = her_bh_obj->animations[get_eta(her_bh_obj)->anim_index].frames_count;
     s16 i = 0;
 
-    if (cur_id != her_bh_obj->id) {
-      x_offset = 0;
-      unk_1 = 0;
-      do {
-        x_offset += 32;
+    while (cur_id != her_bh_obj->id) {
         i++;
         cur_obj = &level.objects[cur_id];
         cur_obj->flags.alive = 1;
         cur_obj->is_active = 1;
         cur_obj->anim_frame = (her_bh_obj->anim_frame + i) % her_bh_frames;
-        cur_obj->init_x = her_bh_obj->init_x + x_offset * (her_bh_obj->hit_points - 2);
+        cur_obj->init_x = her_bh_obj->init_x + i * 32 * (her_bh_obj->hit_points - 2);
         cur_obj->init_y = her_bh_obj->init_y;
-        unk_1 += 256;
-        cur_obj->param = her_bh_obj->param - unk_1;
+        cur_obj->param = her_bh_obj->param - i * 256;
         cur_obj->x = cur_obj->init_x;
         cur_obj->y = cur_obj->init_y;
         calc_obj_pos(her_bh_obj);
         cur_id = link_init[cur_id];
-      } while (cur_id != her_bh_obj->id);
     }
 }
 
