@@ -48,6 +48,15 @@ lowering, materialised booleans) and four effect drafts without a unit (1:633e0,
 - obj2 layout: game `_DATA` 2:00000..2:2d998, runtime `_DATA`, game `CONST` in `_TEXT` link order, `CONST2`, `DATA32`,
   BSS 2:3218a. String literals belong to the referencing object's CONST.
 
+## Cross-version: DOS v1.12 (2026-10-22, build/workers/v112/REPORT.md)
+The 1,359 v1.21 STRICT functions (86 units) rebuilt unchanged against the `dos_v112_us` oracle (worker overlay
+v112_symbols.json, unmodified matcher): 1,290 STRICT on v1.12 (93.2% of their bytes), 9 relocation-only, 44 changed,
+12 missing (CD-protection revision), 4 ambiguous. PROVEN source/build changes between the versions: MakeMyRand drops
+`& 0xEFFF` in v1.12 (rand object STRICT with that one change); `FatalError` is STRICT on v1.12 only with the 10.5
+headers (errno declared `volatile` in 10.6 errno.h/stdlib.h - header-sensitive output, not a different backend);
+screen resource IDs, cheat strings, joystick calibration text index; asm_04d55 is an empty stub in v1.12; DetectCpu
+saves EDX around CPUID only in v1.21. Not integrated (no v1.12 build target yet).
+
 ## Shared types (src/include)
 obj.h (obj_t 0x84, eta_t, anim/sprite, zdc_t, level_t, level_obj_t, active_objects_t), game.h (status_bar_t, rgb,
 world_info_t, poing_t, rayevts_t, finbosslevel_t), map.h (map_tile_t, map_data_t, block_flags_t). Offsets pinned by
