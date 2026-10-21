@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 typedef struct pix_gerbe_item_t {
     s16 x_pos;
@@ -1446,14 +1447,12 @@ void freezeAnim(obj_t *obj, u8 param_2)
     if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x10)
     {
         /* duplicate... */
-        count_capped = count;
-        MIN_3(count_capped, param_2);
+        count_capped = min32(count, param_2);
         obj->anim_frame = count - count_capped + 1;
     }
     else
     {
-        count_capped = count;
-        MIN_3(count_capped, param_2);
+        count_capped = min32(count, param_2);
         obj->anim_frame = count_capped;
     }
 }
@@ -2845,12 +2844,12 @@ void recale_ray_pos(void) {
                 if (Abs(v_scr_temp) >= spd_y_abs_1) {
     s16 spd_y_abs_2;
 
-                    MAX_2(spd_y_abs_1, 3);
+                    spd_y_abs_1 = max32(spd_y_abs_1, 3);
                     spd_y_abs_2 = spd_y_abs_1;
                     if (v_scr_temp > 0) {
-                        MIN_2(v_scroll_speed, (s16) spd_y_abs_1);
+                        v_scroll_speed = min32(v_scroll_speed, (s16) spd_y_abs_1);
                     } else if (v_scr_temp < 0) {
-                        MAX_2(v_scr_temp, -spd_y_abs_2);
+                        v_scr_temp = max32(v_scr_temp, -spd_y_abs_2);
                         v_scroll_speed = v_scr_temp;
                     } else {
                         if (unk_y_2 > 0)
@@ -3941,7 +3940,7 @@ void DO_MOTEUR2(void) {
                 if (NbTramesEcrase != 0) {
                     --NbTramesEcrase;
                 } else {
-                    ray.scale = MAX(0, ray.scale - 5);
+                    ray.scale = max32(0, ray.scale - 5);
                 }
             }
         } else {
