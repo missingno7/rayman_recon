@@ -7578,7 +7578,7 @@
      ]
     },
     "NormalAtter": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7586,7 +7586,7 @@
      ]
     },
     "OBJ_IN_THE_AIR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

@@ -2024,25 +2024,25 @@ void NormalAtter(obj_t *obj)
 
 void OBJ_IN_THE_AIR(obj_t* obj) {
     s16 pesanteur;
-    s16 spd_y;
+    s16 spr_w;
     s16 spr_x;
     s16 spr_y;
-    s16 spr_w;
     s16 spr_h;
     u8 anim_speed_div;
 
     /* 2DA58 80152258 -O2 -msoft-float */
 
-    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed >> 4;
+    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
+    anim_speed_div >>= 4;
 
-    if (!(anim_speed_div == 10 || anim_speed_div == 11))
+    if (!(anim_speed_div == 11 || anim_speed_div == 10))
     {
         obj->gravity_value_1++;
-        if (obj->gravity_value_1 > 2)
+        if (obj->gravity_value_1 >= 3)
             obj->gravity_value_1 = 0;
 
         obj->gravity_value_2++;
-        if (obj->gravity_value_2 > 3)
+        if (obj->gravity_value_2 >= 4)
             obj->gravity_value_2 = 0;
     }
 
@@ -2052,7 +2052,7 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
         if (obj->speed_y >= 0 && obj->sub_etat == 0)
             set_sub_etat(obj, 1);
 
-        if (!gerbe && obj->speed_y > 2 && obj->sub_etat == 1)
+        if (!gerbe && obj->speed_y >= 3 && obj->sub_etat == 1)
         {
             set_sub_etat(obj, 2);
             obj->speed_x = 0;
@@ -2063,13 +2063,12 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
         stoneDogBounces(obj);
         if (obj->main_etat == 2)
         {
-            spd_y = obj->speed_y;
-            if (spd_y > 0)
+            if (obj->speed_y > 0)
             {
                 if (obj->sub_etat != 2)
                     set_sub_etat(obj, 2);
             }
-            else if (spd_y < 0 && (block_flags[(u8) calc_typ_trav(obj, 1)].raw & 1))
+            else if (obj->speed_y < 0 && (block_flags[(u8) calc_typ_trav(obj, 1)].raw & 1))
                 obj->speed_y = 0;
         }
     }
@@ -2317,13 +2316,10 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
             case TYPE_SPIDER_PLAFOND:
                 if (obj->main_etat == 2 && obj->speed_y > 0)
                 {
-    s16 flip_x;
-
                     set_main_and_sub_etat(obj, 0, 29);
                     obj->speed_x = 0;
                     obj->speed_y = 0;
-                    flip_x = ray.x > obj->x;
-                    obj->flags.flip_x = flip_x;
+                    obj->flags.flip_x = ray.x > obj->x ? 1 : 0;
                 }
                 break;
             case TYPE_BALLE1:
@@ -2331,12 +2327,10 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
             case TYPE_BIG_BOING_PLAT:
             case TYPE_BLACK_FIST:
             case TYPE_BLACK_RAY:
-            case TYPE_BNOTE:
             case TYPE_BOING_PLAT:
             case TYPE_BULLET:
             case TYPE_CORDEBAS:
             case TYPE_DARK_PHASE2:
-            case TYPE_DARK:
             case TYPE_MARACAS_BAS:
             case TYPE_MOSKITO:
             case TYPE_MOSKITO2:
@@ -2346,11 +2340,18 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
             case TYPE_POI2:
             case TYPE_POI3:
             case TYPE_RING:
-            case TYPE_SCORPION:
             case TYPE_SPACE_MAMA:
             case TYPE_SPACE_MAMA2:
             case TYPE_TAMBOUR1:
             case TYPE_TAMBOUR2:
+                break;
+            /* DOS 1:47937..47960, 1:4789e..478cd and 1:477b2..477c8
+               distinguish these existing no-op cases from adjacent ranges. */
+            case TYPE_BNOTE:
+                break;
+            case TYPE_SCORPION:
+                break;
+            case TYPE_DARK:
                 break;
             default:
                 NormalAtter(obj);
