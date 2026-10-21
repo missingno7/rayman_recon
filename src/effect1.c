@@ -1,4 +1,4 @@
-/* Worker sfin_effect; partial finishing candidate, see NOTES.md.
+/* Worker w2_effect; partial finishing candidate, see NOTES.md.
  * effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. dummy_prg is a zero-size compiler alias of dummy_scene_func (identical adjacent bodies, docs/COMPILER.md). */
 #include "obj.h"
 #include "game.h"
@@ -378,11 +378,12 @@ void sub_38258(void)
     case 1: sub_37C00(); return;
     case 2: sub_37E00(); return;
     case 3: sub_37C98(); return;
-    case 4: return;
     case 5: sub_37D4C(); return;
     case 6: sub_37F50(); return;
     case 7: sub_37FEC(); return;
     case 8: sub_37E9C(); return;
+    /* No action for selector 4 or an unsupported selector. */
+    case 4:
     default: return;
     }
 }
@@ -393,11 +394,12 @@ void sub_38290(void)
     case 1: sub_38DA0(); return;
     case 2: effect_cleanup_34688(); return;
     case 3: effect_cleanup_6ee28(); return;
-    case 4: return;
     case 5: effect_cleanup_16200(); return;
     case 6: effect_cleanup_506fc(); return;
     case 7: effect_cleanup_6c7a0(); return;
     case 8: effect_cleanup_634c4(); return;
+    /* No action for selector 4 or an unsupported selector. */
+    case 4:
     default: return;
     }
 }
