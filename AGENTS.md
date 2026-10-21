@@ -26,8 +26,14 @@ Hard rules
   for instructions plain C cannot generate (debug/control registers DR0-DR7/CRn, INT n/INT3, STI/CLI, IN/OUT and
   port string ops, LGDT-class system instructions), when the DOS bytes show them inline inside a C function. Each
   pragma: the exact instruction sequence from the DOS disassembly (cite address), its register effects declared,
-  one pragma per sequence, named after its purpose, and a comment marking it ORIGINAL_INLINE. Never use an inline
-  pragma for anything C can express (arithmetic, loads/stores, calls, branches) or to patch register allocation.
+  one pragma per sequence, named after its purpose, and a comment marking it ORIGINAL_INLINE. Otherwise never use
+  an inline pragma for anything C can express (arithmetic, loads/stores, calls, branches) or to patch register
+  allocation - with ONE exception (user decision 2026-10-21, ai_decomp review): original inline helpers. A
+  C-expressible sequence may be an ORIGINAL_INLINE helper only when its exact DOS bytes recur with fixed registers
+  in at least 2 functions (none of them STRICT through plain C), every site is cited by DOS address, the
+  register/clobber contract (`parm/value/modify exact`) is read off at least 2 sites, and the helper is declared once
+  in the shared header src/include/inline_helpers.h (never redefined per unit, no new helper pragmas in units).
+  Current helpers: ashr16, inrange, sgn, fill, copy (evidence: docs/COMPILER.md "Original inline helpers").
 - Bind every global at its true start with its true type (one address = one symbol). wcc386 -5 loads a `short`
   as `mov r,[x-2]; sar r,16` (fixup field -2) by itself; never declare a wider type or a shifted alias to get bytes.
 - Zero regression: `python tools/verify.py` must stay at 0 regressions; `python -m unittest discover -s tests` must
