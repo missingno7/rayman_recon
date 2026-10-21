@@ -9378,7 +9378,7 @@
      ]
     },
     "DO_COMMANDE_KEY": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9438,7 +9438,7 @@
      ]
     },
     "DO_COMMANDE_PAD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
