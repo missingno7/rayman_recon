@@ -1,4 +1,4 @@
-/* load object, DOS v1.21. Names RAYVERSE/ANDROID; w2_loadcoll2 worker candidate.
+/* load object, DOS v1.21. Names RAYVERSE/ANDROID; d_load worker candidate.
    See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
 #include "game.h"
@@ -131,6 +131,9 @@ void load_break_fix_eta(void);
 
 void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
     s32 i;
+    /* Both branches use the same file fields: DOS esp+0x30 and esp+0x44. */
+    u16 layer_table_size;
+    u8 img_buffer_checksum;
     char *full_filename;
     FILE *fp;
     extern u16 path_has_changed;
@@ -194,13 +197,10 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
         // Header block
         fread(&background_width, 2, 1, fp);
         fread(&background_height, 2, 1, fp);
-        if (GameModeVideo != MODE_NORMAL) {
-            if (FondAutorise != 0) {
-                PLAN0 = allocate_PLAN0(mem_world, background_width, background_height);
-            }
-        } else {
-            // NOTE: is the background buffer wider to allow for differential scrolling?
+        if (GameModeVideo == MODE_NORMAL) {
             PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);
+        } else if (FondAutorise != 0) {
+            PLAN0 = allocate_PLAN0(mem_world, background_width, background_height);
         }
         fread(&plan0_num_pcx_count, 1, 1, fp);
         fread(&BiosCheckSum, 1, 1, fp);
@@ -223,7 +223,6 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
             fread(&wldobj[des_index].x, 4, 1, fp);
 
             if (sprite_is_always_used || ToutSpriteAutorise) {
-                u8 img_buffer_checksum;
 
                 s32 image_offset;
                 u32 retry_index;
@@ -266,7 +265,6 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
 
                     wldobj[des_index].animations = (anim_t*)block_malloc(mem_world, wldobj[des_index].anim_count * sizeof(anim_t));
                     for (i = 0; i < wldobj[des_index].anim_count; ++i) {
-                        u16 layer_table_size;
 
                         fread(&wldobj[des_index].animations[i].layers_per_frame, 2, 1, fp);
                         fread(&wldobj[des_index].animations[i].frames_count, 2, 1, fp);
@@ -274,21 +272,27 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
 
                         fread(&layer_table_size, 2, 1, fp);
                         wldobj[des_index].animations[i].layers = (anim_layer_t*) block_malloc(mem_world, layer_table_size);
-                        fread(wldobj[des_index].animations[i].layers, layer_table_size, 1, fp);
+                        /* DOS 1:35324..35339: byte elements, layer_table_size items. */
+                        fread(wldobj[des_index].animations[i].layers, 1, layer_table_size, fp);
                         if (wldobj[des_index].animations[i].frames != (anim_frame_t *)-1) {
                             wldobj[des_index].animations[i].frames = (anim_frame_t*) block_malloc(mem_world, wldobj[des_index].animations[i].frames_count * sizeof(anim_frame_t));
                             fread(wldobj[des_index].animations[i].frames, sizeof(anim_frame_t), wldobj[des_index].animations[i].frames_count, fp);
                         }
                         load_break_world_animation();
                     }
+                } else {
+                    wldobj[des_index].animations = wldobj[0].animations;
+                    wldobj[des_index].anim_count = wldobj[0].anim_count;
                 }
             } else {
-                u8 img_buffer_checksum;
-
+                /* DOS 1:353b0..353b8 clears the skipped image pointer. */
+                wldobj[des_index].img_buffer = NULL;
                 fseek(fp, wldobj[des_index].x, 1); // skip
 
                 fread(&img_buffer_checksum, 1, 1, fp);
                 fread(&wldobj[des_index].nb_sprites, 2, 1, fp);
+                /* DOS 1:353eb..353ed also clears its sprite table. */
+                wldobj[des_index].sprites = NULL;
                 fseek(fp, wldobj[des_index].nb_sprites * sizeof(sprite_t), 1);
                 fread(&wldobj[des_index].anim_count, 1, 1, fp);
                 if (wldobj[des_index].anim_count != 0) {
@@ -298,7 +302,6 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
                         u16 layers_per_frame;
                         u16 frame_count;
                         s32 frames_ptr;
-                        u16 layer_table_size;
 
                         fread(&layers_per_frame, 2, 1, fp);
                         fread(&frame_count, 2, 1, fp);
@@ -310,11 +313,10 @@ void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
                             fseek(fp, frame_count * sizeof(anim_frame_t), 1);
                         }
                     }
+                } else {
+                    wldobj[des_index].animations = wldobj[0].animations;
+                    wldobj[des_index].anim_count = wldobj[0].anim_count;
                 }
-            }
-            if (wldobj[des_index].anim_count == 0) {
-                wldobj[des_index].animations = wldobj[0].animations;
-                wldobj[des_index].anim_count = wldobj[0].anim_count;
             }
         }
         nb_des += nb_fix_des;
