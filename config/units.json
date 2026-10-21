@@ -12213,6 +12213,25 @@
      ]
     }
    }
+  },
+  "lowlevel_00010": {
+   "source": "src\\lowlevel_00010.asm",
+   "oracle": "gog_v121_us",
+   "profile": "asm",
+   "functions": {
+    "effect_reset_geometry": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "draw_effect_segment": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
