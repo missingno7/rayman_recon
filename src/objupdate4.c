@@ -31,7 +31,7 @@ extern s16 num_world;
 extern u8 horloge[25];
 extern options_jeu_t options_jeu;
 bool EOA(obj_t* obj);
-u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void RAY_HIT(bool hurt, obj_t* obj);
 void RAY_THROW_FIST(void);
 void Reset_air_speed(u8 is_rolling_speed);
@@ -51,14 +51,15 @@ void DoPlatformPoingCollision(obj_t* obj, s16 sprite);
 
 void DO_SPECIAL_PLATFORM(obj_t* obj) {
     /* 3FFAC 801647AC -O2 -msoft-float */
-    ObjType obj_type;
+    s16 obj_type;
     s16 plat_x; s16 plat_y; s16 plat_w; s16 plat_h;
     u8 unk_2;
     u16 test_1;
-    s32 temp_a0_4;
-    s32 temp_a0_6;
-    s16 unk_1 = RayEvts.tiny ? 0x0100 : 0x0200;
-    u8 is_rolling_speed = unk_1 < Abs(decalage_en_cours);
+    s16 unk_1;
+    u8 is_rolling_speed;
+    if (RayEvts.tiny) unk_1 = 0x100;
+    else unk_1 = 0x200;
+    is_rolling_speed = Abs(decalage_en_cours) > unk_1;
 
     switch (obj->type)
     {
@@ -69,7 +70,9 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
         case TYPE_MARK_AUTOJUMP_PLAT:
             if (ray.follow_id == obj->id)
             {
-                if (obj->iframes_timer == 0 || --obj->iframes_timer == 0)
+                if (obj->iframes_timer != 0)
+                    obj->iframes_timer--;
+                if (obj->iframes_timer == 0)
                 {
                     button_released = 1;
                     switch (ray.main_etat * 0x100 + ray.sub_etat)
@@ -85,7 +88,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->ray_dist = 10000;
                     jump_time = 12;
                     ray.speed_y -= 3;
-                    obj_type = (ObjType)obj->type;
+                    obj_type = obj->type;
                     if (obj_type == TYPE_MARK_AUTOJUMP_PLAT)
                         set_main_and_sub_etat(obj, 0, 17);
                     else if (obj_type == TYPE_CAISSE_CLAIRE)
@@ -116,7 +119,9 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
         case TYPE_INST_PLAT:
             if (ray.follow_id == obj->id)
             {
-                if (obj->iframes_timer == 0 || --obj->iframes_timer == 0)
+                if (obj->iframes_timer != 0)
+                    obj->iframes_timer--;
+                if (obj->iframes_timer == 0)
                 {
                     GET_SPRITE_POS(obj, obj->follow_sprite, &plat_x, &plat_y, &plat_w, &plat_h);
                     RAY_HIT(0, NULL);
@@ -135,7 +140,9 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->main_etat == 0 && obj->sub_etat == 9
                     )
             {
-                if (obj->iframes_timer == 0 || --obj->iframes_timer == 0)
+                if (obj->iframes_timer != 0)
+                    obj->iframes_timer--;
+                if (obj->iframes_timer == 0)
                 {
                     button_released = 1;
                     switch (ray.main_etat * 0x100 + ray.sub_etat)
@@ -161,37 +168,6 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             }
             else
                 obj->iframes_timer = obj->follow_id;
-            break;
-        case TYPE_PAILLETTE:
-        case TYPE_DESTROYING_DOOR:
-            if (obj->flags.alive)
-            {
-                if (ray.follow_id == obj->id || obj->link != obj->param)
-                {
-                    if (obj->link == obj->param)
-                    {
-                        set_sub_etat(obj, 11);
-                        obj->link--;
-                    }
-                    else if (obj->link == 0 || --obj->link == 0)
-                    {
-                        obj_init(obj);
-                        obj->flags.alive = 0;
-                        obj->is_active = 0;
-                        if (ray.follow_id == obj->id)
-                        {
-                            ray.follow_id = -1;
-                            obj->ray_dist = 1000;
-                            set_main_and_sub_etat(&ray, 2, 2);
-                            Reset_air_speed(is_rolling_speed);
-                            jump_time = 0;
-                            ray.link = 0;
-                        }
-                    }
-                }
-            }
-            else
-                obj->ray_dist = 1000;
             break;
         case TYPE_CRUMBLE_PLAT:
             if (obj->link != 0) {
@@ -271,9 +247,8 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             unk_2 = 0;
             if (ray.follow_id == obj->id)
             {
-                if (!(obj->main_etat == 2 || obj->follow_id == 0))
+                if (obj->main_etat != 2 && obj->follow_id != 0)
                 {
-                    unk_2 = 1;
                     set_main_and_sub_etat(obj, 2, 4);
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
@@ -282,6 +257,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
+                    unk_2 = 1;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
                     unk_2 = 1;
@@ -318,7 +294,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     test_1 = 1; /* TODO: remove? */
                     if (
                             !unk_2 && ray.follow_id == obj->id &&
-                            (button_released & 1) == test_1 &&
+                            button_released % 2 == test_1 &&
                             options_jeu.test_fire1()
                             )
                     {
@@ -326,19 +302,10 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                         if (ray.main_etat == 2)
                             obj->ray_dist = 10000;
 
-                        /* TODO: ??? */
-                        temp_a0_4 = (u16) obj->speed_y;
-                        if ((u16) (temp_a0_4 + 2) >= 5U)
-                        {
-                            if ((s16) temp_a0_4 < -2)
-                            {
-                                ray.speed_y -= 2;
-                                ray.speed_y += temp_a0_4;
-                            }
-                        }
-                        else
-                        {
+                        if (!(obj->speed_y < -2 || obj->speed_y > 2))
                             ray.speed_y -= 2;
+                        else if (obj->speed_y < -2) {
+                            ray.speed_y += obj->speed_y - 2;
                         }
                     }
                 }
@@ -348,9 +315,8 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             unk_2 = 0;
             if (ray.follow_id == obj->id)
             {
-                if (!(obj->main_etat == 2 || obj->follow_id == 0))
+                if (obj->main_etat != 2 && obj->follow_id != 0)
                 {
-                    unk_2 = 1;
                     set_main_and_sub_etat(obj, 2, 3);
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
@@ -359,6 +325,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
+                    unk_2 = 1;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
                     unk_2 = 1;
@@ -395,7 +362,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     test_1 = 1;
                     if (
                             !unk_2 && ray.follow_id == obj->id &&
-                            (button_released & 1) == test_1 &&
+                            button_released % 2 == test_1 &&
                             options_jeu.test_fire1()
                             )
                     {
@@ -403,14 +370,10 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                         if (ray.main_etat == 2)
                             obj->ray_dist = 10000;
 
-                        temp_a0_6 = (u16) obj->speed_y;
-                        if ((u16) ((temp_a0_6 + 2)) < 5U)
-                        {
+                        if (!(obj->speed_y < -2 || obj->speed_y > 2))
                             ray.speed_y -= 2;
-                        }
-                        else if ((s16) temp_a0_6 < -2)
-                        {
-                            ray.speed_y += temp_a0_6;
+                        else if (obj->speed_y < -2) {
+                            ray.speed_y += obj->speed_y;
                             MAX_2(ray.speed_y, -7);
                         }
                     }

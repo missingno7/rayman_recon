@@ -27,8 +27,8 @@ void DO_PIRATE_POELLE(obj_t* pirp_obj) {
     s16 nb_objs;
     s16 pirp_x; s16 pirp_y; s16 pirp_w; s16 pirp_h;
 
-    if (on_block_chdir(pirp_obj, cen_x, cen_y)) {
-        if (!(pirp_obj->sub_etat == 13 || pirp_obj->sub_etat == 28 || pirp_obj->sub_etat == 14 || pirp_obj->sub_etat == 29)) {
+    if (on_block_chdir(pirp_obj, cen_x, cen_y) &&
+        !(pirp_obj->sub_etat == 13 || pirp_obj->sub_etat == 28 || pirp_obj->sub_etat == 14 || pirp_obj->sub_etat == 29)) {
             if (pirp_obj->speed_y > 0) {
                 pirp_obj->speed_y--;
                 if (pirp_obj->type == TYPE_PIRATE_POELLE || pirp_obj->type == TYPE_PIRATE_P_45)
@@ -49,7 +49,6 @@ void DO_PIRATE_POELLE(obj_t* pirp_obj) {
                 else if (pirp_obj->sub_etat == 21)
                     set_main_and_sub_etat(pirp_obj, 1, 22);
             }
-        }
     }
 
     if ((pirp_obj->sub_etat == 13 || pirp_obj->sub_etat == 28) && pirp_obj->anim_frame == 6 && horloge[2] != 0) {
@@ -60,18 +59,18 @@ void DO_PIRATE_POELLE(obj_t* pirp_obj) {
             if (cur_obj->type == TYPE_POELLE_ALWAYS && !cur_obj->is_active) {
                 GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h);
                 if (pirp_obj->flags.flip_x) {
-                    cur_obj->speed_x = 13;
                     cur_obj->init_x =
-                    cur_obj->x = pirp_x - cur_obj->offset_bx + (pirp_w >> 1) + cur_obj->speed_x;
+                    cur_obj->x = pirp_x - cur_obj->offset_bx + (pirp_w >> 1) + 13;
+                    cur_obj->speed_x = 13;
                     cur_obj->flags.flip_x = 1;
                 } else {
-                    cur_obj->speed_x = -13;
                     cur_obj->init_x =
-                    cur_obj->x = pirp_x - cur_obj->offset_bx + (pirp_w >> 1) + cur_obj->speed_x;
+                    cur_obj->x = pirp_x - cur_obj->offset_bx + (pirp_w >> 1) - 13;
+                    cur_obj->speed_x = -13;
                 }
-                cur_obj->speed_y = 2;
                 cur_obj->init_y =
                 cur_obj->y = (pirp_y - cur_obj->offset_by) + pirp_h + 2;
+                cur_obj->speed_y = 2;
                 cur_obj->is_active = 1;
                 cur_obj->flags.alive = 1;
                 add_alwobj(cur_obj);
@@ -148,7 +147,7 @@ void PIRATE_POELLE_REACT(obj_t* obj) {
         if (obj->sub_etat == 0 || obj->sub_etat == 1 || obj->sub_etat == 15 || obj->sub_etat == 16) {
             if (obj->sub_etat == 0 || obj->sub_etat == 1)
                 set_main_and_sub_etat(obj, 1, 5);
-            else
+            else if (obj->sub_etat == 15 || obj->sub_etat == 16)
                 set_main_and_sub_etat(obj, 1, 20);
 
             if (obj->type == TYPE_PIRATE_POELLE || obj->type == TYPE_PIRATE_POELLE_D) {
