@@ -526,8 +526,10 @@ s16 get_allowed_time(void);
 s16 get_proj_x(s16 scale, s16 a2);
 s16 get_proj_y(s16 scale, s16 a2);
 void initGameSave(void);
-s16 inverse_proj_x(s16 scale, s16 a2);
-s16 inverse_proj_y(s16 scale, s16 a2);
+/* This object declares inverse projection returns wide (W-PROTO);
+ * both stores consume AX. See init_flocons in NOTES.md. */
+s32 inverse_proj_x(s16 scale, s16 a2);
+s32 inverse_proj_y(s16 scale, s16 a2);
 void ray_jump(void);
 void restoreGameState(save_state_t *save_state);
 void restore_objects_flags(void);
@@ -785,7 +787,6 @@ void sub_one_floc(void)
 void init_flocons(void) {
     s16 flc_i;
     s16 i;
-    s32 unk_1;
     s16 unk_2;
     s16 j;
     s16 unk_3;
@@ -808,31 +809,32 @@ void init_flocons(void) {
     flc_i = 0;
     i = 0;
     unk_2 = -64;
-    unk_1 = 0xffff; /* TODO: should be -1 ... */
     while (i < 8)
     {
         nb_floc[i] = 0;
         floc_ind[i] = flc_i;
+        {
+        /* DOS 4ba3d..4ba43 keeps a word scale snapshot for the retry loop. */
+        s16 scale = unk_2;
 
         invpy0[i] = inverse_proj_y(unk_2, 0);
         invpy200[i] = inverse_proj_y(unk_2, SCREEN_HEIGHT);
         invpx0[i] = inverse_proj_x(unk_2, 0);
         invpx320[i] = inverse_proj_x(unk_2, SCREEN_WIDTH);
-        j = 0;
-        while (j < tot_nb_flocs[i])
+        for (j = 0; j < tot_nb_flocs[i]; j++)
         {
             do {
                     unk_3 = myRand(700);
                     unk_4 = myRand(400) - 150;
-                    unk_5 = get_proj_x(unk_2, unk_3);
-                    unk_6 = get_proj_y(unk_2, unk_4);
+                    unk_5 = get_proj_x(scale, unk_3);
+                    unk_6 = get_proj_y(scale, unk_4);
                 
             } while (unk_5 >= 320 || unk_5 <= 0 || unk_6 >= 200 || unk_6 <= 0);
             flocon_tab[flc_i].field_0 = unk_3;
             flocon_tab[flc_i].field_2 = unk_4;
-            flocon_tab[flc_i].field_4 = unk_2;
+            flocon_tab[flc_i].field_4 = scale;
             flc_i++;
-            j++;
+        }
         }
         unk_2 += 32;
         i++;

@@ -1,4 +1,5 @@
-/* block_malloc: worker tu_pcmisc (1:61920 ray.c PC part / 1:6f3b0 sysutils.c, misc_source.c). Names RAYVERSE/ANDROID. */
+/* block_malloc, DOS 1:6f5b0..1:6f73f; STRICT including CONST.
+ * Names RAYVERSE/ANDROID; worker w2_smallB. See NOTES.md. */
 #include "game.h"
 #include <stdio.h>
 #include <string.h>
@@ -32,35 +33,33 @@ void FatalError(const char *message);
 
 u8 *block_malloc(mem_t *mem, u32 size)
 {
-    u32 old_cursor;
     u32 new_cursor;
     u8 *result;
     char mem_name[12];
     char *message;
 
     size += size & 3;
-    new_cursor = mem->align + size;
-    if (size == 0 || new_cursor > mem->capacity) {
+    if (size == 0 || (new_cursor = mem->align + size) > mem->capacity) {
         message = (char *)temp_malloc(100);
         if (mem == &main_mem_fix)
-            memcpy(mem_name, "fix", 4);
+            strcpy(mem_name, "fix");
         else if (mem == &main_mem_world)
-            memcpy(mem_name, "world", 6);
+            strcpy(mem_name, "world");
         else if (mem == &main_mem_level)
-            memcpy(mem_name, "level", 6);
+            strcpy(mem_name, "level");
         else if (mem == &main_mem_sprite)
-            memcpy(mem_name, "sprite", 7);
+            strcpy(mem_name, "sprite");
         else
-            memcpy(mem_name, "unknown mem", 12);
+            strcpy(mem_name, "unknown mem");
         sprintf(message, "Memory error in block_malloc : %s = %p, size = %ul.\n", mem_name, mem, size);
         FatalError(message);
         temp_free(message);
         return 0;
     }
 
-    old_cursor = mem->align;
+    result = mem->data;
+    result += mem->align;
     mem->align = new_cursor;
-    result = mem->data + old_cursor;
 
     if (data_22d970.fix.used < main_mem_fix.align) {
         data_22d970.fix.world = num_world;
