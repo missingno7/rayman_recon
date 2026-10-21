@@ -9,10 +9,8 @@ typedef unsigned char bool;
 #define false 0
 #endif
 #define ASSERT(expr)
-#define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #define COUNT(x) (sizeof(x) / sizeof((x)[0]))
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
-#define ashr16(value, bits) ((s16)(value) < 0 ? -(((s16)-(s16)(value)) >> (bits)) : ((s16)(value) >> (bits)))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define ANIMMODE_RESET_IF_NEW 1
 #define BTYP_CHDIR 1

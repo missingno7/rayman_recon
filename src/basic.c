@@ -7,6 +7,7 @@
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
+#include "inline_helpers.h"
 #include "basic_local.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -80,7 +81,7 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     {
         obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
         obj_2_anim_frame += (obj_2_eta_1->flags & 0x10) ? -1 : 1; /* requires ternary to match? */
-        if (!(obj_2_anim_frame >= 0 && obj_2_anim_frame <= obj_2_frames_count - 1))
+        if (!inrange(obj_2_anim_frame, 0, obj_2_frames_count - 1))
         {
             obj_2_eta_2 = &obj_2->eta[obj_2_eta_1->next_main_etat][obj_2_eta_1->next_sub_etat];
             obj_2_anim_index = obj_2_eta_2->anim_index;
@@ -99,15 +100,15 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
     new_spd_x = x_offs + obj_2_x - obj_1->x;
     while (abs(new_spd_x) >= 16)
     {
-        obj_1->x += SGN(new_spd_x) * 16;
-        new_spd_x += SGN(new_spd_x) * -16;
+        obj_1->x += sgn(new_spd_x) * 16;
+        new_spd_x += sgn(new_spd_x) * -16;
     }
 
     new_spd_y = y_offs + obj_2_y - obj_1->y;
     while (abs(new_spd_y) >= 16)
     {
-        obj_1->y += SGN(new_spd_y) * 16;
-        new_spd_y += SGN(new_spd_y) * -16;
+        obj_1->y += sgn(new_spd_y) * 16;
+        new_spd_y += sgn(new_spd_y) * -16;
     }
 
     {
@@ -474,9 +475,10 @@ void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 an
     s32 unk_1;
     s32 x_1;
     s32 x_2;
-    u8 foll_spr = obj->follow_sprite;
+    u8 foll_spr;
     anim_layer_t* layer_1 = &anim_1->layers[(anim_1->layers_per_frame & 0x3FFF) * obj->anim_frame];
     anim_layer_t* layer_2 = &anim_2->layers[(anim_2->layers_per_frame & 0x3FFF) * anim_frame_2];
+    foll_spr = obj->follow_sprite;
 
     width_1 = obj->sprites[layer_1[foll_spr].sprite_index].outer_width;
     if (obj->flags.flip_x) {
@@ -843,7 +845,7 @@ void makeUturn(obj_t* obj) {
 
 //1E588
 u8 BTYP(s16 tile_x, s16 tile_y) {
-    if (tile_x >= 0 && tile_x <= (mp.width - 1) && tile_y >= 0 && tile_y <= (mp.height - 1)) {
+    if (inrange(tile_x, 0, mp.width - 1) && inrange(tile_y, 0, mp.height - 1)) {
         return mp.map[tile_y * mp.width + tile_x].tile_type;
     } else {
         return BTYP_NONE;
@@ -852,25 +854,31 @@ u8 BTYP(s16 tile_x, s16 tile_y) {
 
 //1E608
 void calc_btyp_square(obj_t* obj) {
-    u8 x_offset;
     s16 x;
     s16 y;
     s16 tile_x;
     s16 tile_y;
     s16 tile_x_left;
     s16 tile_x_right;
-    if (obj->type == TYPE_23_RAYMAN) {
-        x_offset = RayEvts.tiny ? 4 : 8;
-    } else {
-        x_offset = 16;
-    }
+    {
+        u8 x_offset;
+        if (obj->type == TYPE_23_RAYMAN) {
+            if (RayEvts.tiny) {
+                x_offset = 4;
+            } else {
+                x_offset = 8;
+            }
+        } else {
+            x_offset = 16;
+        }
 
-    x = obj->x + obj->offset_bx;
-    y = obj->y + obj->offset_by;
-    tile_x = ashr16(x, 4);
-    tile_y = ashr16(y, 4);
-    tile_x_left = ashr16(x - x_offset, 4);
-    tile_x_right = ashr16(x + x_offset, 4);
+        x = obj->x + obj->offset_bx;
+        y = obj->y + obj->offset_by;
+        tile_x = ashr16(x, 4);
+        tile_y = ashr16(y, 4);
+        tile_x_left = ashr16(x - x_offset, 4);
+        tile_x_right = ashr16(x + x_offset, 4);
+    }
 
     obj->btypes[3] = BTYP(tile_x, tile_y - 1); // up
     obj->btypes[1] = BTYP(tile_x_left, tile_y); // left
@@ -930,6 +938,10 @@ u8 calc_btyp(obj_t* obj) {
             case BTYP_SLIPPERY_RIGHT2_30:
             case BTYP_SLIPPERY_LEFT1_30:
             case BTYP_SLIPPERY_LEFT2_30:
+                ray_last_ground_btyp = false;
+                break;
+            case 25: /* DOS 1:0e7e3 leaves ray_last_ground_btyp unchanged. */
+                break;
             case BTYP_SLIPPERY:
                 ray_last_ground_btyp = false;
                 break;
