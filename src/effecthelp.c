@@ -35,10 +35,10 @@ typedef struct effect5_state {
     u8 *screen_b;
     effect5_point_t *points;
     effect5_item_t *items;
-    s16 center_x;
-    s16 center_y;
-    s16 radius_x;
-    s16 radius_y;
+    u16 center_x;
+    u16 center_y;
+    s16 velocity_x;
+    s16 velocity_y;
     s16 angle_x;
     s16 angle_y;
     u8 phase_x;
@@ -59,97 +59,101 @@ extern void *sub_6FBB4(s32 size);
 extern void JumelleFreeArray(void **p);
 extern void effect_copy_band(u8 *source, u8 *destination, u32 width);
 extern void effect_reset_geometry(void);
-#pragma aux effect_reset_geometry modify exact []
 extern void draw_effect_segment(u8 *destination, u8 *item);
 #pragma aux draw_effect_segment parm [eax] [esi] modify exact []
 extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
 
+#define EFFECT_MAX(a,b) ((s32)(a) < (s32)(b) ? (s32)(b) : (s32)(a))
+
 void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
 {
     effect5_state_t *state;
+    effect5_point_t *point;
+    effect5_item_t *item;
     double latitude_step;
     double longitude_step;
     double latitude;
     double longitude;
-    double radius_value;
-    s16 row;
-    s16 column;
-    u16 point_index;
-    u16 cell_index;
-    u16 width_step;
-    u16 height_step;
+    double scaled_sin;
+    double scaled_cos;
+    u8 row;
+    u8 column;
+    u16 cell;
+    u8 width_step;
+    u8 height_step;
+    u16 x;
+    u16 y;
+    s32 clamped;
 
     state = effect5_state;
     effect_reset_geometry();
-
     state->frame = 0;
-    state->frame_limit = frame_limit < 1 ? 1 : frame_limit;
+    clamped = 1;
+    if (frame_limit > clamped) clamped = frame_limit;
+    state->frame_limit = clamped;
     if (speed >= 0) {
-        if (speed < 1)
-            speed = 1;
-    } else if (speed > -1) {
-        speed = -1;
+        clamped = 1;
+        if (speed > clamped) clamped = speed;
+    } else {
+        clamped = 1;
+        if (-speed > clamped) clamped = -speed;
+        clamped = -clamped;
     }
-    state->speed = speed;
-    if (radius > 70)
-        radius = 70;
-    if (radius < 40)
-        radius = 40;
-    state->radius = (u8)radius;
-
-    latitude_step = 3.14159265358979323846 / state->rows;
-    longitude_step = (2.0 * 3.14159265358979323846) / state->columns;
-    radius_value = state->radius;
-    point_index = 0;
-    for (row = 0; row <= state->rows; ++row) {
-        latitude = -1.57079632679489661923 + row * latitude_step;
-        for (column = 0; column <= state->columns; ++column) {
-            longitude = column * longitude_step;
-            state->points[point_index].x = (s16)(radius_value * cos(latitude) * cos(longitude));
-            state->points[point_index].y = (s16)(radius_value * cos(latitude) * sin(longitude));
-            state->points[point_index].z = (s16)(radius_value * sin(latitude));
-            ++point_index;
+    state->speed = clamped;
+    clamped = radius;
+    if (clamped > 70) clamped = 70;
+    {
+        s32 minimum = 40;
+        if (minimum < clamped) minimum = clamped;
+        state->radius = minimum;
+    }
+    latitude_step = 3.141592654 / state->rows;
+    longitude_step = (2 * 3.141592654) / state->columns;
+    point = state->points;
+    latitude = -3.141592654 / 2;
+    for (row = 0; row <= state->rows; row++) {
+        scaled_sin = state->radius * sin(latitude);
+        scaled_cos = state->radius * cos(latitude);
+        longitude = 0;
+        for (column = 0; column <= state->columns; column++) {
+            point->x = -scaled_cos * sin(longitude);
+            point->y = scaled_sin;
+            point->z = -scaled_cos * cos(longitude);
+            point++;
+            longitude += longitude_step;
         }
+        latitude += latitude_step;
     }
-
-    width_step = (u16)(effect5_width / state->columns);
-    height_step = (u16)(effect5_height / state->rows);
-    cell_index = 0;
-    for (row = 0; row < state->rows; ++row) {
-        for (column = 0; column < state->columns; ++column) {
-            effect5_item_t *item = &state->items[cell_index];
-            u16 x;
-            u16 y;
-            u16 right;
-            u16 bottom;
-            u16 vertex;
-
-            vertex = (u16)(row * (state->columns + 1) + column);
-            item->point[0] = vertex;
-            item->point[1] = vertex + 1;
-            item->point[2] = vertex + state->columns + 2;
-            item->point[3] = vertex + state->columns + 1;
-
-            x = (u16)(column * width_step);
-            y = (u16)(row * height_step);
-            right = (u16)(x + width_step - 1);
-            bottom = (u16)(y + height_step - 1);
-            if (effect5_width > 256 && x >= 160) {
+    item = state->items;
+    for (cell = 0; cell < state->count; cell++) {
+        s32 vertex;
+        vertex = cell + cell / state->columns;
+        item->point[0] = vertex;
+        item->point[1] = vertex + 1;
+        item->point[2] = vertex + state->columns + 2;
+        item->point[3] = vertex + state->columns + 1;
+        item++;
+    }
+    width_step = effect5_width / state->columns;
+    height_step = effect5_height / state->rows;
+    item = state->items;
+    for (row = 0; row < state->rows; row++) {
+        for (column = 0; column < state->columns; column++) {
+            x = column * width_step;
+            y = row * height_step;
+            if (effect5_width <= 256)
+                item->screen = state->screen_a;
+            else if (x < 160)
+                item->screen = state->screen_a;
+            else {
                 item->screen = state->screen_b;
                 x -= 160;
-                right -= 160;
-            } else {
-                item->screen = state->screen_a;
             }
-            item->rectangle[0] = (u8)x;
-            item->rectangle[1] = (u8)y;
-            item->rectangle[2] = (u8)x;
-            item->rectangle[3] = (u8)bottom;
-            item->rectangle[4] = (u8)right;
-            item->rectangle[5] = (u8)bottom;
-            item->rectangle[6] = (u8)right;
-            item->rectangle[7] = (u8)y;
-            ++cell_index;
+            item->rectangle[0] = item->rectangle[2] = x;
+            item->rectangle[1] = item->rectangle[7] = y;
+            item->rectangle[3] = item->rectangle[5] = y + height_step - 1;
+            item->rectangle[4] = item->rectangle[6] = x + width_step - 1;
+            item++;
         }
     }
     state->mode = 1;
@@ -178,38 +182,42 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
 
     effect5_width = 0x100;
     effect5_height = 0xc8;
-    effect5_x_offset = 0x20;
     effect5_y_offset = 0;
+    effect5_x_offset = 0x20;
     success = 0;
 
     if (source != 0 && destination != 0) {
         effect5_state = (effect5_state_t *)sub_6FBB4(0x3c);
         state = effect5_state;
         if (state != 0) {
-            state->columns = columns < 2 ? 2 : (u8)columns;
-            state->rows = rows < 1 ? 1 : (u8)rows;
+            state->columns = EFFECT_MAX(2, columns);
+            state->rows = EFFECT_MAX(1, rows);
             state->count = (u16)(columns * rows);
             state->point_count = (u16)((columns + 1) * (rows + 1));
             state->source = source;
             state->destination = destination;
-            state->screen_a = EffetBufferNormal;
-            state->screen_b = effect5_width > 0x100 ? EffetBufferNormal + 0xc800 : 0;
-            state->points = (effect5_point_t *)sub_6FBB4(state->point_count * 10);
-            if (state->points != 0) {
-                state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);
-                if (state->items != 0)
+            state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);
+            if (state->items != 0) {
+                state->points = (effect5_point_t *)sub_6FBB4(state->point_count * 10);
+                if (state->points != 0) {
+                    state->screen_a = EffetBufferNormal;
+                    if (effect5_width <= 0x100)
+                        state->screen_b = 0;
+                    else
+                        state->screen_b = EffetBufferNormal + 0xc800;
                     success = 1;
+                }
             }
         }
     }
 
     if (success != 0) {
         if (effect5_width <= 0x100) {
-            effect_copy_band(source + effect5_y_offset * 320 + effect5_x_offset,
+            effect_copy_band(state->source + effect5_y_offset * 320 + effect5_x_offset,
                              state->screen_a, effect5_width);
         } else {
-            effect_copy_band(source, state->screen_a, 0xa0);
-            effect_copy_band(source + 0xa0, state->screen_b, 0xa0);
+            effect_copy_band(state->source, state->screen_a, 0xa0);
+            effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0);
         }
         effect_helper_15e60(radius, speed, frame_limit);
     } else {
@@ -222,113 +230,165 @@ s16 effect_helper_16404(void)
 {
     effect5_state_t *state;
     effect5_point_t *point;
-    effect5_item_t *item;
-    s16 frame_step;
-    s16 x_sin;
-    s16 x_cos;
-    s16 y_sin;
-    s16 y_cos;
-    s16 i;
+    s32 frame;
+    s32 magnitude;
+    s32 step;
+    s32 target_x, target_y;
+    s32 projected_x, projected_y;
+    s32 denominator;
+    s32 x, y, z;
+    s32 sine_x, cosine_x, sine_y, cosine_y;
+    s16 cosine, sine;
+    u8 width_step, height_step;
+    u8 row, column;
 
     state = effect5_state;
+    point = state->points;
     if (state->mode == 1) {
-        frame_step = state->speed;
-        if (frame_step < 0)
-            frame_step = -frame_step;
-        point = state->points;
-        for (i = 0; i < state->point_count; ++i) {
-            point->x = (s16)(point->x + frame_step);
-            point->y = (s16)(point->y + state->speed);
-            ++point;
+        if (state->speed >= 0)
+            frame = state->frame;
+        else
+            frame = state->frame_limit - state->frame;
+        width_step = effect5_width / state->columns;
+        height_step = effect5_height / state->rows;
+        target_y = effect5_y_offset - 100;
+        for (row = 0; row <= state->rows; row++) {
+            target_x = effect5_x_offset - 160;
+            for (column = 0; column <= state->columns; column++) {
+                denominator = point->z + 512;
+                projected_x = (point->x << 9) / denominator;
+                projected_y = (point->y << 9) / denominator;
+                point->u = projected_x + 160 + (target_x - projected_x) * frame / state->frame_limit;
+                point->v = projected_y + 100 + (target_y - projected_y) * frame / state->frame_limit;
+                point++;
+                target_x += width_step;
+            }
+            target_y += height_step;
         }
-        state->frame = (u16)(state->frame + frame_step);
+        magnitude = state->speed;
+        if (magnitude < 0) magnitude = -magnitude;
+        state->frame = state->frame + magnitude;
         if (state->frame > state->frame_limit) {
             if (state->speed < 0)
                 state->mode = 2;
             else
                 state->frame = 0;
         }
-    }
-
-    if (state->mode == 2) {
-        state->center_x = 160;
-        state->center_y = 100;
-        state->radius_x = 8;
-        state->radius_y = 10;
-        state->angle_x = 0;
-        state->angle_y = 0;
-        state->phase_x = 0;
-        state->phase_y = 0;
-        state->flags_36 = 0;
-        state->flags_37 = 0;
-        state->flags_38 = 0;
-        state->frame = 0;
-        state->frame_limit = 1000;
-        state->mode = 0;
-    }
-
-    sinus_cosinus(state->angle_x, &x_sin, &x_cos);
-    sinus_cosinus(state->angle_y, &y_sin, &y_cos);
-    item = state->items;
-    for (i = 0; i < state->count; ++i) {
-        s16 corner;
-        for (corner = 0; corner < 4; ++corner) {
-            point = &state->points[item->point[corner]];
-            item->projected[corner * 2] = state->center_x + point->x * x_cos / 512;
-            item->projected[corner * 2 + 1] = state->center_y + point->y * y_cos / 512;
+        return state->frame;
+    } else {
+        if (state->mode == 2) {
+            state->center_x = 160;
+            state->center_y = 100;
+            state->velocity_x = 8;
+            state->velocity_y = 10;
+            state->phase_x = 0;
+            state->phase_y = 0;
+            state->flags_36 = 0;
+            state->angle_x = 0;
+            state->angle_y = 0;
+            state->mode = 0;
+            state->frame = 0;
+            state->frame_limit = 1000;
+            state->flags_37 = 0;
+            state->flags_38 = 0;
         }
-        ++item;
+        if (state->flags_36 != 0) {
+            magnitude = state->speed;
+            if (magnitude < 0) magnitude = -magnitude;
+            state->angle_y = magnitude * 4 + state->angle_y;
+        }
+        state->velocity_y++;
+        if (state->center_x > 320 - (state->radius + 4) && state->phase_y == 0) {
+            state->velocity_x = -state->velocity_x + 1;
+            state->phase_y = 1;
+            if (state->flags_38 != 0)
+                state->flags_37 = 1;
+            state->flags_38 = 1;
+        } else if (state->center_x < state->radius + 4 && state->phase_y == 0) {
+            state->velocity_x = -state->velocity_x - 1;
+            state->phase_y = 1;
+        } else if (state->center_x > state->radius + 4 || state->center_x < 320 - (state->radius + 4))
+            state->phase_y = 0;
+        if (state->center_y > 200 - (state->radius + 3) && state->phase_x == 0 && state->flags_37 == 0) {
+            state->phase_x = 1;
+            state->velocity_y = -state->velocity_y + 2;
+            state->flags_36 = 1;
+        } else if (state->center_y <= 200 - (state->radius + 3))
+            state->phase_x = 0;
+        else if (state->center_y >= 200 + state->radius + 3)
+            state->frame = state->frame_limit;
+        step = state->velocity_x / 4;
+        magnitude = state->speed;
+        if (magnitude < 0) magnitude = -magnitude;
+        state->center_x = step * magnitude + state->center_x;
+        step = state->velocity_y / 4;
+        magnitude = state->speed;
+        if (magnitude < 0) magnitude = -magnitude;
+        state->center_y = step * magnitude + state->center_y;
+        sinus_cosinus(state->angle_x, &sine, &cosine);
+        sine_x = sine;
+        cosine_x = cosine;
+        sinus_cosinus(state->angle_y, &sine, &cosine);
+        sine_y = sine;
+        cosine_y = cosine;
+        for (row = 0; row <= state->rows; row++) {
+            for (column = 0; column <= state->columns; column++) {
+                y = sine_y * point->x + cosine_y * point->y;
+                x = (point->x * cosine_y - point->y * sine_y) >> 9;
+                z = -point->z;
+                projected_x = sine_x * z + cosine_x * x;
+                denominator = z * cosine_x - x * sine_x;
+                denominator >>= 9;
+                denominator += 512;
+                point->u = projected_x / denominator + state->center_x;
+                point->v = y / denominator + state->center_y;
+                point++;
+            }
+        }
+        magnitude = state->speed;
+        if (magnitude < 0) magnitude = -magnitude;
+        state->angle_x = magnitude * 2 + state->angle_x;
+        magnitude = state->speed;
+        if (magnitude < 0) magnitude = -magnitude;
+        state->frame = state->frame + magnitude;
+        if (state->frame > state->frame_limit)
+            state->frame = 0;
     }
-    return (s16)state->frame;
+    return state->frame;
 }
 
 void effect_helper_168c8(void)
 {
     effect5_state_t *state;
+    effect5_point_t *points;
     effect5_item_t *item;
-    effect5_point_t *p0;
-    effect5_point_t *p1;
-    effect5_point_t *p2;
-    effect5_point_t *p3;
-    s32 u0;
-    s32 v0;
-    s32 u1;
-    s32 v1;
-    s32 u2;
-    s32 v2;
-    s32 u3;
-    s32 v3;
-    s32 i;
+    s32 u0, u1, u2, u3;
+    s32 v0, v1, v2, v3;
+    u16 i;
 
     state = effect5_state;
+    points = state->points;
     item = state->items;
-    for (i = 0; i < state->count; ++i) {
-        s32 area;
-
-        p0 = &state->points[item->point[0]];
-        p1 = &state->points[item->point[1]];
-        p2 = &state->points[item->point[2]];
-        p3 = &state->points[item->point[3]];
-        u0 = p0->u;
-        v0 = p0->v;
-        u1 = p1->u - 1;
-        v1 = p1->v;
-        u2 = p2->u - 1;
-        v2 = p2->v;
-        u3 = p3->u;
-        v3 = p3->v;
-        area = (u0 - u3) * (v2 - v1) - (v0 - v3) * (u2 - u1);
-        if (area < 0) {
+    for (i = 0; i < state->count; i++) {
+        u0 = points[item->point[0]].u;
+        v0 = points[item->point[0]].v;
+        u3 = points[item->point[3]].u;
+        v3 = points[item->point[3]].v;
+        u2 = points[item->point[2]].u - 1;
+        v2 = points[item->point[2]].v;
+        u1 = points[item->point[1]].u - 1;
+        v1 = points[item->point[1]].v;
+        if ((u0 - u2) * (v3 - v1) < (v0 - v2) * (u3 - u1)) {
+            item->projected[3] = v3;
+            item->projected[7] = v1;
             item->projected[0] = u0;
-            item->projected[1] = v0;
-            item->projected[2] = u1;
-            item->projected[3] = v1;
             item->projected[4] = u2;
+            item->projected[1] = v0;
             item->projected[5] = v2;
-            item->projected[6] = u3;
-            item->projected[7] = v3;
+            item->projected[2] = u3;
+            item->projected[6] = u1;
             draw_effect_segment(state->destination, (u8 *)&item->screen);
         }
-        ++item;
+        item++;
     }
 }
