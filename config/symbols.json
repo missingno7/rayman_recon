@@ -7822,6 +7822,56 @@
     "addr": "1:031ed",
     "name": "RAYVERSE",
     "evidence": "Android symbol exists; DOS DISPLAY_BLACKBOX calls, ABI docs/reference/lowlevel_abi.h"
+   },
+   "sub_193b8": {
+    "addr": "1:193b8",
+    "name": "INVENTED",
+    "evidence": "Address-based name; returns byte at 2:4ef00."
+   },
+   "sub_193c0": {
+    "addr": "1:193c0",
+    "name": "INVENTED",
+    "evidence": "Address-based name; returns byte at 2:4eefc."
+   },
+   "sub_193c8": {
+    "addr": "1:193c8",
+    "name": "INVENTED",
+    "evidence": "Address-based name; returns byte at 2:4eefd."
+   },
+   "sub_193d0": {
+    "addr": "1:193d0",
+    "name": "INVENTED",
+    "evidence": "Address-based name; stores one byte at 2:4eefb."
+   },
+   "sub_193d8": {
+    "addr": "1:193d8",
+    "name": "INVENTED",
+    "evidence": "Address-based name; stores one byte at 2:4ef00."
+   },
+   "sub_193e0": {
+    "addr": "1:193e0",
+    "name": "INVENTED",
+    "evidence": "Address-based name; stores one byte at 2:4eefc."
+   },
+   "sub_193e8": {
+    "addr": "1:193e8",
+    "name": "INVENTED",
+    "evidence": "Address-based name; stores one byte at 2:4eefd."
+   },
+   "sub_193f0": {
+    "addr": "1:193f0",
+    "name": "INVENTED",
+    "evidence": "DOS code calls 1:564f8 with command 0x2f and the input value."
+   },
+   "sub_564f8": {
+    "addr": "1:564f8",
+    "name": "INVENTED",
+    "evidence": "Direct call target from 1:193f0; outside this candidate object."
+   },
+   "sub_19400": {
+    "addr": "1:19400",
+    "name": "INVENTED",
+    "evidence": "Address-based name; normalizes a high-bit status word as shown at 1:19400."
    }
   },
   "data": {
@@ -14262,6 +14312,30 @@
     "type": "void (*)(void)",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //E4CC0; Android object .bss size 4; DOS MAIN_CALIBRATE_JOYSTICK 1:3f0b3/3f0bd saves pEND_SCREEN here, 1:3f0f9/3f104 restores it"
+   },
+   "byte_DEEFB": {
+    "addr": "2:4eefb",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment //DEEFB; DOS code reads and writes a byte here."
+   },
+   "byte_DEEFC": {
+    "addr": "2:4eefc",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS code reads and writes one byte at 2:4eefc."
+   },
+   "byte_DEEFD": {
+    "addr": "2:4eefd",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS code reads and writes one byte at 2:4eefd."
+   },
+   "byte_DEF00": {
+    "addr": "2:4ef00",
+    "type": "u8",
+    "name": "INVENTED",
+    "evidence": "DOS code reads and writes one byte at 2:4ef00."
    }
   }
  }
