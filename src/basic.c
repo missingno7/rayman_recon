@@ -1276,26 +1276,27 @@ void calc_num_let_spr(u8 font_size, u8* letter_num) {
 //1F1B0
 s16 calc_largmax_text(const char* text, s16 char_index, s16 space_width, s16 char_spacing, u8 font_size) {
     s16 width = 0;
-    char c;
-    s32 num_let;
-    for (;;) {
-        ++char_index;
-        c = text[char_index];
-        if (c == '\0' || c == '/') {
-            break;
-        }
-        if (c == ' ') {
-            width += space_width;
-        } else {
-            num_let = deter_num_let(c, text + char_index + 1);
-            if (num_let != 0) {
-                width += calc_let_Width2(font_size, num_let) - char_spacing;
-                if (num_let >= 1000) {
-                    char_index += 3;
-                }
-            }
+    s16 i;
+    u32 num_let;
+    /* DOS 1:f1c2 jumps to the increment/test at 1:f204. Keep that footer
+       explicit; a while condition moves the test before the character body. */
+    i = char_index;
+    goto next_character;
+character:
+    if (text[i] == '/') goto done;
+    if (text[i] == ' ') {
+        width += space_width;
+    } else {
+        num_let = deter_num_let(text[i], text + (i + 1));
+        if (num_let != 0) {
+            width += calc_let_Width2(font_size, num_let) - char_spacing;
+            if (num_let >= 1000) i += 3;
         }
     }
+next_character:
+    ++i;
+    if (text[i] != '\0') goto character;
+done:
     return width;
 }
 
