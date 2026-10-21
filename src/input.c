@@ -1,4 +1,5 @@
-/* input.c (1:31ab0..1:32930: keyboard/joystick/demo record). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholder names); workers gfin_input and w2_smallA finishing candidate. See NOTES.md for measured statuses. */
+/* input.c: DOS v1.21 object 1:31ab0..32924; d_input finishing candidate.
+ * Names RAYVERSE/Android except inherited placeholders. See NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -595,8 +596,9 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
     }
 
     if (dans_la_map_monde) {
-        ModeAutoJumelle = 0;
+        /* DOS 1:3262f..32646: mask update precedes the mode clear. */
         ChangeJumelleSizeOK &= ~4;
+        ModeAutoJumelle = 0;
         if (PositionStageNameCalcule == 1)
             PositionStageNameCalcule = 2;
     }
@@ -703,8 +705,8 @@ u8 JoystickPresent(void)
             Read_Input_Func = get_joy_input2_windows2;
             something_with_cfg_25_default_00_joy = 1;
         } else {
-            something_with_cfg_25_default_00_joy = 1;
-            is_joypad_mode = 1;
+            /* DOS 1:328f6..32902: both flags share the value in BH. */
+            something_with_cfg_25_default_00_joy = is_joypad_mode = 1;
             Read_Input_Func = get_joy_input2_dos2;
             Swap_And_Test_Joystick = get_joy_input1_dos2;
         }
