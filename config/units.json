@@ -6005,7 +6005,7 @@
      ]
     },
     "INIT_WORLD_INFO": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6029,7 +6029,7 @@
      ]
     },
     "INIT_CHEMIN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

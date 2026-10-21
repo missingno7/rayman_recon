@@ -29,7 +29,7 @@ void *temp_malloc(s32 size);
 void temp_free(void *ptr);
 void check_cd_for_save(void); /* INVENTED: DOS 1:5bc40 */
 u32 deter_num_let(u8 c, const char *next_chars);
-s16 calc_largmax_text(const char *text, s16 char_index, s32 space_width, s32 spacing, u8 font_size);
+s16 calc_largmax_text(const char *text, s32 char_index, s16 space_width, s16 spacing, u8 font_size); /* DOS 1:5838d..1:583ab */
 s16 myRand(s16 max);
 extern sprite_t *alpha, *alpha2;
 extern char TexteStageNameLevel[], TexteStageNameWorld[];
@@ -405,13 +405,15 @@ void CHANGE_STAGE_NAMES(void) {
     }
 }
 
+/* Nonnegative-first absolute value: DOS 1:58751..1:58757, 1:58845..1:5884b. */
+#define ABS_STAGE(x) ((x) >= 0 ? (x) : -(x))
+
 void DO_STAGE_NAMES(void) {
     s32 i, letter, x, speed, distance, rand_speed;
-    s16 spacing, space_width;
+    s32 spacing, space_width;
     u8 finished;
     display_item_t *item_level, *item_world;
     sprite_t *sprite_level, *sprite_world;
-    char *text_level, *next_level, *text_world, *next_world;
     s32 start_level_x, start_world_x;
     if (!ModeAutoJumelle) {
         if (text_to_display[1].xpos > 160) {
@@ -439,14 +441,12 @@ void DO_STAGE_NAMES(void) {
         space_width = 8;
         LongueurStageNameLevel = strlen(item_level->text);
         start_level_x = item_level->xpos;
-        text_level = item_level->text;
-        next_level = text_level + 1;
-        for (i = 0; i < LongueurStageNameLevel; ++i, ++text_level, ++next_level) {
-            letter = deter_num_let(*text_level, next_level);
-            if (*text_level == '/') {
+        for (i = 0; i < LongueurStageNameLevel; ++i) {
+            letter = deter_num_let(item_level->text[i], &item_level->text[i+1]);
+            if (item_level->text[i] == '/') {
                 x = start_level_x - (calc_largmax_text(item_level->text, i, space_width, spacing, item_level->font_size) >> 1);
                 letter = 0;
-            } else if (*text_level == ' ') {
+            } else if (item_level->text[i] == ' ') {
                 x += space_width;
                 letter = 0;
             }
@@ -455,9 +455,9 @@ void DO_STAGE_NAMES(void) {
                 PositionXStageNameLevel[i] = x << 4;
                 PositionYStageNameLevel[i] = item_level->ypos << 4;
                 VitesseXStageNameLevel[i] = 0;
-                do {
-                    VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + myRand(32) - 16;
-                } while (!VitesseXStageNameLevel[i]);
+                while (!VitesseXStageNameLevel[i]) {
+                    VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + (myRand(32) - 16);
+                }
                 VitesseYStageNameLevel[i] = -16 - myRand(32);
                 x += (sprite_level->sprite_pos.raw & 15) + sprite_level->inner_width - spacing;
             }
@@ -470,26 +470,24 @@ void DO_STAGE_NAMES(void) {
         space_width = 10;
         LongueurStageNameWorld = strlen(item_world->text);
         start_world_x = item_world->xpos;
-        text_world = item_world->text;
-        next_world = text_world + 1;
-        for (i = 0; i < LongueurStageNameWorld; ++i, ++text_world, ++next_world) {
-            letter = deter_num_let(*text_world, next_world);
-            if (*text_world == '/') {
+        for (i = 0; i < LongueurStageNameWorld; ++i) {
+            letter = deter_num_let(item_world->text[i], &item_world->text[i+1]);
+            if (item_world->text[i] == '/') {
                 x = start_world_x - (calc_largmax_text(item_world->text, i, space_width, spacing, item_world->font_size) >> 1);
                 letter = 0;
-            } else if (*text_world == ' ') {
+            } else if (item_world->text[i] == ' ') {
                 x += space_width;
                 letter = 0;
             }
             if (letter) {
                 letter += 41;
-sprite_world = &alpha2[letter];
+                sprite_world = &alpha2[letter];
                 PositionXStageNameWorld[i] = x << 4;
                 PositionYStageNameWorld[i] = item_world->ypos << 4;
                 VitesseXStageNameWorld[i] = 0;
-                do {
-                    VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + myRand(32) - 16;
-                } while (!VitesseXStageNameWorld[i]);
+                while (!VitesseXStageNameWorld[i]) {
+                    VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + (myRand(32) - 16);
+                }
                 VitesseYStageNameWorld[i] = -16 - myRand(32);
                 x += (sprite_world->sprite_pos.raw & 15) + sprite_world->inner_width - spacing;
             }
@@ -511,9 +509,7 @@ sprite_world = &alpha2[letter];
                 PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
                 if (PositionYStageNameWorld[i] >= 3200) {
                     PositionYStageNameWorld[i] = 3200;
-                    speed = VitesseYStageNameWorld[i];
-                    if (speed < 0) speed = -speed;
-                    if (speed < 8) VitesseYStageNameWorld[i] = -64 - myRand(32);
+                    if (ABS_STAGE(VitesseYStageNameWorld[i]) < 8) VitesseYStageNameWorld[i] = -64 - myRand(32);
                     else VitesseYStageNameWorld[i] = -VitesseYStageNameWorld[i];
                 }
                 VitesseYStageNameWorld[i]++;
@@ -528,9 +524,7 @@ sprite_world = &alpha2[letter];
                 PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
                 if (PositionYStageNameLevel[i] >= 3200) {
                     PositionYStageNameLevel[i] = 3200;
-                    speed = VitesseYStageNameLevel[i];
-                    if (speed < 0) speed = -speed;
-                    if (speed < 8) VitesseYStageNameLevel[i] = -64 - myRand(32);
+                    if (ABS_STAGE(VitesseYStageNameLevel[i]) < 8) VitesseYStageNameLevel[i] = -64 - myRand(32);
                     else VitesseYStageNameLevel[i] = -VitesseYStageNameLevel[i];
                 }
                 VitesseYStageNameLevel[i]++;
@@ -755,7 +749,11 @@ void RESPOND_TO_LEFT(void)
         PositionStageNameCalcule = 2;
 }
 
+/* DOS uses conditional negation, e.g. 1:59283..1:59293. */
+#define ABS_PROMOTED(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
+
 void DO_RAYMAN_IN_WLD_MAP(void) {
+    s16 diff_x, diff_y, xspeed, yspeed, move_x, move_y;
     if (old_num_world == num_world_choice) {
         if (ValidButPressed()) {
             PositionStageNameCalcule = 0;
@@ -763,7 +761,7 @@ void DO_RAYMAN_IN_WLD_MAP(void) {
             if (num_world_choice == 18 || num_world_choice == 19 || num_world_choice == 20 || num_world_choice == 21 ||
                 num_world_choice == 22 || num_world_choice == 23
             ) {
-                if (t_world_info[num_world_choice].text == language_txt[150] /* /save game/ */ &&
+                if (language_txt[150] == t_world_info[num_world_choice].text /* /save game/ */ &&
                     NBRE_SAVE != 0 &&
                     strcmp(text_to_display[3].text, language_txt[161] /* /password/ */) != 0
                 ) {
@@ -798,34 +796,34 @@ void DO_RAYMAN_IN_WLD_MAP(void) {
             }
         }
     } else {
-        s16 diff_x = t_world_info[num_world_choice].xpos - t_world_info[old_num_world].xpos;
-        s16 diff_y = t_world_info[num_world_choice].ypos - t_world_info[old_num_world].ypos;
-        s16 xspeed = 0;
-        s16 yspeed = 0;
+        diff_x = t_world_info[num_world_choice].xpos - t_world_info[old_num_world].xpos;
+        diff_y = t_world_info[num_world_choice].ypos - t_world_info[old_num_world].ypos;
         if (diff_x < 0) {
             ray.flags.flip_x = 0;
         } else {
             ray.flags.flip_x = 1;
         }
         if (diff_x != 0 && diff_y != 0) {
-            if (abs(diff_y) > abs(diff_x)) {
-                xspeed = abs(ray.timer * diff_x / diff_y);
+            if (ABS_PROMOTED(diff_y) > ABS_PROMOTED(diff_x)) {
+                xspeed = ABS_PROMOTED(ray.timer * diff_x / diff_y);
                 yspeed = ray.timer;
             } else {
                 xspeed = ray.timer;
-                yspeed = abs(ray.timer * diff_y / diff_x);
+                yspeed = ABS_PROMOTED(ray.timer * diff_y / diff_x);
             }
         } else if (diff_x == 0) {
             yspeed = ray.timer;
-        } else /*if (diff_y == 0)*/ {
+        } else if (diff_y == 0) {
             xspeed = ray.timer;
         }
         ++ray.timer;
 
-        ray.speed_x = t_world_info[old_num_world].xpos + xspeed * sgn(diff_x) - ray.offset_bx - (s16)ray.x;
-        ray.speed_y = t_world_info[old_num_world].ypos + yspeed * sgn(diff_y) - ray.offset_by - (s16)(ray.y - 8);
+        move_x = xspeed * sgn(diff_x);
+        move_y = yspeed * sgn(diff_y);
+        ray.speed_x = t_world_info[old_num_world].xpos + move_x - ray.offset_bx - (s16)ray.x;
+        ray.speed_y = t_world_info[old_num_world].ypos + move_y - ray.offset_by - (s16)ray.y + 8;
 
-        if (abs(xspeed) >= abs(diff_x) && abs(yspeed) >= abs(diff_y)) {
+        if (ABS_PROMOTED(xspeed) >= ABS_PROMOTED(diff_x) && ABS_PROMOTED(yspeed) >= ABS_PROMOTED(diff_y)) {
             // arrived at new location
             old_num_world = num_world_choice;
             if (ray.main_etat != 0) {
