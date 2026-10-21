@@ -1,11 +1,9 @@
 /* blocs.c (1:14e90..1:15e60). Names RAYVERSE (blocs1_* helpers from Rayverse); seeded by tools/seed.py, worker tu_blocs. finish pass fin_blocs; see config/units.json. Watcom places switch jump tables in _TEXT before the function that uses them. */
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 extern obj_type_flags_t flags[262];
 #include "map.h"
-#ifndef ashr16
-#define ashr16(v, b) ((v) >> (b))
-#endif
 
 #define BTYP_CHDIR 1
 #define BTYP_CLIFF 25
@@ -62,14 +60,14 @@ extern u8 button_released;
 #define flags2_8_can_jump (1UL << 19)
 #define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 u8 BTYP(s16 tile_x, s16 tile_y);
-u8 GET_SPRITE_POS(obj_t *obj, u8 index, s16 *x, s16 *y, s16 *w, s16 *h);
+u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void IS_RAY_ON_LIANE(void);
 void Reset_air_speed(u8 is_rolling_speed);
 void ray_jump(void);
 void PlaySnd(s16 snd, s16 obj_id);
 void allocatePaillette(obj_t *obj);
 void obj_jump(obj_t *obj);
-s32 instantSpeed(s16 speed);
+s16 instantSpeed(s16 speed);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 void set_main_etat(obj_t* obj, u8 etat);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
@@ -112,7 +110,7 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
     s32 var_v0_1;
     s32 var_v0_2;
     s16 temp_s1;
-    s32 temp_v1_2;
+    u8 temp_v1_2;
     u8 var_s3_1;
     s16 test_3;
 
@@ -187,7 +185,7 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
             {
                 if ((s32) temp_v1_2 >= 4)
                 {
-                    if ((s32) temp_v1_2 < 0x14)
+                    if ((s32) temp_v1_2 <= 0x13)
                     {
                         if ((s32) temp_v1_2 >= 0x12)
                         {
@@ -273,7 +271,7 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
     }
     temp_s0 = (s16) var_s0_1;
     var_s3_1 = var_s3_1 - ashr16(temp_s0, 4U);
-    if ((var_s3_1) >= 0x81U)
+    if ((var_s3_1) > 0x80U)
     {
         var_s3_1 = 0;
     }
@@ -297,22 +295,14 @@ u8 calc_typ_trav(obj_t* obj, u8 a2) {
 }
 
 u8 calc_typ_travd(obj_t* obj, u8 a2) {
-    s32 spd_x_sgn = obj->speed_x; /* ??? */
+    s16 x_saved;
+    s16 spd_x_sgn = sgn(obj->speed_x);
     s16 x_offs_1;
     s32 unk_1;
-    s16 x_saved;
-    s16 x_offs_2;
+    s32 x_offs_2;
     s16 foll_x; s16 foll_y; s16 foll_w; s16 foll_h;
     u8 unk_2;
     s32 res;
-
-    /* sgn() on android */
-    if (spd_x_sgn != 0) {
-        if (spd_x_sgn > 0)
-            spd_x_sgn = 1;
-        else
-            spd_x_sgn = -1;
-    }
 
     if (spd_x_sgn != 0)
     {
@@ -338,7 +328,7 @@ u8 calc_typ_travd(obj_t* obj, u8 a2) {
         {
             x_offs_2 = obj->speed_x;
             if (flags[obj->type].raw & flags1_0x10_move_x)
-                x_offs_2 /= 16;
+                x_offs_2 = ashr16(x_offs_2, 4);
             obj->x -= x_offs_2;
         }
 
@@ -560,15 +550,13 @@ void CALC_MOV_ON_BLOC(obj_t* obj) {
             case 25:
                 temp_s1_2 = speed_x + (obj->x + obj->offset_bx);
                 temp_s0_3 = var_s1 + (obj->y + obj->offset_by) + 16;
-                temp_v0_2 = dist_to_bloc_floor(BTYP(temp_s1_2 >> 4, temp_s0_3 >> 4), temp_s1_2 & 0xF, temp_s0_3 | ~0xF);
-                if (temp_v0_2 >= 3)
+                temp_v0_2 = calcblocfloor[BTYP(temp_s1_2 >> 4, temp_s0_3 >> 4)](temp_s1_2 & 0xF, temp_s0_3 | ~0xF) - (temp_s0_3 | ~0xF);
+                if (temp_v0_2 <= 2)
+                    var_s2_1 = y_in_tile + temp_v0_2;
+                else
                 {
                     case 12:
                         var_s2_1 = y_in_tile;
-                }
-                else
-                {
-                    var_s2_1 = y_in_tile + temp_v0_2;
                 }
                 break;
             case 2:
