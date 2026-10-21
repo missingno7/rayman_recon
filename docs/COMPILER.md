@@ -189,6 +189,8 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   is use/savings-sensitive (a value with more post-call uses avoids spilling; reversing a consuming expression swaps
   EDI/EBP), byte-typed values can recolor earlier inputs, stack reuse needs non-address-taken temps (lexical braces
   alone do not reuse). OW2's general register order list is REFUTED for 10.6. Evidence: build/workers/r_owcg/REPORT.md.
+  Applied to 9 units (r_slots): 0 new STRICT - DOS dword accesses do not prove a wider declaration, and parameter
+  homes / split aliases block simple rank inversion; useful to read frames, not a fix by itself.
 
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
