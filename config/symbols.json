@@ -7953,11 +7953,6 @@
     "name": "INVENTED",
     "evidence": "DOS prints the fatal prefix and selected save error text, then sets 2:6318 at 1:21ec0."
    },
-   "fprintf_": {
-    "addr": "1:711d6",
-    "name": "INVENTED",
-    "evidence": "DOS helper at 1:711d6 forwards format and varargs registers to __fprtf_ with stderr FILE object (1:711d7..711e5); C fprintf maps to this helper."
-   },
    "Swap_To_Screen": {
     "addr": "1:04c9c",
     "name": "RAYVERSE",
@@ -8302,6 +8297,11 @@
     "addr": "1:5bad4",
     "name": "INVENTED",
     "evidence": "DOS 1:5bad2 mov eax,eax alignment followed by ret at 1:5bad4; W-LAYOUT shared empty return, as audiocd. Android name lookup absent."
+   },
+   "vprintf_": {
+    "addr": "1:711d6",
+    "name": "WATCOM",
+    "evidence": "Watcom vprintf: 1:711d6 takes (format EAX, va_list EDX) and calls __fprtf_ (1:761a0) with the fixed stream 2:2d9de; no FILE* parameter, so not fprintf. C vprintf() in savecodec report_save_codec_error references vprintf_ here (STRICT)."
    }
   },
   "data": {
