@@ -890,7 +890,8 @@ void calc_btyp_square(obj_t* obj) {
 
     // center
     {
-        s32 center_btyp = obj->main_etat == 2
+        /* DOS 1:0e71e: signed narrow result (CWDE); only AL is consumed. */
+        s16 center_btyp = obj->main_etat == 2
         ? bloc_floor((u8)BTYP(tile_x, tile_y), x & 15, y & 15)
         : (u8)BTYP(tile_x, tile_y);
         obj->btypes[0] = center_btyp;
