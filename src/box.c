@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* box.c (1:13f30..1:14e90: plasma/fire boxes, gauges, palette/capture helpers; PC-only). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_box. ABI pragmas describe external assembly; the marked ORIGINAL_INLINE pragmas contain only proven port/interrupt instructions. */
 /* d_box: preserve the five accepted STRICT functions. CalcTab uses intrinsic sin
  * and one expression: one remaining reciprocal byte differs. See NOTES.md. */
@@ -65,15 +66,7 @@ extern void box_palette_lock(void);
 extern void box_palette_write(u16 port, u8 *data, u32 count);
 #pragma aux box_palette_write = "rep outsb" "sti" parm [dx] [esi] [ecx] modify [esi ecx]
 
-#define BOX_SET_PALETTE(first, last) { \
-    s32 box_first = (first); \
-    s32 box_count = ((last) - box_first + 1) * 3; \
-    u8 *box_data = (u8 *)&rvb[0]; \
-    box_dac_index(0x3c8, box_first); \
-    box_data += box_first * 3; \
-    box_palette_lock(); \
-    box_palette_write(0x3c9, box_data, box_count); \
-}
+#define BOX_SET_PALETTE(first,last) palette_output(first, last, &rvb[0])
 
 void CalcTab(void)
 {
