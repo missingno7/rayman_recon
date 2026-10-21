@@ -348,13 +348,12 @@ void ChangeDeltaSizeJumelle(s32 delta_size) {
 void CalculVitesseJumelle(void) {
     s16 delta_x = PositionJumelleDemandeX - JumellePosX;
     s16 delta_y = PositionJumelleDemandeY - JumellePosY;
-    s32 absolute_x = delta_x;
-    s32 absolute_y = delta_y;
-    s16 dist;
+    /* DOS 1:3316f..33189: promoted absolute-value snapshots.
+     * The remaining difference is the timing of the EDX-to-EDI copy. */
+    s32 absolute_x = Abs((s32)delta_x);
+    s32 absolute_y = Abs((s32)delta_y);
+    s16 dist = absolute_x + absolute_y;
     s32 dx, dy;
-    if (absolute_x < 0) absolute_x = -absolute_x;
-    if (absolute_y < 0) absolute_y = -absolute_y;
-    dist = absolute_x + absolute_y;
     if (dist > 0) {
         delta_x = ashl16(delta_x, 6) / dist;
         delta_y = ashl16(delta_y, 6) / dist;
@@ -403,61 +402,67 @@ void ChangeDeltaPosYJumelleWithoutLimit(s32 delta_pos_y) {
     ChangeJumelleVariable();
 }
 
+/* DOS 1:333d0: cache the radius margin and position for both tests.
+ * Initializing the result before the entry clamp reproduces ESI at entry.
+ * Still NEAR: the inner clamp and final update allocation differ. */
 s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
-    bool changed;
+    bool changed = 0;
     delta_pos_x = max32(-16, min32(16, delta_pos_x));
 
-    changed = 0;
-    if (((xmap != scroll_start_x && xmap != scroll_end_x) ||
+    if ((xmap != scroll_start_x && xmap != scroll_end_x) ||
         (xmap == scroll_start_x && delta_pos_x > 0) ||
-        (xmap == scroll_end_x && delta_pos_x < 0)) &&
-        JumellePosX > RayonJumelle / 3 && JumellePosX < 320 - RayonJumelle / 3
-    ) {
-        if (ModeAutoJumelle & 1) {
-            Xmap16 = (Xmap16 & ~0xF) | (PositionJumelleX16 & 0xF);
-            Xmap16 = max32(16 * scroll_start_x, min32(16 * scroll_end_x, delta_pos_x + Xmap16));
-            xmap = Xmap16 >> 4;
-        } else {
-            xmap = max32(scroll_start_x, min32(scroll_end_x, xmap + (delta_pos_x >> 4)));
+        (xmap == scroll_end_x && delta_pos_x < 0)) {
+        s32 margin = RayonJumelle / 3;
+        s32 position = JumellePosX;
+        if (margin < position && 320 - margin > position) {
+            if (ModeAutoJumelle & 1) {
+                Xmap16 = (Xmap16 & ~0xF) | (PositionJumelleX16 & 0xF);
+                Xmap16 = max32(16 * scroll_start_x,
+                    min32(16 * scroll_end_x, delta_pos_x + Xmap16));
+                xmap = Xmap16 >> 4;
+            } else {
+                xmap = max32(scroll_start_x,
+                    min32(scroll_end_x, xmap + (delta_pos_x >> 4)));
+            }
+            PositionJumelleX16 += delta_pos_x;
+            JumellePosX = PositionJumelleX16 >> 4;
+            changed = 1;
         }
-
-        PositionJumelleX16 += delta_pos_x;
-        JumellePosX = PositionJumelleX16 >> 4;
-        changed = 1;
     }
-
     ChangeJumelleVariable();
     return changed;
 }
 
-
+/* DOS 1:33520: cache the radius margin and position for both tests.
+ * Initializing the result before the entry clamp reproduces ESI at entry.
+ * Still NEAR: the inner clamp and final update allocation differ. */
 s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
-    bool changed;
+    bool changed = 0;
     delta_pos_y = max32(-16, min32(16, delta_pos_y));
 
-    changed = 0;
-    if (((ymap != scroll_start_y && ymap != scroll_end_y) ||
-         (ymap == scroll_start_y && delta_pos_y > 0) ||
-         (ymap == scroll_end_y && delta_pos_y < 0)) &&
-        JumellePosY > RayonJumelle / 3 && JumellePosY < 200 - RayonJumelle / 3
-            ) {
-        if (ModeAutoJumelle & 1) {
-            Ymap16 = (Ymap16 & ~0xF) | (PositionJumelleY16 & 0xF);
-            Ymap16 = max32(16 * scroll_start_y, min32(16 * scroll_end_y, delta_pos_y + Ymap16));
-            ymap = Ymap16 >> 4;
-        } else {
-            ymap = max32(scroll_start_y, min32(scroll_end_y, ymap + (delta_pos_y >> 4)));
+    if ((ymap != scroll_start_y && ymap != scroll_end_y) ||
+        (ymap == scroll_start_y && delta_pos_y > 0) ||
+        (ymap == scroll_end_y && delta_pos_y < 0)) {
+        s32 margin = RayonJumelle / 3;
+        s32 position = JumellePosY;
+        if (margin < position && 200 - margin > position) {
+            if (ModeAutoJumelle & 1) {
+                Ymap16 = (Ymap16 & ~0xF) | (PositionJumelleY16 & 0xF);
+                Ymap16 = max32(16 * scroll_start_y,
+                    min32(16 * scroll_end_y, delta_pos_y + Ymap16));
+                ymap = Ymap16 >> 4;
+            } else {
+                ymap = max32(scroll_start_y,
+                    min32(scroll_end_y, ymap + (delta_pos_y >> 4)));
+            }
+            PositionJumelleY16 += delta_pos_y;
+            JumellePosY = PositionJumelleY16 >> 4;
+            changed = 1;
         }
-
-        PositionJumelleY16 += delta_pos_y;
-        JumellePosY = PositionJumelleY16 >> 4;
-        changed = 1;
     }
-
     ChangeJumelleVariable();
     return changed;
 }
-
 
 /* Name ANDROID; recovered DOS entry 1:33670. */
 void ChangeRealPosJumelle(s32 x, s32 y) {
