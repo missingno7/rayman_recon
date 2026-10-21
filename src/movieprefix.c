@@ -145,21 +145,6 @@ s32 sub_3B138(movie_work_t *work, movie_surface_t *surface);
 void sub_3B260(void);
 void sub_3B274(void);
 
-/* ORIGINAL_INLINE: exact port string sequence at DOS 1:2ae90..1:2aeab.
- * The C dialect has no expression for REP OUTSB; the scalar port operations elsewhere use inp/outp.
- */
-#pragma aux write_movie_palette = \
-    "pushad" \
-    "add esi,3" \
-    "mov edx,0x3c8" \
-    "mov eax,1" \
-    "out dx,al" \
-    "mov ecx,0x2fd" \
-    "mov edx,0x3c9" \
-    "rep outsb" \
-    "popad" \
-    parm [esi] modify exact []
-extern void write_movie_palette(u8 *palette);
 
 s32 sub_3A1C0(void)
 {

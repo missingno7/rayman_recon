@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -75,23 +76,6 @@ typedef struct movie_local_t {
     u8 info[0x18];
 } movie_local_t;
 
-/* ORIGINAL_INLINE: DOS 1:2b2ed..1:2b308 saves registers, selects VGA DAC
-   entry 1 at port 0x3c8, then sends 0x2fd bytes to port 0x3c9.
-   Keep the standard implicit EAX/argument-register clobbers: modify [],
-   rather than modify exact []. The DOS caller reloads AH and ESI each
-   fade step (1:2b290 and 1:2b2e5), while retaining ECX across steps. */
-#pragma aux write_movie_palette = \
-    "pushad" \
-    "add esi,3" \
-    "mov edx,0x3c8" \
-    "mov eax,1" \
-    "out dx,al" \
-    "mov ecx,0x2fd" \
-    "mov edx,0x3c9" \
-    "rep outsb" \
-    "popad" \
-    parm [esi] modify []
-extern void write_movie_palette(u8 *palette);
 
 void display_movie_frames(void)
 {

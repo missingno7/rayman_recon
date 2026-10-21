@@ -126,4 +126,20 @@ s32 ashl16(s16 value, u8 shift);
   "cwde" \
   "shl eax,cl" \
   parm [ax] [cl] value [eax] modify exact [eax cx]
+/* ORIGINAL_INLINE (port string output): DOS 1:2ae90..2aeab (movieprefix) and 1:2b2ed..2b308 (movie).
+ * Saves all registers, selects VGA DAC entry 1 at port 0x3c8, sends 0x2fd palette bytes from ESI+3 to 0x3c9.
+ * Contract `modify []` (standard implicit clobbers): proven at both sites - movie needs it (the caller reloads AH and
+ * ESI each fade step, 1:2b290/1:2b2e5) and movieprefix matches identically with it (26/41 unchanged). */
+void write_movie_palette(u8 *palette);
+#pragma aux write_movie_palette = \
+  "pushad" \
+  "add esi,3" \
+  "mov edx,0x3c8" \
+  "mov eax,1" \
+  "out dx,al" \
+  "mov ecx,0x2fd" \
+  "mov edx,0x3c9" \
+  "rep outsb" \
+  "popad" \
+  parm [esi] modify []
 #endif
