@@ -75,7 +75,10 @@ build/workers/w6_helpers/REPORT.md; source of the finding: the ai_decomp review 
 | fill (64000-byte zero, no CLD) | `b8 00 00 00 00 b9 80 3e 00 00 f3 ab` | 11 / 9 | EDI; `modify exact [eax ecx edi]` | 4 effect1 functions, DEPART_LEVEL, confirmation_msg STRICT |
 | copy (CLD; bytes then dwords) | `fc 89 c8 83 e1 03 74 02 f3 a4 89 c1 c1 e9 02 f3 a5` | 15 / 10 | EDI, ESI, ECX; advertised clobbers OPEN | bytes reproduce; full functions still NEAR |
 Rules: use the header as declared (no per-unit redefinitions, no new helper pragmas); the CL/bounds setup is caller
-code. Negative: the clamp family (`39 d8 7e 02 89 d8`) is reproduced by ordinary C - not a helper.
+code. OPEN candidates (fail the gate: one STRICT proof each, both in breakout; build/workers/w7_shift32/REPORT.md):
+bare `shl eax,cl` after `mov cl,N` (4 sites / 2 functions; set_ball_pos STRICT in scratch) and a 32-bit
+`sar r32,cl` JE-form body (9 bodies / 4 functions; move_ball STRICT in scratch), both EAX,CL -> EAX. They block
+moteur instantSpeed and breakout set_ball_pos; accept only with a second-unit proof. Negative: the clamp family (`39 d8 7e 02 89 d8`) is reproduced by ordinary C - not a helper.
 First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, ray, effect1, menu, cheat, 0 losses.
 
 ## Evidence log (established facts, with their proofs)
