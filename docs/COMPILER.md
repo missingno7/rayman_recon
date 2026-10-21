@@ -78,7 +78,15 @@ Rules: use the header as declared (no per-unit redefinitions, no new helper prag
 code. OPEN candidates (fail the gate: one STRICT proof each, both in breakout; build/workers/w7_shift32/REPORT.md):
 bare `shl eax,cl` after `mov cl,N` (4 sites / 2 functions; set_ball_pos STRICT in scratch) and a 32-bit
 `sar r32,cl` JE-form body (9 bodies / 4 functions; move_ball STRICT in scratch), both EAX,CL -> EAX. They block
-moteur instantSpeed and breakout set_ball_pos; accept only with a second-unit proof. Negative: the clamp family (`39 d8 7e 02 89 d8`) is reproduced by ordinary C - not a helper.
+moteur instantSpeed and breakout set_ball_pos; accept only with a second-unit proof. Added 2026-10-21 (w8_mine, user approval): **palette_output** (`29 c1 41 6b c9 03 66 ba c8 03 ee 6b c0 03 ...` - OUT,
+CLI, REP OUTSB, STI with the count arithmetic through fixed registers; EAX first, ECX inclusive last, ESI palette;
+`modify exact [eax ecx edx esi]`; STRICT proofs InitPlasma, SYNCHRO_LOOP_PALETTE, actualize_palette) and
+**min32/max32** (`39 d8 7e/7d 02 89 d8`, EAX/EBX, constant kept in a register by the caller; STRICT proofs
+ChangeDeltaSizeJumelle, ChangeDeltaPosX/YJumelleWithoutLimit, effect_prepare_rows; advertised EBX clobber OPEN).
+CORRECTION: the earlier note "clamp family is ordinary C" was wrong - its two STRICT counterexamples were a 16-bit
+`66 39 d8` hit and a hit outside the function's true extent; plain C min/max ternaries fold the constant into the
+compare instead. Families shown to be ordinary C (no helper): flag bitfield extraction `c0 e0 04 ... c0 e8 07`
+(W-BITF), animation index arithmetic `8d 04 95 .. 29 d0` (struct indexing), menu screen call setup.
 First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, ray, effect1, menu, cheat, 0 losses.
 
 ## Evidence log (established facts, with their proofs)
