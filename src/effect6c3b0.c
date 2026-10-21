@@ -51,25 +51,13 @@ void effect_helper_6c3b0(s16 x, s16 y, s16 velocity, u16 step)
     map = state->map;
 
     state->frame = 0;
+    state->step = max32(1, step);
     {
-        s32 chosen = 1;
-        s32 requested = step;
-        if (requested > chosen) chosen = requested;
-        state->step = chosen;
-    }
-    {
-        s32 adjusted;
-        if (velocity >= 0) {
-            s32 chosen = 1;
-            s32 requested = velocity;
-            if (requested > chosen) chosen = requested;
-            adjusted = chosen;
-        } else {
-            s32 requested = -velocity;
-            s32 chosen = 1;
-            if (requested > chosen) chosen = requested;
-            adjusted = -chosen;
-        }
+        s16 adjusted;
+        if (velocity >= 0)
+            adjusted = max32(1, velocity);
+        else
+            adjusted = -max32(1, -velocity);
         state->velocity = adjusted;
     }
 
@@ -78,21 +66,8 @@ void effect_helper_6c3b0(s16 x, s16 y, s16 velocity, u16 step)
     if (y != -1)
         state->y = y;
 
-    {
-        s32 bound = 319 - state->radius;
-        s32 position = state->x;
-        s32 lower;
-        if (bound < position) position = bound;
-        lower = state->radius;
-        if (position > lower) lower = position;
-        state->x = lower;
-        bound = 199 - state->radius;
-        position = state->y;
-        if (bound < position) position = bound;
-        lower = state->radius;
-        if (position > lower) lower = position;
-        state->y = lower;
-    }
+    state->x = max32(state->radius, min32(state->x, 319 - state->radius));
+    state->y = max32(state->radius, min32(state->y, 199 - state->radius));
     random_value = rand() & 7;
     state->velocity_x = random_value < 4 ? state->velocity : (s16)-state->velocity;
     random_value = rand() & 7;
@@ -154,7 +129,7 @@ u8 effect_helper_6c7cc(u16 x, u16 y, u16 radius, s16 speed,
             state->radius = max32(8, min32(radius, 48));
             state->width = (u16)(state->radius * 2 + 1);
             state->height = (u16)(state->radius * 2 + 1);
-            copy_guarded(screen, EffetBufferNormal, 0xfa00);
+            copy(screen, EffetBufferNormal, 0xfa00);
             state->screen = EffetBufferNormal;
             state->output = output;
             bytes = (s32)state->height * state->width * 2;
@@ -194,7 +169,7 @@ s16 effect_helper_6c8d4(void)
         state->velocity_y = -state->velocity_y;
     }
     delta = state->velocity;
-    delta = delta > 0 ? delta : -delta;
+    delta = delta >= 0 ? delta : -delta;
     state->frame += delta;
     if (state->frame > state->step) state->frame = 0;
     return state->frame;
@@ -210,7 +185,7 @@ void effect_helper_6c9bc(void)
     s32 y;
     s32 stride;
 
-    copy_guarded(state->screen, state->output, 0xfa00);
+    copy(state->screen, state->output, 0xfa00);
     x = state->x - state->radius;
     y = state->y - state->radius;
     x = x + y * 320;
