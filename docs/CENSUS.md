@@ -109,3 +109,14 @@ the W-LAYOUT drift line), 6 Luna-xhigh first passes on unnamed ranges, 1 cdaudio
   from W-SWITCH, not the grid) - the wave-3 prompts forbid grids explicitly.
 - Integration lesson: name de-duplication onto existing bindings hid a swapped pair (Watcom IF@DSIN/IF@DCOS);
   fixed from the dispatcher modes and a -fpc probe. Read the integrate tool's "name X -> existing Y" lines.
+
+## 6. Layout-drift wave (2026-10-21)
+One sol-high worker per unit with NEAR functions, briefed with the census W-LAYOUT line (first size-drifting function)
+and told to fix the drift chain in address order before body shape. 52 units, STRICT 1257 -> 1301 (+44), NEAR 401 -> 357,
+0 regressions. Largest: moteur +7 (init_allowed_time exact size unlocked three dependents), movieprefix +8, fee +3,
+blocs +2 (calc_typ_trav size flipped bloc_floor), worldmap +2, effect1 +2, map_ngawe +2, sound +2, blacktoon complete,
+ray_pc complete, movie complete. 14 units became contiguous without new STRICT (bbmont, special, stoneman, ufo,
+objupdate4, araignee, ...): their remaining NEAR functions are now body-shape only. Structural finding: hybrid was two
+original objects (11 zero bytes at 1:2f035..2f040) - split into hifi + hybrid (FreeDetectDriver STRICT). New compiler
+fact: unused prefix vs postfix short decrement differ (ray_pc). Measured: the drift-first brief gained in ~45% of units,
+versus ~25% for the preceding helper/finishing passes on the same pools.
