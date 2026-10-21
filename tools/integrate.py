@@ -35,7 +35,7 @@ from image import parse_addr  # noqa: E402
 
 SHARED = {p.name for p in (ROOT / "src" / "include").glob("*.h")}
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-FILENAME = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.-]*\.[ch]$")
+FILENAME = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.-]*\.(c|h|asm)$")
 
 
 def run(*cmd):
@@ -164,7 +164,7 @@ def parse(argv):
     for p in a.pairs:
         unit, sep, fname = p.partition("=")
         if not sep or not IDENT.match(unit) or not FILENAME.match(fname):
-            ap.error(f"bad UNIT=FILE.c pair {p!r} (identifier unit, plain file name)")
+            ap.error(f"bad UNIT=FILE pair {p!r} (identifier unit, plain .c/.asm file name)")
         pairs.append((unit, fname))
     return a, pairs, renames
 
@@ -190,7 +190,9 @@ def main(argv):
             raise SystemExit(f"--new: unit {unit} already exists")
         if not a.new and unit not in units:
             raise SystemExit(f"unknown unit {unit} (use --new for a new unit)")
-        dst = ROOT / (f"src/{unit}.c" if a.new else units[unit]["source"])
+        dst = ROOT / (f"src/{unit}{Path(fname).suffix}" if a.new else units[unit]["source"])
+        if not a.new and Path(fname).suffix != dst.suffix:
+            raise SystemExit(f"{unit}: candidate {fname} and unit source {dst.name} differ in language")
         if not inside(dst, src_dir) or not (wdir / fname).is_file():
             raise SystemExit(f"{unit}: destination {dst} outside src/ or candidate {wdir / fname} missing")
         ids = {os.path.normcase(os.path.realpath(dst))}
