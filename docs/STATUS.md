@@ -1,4 +1,4 @@
-# Status (Phase 2 continued - systematic DOS matching, 2026-10-21)
+# Status (Phase 2 continued - systematic DOS matching, 2026-10-22)
 
 Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record;
 the per-unit table is printed by tools/status.py and is not duplicated here). NEAR diagnosis: `python tools/census.py`
@@ -7,10 +7,10 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1359 recorded STRICT, 254,440 code bytes** (55.6% of game code 1:00000-1:6fbe6) in 249 units (C, hand-written assembly, data): 311 NEAR; `python tools/status.py` for the per-unit table |
+| function-level STRICT | **1372 recorded STRICT, 261,067 code bytes** (57.0% of game code 1:00000-1:6fbe6), C + hand-written assembly: 299 NEAR; `python tools/status.py` for the per-unit table |
 | whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
-| data closure | **46,246 bytes VERIFIED** `_DATA` (incl. the 5.2 KB ObjectsFonctions table and 12 gap blocks); mapped: 89.7% of game `_DATA` |
-| BSS | order rule PROVEN; layout VERIFIED **28,406 bytes** (99 central-BSS fragments in src/bss/ + earlier units) |
+| data closure | **47,069 bytes VERIFIED** `_DATA`/`CONST` (incl. the 5.2 KB ObjectsFonctions table, gap blocks, menu/savecodec/block_malloc CONST); game `_DATA` gaps left: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets |
+| BSS | order rule PROVEN; layout VERIFIED **148,699 of 152,302 game-BSS bytes (97.6%)**, 2:3218a..2:57478; runtime (CLIB) BSS starts at 2:57478 (PROVEN, atexit `_BSS`). Fragments in src/bss/ are layout units, not original TU boundaries; 3.6 KB OPEN |
 | linked binary / packed EXE | not started (by design; first step only: PMODE/W 1.22 PMWLITE determinism, docs/NEXT_STEPS.md) |
 
 Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
