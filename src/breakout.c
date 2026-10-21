@@ -1,5 +1,5 @@
 /* breakout.c (DOS v1.21, 1:16a20..1:18b3a; object padding to 1:18b40).
- * Worker d_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
+ * Worker d2_breakout candidate; statuses and unresolved hypotheses in NOTES.md.
  * Function/global names RAYVERSE/ANDROID; descriptive local names INVENTED.
  */
 #include "obj.h"
@@ -289,10 +289,8 @@ s16 angle_direction(s16 x, s16 y)
         while (ratio < -(u16)CBdata[index][0])
             index--;
         angle = index;
-    } else if (y != 0) {
-        angle = 18;
     } else {
-        angle = 0;
+        angle = y != 0 ? 18 : 0;
     }
     if (original_x < 0)
         angle = 36 - angle;
