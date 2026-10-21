@@ -6,6 +6,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
@@ -63,13 +64,6 @@ extern bios_wait_timer_t bios_wait_timer;
 typedef void copy_dwords_t(u32 *source, u32 *dest, s32 count);
 #pragma aux copy_dwords_t parm [esi] [edi] [ecx] modify exact [ecx esi edi]
 extern copy_dwords_t copy_dwords;
-#ifndef SGN
-#define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
-#endif
-#ifndef ashr16
-#define ashr16(v, b) ((v) >> (b))
-#endif
-
 /* DOS record lists: helpers traverse 14 rows at 128-byte stride, reading dwords.
    Names are INVENTED; Android patai_line/vide_line are each 1792 bytes, mapping OPEN. */
 extern u32 frame_records_38888[14][32];
@@ -156,7 +150,7 @@ extern u8 Main_Control;
 typedef s32 (swap_func_t)(u8 *, u8 *, s32, s32);
 #pragma aux swap_func_t parm [edi] [esi] [ecx] [eax]
 extern swap_func_t *Swap_And_Test_Joystick;
-extern void clear_memory(void *dest, s32 value, s32 count);
+extern void clear_memory(u8 *dest, s32 value, s32 count);
 void advance_frame(void);
 void set_fade_palette(rgb_palette_t *palette);
 void do_fade(rgb_palette_t *source_pal, rgb_palette_t *dest_pal);
@@ -182,7 +176,7 @@ void select_display_buffer(u8 *buffer);
 #pragma aux DisplayBufferModeNormal parm [esi] [edi]
 #pragma aux display_emptypicture parm [edi] [ecx]
 #pragma aux ClearDrawAndDisplayBufferNormal parm [edi] [esi]
-void ClearBorder(s16 h1, s16 h2, s16 w1, s16 w2);
+void ClearBorder(s32 h1, s32 h2, s32 w1, s32 w2);
 void InitFirstModeVideo(void);
 void InitModeNormal(void);
 void GetVideoRegister(void);
@@ -226,7 +220,7 @@ extern void_func_t draw_pluie7_Normal;
 extern fplot_func_t fplot_Normal;
 void BombExplosion(obj_t* obj);
 void ClearDrawAndDisplayBufferNormal(u8* draw_buf, u8* display_buf);
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+u8 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void PlaySnd_old(s16 sound_id);
 void SetPalette(rgb_palette_t* palette, u8 first_color, s32 num_colors);
 void add_alwobj(obj_t* obj);
@@ -236,10 +230,10 @@ void endsynchro(void);
 short myRand(short max);
 void obj_hurt(obj_t* target);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
-void set_sub_etat(obj_t* obj, u8 sub_etat);
+s32 set_sub_etat(obj_t* obj, u8 sub_etat);
 u8 skipOneCommand(obj_t *obj);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
-void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, s16 y_offs);
+void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, s32 y_offs);
 void textmode(void);
 void clear_palette(rgb_palette_t* palette);
 void start_fade_in(s16 speed, rgb_palette_t *palette);
@@ -778,19 +772,19 @@ void set_fade_palette(rgb_palette_t* palette) {
 }
 
 void start_fade_in(s16 speed, rgb_palette_t *palette) {
+    u8 *palette_bytes = (u8*)&current_rvb;
+    u32 first_color = 0;
+    u32 last_color = 0xff;
     (void)palette;
-    fade_speed = speed;
     nb_fade = 1 << (6 - speed);
+    fade_speed = speed;
     fade = 1; // fade in
-    clear_palette(&current_rvb);
-    outp(0x3c8, 0);
-    _disable();
-    {
-        u8 *p = (u8*)&current_rvb;
-        u16 i;
-        for (i = 0; i < 0x300; ++i) outp(0x3c9, *p++);
-    }
-    _enable();
+    clear_palette((rgb_palette_t*)palette_bytes);
+    frame_palette_index(0x3c8, first_color);
+    frame_disable_irq();
+    frame_palette_stream(0x3c9, palette_bytes + first_color * 3,
+                         (last_color - first_color + 1) * 3);
+    frame_enable_irq();
 }
 
 void start_fade_out(s16 speed, rgb_palette_t *palette) {
@@ -802,13 +796,11 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
 
 #define WRITE_PALETTE_BYTES(palette_ptr, color_count) \
     do { \
-        s32 palette_byte; \
         u8 *palette_data = (u8*)(palette_ptr); \
-        outp(0x3c8, 0); \
-        _disable(); \
-        for (palette_byte = 0; palette_byte < (color_count) * 3; ++palette_byte) \
-            outp(0x3c9, palette_data[palette_byte]); \
-        _enable(); \
+        frame_palette_index(0x3c8, 0); \
+        frame_disable_irq(); \
+        frame_palette_stream(0x3c9, palette_data, (color_count) * 3); \
+        frame_enable_irq(); \
     } while (0)
 
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
@@ -1065,8 +1057,8 @@ void DISPLAY_FOND_MENU(void) {
     } else {
         if (prev_Bloc_lim_W1 != Bloc_lim_W1) {
             if (prev_Bloc_lim_W1 < Bloc_lim_W1)
-                ClearBorder((s16)Bloc_lim_H1, (s16)Bloc_lim_H2,
-                            (s16)Bloc_lim_W1, (s16)Bloc_lim_W2);
+            ClearBorder((s16)Bloc_lim_H1, (s16)Bloc_lim_H2,
+                        (s16)Bloc_lim_W1, (s16)Bloc_lim_W2);
             prev_Bloc_lim_W1 = Bloc_lim_W1;
         }
         clear_memory(draw_buffer, 0, Bloc_lim_H1 * 320);
@@ -1447,7 +1439,7 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                             break;
                         case 0x0D:
                             unk_x = 8 - myRand(32);
-                            unk_x += 8 * SGN(unk_x);
+                            unk_x += 8 * sgn(unk_x);
                             new_spd_x = unk_x;
                             mul_x_pos = 0;
                             cur_eta_3 = &cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat];
