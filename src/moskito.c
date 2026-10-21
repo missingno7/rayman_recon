@@ -581,16 +581,16 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
 
 //54C9C
 void moskitoDropFruitOnRay(obj_t* obj) {
-    /* DOS frame: height +0, width +4, x_2 +8, cen_y +12, y_1 +16. */
-    s16 x_1, width;
-    s16 y_1, cen_x, cen_y;
-    s16 distance, x_2, height;
+    /* DOS frame: height +0, width +4, x_2 +8, cen_y +12, y_1 +16.
+     * Remaining NEAR: this candidate swaps width/cen_y slots (+12/+4). */
+    s16 x_1, height;
+    s16 width, cen_x, cen_y;
+    s16 distance, y_1, x_2;
     x_1 = obj->offset_bx + obj->x;
     x_2 = x_1;
     switch (obj->sub_etat) {
     case 12:
-        distance = obj->speed_x;
-        distance = ((distance - ray.speed_x) * 2) / 16;
+        distance = ((obj->speed_x - ray.speed_x) * 2) / 16;
         x_1 -= distance / 2;
         break;
     case 11:
@@ -601,11 +601,17 @@ void moskitoDropFruitOnRay(obj_t* obj) {
     if (distance < 0) x_1 += distance;
     y_1 = obj->offset_by + obj->y;
     height = scroll_end_y - scroll_start_y + SCREEN_HEIGHT;
-    cen_x = ray_zdc_x + (ray_zdc_w >> 1);
+    {
+        /* INVENTED local: retain the promoted center until the short assignment.
+         * DOS 1:44d58..44d6e loads width into EAX and keeps center X in EDX. */
+        s32 center_x = ray_zdc_x;
+        center_x += ray_zdc_w >> 1;
+        cen_x = center_x;
+    }
     cen_y = ray_zdc_h + (ray_zdc_y >> 1);
     /* DOS 1:44d44: [scroll_end_x - 2] >> 16 is the signed short upper bound. */
     if (inrange(x_2, scroll_start_x, scroll_end_x + 304) &&
-        cen_x >= x_1 && cen_y >= y_1 && cen_x <= x_1 + width && cen_y <= y_1 + height) {
+        cen_x >= x_1 && cen_y >= y_1 && cen_x <= width + x_1 && cen_y <= y_1 + height) {
         allocateMoskitoFruit(obj);
         set_main_and_sub_etat(obj, 0, 16);
         bossYToReach -= 64;
