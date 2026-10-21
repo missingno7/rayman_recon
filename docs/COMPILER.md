@@ -182,6 +182,14 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   observations, not proof of 10.6's costs. Further declaration permutations repeat the documented dead end; a new
   discriminator needs the 10.6 allocator's cost/tie behaviour. Evidence: build/workers/r_regalloc/REPORT.md.
 
+- **Stack homes: ascending raw size, rounded to 4** [PROVEN, r_owcg 2026-10-22]: Watcom 10.6 assigns stack homes to
+  locals sorted by ascending raw size (allocations rounded to 4 bytes), not by first use; declaration order only breaks
+  ties among equal sizes (probe p_size: char[3], short[3], int[3] -> homes 20, 12, 0, frame 24, all exact). Use it to
+  read a DOS frame: the slot order tells the size ranks of the locals (W-DECL/W-WIDTH). Also PROVEN: register choice
+  is use/savings-sensitive (a value with more post-call uses avoids spilling; reversing a consuming expression swaps
+  EDI/EBP), byte-typed values can recolor earlier inputs, stack reuse needs non-address-taken temps (lexical braces
+  alone do not reuse). OW2's general register order list is REFUTED for 10.6. Evidence: build/workers/r_owcg/REPORT.md.
+
 ## Undetermined / next discriminators
 - `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
   evidence (e.g. an FP function whose residue changes under `-on`: box CalcTab 71 -> 64 diffs, still NEAR).
