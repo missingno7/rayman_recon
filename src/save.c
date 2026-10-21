@@ -6,17 +6,13 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#ifndef ashr16
-#define ashr16(value, amount) \
-    ((value) < 0 ? -((-(value)) >> (amount)) : ((value) >> (amount)))
-#endif
-
 extern save_state_t save1;
 extern u8 save_zone[2592];
 extern s16 num_world;
@@ -291,8 +287,7 @@ s16 get_offset_in_safe_zone(s16 event_index)
         offset += nb_levels_in_world[i] * 32;
     for (i = 1; i < num_level; i++)
         offset += 32;
-    offset += ashr16(event_index, 3);
-    return (s16)offset;
+    return (s16)(offset + ashr16(event_index, 3));
 }
 
 void reset_save_zone_level(void)
@@ -302,19 +297,14 @@ void reset_save_zone_level(void)
 
 void take_bonus(s16 event_index)
 {
-    s16 offset = get_offset_in_safe_zone(event_index);
-    s16 mask;
-    mask = 1 << 7;
-    mask >>= (u8)event_index & 7;
-    save_zone[offset] |= mask;
+    save_zone[get_offset_in_safe_zone(event_index)] |=
+        ashr16(0x80, (u8)event_index & 7);
 }
 
 u8 bonus_taken(s16 event_index)
 {
-    s16 mask;
-    mask = 1 << 7;
-    mask >>= event_index & 7;
-    return save_zone[get_offset_in_safe_zone(event_index)] & mask;
+    return save_zone[get_offset_in_safe_zone(event_index)] &
+        ashr16(0x80, (u8)event_index & 7);
 }
 
 void storeWorldInfoAcces(void)
