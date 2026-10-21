@@ -1303,8 +1303,7 @@ void DO_DARK2_AFFICHE_TEXT(void)
                 }
                 else
                 {
-                    delta = expsin[final_pass_n];
-                    delta = ashr16(delta, shift);
+                    delta = ashr16(expsin[final_pass_n], shift);
                     if (delta != 255)
                     {
                         final_pass_x += delta;
@@ -1560,8 +1559,6 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
 void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
 {
     s16 unk_1;
-    s32 unk_x_1;
-    s16 unk_y_1;
     s16 unk_y_2;
     s16 unk_x_2;
 
@@ -1589,12 +1586,10 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                         sens_sinus_1 = 1;
                 }
                 PosXSin1 += ashr16(dark2_rayon_dx_1, 4);
-                unk_y_1 = PosYSin1 + ashr16(dark2_rayon_dy_1, 4);
-                PosYSin1 = unk_y_1;
+                PosYSin1 += ashr16(dark2_rayon_dy_1, 4);
                 if (ds2_obj->anim_frame == 1)
                 {
-                    unk_x_1 = PosXSin1;
-                    allocate_DARK2_SORT(unk_x_1, unk_y_1,
+                    allocate_DARK2_SORT(PosXSin1, PosYSin1,
                         ds2_obj->sub_etat, ds2_obj->iframes_timer);
                     ds2_obj->hit_points = 0;
                 }
@@ -1614,12 +1609,10 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                         sens_sinus_2 = 1;
                 }
                 PosXSin2 += ashr16(dark2_rayon_dx_2, 4);
-                unk_y_1 = PosYSin2 + ashr16(dark2_rayon_dy_2, 4);
-                PosYSin2 = unk_y_1;
+                PosYSin2 += ashr16(dark2_rayon_dy_2, 4);
                 if (ds2_obj->anim_frame == 1)
                 {
-                    unk_x_1 = PosXSin2;
-                    allocate_DARK2_SORT(unk_x_1, unk_y_1,
+                    allocate_DARK2_SORT(PosXSin2, PosYSin2,
                         ds2_obj->sub_etat, ds2_obj->iframes_timer);
                     ds2_obj->hit_points = 0;
                 }
@@ -1631,9 +1624,20 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
                 unk_x_2 = 240 - (ds2_obj->x + ds2_obj->offset_bx);
             else
                 unk_x_2 = 5 - (ds2_obj->x + ds2_obj->offset_bx);
-            unk_y_2 = firstFloorBelow(ds2_obj) -
-                (ds2_obj->y + ds2_obj->offset_by);
-            unk_1 = abs(unk_x_2) + abs(unk_y_2);
+            {
+                /* DOS 1:3107f: the center is accumulated at short width. */
+                s16 center_y = ds2_obj->offset_by;
+                s32 abs_x, abs_y;
+                center_y += ds2_obj->y;
+                unk_y_2 = firstFloorBelow(ds2_obj) - center_y;
+                abs_x = unk_x_2;
+                if (abs_x < 0)
+                    abs_x = -abs_x;
+                abs_y = unk_y_2;
+                if (abs_y < 0)
+                    abs_y = -abs_y;
+                unk_1 = abs_x + abs_y;
+            }
 
             if (unk_1 < 10)
             {
