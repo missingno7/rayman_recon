@@ -432,8 +432,10 @@ void DoSTOSKOPoingCollision(obj_t *obj, s16 sprite)
 
 void doBBF2command(obj_t *bbf2_obj)
 {
-    s16 spr_x; s16 spr_y_1; s16 spr_w; s16 spr_h;
-    s16 spr_y_2;
+    /* DOS 1:2f948..2f95f: w=0, y1=4, x=8, y2=12, h=16.
+     * Declaration order inferred from the measured stack homes. */
+    s16 spr_y_2; s16 spr_x; s16 spr_y_1; s16 spr_w;
+    s16 spr_h;
     s16 bbf2_y_1;
     s16 bbf2_y_3;
     s16 var_v1;
