@@ -11694,7 +11694,7 @@
    "profile": "game",
    "functions": {
     "display_movie_frames": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

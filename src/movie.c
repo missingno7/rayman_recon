@@ -76,7 +76,10 @@ typedef struct movie_local_t {
 } movie_local_t;
 
 /* ORIGINAL_INLINE: DOS 1:2b2ed..1:2b308 saves registers, selects VGA DAC
-   entry 1 at port 0x3c8, then sends 0x2fd bytes to port 0x3c9. */
+   entry 1 at port 0x3c8, then sends 0x2fd bytes to port 0x3c9.
+   Keep the standard implicit EAX/argument-register clobbers: modify [],
+   rather than modify exact []. The DOS caller reloads AH and ESI each
+   fade step (1:2b290 and 1:2b2e5), while retaining ECX across steps. */
 #pragma aux write_movie_palette = \
     "pushad" \
     "add esi,3" \
@@ -87,44 +90,38 @@ typedef struct movie_local_t {
     "mov edx,0x3c9" \
     "rep outsb" \
     "popad" \
-    parm [esi] modify exact []
+    parm [esi] modify []
 extern void write_movie_palette(u8 *palette);
 
 void display_movie_frames(void)
 {
     s32 pos;
     s32 count;
-    s32 zero;
-    u8 color;
+    s8 color;
 
-    count = 0;
-    zero = 0;
-    pos = zero;
-    do {
-        color = movie_video_buffer[pos] - 2;
-        if ((s8)color < 0)
-            color = (u8)zero;
-        movie_video_buffer[pos] = color;
+    for (count = 0; count < 0x40; count += 2) {
+        for (pos = 0; pos != 0x300; pos += 3) {
+            color = movie_video_buffer[pos] - 2;
+            if (color < 0)
+                color = 0;
+            movie_video_buffer[pos] = color;
 
-        color = movie_video_buffer[pos + 1] - 2;
-        if ((s8)color < 0)
-            color = (u8)zero;
-        movie_video_buffer[pos + 1] = color;
+            color = movie_video_buffer[pos + 1] - 2;
+            if (color < 0)
+                color = 0;
+            movie_video_buffer[pos + 1] = color;
 
-        color = movie_video_buffer[pos + 2] - 2;
-        if ((s8)color < 0)
-            color = (u8)zero;
-        movie_video_buffer[pos + 2] = color;
-        pos += 3;
-    } while (pos != 0x300);
+            color = movie_video_buffer[pos + 2] - 2;
+            if (color < 0)
+                color = 0;
+            movie_video_buffer[pos + 2] = color;
+        }
 
-    endsynchro();
-    synchro();
+        endsynchro();
+        synchro();
 
-    do {
-        count += 2;
         write_movie_palette(movie_video_buffer);
-    } while (count < 0x40);
+    }
 }
 
 s32 playVideo2(const char *path, const char *filename, u8 a3, u8 a4)
