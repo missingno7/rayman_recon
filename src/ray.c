@@ -27,9 +27,6 @@
 #ifndef ashl16
 #define ashl16(v, b) ((s32)(s16)(v) << (b))
 #endif
-#ifndef ashr16
-#define ashr16(v, b) ((s16)(v) < 0 ? -((-(s32)(s16)(v)) >> (b)) : ((s16)(v) >> (b)))
-#endif
 
 #define BLOCK_FLAG_4 4
 #define BLOCK_SOLID 1
@@ -104,9 +101,9 @@ void CALC_MOV_ON_BLOC(obj_t* obj);
 void DO_ANIM(obj_t* obj);
 void DO_NOVA(obj_t* obj);
 void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+void GET_SPRITE_POS(obj_t* obj, u8 index, s16* x, s16* y, s16* w, s16* h);
 u16 MURDUR(s16 x, s16 y);
-void PlaySnd(s16 snd, s16 obj_id);
+void PlaySnd(s32 snd, s32 obj_id);
 void RAY_PREPARE_FIST(void);
 void abs_sinus_cosinus(s16 tab_index, s16 *sinus_result, s16 *cosinus_result);
 obj_t* allocateExplosion(obj_t* obj);
@@ -115,18 +112,17 @@ void allocate_splash(obj_t* obj);
 void calc_obj_pos(obj_t* obj);
 u8 calc_typ_trav(obj_t* obj, u8 a2);
 u8 calc_typ_travd(obj_t* obj, u8 a2);
-u16 downjoy(void);
-s32 instantSpeed(s16 speed);
-u16 leftjoy(void);
+s16 downjoy(void);
+s16 instantSpeed(s16 speed);
+s16 leftjoy(void);
 void recale_position(obj_t *obj);
-u16 rightjoy(void);
+s16 rightjoy(void);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 void set_main_etat(obj_t* obj, u8 etat);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
-#define sgn(x) ((s32)(x)==0?0:((s32)(x)>0?1:-1))
 void switch_off_fist(void);
 void test_fin_cling(void);
-u16 upjoy(void);
+s16 upjoy(void);
 void allocateRayLandingSmoke(void);
 void recale_ray_on_liane(void);
 void IS_RAY_ON_LIANE(void);
@@ -253,13 +249,13 @@ void ChangeLevel(void);
 void DO_COLLISIONS(void);
 void DO_FADE_OUT(void);
 void DO_GROWING_PLATFORM(void);
-s32 DO_PESANTEUR(obj_t* obj);
+s16 DO_PESANTEUR(obj_t* obj);
 u8 EOA(obj_t* obj);
 void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
 void MARACAS_GO(obj_t* obj);
 void RAY_GROW_FIST(void);
-void RAY_HIT(u8 hurt, obj_t* obj);
-void clear_memory(u8 *buffer,s32 value,s32 length);
+void RAY_HIT(s32 hurt, obj_t* obj);
+void clear_memory(void *buffer,s32 value,s32 length);
 void RAY_THROW_FIST(void);
 void RAY_TO_THE_LEFT(void);
 void RAY_TO_THE_RIGHT(void);
@@ -271,7 +267,7 @@ void STOPPE_RAY_EN_XY(void);
 u8 TEST_IS_ON_RESSORT_BLOC(obj_t* obj);
 void TEST_SIGNPOST(void);
 void add_alwobj(obj_t* obj);
-s16 butX0pressed(void);
+s32 butX0pressed(void);
 s16 butX1pressed(void);
 u8 calc_btyp(obj_t* obj);
 void fin_poing_follow(u8 a1);
@@ -399,10 +395,10 @@ void IS_RAY_ON_LIANE(void) {
 
 void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
     s16 var_a1_1;
-    s16 i;
     u16 cur_type;
     s16 unk_y;
     obj_t* cur_obj;
+    s16 i;
     s16 unk_1;
 
     /* 5D518 80181D18 -O2 -msoft-float */
@@ -413,10 +409,9 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
         unk_1 = 8;
     else
         unk_1 = 4;
+    cur_obj = &level.objects[actobj.objects[0]];
     ray.follow_id = -1;
-
     i = 0;
-    cur_obj = &level.objects[actobj.objects[i]];
     while (i < actobj.num_active_objects) {
         if (cur_obj->flags.follow_enabled && cur_obj->id != obj_id) {
             if (flags[cur_obj->type].raw & flags1_0x20_move_y)
@@ -598,13 +593,8 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                 }
 
                 if (ray.main_etat == 2) {
-    u8 new_me;
-    u8 new_se;
-
-                    new_me = 1;
-                    new_se = 3;
-                    if (Abs(ray.speed_x) >= ashr16(ray.eta[new_me][new_se].speed_x_right, 4) && RayEvts.run) {
-                        set_main_and_sub_etat(&ray, new_me, new_se);
+                    if (Abs(ray.speed_x) >= ashr16(ray.eta[1][3].speed_x_right, 4) && RayEvts.run) {
+                        set_main_and_sub_etat(&ray, 1, 3);
                     } else {
                         set_main_etat(&ray, 0);
                         set_sub_etat(&ray, 8);
@@ -1295,7 +1285,7 @@ void CAN_RAY_HANG_BLOC(void) {
 
         ray_x_1 = ray.x + ray.offset_bx;
         ray_x_2 = ray_x_1 >> 4;
-        if (ray_x_2 > 0 && (ray_x_2 <= mp.width - 2)) {
+        if (inrange(ray_x_2, 1, mp.width - 2)) {
     s16 ray_y_1;
     s16 dir_x;
     s16 ray_y_2;
@@ -1964,11 +1954,15 @@ void RAY_GOING_BALANCE(obj_t* obj) {
             ray.speed_x = 0;
             ray.gravity_value_1++;
             ray.speed_y -= obj->speed_y;
-            if (ray.gravity_value_1 > 2) {
-                ray.speed_y++;
+            if (ray.gravity_value_1 >= 3) {
                 ray.gravity_value_1 = 0;
+                ray.speed_y++;
+            } else {
+                obj->follow_y = 95;
             }
         }
+    } else {
+        obj->follow_y = 95;
     }
 }
 
@@ -2541,19 +2535,19 @@ s16 RayEstIlBloque(void) {
                 }
                 ani_xw = ani_x + ani_w;
                 if (
-                        (ray.speed_x <= 0 || !(unk_x >= ani_x - ray.speed_x && unk_x <= ani_x + ray.speed_x)) &&
-                        !(unk_x >= ani_xw + ray.speed_x && unk_x <= ani_xw - ray.speed_x)
+                        (ray.speed_x <= 0 || !inrange(unk_x, ani_x - ray.speed_x, ani_x + ray.speed_x)) &&
+                        !inrange(unk_x, ani_xw + ray.speed_x, ani_xw - ray.speed_x)
                         )
                     goto block_30;
 
                 ani_yh = ani_y + ani_h;
                 unk_y = ray_zdc_h;
                 if (
-                        !(unk_y >= ani_y && unk_y <= ani_yh) &&
-                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
-                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
-                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh)) &&
-                        (unk_y += unk_h, !(unk_y >= ani_y && unk_y <= ani_yh))
+                        !inrange(unk_y, ani_y, ani_yh) &&
+                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
+                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
+                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
+                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh))
                         )
                     goto block_30;
 
