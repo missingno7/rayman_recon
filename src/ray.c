@@ -1808,6 +1808,13 @@ void RAY_RESPOND_TO_NOTHING(void) {
     }
 }
 
+/* RAYVERSE/Android/PS1: original empty helper, in reference source order.
+ * DOS 1:5f0a9 aligns the preceding epilogue before this shared RET at
+ * 1:5f0ac; the following aligned body is BUTTON3 at 1:5f0b0 (W-LAYOUT).
+ * Calls disappear, retaining TEST AX at 1:611a9 and 1:61659.
+ */
+void RAY_RESPOND_TO_BUTTON4(void) {}
+
 void RAY_RESPOND_TO_BUTTON3(void) {
     /* 61568 80185D68 -O2 -msoft-float */
     if (ray.main_etat != 2) {
@@ -2794,7 +2801,7 @@ void DO_RAY_ON_MS(void) {
 
         if (options_jeu.test_button3())
             RAY_RESPOND_TO_BUTTON3();
-        options_jeu.test_button4();
+        if (options_jeu.test_button4()) RAY_RESPOND_TO_BUTTON4();
         if (poing.is_charging) {
             if (ray.sub_etat == 12)
                 RAY_GROW_FIST();
@@ -2912,7 +2919,7 @@ void DO_RAYMAN(void) {
             if (options_jeu.test_button3()) {
                 RAY_RESPOND_TO_BUTTON3(); // action
             }
-            options_jeu.test_button4();
+            if (options_jeu.test_button4()) RAY_RESPOND_TO_BUTTON4();
 
             if (record.is_playing && butX1pressed() && butX0pressed()) {
                 ChangeLevel();

@@ -8307,6 +8307,11 @@
     "addr": "1:6ec80",
     "name": "INVENTED",
     "evidence": "Internal DOS call from 1:6ef44; conventional register-save prologue and C grid/table writes at 1:6ec80..6ee26"
+   },
+   "RAY_RESPOND_TO_BUTTON4": {
+    "addr": "1:5f0ac",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c and PS1 ray_5D190.c both place this empty function immediately before RAY_RESPOND_TO_BUTTON3. Android confirms named size-1 function. DOS 1:5f0a4..5f0a8 restores NOTHING registers, 1:5f0a9 LEA EAX,[EAX] aligns the shared RET at 1:5f0ac, followed by LEA padding and BUTTON3 at 1:5f0b0. W-LAYOUT shared aligned RET as in start_cd_continue. Restored conditional empty calls retain TEST AX at 1:611a9 and 1:61659, with no helper CALL, and close DO_RAY_ON_MS (836 bytes/all reference targets). Original DO_PIEDS_RAYMAN signature/extent unchanged."
    }
   },
   "data": {
