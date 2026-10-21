@@ -93,3 +93,19 @@ all votes agree, the address is free, the Android symbol exists and fits, and th
 New object: `tools/seed.py draft` (unchanged). Finishing pass: `python tools/census.py && python tools/census.py
 --brief UNIT`, give the brief to the worker (TEMPLATE_FINISH): DIFF_calls -> DIFF_globals/fields -> SHAPE by
 similarity; REFS_LAYOUT functions are skipped (they follow the layout).
+
+## 4. Wave 2 (2026-10-21): rule-indexed briefs at scale
+27 workers: 20 sol-high finishing passes over every NEAR pool (census brief with rule hints, prototype lookup and
+the W-LAYOUT drift line), 6 Luna-xhigh first passes on unnamed ranges, 1 cdaudio continuation. Integrated with
+`tools/integrate.py` (gate before every commit; 0 regressions throughout).
+- STRICT 939 -> 1022 (+83). Finishing passes: menu +15, sound +5, ray +4, hybrid +4, pcmain/araignee/fee +5,
+  mite/luciole/poing +8 (validation pass), skops +2, moteur +2, effect1 +2, blacktoon +2, trumpet +2, others +1;
+  no gain: jumelle, pmama, box, basic, meremix rest, special, dark, display, save, breakout, worldmap, stoneman.
+- New units from unnamed ranges: cdaudio 10, cdsave 13/17, savecodec 8/14, effecthelp 1/5, dosmem 1/3,
+  effect50350 1/5. Ranges with 0 STRICT after a first pass (cymbal, blood, 1:34580, 1:633e0, 1:6c3b0, 1:6ec80,
+  1:6e380, 1:6f200) went to wave 3 (sol finishing from the drafts).
+- Workers attributed fixes to existing W-* rules; one new fact (W-BIND signed-byte load `[x-3]; sar 24`).
+- Negative: one worker still ran a permutation grid (trumpet, 24 default-case orders + 5 case orders; the gain came
+  from W-SWITCH, not the grid) - the wave-3 prompts forbid grids explicitly.
+- Integration lesson: name de-duplication onto existing bindings hid a swapped pair (Watcom IF@DSIN/IF@DCOS);
+  fixed from the dispatcher modes and a -fpc probe. Read the integrate tool's "name X -> existing Y" lines.
