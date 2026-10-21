@@ -5421,7 +5421,7 @@
      ]
     },
     "angle_direction": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

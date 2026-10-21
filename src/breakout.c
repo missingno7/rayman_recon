@@ -278,9 +278,7 @@ s16 angle_direction(s16 x, s16 y)
     s16 ratio;
     s16 angle;
     u8 index;
-    s16 original_x;
 
-    original_x = x;
     if (x != 0) {
         ratio = (y << 9) / x;
         if (ratio < 0)
@@ -292,7 +290,7 @@ s16 angle_direction(s16 x, s16 y)
     } else {
         angle = y != 0 ? 18 : 0;
     }
-    if (original_x < 0)
+    if (x < 0)
         angle = 36 - angle;
     if (y > 0)
         angle = 72 - angle;
