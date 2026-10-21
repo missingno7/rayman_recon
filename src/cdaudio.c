@@ -721,13 +721,15 @@ void sub_1a5e0(u8 track, u8 minute, u8 second)
 
 u32 sub_1a61c(u8 track, u8 command)
 {
+    u32 result;
     word_DE8BC = sub_1a280(track, command);
     if (word_DE8BC == 0x100) {
         u32 segment = (cd_offset_834 >> 12) & ~15;
-        u32 offset = cd_offset_834 & 0xffff;
-        return offset + segment;
-    }
-    return 0;
+        result = cd_offset_834 & 0xffff;
+        result += segment;
+    } else
+        result = 0;
+    return result;
 }
 
 void sub_1a654(u8 track)
