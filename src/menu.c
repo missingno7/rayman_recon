@@ -999,13 +999,13 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
             switch(i) {
                 case 0: {
                     // Text "music" offsetted to the left with "on off" to the right
-                    s32 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
+                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
                                      calc_largmax_text(v39, -1, 8, 1, 2) + calc_largmax_text(v32, -1, 8, 1, 2);
                     menu_to_display[i].xpos = (SCREEN_WIDTH / 2) - (text_width >> 1);
                 } break;
                 case 1: {
                     // Text "sound" offsetted to the left
-                    s32 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
+                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
                              20 * calc_largmax_text("|", -1, 8, 1, 2);
                     menu_to_display[i].xpos = (SCREEN_WIDTH / 2) - (text_width >> 1);
                 } break;
@@ -1037,47 +1037,38 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
     msg_to_display[1].is_fond = 2;
     msg_to_display[1].field_D5 = 0;
 
-    if (byte_E4CFD) {
-        if (OptionGame) {
-            word_E4CEC_x = basex;
-            word_E4CF4_w = 2 * byte_E4CFC;
-            word_E4CF0_y = debut_titre - 25;
-            word_E4CEE_h = menu_to_display[option_exit].ypos - debut_titre + 35;
-            FonduOption(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h, 0);
-        }
-    } else {
-        s16 v21, v42_hi, v22_x, v23_y, v24, unk_w;
-        s32 v37, v33, v25, v34, v26, v31, v38, v36, v27_h;
-        v21 = debut_titre - 25;
-        v42_hi = menu_to_display[option_exit].ypos - debut_titre + 35;
-        v22_x = (basex >= word_E4CEC_x) ? word_E4CEC_x : basex;
-        v23_y = word_E4CF0_y;
-        if (v21 < word_E4CF0_y) {
-            v23_y = debut_titre - 25;
-        }
-        v24 = word_E4CF4_w + word_E4CEC_x;
-        v37 = basex;
-        v33 = v24;
-        v25 = basex + 2 * byte_E4CFC;
-        v34 = (v25 >= v24) ? v25 - v22_x : v24 - v22_x;
-        unk_w = v34;
-        v26 = word_E4CEE_h + word_E4CF0_y;
-        v31 = v21;
-        v38 = v42_hi;
-        v36 = v42_hi + v21;
-        if (v26 <= v36) {
-            v26 = v36;
-        }
-        v27_h = v26 - v23_y;
-        word_E4CEC_x = basex;
-        word_E4CF0_y = debut_titre - 25;
-        word_E4CEE_h = v42_hi;
-        word_E4CF4_w = 2 * byte_E4CFC;
-        if (OptionGame) {
-            FonduOption(v22_x, v23_y, unk_w, v27_h, 1); //TODO
-
+    {
+        s16 y = debut_titre - 25;
+        if (byte_E4CFD) {
+            if (OptionGame) {
+                word_E4CEC_x = basex;
+                word_E4CF4_w = 2 * byte_E4CFC;
+                word_E4CF0_y = y;
+                word_E4CEE_h = menu_to_display[option_exit].ypos - debut_titre + 35;
+                FonduOption(word_E4CEC_x, word_E4CF0_y, word_E4CF4_w, word_E4CEE_h, 0);
+            }
         } else {
-            FonduPixel(v22_x, v23_y, unk_w, v27_h); //TODO
+            s16 h = menu_to_display[option_exit].ypos - debut_titre + 35;
+            s16 x = basex;
+            s16 w = 2 * byte_E4CFC;
+            s16 left = x < word_E4CEC_x ? x : word_E4CEC_x;
+            s16 top = word_E4CF0_y;
+            s16 width, height;
+            s32 old_right, new_right, bottom, new_bottom;
+            if (y < top) top = y;
+            old_right = word_E4CF4_w + word_E4CEC_x;
+            new_right = w + x;
+            width = new_right < old_right ? old_right - left : new_right - left;
+            bottom = word_E4CEE_h + word_E4CF0_y;
+            new_bottom = y + h;
+            if (bottom <= new_bottom) bottom = new_bottom;
+            height = bottom - top;
+            word_E4CEC_x = x;
+            word_E4CF0_y = y;
+            word_E4CEE_h = h;
+            word_E4CF4_w = w;
+            if (OptionGame) FonduOption(left, top, width, height, 1);
+            else FonduPixel(left, top, width, height);
         }
     }
     byte_E4CFD = 0;
@@ -1316,84 +1307,67 @@ void INIT_AFFICHE_KEY_SCREEN(void) {
     s16 i;
     u8 language_offset;
     s16 new_x, new_y, new_w, new_h;
-    s16 left, top, right, bottom, width, height;
+    s16 left, top, width, height;
     u8 color[10] = {5, 5, 5, 5, 5, 5, 5, 5, 3, 0};
 
     switch (language) {
-    case 0:
-        language_offset = 20;
-        break;
-    case 1:
-        language_offset = 25;
-        break;
-    case 2:
-        language_offset = 45;
-        break;
+    case 0: language_offset = 20; break;
+    case 1: language_offset = 25; break;
+    case 2: language_offset = 45; break;
     }
-
     strcpy(title + 1, language_txt[233]);
-    i = (s16)strlen(language_txt[233]);
-    title[i + 1] = '/';
-    title[i + 2] = 0;
-
+    i = strlen(language_txt[233]) + 1;
+    title[i] = '/';
+    title[i + 1] = 0;
     for (i = 0; i <= nbre_options; ++i) {
-
+        menu_to_display[i].color = color[i];
         if (i == 8) {
             strcpy(menu_to_display[i].text, language_txt[232]);
             menu_to_display[i].xpos = 160;
             menu_to_display[i].ypos = debut_sortie;
+            menu_to_display[i].color = color[i];
+        } else if (i == 7) {
+            strcpy(menu_to_display[i].text, language_txt[182 + i]);
+            menu_to_display[i].xpos = 160;
+            menu_to_display[i].ypos = i * (ecart_options + 15) + debut_options;
         } else {
             strcpy(menu_to_display[i].text, language_txt[182 + i]);
-            if (i == 7) {
-                menu_to_display[i].xpos = 160;
-            } else {
-                menu_to_display[i].xpos = (s16)(basex + language_offset);
-            }
-            menu_to_display[i].ypos = (s16)(i * (ecart_options + 15) + debut_options);
+            menu_to_display[i].xpos = basex + language_offset;
+            menu_to_display[i].ypos = i * (ecart_options + 15) + debut_options;
         }
-        menu_to_display[i].color = (s8)color[i];
         menu_to_display[i].font_size = 2;
         menu_to_display[i].field_D5 = 0;
         menu_to_display[i].is_fond = 1;
-        INIT_TXT_BOX((&menu_to_display[i]));
+        INIT_TXT_BOX(&menu_to_display[i]);
     }
-
     text_to_display[0].is_fond = 1;
-    text_to_display[0].xpos = (s16)(debut_titre + 80);
+    text_to_display[0].xpos = basex + 80;
     text_to_display[0].field_D5 = 0;
     text_to_display[0].font_size = 2;
-
+    strcpy(msg_to_display[0].text, language_txt[222]);
+    msg_to_display[0].font_size = 2;
+    msg_to_display[0].is_fond = 2;
+    msg_to_display[0].field_D5 = 0;
     msg_to_display[0].xpos = 160;
     msg_to_display[0].ypos = 100;
-    msg_to_display[0].font_size = 2;
-    msg_to_display[0].field_D5 = 0;
-    msg_to_display[0].is_fond = 1;
-    strcpy(msg_to_display[0].text, language_txt[222]);
     INIT_TXT_BOX(&msg_to_display[0]);
 
-    new_x = (s16)(basex - 2);
-    new_y = (s16)(debut_titre - 25);
-    new_w = (s16)(byte_E4CFC * 2);
-    new_h = (s16)(menu_to_display[8].ypos - debut_titre + 35);
-
-    left = (word_E4CEC_x < new_x) ? word_E4CEC_x : new_x;
-    top = (word_E4CF0_y < new_y) ? word_E4CF0_y : new_y;
-    right = ((s16)(word_E4CEC_x + word_E4CF4_w) > (s16)(new_x + new_w)) ?
-            (s16)(word_E4CEC_x + word_E4CF4_w) : (s16)(new_x + new_w);
-    bottom = ((s16)(word_E4CF0_y + word_E4CEE_h) > (s16)(new_y + new_h)) ?
-             (s16)(word_E4CF0_y + word_E4CEE_h) : (s16)(new_y + new_h);
-    width = (s16)(right - left);
-    height = (s16)(bottom - top);
-
-    word_E4CEC_x = left;
-    word_E4CF0_y = top;
-    word_E4CF4_w = width;
-    word_E4CEE_h = height;
-    if (OptionGame) {
-        FonduOption(left, top, width, height, 1);
-    } else {
-        FonduPixel(left, top, width, height);
-    }
+    new_x = basex - 2;
+    new_y = debut_titre - 25;
+    new_w = byte_E4CFC * 2;
+    new_h = menu_to_display[8].ypos - debut_titre + 35;
+    left = new_x < word_E4CEC_x ? new_x : word_E4CEC_x;
+    top = new_y < word_E4CF0_y ? new_y : word_E4CF0_y;
+    width = word_E4CEC_x + word_E4CF4_w > new_x + new_w ?
+        word_E4CEC_x + word_E4CF4_w - left : new_x + new_w - left;
+    height = new_y + new_h < word_E4CF0_y + word_E4CEE_h ?
+        word_E4CF0_y + word_E4CEE_h - top : new_y + new_h - top;
+    word_E4CEC_x = new_x;
+    word_E4CF0_y = new_y;
+    word_E4CF4_w = new_w;
+    word_E4CEE_h = new_h;
+    if (OptionGame) FonduOption(left, top, width, height, 1);
+    else FonduPixel(left, top, width, height);
 }
 
 /* DOS 1:3b8a4; menu.c:921 */
@@ -3201,14 +3175,16 @@ s16 apparition_prg(u32 a1) {
 s16 fondu_prg(u32 a1) {
     u16 row_skip = 320 - wFondu;
     u16 i, j;
-    u8 *dst = DrawBufferNormal + xFondu + yFondu * 320;
-    u8 *src = EffetBufferNormal + 64000 + xFondu;
-    for (j = 0; j < hFondu; ++j) {
+    u8 *dst = yFondu * 320 + (xFondu + DrawBufferNormal);
+    /* DOS 1:401b1: the first loop-tail entry adds the initial Y offset. */
+    u8 *src = yFondu * 320 + (xFondu + (EffetBufferNormal + 64000));
+    for (j = 0; j < hFondu;) {
         for (i = 0; i < wFondu; ++i, ++dst, ++src) {
             if (*dst != *src) {
                 *dst = (*dst * (16 - EtapeFondu) + *src) / (17 - EtapeFondu);
             }
         }
+        ++j;
         dst += row_skip;
         src += row_skip;
     }
@@ -3394,23 +3370,25 @@ void FonduOption(s16 x, s16 y, s16 w, s16 h, u8 mode) {
 
 /* DOS 1:40a38; menu.c:1685 */
 s16 FonduPixel_prg(u32 arg) {
-    u16 row_skip, width, row, column, phase;
+    u16 row_skip, row, column, phase;
     u8 *src, *dst;
-    width = wFondu;
-    row_skip = 320 - width;
-    src = DrawBufferNormal + xFondu + yFondu * 320;
-    dst = EffetBufferNormal + 64000 + xFondu;
+    row_skip = 320 - wFondu;
+    /* DOS 1:40a77/40ad9: both buffers begin at the rectangle origin. */
+    src = yFondu * 320 + (xFondu + DrawBufferNormal);
+    dst = yFondu * 320 + (xFondu + (EffetBufferNormal + 64000));
     phase = 0;
-    for (row = 0; row < hFondu; ++row) {
-        for (column = 0; column < wFondu; ++column) {
+    for (row = 0; row < hFondu;) {
+        for (column = 0; column < wFondu;) {
             if (phase == EtapeFondu) {
                 if (*src != *dst) *src = *dst;
                 phase = 0;
             }
+            ++column;
             ++src;
             ++dst;
             ++phase;
         }
+        ++row;
         src += row_skip;
         dst += row_skip;
     }
