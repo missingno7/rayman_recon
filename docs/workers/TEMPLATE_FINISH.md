@@ -15,6 +15,8 @@ Compiler knowledge: docs/COMPILER.md "Matching rules" is the single list of prov
   function and any callee whose prototype differs from other units (W-PROTO). Follow the triage order: W-LAYOUT
   (neighbour/size/missing function), W-PROTO (callee declaration), W-BIND (binding/short load), W-PORT (port
   additions) before reshaping a body. No compiler-option or compiler-release probes (settled; see "Do not try").
+  No permutation grids (enumerating orders of cases, declarations or statements): find the DOS order in the
+  disassembly instead (wave 2: a 29-variant grid produced nothing the W-SWITCH rule did not).
   Tools may refresh caches under build/ (xref, android): that is expected, not a scope violation.
 Goal: all functions STRICT, one contiguous _TEXT base (`# object _TEXT layout: contiguous`), so intra-object
 references (jump tables, function pointers) verify. Work difference-first; <=20 min per stubborn function, then move
