@@ -9842,6 +9842,12 @@
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ]
+    },
+    "PrintMemInfo": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
     }
    },
    "segments": {
@@ -11320,7 +11326,8 @@
     }
    },
    "segments": {
-    "CONST": "VERIFIED"
+    "CONST": "VERIFIED",
+    "_DATA": "VERIFIED"
    }
   },
   "effecthelp": {

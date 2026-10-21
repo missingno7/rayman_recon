@@ -49,6 +49,21 @@ extern s16 display_mode;
 void set_vga_frequency(u8 frequency);
 void InitPcSoundCard(void);
 extern const char **key_descriptions;
+/* Definitions whose literal initializers precede the key-table literals.
+ * Android: TabScreenSize 16 B, TabFreq 20 B; DOS pointer fixups prove targets.
+ * Other definitions are the existing verified src/data/blk_684c.c and blk_6880.c. */
+char *TabScreenSize[4] = {"320x200", "312x196", "304x192", "300x188"};
+s16 TabW1[4] = {4, 12, 20, 24};
+s16 TabW2[4] = {320, 312, 304, 300};
+s16 TabH1[4] = {0, 8, 16, 20};
+s16 TabH2[4] = {200, 192, 184, 180};
+char *TabFreq[5] = {"60", "50", "30", "25", "mode dieu"};
+u8 msg_box_being_displayed = 0;
+u8 first_option = 0;
+u8 yesno_finished = 0;
+u8 byte_96883 = 0;
+u8 byte_96884 = 64;
+
 #include "menu_keys_local.h"
 extern s32 Bloc_lim_H1;
 extern s32 Bloc_lim_H2;

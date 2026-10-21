@@ -1,13 +1,14 @@
-/* block_malloc, DOS 1:6f5b0..1:6f73f; STRICT including CONST.
- * Names RAYVERSE/ANDROID; worker w2_smallB. See NOTES.md. */
+/* PrintMemInfo + block_malloc, DOS 1:6f410..1:6f73f.
+ * Both functions STRICT; CONST 833 bytes VERIFIED at 2:31434.
+ * Extension of src/block_malloc.c; see worker NOTES.md. */
 #include "game.h"
 #include <stdio.h>
 #include <string.h>
 
 struct mem_peak_t {
     u32 used;
-    s16 world;
-    s16 level;
+    u16 world;
+    u16 level;
 };
 
 typedef struct mem_usage_stats_t {
@@ -30,6 +31,32 @@ extern s16 num_level;
 void *temp_malloc(u32 size);
 void temp_free(void *ptr);
 void FatalError(const char *message);
+
+u32 get_avail_memory(void);
+
+/* DOS 1:6f410; original name ANDROID, typed fields proven by word/dword loads. */
+void PrintMemInfo(void)
+{
+    printf("Information sur le bloc_malloc.\n");
+    printf("   - Taille allou\202e fixes                           : %u\n", main_mem_fix.capacity);
+    printf("   - Taille maximum utilis\202e fixes   (w=%3d, l=%3d) : %u (%u*1024L)\n", data_22d970.fix.world, data_22d970.fix.level,
+           data_22d970.fix.used, (data_22d970.fix.used >> 10) + 2);
+    printf("   - Taille allou\202e mondes                          : %u\n", main_mem_world.capacity);
+    printf("   - Taille maximum utilis\202e mondes  (w=%3d, l=%3d) : %u (%u*1024L)\n", data_22d970.world.world, data_22d970.world.level,
+           data_22d970.world.used, (data_22d970.world.used >> 10) + 2);
+    printf("   - Taille allou\202e maps                            : %u\n", main_mem_level.capacity);
+    printf("   - Taille maximum utilis\202e maps    (w=%3d, l=%3d) : %u (%u*1024L)\n", data_22d970.level.world, data_22d970.level.level,
+           data_22d970.level.used, (data_22d970.level.used >> 10) + 2);
+    printf("   - Taille allou\202e sprites                         : %u\n", main_mem_sprite.capacity);
+    printf("   - Taille maximum utilis\202e sprites (w=%3d, l=%3d) : %u (%u*1024L)\n", data_22d970.sprite.world, data_22d970.sprite.level,
+           data_22d970.sprite.used, (data_22d970.sprite.used >> 10) + 2);
+    printf("\n");
+    printf("Information sur le temp_malloc.\n");
+    printf("   - Taille de la m\202moire allou\202e            : %u\n", data_22d970.temp_capacity);
+    printf("   - Taille maximum utilis\202e                 : %u (%u*1024L)\n", data_22d970.temp_peak, (data_22d970.temp_peak >> 10) + 2);
+    printf("\n");
+    printf("Left memory = %d\n", get_avail_memory());
+}
 
 u8 *block_malloc(mem_t *mem, u32 size)
 {
