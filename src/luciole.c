@@ -6,6 +6,7 @@
 
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 #include "lowlevel.h"
 #include "rtypes.h"
 
@@ -233,9 +234,7 @@ void Display_and_free_luciole(u8 *draw_buf)
 
         dx = ((old_x_luc - x_luc) >= 0 ? old_x_luc - x_luc : -(old_x_luc - x_luc));
         dy = ((old_y_luc - y_luc) >= 0 ? old_y_luc - y_luc : -(old_y_luc - y_luc));
-        distance = dy;
-        if (distance < dx)
-            distance = dx;
+        distance = max32(dy, dx);
         ADDLUCLIP = distance + 6;
 
         old_y_luc = y_luc;
