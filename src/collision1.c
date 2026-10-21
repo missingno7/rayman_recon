@@ -8,6 +8,7 @@
 extern obj_type_flags_t flags[262];
 #include "map.h"
 #include "collision1_local.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -38,12 +39,11 @@ s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
 void GET_BB1_ZDCs(obj_t* obj, s16 *x_1, s16 *y_1, s16 *w_1, s16 *h_1, s16 *x_2, s16 *y_2, s16 *w_2, s16 *h_2);
 void calc_obj_dir(obj_t* obj);
-u8 BTYP(s16 tile_x, s16 tile_y);
+u8 BTYP(s32 tile_x, s32 tile_y);
 s32 bat_get_eject_sens(obj_t* obj);
 u8 calc_typ_trav(obj_t* obj, u8 a2);
 void make_active(obj_t* obj, u8 do_nova);
 void suppressFromLinkList(obj_t* obj);
-s32 sgn(s32 x);
 void obj_init(obj_t* obj);
 void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 s32 x_pos(u8 param_1, u8 nb_couteau);
@@ -59,7 +59,7 @@ u8 bonus_taken(s16 obj_id);
 s32 saxo2_get_eject_sens(void);
 s32 sko_get_eject_sens(void);
 void stop_all_snd(void);
-void PlaySnd(s16 snd, s16 obj_id);
+void PlaySnd(s32 snd, s32 obj_id);
 
 extern obj_t ray;
 extern s16 ray_zdc_x;
@@ -891,8 +891,8 @@ s16 setToleranceDist(s16 x, s16 w, s16 y) {
 
     s16 unk_2 = 8;
     if (RayEvts.tiny) unk_2 = 4;
-    if ((ray_x < x - unk_2 ? 0 : (ray_x > unk_1 + unk_2 ? 0 : 1))) {
-        if ((ray_x < x ? 0 : (ray_x > unk_1 ? 0 : 1))) return abs(ray_y - y);
+    if (inrange(ray_x, x - unk_2, unk_1 + unk_2)) {
+        if (inrange(ray_x, x, unk_1)) return abs(ray_y - y);
         else return -abs(ray_y - y) - 1;
     }
     return 10000;
@@ -928,15 +928,14 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
     spr_y += obj->offset_hy;
     ray_x = ray.x + ray.offset_bx;
     ray_y = ray.y + ray.offset_by;
-    if ((ray_x >= spr_x - limit && ray_x <= slope_x2 + limit) != 0) {
+    if (inrange(ray_x, spr_x - limit, slope_x2 + limit)) {
         diff_y = spr_y - ray_y;
         if (((s32)diff_y < 0 ? -(s32)diff_y : (s32)diff_y) < spr_w) {
             diff_x = ray_x - (spr_x + (spr_w >> 1));
             spr_h = diff_x * (s8)obj->hit_points;
             /* DOS 1:1d058: negate at 16 bits before the arithmetic shift. */
-            if (spr_h < 0) spr_h = -((s16)-spr_h >> 4);
-            else spr_h >>= 4;
-            if ((ray_x >= spr_x && ray_x <= slope_x2) != 0) {
+            spr_h = ashr16(spr_h, 4);
+            if (inrange(ray_x, spr_x, slope_x2)) {
                 obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
             } else {
                 obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
@@ -1305,7 +1304,7 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
                 } else {
                     /* DOS 1:1de27..1de5b: sign of the promoted difference; zero falls back to facing. */
                     s32 xspeed_delta = (s32)obj->speed_x - ray.speed_x;
-                    eject_sens = xspeed_delta == 0 ? 0 : (xspeed_delta > 0 ? 1 : -1);
+                    eject_sens = sgn(xspeed_delta);
                     if (eject_sens == 0) {
                         eject_sens = ray.flags.flip_x ? -1 : 1;
                     }
@@ -1827,7 +1826,7 @@ void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
                             /* sgn() on android */
                             if (
                                     obj->flags.flip_x &&
-                                    (cur_obj->x + cur_obj->offset_bx) - obj->x - obj->offset_bx > -1
+                                    sgn((cur_obj->x + cur_obj->offset_bx) - obj->x - obj->offset_bx) >= 0
                                     )
                             {
                                 cur_obj->config = 1;
@@ -1836,7 +1835,7 @@ void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
                             }
                             if (
                                     !(obj->flags.flip_x) &&
-                                    (cur_obj->x + cur_obj->offset_bx) - obj->x - obj->offset_bx < 0
+                                    sgn((cur_obj->x + cur_obj->offset_bx) - obj->x - obj->offset_bx) < 0
                                     )
                             {
                                 cur_obj->config = 1;
