@@ -73,17 +73,16 @@ void LOAD_FND(void) {
     }
 }
 
+/* W-SWITCH: keep the repeated per-level bodies separate. Grouping their labels
+   changes Watcom's global caching/register allocation, even though the emitted
+   bodies merge (DOS 1:39098..391c3). */
 void INIT_FND(void) {
-    u8 local_sp_y;
-    u8 local_type_fnd;
-    u8 local_type_fndscrX;
-
-    local_sp_y = 0;
-    if (16 * mp.height >= plan0_height)
-        local_type_fnd = 0;
+    sp_y = 0;
+    if (16 * mp.height < plan0_height)
+        type_fnd = 3;
     else
-        local_type_fnd = 3;
-    local_type_fndscrX = 0;
+        type_fnd = 0;
+    type_fndscrX = 0;
     switch (num_world) {
         case 1: {
             switch (num_level) {
@@ -94,15 +93,21 @@ void INIT_FND(void) {
                 case 4:
                 case 5:
                     break;
-                case 6:
-                case 9: {
-                    local_type_fndscrX = 1;
-                    local_sp_y = 2;
-                    local_type_fnd = 1;
+                case 6: {
+                    type_fndscrX = 1;
+                    sp_y = 2;
+                    type_fnd = 1;
                 } break;
-                case 7:
+                case 9: {
+                    type_fndscrX = 1;
+                    sp_y = 2;
+                    type_fnd = 1;
+                } break;
+                case 7: {
+                    type_fnd = 3;
+                } break;
                 case 10: {
-                    local_type_fnd = 3;
+                    type_fnd = 3;
                 } break;
                 case 8:
                     break;
@@ -112,10 +117,13 @@ void INIT_FND(void) {
                 case 14:
                 case 15:
                     break;
-                case 16:
+                case 16: {
+                    type_fndscrX = 1;
+                    type_fnd = 3;
+                } break;
                 case 22: {
-                    local_type_fndscrX = 1;
-                    local_type_fnd = 3;
+                    type_fndscrX = 1;
+                    type_fnd = 3;
                 } break;
                 case 17:
                 case 18:
@@ -137,14 +145,29 @@ void INIT_FND(void) {
                 case 6:
                     break;
                 case 7:
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
                 case 8:
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
                 case 9:
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
                 case 10:
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
                 case 11:
-                case 18: {
-                    local_type_fnd = 1;
-                    local_sp_y = 4;
-                } break;
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
+                case 18:
+                    type_fnd = 1;
+                    sp_y = 4;
+                    break;
                 case 12:
                 case 13:
                 case 14:
@@ -166,8 +189,8 @@ void INIT_FND(void) {
                 case 6:
                     break;
                 case 7: {
-                    local_type_fnd = 1;
-                    local_sp_y = 4;
+                    type_fnd = 1;
+                    sp_y = 4;
                 } break;
                 case 8:
                 case 9:
@@ -176,8 +199,9 @@ void INIT_FND(void) {
                 case 13:
                     break;
                 case 10:
-                    local_type_fndscrX = 1;
-                    local_type_fnd = 3;
+                    /* DOS table slot 1:39024 targets 1:39110, after the
+                       type_fndscrX assignment at 1:3910e. */
+                    type_fnd = 3;
                     break;
                 default: break;
             }
@@ -189,10 +213,13 @@ void INIT_FND(void) {
                 case 2:
                 case 3:
                     break;
-                case 4:
+                case 4: {
+                    type_fndscrX = 1;
+                    type_fnd = 3;
+                } break;
                 case 11: {
-                    local_type_fndscrX = 1;
-                    local_type_fnd = 3;
+                    type_fndscrX = 1;
+                    type_fnd = 3;
                 } break;
                 case 5:
                 case 6:
@@ -212,10 +239,13 @@ void INIT_FND(void) {
                 case 1:
                 case 2:
                     break;
-                case 3:
+                case 3: {
+                    type_fndscrX = 1;
+                    type_fnd = 3;
+                } break;
                 case 11: {
-                    local_type_fndscrX = 1;
-                    local_type_fnd = 3;
+                    type_fndscrX = 1;
+                    type_fnd = 3;
                 } break;
                 case 4:
                 case 5:
@@ -230,19 +260,25 @@ void INIT_FND(void) {
             }
         } break;
         case 6: {
-            if (num_level > 3 && num_level == 4) {
-                local_type_fndscrX = 1;
-                local_type_fnd = 3;
+            /* DOS 1:39179..3918f: unsigned lower/range guards for 1..3,
+               followed by the level-4 case; no jump table for this world. */
+            switch (num_level) {
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                case 4:
+                    type_fndscrX = 1;
+                    type_fnd = 3;
+                    break;
+                default: break;
             }
         } break;
         default:break;
     }
     if (GameModeVideo == MODE_NORMAL) {
-        local_type_fndscrX = 0;
+        type_fndscrX = 0;
     }
-    type_fnd = local_type_fnd;
-    type_fndscrX = local_type_fndscrX;
-    sp_y = local_sp_y;
     LOAD_FND();
 }
 
