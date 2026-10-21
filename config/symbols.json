@@ -7808,11 +7808,6 @@
     "name": "RAYVERSE",
     "evidence": "CalcTab call at 1:13f66; negative-input check, x87 fsqrt path and software-sqrt path at 1:70552..705ab. Standard C math function, also in Rayverse CalcTab."
    },
-   "sin": {
-    "addr": "1:70872",
-    "name": "RAYVERSE",
-    "evidence": "CalcTab call at 1:13f93; trigonometric dispatcher mode zero at 1:70883, versus cos mode two at 1:708aa. Standard C math function also in Rayverse CalcTab."
-   },
    "draw_blackbox": {
     "addr": "1:03125",
     "name": "RAYVERSE",
@@ -7998,11 +7993,6 @@
     "name": "INVENTED",
     "evidence": "DOS helper at 1:15e60 initializes the effect mesh and is called by effect_helper_1623c; no matching Android name identified"
    },
-   "IF@DSIN": {
-    "addr": "1:70899",
-    "name": "INVENTED",
-    "evidence": "Census identifies DOS 1:70899 as sin; tested as the target for Watcom IF@DSIN calls from the mesh candidate"
-   },
    "effect_prepare_rows": {
     "addr": "1:345b0",
     "name": "INVENTED",
@@ -8107,6 +8097,16 @@
     "addr": "1:633e0",
     "name": "INVENTED",
     "evidence": "DOS call from the setup routine at 1:635fc; fills the table in the 0x30-byte state at 2:55760."
+   },
+   "IF@DCOS": {
+    "addr": "1:70899",
+    "name": "WATCOM",
+    "evidence": "Watcom math register entry: trig dispatcher 1:7062d with mode EBX=2 (cos) at 1:708aa; wcc386 -fpc emits IF@DCOS for cos() (probe scratch/trig/t.c). Stack wrapper at 1:7088c calls it."
+   },
+   "IF@DSIN": {
+    "addr": "1:70872",
+    "name": "WATCOM",
+    "evidence": "Watcom math register entry: trig dispatcher 1:7062d with mode EBX=0 (sin) at 1:70883; wcc386 -fpc emits IF@DSIN for sin() (probe); CalcTab calls it at 1:13f93. Stack wrapper at 1:70860 calls it."
    }
   },
   "data": {
