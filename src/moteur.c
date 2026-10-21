@@ -83,7 +83,7 @@ typedef struct flocon_t {
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 void init_allowed_time(void);
 void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj);
-s32 DO_PESANTEUR(obj_t* obj);
+s16 DO_PESANTEUR(obj_t* obj);
 void DO_ANIM(obj_t* obj);
 void DO_STONEBOMB_REBOND(obj_t* obj);
 void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3);
@@ -103,7 +103,7 @@ void correct_link(void);
 void INIT_RAY(u8 new_lvl);
 void STOPPE_RAY_EN_XY(void);
 void INIT_MOTEUR(u8 new_lvl);
-void INIT_MOTEUR_LEVEL(u8 a1);
+void INIT_MOTEUR_LEVEL(s32 a1);
 void restore_gendoor_link(void);
 void DO_MOTEUR(void);
 void DO_MOTEUR_GELE(void);
@@ -634,7 +634,7 @@ extern void make_active(obj_t* obj, u8 do_nova);
 extern u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4);
 extern void kill_obj(obj_t *obj);
 extern void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj);
-extern s32 DO_PESANTEUR(obj_t* obj);
+extern s16 DO_PESANTEUR(obj_t* obj);
 extern void freezeAnim(obj_t *obj, u8 param_2);
 extern void DO_ANIM(obj_t* obj);
 extern s16 prof_in_bloc(obj_t* obj);
@@ -685,7 +685,7 @@ extern void DO_AUTO_SCROLL(void);
 extern void INIT_MOTEUR(u8 new_lvl);
 extern void INIT_MOTEUR_BEGIN(void);
 extern void INIT_MOTEUR_WORLD(void);
-extern void INIT_MOTEUR_LEVEL(u8 a1);
+extern void INIT_MOTEUR_LEVEL(s32 a1);
 extern void restore_gendoor_link(void);
 extern void DONE_MOTEUR_LEVEL(void);
 extern void INIT_MOTEUR_DEAD(void);
@@ -1370,10 +1370,9 @@ void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
     }
 }
 
-s32 DO_PESANTEUR(obj_t* obj) {
-    s16 spd_y;
-    s32 res;
+s16 DO_PESANTEUR(obj_t* obj) {
     s16 y_accel;
+    s32 res;
     u8 anim_speed_div;
 
     /* 2C214 80150A14 -O2 -msoft-float */
@@ -1420,20 +1419,18 @@ s32 DO_PESANTEUR(obj_t* obj) {
                     }
                     break;
                 case 3:
-                    spd_y = obj->speed_y;
-                    if (spd_y > 0)
+                    if (obj->speed_y > 0)
                     {
-                        if (spd_y > 1)
+                        if (obj->speed_y > 1)
                             y_accel = -1;
                     }
                     else
                         y_accel = 1;
                     break;
                 case 4:
-                    spd_y = obj->speed_y;
-                    if (spd_y < -1)
+                    if (obj->speed_y < -1)
                     {
-                        if (spd_y < -2)
+                        if (obj->speed_y < -2)
                             y_accel = 1;
                     }
                     else
@@ -1629,17 +1626,14 @@ u8 underSlope(obj_t *obj) { return (block_flags[obj->btypes[0]].raw & 1) && (blo
 void DO_STONEBOMB_REBOND(obj_t* obj) {
     s16 new_spd_x;
     s16 new_spd_y;
-    u16 obj_type;
 
     /* 2CAAC 801512AC -O2 -msoft-float */
 
-    obj_type = (u16)obj->type;
-
-    if (obj_type == TYPE_STONEBOMB2) {
+    if (obj->type == TYPE_STONEBOMB2) {
         new_spd_x = 32;
         new_spd_y = -4;
     }
-    else if (obj_type == TYPE_STONEBOMB3) {
+    else if (obj->type == TYPE_STONEBOMB3) {
         new_spd_x = 48;
         new_spd_y = -6;
     }
@@ -1933,17 +1927,11 @@ void Drop_Atter(obj_t *obj)
 
 void BadGuyAtter(obj_t *obj)
 {
-    u8 sub_etat;
-    u8 label;
-
     recale_position(obj);
     if (obj->hit_points != obj->init_hit_points)
     {
-        if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x40)
-            sub_etat = 2;
-        else
-            sub_etat = 11;
-        set_main_and_sub_etat(obj, 1, sub_etat);
+        set_main_and_sub_etat(obj, 1,
+            (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x40) ? 2 : 11);
     }
     else
     {
@@ -1952,11 +1940,7 @@ void BadGuyAtter(obj_t *obj)
     }
 
     calc_obj_dir(obj);
-    if (obj->flags.flip_x)
-        label = 3;
-    else
-        label = 2;
-    skipToLabel(obj, label, 1);
+    skipToLabel(obj, obj->flags.flip_x ? 3 : 2, 1);
 }
 
 void MiteAtter(obj_t *obj)
@@ -2390,7 +2374,7 @@ void test_fall_in_water(obj_t* obj) {
                 if (!obj->flags.flag_0x40) {
                     allocate_splash(obj);
                     obj->speed_y = 0;
-                    obj->speed_x = 0;
+                    obj->speed_x = obj->speed_y;
                 }
                 if (flags[obj->type].raw & flags3_2_die_in_water) {
                     obj->is_active = 0;
@@ -2529,7 +2513,9 @@ void build_active_table(void) {
 
         obj = &level.objects[level_obj.obj_ids[i]];
         if (obj->field_1C == 0) {
-            if ((Abs(obj->x - screen_center_x) < 660 && Abs(obj->y - screen_center_y) < 600) || (flags[obj->type].raw & flags2_0x10_do_not_check_ray_collision)) {
+            if (Abs(obj->x - screen_center_x) < 660 && Abs(obj->y - screen_center_y) < 600) {
+                SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
+            } else if (flags[obj->type].raw & flags2_0x10_do_not_check_ray_collision) {
                 SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
             } else {
                 obj->is_active = 0;
@@ -2780,20 +2766,22 @@ s16 RayCoince(s16 dir) {
 }
 
 void move_up_ray(void) {
+    eta_t *eta_row;
+    u8 main_state;
     s16 unk_y_1;
-    s16 unk_y_2;
 
     /* 30E34 80155634 -O2 -msoft-float */
     if (ray_mode == MODE_2_RAY_ON_MS && RayCoince(2)) {
         ray.speed_y = 0;
     }
 
-    unk_y_1 = ((get_eta(&ray)->flags & 0x40) || RayEvts.tiny) ? 40 : 25;
-    unk_y_2 = 20;
+    main_state = ray.main_etat;
+    eta_row = ray.eta[main_state];
+    unk_y_1 = ((eta_row[ray.sub_etat].flags & 0x40) || RayEvts.tiny) ? 40 : 25;
 
     ray.y += ray.speed_y;
-    if (ray.y < scroll_start_y - (unk_y_1 + unk_y_2)) {
-        ray.y = scroll_start_y - (unk_y_1 + unk_y_2);
+    if (ray.y < scroll_start_y - 20 - unk_y_1) {
+        ray.y = scroll_start_y - 20 - unk_y_1;
         ray.speed_y = 0;
         if (ray.follow_id != -1) {
             RAY_HIT(ray.iframes_timer == -1, NULL);
@@ -2812,10 +2800,15 @@ void move_down_ray(void)
     calc_obj_pos(&ray);
     if (ray.main_etat == 2)
     {
-        if ((scroll_end_y - ymap > ray.speed_y) && ray.screen_y >= 100)
+        if (scroll_end_y - ymap > ray.speed_y) {
+            if (ray.screen_y < 100) {
+                v_scroll_speed = 0;
+                return;
+            }
             v_scroll_speed = ray.speed_y;
-        else
-            v_scroll_speed = 0;
+            return;
+        }
+        v_scroll_speed = 0;
     }
 }
 
@@ -2994,22 +2987,22 @@ void DO_FIXE(void) {
         status_bar.hp_sprites[1] = ray.hit_points;
         status_bar.hp_sprites[0] = 0;
     } else {
-        if (ray.hit_points > 2) {
-            status_bar.hp_sprites[1] = 2;
-            status_bar.hp_sprites[0] = ray.hit_points - 2;
-        } else {
+        if (ray.hit_points <= 2) {
             status_bar.hp_sprites[1] = ray.hit_points;
             status_bar.hp_sprites[0] = 0;
+        } else {
+            status_bar.hp_sprites[1] = 2;
+            status_bar.hp_sprites[0] = ray.hit_points - 2;
         }
     }
     if (status_bar.lives == -1) {
-        status_bar.lives_digits[0] = 0;
         status_bar.lives_digits[1] = 0;
+        status_bar.lives_digits[0] = 0;
     } else {
-        status_bar.lives_digits[0] = status_bar.lives / 10;
         status_bar.lives_digits[1] = status_bar.lives % 10;
+        status_bar.lives_digits[0] = status_bar.lives / 10;
     }
-    status_bar.num_wiz = MIN(status_bar.num_wiz, 99);
+    status_bar.num_wiz = MIN(99, status_bar.num_wiz);
     status_bar.wiz_digits[0] = status_bar.num_wiz / 10;
     status_bar.wiz_digits[1] = status_bar.num_wiz % 10;
 }
@@ -3143,21 +3136,21 @@ void correct_link(void) {
 }
 
 void INIT_RAY_BEGIN(void) {
+    status_bar.max_hitp = 2;
+    RayEvts.run = 0;
+    RayEvts.firefly = 0;
+    RayEvts.force_run = 0;
+    RayEvts.reverse = 0;
+    RayEvts.squashed = 0;
     RayEvts.poing = 0;
     RayEvts.hang = 0;
     RayEvts.helico = 0;
     RayEvts.handstand_dash = 0;
     RayEvts.handstand = 0;
     RayEvts.grap = 0;
-    RayEvts.run = 0;
-    RayEvts.firefly = 0;
-    RayEvts.force_run = 0;
-    RayEvts.reverse = 0;
-    RayEvts.squashed = 0;
-    status_bar.max_hitp = 2;
+    ray.flags.hurtbyfist = 0;
     status_bar.num_wiz = 0;
     fin_continue = 0;
-    ray.flags.hurtbyfist = 0;
 }
 
 void INIT_RAY(u8 new_lvl) {
@@ -3618,7 +3611,7 @@ void INIT_MOTEUR_WORLD(void)
     new_level = 1;
 }
 
-void INIT_MOTEUR_LEVEL(u8 a1) {
+void INIT_MOTEUR_LEVEL(s32 a1) {
     Bloc_lim_W1_Aff = Bloc_lim_W1;
     Bloc_lim_W2_Aff = Bloc_lim_W2;
     Bloc_lim_H1_Aff = Bloc_lim_H1;
