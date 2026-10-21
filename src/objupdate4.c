@@ -51,17 +51,20 @@ void set_sub_etat(obj_t* obj, u8 sub_etat);
 void DoPlatformPoingCollision(obj_t* obj, s16 sprite);
 
 void DO_SPECIAL_PLATFORM(obj_t* obj) {
-    /* 3FFAC 801647AC -O2 -msoft-float */
-    s16 plat_x; s16 plat_y; s16 plat_w; s16 plat_h;
+    /* DOS 1:53800. Partial: exact extent, remaining source-shape differences. */
+    u16 obj_type;
     u8 unk_2;
+    s16 plat_y; s16 plat_x; s16 plat_h; s16 plat_w;
     u16 test_1;
+    s32 speed;
     s32 speed_threshold;
     s16 unk_1;
     u8 is_rolling_speed;
     if (RayEvts.tiny) unk_1 = 0x100;
     else unk_1 = 0x200;
+    speed = decalage_en_cours;
     speed_threshold = unk_1;
-    is_rolling_speed = Abs(decalage_en_cours) > speed_threshold;
+    is_rolling_speed = Abs(speed) > speed_threshold;
 
     switch (obj->type)
     {
@@ -90,16 +93,17 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->ray_dist = 10000;
                     ray.speed_y -= 3;
                     jump_time = 12;
-                    if (obj->type == TYPE_MARK_AUTOJUMP_PLAT)
+                    obj_type = obj->type;
+                    if (obj_type == TYPE_MARK_AUTOJUMP_PLAT)
                         set_main_and_sub_etat(obj, 0, 17);
-                    else if (obj->type == TYPE_CAISSE_CLAIRE)
+                    else if (obj_type == TYPE_CAISSE_CLAIRE)
                     {
                         if (!(obj->main_etat == 0 && obj->sub_etat == 2))
                             set_main_and_sub_etat(obj, 0, 1);
                         else
                             set_main_and_sub_etat(obj, 0, 3);
                     }
-                    else if (obj->type == TYPE_GOMME)
+                    else if (obj_type == TYPE_GOMME)
                     {
                         if (obj->main_etat == 0 && obj->sub_etat == 0)
                         {
@@ -248,17 +252,19 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             unk_2 = 0;
             if (ray.follow_id == obj->id)
             {
-                if (obj->main_etat != 2 && obj->follow_id != 0)
+                /* DOS materializes the state predicate before the follow-id guard. */
+                s32 not_bouncing = obj->main_etat != 2;
+                if (not_bouncing && obj->follow_id != 0)
                 {
                     set_main_and_sub_etat(obj, 2, 4);
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
                     obj->gravity_value_2 = 0;
+                    unk_2 = 1;
                     obj->speed_y =
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
-                    unk_2 = 1;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
                     unk_2 = 1;
@@ -316,17 +322,19 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             unk_2 = 0;
             if (ray.follow_id == obj->id)
             {
-                if (obj->main_etat != 2 && obj->follow_id != 0)
+                /* DOS materializes the state predicate before the follow-id guard. */
+                s32 not_bouncing = obj->main_etat != 2;
+                if (not_bouncing && obj->follow_id != 0)
                 {
                     set_main_and_sub_etat(obj, 2, 3);
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
                     obj->gravity_value_2 = 0;
+                    unk_2 = 1;
                     obj->speed_y =
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
-                    unk_2 = 1;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
                     unk_2 = 1;
@@ -402,8 +410,8 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             }
 
             if (
-                    (num_world != 1 || obj->display_prio == 0) &&
-                    (num_world == 1 || obj->sub_etat != 20)
+                    (num_world == 1 && obj->display_prio == 0) ||
+                    (num_world != 1 && obj->sub_etat != 20)
                     )
             {
                 if (ray.follow_id == obj->id)
