@@ -10274,7 +10274,7 @@
      ]
     },
     "AllocVariablesAutorisee": {
-     "status": "STRICT",
+     "status": "CODE_BYTES_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

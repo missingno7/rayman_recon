@@ -217,6 +217,11 @@ def verify_object(img, mod, only=None, seg_report=None):
     results = []
     seg_base = {}          # segment index -> oracle (obj, base) inferred or placed
     seg_votes = {}
+
+    def segment_contents_ok(si_, base_):
+        s_ = mod.segments[si_]
+        return (s_.size > 0 and s_.cls.upper() != "BSS" and bytes(s_.covered) == b"\x01" * s_.size and
+                img.obj[base_[0]][base_[1]:base_[1] + s_.size] == bytes(s_.data))
     for si in code_si:
         seg = mod.segments[si]
         pubs = sorted((o, n) for n, s, o, _ in mod.publics if s == si)
@@ -330,6 +335,12 @@ def verify_object(img, mod, only=None, seg_report=None):
                     elif (taddr[0], taddr[1] + addend) != (tobj, toff):
                         res["problems"].append(f"+{rel:x}: off32 -> {tname}+{addend:x} = {taddr[0]}:"
                                                f"{taddr[1] + addend:x}, oracle {tobj}:{toff:x}")
+                    elif tsrc == "segment" and mod.segments[f.target[1]].cls.upper() != "CODE" and \
+                            not segment_contents_ok(f.target[1], taddr):
+                        # the segment's placement was inferred earlier, but its bytes do not equal the oracle: a
+                        # reference into it is not verified (placement alone is not content; worker sfin_action)
+                        res["unverified"].append(f"+{rel:x} -> segment {mod.segments[f.target[1]].name}+{addend:x} "
+                                                 f"(oracle {tobj}:{toff:x}; contents not verified)")
                     else:
                         ref["verified_by"] = tsrc
                 res["references"].append(ref)
