@@ -10176,9 +10176,7 @@
      ]
     }
    },
-   "segments": {
-    "CONST": "VERIFIED"
-   }
+   "segments": {}
   },
   "effect2": {
    "source": "src/effect2.c",
