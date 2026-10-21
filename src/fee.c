@@ -1,6 +1,6 @@
 /*
- * Fairy (Betilla) dialogue and powers (GOG v1.21 object 1:29210-1:2a1c0). File name invented (Rayverse fee.c).
- * Names: Rayverse/Android. Status per function: config/units.json.
+ * Fairy (Betilla) dialogue and powers (GOG v1.21 code 1:29210-1:2a1b7). File name invented (Rayverse fee.c).
+ * Names: Rayverse/Android. Worker results: NOTES.md and final.txt.
  */
 #include <string.h>
 #include "obj.h"
@@ -212,16 +212,11 @@ void wait_for_dialogue_fee(obj_t* obj, s16 time) {
 //39C04
 void DO_FEE_ETAPE(obj_t* obj) {
     /* 4E020 80172820 -O2 -msoft-float */
-    u8 state = obj->config;
 
-
-
-    switch (state) {
-        case 1: {
-            u8 cur_txt;
+    switch (obj->config) {
+        case 1:
             wait_for_dialogue_fee(obj, 100);
-            cur_txt = display_txt_fee;
-            if (cur_txt == 5 || (text_to_display + 1)[(s16)cur_txt].text[0] == '\0')
+            if (display_txt_fee == 5 || (text_to_display + 1)[display_txt_fee].text[0] == '\0')
             {
                 skipToLabel(obj, 1, false);
                 obj->config = 0;
@@ -229,7 +224,6 @@ void DO_FEE_ETAPE(obj_t* obj) {
                 obj->timer = 0;
             }
             break;
-        }
         case 2:
             wait_for_dialogue_fee(obj, 110);
             if (display_txt_fee == 7) {
@@ -246,18 +240,15 @@ void DO_FEE_ETAPE(obj_t* obj) {
                 obj->timer = 0;
             }
             break;
-        case 4: {
-            u8 cur_txt;
+        case 4:
             if (horloge[2] != 0)
                 obj->speed_y = -1;
             else
                 obj->speed_y = 0;
 
-            cur_txt = display_txt_fee;
-            if (cur_txt < 9 && (text_to_display + 1)[(s16)cur_txt + 1].text[0] != '\0')
+            if (display_txt_fee < 9 && (text_to_display + 1)[display_txt_fee + 1].text[0] != '\0')
                 wait_for_dialogue_fee(obj, 120);
             break;
-        }
         case 0:
         default:
             display_txt_fee = 255;
@@ -293,8 +284,7 @@ void DO_FEE(obj_t* obj) {
     /* 4E2D0 80172AD0 -O2 -msoft-float */
     obj_t* png_or_fee;
     u8 old_txt;
-    u8 ray_main_etat;
-    s16 y;
+    s32 y; /* DOS 1:2a009..2a01b: full-width Y expression and store. */
     s16 y_fee;
 
     png_or_fee = png_or_fee_id + level.objects;
@@ -304,8 +294,7 @@ void DO_FEE(obj_t* obj) {
         case 0:
             if (obj->detect_zone_flag != 0) {
                 if (Abs(ray.x + ray.offset_bx - obj->x + 2) < 3) {
-                    ray_main_etat = ray.main_etat;
-                    if ((ray_main_etat == 1 || ray_main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 20) || (ray.main_etat == 3 && ray.sub_etat == 21)) {
+                    if ((ray.main_etat == 1 || ray.main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 20) || (ray.main_etat == 3 && ray.sub_etat == 21)) {
                         set_sub_etat(obj, 1);
                         skipToLabel(obj, 0, true);
                         set_main_and_sub_etat(&ray, 3, 34);
@@ -327,8 +316,7 @@ void DO_FEE(obj_t* obj) {
             break;
         case 2:
         case 3:
-            ray_main_etat = ray.main_etat;
-            if ((ray_main_etat == 1 || ray_main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 34))
+            if ((ray.main_etat == 1 || ray.main_etat == 0) || (ray.main_etat == 3 && ray.sub_etat == 34))
                 set_main_and_sub_etat(&ray, 3, 35);
             if (ray.main_etat == 3 && ray.sub_etat == 36)
                 ray.anim_frame = -1;
@@ -379,9 +367,9 @@ void DO_FEE(obj_t* obj) {
             png_or_fee->screen_x = -png_or_fee->offset_bx;
             png_or_fee->flags.flip_x = 1;
             png_or_fee->screen_y = y_fee - png_or_fee->offset_by;
-            old_txt_fee = old_txt;
             png_or_fee->init_x = png_or_fee->x;
             png_or_fee->init_y = png_or_fee->y;
+            old_txt_fee = old_txt;
         }
     }
     if (new_txt_fee != 0) {
@@ -410,20 +398,16 @@ void DO_FEE(obj_t* obj) {
 
 //3A118
 void DoFeeRaymanZDD(obj_t* obj) {
-    u8 sub_etat;
-    u8 ray_main_etat;
 
-    sub_etat = obj->sub_etat;
-    if (sub_etat == 0) {
-        ray_main_etat = ray.main_etat;
-        if (ray_main_etat == 2) {
+    if (obj->sub_etat == 0) {
+        if (ray.main_etat == 2) {
             ray.speed_x = 0;
             ray.link = 0;
             ray_in_fee_zone = 1;
             decalage_en_cours = 0;
-        } else if (ray_main_etat == 1 || ray_main_etat == 0 ||
-                   (ray_main_etat == 3 && ray.sub_etat == 20)) {
-            remoteRayXToReach = obj->x - (ray.offset_bx + 2);
+        } else if (ray.main_etat == 1 || ray.main_etat == 0 ||
+                   (ray.main_etat == 3 && ray.sub_etat == 20)) {
+            remoteRayXToReach = obj->x - 2 - ray.offset_bx;
             if (ray.x & 1)
                 remoteRayXToReach |= 1;
             else

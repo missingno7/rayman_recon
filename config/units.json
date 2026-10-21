@@ -2522,7 +2522,7 @@
      ]
     },
     "fee_gives_super_evts": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2530,7 +2530,7 @@
      ]
     },
     "DO_FEE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2538,7 +2538,7 @@
      ]
     },
     "DoFeeRaymanZDD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
