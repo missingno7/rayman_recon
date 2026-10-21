@@ -3922,11 +3922,6 @@
     "name": "RAYVERSE",
     "evidence": "tools/xref.py and DOS call at 1:327f8"
    },
-   "unidentified_record_allocator": {
-    "addr": "1:6f8d8",
-    "name": "INVENTED",
-    "evidence": "DOS direct call at 1:32309 receives signed size in EAX and returns record data pointer in EAX; identity unresolved"
-   },
    "close": {
     "addr": "1:7168b",
     "name": "RAYVERSE",
@@ -4640,11 +4635,6 @@
     "addr": "1:5bc40",
     "name": "INVENTED",
     "evidence": "DOS INIT_SAVE_CHOICE call guarded by !JeuCracker; body checks CD"
-   },
-   "release_record": {
-    "addr": "1:6fa70",
-    "name": "INVENTED",
-    "evidence": "DOS INIT_WORLD_STAGE_NAME allocation counterpart at epilogue (allocator 1:6f8d8)"
    },
    "RAY_TOMBE": {
     "addr": "1:5df28",
@@ -7027,6 +7017,66 @@
     "addr": "1:02b86",
     "name": "INVENTED",
     "evidence": "DOS InitModeXWithFrequency loads this direct function address into the corresponding callback slot"
+   },
+   "temp_malloc": {
+    "addr": "1:6f8d8",
+    "name": "ANDROID",
+    "evidence": "Android .text function temp_malloc (adjacent to block_malloc, same semantics); previously INVENTED unidentified_record_allocator (tu_pcmisc)"
+   },
+   "temp_free": {
+    "addr": "1:6fa70",
+    "name": "ANDROID",
+    "evidence": "Android .text function temp_free (adjacent to block_malloc, same semantics); previously INVENTED release_record (tu_pcmisc)"
+   },
+   "FIN_PC": {
+    "addr": "1:61934",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71934; DOS call in DO_UBI_LOGO"
+   },
+   "updateLogo": {
+    "addr": "1:61940",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71940; DOS call in DO_UBI_LOGO"
+   },
+   "LOAD_SCREEN": {
+    "addr": "1:61a70",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71A70; DOS direct call in DO_UBI_LOGO"
+   },
+   "sub_71A84": {
+    "addr": "1:61a84",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71A84; DOS function entry"
+   },
+   "sub_71A98": {
+    "addr": "1:61a98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71A98; DOS function entry and body reconstructed from disassembly"
+   },
+   "DO_UBI_LOGO": {
+    "addr": "1:61b34",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse ray.c comment //71B34; DOS function entry"
+   },
+   "SpriteFixeOffset": {
+    "addr": "1:6fb48",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse misc_source.c comment //7FB48; Android function name confirmed"
+   },
+   "SpriteWorldOffset": {
+    "addr": "1:6fb60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse misc_source.c comment //7FB60; Android function name confirmed"
+   },
+   "SpriteFixeBlocksFree": {
+    "addr": "1:6fb78",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse misc_source.c comment //7FB78; Android function name confirmed"
+   },
+   "SpriteWorldBlocksFree": {
+    "addr": "1:6fb84",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse misc_source.c comment //7FB84; Android function name confirmed"
    }
   },
   "data": {
@@ -12758,6 +12808,18 @@
     "type": "s32",
     "name": "INVENTED",
     "evidence": "DOS build_map loads this dword as the initial copy-plane offset, doubles it after each plane, and resets it at 16."
+   },
+   "OffsetSpriteFixe": {
+    "addr": "2:57474",
+    "type": "u32",
+    "name": "ANDROID",
+    "evidence": "Android .bss object size 4; DOS writes dword at 2:57474 in SpriteFixeOffset and reads it in SpriteFixeBlocksFree"
+   },
+   "OffsetSpriteWorld": {
+    "addr": "2:57470",
+    "type": "u32",
+    "name": "ANDROID",
+    "evidence": "Android .bss object size 4; DOS writes dword at 2:57470 in SpriteWorldOffset and reads it in SpriteWorldBlocksFree"
    }
   }
  }

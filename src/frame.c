@@ -44,8 +44,8 @@ extern display_anypicture_t display_anypicture;
 extern void speaker_enable(void);
 extern s32 clock_ticks(void);
 extern scene_func_t dummy_prg;
-u8 *unidentified_record_allocator(s32 size);
-void release_record(u8 *buffer);
+u8 *temp_malloc(s32 size);
+void temp_free(u8 *buffer);
 typedef void delay_500_t(s32 milliseconds);
 #pragma aux delay_500_t parm [eax]
 extern delay_500_t wait_milliseconds;
@@ -330,13 +330,13 @@ u8 find_in_map(s16 x, s16 y) {
 
 void init_find_in_map(void) {
     s16 i;
-    smap = unidentified_record_allocator(0x4b0);
+    smap = temp_malloc(0x4b0);
     for (i = 0; i < 0x4b0; ++i)
         smap[i] = 1;
 }
 
 void end_find_in_map(void) {
-    release_record(smap);
+    temp_free(smap);
 }
 
 void build_map(s16 x, s16 y) {

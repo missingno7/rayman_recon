@@ -24,8 +24,8 @@ void LoadGameOnDisk(u8 slot);
 void LoadInfoGame(u8 slot);
 void calc_obj_pos(obj_t *obj);
 void MAIN_NO_MORE_CONTINUE_PRG(void);
-void *unidentified_record_allocator(s32 size);
-void release_record(void *ptr);
+void *temp_malloc(s32 size);
+void temp_free(void *ptr);
 void check_cd_for_save(void); /* INVENTED: DOS 1:5bc40 */
 s32 deter_num_let(u8 c, const char *next_chars);
 s16 calc_largmax_text(const char *text, s16 char_index, s16 space_width, s16 spacing, u8 font_size);
@@ -316,7 +316,7 @@ void INIT_LEVEL_STAGE_NAME(void) {
 }
 
 void INIT_WORLD_STAGE_NAME(void) {
-    char *name = (char *)unidentified_record_allocator(75);
+    char *name = (char *)temp_malloc(75);
     s8 new_color;
     switch (t_world_info[num_world_choice].world) {
         case 7: {
@@ -381,7 +381,7 @@ void INIT_WORLD_STAGE_NAME(void) {
     INIT_TXT_BOX(&text_to_display[3]);
     text_to_display[3].width += 10;
     text_to_display[3].height += 2;
-    release_record(name);
+    temp_free(name);
 }
 
 void INIT_STAGE_NAME(void) {

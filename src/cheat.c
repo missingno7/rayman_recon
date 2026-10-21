@@ -45,8 +45,8 @@ u8 TOUCHE(u8 key);
 s16 but1pressed(void);
 void do_record(record_t *rec);
 s32 clock_ticks(void);
-void *unidentified_record_allocator(s32 size);
-void release_record(void *memory);
+void *temp_malloc(s32 size);
+void temp_free(void *memory);
 s16 CalcSpeed(void);
 u8 confirmation_msg(s32 msg);
 extern void exit();
@@ -209,14 +209,14 @@ void sub_35F70(void) {
     s16 outliers;
     u8 valid;
 
-    times = (s32*)unidentified_record_allocator(0xfa0);
+    times = (s32*)temp_malloc(0xfa0);
     if (times != 0) {
         for (i = 0; i < 1000; ++i) {
             for (j = 0; j < 500; ++j) {
             }
             times[i] = clock_ticks();
         }
-        intervals = (s32*)unidentified_record_allocator(0xf9c);
+        intervals = (s32*)temp_malloc(0xf9c);
         if (intervals != 0) {
             valid = 1;
             sum = 0;
@@ -241,9 +241,9 @@ void sub_35F70(void) {
                 }
                 need_timer = (outliers < 10);
             }
-            release_record(intervals);
+            temp_free(intervals);
         }
-        release_record(times);
+        temp_free(times);
     }
 }
 

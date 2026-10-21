@@ -97,7 +97,7 @@ extern s32 get_joy_input1_dos1(u8 *source_buf, u8 *dest_buf, s32 width, s32 heig
 extern s32 get_joy_input1_dos2(u8 *source_buf, u8 *dest_buf, s32 width, s32 height);
 extern s32 dos_game_io_port_something(void);
 extern s32 dos_game_io_port_something2(void);
-extern u8 *unidentified_record_allocator(s32 size);
+extern u8 *temp_malloc(s32 size);
 extern void InitTextMode(void);
 extern s16 InitModeXWithFrequency(u8 frequency);
 extern void DO_FADE_OUT(void);
@@ -446,7 +446,7 @@ void read_record(const char *filename, record_t *rec)
     }
 
     file_size = (s16)filelength(handle);
-    rec->data = unidentified_record_allocator(file_size);
+    rec->data = temp_malloc(file_size);
     rec->length = file_size;
     read(handle, rec->data, file_size);
     close(handle);
