@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "rtypes.h"
+#include "inline_helpers.h"
 
 typedef struct effect_item {
     s32 x0;
@@ -115,10 +116,10 @@ void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
     item = state->items;
     effect_reset_geometry();
     state->frame = 0;
-    state->frame_limit = 1 > vertical_speed ? 1 : vertical_speed;
+    state->frame_limit = max32(1, vertical_speed);
     state->speed = horizontal_offset >= 0 ?
-                   (1 > horizontal_offset ? 1 : horizontal_offset) :
-                   -(1 > -horizontal_offset ? 1 : -horizontal_offset);
+                   max32(1, horizontal_offset) :
+                   -max32(1, -horizontal_offset);
 
     for (i = 0; i < state->count; ++i) {
         u16 y;
@@ -179,8 +180,8 @@ u8 sub_38DCC(u16 columns, u16 rows, s16 horizontal_offset, u16 vertical_speed,
         effect_data = (effect_state_t *)sub_6FBB4(sizeof(effect_state_t));
         state = effect_data;
         if (state != 0) {
-            state->columns = 2 > columns ? 2 : columns;
-            state->rows = 1 > rows ? 1 : rows;
+            state->columns = max32(2, columns);
+            state->rows = max32(1, rows);
             state->count = state->columns * state->rows;
             state->source = source;
             state->destination = destination;
