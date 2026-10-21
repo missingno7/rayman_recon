@@ -265,61 +265,70 @@ u8 calc_typ_trav(obj_t* obj, u8 height) {
     return result;
 }
 
-u8 calc_typ_travd(obj_t* obj, u8 a2) {
+u8 calc_typ_travd(obj_t* obj, u8 backwards) {
+    /* Local names INVENTED. DOS 1:151f8..15388; word sprite outputs. */
+    eta_t **eta;
     s16 x_saved;
-    s16 spd_x_sgn = sgn(obj->speed_x);
-    s16 x_offs_1;
-    s32 unk_1;
-    s32 x_offs_2;
-    s16 foll_x; s16 foll_y; s16 foll_w; s16 foll_h;
-    u8 unk_2;
-    s32 res;
+    s16 direction = sgn(obj->speed_x);
+    s16 x_offset;
+    u8 follow_inset;
+    s16 x_speed;
+    s16 sprite_y; s16 sprite_x; s16 sprite_w; s16 sprite_h;
+    u8 height;
+    u8 result;
 
-    if (spd_x_sgn != 0)
+    if (direction != 0)
     {
-        x_offs_1 = 14;
         if (obj->type == TYPE_RAYMAN)
         {
-            unk_1 = 4;
+            follow_inset = 4;
             if (RayEvts.tiny)
             {
-                x_offs_1 = 8;
-                unk_1 = 2;
+                x_offset = 8;
+                follow_inset = 2;
             }
+            else
+                x_offset = 14;
 
             if (ray.param != -1)
-                x_offs_1 -= unk_1;
+                x_offset -= follow_inset;
         }
-        x_offs_1 *= spd_x_sgn;
-        if (a2)
-            x_offs_1 = -x_offs_1;
+        else
+            x_offset = 14;
+        if (direction < 0)
+            x_offset = -x_offset;
+        if (backwards)
+            x_offset = -x_offset;
         x_saved = obj->x;
-        obj->x += x_offs_1;
-        if (!a2)
+        obj->x += x_offset;
+        if (!backwards)
         {
-            x_offs_2 = obj->speed_x;
+            x_speed = obj->speed_x;
             if (flags[obj->type].raw & flags1_0x10_move_x)
-                x_offs_2 = ashr16(x_offs_2, 4);
-            obj->x -= x_offs_2;
+                x_speed = ashr16(x_speed, 4);
+            obj->x -= x_speed;
         }
 
         if (obj->flags.follow_enabled)
-            GET_SPRITE_POS(obj, obj->follow_sprite, &foll_x, &foll_y, &foll_w, &foll_h);
+            GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h);
         else
-            foll_y = 0;
+            sprite_y = 0;
 
-        unk_2 = ashr16(-(foll_y + obj->offset_hy) + obj->offset_by, 4);
-        if (obj->type == TYPE_RAYMAN && ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)
-            unk_2 = ashr16(unk_2, 1);
-        if (unk_2 != 0)
-            unk_2--;
-        res = calc_typ_trav(obj, unk_2);
+        height = ashr16(-(sprite_y + obj->offset_hy) + obj->offset_by, 4);
+        if (obj->type == TYPE_RAYMAN) {
+            eta = ray.eta;
+            if (eta[ray.main_etat][ray.sub_etat].flags & 0x40)
+                height = ashr16(height, 1);
+        }
+        if (height != 0)
+            height--;
+        result = calc_typ_trav(obj, height);
         obj->x = x_saved;
     }
     else
-        res = 0;
+        result = 0;
 
-    return res;
+    return result;
 }
 
 void TEST_FIN_BLOC(obj_t* obj) {

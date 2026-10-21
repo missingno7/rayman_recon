@@ -4499,7 +4499,7 @@
      ]
     },
     "calc_typ_travd": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
