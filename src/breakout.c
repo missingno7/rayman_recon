@@ -299,12 +299,14 @@ s16 angle_direction(s16 x, s16 y)
 
 void move_ball(obj_t *obj)
 {
+    u8 old_undestroy;
     s16 dx;
     s16 dy;
 
+    old_undestroy = undestroy;
     dx = 0;
     dy = 0;
-    if (undestroy > 5 || upscreen != 0) {
+    if (old_undestroy > 5 || upscreen != 0) {
         if (undestroy > 5)
             undestroy = 0;
         dx = myRand(257) - 128;
