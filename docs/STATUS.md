@@ -2,26 +2,38 @@
 
 Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record;
 the per-unit table is printed by tools/status.py and is not duplicated here). NEAR diagnosis: `python tools/census.py`
-(docs/CENSUS.md). Wave history and measured worker effectiveness: docs/CENSUS.md sections 2-5.
+(docs/CENSUS.md). Wave history and measured worker effectiveness: docs/CENSUS.md.
 
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1105 of 1511 recorded functions, 184,133 code bytes** (~40.2% of game code 1:00000-1:6fbe6) in 123 code units; 406 NEAR_MATCH, 1 CODE_BYTES_MATCH |
-| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe |
-| data closure | **30,027 bytes VERIFIED**; mapped (named+sized bindings): 89.7% of game `_DATA` |
+| function-level STRICT | **1151 of 1552 recorded functions, 192,300 code bytes** (~42.0% of game code 1:00000-1:6fbe6) in 124 code units; 401 NEAR_MATCH |
+| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson |
+| data closure | **30,058 bytes VERIFIED**; mapped (named+sized bindings): 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED 6,919 bytes |
-| linked binary / packed EXE | not started (by design) |
+| linked binary / packed EXE | not started (by design; first step only: PMODE/W 1.22 PMWLITE determinism, docs/NEXT_STEPS.md) |
 
-Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1683 functions, 1143 data. Tests: 17.
+Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
+
+## Original inline helpers (2026-10-21)
+Six ORIGINAL_INLINE helpers in src/include/inline_helpers.h (ashr16, inrange, sgn, fill, copy, ashl16; AGENTS.md
+exception, docs/COMPILER.md "Original inline helpers"). Applied at every recorded DOS site in 37 units. This pass:
+1105 -> 1151 STRICT = helpers +27, new movieprefix unit +18, display CONST fix +1; 0 regressions. Most remaining helper sites have exact helper bytes displaced by size
+drift of earlier code in the same function (fix the first size-drifting function, W-LAYOUT). copy's advertised
+clobber list and ashl16's CL/CX width remain OPEN.
+
+## Integrator
+tools/integrate.py fails closed (ai_decomp review 2026-10-21, two adversarial re-reviews): no silent name
+de-duplication (refuse or explicit --rename recorded as an immutable alias), claim index in promote.py, contained
+destinations, exact rollback of written files only, literal-pathspec commit of written files only, local headers
+replaced only when private to the run's units. tests/test_integrate.py.
 
 ## Coverage
-Every C range of the game code below 1:6fbe6 now has a unit except: the hand-written low-level assembly block
-1:00000-1:06f80 (~28 KB; ABIs in docs/reference/lowlevel_abi.h; needs an assembly reconstruction path - not started)
-and the anonymous prefix of the movie object 1:2a1c0-1:2b288 (34 routines; C-vs-assembly being decided).
-Of 406 NEAR functions most have had two or more finishing passes; remaining blockers are register/stack allocation,
-the F3 `rep movs` copy idiom (OPEN, not a compiler-release difference: 10.5 and 10.6 emit identical prefixes), clamp
-lowering and object layout drift (each brief names the first size-drifting function).
+Every C range of the game code below 1:6fbe6 now has a unit except the hand-written low-level assembly block
+1:00000-1:06f80 (~28 KB; scoping report build/workers/w5_asmscope/REPORT.md: ~119 routines, WASM 10.5/10.6 run
+natively, assembler identity OPEN, pilot 2/2 STRICT; not started) and four effect drafts without a unit (1:633e0,
+1:6c3b0, 1:6e380, 1:50350 partly). Remaining NEAR blockers: object layout drift (first size-drifting function per
+object), register/stack allocation, clamp lowering, materialised booleans.
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
