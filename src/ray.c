@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* ray.c (1:5bfd0..1:61920: Rayman movement/state core). Names RAYVERSE/ANDROID/PS1; seeded by tools/seed.py, worker tu_ray. See config/units.json for statuses. */
 /* Rayman state/movement core, GOG v1.21 1:5bfd0..1:61920.
  * Worker candidate; statuses and experiment evidence are in NOTES.md / match.json.
@@ -2618,7 +2619,7 @@ void DO_SURF_CHANGE_HAIRS(void) {
     if (ray.main_etat == 0 && ray.sub_etat == 40) {
         s16 x_sign = (ray.flags.flip_x) ? 1 : -1;
 
-        if (x_sign == sgn(ray.speed_x)) {
+        if ((sgn)(ray.speed_x) == x_sign) {
             ray.anim_index = 79;
         } else {
             ray.anim_index = 80;
