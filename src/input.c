@@ -3,6 +3,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 #include <conio.h>
 #include <dos.h>
 #include <fcntl.h>
@@ -478,14 +479,7 @@ void load_record(record_t *rec)
     read_record(filename, rec);
     InitModeXWithFrequency(VGA_FREQ);
 
-    _disable();
-    outp(0x3c8, 0);
-    {
-        s32 i;
-        for (i = 0; i < 256 * 3; ++i)
-            outp(0x3c9, ((u8 *)&current_rvb)[i]);
-    }
-    _enable();
+    palette_output(0, 255, &current_rvb);
 }
 
 void sub_42408(u8 buttons)
