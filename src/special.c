@@ -1,6 +1,6 @@
 /*
  * Special level objects (GOG v1.21 object 1:6a340-1:6c3b0). File name invented (Rayverse special.c).
- * Worker candidate: 21/30 STRICT, contiguous _TEXT; see NOTES.md and final.json.
+ * Worker candidate: 22/30 STRICT, contiguous _TEXT; see NOTES.md and final.json.
  * Names: Rayverse/Android; new arithmetic local names are INVENTED.
  */
 #include "obj.h"
