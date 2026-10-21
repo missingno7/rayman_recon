@@ -1,8 +1,8 @@
 /*
  * Bat enemy (GOG v1.21 object 1:0fa40-1:100b0). File name invented (Rayverse bat.c). Names: Rayverse/Android.
  * Uses the shared src/include/obj.h layout.
- * Worker candidate: seven STRICT functions, including bat_dir and its switch tables.
- * DO_BAT_FLASH and DO_BAT_COMMAND remain NEAR; see NOTES.md and final_match.txt.
+ * Worker candidate: eight STRICT functions and contiguous _TEXT layout.
+ * DO_BAT_COMMAND remains NEAR; see NOTES.md and final_match.txt.
  */
 #include "obj.h"
 
