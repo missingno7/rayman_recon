@@ -508,7 +508,7 @@ void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
     s16 speed;
     s32 speed_x;
     s16 stmn_spr;
-    s16 stmn_x; s16 stmn_y; s16 stmn_w; s16 stmn_h;
+    s16 stmn_x; s16 stmn_h; s16 stmn_w; s16 stmn_y;
 
     if (stmn_obj->type == TYPE_35_STONEMAN1) {
         i = 0;
@@ -541,7 +541,7 @@ void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
 
                 if (stmn_spr != -1) {
                     GET_SPRITE_POS(stmn_obj, stmn_spr, &stmn_x, &stmn_y, &stmn_w, &stmn_h);
-                    cur_obj->x = stmn_x - cur_obj->offset_bx + (stmn_w >> 1);
+                    cur_obj->x = stmn_x + ((stmn_w >> 1) - cur_obj->offset_bx);
                     cur_obj->y = stmn_y - cur_obj->offset_hy;
                     cur_obj->init_x = cur_obj->x;
                     cur_obj->init_y = cur_obj->y;
