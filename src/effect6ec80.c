@@ -1,6 +1,7 @@
 /* DOS 1:6ec80..1:6f200. Semantic effect names are INVENTED.
  * Partial matching candidate; see NOTES.md for evidence and rejected shapes. */
 #include "rtypes.h"
+#include "inline_helpers.h"
 
 typedef struct effect_vertex_6e_t {
     u16 x;
@@ -36,7 +37,7 @@ typedef struct effect_state_6e_t {
 
 extern effect_state_6e_t *effect_state_6e;
 extern u8 *EffetBufferNormal;
-extern void *sub_6FBB4(u32 size);
+extern void *sub_6FBB4(s32 size);
 extern void JumelleFreeArray(void **array);
 extern void effect_reset_geometry(void);
 extern void effect_copy_band(u8 *source, u8 *destination, u32 width);
@@ -135,8 +136,8 @@ u8 effect_helper_6ee54(u16 columns, u16 rows, s16 speed, u16 step,
         effect_state_6e = allocated;
         if (allocated != 0) {
             state = allocated;
-            allocated->columns = 2 > (s32)columns ? 2 : (s32)columns;
-            allocated->rows = 1 > (s32)rows ? 1 : (s32)rows;
+            allocated->columns = (u8)max32(2, columns);
+            allocated->rows = (u8)max32(1, rows);
             allocated->vertex_count = (columns + 1) * (rows + 1);
             allocated->source = source;
             allocated->sprite = sprite;
