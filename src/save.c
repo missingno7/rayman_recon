@@ -366,9 +366,7 @@ u8 SaveGameOnDisk(u8 which_save)
 
     fd = (s16)open(temporary, O_RDWR | O_CREAT | O_BINARY,
                    S_IREAD | S_IWRITE);
-    if (fd == -1) {
-        error = 1;
-    } else {
+    if (fd != -1) {
         write(fd, save_ray[which_save - 1], 4);
         write(fd, &nb_continue, 1);
         storeWorldInfoAcces();
@@ -403,6 +401,8 @@ u8 SaveGameOnDisk(u8 which_save)
         } else {
             error = 1;
         }
+    } else {
+        error = 1;
     }
 
     destination = fopen(temporary, "wb");
@@ -494,7 +494,6 @@ u8 LoadInfoGame(u8 which_save)
     char filename[120];
     char temp_name[L_tmpnam];
     s16 fd;
-    FILE *source;
     FILE *destination;
     u8 error;
     s32 i;
@@ -507,29 +506,33 @@ u8 LoadInfoGame(u8 which_save)
     tmpnam(temp_name);
     strcpy(temporary, demo_video_mem);
     strcat(temporary, temp_name);
-    source = fopen(filename, "rb");
-    if (source != NULL) {
-        destination = fopen(temporary, "wb");
-        if (destination != NULL) {
-            sub_21d28(source, destination);
-            error = sub_21840();
-            fclose(destination);
+    {
+        FILE *source;
+        source = fopen(filename, "rb");
+        if (source != NULL) {
+            destination = fopen(temporary, "wb");
+            if (destination != NULL) {
+                sub_21d28(source, destination);
+                error = sub_21840();
+                fclose(destination);
+            } else {
+                error = 1;
+            }
+            fclose(source);
         } else {
             error = 1;
         }
-        fclose(source);
-    } else {
-        error = 1;
     }
-
     if (error == 0) {
         if (file_size(temporary) != 0xa7a)
             error = 1;
     }
     if (error == 0) {
-            fd = (s16)open(temporary, O_RDONLY | O_BINARY,
-                           S_IREAD | S_IWRITE);
-            if (fd != -1) {
+        fd = (s16)open(temporary, O_RDONLY | O_BINARY,
+                       S_IREAD | S_IWRITE);
+        if (fd == -1) {
+            error = 1;
+        } else {
             read(fd, save_ray[which_save - 1], 4);
             read(fd, &nb_continue, 1);
             read(fd, wi_save_zone, 24);
@@ -544,9 +547,7 @@ u8 LoadInfoGame(u8 which_save)
                 LoadInfoRay[which_save - 1].cages += wi_save_zone[i].nb_cages;
             LoadInfoRay[which_save - 1].lives = (u8)status_bar.lives;
             LoadInfoRay[which_save - 1].tings = status_bar.num_wiz;
-            } else {
-                error = 1;
-            }
+        }
     } else {
         error = 1;
     }
