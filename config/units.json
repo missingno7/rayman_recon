@@ -10083,7 +10083,7 @@
      ]
     },
     "DO_HYB_BBF2_LAS": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"

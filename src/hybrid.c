@@ -648,9 +648,10 @@ void DO_HYB_BBF2_LAS(obj_t *las_obj)
     s16 i;
     s16 nb_objs;
     s16 j;
-    /* Stack slots inferred from DOS 1:2ffeb..30014, not an order search. */
-    s16 las_y, las_x, las_w, cur_y;
-    s16 cur_h, las_h, cur_w, cur_x;
+    /* Stack slots inferred from DOS 1:2ffeb..30014 after separating
+     * the initial base load from the active-ID pointer advance. */
+    s16 cur_y, las_y, las_x, las_w;
+    s16 cur_x, cur_h, las_h, cur_w;
 
     if (owner->type == TYPE_HYB_BBF2_D ||
         owner->type == TYPE_HYB_BBF2_G)
@@ -691,7 +692,10 @@ void DO_HYB_BBF2_LAS(obj_t *las_obj)
     if (las_obj->speed_y == 0)
     {
         j = 0;
-        unk_obj = &level.objects[actobj.objects[j]];
+        /* DOS 1:300c0..300e2 loads the object base independently before
+         * adding the active-ID displacement. */
+        unk_obj = level.objects;
+        unk_obj += actobj.objects[j];
         while (j < actobj.num_active_objects)
         {
             if (unk_obj->type == TYPE_HYB_BBF2_LAS &&
@@ -963,17 +967,19 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
         /* 1:30a5b reads map_tile_t +2 (tile_type), not texture bits. */
         if (ToonJustGivePoing == 1 &&
             block_flags[mp.map[ray.ray_dist].tile_type].bits.solid &&
-            !(ray.main_etat == 3 && ray.sub_etat == 23))
+            ((ray.main_etat == 3 && ray.sub_etat == 23) == 0))
         {
             ToonJustGivePoing = 2;
             set_main_and_sub_etat(&ray, 3, 23);
             ray.speed_x = 0;
             ray.speed_y = 0;
         }
-        if (!(level.objects[flamme_gauche_id].is_active ||
-            (dp2_obj->main_etat == 0 && dp2_obj->sub_etat == 34) ||
-            (dp2_obj->main_etat == 2 && dp2_obj->sub_etat == 1) ||
-            (ray.main_etat == 3 && ray.sub_etat == 23) || ToonJustGivePoing != 2))
+        /* DOS 1:30a6d..30a88, 1:30ae3..30b04 and 1:30b08..30b23
+         * materialize these negated state predicates before testing them. */
+        if (level.objects[flamme_gauche_id].is_active == 0 &&
+            (((dp2_obj->main_etat == 0 && dp2_obj->sub_etat == 34) ||
+              (dp2_obj->main_etat == 2 && dp2_obj->sub_etat == 1)) == 0) &&
+            ((ray.main_etat == 3 && ray.sub_etat == 23) == 0) && ToonJustGivePoing == 2)
         {
             ToonJustGivePoing = 0;
             set_main_and_sub_etat(dp2_obj, 0, 34);
