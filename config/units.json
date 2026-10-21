@@ -14078,6 +14078,456 @@
    "segments": {
     "_BSS": "VERIFIED"
    }
+  },
+  "bss_50d18": {
+   "source": "src/bss/bss_50d18.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_540a9": {
+   "source": "src/bss/bss_540a9.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_540ac": {
+   "source": "src/bss/bss_540ac.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_543ac": {
+   "source": "src/bss/bss_543ac.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_546ac": {
+   "source": "src/bss/bss_546ac.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_549ac": {
+   "source": "src/bss/bss_549ac.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cac": {
+   "source": "src/bss/bss_54cac.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cb0": {
+   "source": "src/bss/bss_54cb0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cb4": {
+   "source": "src/bss/bss_54cb4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cb8": {
+   "source": "src/bss/bss_54cb8.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cbc": {
+   "source": "src/bss/bss_54cbc.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cc0": {
+   "source": "src/bss/bss_54cc0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cc4": {
+   "source": "src/bss/bss_54cc4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cc8": {
+   "source": "src/bss/bss_54cc8.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ccc": {
+   "source": "src/bss/bss_54ccc.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cd0": {
+   "source": "src/bss/bss_54cd0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cd4": {
+   "source": "src/bss/bss_54cd4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cd8": {
+   "source": "src/bss/bss_54cd8.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cd9": {
+   "source": "src/bss/bss_54cd9.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ce0": {
+   "source": "src/bss/bss_54ce0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ce2": {
+   "source": "src/bss/bss_54ce2.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ce4": {
+   "source": "src/bss/bss_54ce4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ce6": {
+   "source": "src/bss/bss_54ce6.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54ce8": {
+   "source": "src/bss/bss_54ce8.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cea": {
+   "source": "src/bss/bss_54cea.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cec": {
+   "source": "src/bss/bss_54cec.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cee": {
+   "source": "src/bss/bss_54cee.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cf0": {
+   "source": "src/bss/bss_54cf0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cf2": {
+   "source": "src/bss/bss_54cf2.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cf4": {
+   "source": "src/bss/bss_54cf4.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cf6": {
+   "source": "src/bss/bss_54cf6.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cfb": {
+   "source": "src/bss/bss_54cfb.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cfc": {
+   "source": "src/bss/bss_54cfc.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cfd": {
+   "source": "src/bss/bss_54cfd.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cfe": {
+   "source": "src/bss/bss_54cfe.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54cff": {
+   "source": "src/bss/bss_54cff.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d00": {
+   "source": "src/bss/bss_54d00.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d80": {
+   "source": "src/bss/bss_54d80.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d88": {
+   "source": "src/bss/bss_54d88.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d8c": {
+   "source": "src/bss/bss_54d8c.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d8e": {
+   "source": "src/bss/bss_54d8e.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d90": {
+   "source": "src/bss/bss_54d90.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d92": {
+   "source": "src/bss/bss_54d92.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d94": {
+   "source": "src/bss/bss_54d94.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d96": {
+   "source": "src/bss/bss_54d96.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d98": {
+   "source": "src/bss/bss_54d98.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d99": {
+   "source": "src/bss/bss_54d99.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d9a": {
+   "source": "src/bss/bss_54d9a.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d9b": {
+   "source": "src/bss/bss_54d9b.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_54d9c": {
+   "source": "src/bss/bss_54d9c.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
   }
  }
 }
