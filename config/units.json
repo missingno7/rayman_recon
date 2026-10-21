@@ -9287,7 +9287,7 @@
      ]
     },
     "DO_YESNOBIS": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9567,7 +9567,7 @@
      ]
     },
     "confirmation_msg": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

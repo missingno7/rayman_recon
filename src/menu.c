@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. INIT_GENERAL_CHOICE contains a DOS self-modifying trampoline (1:39ed1, OPEN). */
 #include "obj.h"
 #include "game.h"
@@ -3108,7 +3109,7 @@ u8 confirmation_msg(u8 which_message) {
             InitMenuPalette();
             CaptureVideo(display_buffer, 1);
             DO_FADE_OUT();
-            memset(display_buffer, 0, 64000);
+            fill(display_buffer);
             INIT_FADE_IN();
             memcpy(&rvb[0], &MenuPalette, 768);
             pAFFICHE_SCREEN = DISPLAY_FOND_MENU;
@@ -3129,7 +3130,7 @@ u8 confirmation_msg(u8 which_message) {
             InitMenuPalette();
             CaptureVideo(display_buffer, 1);
             DO_FADE_OUT();
-            memset(display_buffer, 0, 64000);
+            fill(display_buffer);
             INIT_FADE_IN();
             memcpy(&rvb[0], &MenuPalette, 768);
             pAFFICHE_SCREEN = DISPLAY_FOND_MENU;
