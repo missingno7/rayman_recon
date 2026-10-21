@@ -3656,7 +3656,7 @@
      ]
     },
     "DO_ROLL_EYES": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3664,7 +3664,7 @@
      ]
     },
     "DoKillingEyesPoingCollision": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
