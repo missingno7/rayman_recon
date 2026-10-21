@@ -96,7 +96,8 @@ def apply_renames(overlay, sources, renames, cfg_path):
     for p in sources:
         t = p.read_text(encoding="utf-8")
         for old, new in renames.items():
-            t = re.sub(r"(?<![\w@])%s(?![\w@])" % re.escape(old), new, t)
+            # also the Watcom-decorated spellings in assembly sources: _data and code_
+            t = re.sub(r"(?<![\w@])(_?)%s(_?)(?![\w@])" % re.escape(old), lambda m: m.group(1) + new + m.group(2), t)
         p.write_text(t, encoding="utf-8", newline="\n")
     dump_json(overlay, ov)
     dump_json(cfg_path, cfg_all)
