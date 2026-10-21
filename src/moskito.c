@@ -156,11 +156,10 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
     s16 unk_2;
     u8 curAct_tmp_1;
     s16 nb_obj;
-    s32 half_wid;
+    s32 midpoint_sum;
 
-    half_wid = scroll_start_x;
-    half_wid += scroll_end_x;
-    unk_2 = (half_wid + SCREEN_WIDTH) / 2;
+    midpoint_sum = scroll_start_x;
+    unk_2 = (scroll_end_x + midpoint_sum + SCREEN_WIDTH) / 2;
     while (currentBossActionIsOver)
     {
         curAct = moskitoActionSequences[bossEncounter][currentBossAction++];
@@ -182,31 +181,35 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                     while (curAct == 26 || curAct == 14)
                         curAct = moskitoActionSequences[bossEncounter][++currentBossAction];
                 }
+                /* DOS 1:4401d..4402b: advance a resumed side attack. */
+                else if (curAct == 20)
+                    currentBossAction++;
                 else if (curAct == 18 || curAct == 19 || (curAct == 21))
                 {
                     if (curAct == 21)
                         currentBossAction++;
 
-                    curAct = moskitoActionSequences[bossEncounter][++currentBossAction];
-                    while (curAct == 20 || curAct == 21)
+                    currentBossAction++;
+                    curAct = moskitoActionSequences[bossEncounter][currentBossAction];
+                    while (curAct == 21 || curAct == 20)
                     {
                         if (curAct == 21)
                             currentBossAction++;
 
-                        curAct = moskitoActionSequences[bossEncounter][++currentBossAction];
+                        currentBossAction++;
+                        curAct = moskitoActionSequences[bossEncounter][currentBossAction];
                     }
                 }
-                saveBossEncounter = 255;
                 currentBossActionIsOver = true;
+                saveBossEncounter = 255;
                 mstMustLeaveScreenToProceed = false;
                 break;
             case 12:
                 curAct_tmp_1 = moskitoActionSequences[bossEncounter][currentBossAction++];
                 currentBossAction = 0;
                 if (curAct_tmp_1 == bossEncounter)
-                    bossEncounter++;
-                else
-                    bossEncounter = curAct_tmp_1;
+                    curAct_tmp_1++;
+                bossEncounter = curAct_tmp_1;
 
                 currentBossActionIsOver = false;
                 break;
@@ -260,9 +263,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                     mst_obj->offset_by -= 16; // NOTE: changed in PC version
 
                 mst_obj->flags.flip_x = false;
-                bossXToReach =
-                mst_obj->x =
-                        scroll_start_x - (mst_obj->offset_bx - SCREEN_WIDTH / 2);
+                bossXToReach = scroll_start_x + SCREEN_WIDTH / 2 - mst_obj->offset_bx;
+                mst_obj->x = bossXToReach;
                 bossYToReach = floorLine - mst_obj->offset_by;
                 set_main_and_sub_etat(mst_obj, 2, 1);
                 mst_obj->gravity_value_2 = 2;
@@ -273,8 +275,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 currentBossActionIsOver = false;
                 break;
             case 17: // recover after hit
-                half_wid = SCREEN_WIDTH / 2; /* TODO: ??? */
-                bossXToReach = scroll_start_x + half_wid - mst_obj->offset_bx;
+                bossXToReach = scroll_start_x + SCREEN_WIDTH / 2 - mst_obj->offset_bx;
                 bossYToReach = floorLine - 230 + (s16)Bloc_lim_H1;
                 set_main_and_sub_etat(mst_obj, 0, 6);
                 skipToLabel(mst_obj, 2, true);
@@ -296,8 +297,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 break;
             case 26: // at top of screen (after recovering from hit), turn around
                 /* TODO: temp_s0_2? */
-                temp_s0_2 = mst_obj->main_etat == 0;
-                if (temp_s0_2 && mst_obj->sub_etat == 20)
+                if (mst_obj->main_etat == 0 && mst_obj->sub_etat == 20)
                 {
                     calc_obj_dir(mst_obj);
                     set_main_and_sub_etat(mst_obj, 0, 0); // NOTE: different from PS1 version? (sub etat 21 is invalid)
@@ -306,11 +306,12 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 }
                 else
                 {
-                    prev_flip_x = mst_obj->flags.flip_x;
+                    /* DOS 1:443d5..443f8: wide snapshot, distinct from the byte saved in case 13. */
+                    temp_s0_2 = mst_obj->flags.flip_x;
                     calc_obj_dir(mst_obj);
-                    if ((mst_obj->flags.flip_x) != prev_flip_x)
+                    if ((mst_obj->flags.flip_x) != temp_s0_2)
                     {
-                        mst_obj->flags.flip_x = prev_flip_x;
+                        mst_obj->flags.flip_x = temp_s0_2;
                         set_main_and_sub_etat(mst_obj, 0, 0); // NOTE: different from PS1 version? (sub etat 21 is invalid)
                         temp_s0_2 = vblToEOA(mst_obj, 1);
                         set_main_and_sub_etat(mst_obj, 0, 1);
@@ -332,16 +333,12 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                 mst_obj->display_prio = 3;
                 if (mstMustLeaveScreenToProceed == 0)
                 {
-                    /* TODO: this control flow is extra weird? */
                     currentBossActionIsOver = true;
+                    break;
                 }
-                else
-                {
-                    mstMustLeaveScreenToProceed = 0;
-                    curAct = 4; // fly up
-                    goto block_52;
-                }
-                break;
+                mstMustLeaveScreenToProceed = 0;
+                curAct = 4; // fly up
+                /* fall through */
             case 4: // fly straight up, out of the screen
             block_52:
                 bossXToReach = mst_obj->x;
@@ -419,9 +416,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                     mst_obj->x -= 48;
                     bossXToReach = scroll_end_x + SCREEN_WIDTH - mst_obj->offset_bx + 48;
                 }
-                bossYToReach =
-                mst_obj->y =
-                        floorLine - 230;
+                mst_obj->y = floorLine - 230;
+                bossYToReach = mst_obj->y;
                 alternateBossSpeedFactor = moskitoActionSequences[bossEncounter][currentBossAction++] << 10;
                 bossReachingAccuracyX = 0xFF;
                 bossReachingAccuracyY = 0xFF;
@@ -444,9 +440,8 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
                     mst_obj->x -= 96;
                     bossXToReach = scroll_end_x + SCREEN_WIDTH - mst_obj->offset_bx + 64;
                 }
-                bossYToReach =
-                mst_obj->y =
-                        floorLine - 180;
+                mst_obj->y = floorLine - 180;
+                bossYToReach = mst_obj->y;
                 alternateBossSpeedFactor = moskitoActionSequences[bossEncounter][currentBossAction++] << 10;
                 bossReachingAccuracyX = 0xFF;
                 bossReachingAccuracyY = 0xFF;
@@ -583,9 +578,10 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
 
 //54C9C
 void moskitoDropFruitOnRay(obj_t* obj) {
-    s16 x_1, x_2;
+    /* DOS frame: height +0, width +4, x_2 +8, cen_y +12, y_1 +16. */
+    s16 x_1, width;
     s16 y_1, cen_x, cen_y;
-    s16 distance, width, height;
+    s16 distance, x_2, height;
     x_1 = obj->offset_bx + obj->x;
     x_2 = x_1;
     switch (obj->sub_etat) {
@@ -897,3 +893,5 @@ void DoMstShakyFruitRaymanZDD(obj_t* obj) {
         obj->gravity_value_2 = 4;
     }
 }
+
+
