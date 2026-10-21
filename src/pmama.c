@@ -596,7 +596,8 @@ void retour_couteau(obj_t* obj) {
 
     cout_ind = find_couteau(obj);
     if (cout_ind != 0xFF && (cout_ind == 0 || (cout_ind != 0 && CouteauxInfos[cout_ind - 1].field3_0x6 == 0))) {
-        if (CouteauxInfos[cout_ind].field3_0x6 == 0) {
+        s16 remaining = CouteauxInfos[cout_ind].field3_0x6;
+        if (remaining == 0) {
             diff_x = 0;
             diff_y = 0;
             if (CouteauxInfos[cout_ind].field9_0x12 != 2) {
@@ -626,7 +627,7 @@ void retour_couteau(obj_t* obj) {
             }
         }
         else
-            CouteauxInfos[cout_ind].field3_0x6--;
+            CouteauxInfos[cout_ind].field3_0x6 = remaining - 1;
     }
 }
 
