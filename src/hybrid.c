@@ -8,12 +8,6 @@
 #ifndef FLG
 #define FLG(x) (1 << x)
 #endif
-#ifndef MAX_1
-#define MAX_1(x, y) ((x) > (y) ? (x) : (y))
-#endif
-#ifndef MIN_1
-#define MIN_1(x, y) ((x) < (y) ? (x) : (y))
-#endif
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif
@@ -542,8 +536,7 @@ void doBBF2command(obj_t *bbf2_obj)
         {
             s32 speed_step = sgn(((s16)unk_2) - bbf2_obj->speed_y) +
                 bbf2_obj->speed_y;
-            bbf2_obj->speed_y = MAX_1(-48, MIN_1(48,
-                speed_step));
+            bbf2_obj->speed_y = max32(-48, min32(48, speed_step));
         }
     }
 
@@ -1497,9 +1490,9 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
     }
 
     speed_y_step = sgn(diff_y - d2fly_obj->speed_y) + d2fly_obj->speed_y;
-    d2fly_obj->speed_y = MAX_1(-40, MIN_1(40, speed_y_step));
+    d2fly_obj->speed_y = max32(-40, min32(40, speed_y_step));
     speed_x_step = sgn(diff_x - d2fly_obj->speed_x) + d2fly_obj->speed_x;
-    d2fly_obj->speed_x = MAX_1(-40, MIN_1(40, speed_x_step));
+    d2fly_obj->speed_x = max32(-40, min32(40, speed_x_step));
 
     if (d2fly_obj->speed_x > 0 && !(d2fly_obj->flags.flip_x))
         d2fly_obj->flags.flip_x = 1;
