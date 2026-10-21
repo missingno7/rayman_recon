@@ -49,8 +49,10 @@ extern u8 ray_last_ground_btyp;
 extern u8 ray_on_poelle;
 extern s16 ray_wind_force;
 typedef s32 (*calcbloc_func_t)(s32, s32);
+/* Provisional DOS table-1 return width; see NOTES.md. Not yet a STRICT proof. */
+typedef s16 (*calcbloc1_func_t)(s32, s32);
 extern calcbloc_func_t calcblocrecal[64];
-extern calcbloc_func_t calcbloc1[64];
+extern calcbloc1_func_t calcbloc1[64];
 extern calcbloc_func_t calcbloc2[64];
 extern calcbloc_func_t calcblocfloor[64];
 extern u8 button_released;
@@ -462,144 +464,77 @@ u8 IS_ON_RESSORT_BLOC(obj_t* obj) {
     return result;
 }
 
-void CALC_MOV_ON_BLOC(obj_t* obj) {
-    s16 temp_s0_1;
-    s16 temp_s0_3;
-    s32 temp_s1_1;
-    s16 temp_s1_2;
-    u8 temp_v0_1;
-    s16 temp_v0_2;
-    s16 temp_v1_6;
-    s32 var_s1;
-    s16 var_v0_2;
-    s32 temp_a0;
-    s32 temp_s0_2;
-    s32 temp_s4;
-    s32 x_in_tile;
-    s32 var_s2_1;
-    s32 var_s2_2;
-    s32 y_in_tile;
-    s32 speed_x;
-    s32 var_v0;
-    u32 temp_v1_4;
-    u32 temp_v1_5;
-    u8 temp_v1_2;
-    u8 temp_v1_3;
-
-    /*var_s2_1 = saved_reg_s2;*/
-    temp_a0 = obj->type * 4;
+void CALC_MOV_ON_BLOC(obj_t *obj) {
+    /* INVENTED locals. DOS 1:15820..15b30; exact extent, still NEAR_MATCH. */
+    s16 speed_x, delta, full_x, full_y, x, y, height, next_y, next_x;
+    s32 dist;
+    u8 btyp, floor_type;
+    s16 floor_x, floor_y;
     if ((flags[obj->type].raw & flags2_1_check_tile_type) || obj->type == TYPE_23_RAYMAN) {
-        if ((flags[obj->type].raw & flags1_0x10_move_x) && obj->type != TYPE_23_RAYMAN) {
+        if ((flags[obj->type].raw & flags1_0x10_move_x) && obj->type != TYPE_23_RAYMAN)
             speed_x = instantSpeed(obj->speed_x);
-        } else {
-            speed_x = obj->speed_x;
-        }
-        x_in_tile = speed_x + ((obj->offset_bx + obj->x) & 0xF);
-        y_in_tile = (obj->offset_by + obj->y) & 0xF;
-        if ((obj->type == TYPE_23_RAYMAN) && (ray.param != -1)) {
-            if (speed_x > 0)
-            {
-                x_in_tile = 15;
-            }
-            else if (speed_x < 0)
-            {
-                x_in_tile = 0;
-            }
-            temp_v1_2 = obj->btypes[0];
-            var_s2_1 = calcbloc1[obj->btypes[0]](x_in_tile, y_in_tile);
-            y_in_tile = var_s2_1;
-        }
-        else
-        {
-            var_s2_1 = calcbloc1[obj->btypes[0]](x_in_tile, y_in_tile);
-
-        }
-        var_s1 = var_s2_1 - y_in_tile;
-        x_in_tile = speed_x + (obj->x + obj->offset_bx);
-        temp_s1_1 = var_s1 + (obj->y + obj->offset_by);
-        temp_v0_1 = BTYP(x_in_tile >> 4, temp_s1_1 >> 4);
-        x_in_tile = x_in_tile & 0xF;
-        y_in_tile = temp_s1_1 & 0xF;
-        switch (temp_v0_1)
-        {
-            case 0:
-            case 1:
-            case 8:
-            case 10:
-            case 24:
-            case 25:
-                temp_s1_2 = speed_x + (obj->x + obj->offset_bx);
-                temp_s0_3 = var_s1 + (obj->y + obj->offset_by) + 16;
-                temp_v0_2 = calcblocfloor[BTYP(temp_s1_2 >> 4, temp_s0_3 >> 4)](temp_s1_2 & 0xF, temp_s0_3 | ~0xF) - (temp_s0_3 | ~0xF);
-                if (temp_v0_2 <= 2)
-                    var_s2_1 = y_in_tile + temp_v0_2;
-                else
-                {
-                    case 12:
-                        var_s2_1 = y_in_tile;
-                }
-                break;
-            case 2:
-            case 18:
-                var_s2_1 = 15 - x_in_tile;
-                break;
-            case 3:
-            case 19:
-                var_s2_1 = x_in_tile;
-                break;
-            case 4:
-            case 20:
-                var_s2_1 = 15 - (x_in_tile >> 1);
-                break;
-            case 5:
-            case 21:
-                var_s2_1 = 7 - (x_in_tile >> 1);
-                break;
-            case 6:
-            case 22:
-                var_s2_1 = ((x_in_tile) >> 1);
-                break;
-            case 7:
-            case 23:
-                var_s2_1 = ((x_in_tile) >> 1) + 8;
-                break;
-            case 9:
-            case 14:
-            case 15:
-            case 30:
-                temp_v1_5 = BTYP((obj->x + obj->offset_bx + speed_x) >> 4, (obj->y + obj->offset_by + var_s1 - 16) >> 4);
-                var_s2_2 = calcbloc2[temp_v1_5](x_in_tile, y_in_tile);
-                var_s2_1 = (var_s2_2 - 16);
-                var_s2_1 = y_in_tile + var_s2_1;
-                break;
+        else speed_x = obj->speed_x;
+        full_x = obj->offset_bx + (u16)obj->x;
+        full_y = obj->offset_by + (u16)obj->y;
+        x = (full_x & 15) + speed_x;
+        y = full_y & 15;
+        if (obj->type == TYPE_23_RAYMAN && ray.param != -1) {
+            if (speed_x > 0) x = 15;
+            else if (speed_x < 0) x = 0;
+            height = calcbloc1[obj->btypes[0]](x, y);
+            y = height;
+        } else height = calcbloc1[obj->btypes[0]](x, y);
+        delta = height - y;
+        x = full_x + speed_x;
+        next_y = full_y + delta;
+        btyp = BTYP(x >> 4, next_y >> 4);
+        x &= 15;
+        y = next_y & 15;
+        switch (btyp) {
+        case 9: case 14: case 15: case 30:
+            height = calcbloc2[BTYP((full_x + speed_x) >> 4, (full_y + delta - 16) >> 4)](x, y) + (y - 16);
+            break;
+        case 2: case 18: height = 15 - x; break;
+        case 3: case 19: height = x; break;
+        case 4: case 20: height = 15 - (x >> 1); break;
+        case 5: case 21: height = 7 - (x >> 1); break;
+        case 6: case 22: height = x >> 1; break;
+        case 7: case 23: height = (x >> 1) + 8; break;
+        case 0:
+        default:
+            next_x = full_x + speed_x;
+            next_y = full_y + delta + 16;
+            floor_x = next_x & 15;
+            floor_y = (next_y & 15) - 16;
+            floor_type = BTYP(next_x >> 4, next_y >> 4);
+            dist = calcblocfloor[floor_type](floor_x, floor_y) - floor_y;
+            if ((s16)dist > 2)
+                height = y;
+            else
+                height = y + dist;
+            break;
+        case 12:
+            height = y;
+            break;
         }
         if (!IS_ON_RESSORT_BLOC(obj)) {
-            if (obj->type == TYPE_23_RAYMAN) {
-                if ((ray.follow_id == -1 && ray.main_etat != 2) && Abs(obj->speed_y) > 2 && Abs(obj->speed_y) < 16 &&
-                    !(block_flags[temp_v0_1] & 2))
-                {
+            switch (obj->type) {
+            case TYPE_23_RAYMAN:
+                if ((ray.follow_id == -1 && !(ray.main_etat == 2)) && Abs(obj->speed_y) > 2 && Abs(obj->speed_y) < 16 && !(block_flags[btyp] & 2)) {
                     s16 saved_speed_y = obj->speed_y;
                     set_main_and_sub_etat(&ray, 0, 0);
                     button_released = 1;
                     ray_jump();
                     obj->speed_y = saved_speed_y;
+                } else if (!(ray.main_etat == 3 && ray.sub_etat == 32) && !(ray.main_etat == 3 && ray.sub_etat == 22)) {
+                    obj->speed_y = delta + height - y;
+                    TEST_FIN_BLOC(obj);
                 }
-                else
-                {
-                    if (
-                            ((ray.main_etat != 3) || (((ray.sub_etat != 32)) &&
-//                                                     (ray.sub_etat != 0x26) && //NOTE: this subetat only in PS1
-                                                     ((ray.sub_etat != 22))))
-                            )
-                    {
-                        obj->speed_y = (var_s1 + var_s2_1) - y_in_tile;
-                        TEST_FIN_BLOC(obj);
-                    }
-                }
-            }
-            else {
-                obj->speed_y = (var_s1 + var_s2_1) - y_in_tile;
+                break;
+            default:
+                obj->speed_y = delta + height - y;
                 TEST_FIN_BLOC(obj);
+                break;
             }
         }
     }
@@ -645,11 +580,14 @@ s32 blocs1_left2_30(s16 x, s32 y) {
     return (x >> 1) + 8;
 }
 
-s32 blocs3_empty(s32 x, s32 y) {
-    return y;
+/* DOS 1:15bf0 is shared by both names. The forward wrapper folds naturally
+ * into the following implementation; both public names remain in the object. */
+s32 blocs3_empty(s32 x, s32 y);
+s32 blocs1_liane(s32 x, s32 y) {
+    return blocs3_empty(x, y);
 }
 
-s32 blocs1_liane(s32 x, s32 y) {
+s32 blocs3_empty(s32 x, s32 y) {
     return y;
 }
 
