@@ -1,5 +1,6 @@
 /* Candidate for obj1:50350..50ad0. The switch table begins the _TEXT extent. */
 #include "effect_types.h"
+#include "inline_helpers.h"
 #include <string.h>
 
 extern effect3d_t *dword_E4DA8;
@@ -20,27 +21,13 @@ void effect_activate(u8 mode, s16 speed)
 
     s32 magnitude;
     s32 step;
-    s32 clamp;
-    s32 limit;
     effect_segment_t *segment;
     u8 *matrix_bytes;
 
     matrix_bytes = (u8 *)state->transformed;
     effect_reset_geometry();
-    if (speed >= 0) {
-        clamp = 1;
-        if (speed > clamp) clamp = speed;
-        state->speed = -clamp;
-    } else {
-        clamp = 1;
-        if (-speed > clamp) clamp = -speed;
-        state->speed = clamp;
-    }
-    clamp = 1;
-    if (mode > clamp) clamp = mode;
-    limit = 15;
-    if (limit < clamp) clamp = limit;
-    state->mode = clamp;
+    state->speed = speed >= 0 ? -max32(1, speed) : max32(1, -speed);
+    state->mode = (u8)min32(max32(1, mode), 15);
 
     *(u32 *)(matrix_bytes + 0x14) = 0;
     *(u32 *)(matrix_bytes + 0x54) = 0;
