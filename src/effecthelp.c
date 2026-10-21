@@ -1,4 +1,4 @@
-/* Worker candidate for the unnamed DOS effect block 1:15e60..1:16a20.
+/* Worker candidate for the unnamed DOS effect block 1:15e60..1:16a14.
  * All semantic names here are INVENTED; the oracle controls every address and byte. */
 #include "rtypes.h"
 #include "inline_helpers.h"
@@ -78,8 +78,8 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     u8 row;
     u8 column;
     u16 cell;
-    u8 width_step;
     u8 height_step;
+    u8 width_step;
     u16 x;
     u16 y;
 
@@ -87,10 +87,14 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     effect_reset_geometry();
     state->frame = 0;
     state->frame_limit = max32(1, frame_limit);
-    if (speed >= 0) {
-        state->speed = max32(1, speed);
-    } else {
-        state->speed = -max32(1, -speed);
+    /* DOS 1:15e9a..15ec5 merges both branches before the signed-word store. */
+    {
+        s16 adjusted_speed;
+        if (speed >= 0)
+            adjusted_speed = max32(1, speed);
+        else
+            adjusted_speed = -max32(1, -speed);
+        state->speed = adjusted_speed;
     }
     state->radius = max32(40, min32(radius, 70));
     latitude_step = 3.141592654 / state->rows;
@@ -113,7 +117,9 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     item = state->items;
     for (cell = 0; cell < state->count; cell++) {
         s32 vertex;
-        vertex = cell + cell / state->columns;
+        /* DOS 1:160ac..160bf: quotient first, then the cell index. */
+        vertex = cell / state->columns;
+        vertex += cell;
         item->point[0] = vertex;
         item->point[1] = vertex + 1;
         item->point[2] = vertex + state->columns + 2;
@@ -125,7 +131,7 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     item = state->items;
     for (row = 0; row < state->rows; row++) {
         for (column = 0; column < state->columns; column++) {
-            x = column * width_step;
+            x = width_step * column;
             y = row * height_step;
             if (effect5_width <= 256)
                 item->screen = state->screen_a;
@@ -224,7 +230,7 @@ s16 effect_helper_16404(void)
     s32 denominator;
     s32 x, y, z;
     s32 sine_x, cosine_x, sine_y, cosine_y;
-    s16 cosine, sine;
+    s16 sine, cosine;
     u8 width_step, height_step;
     u8 row, column;
 
@@ -306,11 +312,16 @@ s16 effect_helper_16404(void)
         step = state->velocity_x / 4;
         magnitude = state->speed;
         if (magnitude < 0) magnitude = -magnitude;
-        state->center_x = step * magnitude + state->center_x;
+        /* DOS 1:16713..1676f keeps the complete center sums in s32. */
+        step *= magnitude;
+        step = state->center_x + step;
+        state->center_x = step;
         step = state->velocity_y / 4;
         magnitude = state->speed;
         if (magnitude < 0) magnitude = -magnitude;
-        state->center_y = step * magnitude + state->center_y;
+        step *= magnitude;
+        step = state->center_y + step;
+        state->center_y = step;
         sinus_cosinus(state->angle_x, &sine, &cosine);
         sine_x = sine;
         cosine_x = cosine;
@@ -320,8 +331,8 @@ s16 effect_helper_16404(void)
         for (row = 0; row <= state->rows; row++) {
             for (column = 0; column <= state->columns; column++) {
                 y = sine_y * point->x + cosine_y * point->y;
-                x = (point->x * cosine_y - point->y * sine_y) >> 9;
                 z = -point->z;
+                x = (point->x * cosine_y - point->y * sine_y) >> 9;
                 projected_x = sine_x * z + cosine_x * x;
                 denominator = z * cosine_x - x * sine_x;
                 denominator >>= 9;
