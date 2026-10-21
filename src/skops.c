@@ -34,7 +34,7 @@ extern u16 NbBande;
 extern u16 NbSprite;
 extern u16 Num_Fond;
 extern u16 Val_Div_Scroll_Y;
-extern s16 Val_Add_Scroll_Y;
+extern u16 Val_Add_Scroll_Y; /* DOS 1:67d1c..67d25 zero-extends this word. */
 extern s16 PosLave_Y;
 extern s32 sko_ecran_tremble;
 extern u8 horloge[25];
