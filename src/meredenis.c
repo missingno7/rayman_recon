@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /*
  * Viking Mama boss (GOG v1.21 object 1:40b60-1:42d30). File name invented (Rayverse meredenis.c).
  * Names: Rayverse/Android. Worker results and remaining differences: NOTES.md.
@@ -57,8 +58,8 @@ void findMereDenisWeapon(void) {
 u8 mereDenisCanAttak(obj_t *obj) {
     if (!scrollLocked) {
         scrollLocked =
-            xmap >= bossScrollStartX - h_scroll_speed && xmap <= bossScrollEndX + h_scroll_speed &&
-            ymap >= bossScrollStartY - v_scroll_speed && ymap <= bossScrollEndY + v_scroll_speed;
+            inrange(xmap, bossScrollStartX - h_scroll_speed, bossScrollEndX + h_scroll_speed) &&
+            inrange(ymap, bossScrollStartY - v_scroll_speed, bossScrollEndY + v_scroll_speed);
         if (scrollLocked) {
             scroll_end_x = xmap;
             scroll_start_x = xmap;
