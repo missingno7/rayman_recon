@@ -774,11 +774,7 @@ void start_fade_in(s16 speed, rgb_palette_t *palette) {
     fade_speed = speed;
     fade = 1; // fade in
     clear_palette((rgb_palette_t*)palette_bytes);
-    frame_palette_index(0x3c8, first_color);
-    frame_disable_irq();
-    frame_palette_stream(0x3c9, palette_bytes + first_color * 3,
-                         (last_color - first_color + 1) * 3);
-    frame_enable_irq();
+    palette_output(first_color, last_color, palette_bytes);
 }
 
 void start_fade_out(s16 speed, rgb_palette_t *palette) {
@@ -788,14 +784,7 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
     fade_speed = speed;
 }
 
-#define WRITE_PALETTE_BYTES(palette_ptr, color_count) \
-    do { \
-        u8 *palette_data = (u8*)(palette_ptr); \
-        frame_palette_index(0x3c8, 0); \
-        frame_disable_irq(); \
-        frame_palette_stream(0x3c9, palette_data, (color_count) * 3); \
-        frame_enable_irq(); \
-    } while (0)
+#define WRITE_PALETTE_BYTES(p,n) palette_output(0, (n)-1, p)
 
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
     if (nb_fade > 0) {
