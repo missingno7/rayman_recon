@@ -10561,7 +10561,7 @@
      ]
     },
     "DISPLAY_FIXE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10620,7 +10620,7 @@
      ]
     },
     "display_pix_gerbes": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10628,7 +10628,7 @@
      ]
     },
     "DISPLAY_BLACKBOX": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10657,7 +10657,7 @@
      ]
     },
     "display_box_text": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10689,7 +10689,7 @@
      ]
     },
     "DISPLAY_TEXT_FEE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10726,7 +10726,7 @@
      ]
     },
     "display_time": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -10759,7 +10759,7 @@
      ]
     },
     "CALCUL_DEFORMATION": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

@@ -7812,6 +7812,16 @@
     "addr": "1:70872",
     "name": "RAYVERSE",
     "evidence": "CalcTab call at 1:13f93; trigonometric dispatcher mode zero at 1:70883, versus cos mode two at 1:708aa. Standard C math function also in Rayverse CalcTab."
+   },
+   "draw_blackbox": {
+    "addr": "1:03125",
+    "name": "RAYVERSE",
+    "evidence": "Android symbol exists; DOS DISPLAY_BLACKBOX calls, ABI docs/reference/lowlevel_abi.h"
+   },
+   "draw_borderbox": {
+    "addr": "1:031ed",
+    "name": "RAYVERSE",
+    "evidence": "Android symbol exists; DOS DISPLAY_BLACKBOX calls, ABI docs/reference/lowlevel_abi.h"
    }
   },
   "data": {

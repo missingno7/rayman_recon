@@ -1,4 +1,4 @@
-/* 1:06f80..1:0cee0: action.c, affiche.c, araignee.c, pcmain.c (init, main loops, display, spider); four original objects by DOS boundaries (build/workers/tu_action/source_objects.md) - kept in one file until split. Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_action. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker sfin_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -23,6 +23,8 @@ void display_text(const char *text, s16 x, s16 y, u8 font_size, u8 color);
 #ifndef ashl16
 #define ashl16(v, b) ((v) << (b))
 #endif
+
+#define ABS_1(x) ((x) < 0 ? -(x) : (x))
 
 #define BLOCK_FULLY_SOLID 0
 #define BLOCK_SIZE 16
@@ -238,7 +240,7 @@ extern draw_func_t *DrawSpriteFlipNoClipNormalEtX;
 extern draw_func_t *DrawSpriteColorNormalEtX;
 extern fplot_func_t *fplotNormalETX;
 s32 calc_let_Width(u8 font_size, s32 num_let);
-s32 deter_num_let(u8 c, const char* next_chars);
+u32 deter_num_let(u8 c, const char* next_chars);
 s16 calc_largmax_text(const char* text, s16 char_index, s16 space_width,
                       s16 char_spacing, u8 font_size);
 s16 get_proj_x(s16 scale, s16 x);
@@ -250,10 +252,19 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
 void CALC_MOV_ON_BLOC(obj_t* obj);
 void DrawBlackBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width);
 void DrawBorderBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width, u16 colors);
-void DrawFondBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width, u8 fond_type);
+void DrawFondBoxNormal(u8* buffer, s32 x, s32 y, s32 height, s32 width, s32 fond_type);
+/* DOS asm 1:04aef, 04b2c, 04bbb; ABI measured in docs/reference/lowlevel_abi.h. */
+#pragma aux DrawBlackBoxNormal parm [edi] [eax] [ebx] [ecx] [edx] modify exact []
+#pragma aux DrawFondBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify exact [eax ebx ecx esi edi]
+#pragma aux DrawBorderBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify exact [eax ebx ecx edx edi]
+void draw_blackbox(u8 *buffer, s32 x, s32 y, s32 height, s32 width);
+#pragma aux draw_blackbox parm [edi] [esi] [edx] [ebx] [ecx] modify exact []
+void draw_borderbox(u8 *buffer, s32 x, s32 y, s32 height, s32 width);
+#pragma aux draw_borderbox parm [edi] [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]
 /* Assembly ABI: DOS 1:04ac1..04aee; caller DISPLAY_POINT 1:09864. */
 void DrawWldPointPlan2Normal(u8* buffer, s32 x, s32 y);
 #pragma aux DrawWldPointPlan2Normal parm [edi] [eax] [ebx] modify exact [ebx edi]
+void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
 void InitTextMode(void);
 void AllocVariablesAutorisee(void);
@@ -306,8 +317,8 @@ void get_luciole(void);
 void update_display_map(big_map_t* map);
 void DO_DARK2_AFFICHE_TEXT(void);
 void DISPLAY_FIXE_CB(obj_t* obj);
-void ClearBorder(s32 h1, s32 h2, s32 w1, s32 w2);
-void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, s16 font_size, u8 is_fond);
+void ClearBorder(s16 h1, s16 h2, s16 w1, s16 w2);
+void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_fond);
 void DISPLAY_DEFORMATION(obj_t* obj, s16 a2, s16 a3, s16 a4);
 s32 cosinus(s32 x);
 void SET_X_SPEED(obj_t* obj);
@@ -354,9 +365,9 @@ void DISPLAY_PTS_TO(s16 x1, s16 y1, s16 x2, s16 y2, s16 percentage);
 void DISPLAY_PTS_TO_PLAN2(s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s16 percent);
 void display_flocons_behind(void);
 void display_flocons_before(void);
-void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, s16 font_size, u8 is_fond);
+void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_fond);
 void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color, s16 rotation, s16 enx, s16 eny);
-void display_text_sin(const char* text, s16 x, s16 y, u8 font_size, s8 color, u8 a6);
+void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u8 color);
 void display_box_text(display_item_t* box);
 void CLRSCR(void);
 void display_grp_stars(void);
@@ -524,72 +535,56 @@ void DISPLAY_CLING(void) {
     }
 }
 
+u8 sprite_of_ref(obj_t *obj, u8 reference);
+
 void display_bar_boss(obj_t *boss_obj)
 {
+    s32 x_offset;
+    s32 y_offset;
     u8 hp;
-    obj_t *poing_obj;
     u8 init_hp;
-    s32 unk_1;
-    s32 unk_2;
-    s32 unk_3;
-    s32 disp_mode;
-
-    if (scrollLocked)
-    {
+    s32 pixel_width;
+    s32 lost_width;
+    s32 blank_width;
+    u8 icon;
+    if (GameModeVideo == MODE_NORMAL) {
+        x_offset = 4;
+        y_offset = 0;
+    } else {
+        x_offset = 8;
+        y_offset = P486 == 1 ? 8 : 0;
+    }
+    if (scrollLocked) {
         hp = boss_obj->hit_points;
-        if (hp != 0)
-        {
-            poing_obj = &level.objects[poing_obj_id];
+        if (hp != 0) {
             init_hp = boss_obj->init_hit_points;
-            unk_1 = 6;
-            unk_2 = (29 - init_hp) * unk_1;
-            unk_3 = 20 - unk_2;
-            disp_mode = 1;
-            display_sprite(poing_obj, 61, unk_3 - (init_hp - hp) * unk_1, 217, disp_mode);
-            display_sprite(poing_obj, 60, 20 - unk_2 + 1, 216, disp_mode);
-            switch (boss_obj->type)
-            {
+            pixel_width = 6;
+            lost_width = (init_hp - hp) * pixel_width;
+            blank_width = (29 - init_hp) * pixel_width;
+            display_sprite(poing_obj, 61,
+                Bloc_lim_W1 - 4 + x_offset + 20 - lost_width - blank_width,
+                Bloc_lim_H2 - 19 - y_offset, 1);
+            display_sprite(poing_obj, 60,
+                Bloc_lim_W1 - 4 + x_offset + 21 - blank_width,
+                Bloc_lim_H2 - 20 - y_offset, 1);
+            switch (boss_obj->type) {
             case TYPE_MOSKITO:
-                display_sprite(poing_obj, 62, 0, 206, disp_mode);
-                break;
-            case TYPE_MOSKITO2:
-                display_sprite(poing_obj, 62, 0, 206, disp_mode);
-                break;
+            case TYPE_MOSKITO2: icon = 44; break;
             case TYPE_BB1:
-                display_sprite(poing_obj, 106, 0, 206, disp_mode);
-                break;
-            case TYPE_BB12:
-                display_sprite(poing_obj, 106, 0, 206, disp_mode);
-                break;
+            case TYPE_BB12: icon = 108; break;
             case TYPE_SPACE_MAMA:
-                display_sprite(poing_obj, 108, 0, 206, disp_mode);
-                break;
-            case TYPE_SPACE_MAMA2:
-                display_sprite(poing_obj, 108, 0, 206, disp_mode);
-                break;
-            case TYPE_MAMA_PIRATE:
-                display_sprite(poing_obj, 111, 0, 206, disp_mode);
-                break;
-            case TYPE_SCORPION:
-                display_sprite(poing_obj, 107, 0, 206, disp_mode);
-                break;
+            case TYPE_SPACE_MAMA2: icon = 110; break;
+            case TYPE_MAMA_PIRATE: icon = 113; break;
+            case TYPE_SCORPION: icon = 109; break;
             case TYPE_HYB_BBF2_D:
-                display_sprite(poing_obj, 110, 0, 206, disp_mode);
-                break;
             case TYPE_HYBRIDE_STOSKO:
-                display_sprite(poing_obj, 110, 0, 206, disp_mode);
-                break;
             case TYPE_HYBRIDE_MOSAMS:
-                display_sprite(poing_obj, 110, 0, 206, disp_mode);
-                break;
-            case TYPE_DARK:
-                display_sprite(poing_obj, 110, 0, 206, disp_mode);
-                break;
+            case TYPE_DARK: icon = 112; break;
             case TYPE_SAXO:
-            case TYPE_SAXO2:
-                display_sprite(poing_obj, 109, 0, 206, disp_mode);
-                break;
+            case TYPE_SAXO2: icon = 111; break;
             }
+            display_sprite(poing_obj, sprite_of_ref(poing_obj, icon),
+                Bloc_lim_W1 + x_offset - 4, Bloc_lim_H2 - 30 - y_offset, 1);
         }
     }
 }
@@ -608,7 +603,7 @@ void DISPLAY_FIXE(s32 time) {
     s16 height;
     s16 width;
     obj_t* obj;
-    s32 draw_y;
+    s16 draw_y;
 
     if (ray_mode == MODE_5_CASSE_BRIQUE) {
         if (cb_ball_obj_id != -1)
@@ -631,27 +626,27 @@ void DISPLAY_FIXE(s32 time) {
             width = 77;
             if (GameModeVideo == MODE_NORMAL && (Bloc_lim_W1 > 16 || Bloc_lim_H1 > 5)) {
                 if (id_Cling_Old) {
-                    height = 45;
                     width = 85;
+                    height = 45;
+                    id_Cling_Old = 0;
                 }
-                if (Bloc_lim_H1 - 5 >= height)
-                    DISPLAY_BLACKBOX(13, 0, width, height, -1, 0);
-                else {
+                if (Bloc_lim_H1 - 5 < height) {
                     DISPLAY_BLACKBOX(13, 0, width, Bloc_lim_H1, -1, 0);
+                    height += 5;
                     DISPLAY_BLACKBOX(13, Bloc_lim_H1, Bloc_lim_W1 - 15,
-                                     height + 5 - Bloc_lim_H1, -1, 0);
-                }
-                if (Bloc_lim_H1 - 5 >= 23)
-                    DISPLAY_BLACKBOX(241, 4, 68, 23, -1, 0);
-                else {
+                                     height - Bloc_lim_H1, -1, 0);
+                } else
+                    DISPLAY_BLACKBOX(13, 0, width, height, -1, 0);
+                if (Bloc_lim_H1 - 5 < 23) {
                     DISPLAY_BLACKBOX(241, 4, 68, Bloc_lim_H1 - 4, -1, 0);
                     DISPLAY_BLACKBOX(Bloc_lim_W2, Bloc_lim_H1, 312 - Bloc_lim_W2,
                                      28 - Bloc_lim_H1, -1, 0);
-                }
+                } else
+                    DISPLAY_BLACKBOX(241, 4, 68, 23, -1, 0);
             }
             obj = level.objects + sbar_obj_id;
             if (time == -2) {
-                draw_y = (GameModeVideo == MODE_NORMAL && P486 == 1) ? 16 : 0;
+                draw_y = (GameModeVideo == MODE_X && P486 == 1) ? 16 : 0;
                 display_sprite_NoClip(obj, 27, 16, draw_y + 5, 1);
                 display_sprite_NoClip(obj, 56, 244, draw_y + 5, 1);
                 display_sprite_NoClip(obj, 28 + status_bar.lives_digits[0], 55, draw_y + 5, 1);
@@ -712,10 +707,11 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     sprite_t* sprite;
     s16 x;
     s16 y;
-    s32 proj_x;
-    s32 proj_y;
+    s16 proj_x;
+    s16 proj_y;
     s32 proj_height;
-    vec2b_t proj_size;
+    u32 packed_size;
+    anim_layer_t *current;
     u8* image_data;
     anim_t* anim = &obj->animations[obj->anim_index];
     anim_layer_t* layer = &anim->layers[(anim->layers_per_frame & 0x3FFF) * obj->anim_frame];
@@ -729,17 +725,17 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     }
     i = begin;
     for (; i <= end; i++) {
-        sprite = &obj->sprites[layer[i].sprite_index];
-        y = layer[i].y + obj->screen_y;
+        current = layer + i;
+        y = current->y + obj->screen_y;
+        sprite = &obj->sprites[current->sprite_index];
         if (sprite->id != 0) {
-            x = layer[i].x + obj->screen_x;
+            x = current->x + obj->screen_x;
             proj_y = get_proj_y(obj->scale, y);
             proj_x = get_proj_x(obj->scale, x);
             proj_height = get_proj_dist(obj->scale, sprite->outer_height);
-            proj_size.width = (u8)get_proj_dist(obj->scale, sprite->outer_width);
-            proj_size.height = (u8)proj_height;
+            packed_size = (u16)((proj_height << 8) + get_proj_dist(obj->scale, sprite->outer_width));
             image_data = obj->img_buffer + sprite->offset_in_atlas;
-            DrawSpriteNormalEtX(proj_x, sprite->color, proj_y, (u16)((proj_size.height << 8) + proj_size.width),
+            DrawSpriteNormalEtX(proj_x, sprite->color_bits.palette_index, proj_y, packed_size,
                                 draw_buf, image_data);
         }
     }
@@ -760,25 +756,20 @@ void DISPLAY_ALL_OBJECTS(void) {
     s32 divisor;
 
     for (current_display_prio = 7; current_display_prio >= 1; --current_display_prio) {
-        for (i = 0; i < actobj.num_active_objects; ++i) {
-            obj = level.objects + actobj.objects[i];
+        for (i = 0, obj = level.objects + actobj.objects[0]; i < actobj.num_active_objects;
+             ++i, obj = level.objects + actobj.objects[i]) {
             if (current_display_prio == 1 &&
                 (flags[obj->type].flags0 & 0x80) != 0)
                 display_bar_boss(obj);
             if (obj->display_prio != current_display_prio)
                 continue;
-            if (obj->type == 0x9D && num_world == 5 && num_level == 8 && obj->x >= 300) {
-                display2(obj);
-                continue;
-            }
-            if (obj->type == 0x51) {
+            if (obj->type == 0x9D && num_world == 5 && num_level == 8) {
+                if (obj->x >= 300) display2(obj);
+            } else if (obj->type == 0x51) {
                 DISPLAY_CYMBALE(obj, draw_buffer, 1);
             } else if (obj->type == 0xFE) {
-                hp = (s8)obj->hit_points;
-                angle = pente[hp < 0 ? -hp : hp];
-                if (hp > 0)
-                    angle = -angle;
-                angle = (angle << 9) / 360;
+                angle = ((pente[abs((s8)obj->hit_points)] << 9) *
+                    -((s8)obj->hit_points == 0 ? 0 : ((s8)obj->hit_points > 0 ? 1 : -1))) / 360;
                 DISPLAY_DEFORMATION(obj, (s16)angle, 0x1000, 0x1000);
             } else if (obj->type == 0xFC || obj->type == 0xFB || obj->type == 0xAD) {
                 get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);
@@ -802,13 +793,13 @@ void DISPLAY_ALL_OBJECTS(void) {
         } else if (current_display_prio == 2 && nb_cymbal_in_map != 0) {
             for (j = 0; j < nb_cymbal_in_map; ++j) {
                 obj = level.objects + cymbal_obj_id[j];
-                if (obj->id != 0)
+                if (obj->is_active != 0)
                     DISPLAY_CYMBALE(obj, draw_buffer, 0);
             }
         }
     }
-    for (i = 0; i < actobj.num_active_objects; ++i) {
-        obj = level.objects + actobj.objects[i];
+    for (i = 0, obj = level.objects + actobj.objects[0]; i < actobj.num_active_objects;
+         ++i, obj = level.objects + actobj.objects[i]) {
         if (obj->display_prio == 0 && obj->type == 0xF5) {
             display2(obj);
             break;
@@ -816,92 +807,113 @@ void DISPLAY_ALL_OBJECTS(void) {
     }
 }
 
+/* DOS drawing targets preserve ECX/EDX/EDI; X variants clobber EAX/EBX.
+   docs/reference/lowlevel_abi.h 1:02b3d..0300f, 05640..0595c. */
+typedef void (snow_draw_t)(u8 *buffer, s32 x, s32 y);
+#pragma aux snow_draw_t parm [edi] [eax] [ebx] modify exact [eax ebx]
+extern snow_draw_t *drawflocon1NormalETX;
+extern snow_draw_t *drawflocon2NormalETX;
+extern snow_draw_t *drawflocon3NormalETX;
+extern snow_draw_t *drawflocon4NormalETX;
+extern snow_draw_t *drawflocon5NormalETX;
+extern snow_draw_t *drawflocon6NormalETX;
+extern snow_draw_t *drawflocon7NormalETX;
+extern snow_draw_t *drawpluie4NormalETX;
+extern snow_draw_t *drawpluie5NormalETX;
+extern snow_draw_t *drawpluie6NormalETX;
+extern snow_draw_t *drawpluie7NormalETX;
 void display_flocons_behind(void) {
-    s16 previous_center_x;
     s16 previous_center_y;
-    s16 layer;
-    s16 group;
-    s16 depth;
-    s16 index;
+    s16 previous_center_x;
+    s16 depth = 32;
+    s16 group = 3;
+    s16 multiplier;
+    s16 center_x;
+    s16 center_y;
     s16 end_index;
-    s32 multiplier;
-    s32 center_x;
-    s32 center_y;
-    flocon_t* entry;
-    void (*draw_func)(s16, s16);
-
-    previous_center_x = PROJ_CENTER_X;
+    s16 index;
+    u16 size_index = 4;
+    s16 layer = 6;
+    flocon_t *entry;
+    snow_draw_t *draw_func;
     previous_center_y = PROJ_CENTER_Y;
+    previous_center_x = PROJ_CENTER_X;
     set_proj_center(160, 170);
-    layer = 6;
-    group = 3;
-    depth = 32;
-    while (depth < 192) {
+    do {
+        multiplier = 0x10000 / (depth + 256);
+        center_x = PROJ_CENTER_X - ((multiplier * PROJ_CENTER_X) >> 8);
+        center_y = PROJ_CENTER_Y - ((multiplier * PROJ_CENTER_Y) >> 8);
         --layer;
-        multiplier = 0x10000 / (depth + 256);
-        center_x = PROJ_CENTER_X - multiplier * PROJ_CENTER_X / 256;
-        center_y = PROJ_CENTER_Y - multiplier * PROJ_CENTER_Y / 256;
-        index = floc_ind[group];
-        entry = flocon_tab + index;
-        end_index = index + nb_floc[group];
+        --size_index;
+        entry = flocon_tab + floc_ind[group];
+        end_index = nb_floc[group] + floc_ind[group];
         if (num_world != 1) {
-            if (layer == 5) draw_func = draw_flocon5_Normal;
-            else if (layer == 4) draw_func = draw_flocon4_Normal;
-            else if (layer == 3) draw_func = draw_flocon3_Normal;
-            else if (layer == 2) draw_func = draw_flocon2_Normal;
-            else draw_func = draw_flocon1_Normal;
+            switch (size_index) {
+            case 0: draw_func = drawflocon4NormalETX; break;
+            case 1: draw_func = drawflocon3NormalETX; break;
+            case 2: draw_func = drawflocon2NormalETX; break;
+            case 3: draw_func = drawflocon1NormalETX; break;
+            default: draw_func = drawflocon5NormalETX; break;
+            }
         } else {
-            if (layer == 5) draw_func = draw_pluie6_Normal;
-            else if (layer >= 3) draw_func = draw_pluie5_Normal;
-            else draw_func = draw_pluie4_Normal;
+            if (layer == 5) draw_func = drawpluie6NormalETX;
+            else if (layer > 2) draw_func = drawpluie5NormalETX;
+            else draw_func = drawpluie4NormalETX;
         }
-        for (; index < end_index; ++index, ++entry)
-            draw_func((s16)((multiplier * entry->field_0 >> 8) + center_x),
-                      (s16)((multiplier * entry->field_2 >> 8) + center_y));
+        for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+            draw_func(draw_buffer, ((multiplier * entry->field_0) >> 8) + center_x,
+                      ((entry->field_2 * multiplier) >> 8) + center_y);
         ++group;
         depth += 32;
-    }
-    PROJ_CENTER_X = previous_center_x;
+    } while (depth < 192);
     PROJ_CENTER_Y = previous_center_y;
+    PROJ_CENTER_X = previous_center_x;
 }
-
 void display_flocons_before(void) {
-    s16 previous_center_x;
     s16 previous_center_y;
-    s16 group;
+    s16 previous_center_x;
     s16 depth;
-    s16 index;
+    s16 group;
+    s16 multiplier;
+    s16 center_x;
+    s16 center_y;
     s16 end_index;
-    s32 multiplier;
-    s32 center_x;
-    s32 center_y;
-    flocon_t* entry;
-    void (*draw_func)(s16, s16);
-
-    previous_center_x = PROJ_CENTER_X;
+    s16 index;
+    flocon_t *entry;
     previous_center_y = PROJ_CENTER_Y;
+    previous_center_x = PROJ_CENTER_X;
     set_proj_center(160, 170);
-    group = 0;
     depth = -64;
-    while (depth < 32) {
-        index = floc_ind[group];
-        end_index = index + nb_floc[group];
-        entry = flocon_tab + index;
+    group = 0;
+    do {
+        entry = flocon_tab + floc_ind[group];
         multiplier = 0x10000 / (depth + 256);
-        center_x = PROJ_CENTER_X - multiplier * PROJ_CENTER_X / 256;
-        center_y = PROJ_CENTER_Y - multiplier * PROJ_CENTER_Y / 256;
-        if (num_world != 1)
-            draw_func = group == 0 ? draw_flocon7_Normal : draw_flocon6_Normal;
-        else
-            draw_func = draw_pluie7_Normal;
-        for (; index < end_index; ++index, ++entry)
-            draw_func((s16)((multiplier * entry->field_0 >> 8) + center_x),
-                      (s16)((multiplier * entry->field_2 >> 8) + center_y));
+        center_x = PROJ_CENTER_X - ((multiplier * PROJ_CENTER_X) >> 8);
+        center_y = PROJ_CENTER_Y - ((multiplier * PROJ_CENTER_Y) >> 8);
+        end_index = nb_floc[group] + floc_ind[group];
+        if (num_world != 1) {
+            if (group == 0) {
+                for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+                    drawflocon6NormalETX(draw_buffer,
+                        ((multiplier * entry->field_0) >> 8) + center_x,
+                        ((entry->field_2 * multiplier) >> 8) + center_y);
+            } else {
+                for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+                    drawflocon7NormalETX(draw_buffer,
+                        ((multiplier * entry->field_0) >> 8) + center_x,
+                        ((entry->field_2 * multiplier) >> 8) + center_y);
+            }
+        } else {
+            for (index = floc_ind[group]; index < end_index; ++index, ++entry)
+                drawpluie7NormalETX(draw_buffer,
+                    ((multiplier * entry->field_0) >> 8) + center_x,
+                    ((entry->field_2 * multiplier) >> 8) + center_y);
+        }
         ++group;
         depth += 32;
-    }
-    PROJ_CENTER_X = previous_center_x;
+    } while (depth < 32);
     PROJ_CENTER_Y = previous_center_y;
+    PROJ_CENTER_X = previous_center_x;
 }
 
 void display_pix_gerbes(void) {
@@ -912,76 +924,54 @@ void display_pix_gerbes(void) {
     u8 unk_1;
     s16 spd_y;
 
-    i = 0;
-    do {
+    for (i = 0; i < 8; ++i) {
         if (pix_gerbe[i].is_active) {
             cur_item = &pix_gerbe[i].items[0];
             j = 0;
             do {
                 unk_1 = cur_item->unk_1;
-                if (unk_1 > 127 && cur_item->y_pos > (Bloc_lim_H1_Aff << 6)) {
-                    spd_y = (u8)cur_item->speed_y;
-                    if (spd_y > 127)
+                if (unk_1 >= 128 && cur_item->y_pos > (Bloc_lim_H1_Aff << 6)) {
+                    spd_y = ABS_1((s32)(u8)cur_item->speed_y);
+                    if (spd_y >= 128)
                         color = 88;
                     else
-                        color = (unk_1 & 127) + ((spd_y >> 5) + 4);
+                        color = (spd_y >> 5) + ((unk_1 & 127) + 4);
                     fplotNormalETX(draw_buffer, cur_item->x_pos >> 6,
                                    cur_item->y_pos >> 6, color);
                 }
                 cur_item++;
                 ++j;
-            } while (j < LEN(pix_gerbe[i].items));
+            } while (j < 64);
         }
-        ++i;
-    } while (i < LEN(pix_gerbe));
+    }
 }
 
-void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, s16 font_size, u8 is_fond) {
-    s32 clip_height = height;
-    s32 clip_width = width;
-    s32 clip_x = x;
-    s32 clip_y = y;
-    if (x < 0) {
-        clip_x = 0;
-        clip_width = x + width;
-    } else if (x > 320) {
-        clip_x = 320;
-    }
-    if (clip_width + clip_x > 320) {
-        clip_width = 320 - clip_x;
-    }
-    if (y < 0) {
-        clip_y = 0;
-        clip_height = y + height;
-    } else if (y > 200) {
-        clip_y = 200;
-    }
-    if (clip_height + clip_y > 200) {
-        clip_height = 200 - clip_y;
-    }
-
-    if (clip_width > 0 && clip_height > 0) {
-        if (font_size == -1) {
-            if (ModeVideoActuel == MODE_X) {
-                //draw_borderbox();
-            } else {
-                if (is_fond == 0) {
-                    DrawBlackBoxNormal(draw_buffer, clip_x, clip_y, clip_height, clip_width);
-                } else {
-                    DrawFondBoxNormal(draw_buffer, clip_x, clip_y, clip_height, clip_width, is_fond);
-                }
-            }
+void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_fond) {
+    if (x < 0) { width = width + x; x = 0; }
+    else if (x > 320) x = 320;
+    if (x + width > 320) width = 320 - x;
+    if (y < 0) { height = height + y; y = 0; }
+    else if (y > 200) y = 200;
+    if (y + height > 200) height = 200 - y;
+    if (width > 0 && height > 0) {
+        if (font_size == 255) {
+            if (ModeVideoActuel == MODE_X)
+                draw_blackbox(draw_buffer, x, y, height, width);
+            else if (is_fond != 0)
+                DrawFondBoxNormal(draw_buffer, x, y, height, width, is_fond);
+            else
+                DrawBlackBoxNormal(draw_buffer, x, y, height, width);
         }
         if (is_fond == 1) {
-            if (ModeVideoActuel != MODE_X) {
-                DrawBorderBoxNormal(draw_buffer, clip_x, clip_y, clip_height, clip_width, 0x2026);
-            }
+            if (ModeVideoActuel == MODE_X)
+                draw_borderbox(draw_buffer, x, y, height, width);
+            else
+                DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2026);
         } else if (is_fond == 2) {
-            if (ModeVideoActuel != MODE_X) {
-                DrawBorderBoxNormal(draw_buffer, clip_x, clip_y, clip_height, clip_width, 0x2020);
-            } else {
-                //draw_borderbox();
-            }
+            if (ModeVideoActuel == MODE_X)
+                draw_borderbox(draw_buffer, x, y, height, width);
+            else
+                DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2620);
         }
     }
 }
@@ -990,80 +980,46 @@ void display_text(const char* text, s16 x, s16 y, u8 font_size, u8 color) {
     s32 line_height;
     s16 char_spacing;
     s16 space_width;
-    s32 num_let;
-    s32 current_x;
-    sprite_t* sprite;
-    s32 i;
-    const char* pos;
-    char c;
+    u32 number;
+    s16 current_x;
+    sprite_t *sprite;
+    s16 index;
+    s32 current_y;
     s32 let_width;
-    vec2b_t size;
-
-    if (font_size == 2) {
-        line_height = 15;
-        char_spacing = 1;
-        space_width = 8;
-    } else if (font_size == 1) {
-        line_height = 23;
-        char_spacing = 3;
-        space_width = 10;
-    } else {
-        line_height = 36;
-        char_spacing = 3;
-        space_width = 12;
-    }
+    if (font_size == 2) { line_height = 15; char_spacing = 1; space_width = 8; }
+    else if (font_size == 1) { line_height = 23; char_spacing = 3; space_width = 10; }
+    else { line_height = 36; char_spacing = 3; space_width = 12; }
     current_x = x;
-    sprite = NULL;
-    num_let = 0;
-    if (text != NULL) {
-        for (i = 0; text[i] != 0; i++) {
-            pos = text + i;
-            c = *pos;
-            if (c == '/') {
-                current_x = x - calc_largmax_text(text, (s16)i, space_width,
-                                                 char_spacing, font_size) / 2;
-                if (i > 1)
-                    y += line_height;
-                num_let = 0;
-            } else if (c == ' ') {
-                num_let = 0;
+    current_y = y;
+    if (*text != 0) {
+        for (index = 0; text[index] != 0; ++index) {
+            if (text[index] == '/') {
+                current_x = x - ((s16)calc_largmax_text(text, index, space_width, char_spacing, font_size) >> 1);
+                if (index > 1) current_y += line_height;
+                number = 0;
+            } else if (text[index] == ' ') {
+                number = 0;
                 current_x += space_width;
             } else {
-                num_let = deter_num_let(c, pos + 1);
+                number = deter_num_let((u8)text[index], text + index + 1);
             }
-            if (num_let != 0) {
-                let_width = calc_let_Width(font_size, num_let);
-                if (num_let < 1000) {
-                    if (font_size <= 1) {
-                        if (font_size == 1)
-                            num_let += 41;
-                        sprite = alpha2.sprites + num_let;
-                        size.width = (u8)let_width;
-                        size.height = sprite->outer_height;
-                        DrawSpriteColorNormalEtX(current_x, color,
-                            y - sprite->outer_height,
-                            (u16)((size.height << 8) + size.width), draw_buffer,
-                            alpha2.img_buffer + sprite->offset_in_atlas);
-                    } else if (font_size == 2) {
-                        sprite = alpha.sprites + num_let;
-                        size.width = (u8)let_width;
-                        size.height = sprite->outer_height;
-                        DrawSpriteColorNormalEtX(current_x, color,
-                            y - sprite->outer_height,
-                            (u16)((size.height << 8) + size.width), draw_buffer,
-                            alpha.img_buffer + sprite->offset_in_atlas);
-                    }
-                } else {
-                    sprite = alpha_numbers.sprites + (num_let - 1000);
-                    size.width = (u8)let_width;
-                    size.height = sprite->outer_height;
-                    DrawSpriteColorNormalEtX(current_x, color,
-                        y - sprite->outer_height,
-                        (u16)((size.height << 8) + size.width), draw_buffer,
-                        alpha_numbers.img_buffer + sprite->offset_in_atlas);
-                    i += 3;
+            if (number != 0) {
+                let_width = calc_let_Width(font_size, number);
+                if (number >= 1000) {
+                    sprite = alpha_numbers.sprites + number - 1000;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);
+                    index += 3;
                 }
-                current_x += (sprite->sprite_pos.raw & 0xF) + sprite->inner_width - char_spacing;
+                else if (font_size <= 1) {
+                    if (font_size == 1) number += 41;
+                    sprite = alpha2.sprites + number;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);
+                }
+                else if (font_size == 2) {
+                    sprite = alpha.sprites + number;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);
+                }
+                current_x += sprite->sprite_pos.bits.x + sprite->inner_width - char_spacing;
             }
         }
     }
@@ -1073,158 +1029,123 @@ void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color,
     s32 line_height;
     s16 char_spacing;
     s16 space_width;
-    s32 index;
-    s32 number;
-    s32 current_x;
+    u32 number;
+    s16 current_x;
+    sprite_t *sprite;
+    s16 index;
     s32 current_y;
-    sprite_t* sprite;
-    font_t* font;
-    u8 sprite_index;
-
-    if (font_size == 2) {
-        line_height = 15;
-        char_spacing = 1;
-        space_width = 8;
-    } else if (font_size == 1) {
-        line_height = 23;
-        char_spacing = 3;
-        space_width = 10;
-    } else {
-        line_height = 36;
-        char_spacing = 3;
-        space_width = 12;
-    }
-    current_x = x;
-    current_y = y;
-    sprite = NULL;
-    if (text != NULL && text[0] != '\0') {
-        for (index = 0; text[index] != '\0'; ++index) {
-            if (text[index] == '/') {
-                current_x = x - calc_largmax_text(text, (s16)index,
-                    space_width, char_spacing, font_size) / 2;
-                if (index > 1)
-                    current_y += line_height;
-                number = 0;
-            } else if (text[index] == ' ') {
-                current_x += space_width;
-                number = 0;
-            } else {
-                number = deter_num_let((u8)text[index], text + index + 1);
-            }
-            if (number != 0) {
-                calc_let_Width(font_size, number);
-                calc_num_let_spr(font_size, &sprite_index);
-                if (font_size <= 1) {
-                    font = &alpha2;
-                    sprite = font->sprites + sprite_index;
-                } else if (font_size == 2) {
-                    font = &alpha;
-                    sprite = font->sprites + sprite_index;
-                } else {
-                    font = &alpha_numbers;
-                    sprite = font->sprites + sprite_index;
-                }
-                DISPLAY_DEFORM_SPRITE(sprite,
-                    font->img_buffer + sprite->offset_in_atlas,
-                    (s16)current_x,
-                    (s16)(current_y - sprite->outer_height),
-                    rotation, enx, eny);
-                current_x += (sprite->sprite_pos.raw & 0x0f) +
-                    sprite->inner_width - char_spacing;
-            }
-        }
-    }
-}
-
-void display_text_sin(const char* text, s16 x, s16 y, u8 font_size, s8 color, u8 phase) {
-    s32 line_height;
-    s16 char_spacing;
-    s16 space_width;
-    s32 index;
-    s32 number;
-    s32 angle;
-    s32 vertical_offset;
     s32 let_width;
-    s32 current_x;
-    s32 current_y;
-    sprite_t* sprite;
-    font_t* font;
-    vec2b_t size;
-
-    if (font_size == 2) {
-        line_height = 15;
-        char_spacing = 1;
-        space_width = 8;
-    } else if (font_size == 1) {
-        line_height = 23;
-        char_spacing = 3;
-        space_width = 10;
-    } else {
-        line_height = 36;
-        char_spacing = 3;
-        space_width = 12;
-    }
+    number = 0;
+    if (font_size == 2) { line_height = 15; char_spacing = 1; space_width = 8; }
+    else if (font_size == 1) { line_height = 23; char_spacing = 3; space_width = 10; }
+    else { line_height = 36; char_spacing = 3; space_width = 12; }
     current_x = x;
     current_y = y;
-    if (text != NULL && text[0] != '\0') {
-        for (index = 0; text[index] != '\0'; ++index) {
+    if (*text != 0) {
+        for (index = 0; text[index] != 0; ++index) {
             if (text[index] == '/') {
-                current_x = x - calc_largmax_text(text, (s16)index, space_width,
-                                                  char_spacing, font_size) / 2;
-                if (index > 1)
-                    current_y += line_height;
+                current_x = x - ((s16)calc_largmax_text(text, index, space_width, char_spacing, font_size) >> 1);
+                if (index > 1) current_y += line_height;
                 number = 0;
             } else if (text[index] == ' ') {
-                current_x += space_width;
                 number = 0;
+                current_x += space_width;
             } else {
                 number = deter_num_let((u8)text[index], text + index + 1);
             }
             if (number != 0) {
                 let_width = calc_let_Width(font_size, number);
                 calc_num_let_spr(font_size, (u8*)&number);
-                angle = cosinus(phase + index * 32);
-                if (angle < 0)
-                    vertical_offset = -((-angle) >> 5);
-                else
-                    vertical_offset = angle >> 5;
                 if (number >= 1000) {
-                    font = &alpha_numbers;
-                    sprite = font->sprites + (number - 1000);
-                    size.width = (u8)let_width;
-                    size.height = sprite->outer_height;
-                    DrawSpriteColorNormalEtX(current_x, color,
-                        current_y - sprite->outer_height + vertical_offset, (u16)((size.height << 8) + size.width),
-                        draw_buffer, font->img_buffer + sprite->offset_in_atlas);
+                    sprite = alpha_numbers.sprites + number - 1000;
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha_numbers.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
                     index += 3;
-                } else if (font_size <= 1) {
-                    font = &alpha2;
-                    sprite = font->sprites + number;
-                    size.width = (u8)let_width;
-                    size.height = sprite->outer_height;
-                    DrawSpriteColorNormalEtX(current_x, color,
-                        current_y - sprite->outer_height + vertical_offset, (u16)((size.height << 8) + size.width),
-                        draw_buffer, font->img_buffer + sprite->offset_in_atlas);
-                } else if (font_size == 2) {
-                    font = &alpha;
-                    sprite = font->sprites + number;
-                    size.width = (u8)let_width;
-                    size.height = sprite->outer_height;
-                    DrawSpriteColorNormalEtX(current_x, color,
-                        current_y - sprite->outer_height + vertical_offset, (u16)((size.height << 8) + size.width),
-                        draw_buffer, font->img_buffer + sprite->offset_in_atlas);
                 }
-                current_x += (sprite->sprite_pos.bits.x + sprite->inner_width) - char_spacing;
+                else if (font_size <= 1) {
+                    sprite = alpha2.sprites + number;
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha2.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                }
+                else if (font_size == 2) {
+                    sprite = alpha.sprites + number;
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                }
+                current_x += sprite->sprite_pos.bits.x + sprite->inner_width - char_spacing;
+            }
+        }
+    }
+}
+
+void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u8 color) {
+    s32 line_height;
+    s16 char_spacing;
+    s16 space_width;
+    u32 number;
+    s16 current_x;
+    sprite_t *sprite;
+    s16 index;
+    s32 current_y;
+    s32 let_width;
+    s16 vertical_offset;
+    number = 0;
+    if (font_size == 2) { line_height = 15; char_spacing = 1; space_width = 8; }
+    else if (font_size == 1) { line_height = 23; char_spacing = 3; space_width = 10; }
+    else { line_height = 36; char_spacing = 3; space_width = 12; }
+    current_x = x;
+    current_y = y;
+    if (*text != 0) {
+        for (index = 0; text[index] != 0; ++index) {
+            if (text[index] == '/') {
+                current_x = x - ((s16)calc_largmax_text(text, index, space_width, char_spacing, font_size) >> 1);
+                if (index > 1) current_y += line_height;
+                number = 0;
+            } else if (text[index] == ' ') {
+                number = 0;
+                current_x += space_width;
+            } else {
+                number = deter_num_let((u8)text[index], text + index + 1);
+            }
+            if (number != 0) {
+                let_width = calc_let_Width(font_size, number);
+                calc_num_let_spr(font_size, (u8*)&number);
+                vertical_offset = cosinus((s16)(phase + (index << 5)));
+                if (vertical_offset >= 0) vertical_offset >>= 5;
+                else vertical_offset = -((-vertical_offset) >> 5);
+                if (number >= 1000) {
+                    sprite = alpha_numbers.sprites + number - 1000;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);
+                    index += 3;
+                }
+                else if (font_size <= 1) {
+                    sprite = alpha2.sprites + number;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);
+                }
+                else if (font_size == 2) {
+                    sprite = alpha.sprites + number;
+                    DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);
+                }
+                current_x += sprite->sprite_pos.bits.x + sprite->inner_width - char_spacing;
             }
         }
     }
 }
 
 void display_box_text(display_item_t* box) {
-    s16 blackbox_x = (s16)(box->centered_x_pos - 3);
-    s16 blackbox_y = (s16)(box->centered_y_pos - 3);
-    s16 blackbox_width = (s16)(box->width + 6);
-    s16 blackbox_height = (s16)(box->height + 6);
+    s16 blackbox_height;
+    s16 blackbox_width;
+    s16 blackbox_y;
+    s16 blackbox_x;
+
+
+
+
+    blackbox_x = box->centered_x_pos;
+    blackbox_y = box->centered_y_pos;
+    blackbox_width = box->width;
+    blackbox_height = box->height;
+    blackbox_x -= 3;
+    blackbox_y -= 3;
+    blackbox_width += 6;
+    blackbox_height += 6;
     if (box->field_D5) {
         DISPLAY_BLACKBOX(blackbox_x, blackbox_y, blackbox_width, blackbox_height, 255, box->is_fond);
         if (box->is_fond == 1) {
@@ -1257,7 +1178,7 @@ void display_etoile(s16 in_x, s16 in_y) {
     s16 draw_x;
     s16 draw_y;
     sprite_t* sprite;
-    vec2b_t proj_size;
+    u16 packed_size;
 
     star = &grp_stars[current_star];
     star->timer++;
@@ -1268,16 +1189,15 @@ void display_etoile(s16 in_x, s16 in_y) {
         star->dist = rand_res;
         star->sprite_table_index = rand_res;
     }
-    draw_x = star->dist + (in_x - xmap) - 8;
+    draw_x = star->dist + (in_x - xmap);
     draw_y = star->dist + (in_y - ymap);
     if (draw_x > 0 && SCREEN_WIDTH - draw_x > 0 && draw_y > 0 && SCREEN_HEIGHT - draw_y > 0) {
         sprite = poing_obj->sprites + loc_star_spr[star->sprite_table_index];
-        proj_size.width = (u8)sprite->outer_width;
-        proj_size.height = (u8)sprite->outer_height;
-        DrawSpriteNormalEtX(draw_x, sprite->color >> 4, draw_y, (u16)((proj_size.height << 8) + proj_size.width),
+        packed_size = ((u16)sprite->outer_height << 8) + (u16)sprite->outer_width;
+        DrawSpriteNormalEtX(draw_x, sprite->color >> 4, draw_y, packed_size,
                             draw_buffer, poing_obj->img_buffer + sprite->offset_in_atlas);
     }
-    if (current_star < LEN(grp_stars))
+    if (current_star < 30)
         current_star++;
 }
 
@@ -1290,18 +1210,18 @@ void display_grp_stars(void)
 
     if (ray.main_etat == 7 && (ray.flags.alive))
     {
-        current_star = 0;
         grapped = &level.objects[id_obj_grapped];
+        current_star = 0;
         GET_SPRITE_POS(&ray, 1, &x, &y, &w, &h);
 
-        cen_x = x + (w >> 1);
+        cen_x = (w >> 1) + x;
         grapped_x = grapped->offset_bx + grapped->x;
         Bresenham(
             display_etoile,
-            cen_x, (s16) (y + (h >> 1) - 6),
+            cen_x, (s16) ((h >> 1) + y - 6),
             grapped_x, (s16) (grapped->offset_hy + grapped->y),
             5,
-            100
+            128
         );
     }
 }
@@ -1310,9 +1230,8 @@ void DISPLAY_TEXT_FEE(void) {
     /* 19D20 8013E520 -O2 -msoft-float */
     obj_t* obj;
     display_item_t ttd;
-    s16 cen_x;
     s16 obj_x;
-    s16 marg_x;
+    s16 cen_x;
 
     DISPLAY_BLACKBOX(0, 0, 320, 16, 255, 0);
     DISPLAY_BLACKBOX(0, 160, 320, 40, 255, 0);
@@ -1326,20 +1245,12 @@ void DISPLAY_TEXT_FEE(void) {
             {
                 s16 y_fee = 190;
                 obj->screen_y = y_fee - obj->offset_by;
-                cen_x = ttd.centered_x_pos;
                 obj_x = obj->offset_bx + obj->screen_x;
-                marg_x = 8;
-                if (cen_x < obj_x - marg_x)
-                {
-                    if (cen_x + ttd.width > obj_x)
-                    {
-                        ttd.text[(s16) ((obj_x - (cen_x + marg_x)) / 7)] = '\0';
-                        display_box_text(&ttd);
-                    }
-                    else
-                        display_box_text(&ttd);
-                }
-                else if (cen_x + ttd.width <= obj_x)
+                cen_x = ttd.centered_x_pos;
+                if (obj_x - 8 > cen_x && obj_x < cen_x + ttd.width) {
+                    ttd.text[(s16)((obj_x - 8 - cen_x) / 7)] = '\0';
+                    display_box_text(&ttd);
+                } else if (obj_x >= ttd.centered_x_pos + ttd.width)
                     display_box_text(&ttd);
 
                 DISPLAY_BLACKBOX(obj_x, obj->screen_y + obj->offset_by - 20, 30, 18, 255, 0);
@@ -1358,39 +1269,36 @@ void DISPLAY_TEXT_FEE(void) {
 }
 
 void DISPLAY_SAVE_SPRITES(s16 x, s16 save_index) {
-    s16 y;
-    loadinforay_t* loadinfo;
-    s32 sprite_index;
-    u16 percentage;
-
-    y = save_index * (ecarty + 23) + debut_options - 23;
-    loadinfo = LoadInfoRay + save_index;
-    sprite_index = 27;
-    display_sprite(&div_obj, 27, x, y, 1);
-    x += div_obj.sprites[sprite_index].outer_width;
-    sprite_index = (loadinfo->lives / 10) % 10 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[sprite_index].outer_width;
-    sprite_index = loadinfo->lives % 10 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[28].outer_width + 10;
-    sprite_index = 57;
-    display_sprite(&mapobj[0], (u8)sprite_index, x, y, 1);
-    x += mapobj[0].sprites[sprite_index].outer_width;
-    sprite_index = loadinfo->continues % 10 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[37].outer_width + 10;
-    percentage = (u16)(loadinfo->cages * 100 / 102);
-    sprite_index = percentage / 100 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[sprite_index].outer_width;
-    sprite_index = (percentage / 10) % 10 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[sprite_index].outer_width;
-    sprite_index = percentage % 10 + 28;
-    display_sprite(&div_obj, (u8)sprite_index, x, y, 1);
-    x += div_obj.sprites[sprite_index].outer_width;
-    display_text("%", x, debut_options + save_index * (ecarty + 23), 1, 2);
+    s16 digit_a;
+    s16 digit_b;
+    s16 digit_c;
+    s16 percentage;
+    digit_a = LoadInfoRay[save_index].lives / 10 + 28;
+    digit_b = LoadInfoRay[save_index].lives % 10 + 28;
+    display_sprite(&div_obj, 27, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += (u16)div_obj.sprites[27].outer_width;
+    display_sprite(&div_obj, digit_a, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += (u16)div_obj.sprites[digit_a].outer_width;
+    display_sprite(&div_obj, digit_b, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    digit_b = LoadInfoRay[save_index].continues % 10 + 28;
+    x += (u16)div_obj.sprites[28].outer_width;
+    x += 10;
+    display_sprite(&mapobj[0], 57, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += mapobj[0].sprites[57].outer_width;
+    display_sprite(&div_obj, digit_b, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    percentage = LoadInfoRay[save_index].cages * 100 / 102;
+    digit_c = percentage / 100 + 28;
+    digit_a = percentage / 10 % 10 + 28;
+    digit_b = percentage % 10 + 28;
+    x += (u16)div_obj.sprites[37].outer_width;
+    x += 10;
+    display_sprite(&div_obj, digit_c, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += (u16)div_obj.sprites[digit_c].outer_width;
+    display_sprite(&div_obj, digit_a, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += (u16)div_obj.sprites[digit_a].outer_width;
+    display_sprite(&div_obj, digit_b, x, (ecarty + 23) * save_index + debut_options - 23, 1);
+    x += (u16)div_obj.sprites[digit_b].outer_width;
+    display_text("%", x, (ecarty + 23) * save_index + debut_options, 1, 2);
 }
 
 void DISPLAY_SAVE_POING(void) {
@@ -1419,7 +1327,7 @@ void DISPLAY_YESNO_POING(void) {
 void display_time(s32 time) {
     // NOTE(Falcury): based on the PC version (the PS1 version is slightly different)
     obj_t *sbar_obj;
-    char text[24];
+    char text[20];
     u8 nb_wiz_text[8];
     s32 time_div;
     u32 col;
@@ -1430,7 +1338,7 @@ void display_time(s32 time) {
         u8 seconds = time / 60 % 10;
         u8 tens = time / 600 % 10;
         u8 hundreds = time / 6000 % 10;
-        s16 x_offset = 0;
+        u8 x_offset = 0;
 
         display_text(language_txt[159], Bloc_lim_W2 - 52, Bloc_lim_H2 - 32, 2, 5); // /time/
         if (hundreds != 0) {
@@ -1440,28 +1348,24 @@ void display_time(s32 time) {
         display_sprite(sbar_obj, tens + 28, Bloc_lim_W2 - 50 + x_offset, Bloc_lim_H2 - 30, 1);
         display_sprite(sbar_obj, seconds + 28, Bloc_lim_W2 - 35 + x_offset, Bloc_lim_H2 - 30, 1);
 
-        if (map_time > 100) {
-            if (map_time <= 160 && map_time > 120) {
-                strcpy(text, "/go !/");
-                display_text(text, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0, 5);
-            }
-        } else {
+        if (map_time <= 100) {
             ray.is_active = 0;
             sprintf(text, language_txt[156], nb_wiz); // /%d tings to get/
             if (horloge[8] < 4) {
-                col = PC_TingsToGet_Col;
-                col_add = PC_TingsToGet_ColAdd;
-                PC_TingsToGet_Col = col + col_add;
-                if (PC_TingsToGet_Col >= 6) {
-                    PC_TingsToGet_ColAdd *= -1;
+                PC_TingsToGet_Col += PC_TingsToGet_ColAdd;
+                if (PC_TingsToGet_Col > 5) {
+                    PC_TingsToGet_ColAdd = -PC_TingsToGet_ColAdd;
                     PC_TingsToGet_Col = 5;
                 } else if (PC_TingsToGet_Col == 0) {
-                    PC_TingsToGet_ColAdd *= -1;
+                    PC_TingsToGet_ColAdd = -PC_TingsToGet_ColAdd;
                     PC_TingsToGet_Col = 1;
                 }
 
                 display_text(text, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 2, PC_TingsToGet_Col);
             }
+        } else if (map_time <= 160 && map_time > 120) {
+            strcpy(text, "/go !/");
+            display_text(text, 160, 100, 0, 5);
         }
     }
 }
@@ -1496,79 +1400,113 @@ void DISPLAY_CONTINUE_SPR(void) {
 void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
                             s16 x1, s16 y1, s16 x2, s16 y2, s16 x3, s16 y3) {
     deform_blit_t geometry;
-    s32 min_x;
-    s32 max_x;
-    s32 min_y;
-    s32 max_y;
-    vec2b_t size;
-
+    s16 min_x;
+    s16 max_x;
+    s16 min_y;
+    s16 max_y;
+    s32 width;
+    s32 dx1;
+    s32 dy1;
+    s32 dx2;
+    s32 dy2;
+    s32 xstep1;
+    s32 xstep2;
+    s32 rowstep1;
+    s32 rowstep2;
     min_x = x0;
-    max_x = x0;
+    max_x = x3;
+    if (x1 < x0) { min_x = x1; max_x = x2; }
+    if (min_x > x2) { min_x = x2; max_x = x1; }
+    if (min_x > x3) { min_x = x3; max_x = x0; }
     min_y = y0;
-    max_y = y0;
-    if (x1 < min_x) min_x = x1;
-    if (x2 < min_x) min_x = x2;
-    if (x3 < min_x) min_x = x3;
-    if (x1 > max_x) max_x = x1;
-    if (x2 > max_x) max_x = x2;
-    if (x3 > max_x) max_x = x3;
-    if (y1 < min_y) min_y = y1;
-    if (y2 < min_y) min_y = y2;
-    if (y3 < min_y) min_y = y3;
-    if (y1 > max_y) max_y = y1;
-    if (y2 > max_y) max_y = y2;
-    if (y3 > max_y) max_y = y3;
-    geometry.corner[0] = x0;
-    geometry.corner[1] = y0;
-    geometry.corner[2] = x1;
-    geometry.corner[3] = y1;
-    geometry.corner[4] = x2;
-    geometry.corner[5] = y2;
-    geometry.corner[6] = x3;
-    geometry.corner[7] = y3;
-    geometry.dest_width = max_x - min_x + 1;
-    geometry.dest_height = max_y - min_y + 1;
-    geometry.dest_offset = min_y * 320 + min_x;
+    max_y = y3;
+    if (y1 < y0) { min_y = y1; max_y = y2; }
+    if (y2 < min_y) { min_y = y2; max_y = y1; }
+    if (y3 < min_y) { min_y = y3; max_y = y0; }
+    width = max_x - min_x;
+    dy1 = y1 - y0;
+    dx1 = x1 - x0;
+    if (dy1 < 0) { rowstep1 = -width; dy1 = -dy1; }
+    else rowstep1 = width;
+    if (dx1 < 0) { xstep1 = -1; dx1 = -dx1; }
+    else xstep1 = 1;
+    dy2 = y2 - y0;
+    dx2 = x2 - x0;
+    if (dy2 < 0) { rowstep2 = -width; dy2 = -dy2; }
+    else rowstep2 = width;
+    if (dx2 < 0) { xstep2 = -1; dx2 = -dx2; }
+    else xstep2 = 1;
+    if (dy1 == 0) ++dy1;
+    if (dy2 == 0) ++dy2;
+    geometry.x_step_1 = xstep1;
+    geometry.row_step_1 = rowstep1;
+    geometry.dx_1 = dx1;
+    geometry.dy_1 = dy1;
+    geometry.x_step_2 = xstep2;
+    geometry.row_step_2 = rowstep2;
+    geometry.dx_2 = dx2;
+    geometry.dy_2 = dy2;
+    geometry.dest_width = width;
+    geometry.dest_height = max_y - min_y;
+    geometry.dest_offset = (y0 - min_y) * width + x0 - min_x;
     geometry.source_width = sprite->outer_width;
     geometry.source_height = sprite->outer_height;
     draw_sprite_deform(image + sprite->offset_in_atlas, new_sprite_deform, &geometry);
-    size.width = (u8)geometry.dest_width;
-    size.height = (u8)geometry.dest_height;
-    DrawSpriteNormalEtX(min_x, sprite->color >> 4, min_y, (u16)((size.height << 8) + size.width),
-                        draw_buffer, new_sprite_deform);
+    DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,
+        (u16)(((max_y - min_y) << 8) + (max_x - min_x)), draw_buffer, new_sprite_deform);
 }
 
 void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
-    anim_t* anim;
-    anim_layer_t* layer;
-    sprite_t* sprite;
-    u16 layers_per_frame;
-    s32 layer_index;
-    s16 sprite_x;
-    s16 sprite_y;
-    s16 sprite_width;
-    s16 sprite_height;
-    s16 origin_x;
-    s16 origin_y;
-
+    anim_t *anim;
+    anim_layer_t *layers;
+    anim_layer_t *layer;
+    sprite_t *sprite;
+    s16 index;
+    s16 sprite_index;
+    s16 center_x;
+    s16 center_y;
+    s16 follow_x, follow_y, follow_w, follow_h;
+    s16 anim_x, anim_y, anim_w, anim_h;
+    s16 sprite_x, sprite_y;
+    s16 x0, y0, x1, y1, x2, y2;
     anim = obj->animations + obj->anim_index;
-    layers_per_frame = anim->layers_per_frame & 0x3FFF;
-    layer = anim->layers + obj->anim_frame * layers_per_frame;
-    origin_x = obj->screen_x;
-    origin_y = obj->screen_y;
+    layers = anim->layers + obj->anim_frame * (anim->layers_per_frame & 0x3fff);
     if (obj->flags.follow_enabled) {
-        GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y,
-                       &sprite_width, &sprite_height);
-        origin_x = (s16)(sprite_x - xmap + 8 + (sprite_width >> 1));
-        origin_y = (s16)(sprite_y - ymap + obj->offset_by - obj->offset_hy);
+        GET_SPRITE_POS(obj, obj->follow_sprite, &follow_x, &follow_y, &follow_w, &follow_h);
+        center_x = follow_x - xmap + 8 + (follow_w >> 1);
+        center_y = follow_y - ymap + obj->offset_hy;
+    } else {
+        GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h);
+        anim_x -= xmap;
+        anim_x += 8;
+        anim_y -= ymap;
+        center_x = anim_x + (anim_w >> 1);
+        center_y = anim_y + (anim_h >> 1);
     }
-    for (layer_index = 0; layer_index < layers_per_frame; ++layer_index, ++layer) {
-        if (layer->sprite_index != 0) {
-            sprite = obj->sprites + layer->sprite_index;
-            if (sprite->id != 0)
-                DISPLAY_DEFORM_SPRITE(sprite, obj->img_buffer,
-                    origin_x + layer->x, origin_y + layer->y,
-                    angle, scale_x, scale_y);
+    for (index = 0; index < (anim->layers_per_frame & 0x3fff); ++index) {
+        layer = layers + index;
+        sprite_index = layer->sprite_index;
+        if (sprite_index != 0) {
+            sprite = obj->sprites + sprite_index;
+            sprite_x = layer->x + obj->screen_x;
+            sprite_y = layer->y + obj->screen_y;
+            x0 = sprite_x - center_x;
+            x2 = x0;
+            x1 = sprite_x + sprite->outer_width - center_x;
+            y0 = sprite_y - center_y;
+            y1 = y0;
+            y2 = sprite_y + sprite->outer_height - center_y;
+            CALCUL_DEFORMATION(&x0, &y0, angle, scale_x, scale_y);
+            CALCUL_DEFORMATION(&x1, &y1, angle, scale_x, scale_y);
+            CALCUL_DEFORMATION(&x2, &y2, angle, scale_x, scale_y);
+            x0 += center_x;
+            x1 += center_x;
+            x2 += center_x;
+            y0 += center_y;
+            y1 += center_y;
+            y2 += center_y;
+            AFFICHE_SPRITE_DEFORME(sprite, obj->img_buffer, x0, y0, x1, y1, x2, y2,
+                                 (x1 - x0) + x2, (y1 - y0) + y2);
         }
     }
 }
@@ -1577,48 +1515,33 @@ void DISPLAY_DEFORM_SPRITE(sprite_t* sprite, u8* image, s16 x, s16 y,
                            s16 angle, s16 scale_x, s16 scale_y) {
     s16 center_x;
     s16 center_y;
-    s16 x_points[4];
-    s16 y_points[4];
-    s16 left;
-    s16 top;
-    s16 right;
-    s16 bottom;
-    s16 fourth_x;
-    s16 fourth_y;
-
-    left = sprite->sprite_pos.bits.x;
-    top = sprite->sprite_pos.bits.y;
-    center_x = x + left + (sprite->inner_width >> 1);
-    center_y = y + top + 1 + (sprite->inner_height >> 1);
-    x_points[0] = (s16)(x - center_x);
-    y_points[0] = (s16)(y - center_y);
-    x_points[1] = (s16)(x + sprite->outer_width - center_x);
-    y_points[1] = y_points[0];
-    x_points[2] = x_points[0];
-    y_points[2] = (s16)(y + sprite->outer_height - center_y);
-    CALCUL_DEFORMATION(&x_points[0], &y_points[0], angle, scale_x, scale_y);
-    CALCUL_DEFORMATION(&x_points[1], &y_points[1], angle, scale_x, scale_y);
-    CALCUL_DEFORMATION(&x_points[2], &y_points[2], angle, scale_x, scale_y);
-    fourth_x = (s16)(x_points[1] + x_points[2] - x_points[0]);
-    fourth_y = (s16)(y_points[1] + y_points[2] - y_points[0]);
-    x_points[0] += center_x;
-    x_points[1] += center_x;
-    x_points[2] += center_x;
-    fourth_x += center_x;
-    y_points[0] += center_y;
-    y_points[1] += center_y;
-    y_points[2] += center_y;
-    fourth_y += center_y;
-    AFFICHE_SPRITE_DEFORME(sprite, image,
-        x_points[0], y_points[0], x_points[1], y_points[1],
-        x_points[2], y_points[2], fourth_x, fourth_y);
+    s16 x0, y0, x1, y1, x2, y2;
+    center_x = x + sprite->sprite_pos.bits.x + (sprite->inner_width >> 1);
+    center_y = y + sprite->sprite_pos.bits.y + 1 + (sprite->inner_height >> 1);
+    x0 = x - center_x;
+    x1 = x + sprite->outer_width - center_x;
+    x2 = x0;
+    y0 = y - center_y;
+    y1 = y0;
+    y2 = y + sprite->outer_height - center_y;
+    CALCUL_DEFORMATION(&x0, &y0, angle, scale_x, scale_y);
+    CALCUL_DEFORMATION(&x1, &y1, angle, scale_x, scale_y);
+    CALCUL_DEFORMATION(&x2, &y2, angle, scale_x, scale_y);
+    x0 += center_x;
+    x1 += center_x;
+    x2 += center_x;
+    y0 += center_y;
+    y1 += center_y;
+    y2 += center_y;
+    AFFICHE_SPRITE_DEFORME(sprite, image, x0, y0, x1, y1, x2, y2,
+                         (x1 - x0) + x2, (y1 - y0) + y2);
 }
 
 void CALCUL_DEFORMATION(s16* x, s16* y, s16 angle, s16 scale_x, s16 scale_y) {
-    s16 sin_value;
+    s16 scaled_y;
     s16 cos_value;
-    s32 scaled_x;
-    s32 scaled_y;
+    s16 sin_value;
+    s16 scaled_x;
 
     scaled_x = ((s32)*x * scale_x) >> 12;
     scaled_y = ((s32)*y * scale_y) >> 12;
@@ -1626,3 +1549,5 @@ void CALCUL_DEFORMATION(s16* x, s16* y, s16 angle, s16 scale_x, s16 scale_y) {
     *x = (s16)((scaled_x * cos_value - scaled_y * sin_value) >> 9);
     *y = (s16)((scaled_x * sin_value + scaled_y * cos_value) >> 9);
 }
+
+

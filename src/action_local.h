@@ -13,7 +13,9 @@ typedef void (draw_func_t)(s32 x, s32 color, s32 y, u32 size,
                            u8 *draw_buffer, u8 *image_data);
 /* DOS assembly sprite entries 1:063e6..06d50 use these six registers. */
 #pragma aux draw_func_t parm [eax] [edx] [ebx] [ecx] [edi] [esi] modify exact [eax ebx ecx edx esi edi]
-typedef void (fplot_func_t)(u8 *draw_buffer, s16 x, s16 y, u8 color);
+/* DOS fplot_X 1:02b86 preserves ECX/EDX/EDI, modifies EAX/EBX. */
+typedef void (fplot_func_t)(u8 *draw_buffer, s32 x, s32 y, s32 color);
+#pragma aux fplot_func_t parm [edi] [eax] [ebx] [esi] modify exact [eax ebx]
 
 typedef struct pix_gerbe_item_t {
     s16 x_pos;
@@ -37,8 +39,16 @@ typedef struct flocon_t {
     u8 field_7;
 } flocon_t;
 
+/* DOS descriptor 1:0baec..0bb5f; drawing assembler reads stride at +0x20. */
 typedef struct deform_blit_t {
-    s32 corner[8];
+    s32 x_step_1;
+    s32 row_step_1;
+    s32 dx_1;
+    s32 dy_1;
+    s32 x_step_2;
+    s32 row_step_2;
+    s32 dx_2;
+    s32 dy_2;
     s32 dest_width;
     s32 dest_height;
     s32 dest_offset;
