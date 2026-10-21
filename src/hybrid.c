@@ -362,7 +362,7 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
     FILE *data_file;
     u32 size, i;
     u8 check;
-    u8 *bytes, *end;
+    u8 *end, *bytes;
     u8 *sample;
     u8 *new_data;
 
@@ -399,7 +399,7 @@ s32 LoadBnkFile(s32 header_index, s32 data_index,
     fclose(data_file);
     check = snd8b_data_infos[data_index].checksum_byte;
     i = 0;
-    if (size != 0) {
+    if (size > 0) {
         sample = new_data;
         do {
             check -= *sample;
