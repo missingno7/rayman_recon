@@ -1074,18 +1074,19 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
 }
 
 /* DOS 1:3ab34; menu.c:736 */
+void DrawBlackBorderBox(s16 x, s16 y, s16 width, s16 height, u8 color);
 void AFFICHE_ECRAN_OPTIONS(void)
 {
     u8 option_index;
     u8 i;
-    s32 v5;
-    s32 v6;
-    s32 v18;
-    s32 v8;
-    s32 draw_x;
+    /* DOS 3ac82 / 3ae22..3ae95: width and bar color share this value. */
+    s16 v5;
+    s16 v6;
+    s16 v18;
+    s16 v8;
+    s16 draw_x;
     s16 x;
     s16 y;
-    u8 color;
     char on_text[3] = "on";
     char off_text[4] = "off";
     const char *nonselected_text;
@@ -1098,26 +1099,29 @@ void AFFICHE_ECRAN_OPTIONS(void)
     }
     display_text(language_txt[181], SCREEN_WIDTH / 2, debut_titre, 1, 1);
     for (option_index = first_option; option_index <= first_option + nbre_options; ++option_index) {
-        x = menu_to_display[option_index].xpos;
         y = menu_to_display[option_index].ypos;
-        if (option_index == position) {
-            display_box_text_plasma(menu_to_display + option_index, 1);
-        } else if (option_index == option_exit) {
-            display_text(language_txt[232], x, y, 2, menu_to_display[option_index].color);
+        x = menu_to_display[option_index].xpos;
+        if (option_index != position) {
+            if (option_index == option_exit) {
+                display_text(language_txt[232], x, y, 2, menu_to_display[option_index].color);
+            } else {
+                display_text(language_txt[190 + option_index], x, y, 2, menu_to_display[option_index].color);
+            }
         } else {
-            display_text(language_txt[190 + option_index], x, y, 2, menu_to_display[option_index].color);
+            display_box_text_plasma(menu_to_display + option_index, 1);
         }
         if (option_index == 0) {
-            v5 = calc_largmax_text(menu_to_display[0].text, -1, 8, 1, 2);
-            v6 = v5 + x;
-            if (options.music_enabled) {
+            v5 = calc_largmax_text(menu_to_display[option_index].text, -1, 8, 1, 2);
+            v6 = x + v5;
+            draw_x = v6 + 16;
+            if (((s16*)&options)[option_index]) {
                 nonselected_text = off_text;
                 v18 = v6 + calc_largmax_text(on_text, -1, 8, 1, 2) + 32;
-                v8 = v6 + 16;
+                v8 = draw_x;
                 other_text = on_text;
             } else {
                 nonselected_text = on_text;
-                v18 = v6 + 16;
+                v18 = draw_x;
                 v8 = v6 + calc_largmax_text(on_text, -1, 8, 1, 2) + 32;
                 other_text = off_text;
             }
@@ -1126,26 +1130,26 @@ void AFFICHE_ECRAN_OPTIONS(void)
                 to_display = text_to_display;
                 strcpy(to_display->text, other_text);
                 to_display->xpos = v8;
-                to_display->ypos = menu_to_display[0].ypos;
+                to_display->ypos = y;
                 INIT_TXT_BOX(to_display);
                 display_box_text_plasma(to_display, 0);
             } else {
-                display_text(other_text, v8, y, 2, 5);
+                display_text(other_text, v8, y, 2, 1);
             }
         } else if (option_index == 1) {
-            draw_x = x + calc_largmax_text(menu_to_display[1].text, -1, 8, 1, 2);
-            draw_x += 16;
-            DrawBlackBorderBox(draw_x, y - 14, 15, 20 * ecart_barre + 1, 1);
+            v6 = calc_largmax_text(menu_to_display[option_index].text, -1, 8, 1, 2) + 16;
+            DrawBlackBorderBox(x + v6, y - 14, 20 * ecart_barre + 1, 15, 1);
             for (i = 0; i < options.sound_volume; ++i) {
-                if (i >= (2 * max_sound) / 3) {
-                    color = 1;
-                } else if (i >= max_sound / 3) {
-                    color = 3;
-                } else {
-                    color = 5;
+                if (i < max_sound / 3) {
+                    v5 = 5;
+                } else if (i < (2 * max_sound) / 3 && i >= ecart_barre / 3) {
+                    v5 = 3;
+                } else if (i < max_sound && i >= (2 * ecart_barre) / 3) {
+                    v5 = 1;
                 }
-                display_text("|", draw_x + ecart_barre * i,
-                             debut_options + ecart_options + 15, 2, color);
+                /* DOS 3aec3..3aecc uses the outer row index here. */
+                display_text("|", x + (s32)option_index * ecart_barre + v6,
+                             ecart_options + 15 + debut_options, 2, v5);
             }
         }
     }
@@ -2139,7 +2143,10 @@ void AFFICHE_GRAPHIC_SCREEN(void) {
                 gauge(byte_E4CFC + 70, y - 12, 80, 12, 0, 3, 3 - options.SizeScreen);
             }
             break;
-        case 2:
+        case 2: {
+            /* DOS 3d7ee..3d91d has separate frequency-choice temporaries. */
+            s16 selected_x, other_x, third_x;
+            const char *selected_text, *other_text, *third_text;
             if ((options.Frequence == 0 && GameModeVideo == 0) ||
                 ((options.Frequence == 0 || options.Frequence == 70 ||
                   options.Frequence == 80 || options.Frequence == 100) && GameModeVideo == 1)) {
@@ -2176,6 +2183,7 @@ void AFFICHE_GRAPHIC_SCREEN(void) {
                 display_text(selected_text, selected_x, y, 2, 1);
             }
             break;
+        }
         case 5:
             if (OptionGame || options.BackgroundOn == 0 || options.sound_volume != 0) break;
             /* The DOS cases intentionally fall through through the shared guards. */
