@@ -1,14 +1,14 @@
 #include "inline_helpers.h"
-/* box.c (1:13f30..1:14e90: plasma/fire boxes, gauges, palette/capture helpers; PC-only). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_box. ABI pragmas describe external assembly; the marked ORIGINAL_INLINE pragmas contain only proven port/interrupt instructions. */
-/* d_box: preserve the five accepted STRICT functions. CalcTab uses intrinsic sin
- * and one expression: one remaining reciprocal byte differs. See NOTES.md. */
+/* box.c: DOS v1.21 object 1:13f30..1:14e90. Names RAYVERSE/ANDROID.
+ * Worker c_box: six preserved STRICT functions; CalcTab and InitFire remain
+ * NEAR. See NOTES.md for exact differences and rejected hypotheses. */
 #include "game.h"
 #include "rtypes.h"
 #include <conio.h>
 #include <math.h>
 #include <string.h>
-/* CalcTab: sqrt uses the ordinary entry; sin keeps the software intrinsic ABI. */
-/* sqrt: intrinsic register entry IF@DSQRT (1:70552), like sin */
+/* CalcTab calls the software intrinsic register entries IF@DSQRT/IF@DSIN
+ * (DOS 1:13f66 / 1:13f93), as declared by the historical <math.h>. */
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
@@ -55,16 +55,6 @@ extern s16 cosinus(s16 x);
 extern s16 sinus(s16 x);
 extern void MakeMyRand(int set_seed);
 extern s16 myRand(s16 max);
-
-/* ORIGINAL_INLINE: InitPlasma 1:14053, InitFire 1:1447c: OUT DX,AL. */
-extern void box_dac_index(u16 port, u8 index);
-#pragma aux box_dac_index = "out dx,al" parm [dx] [al] modify []
-/* ORIGINAL_INLINE: 1:14059 / 1:14482: CLI. */
-extern void box_palette_lock(void);
-#pragma aux box_palette_lock = "cli" modify []
-/* ORIGINAL_INLINE: 1:1405e..14060 / 1:14487..14489: REP OUTSB; STI. */
-extern void box_palette_write(u16 port, u8 *data, u32 count);
-#pragma aux box_palette_write = "rep outsb" "sti" parm [dx] [esi] [ecx] modify [esi ecx]
 
 #define BOX_SET_PALETTE(first,last) palette_output(first, last, &rvb[0])
 
