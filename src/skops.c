@@ -3,15 +3,13 @@
 #include "game.h"
 #include "map.h"
 #include "screen_types.h"
+#include "inline_helpers.h"
 #include <stdlib.h>
 #ifndef MAX_2
 #define MAX_2(x, y) if (x < y) x = y;
 #endif
 #ifndef ABS
 #define ABS(x) abs(x)
-#endif
-#ifndef SGN
-#define SGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #endif
 #ifndef ashl16
 #define ashl16(v, b) ((v) << (b))
@@ -690,8 +688,8 @@ void do_sko_rayon(void)
         D_801E4E10 = 3;
         sko_rayon_on--;
         ecroule_obj = &level.objects[sko_ecroule_plat];
-        diff_y = sko_final_y - sko_rayon_y;
         diff_x = sko_final_x - sko_rayon_x;
+        diff_y = sko_final_y - sko_rayon_y;
         dist = ABS(diff_x) + ABS(diff_y);
         if (dist < 8) {
             set_main_etat(ecroule_obj, 2);
@@ -703,8 +701,8 @@ void do_sko_rayon(void)
         }
         unk_1 = horloge[4] == 0 && sko_rayon_on < 50;
         if (unk_1) {
-            sko_rayon_dx += SGN(diff_x - sko_rayon_dx);
-            sko_rayon_dy += SGN(diff_y - sko_rayon_dy);
+            sko_rayon_dx += sgn(diff_x - sko_rayon_dx);
+            sko_rayon_dy += sgn(diff_y - sko_rayon_dy);
         }
         sko_rayon_x += sko_rayon_dx;
         sko_rayon_y += sko_rayon_dy;
@@ -741,8 +739,8 @@ void do_sko_rayon2(void)
             diff_y = ashl16(diff_y, (u32)D_801E4E10) / dist;
         }
         if (horl_zero) {
-            sko_rayon_dx += SGN(diff_x - sko_rayon_dx);
-            sko_rayon_dy += SGN(diff_y - sko_rayon_dy);
+            sko_rayon_dx += sgn(diff_x - sko_rayon_dx);
+            sko_rayon_dy += sgn(diff_y - sko_rayon_dy);
         }
         sko_rayon_x += sko_rayon_dx;
         sko_rayon_y += sko_rayon_dy;
@@ -820,7 +818,7 @@ s32 sko_get_eject_sens(void)
 void DO_SOL_ENFONCE(void)
 {
     s16 i;
-    s16 scroll_y = scroll_end_y;
+    s16 scroll_y = ymapmax;
     s16 lave_y = PosLave_Y;
     s32 tremble = sko_ecran_tremble;
     if (ray_mode == 3 ||
@@ -841,7 +839,7 @@ void DO_SOL_ENFONCE(void)
             if (horloge[4] >= 2) xmap += 3;
             else xmap -= 3;
             --scroll_y;
-            if (ymapmax > scroll_start_y) --ymapmax;
+            if (scroll_end_y > scroll_start_y) --scroll_end_y;
             ++pixels_enfonce;
             if ((pixels_enfonce & 15) == 0) --mp.height;
             for (i = 0; i < sko_nb_lave; ++i) {
@@ -869,7 +867,7 @@ void DO_SOL_ENFONCE(void)
     }
     sko_ecran_tremble = tremble;
     PosLave_Y = lave_y;
-    scroll_end_y = scroll_y;
+    ymapmax = scroll_y;
 }
 
 void DO_SKO_PHASE_0(obj_t *sko_obj)
