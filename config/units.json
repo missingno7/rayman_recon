@@ -15854,6 +15854,19 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "blood": {
+   "source": "src/blood.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DoEffectBloodOut": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
