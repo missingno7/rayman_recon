@@ -6227,6 +6227,421 @@
     "addr": "1:3f50c",
     "name": "ANDROID",
     "evidence": "Android symbol CalcSpeed; DOS call at 1:261FE and return compared as AX at 1:26203."
+   },
+   "display_box_text_fire": {
+    "addr": "1:3f878",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f878"
+   },
+   "set_special_key_descriptions": {
+    "addr": "1:398a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:398a4"
+   },
+   "FonduPixel_prg": {
+    "addr": "1:40a38",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:40a38"
+   },
+   "InitClipping": {
+    "addr": "1:39720",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39720"
+   },
+   "PlasmaBox": {
+    "addr": "1:141fc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "check_key_table": {
+    "addr": "1:39308",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39308"
+   },
+   "FonduPixel": {
+    "addr": "1:40b0c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:40b0c"
+   },
+   "FireBox": {
+    "addr": "1:14738",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "default_sprite_clipping": {
+    "addr": "1:06194",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LOAD_CONFIG": {
+    "addr": "1:39388",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39388"
+   },
+   "IsBackgroundOn": {
+    "addr": "1:3980c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3980c"
+   },
+   "DO_NEW_MENUS": {
+    "addr": "1:39998",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39998"
+   },
+   "DO_OPTIONS_IN_GAME": {
+    "addr": "1:39b7c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39b7c"
+   },
+   "INIT_GENERAL_CHOICE": {
+    "addr": "1:39e98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:39e98"
+   },
+   "AFFICHE_ECRAN_GENERAL": {
+    "addr": "1:3a0dc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3a0dc"
+   },
+   "DO_COMMANDE_GENERAL": {
+    "addr": "1:3a178",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3a178"
+   },
+   "END_GENERAL_SCREEN": {
+    "addr": "1:3a3d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3a3d8"
+   },
+   "INIT_OPTIONS_CHOICE": {
+    "addr": "1:3a44c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3a44c"
+   },
+   "INIT_AFFICHE_ECRAN_OPTIONS": {
+    "addr": "1:3a628",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3a628"
+   },
+   "AFFICHE_ECRAN_OPTIONS": {
+    "addr": "1:3ab34",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3ab34"
+   },
+   "DO_COMMANDE_OPTIONS": {
+    "addr": "1:3af28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3af28"
+   },
+   "END_OPTIONS_SCREEN": {
+    "addr": "1:3b334",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3b334"
+   },
+   "INIT_KEY_SCREEN": {
+    "addr": "1:3b3ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3b3ec"
+   },
+   "INIT_AFFICHE_KEY_SCREEN": {
+    "addr": "1:3b514",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3b514"
+   },
+   "AFFICHE_KEY_SCREEN": {
+    "addr": "1:3b8a4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3b8a4"
+   },
+   "DO_COMMANDE_KEY": {
+    "addr": "1:3bacc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3bacc"
+   },
+   "END_KEY_SCREEN": {
+    "addr": "1:3bd50",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3bd50"
+   },
+   "INIT_BUTTON_SCREEN": {
+    "addr": "1:3bda4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3bda4"
+   },
+   "INIT_AFFICHE_BUTTON_SCREEN": {
+    "addr": "1:3be04",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3be04"
+   },
+   "AFFICHE_BUTTON_JOYSTICK": {
+    "addr": "1:3bf60",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3bf60"
+   },
+   "DO_BUTTON_COMMANDE": {
+    "addr": "1:3c138",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c138"
+   },
+   "END_BUTTON_COMMAND": {
+    "addr": "1:3c390",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c390"
+   },
+   "INIT_PAD_SCREEN": {
+    "addr": "1:3c3d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c3d0"
+   },
+   "INIT_AFFICHE_PAD_SCREEN": {
+    "addr": "1:3c4d0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c4d0"
+   },
+   "AFFICHE_PAD_SCREEN": {
+    "addr": "1:3c854",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c854"
+   },
+   "DO_COMMANDE_PAD": {
+    "addr": "1:3c9d8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3c9d8"
+   },
+   "END_PAD_SCREEN": {
+    "addr": "1:3cd38",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3cd38"
+   },
+   "InitParamGraphicsScreen": {
+    "addr": "1:3cd94",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3cd94"
+   },
+   "INIT_GRAPHIC_SCREEN": {
+    "addr": "1:3d094",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3d094"
+   },
+   "INIT_AFFICHE_GRAPHIC_SCREEN": {
+    "addr": "1:3d178",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3d178"
+   },
+   "AFFICHE_GRAPHIC_SCREEN": {
+    "addr": "1:3d55c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3d55c"
+   },
+   "DO_COMMANDE_GRAPHIC": {
+    "addr": "1:3da8c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3da8c"
+   },
+   "END_GRAPHIC_SCREEN": {
+    "addr": "1:3df88",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3df88"
+   },
+   "INIT_VIDEOMODE_SCREEN": {
+    "addr": "1:3e0a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e0a0"
+   },
+   "INIT_AFFICHE_VIDEOMODE_SCREEN": {
+    "addr": "1:3e1cc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e1cc"
+   },
+   "AFFICHE_VIDEOMODE_SCREEN": {
+    "addr": "1:3e470",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e470"
+   },
+   "DO_COMMANDE_VIDEOMODE": {
+    "addr": "1:3e574",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e574"
+   },
+   "END_VIDEOMODE_SCREEN": {
+    "addr": "1:3e708",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e708"
+   },
+   "INIT_CALIBRATE_JOYSTICK": {
+    "addr": "1:3e790",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e790"
+   },
+   "AFFICHE_CALIBRATE_JOYSTICK": {
+    "addr": "1:3e804",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e804"
+   },
+   "calibrate_joystick_prg": {
+    "addr": "1:3e99c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e99c"
+   },
+   "AFFICHE_CENTER_JOYSTICK": {
+    "addr": "1:3e9e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3e9e8"
+   },
+   "center_joystick_prg": {
+    "addr": "1:3eae8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3eae8"
+   },
+   "MAIN_CALIBRATE_JOYSTICK": {
+    "addr": "1:3eb28",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3eb28"
+   },
+   "menu_prg": {
+    "addr": "1:3f17c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f17c"
+   },
+   "DO_INTER_MENU": {
+    "addr": "1:3f2e0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f2e0"
+   },
+   "DO_MENU": {
+    "addr": "1:3f318",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f318"
+   },
+   "default_key": {
+    "addr": "1:3f488",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f488"
+   },
+   "new_key": {
+    "addr": "1:3f4ec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f4ec"
+   },
+   "display_box_msg_prg": {
+    "addr": "1:3f8b4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f8b4"
+   },
+   "display_box_msg": {
+    "addr": "1:3f904",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f904"
+   },
+   "display_box_msg_commande": {
+    "addr": "1:3f960",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f960"
+   },
+   "AfficheYesNo": {
+    "addr": "1:3f9f0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3f9f0"
+   },
+   "DO_YESNOBIS": {
+    "addr": "1:3fac4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3fac4"
+   },
+   "SYNCHRO_LOOP_PALETTE": {
+    "addr": "1:3fef0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3fef0"
+   },
+   "apparition_prg": {
+    "addr": "1:3ff3c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:3ff3c"
+   },
+   "fondu_prg": {
+    "addr": "1:400fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:400fc"
+   },
+   "change_couleur_prg": {
+    "addr": "1:401e8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:401e8"
+   },
+   "FonduOption": {
+    "addr": "1:402fc",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; DOS disassembly at 1:402fc"
+   },
+   "CadreTrans": {
+    "addr": "1:14a98",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "CalcTab": {
+    "addr": "1:13f30",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "CaptureVideo": {
+    "addr": "1:1494c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "DrawBlackBorderBox": {
+    "addr": "1:14b80",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "InitFire": {
+    "addr": "1:143e0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "InitGauge": {
+    "addr": "1:14bf0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "InitMenuPalette": {
+    "addr": "1:1479c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "LoadBnkFixe": {
+    "addr": "1:2e9b4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "LoadLanguageTxt": {
+    "addr": "1:37e10",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "SetDeviceID": {
+    "addr": "1:2eff8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "SetDma": {
+    "addr": "1:2efe8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "SetIrq": {
+    "addr": "1:2efe0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "SetParam": {
+    "addr": "1:2eff0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
+   },
+   "SetPort_": {
+    "addr": "1:2efd4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse xref; called by a candidate function in this range"
    }
   },
   "data": {
@@ -11622,6 +12037,276 @@
     "type": "u8",
     "name": "ANDROID",
     "evidence": "Android symbol P486 (1 byte .bss); DOS byte accesses; cheat worker"
+   },
+   "key_descriptions_azerty": {
+    "addr": "2:6888",
+    "type": "const char *[128]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //96888; DOS indexes a 128-entry pointer table"
+   },
+   "key_descriptions_qwerty": {
+    "addr": "2:6a88",
+    "type": "const char *[128]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //96A88; DOS indexes a 128-entry pointer table"
+   },
+   "hFondu": {
+    "addr": "2:54ce2",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CE2; DOS word access"
+   },
+   "xFondu": {
+    "addr": "2:54ce4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CE4; DOS word access"
+   },
+   "yFondu": {
+    "addr": "2:54ce6",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CE6; DOS word access"
+   },
+   "wFondu": {
+    "addr": "2:54ce8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CE8; DOS word access"
+   },
+   "EtapeFondu": {
+    "addr": "2:54cea",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CEA; DOS word decrement/return"
+   },
+   "word_E4CE0": {
+    "addr": "2:54ce0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CE0; DOS word access"
+   },
+   "pAFFICHE_SCREEN": {
+    "addr": "2:54cc8",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CC8; DOS call through this function pointer in FonduPixel"
+   },
+   "key_descriptions": {
+    "addr": "2:54cb0",
+    "type": "const char **",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4CB0; DOS caller stores each language table pointer here before calling setter"
+   },
+   "InOut": {
+    "addr": "2:54cfb",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "MENU_SUITE": {
+    "addr": "2:3fa38",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "MapTimePause": {
+    "addr": "2:3cfd8",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "MenuPalette": {
+    "addr": "2:4e43c",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "byte_E4CD8": {
+    "addr": "2:54cd8",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "byte_E4CD9": {
+    "addr": "2:54cd9",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "byte_E4CFC": {
+    "addr": "2:54cfc",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "byte_E4CFD": {
+    "addr": "2:54cfd",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "delai_barre": {
+    "addr": "2:3f792",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "delai_stereo": {
+    "addr": "2:3f77a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "dialog_display_item_ptr": {
+    "addr": "2:54cac",
+    "type": "display_item_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "ecart_barre": {
+    "addr": "2:3f79c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "max_sound": {
+    "addr": "2:3f798",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "menu_rvb": {
+    "addr": "2:543ac",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "msg_to_display": {
+    "addr": "2:3bb58",
+    "type": "display_item_t[2]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "option_exit": {
+    "addr": "2:3f754",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "options": {
+    "addr": "2:3d7a4",
+    "type": "options_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pCOMMANDE_BOX": {
+    "addr": "2:54cd4",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pDO_COMMANDE": {
+    "addr": "2:54cc4",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pEND_SCREEN": {
+    "addr": "2:54ccc",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pINIT_AFFICHE_SCREEN": {
+    "addr": "2:54cb8",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pINIT_SCREEN": {
+    "addr": "2:54cbc",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pINIT_SCROLL": {
+    "addr": "2:54cb4",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pLOAD_SCREEN": {
+    "addr": "2:54cd0",
+    "type": "void (*)(void)",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "pos_YN": {
+    "addr": "2:3fa4f",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "position": {
+    "addr": "2:3f78c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "rvb_E40AC": {
+    "addr": "2:540ac",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "rvb_menu_save": {
+    "addr": "2:549ac",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "rvb_options_in_game": {
+    "addr": "2:546ac",
+    "type": "rgb_palette_t",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "rvb_special": {
+    "addr": "2:3d83c",
+    "type": "rgb_palette_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "sortie_options": {
+    "addr": "2:3f78e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "word_E4CEC_x": {
+    "addr": "2:54cec",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "word_E4CEE_h": {
+    "addr": "2:54cee",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "word_E4CF0_y": {
+    "addr": "2:54cf0",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
+   },
+   "word_E4CF4_w": {
+    "addr": "2:54cf4",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c declaration and address annotation; referenced by this candidate"
    }
   }
  }
