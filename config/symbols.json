@@ -8017,6 +8017,96 @@
     "addr": "1:564c4",
     "name": "INVENTED",
     "evidence": "DOS DPMI function 0101 wrapper at 1:564c4; input handle in AX."
+   },
+   "interrupt_handler_5ba70": {
+    "addr": "1:5ba70",
+    "name": "INVENTED",
+    "evidence": "DOS entry saves all registers and segments, calls __GETDS, restores state, and IRETDs at 1:5ba70."
+   },
+   "empty_handler_5ba88": {
+    "addr": "1:5ba88",
+    "name": "INVENTED",
+    "evidence": "Standalone one-byte RET at 1:5ba88, followed by alignment NOPs."
+   },
+   "interrupt_handler_5ba8c": {
+    "addr": "1:5ba8c",
+    "name": "INVENTED",
+    "evidence": "Installed by DOS vector setup at 1:5bae2..1:5bb40; saves state, calls __GETDS, executes CLI/STI/CLD, and IRETDs."
+   },
+   "save_interrupt_vectors": {
+    "addr": "1:5baa8",
+    "name": "INVENTED",
+    "evidence": "DOS loop calls _dos_getvect for vector indexes 0..255 and stores six-byte far pointers at 2:54e80."
+   },
+   "check_saved_drive_letter": {
+    "addr": "1:5bbb0",
+    "name": "INVENTED",
+    "evidence": "DOS body reads 2:3fa29, sets 2:3fa27 from AudioStatusByte, compares saved_argv[0], and updates 2:3fa2a."
+   },
+   "verify_mscdex": {
+    "addr": "1:5bbec",
+    "name": "INVENTED",
+    "evidence": "DOS callsites enter the MSCDEX detection and error-message routine at 1:5bbec."
+   },
+   "verify_cdrom_response": {
+    "addr": "1:5bcec",
+    "name": "INVENTED",
+    "evidence": "DOS body polls CD status and keyboard, prints the prompt strings in its CONST run, and returns the state of 2:3fa2c."
+   },
+   "wait_for_cdrom_response": {
+    "addr": "1:5bed8",
+    "name": "INVENTED",
+    "evidence": "DOS body allocates 100 bytes, polls sub_1a360 up to 1000 times, then frees the allocation."
+   },
+   "save_file_exists": {
+    "addr": "1:5bf3c",
+    "name": "INVENTED",
+    "evidence": "DOS routine opens the caller-supplied path with the literal mode \"rb\", closes it on success, and returns a byte."
+   },
+   "sub_19a8c": {
+    "addr": "1:19a8c",
+    "name": "INVENTED",
+    "evidence": "Direct call target from DOS MSCDEX detection at 1:5bbed; byte return tested in AL."
+   },
+   "sub_19ac8": {
+    "addr": "1:19ac8",
+    "name": "INVENTED",
+    "evidence": "Direct call target from DOS MSCDEX detection at 1:5bc1c; byte return compared with 1."
+   },
+   "sub_1a2e8": {
+    "addr": "1:1a2e8",
+    "name": "INVENTED",
+    "evidence": "Direct call target in CD response polling at 1:5bd11 and 1:5bdbc; byte input/output in AL."
+   },
+   "sub_1a3e8": {
+    "addr": "1:1a3e8",
+    "name": "INVENTED",
+    "evidence": "Direct call target at 1:5bd96; DOS callee consumes AL and preserves EDX, including the caller's drive byte in DL."
+   },
+   "sub_1a440": {
+    "addr": "1:1a440",
+    "name": "INVENTED",
+    "evidence": "Direct call target from CD response handling at 1:5bde8 and 1:5be4b."
+   },
+   "sub_1a5b8": {
+    "addr": "1:1a5b8",
+    "name": "INVENTED",
+    "evidence": "Direct call target from CD response handling at 1:5bd24."
+   },
+   "sub_1a724": {
+    "addr": "1:1a724",
+    "name": "INVENTED",
+    "evidence": "Direct call target from CD response wait at 1:5bf1b."
+   },
+   "effect_math_curve": {
+    "addr": "1:75b4a",
+    "name": "INVENTED",
+    "evidence": "DOS calls this software floating-point helper with the normalized loop coordinate in EAX:EDX at 1:63471; its double result is multiplied by width."
+   },
+   "effect_update_table_633e0": {
+    "addr": "1:633e0",
+    "name": "INVENTED",
+    "evidence": "DOS call from the setup routine at 1:635fc; fills the table in the 0x30-byte state at 2:55760."
    }
   },
   "data": {
@@ -14589,6 +14679,30 @@
     "type": "u8[92]",
     "name": "INVENTED",
     "evidence": "DOS DPMI register workspace directly referenced from 1:56464 through 1:56660; extends to the next named data at 2:54e78."
+   },
+   "interrupt_vectors": {
+    "addr": "2:54e80",
+    "type": "dos_vector_t[256]",
+    "name": "INVENTED",
+    "evidence": "DOS save/restore loops use six-byte vector entries at 2:54e80 through 2:5547f, one entry per interrupt vector."
+   },
+   "drm_byte_CFA27": {
+    "addr": "2:3fa27",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA27; DOS 1:5bbc1 stores one byte here."
+   },
+   "byte_CFA29": {
+    "addr": "2:3fa29",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA29; DOS byte reads and writes in 1:5bbb1..1:5bc36."
+   },
+   "effect_state_55760": {
+    "addr": "2:55760",
+    "type": "effect_state_t *",
+    "name": "INVENTED",
+    "evidence": "DOS routines at 1:633e9, 1:634c4, 1:63524 and 1:6361d treat this as a pointer to a 0x30-byte state with fields at offsets 0, 2, 4..0x2c."
    }
   }
  }
