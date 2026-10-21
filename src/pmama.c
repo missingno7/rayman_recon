@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /*
  * Space Mama boss and knives (GOG v1.21 object 1:543f0-1:56460). File name invented (Rayverse pmama.c).
  * Worker candidate; measurements and unresolved differences: NOTES.md.
@@ -16,7 +17,6 @@
 #endif
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
 #define Abs(value) ((s32)(value) < 0 ? -(s32)(value) : (s32)(value))
-#define ashl16(value, amount) ((s32)(s16)(value) << (amount))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200

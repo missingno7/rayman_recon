@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /*
  * Trumpet enemy (GOG v1.21 object 1:6e420-1:6e760). File name invented (Rayverse trumpet.c). Names: Rayverse/Android.
  * Status per function: config/units.json.
@@ -57,7 +58,6 @@ void DO_TRP_ATTAK(obj_t *obj);
 #define RESERVED_GO_SKIPF 29
 #define GO_NOP 30
 
-#define ashl16(value, amount) ((value) << (amount))
 
 void DO_TRP_COMMAND(obj_t *obj)
 {
@@ -107,10 +107,10 @@ void DO_TRP_COMMAND(obj_t *obj)
 
 void trompetteWind(obj_t *obj, u8 a2)
 {
-    s16 trp_w;
     s16 trp_x;
-    s16 trp_h;
     s16 trp_y;
+    s16 trp_w;
+    s16 trp_h;
     s16 unk_1;
 
     obj->timer = 100;
