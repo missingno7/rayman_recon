@@ -7077,6 +7077,31 @@
     "addr": "1:6fb84",
     "name": "RAYVERSE",
     "evidence": "Rayverse misc_source.c comment //7FB84; Android function name confirmed"
+   },
+   "Plasma": {
+    "addr": "1:14068",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse box.c annotation; DOS entry confirmed by disassembly"
+   },
+   "Fire": {
+    "addr": "1:144c4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse box.c annotation; DOS entry confirmed by disassembly"
+   },
+   "gauge": {
+    "addr": "1:14c54",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse box.c annotation; DOS entry confirmed by disassembly"
+   },
+   "DrawBlackBoxNormal": {
+    "addr": "1:04aef",
+    "name": "RAYVERSE",
+    "evidence": "DOS handwritten helper disassembly; Rayverse symbol name"
+   },
+   "DrawBorderBoxNormal": {
+    "addr": "1:04bbb",
+    "name": "RAYVERSE",
+    "evidence": "DOS handwritten helper disassembly; Rayverse symbol name"
    }
   },
   "data": {
@@ -12820,6 +12845,72 @@
     "type": "u32",
     "name": "ANDROID",
     "evidence": "Android .bss object size 4; DOS writes dword at 2:57470 in SpriteWorldOffset and reads it in SpriteWorldBlocksFree"
+   },
+   "byte_DA43C": {
+    "addr": "2:4a43c",
+    "type": "u8[16384]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DA43C; DOS fixups point to object 2:4A43C; 128x128 byte lookup table"
+   },
+   "p1": {
+    "addr": "2:4002c",
+    "type": "s16[21000]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment D002C; DOS writes/reads words from object 2:4002C; Android size 42000"
+   },
+   "plasma_palette_color_index": {
+    "addr": "2:4e73c",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE73C; DOS byte reads/writes"
+   },
+   "word_DE73E": {
+    "addr": "2:4e73e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE73E; DOS word store"
+   },
+   "word_DE740": {
+    "addr": "2:4e740",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE740; DOS word store"
+   },
+   "word_DE742": {
+    "addr": "2:4e742",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE742; DOS word store"
+   },
+   "word_DE744": {
+    "addr": "2:4e744",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE744; DOS word store"
+   },
+   "word_DE746": {
+    "addr": "2:4e746",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE746; DOS word store"
+   },
+   "word_DE748": {
+    "addr": "2:4e748",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE748; DOS word store"
+   },
+   "word_DE74A": {
+    "addr": "2:4e74a",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE74A; DOS word store"
+   },
+   "word_DE74C": {
+    "addr": "2:4e74c",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c comment DE74C; DOS word store"
    }
   }
  }
