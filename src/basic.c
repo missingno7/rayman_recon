@@ -1303,19 +1303,19 @@ done:
 
 //1F21C
 void INIT_TXT_BOX(display_item_t* box) {
-    s32 i;
+    s16 i;
     char text[200];
+    s16 max_width = 0;
+    s16 line_height = 0;
+    s16 num_lines = 0;
+    s16 max_chars = 0;
+    s16 total_chars = 0;
+    s16 is_slash = 0;
+    s16 char_spacing = 0;
+    s16 space_width = 0;
+    u32 num_let = 0;
+    s16 total_width = 0;
     u8 font_size = box->font_size;
-    s32 total_width = 0;
-    s32 max_width = 0;
-    s32 line_height = 0;
-    s32 num_lines = 0;
-    s32 max_chars = 0;
-    s32 total_chars = 0;
-    s32 is_slash = 0;
-    s32 char_spacing = 0;
-    s32 space_width = 0;
-    s32 num_let = 0;
 
     if (font_size == 2) {
         line_height = 15;
@@ -1332,12 +1332,8 @@ void INIT_TXT_BOX(display_item_t* box) {
     }
     memcpy(text, box->text, sizeof(text));
     if (text[0] != '\0') {
-        for (i = 0; i < sizeof(text); ++i) {
-            char c = text[i];
-            if (c == '\0') {
-                break;
-            }
-            if (c == '/') {
+        for (i = 0; text[i] != '\0'; ++i) {
+            if (text[i] == '/') {
                 is_slash = 1;
                 ++num_lines;
                 if (total_width > max_width) {
@@ -1349,12 +1345,12 @@ void INIT_TXT_BOX(display_item_t* box) {
                 }
                 total_chars = 0;
                 num_let = 0;
-            } else if (c == ' ') {
+            } else if (text[i] == ' ') {
                 num_let = 0;
                 total_width += space_width;
                 ++total_chars;
             } else {
-                num_let = deter_num_let(text[i], text + i + 1);
+                num_let = deter_num_let(text[i], text + (i + 1));
             }
             if (num_let != 0) {
                 total_chars += 1;
@@ -1364,11 +1360,11 @@ void INIT_TXT_BOX(display_item_t* box) {
                 }
             }
         }
-        if (num_lines != 0) {
-            --num_lines;
-        } else {
+        if (num_lines == 0) {
             max_width = total_width;
             num_lines = 1;
+        } else {
+            --num_lines;
         }
         if (is_slash) {
             box->centered_x_pos = box->xpos - (max_width >> 1);
