@@ -14,4 +14,8 @@
 5. **OPEN compiler questions** with the widest payoff: the F3 `rep movs`/`rep stos` copy sequence (jumelle, effect1/2,
    six effect objects; not a 10.5/10.6 difference), clamp lowering in the effect objects, materialised booleans.
 6. **Data**: ObjectsFonctions/t_world_info pointer tables; central BSS declaration order; `_DATA` object boundaries.
-7. Link stage (WLINK object order = tumap order) and v1.12 cross-version classification - later.
+7. Link stage (WLINK object order = tumap order) and v1.12 cross-version classification - later. Not started.
+   First step only (before any WLINK work): the oracle stub is PMODE/W **1.22** and C:\tools has PMWLITE 1.33 only -
+   acquire PMODE/W 1.22 PMWLITE.EXE, then test on a trivial WLINK-built LE whether it is deterministic and whether
+   our decoder round-trips its output. Only then ask whether decoded oracle objects re-compress to the original
+   stream (packer reproducibility before link work, as in earlier projects).
