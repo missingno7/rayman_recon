@@ -264,7 +264,7 @@ void STOPPE_RAY_EN_XY(void);
 u8 TEST_IS_ON_RESSORT_BLOC(obj_t* obj);
 void TEST_SIGNPOST(void);
 void add_alwobj(obj_t* obj);
-s32 butX0pressed(void);
+s16 butX0pressed(void); /* DOS 1:61674 tests AX. Unit-local prototype. */
 s16 butX1pressed(void);
 u8 calc_btyp(obj_t* obj);
 void fin_poing_follow(u8 a1);
@@ -585,7 +585,8 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                         break;
                     case TYPE_BOING_PLAT:
                     case TYPE_BIG_BOING_PLAT:
-                        cur_obj->follow_id = ray.speed_y > 1 ? ray.speed_x : 2;
+                        /* DOS 1:5c896..5c8af: both reads are speed_y. */
+                        cur_obj->follow_id = ray.speed_y > 1 ? ray.speed_y : 2;
                         break;
                 }
 
@@ -709,7 +710,8 @@ void ray_jump(void) {
 
     
 
-    if ((get_eta(&ray)->flags & 1) && (button_released & 1) == 1) {
+    /* DOS 1:5cd6c..5cd83 uses signed remainder, not a bit test. */
+    if ((get_eta(&ray)->flags & 1) && (button_released % 2) == 1) {
         if (ray.main_etat == 7) {
             decalage_en_cours = ashl16(ray.speed_x, 7);
             ray.speed_y -= 2;
@@ -935,6 +937,9 @@ void RAY_SWIP(void) {
     u8 old_ray_main_etat;
 
                     ray.follow_id = -1;
+                    /* DOS 1:5d39d..5d3b7: preserve inertia when leaving a slope platform. */
+                    if (follow_obj->type == TYPE_254_SLOPEY_PLAT)
+                        ray.nb_cmd = 1;
                     old_ray_main_etat = ray.main_etat;
                     set_main_etat(&ray, 2);
 
@@ -2249,10 +2254,10 @@ void RAY_IN_THE_AIR(void) {
             in_air_because_hit = 0;
 
             if (!(TEST_IS_ON_RESSORT_BLOC(&ray))) {
-    u16 snd;
-
-                snd = (num_world == 6 && num_level == 1) ? 242 : 19;
-                PlaySnd(snd, -1);
+                if (num_world == 6 && num_level == 1)
+                    PlaySnd(242, -1);
+                else
+                    PlaySnd(19, -1);
             }
 
             if (ray.nb_cmd == 0) {
@@ -2309,7 +2314,7 @@ void RAY_IN_THE_AIR(void) {
         } else {
             if (ray.sub_etat != 7) {
                 if (ray.sub_etat == 8) {
-                    if (ray.speed_y > -1) {
+                    if (ray.speed_y >= 0) {
                         rayMayLandOnAnObject(&may_land_obj, -1);
                     }
                     if (ray.main_etat != 2 || ray.sub_etat != 8) {
@@ -2334,7 +2339,7 @@ void RAY_IN_THE_AIR(void) {
             ray.speed_y = -10;
         }
     }
-    if (num_world == world_2_music && num_level == 15 && (xmapmax < ray.x + 150) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
+    if (num_world == world_2_music && num_level == 15 && (ray.x + 150 > xmapmax) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
         ChangeLevel();
         DO_FADE_OUT();
     }
