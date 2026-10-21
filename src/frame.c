@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <i86.h>
+#include "frame_local.h"
 
 typedef struct vec2b_t { u8 x, y; } vec2b_t;
 typedef void draw_func_t(s32 x, s32 sprite_field_A, s32 y, vec2b_t size, u8 *draw_buf, u8 *image_data);
@@ -50,8 +51,10 @@ void temp_free(u8 *buffer);
 typedef void delay_500_t(s32 milliseconds);
 #pragma aux delay_500_t parm [eax]
 extern delay_500_t wait_milliseconds;
-typedef void bios_wait_timer_t(s32 high, s32 low);
-#pragma aux bios_wait_timer_t parm [ecx] [edx]
+/* DOS 1:2b5fb loads the INT 15h/AH=83h event flag into EBX before
+   1:2b60e calls the assembly wrapper at 1:0273a. */
+typedef void bios_wait_timer_t(s32 high, s32 low, u8 *flag);
+#pragma aux bios_wait_timer_t parm [ecx] [edx] [ebx]
 extern bios_wait_timer_t bios_wait_timer;
 typedef void copy_dwords_t(u32 *source, u32 *dest, s32 count);
 #pragma aux copy_dwords_t parm [esi] [edi] [ecx] modify exact [ecx esi edi]
@@ -291,14 +294,14 @@ void sub_3B580(void) {
 }
 
 s32 sub_3B5E8(void) {
+    u32 *dest = (u32*)0xa0000;
     s32 iterations = 0;
-    u8 *ready = unk_ptr_3d840;
+    *unk_ptr_3d840 = 0;
+    bios_wait_timer(7, 0xa120, unk_ptr_3d840);
     do {
-        *ready = 0;
-        bios_wait_timer(7, 0xa120);
-        copy_dwords((u32*)0, (u32*)0xa0000, 0x3fff);
+        copy_dwords((u32*)0, dest, 0x3fff);
         ++iterations;
-    } while (*ready == 0);
+    } while (*unk_ptr_3d840 == 0);
     return iterations / 8;
 }
 
@@ -342,7 +345,9 @@ void calc_gros_type(void) {
 }
 
 u8 find_in_map(s16 x, s16 y) {
-    return smap[(y >> 4) * 40 + (x >> 4)];
+    y = (s32)y >> 4;
+    x = (s32)x >> 4;
+    return smap[y * 40 + x];
 }
 
 void init_find_in_map(void) {
@@ -491,6 +496,7 @@ void sub_3BE20(s16 x, s16 y) {
     s32 mask;
     u32 dest = 0;
     s16 plane;
+    u32 offset;
     context[0] = (u32)plan0bit_length >> 2;
     context[1] = (u32)PLAN0BIT + plan0bit_length;
     context[2] = plan0bit_length - 1;
@@ -501,7 +507,7 @@ void sub_3BE20(s16 x, s16 y) {
         asm_037e4(frame_records_38888, draw_buffer);
     } else {
         for (plane = 0; plane < 4; ++plane) {
-            u32 offset = plane * ((u32)plan0bit_length >> 2);
+            offset = ((u32)plan0bit_length >> 2) * plane;
             asm_03257(mask, plan0bit_nb_bytes, offset, context, &frame_records_38888[0][0], dest);
             mask *= 2;
             if (mask == 16) {
@@ -1024,23 +1030,19 @@ void DoFadePaletteSpecialPC(s16 start, s16 end) {
 
 #define WRITE_SPECIAL_PALETTE(palette_ptr) \
     do { \
-        s32 palette_byte; \
         u8 *palette_data = (u8*)(palette_ptr) + 3; \
-        outp(0x3c8, 1); \
-        for (palette_byte = 0; palette_byte < 765; ++palette_byte) \
-            outp(0x3c9, palette_data[palette_byte]); \
+        frame_palette_index(0x3c8, 1); \
+        frame_palette_stream(0x3c9, palette_data, 765); \
     } while (0)
 
 void DoPaletteSpecialPC(void) {
     if (fade & 0x40) {
         if (num_world == 5 && num_level == 4) {
-            if (horloge[5] != 0) {
-                if (numero_palette_special == 0)
-                    numero_palette_special = 1;
-            } else {
+            if (horloge[5] == 0) {
                 WRITE_SPECIAL_PALETTE(&rvb_special[numero_palette_special]);
                 ++numero_palette_special;
-            }
+            } else if (numero_palette_special == 0)
+                numero_palette_special = 1;
             if (numero_palette_special == 15)
                 numero_palette_special = 0;
         } else if ((num_world == 1 && num_level == 9) ||
