@@ -1,4 +1,4 @@
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker w2_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker d_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -386,37 +386,41 @@ void DoSpiderRaymanZDD(obj_t* obj);
 
 void display2(obj_t* obj) {
     anim_t* anim;
-    u16 layers_per_frame;
-    anim_layer_t* layer;
-    s32 layer_index;
-    s32 proj_y;
+    s16 layers_per_frame;
+    draw_func_t* draw_func;
+    u16 layer_index;
+    s16 proj_y;
     sprite_t* sprite;
     s16 x;
     s32 proj_x;
     s32 proj_height;
     s32 proj_width;
-    vec2b_t proj_size;
+    u32 packed_size;
+    u16 sprite_index;
+    u8 *target;
     u8 sprite_field_A;
-    draw_func_t* draw_func;
+    anim_layer_t* layer;
     u8* image_data;
 
     anim = obj->animations + obj->anim_index;
     layers_per_frame = anim->layers_per_frame & 0x3FFF;
     layer = anim->layers + (obj->anim_frame * layers_per_frame);
+    target = draw_buffer;
     for (layer_index = 0; layer_index < layers_per_frame; ++layer_index) {
         proj_y = get_proj_y(obj->scale, layer->y + obj->screen_y);
-        if (layer->sprite_index != 0) {
-            sprite = obj->sprites + layer->sprite_index;
+        sprite_index = layer->sprite_index;
+        if (sprite_index != 0) {
+            sprite = obj->sprites + sprite_index;
             if (sprite->id != 0) {
-                if (obj->flags.flip_x) {
+                if (!obj->flags.flip_x) {
+                    x = layer->x + obj->screen_x;
+                } else {
                     if (obj->scale == 256 && layer_index == 5 &&
-                        obj->anim_index >= 14 && obj->anim_index <= 16)
+                        obj->anim_index <= 16 && obj->anim_index >= 14)
                         x = -16;
                     else
                         x = 0;
                     x += obj->offset_bx * 2 - layer->x - sprite->outer_width + obj->screen_x;
-                } else {
-                    x = layer->x + obj->screen_x;
                 }
                 if (obj->flags.flip_x ^ layer->mirrored)
                     draw_func = DrawSpriteFlipNormalEtX;
@@ -425,12 +429,11 @@ void display2(obj_t* obj) {
                 proj_x = get_proj_x(obj->scale, x);
                 proj_height = get_proj_dist(obj->scale, sprite->outer_height);
                 proj_width = get_proj_dist(obj->scale, sprite->outer_width);
-                proj_size.width = (u8)proj_width;
-                proj_size.height = (u8)proj_height;
+                packed_size = (u16)((proj_height << 8) + proj_width);
                 sprite_field_A = sprite->color >> 4;
                 image_data = obj->img_buffer + sprite->offset_in_atlas;
-                draw_func(proj_x, sprite_field_A, proj_y, (u16)((proj_size.height << 8) + proj_size.width),
-                          draw_buffer, image_data);
+                draw_func(proj_x, sprite_field_A, proj_y, packed_size,
+                          target, image_data);
             }
         }
         ++layer;
@@ -747,17 +750,14 @@ void DISPLAY_ALL_OBJECTS(void) {
     s16 i;
     s16 j;
     obj_t* obj;
+    s32 ymin;
     s32 xmin;
     s32 xmax;
-    s32 ymin;
     s32 ymax;
-    s32 hp;
     s32 angle;
-    s32 remainder;
-    s32 divisor;
 
     for (current_display_prio = 7; current_display_prio >= 1; --current_display_prio) {
-        for (i = 0, obj = level.objects + actobj.objects[0]; i < actobj.num_active_objects;
+        for (i = 0, obj = actobj.objects[0] + level.objects; i < actobj.num_active_objects;
              ++i, obj = level.objects + actobj.objects[i]) {
             if (current_display_prio == 1 &&
                 (flags[obj->type].flags0 & 0x80) != 0)
@@ -769,7 +769,7 @@ void DISPLAY_ALL_OBJECTS(void) {
             } else if (obj->type == 0x51) {
                 DISPLAY_CYMBALE(obj, draw_buffer, 1);
             } else if (obj->type == 0xFE) {
-                angle = ((pente[abs((s8)obj->hit_points)] << 9) *
+                angle = ((pente[ABS_1((s32)(s8)obj->hit_points)] << 9) *
                     -sgn((s8)obj->hit_points)) / 360;
                 DISPLAY_DEFORMATION(obj, (s16)angle, 0x1000, 0x1000);
             } else if (obj->type == 0xFC || obj->type == 0xFB || obj->type == 0xAD) {
@@ -782,9 +782,7 @@ void DISPLAY_ALL_OBJECTS(void) {
             }
         }
         if (current_display_prio == 3) {
-            divisor = 2 * display_mode + 2;
-            remainder = ray.iframes_timer % divisor;
-            if (gele || remainder <= display_mode ||
+            if (gele || ray.iframes_timer % (2 * display_mode + 2) <= display_mode ||
                 (ray.iframes_timer > 90 && !RayEvts.squashed)) {
                 if (ray.flags.alive && ray.is_active) {
                     display2(&ray);
@@ -799,7 +797,7 @@ void DISPLAY_ALL_OBJECTS(void) {
             }
         }
     }
-    for (i = 0, obj = level.objects + actobj.objects[0]; i < actobj.num_active_objects;
+    for (i = 0, obj = actobj.objects[0] + level.objects; i < actobj.num_active_objects;
          ++i, obj = level.objects + actobj.objects[i]) {
         if (obj->display_prio == 0 && obj->type == 0xF5) {
             display2(obj);
