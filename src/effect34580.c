@@ -1,14 +1,14 @@
 /* Candidate for obj1:34580..34d90. The DOS switch table at 34580 belongs to the
  * first function; these are PC-only screen-wipe helpers (INVENTED names). */
 #include "effect_types.h"
-#include <string.h>
+#include "inline_helpers.h"
 
-extern s32 dword_E0D14;
+extern effect_rows_t *dword_E0D14;
 extern u8 *EffetBufferNormal;
-extern void *sub_6FBB4(s32 size);
+extern void *sub_6FBB4(u32 size);
 extern void JumelleFreeArray(void **p);
 
-#define current_rows() ((effect_rows_t *)(u32)dword_E0D14)
+#define current_rows() (dword_E0D14)
 
 void effect_prepare_rows(u8 mode, s16 direction)
 {
@@ -72,11 +72,11 @@ u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)
     u8 okay = 0;
 
     if (screen != 0 && destination != 0) {
-        dword_E0D14 = (s32)(u32)sub_6FBB4(sizeof(effect_rows_t));
+        dword_E0D14 = (effect_rows_t *)sub_6FBB4(sizeof(effect_rows_t));
         state = current_rows();
         if (state != 0) {
             state->count = 200;
-            memcpy(EffetBufferNormal, screen, 0xfa00);
+            copy(EffetBufferNormal, screen, 0xfa00);
             state->screen = EffetBufferNormal;
             state->destination = (u8 *)destination;
             state->entries = (effect_span_t *)sub_6FBB4(state->count * sizeof(effect_span_t));
@@ -93,11 +93,14 @@ u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)
 
 void effect_helper_34760(void)
 {
-    effect_rows_t *state = current_rows();
-    effect_span_t *span = state->entries;
+    effect_span_t *span;
+    effect_rows_t *state;
     s32 index;
 
-    for (index = 0; index < state->count; ++index, ++span) {
+    state = current_rows();
+    index = 0;
+    span = state->entries;
+    for (; index < state->count; ++index, ++span) {
         s32 width = span->width;
         s32 destination_y = span->destination_y;
         s32 source_y = span->source_y;
@@ -119,7 +122,7 @@ void effect_helper_34760(void)
                 if (width > 0) {
                     u8 *source = state->screen + source_y * 320 + source_x;
                     u8 *destination = state->destination + destination_y * 320 + destination_x;
-                    memcpy(destination, source, width);
+                    copy(destination, source, width);
                 }
             }
         }
