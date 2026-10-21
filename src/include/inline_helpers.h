@@ -182,4 +182,10 @@ s32 max32(s32 a,s32 b);
  "mov eax,ebx" \
  "max_end:" \
  parm [eax] [ebx] value [eax] modify exact [eax ebx]
+/* ORIGINAL_INLINE (gate met 2026-10-22, build/workers/w10_proofs): constant left shift of a 32-bit value through CL
+ * (`mov cl,N` is caller code; plain C folds `x << N` to `shl eax,N`). Bytes: d3 e0 (shl eax,cl). Sites: 4 in 2 functions.
+ * EAX value, CL count -> EAX; modify exact [eax cx] (CL reload evidence as for ashl16).
+ * STRICT proofs: set_ball_pos (breakout), RAY_GOING_BALANCE (ray); 0 STRICT losses in six audited units. */
+s32 ashl32(s32 value, u8 shift);
+#pragma aux ashl32 =   "shl eax,cl"   parm [eax] [cl] value [eax] modify exact [eax cx]
 #endif
