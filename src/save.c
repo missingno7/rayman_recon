@@ -1,7 +1,6 @@
 /* save object (DOS v1.21, 1:63b80..1:65837; following zeros are linker padding).
- * Names RAYVERSE/ANDROID, seeded by tu_save; finishing candidate by gfin_save.
- * Worker status and unresolved differences: NOTES.md. Shared bitfield proposal:
- * header_proposal.md. No shared headers or accepted units were changed.
+ * Names RAYVERSE/ANDROID; tu_save/gfin_save/h_save reconstruction, d_save layout pass.
+ * See NOTES.md for verified results and remaining differences.
  */
 #include "obj.h"
 #include "game.h"
@@ -171,6 +170,7 @@ void restoreGameState(save_state_t *save_state)
     s16 nb_objs;
     s16 index;
     obj_t *save_obj;
+    s32 saved_id;  /* DOS 1:63eec promotes the signed save-object id before indexing. */
 
     if (save_state->is_just_saved) {
         if (RayEvts.tiny) {
@@ -193,8 +193,9 @@ void restoreGameState(save_state_t *save_state)
             RayEvts.reverse = save_state->rayevts_reverse;
         }
 
-        if (save_state->save_obj_id != -1) {
-            save_obj = level.objects + save_state->save_obj_id;
+        saved_id = save_state->save_obj_id;
+        if (saved_id != -1) {
+            save_obj = level.objects + saved_id;
             save_obj->x = save_state->save_obj_x_pos;
             save_obj->y = save_state->save_obj_y_pos;
             save_obj->detect_zone_flag = save_state->save_obj_detect_zone_flag;
@@ -237,9 +238,10 @@ void restoreGameState(save_state_t *save_state)
         poing_obj->init_sub_etat = save_state->poing_sub_etat;
         poing.sub_etat = save_state->poing_sub_etat;
         dead_time = save_state->dead_time;
+        i = 0;  /* DOS 1:64046: initialize before the two reset stores. */
         decalage_en_cours = 0;
         ray_wind_force = 0;
-        for (i = 0; i < 8; i++)
+        for (; i < 8; i++)
             nb_floc[i] = save_state->nb_floc[i];
         VENT_X = save_state->vent_x;
         ray.speed_x = 0;
@@ -280,14 +282,15 @@ void restoreGameState(save_state_t *save_state)
 
 s16 get_offset_in_safe_zone(s16 event_index)
 {
-    s32 offset = 0;
+    s16 offset = 0;  /* DOS 1:641f6 zeroes BH, retaining a narrow accumulator. */
     s16 i;
 
     for (i = 1; i < num_world; i++)
         offset += nb_levels_in_world[i] * 32;
     for (i = 1; i < num_level; i++)
         offset += 32;
-    return (s16)(offset + ashr16(event_index, 3));
+    offset += ashr16(event_index, 3);
+    return offset;
 }
 
 void reset_save_zone_level(void)
