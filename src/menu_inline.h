@@ -1,5 +1,37 @@
 #ifndef SFIN_MENU_INLINE_H
 #define SFIN_MENU_INLINE_H
+/* INVENTED purpose name. ORIGINAL_INLINE, DOS 1:39eb5..39edf inclusive.
+   Saves/restores ESP through EBX. Its internal CALL supplies ECX=39ec7;
+   writers 39ed4/39edb erase that CALL (39ec2..39ec6), and 39eb9 erases
+   the backward JMP (39ec7..39ec8), before a temporary CODE-as-stack pivot.
+   No arguments/result. EBX/ECX clobbered; ESP restored; flags preserved.
+   DOS keeps EAX (color initializer), EDX (zero), ESI/EDI (callbacks) live.
+   Evidence: build/workers/x_menutramp/NOTES.md and tramp.asm. */
+void menu_patch_once(void);
+#pragma aux menu_patch_once = \
+    "mov ebx,esp" \
+    "jmp short once" \
+    "erase_back:" \
+    "mov word ptr [ecx],9090h" \
+    "mov esp,ecx" \
+    "nop" \
+    "nop" \
+    "once:" \
+    "call patch_call" \
+    "jmp short erase_back" \
+    "jmp short restore" \
+    "nop" \
+    "nop" \
+    "restore:" \
+    "mov esp,ebx" \
+    "jmp short done" \
+    "patch_call:" \
+    "mov ecx,dword ptr [esp]" \
+    "mov dword ptr [ecx-5],90909090h" \
+    "mov byte ptr [ecx-1],90h" \
+    "ret" \
+    "done:" \
+    modify exact [ebx ecx]
 /* INVENTED purpose names. ORIGINAL_INLINE instructions verified in DOS v1.21.
    Arithmetic, comparisons and register setup remain ordinary C. */
 u32 menu_read_dr0(void);

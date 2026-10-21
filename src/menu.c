@@ -1,5 +1,5 @@
 #include "inline_helpers.h"
-/* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. INIT_GENERAL_CHOICE contains a DOS self-modifying trampoline (1:39ed1, OPEN). */
+/* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. INIT_GENERAL_CHOICE's ORIGINAL_INLINE trampoline is in menu_inline.h. */
 #include "obj.h"
 #include "game.h"
 #include "lowlevel.h"
@@ -770,16 +770,15 @@ void DO_OPTIONS_IN_GAME(void)
 void INIT_GENERAL_CHOICE(void) {
     u8 color_table[4] = {0, 0, 0, 0};
     u8 i;
-    /* OPEN: DOS 1:39eb7..39edf self-modifying trampoline is not expressible
-       under the permitted inline-instruction rule; no replacement bytes added. */
+    menu_patch_once();
     pINIT_AFFICHE_SCREEN = NULL;
     pINIT_SCROLL = NULL;
+    pAFFICHE_SCREEN = AFFICHE_ECRAN_GENERAL;
     pDO_COMMANDE = DO_COMMANDE_GENERAL;
     pEND_SCREEN = END_GENERAL_SCREEN;
-    pAFFICHE_SCREEN = AFFICHE_ECRAN_GENERAL;
     first_option = 0;
-    option_exit = 3;
     nbre_options = 4;
+    option_exit = 3;
     basex = 160;
     for (i = 0; i < nbre_options; ++i) {
         strcpy(menu_to_display[i].text, language_txt[190 + i]); // "music"
