@@ -563,7 +563,7 @@ s32 instantSpeed(s16 speed);
 void SET_X_SPEED(obj_t* obj);
 void make_active2(obj_t* obj, u8 do_nova);
 void make_active(obj_t* obj, u8 do_nova);
-u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4);
+s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4);
 void kill_obj(obj_t *obj);
 void freezeAnim(obj_t *obj, u8 param_2);
 s16 prof_in_bloc(obj_t* obj);
@@ -626,7 +626,7 @@ extern s32 instantSpeed(s16 speed);
 extern void SET_X_SPEED(obj_t* obj);
 extern void make_active2(obj_t* obj, u8 do_nova);
 extern void make_active(obj_t* obj, u8 do_nova);
-extern u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4);
+extern s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4);
 extern void kill_obj(obj_t *obj);
 extern void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj);
 extern s16 DO_PESANTEUR(obj_t* obj);
@@ -1055,8 +1055,9 @@ void allocateLandingSmoke(obj_t* in_obj) {
     s16 j;
     obj_t * cur_obj;
     s16 nb_objs;
+    s32 pos;
 
-    /* 29F3C 8014E73C -O2 -msoft-float */
+    /* DOS 1:45de5..45e0a: form each coordinate before its store. */
 
     for (i = 0; i <= 2; i += 2)
     {
@@ -1072,12 +1073,15 @@ void allocateLandingSmoke(obj_t* in_obj) {
                 cur_obj->active_timer = 0;
                 cur_obj->active_flag = ACTIVE_ALIVE;
                 set_main_and_sub_etat(cur_obj, 0, i != 0);
-                cur_obj->x = in_obj->x + in_obj->offset_bx - cur_obj->offset_bx;
-                cur_obj->y = in_obj->y + in_obj->offset_by - cur_obj->offset_by;
-                if (i != 0)
-                    cur_obj->display_prio = 2;
-                else
-                    cur_obj->display_prio = 7;
+                pos = in_obj->x;
+                pos += in_obj->offset_bx;
+                pos -= cur_obj->offset_bx;
+                cur_obj->x = pos;
+                pos = in_obj->y;
+                pos += in_obj->offset_by;
+                pos -= cur_obj->offset_by;
+                cur_obj->y = pos;
+                cur_obj->display_prio = i != 0 ? 2 : 7;
                 calc_obj_pos(cur_obj);
                 break;
             }
@@ -1141,28 +1145,21 @@ void make_active(obj_t* obj, u8 do_nova) {
     }
 }
 
-u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4)
+s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
 {
-    s32 unk_3;
-    s32 unk_1;
+    s16 unk_1;
     s16 zdiff_x;
     s16 zdiff_y;
     u8 offset_bx;
-    s32 unk_x;
-    s32 unk_y;
-    u8 unk_param_4;
 
     unk_1 = 0;
     zdiff_x = zonediffx[ot];
     zdiff_y = zonediffy[ot];
     offset_bx = obj->offset_bx;
-    unk_x = in_x;
-    unk_y = in_y;
-    unk_param_4 = param_4;
 
-    if (flags[ot].flags0 >> OBJ0_KEEP_ACTIVE & 1)
+    if (flags[ot].flags0 & 0x10)
     {
-        if (flags[ot].flags0 >> OBJ0_BOSS && IsBossThere)
+        if (flags[ot].flags0 & 0x80 && IsBossThere)
             unk_1 = 1;
         else
         {
@@ -1180,11 +1177,11 @@ u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4)
                 break;
             case TYPE_FISH:
             case TYPE_BBL:
-                if ((u16) (unk_x + 283) < 727)
+                if (in_x > -284 && in_x < 444)
                     unk_1 = 1;
                 break;
             case TYPE_PIERREACORDE:
-                if (((s16) unk_y + zdiff_y > -50) && (u16) (unk_x + 283) < 783)
+                if (((s16) in_y + zdiff_y > -50) && in_x > -284 && in_x < 500)
                 {
                     if (level.objects[pierreAcorde_obj_id].hit_points == 0)
                     {
@@ -1193,57 +1190,48 @@ u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4)
                     }
                 }
             case TYPE_CORDE:
-                if (level.objects[pierreAcorde_obj_id].hit_points != 0)
+                if (level.objects[pierreAcorde_obj_id].hit_points > 0)
                     unk_1 = 1;
                 break;
             case TYPE_EAU:
-                if ((u16) (unk_x + 283) < 783)
+                if (in_x > -284 && in_x < 500)
                     unk_1 = 1;
                 break;
             case TYPE_STONEDOG2:
-                if (((u16) (unk_x + 283) < 727) && ((u16) (unk_y + 99) < 349))
+                if ((in_x > -284 && in_x < 444) && (in_y > -100 && in_y < 250))
                     unk_1 = 1;
                 break;
             case TYPE_SMA_PETIT_LASER:
             case TYPE_SMA_GRAND_LASER:
                 offset_bx = 128;
                 break;
-            case TYPE_PAILLETTE:
-            case TYPE_DESTROYING_DOOR:
-                if (((u16) (obj->y - 50) > 320) || !IsBossThere)
-                {
-                    unk_1 = 2;
-                }
-                else
-                    unk_1 = 1;
-                break;
+
             }
         }
     }
 
-    unk_3 = unk_1;
     if (unk_1 == 0)
     {
-        if (unk_param_4)
+        if (param_4)
         {
             zdiff_x += 60;
             zdiff_y += 60;
         }
 
-        unk_1 = 1;
         if (
-            ((s16) unk_x < -284 - zdiff_x) || ((s16) unk_x > zdiff_x + 444) ||
-            ((s16) unk_y < -144 - zdiff_y) || ((s16) unk_y > zdiff_y + 304) ||
+            ((s16) in_x < -284 - zdiff_x) || ((s16) in_x > zdiff_x + 444) ||
+            ((s16) in_y < -144 - zdiff_y) || ((s16) in_y > zdiff_y + 304) ||
             (obj->y + obj->offset_by < -30) || (obj->y > mp.height * 16 + 30) ||
             (obj->x + offset_bx * 2 < 0) || (obj->x > mp.width * 16)
         )
             unk_1 = 0;
-        unk_3 = unk_1;
-    }
+        else
+            unk_1 = 1;
+        }
 
-    if (unk_3 == 1)
+    if (unk_1 == 1)
     {
-        if (flags[ot].flags0 >> OBJ0_BOSS & 1)
+        if (flags[ot].flags0 & 0x80)
         {
             IsBossThere = 1;
             if (
@@ -1253,7 +1241,7 @@ u8 in_action_zone(s32 in_x, s32 in_y, obj_t *obj, u8 param_4)
                 Change_Wait_Anim();
         }
     }
-    return !(unk_1 ^ 1);
+    return unk_1 == 1;
 }
 
 void kill_obj(obj_t *obj)

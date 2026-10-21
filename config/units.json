@@ -7432,7 +7432,7 @@
      ]
     },
     "in_action_zone": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
