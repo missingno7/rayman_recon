@@ -1,4 +1,6 @@
-/* 1:25f50..1:27b90: cheat.c + display.c tail (level/vignette loading, init/dead/map loops, PC cheats, exit). Names RAYVERSE/ANDROID (sub_* = Rayverse placeholders); seeded by tools/seed.py, worker tu_cheat. Vector wrappers sub_370E8/sub_37134 via Watcom _dos_setvect. Missing ISR and inline interrupt/clear spans prevent object closure; see NOTES.md. */
+/* cheat object, DOS v1.21, worker w4_cheatload. Names inherited RAYVERSE/ANDROID;
+ * sub_* names are reference placeholders. Timer ISR reconstructed from DOS.
+ * Partial candidate: see NOTES.md for remaining byte/layout differences. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -17,10 +19,10 @@ void video_interrupt(u32 service);
 /* ORIGINAL_INLINE: DOS 1:26d88, INT 21h process exit. */
 void terminate_interrupt(u32 service);
 #pragma aux terminate_interrupt = "int 21h" parm [eax] modify exact []
-/* ORIGINAL_INLINE: DOS 1:26164, CLI; no general register changes. */
+/* ORIGINAL_INLINE: DOS 1:26164, 1:26fbb, 1:270c5, CLI; no general register changes. */
 void inhibit_interrupts(void);
 #pragma aux inhibit_interrupts = "cli" modify exact []
-/* ORIGINAL_INLINE: DOS 1:26222, STI, with no CLD or register changes. */
+/* ORIGINAL_INLINE: DOS 1:26222 and 1:270cc, STI; no CLD or register changes. */
 void permit_interrupts(void);
 #pragma aux permit_interrupts = "sti" modify exact []
 
@@ -143,9 +145,9 @@ extern u8 need_timer;
 extern u16 word_CF7E6;
 extern u16 word_CF7EE;
 extern u16 word_CF7F0;
-extern u32 timer_count;
-extern u32 timer_step;
-extern u32 timer_phase;
+extern s32 timer_count;
+extern s32 timer_step;
+extern s32 timer_phase;
 extern void (__interrupt __far *old_timer)(void);
 extern u8 MessageProgram;
 extern u8 * cheat_code_10_wiz;
@@ -812,8 +814,50 @@ void END_WORLD_VIGNET(void) {
     memcpy(&current_rvb, &rvb_save, 768);
 }
 
-/* sub_36FAC is one 316-byte interrupt handler.  sub_36FBB labels its C body
-   after the 15-byte compiler prefix.  Its inline DAC output remains unresolved. */
+/* DOS sub_36FAC is one 316-byte ISR; sub_36FBB labels its body at +15.
+ * This C reconstruction is NEAR: setup, register allocation and extent differ. */
+/* Timer and palette arithmetic: DOS 1:26fbb..2709f.
+ * Signed IDIV and JL/JG prove these existing dword bindings are signed.
+ * Helper names are INVENTED (Android lookup: absent). */
+void palette_write_index(u16 port, u8 index);
+/* ORIGINAL_INLINE: DOS 1:270bf, OUT DX,AL; no general-register effects. */
+#pragma aux palette_write_index = "out dx,al" parm [dx] [al] modify exact []
+void palette_write_components(u16 port, const u8 *components, u32 count);
+/* ORIGINAL_INLINE: DOS 1:270ca, REP OUTSB; ESI advances and ECX becomes zero. */
+#pragma aux palette_write_components = "rep outsb" parm [dx] [esi] [ecx] modify exact [esi ecx]
+
+void __interrupt __far sub_36FAC(void)
+{
+    s32 i, component;
+    inhibit_interrupts();
+    ++timer_phase;
+    if (timer_phase % 10 != 0) {
+        timer_step += timer_count;
+        if (timer_step >= 128) {
+            timer_step = 128;
+            timer_count = -timer_count;
+        } else if (timer_step <= 32) {
+            timer_step = 32;
+            timer_count = -timer_count;
+        }
+        for (i = 1; i < 9; ++i) {
+            component = ((s32)rvb_plan3.colors[i].r * timer_step) >> 6;
+            current_rvb.colors[i].r = component < 63 ? component : 63;
+            component = ((s32)rvb_plan3.colors[i].g * timer_step) >> 6;
+            current_rvb.colors[i].g = component < 63 ? component : 63;
+            component = ((s32)rvb_plan3.colors[i].b * timer_step) >> 6;
+            current_rvb.colors[i].b = component < 63 ? component : 63;
+        }
+        synchro();
+        palette_write_index(0x3c8, 1);
+        inhibit_interrupts();
+        palette_write_components(0x3c9, (const u8 *)&current_rvb.colors[1], 8 * 3);
+        permit_interrupts();
+    }
+    _chain_intr(old_timer);
+    _enable();
+}
+
 void sub_370E8(void)
 {
     timer_phase = 0;
