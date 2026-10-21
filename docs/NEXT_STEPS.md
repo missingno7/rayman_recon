@@ -12,7 +12,10 @@
    Largest pools: moteur 32, menu 28, ray 25, frame 22, breakout 17, affiche 16, basic 13, collision1 13.
 4. **Layout closure**: each census brief names the first size-drifting function per object (W-LAYOUT); fixing it is
    the cheapest way to flip REFS_LAYOUT functions. fnd: matching INIT_FND also fixes LOAD_FND's jump table.
-5. **OPEN compiler questions** with the widest payoff: the F3 `rep movs`/`rep stos` copy sequence (jumelle, effect1/2,
+5. **copy_guarded (OPEN)**: the guarded 19-byte copy variant (JE before REP MOVSD) has one STRICT proof (w9_copy) and
+   is not in inline_helpers.h; movieprefix (1:2a2d8 area) and effect6c3b0 (two sites) call it undeclared, so those
+   functions stay NEAR. A second-unit proof admits it to the header (same gate); until then, do not declare it per unit.
+6. **OPEN compiler questions** with the widest payoff: the F3 `rep movs`/`rep stos` copy sequence (jumelle, effect1/2,
    six effect objects; not a 10.5/10.6 difference), clamp lowering in the effect objects, materialised booleans.
 6. **Data**: ObjectsFonctions/t_world_info pointer tables; central BSS declaration order; `_DATA` object boundaries.
 7. Link stage (WLINK object order = tumap order) and v1.12 cross-version classification - later. Not started.
