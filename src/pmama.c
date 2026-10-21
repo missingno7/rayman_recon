@@ -546,7 +546,6 @@ void lance_couteau_droit(obj_t* obj) {
     u8 cout_ind;
     s16 diff_x;
     s16 diff_y;
-    s32 abs_x;
     s32 abs_y;
     s32 divisor;
 
@@ -556,12 +555,10 @@ void lance_couteau_droit(obj_t* obj) {
         diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->offset_by + obj->y);
         if (Abs(diff_x) >= 4 || Abs(diff_y) >= 4) {
             CouteauxInfos[cout_ind].active = false;
+            /* DOS 1:551be..551df: Y magnitude, X magnitude, max, then fixed-point shift. */
             abs_y = diff_y;
             if (abs_y < 0) abs_y = -abs_y;
-            abs_x = diff_x;
-            if (abs_x < 0) abs_x = -abs_x;
-            abs_x = max32(abs_x, abs_y);
-            divisor = ashl16(abs_x, 4) / 4;
+            divisor = ashl16(max32(Abs(diff_x), abs_y), 4) / 4;
             obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
             obj->speed_y = convertspeed(ashl16(diff_y, 4) / (s16) divisor);
             update_couteau(obj);
@@ -594,7 +591,6 @@ void retour_couteau(obj_t* obj) {
     u8 cout_ind;
     s16 diff_x;
     s16 diff_y;
-    s32 abs_x;
     s32 abs_y;
     s32 divisor;
 
@@ -610,11 +606,9 @@ void retour_couteau(obj_t* obj) {
 
             if (Abs(diff_x) >= 2 || Abs(diff_y) >= 2) {
                 CouteauxInfos[cout_ind].active = false;
-                abs_x = Abs(diff_x);
+                /* DOS 1:553d6..553f7 evaluates the Y magnitude before X. */
                 abs_y = Abs(diff_y);
-                abs_x = max32(abs_x, abs_y);
-                divisor = 2;
-                divisor = ashl16(abs_x, 4) / divisor;
+                divisor = ashl16(max32(Abs(diff_x), abs_y), 4) / 2;
                 obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
                 obj->speed_y = convertspeed(ashl16(diff_y, 4) / (s16) divisor);
             } else {
@@ -688,15 +682,9 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 switch (CouteauxInfos[cout_ind].field9_0x12) {
                     case 1:
                         unk_sub_etat = 11;
-                        {
-                            s32 value;
-                            unk_3 = diff_y;
-                            if (unk_3 < 0) unk_3 = -unk_3;
-                            value = diff_x;
-                            if (value < 0) value = -value;
-                            value = max32(value, unk_3);
-                            unk_4 = ashl16(value, 4) / 4;
-                        }
+                        /* DOS 1:55733..55762: Y magnitude precedes the max/shift expression. */
+                        unk_3 = Abs(diff_y);
+                        unk_4 = ashl16(max32(Abs(diff_x), unk_3), 4) / 4;
                         unk_x_1 = convertspeed(ashl16(diff_x, 4) / unk_4);
                         unk_y_1 = convertspeed(ashl16(diff_y, 4) / unk_4);
                         unk_anim_frame = couteau_frame(unk_x_1, unk_y_1);
