@@ -1057,8 +1057,9 @@ void allocateLandingSmoke(obj_t* in_obj) {
     obj_t * cur_obj;
     s16 nb_objs;
     s32 pos;
+    s32 offset_y;
 
-    /* DOS 1:45de5..45e0a: form each coordinate before its store. */
+    /* DOS 1:45df6..45e01: load the y offset before the y coordinate. */
 
     for (i = 0; i <= 2; i += 2)
     {
@@ -1078,8 +1079,9 @@ void allocateLandingSmoke(obj_t* in_obj) {
                 pos += in_obj->offset_bx;
                 pos -= cur_obj->offset_bx;
                 cur_obj->x = pos;
+                offset_y = in_obj->offset_by;
                 pos = in_obj->y;
-                pos += in_obj->offset_by;
+                pos += offset_y;
                 pos -= cur_obj->offset_by;
                 cur_obj->y = pos;
                 cur_obj->display_prio = i != 0 ? 2 : 7;
@@ -3368,13 +3370,13 @@ void DO_PLACE_RAY(void) {
 
 void DO_AUTO_SCROLL(void) {
     s16 i;
-    s32 eau_id;
     obj_t * scr_obj;
     s16 scr_x;
-    s16 ray_x;
     s16 ray_y;
+    s16 ray_x;
 
-    /* 340A4 801588A4 -O2 -msoft-float */
+    /* DOS 1:49fc1..49fd9: ray_x is the stack short; ray_y stays in DI.
+       Read eau_obj_id only in case 3 (1:4a0b7 and 1:4a110). */
 
     ray_x = ray.x;
     ray_y = ray.y;
@@ -3382,7 +3384,6 @@ void DO_AUTO_SCROLL(void) {
     scroll_x = 0;
     scroll_y = -1;
     for (i = 0; i < NumScrollObj; i++) {
-        eau_id = eau_obj_id;
         scr_obj = &level.objects[scroll_obj_id[i]];
         if (scr_obj->type != TYPE_64_SCROLL)
             break;
@@ -3409,7 +3410,7 @@ void DO_AUTO_SCROLL(void) {
                     scr_obj->y = 10000;
                 break;
             case 3:
-                if (eau_id == -1 || (level.objects[eau_id].hit_points == 0 && level.objects[eau_id].param == 0)) {
+                if (eau_obj_id == -1 || (level.objects[eau_obj_id].hit_points == 0 && level.objects[eau_obj_id].param == 0)) {
                     if (scr_obj->y <= ray_y)
                     {
                         if (Abs(scroll_y) == 1)
@@ -3420,8 +3421,8 @@ void DO_AUTO_SCROLL(void) {
                     else
                         scr_obj->y = 10000;
 
-                    if (eau_id != -1 && scroll_y != 2)
-                        level.objects[eau_id].iframes_timer = 2;
+                    if (eau_obj_id != -1 && scroll_y != 2)
+                        level.objects[eau_obj_id].iframes_timer = 2;
                 }
                 break;
         }

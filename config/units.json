@@ -7823,7 +7823,7 @@
      ]
     },
     "DO_PLACE_RAY": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
