@@ -31,6 +31,20 @@ class CensusRuleTests(unittest.TestCase):
         self.assertEqual(census.classify(a, b, 3, []), "SHAPE")
         self.assertEqual(census.classify(dict(a, calls=[]), b, 3, []), "DIFF_calls")
 
+    def test_rule_hints_follow_triage(self):
+        # code-equal -> only the neighbour rule; a changed push set -> width/unused-param rules; data diffs -> binding
+        self.assertEqual(census.rule_hints({"class": "REFS_LAYOUT", "frame": [[], []]}), ["W-LAYOUT"])
+        h = census.rule_hints({"class": "SHAPE", "frame": [["ebx", "ecx"], ["ebx", "ecx", "edx"]]})
+        self.assertIn("W-RETW", h)
+        self.assertIn("W-UNUSED", h)
+        self.assertEqual(census.rule_hints({"class": "DIFF_globals", "frame": [[], []]})[0], "W-BIND")
+        self.assertEqual(census.rule_hints({"class": "DIFF_calls", "frame": [[], []]})[0], "W-LAYOUT")
+
+    def test_prototype_signature_normalisation(self):
+        # parameter names and C type spellings must not create false W-PROTO conflicts
+        self.assertEqual(census._sig("short", "obj_t *obj, int x"), census._sig("s16", "obj_t*, s32"))
+        self.assertNotEqual(census._sig("u8", "s16, s16"), census._sig("s16", "s16, s16"))
+
 
 if __name__ == "__main__":
     unittest.main()

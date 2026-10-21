@@ -3,7 +3,61 @@
 Evidence levels: PROVEN (measured, reproducible command), STRONG (several consistent observations),
 HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions here.
 
-## Established
+## Matching rules (read this first)
+Distilled from ~100 worker notes (2026-10-21; counts = distinct units where the fix recurred). `tools/census.py`
+prints the rule IDs to try for each NEAR function. One hypothesis at a time; record failures in your NOTES.md.
+
+**Triage order - check the cheap outside causes before touching the body:**
+1. **W-LAYOUT** code bytes already equal, only call/jump-table/self references fail (census `REFS_LAYOUT`, or a
+   "missing call" whose target is in the same object): the cause is a *neighbour* - an earlier function's size, a
+   missing/empty function, a switch table, a shared `ret`. Fix that function; leave this one. (~30 units, 60+
+   functions; start_cd_gameover took ~40 variants before the missing empty start_cd_continue was found.)
+2. **W-PROTO** caller-side difference (`test al/ax/eax`, extra `movsx/and 0xff`, wrong arg count/registers): fix the
+   *callee's prototype in this unit*. Prototypes legitimately differ between original objects (BTYP is `u8` in blocs
+   but `s16` in ray; instantSpeed `s16` in basic, `s32` elsewhere - a shared prototype header regressed 3-143 STRICT),
+   so copy the declaration from a STRICT unit that calls the same helper the same way (`census --brief` lists them).
+   (~20 units; on_block_chdir/test_allowed `s16` was re-derived 8 times.)
+3. **W-BIND** a global/field reference differs: check the binding (true start, true type, Rayverse address
+   conversion, Android size can be wrong) and the -5 short load (`mov r,[x-2]; sar r,16` = plain `short x`).
+   (~15 units of wrong bindings; ~10 where a -2 addend was misread as another global.)
+4. **W-PORT** size or calls differ substantially: remove Rayverse/PS1 port additions (debug, clamps, `&0x7f`, guards),
+   restore DOS-only calls, missing (empty) functions. (~25 units)
+Only then shape the body:
+
+| ID | Symptom in the diff | Try | Not when / note |
+|---|---|---|---|
+| W-RETW | prologue push set differs; `cwde`/`movsx`/`and eax,0ffh` vs `xor ah,ah` | narrower **own return** (s16/u8/u16) | ~25 units (get_proj_x, but*pressed, MURDUR) |
+| W-WIDTH | `cmp ax` vs `cmp eax`, movzx vs movsx, frame size | narrower/wider locals, loop index (s16), params, signed vs unsigned | ~25 units |
+| W-UNUSED | extra EDX/EBX save, `ret 4` | add/remove an unused formal parameter as the DOS callers pass it | 7 units |
+| W-OPORD | load order, `jbe`/`jae` swap, ESI vs EDI | write operands in the binary's load order (`a<b` vs `b>a`, `x+y` vs `y+x`) | ~25 units |
+| W-THRESH | `cmp 2/jbe` vs `cmp 3/jb`, `test ax` vs `cmp ax,1` | other spelling of the same bound: `>9`/`>=10`, `>0`/`!=0`/`>=1`, `-x+c`/`c-x`, `/2` vs `>>1`, `~m` vs `0xff-m` | ~11 units |
+| W-BRANCH | inverted jcc / swapped blocks | reorder if/else (often "death/zero-HP case first"); independent `if`s vs `else if`; keep DOS guards | ~22 units |
+| W-STORE | store/mov scheduling | DOS statement order of field/global stores | ~20 units |
+| W-TEMP | saved-register set, extra spill, reloads | usually *remove* a cached local/pointer (re-read `obj->x`, globals); sometimes a block-scoped s16/s32 snapshot. -oa caches and writes back globals itself - never add a manual writeback | ~28 units |
+| W-DECL | stack slot / register colouring only | local declaration order or block scope; prefer block scoping - exhaustive permutation sweeps (24-720 orders, ~20 functions) succeeded ~2 times | ~15 units |
+| W-BITF | and/shift vs `test byte`, clear/store sequences | bitfield view (union with `raw`) instead of mask arithmetic; `!flip` not `^` | ~13 units; shared views in obj.h/map.h/game.h |
+| W-BOOL | `setne`/`and`, byte-register choice | natural boolean forms: `b=1; if(x) b=0;`, `!(a&&b)` vs `!a\|\|!b`, s32 flag local | casts that only force bytes (`?(s16)1:(s16)0`, `(u8)(a!=b)`) are rejected (OPEN) |
+| W-LOOP | counter register, saved regs, `__STOSB` call | pointer walk with cached count; `for(;c;)` vs `while(c)` vs do/while; advance at bottom | ~16 units |
+| W-SWITCH | extra tables, reloads | grouped labels vs duplicated bodies; remove DOS-absent empty cases (each emits a table entry); `case 0:` vs `case 0: default:`; a one-case switch is not an if | ~16 units |
+| W-ABS | `cdq/xor/sub` vs `test/jge/neg` | Abs macro or ternary on a promoted `(s32)` operand; never `<stdlib.h>` abs/labs | ~11 units |
+| W-COPY | `rep movsd` forms, `memset_` call | `memcpy` with `<string.h>` (intrinsic, F2 prefix) vs struct assignment per site; memset is a call; C zero loop -> `__STOSB`; `strcpy(x,"")`/`strcmp(x,"")` add CONST slots | F3 STOSD has no known source (OPEN) |
+| W-ABI | wrong argument registers, caller saves around asm calls | ABI-only `#pragma aux parm [...] modify exact [...]` (src/include/lowlevel.h; docs/reference/lowlevel_abi.h) | 8 units |
+| W-INTR | port/interrupt code as calls | `<i86.h>` `_disable`/`_enable` (adds CLD), `inp`/`outp`, `_dos_getvect`/`_dos_setvect`, `__interrupt __far`; else ORIGINAL_INLINE pragma (AGENTS.md) | 5 units |
+| W-CONST | CONST segment mismatch | string literal order = first appearance in source; duplicates merged | input, worldmap |
+
+**Do not try (measured dead ends):**
+- Compiler options: `-on/-oi/-ol/-ol+/-om/-or/-oc/-ou` were probed in ~40 units / 100+ functions with **zero STRICT
+  gain**; `-oe`/`-oe=N` (~12 units) always inlines and regresses; `-oh/-ok/-oi+` are rejected. Releases 10.0/10.5:
+  identical to 10.6; 10.0a worse (~15 units). The profile is settled: `-zq -oaxt -s -5r -fpc`.
+- `inline`/`__inline`/`static __inline` (E1022) and C99 declarations: rejected by Watcom 10.6 (~11 units retried).
+- `register` keyword: no effect in most of ~8 units.
+- Exhaustive declaration-order or width grids on a function whose residue is a helper idiom (ashr16 toward zero,
+  sgn, CL-count shifts, inclusive-range booleans, min/max clamps - ~45 functions): no legal C form found yet; park
+  them (record the idiom) instead of re-grinding.
+- Byte-forcing constructs (dead redundant init, empty cases, scratch clobbers, type-forcing block-scope externs)
+  make bytes match but are rejected.
+
+## Evidence log (established facts, with their proofs)
 - **Watcom C, 32-bit flat, register calling convention** [PROVEN]: args in EAX, EDX, EBX, ECX; callee saves used
   registers (`push ebx/ecx/edx`); symbols `name_` for functions, `_name` for data (OMF from wcc386 matches).
 - **Runtime = Watcom CLIB3R + MATH387R** (register-convention libs) [PROVEN, tools/libscan.py]:
@@ -74,8 +128,8 @@ HYPOTHESIS, OPEN. Probe sources live in `scratch/probe/` (ignored); conclusions 
   on the raw byte compiles differently (same lesson as block_flags). Shared as unions with a `raw` view.
 
 ## Undetermined / next discriminators
-- `-oi`, `-ol`/`-ol+`, `-om`: no accepted unit discriminates them yet (jumelle: -or/-om/-ol/-on/-oi/-oe=1 code-equal
-  on its snapshot). Need loops (`-ol`) and intrinsic candidates (`-oi`: memcpy/strcpy/abs inline forms).
+- `-oi`, `-ol`/`-ol+`, `-om`, `-on`: non-discriminating on ~40 units (see "Do not try"); only revisit with concrete new
+  evidence (e.g. an FP function whose residue changes under `-on`: box CalcTab 71 -> 64 diffs, still NEAR).
 - OPEN: the DOS `CLD; REP MOVSB` + dword copy sequence in jumelle is not produced by Watcom 10.6 inline memcpy (F2
   strings) - a different helper or source idiom.
 - Compiler release for v1.21 game code: 10.0, 10.0a, 10.5 and 10.6 give identical code on everything tested

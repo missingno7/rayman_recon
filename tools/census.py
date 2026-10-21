@@ -331,7 +331,106 @@ def name_of(orc, ident):
     return ident
 
 
-def brief(unit, rows=None, path=None, orc=None):
+# ---- rule hints (docs/COMPILER.md "Matching rules") and callee-prototype lookup (W-PROTO)
+DECL = re.compile(r"^[ \t]*(?:extern\s+)?((?:const\s+|unsigned\s+|signed\s+)?[A-Za-z_]\w*(?:\s*\*+)?)\s*\b"
+                  r"([A-Za-z_]\w*)\s*\(([^;{)]*)\)\s*;", re.M)
+ALIAS = {"short": "s16", "signed short": "s16", "unsigned short": "u16", "int": "s32", "long": "s32", "unsigned": "u32",
+         "unsigned int": "u32", "unsigned long": "u32", "char": "s8", "signed char": "s8", "unsigned char": "u8",
+         "bool": "u8", "BOOL": "u8"}
+TYPEWORDS = {"s8", "u8", "s16", "u16", "s32", "u32", "void", "char", "short", "int", "long", "unsigned", "signed",
+             "const", "bool"}
+
+
+def _norm_type(t):
+    words = re.sub(r"\s+", " ", t.replace("*", " * ")).strip().split(" ")
+    if len(words) > 1 and re.match(r"^[A-Za-z_]\w*$", words[-1]) and words[-1] not in TYPEWORDS             and not words[-1].endswith("_t"):
+        words = words[:-1]
+    base = " ".join(w for w in words if w not in ("*", "const"))
+    return ALIAS.get(base, base) + "*" * words.count("*")
+
+
+def _sig(ret, params):
+    ps = [_norm_type(x) for x in params.split(",")] if params.strip() not in ("", "void") else ["void"]
+    return _norm_type(ret) + "(" + ", ".join(ps) + ")"
+
+
+def decl_index(extra=None):
+    """{callee: {unit: normalised signature}} over every accepted unit's source (+ an extra candidate file)."""
+    units = load_json(ROOT / "config" / "units.json")["units"]
+    srcs = [(un, ROOT / u["source"]) for un, u in units.items()]
+    if extra:
+        srcs.append(extra)
+    idx = collections.defaultdict(dict)
+    for un, path in srcs:
+        for m in DECL.finditer(Path(path).read_text(encoding="utf-8", errors="replace")):
+            ret, name, params = m.groups()
+            if ret not in ("return", "else", "if"):
+                idx[name][un] = _sig(ret, params)
+    return idx
+
+
+def proto_hints(unit, src_text, func, idx):
+    """Callees of FUNC whose declaration in this unit differs from other units' declarations."""
+    r = seed.find_function(src_text, func)
+    if not r:
+        return []
+    out = []
+    for name in sorted(set(re.findall(r"\b([A-Za-z_]\w*)\s*\(", src_text[r[0]:r[1]])) - {func}):
+        per = idx.get(name, {})
+        mine = per.get(unit)
+        others = collections.defaultdict(list)
+        for un, sg in per.items():
+            if un != unit and sg != mine:
+                others[sg].append(un)
+        if mine and others:
+            alt = "; ".join(f"{sg} in {', '.join(sorted(us)[:4])}" for sg, us in others.items())
+            out.append(f"{name}: here {mine}; elsewhere {alt}")
+    return out
+
+
+def rule_hints(r):
+    """Rule IDs of docs/COMPILER.md to try first, from the structural features of a census row."""
+    cls, ids = r["class"], []
+    if cls.startswith("REFS"):
+        return ["W-LAYOUT"]
+    if "calls" in cls:
+        ids += ["W-LAYOUT", "W-PORT", "W-PROTO"]
+    if "globals" in cls or "fields" in cls:
+        ids += ["W-BIND"]
+    if "fields" in cls:
+        ids += ["W-BITF"]
+    if "consts" in cls:
+        ids += ["W-THRESH"]
+    if r["frame"][0] != r["frame"][1]:
+        cp = [x for x in r["frame"][0] if not x.startswith("esp")]
+        dp = [x for x in r["frame"][1] if not x.startswith("esp")]
+        if cp != dp:
+            ids += ["W-RETW", "W-UNUSED", "W-TEMP"]
+        if [x for x in r["frame"][0] if x.startswith("esp")] != [x for x in r["frame"][1] if x.startswith("esp")]:
+            ids += ["W-DECL", "W-WIDTH", "W-TEMP"]
+    if cls == "TYPE_WIDTH":
+        ids += ["W-WIDTH", "W-RETW"]
+    if cls in ("SHAPE", "REGALLOC", "CALL_ORDER") or not ids:
+        ids += ["W-OPORD", "W-BRANCH", "W-STORE", "W-TEMP", "W-BOOL"]
+    return list(dict.fromkeys(ids))
+
+
+
+def first_size_drift(orc, rows):
+    """W-LAYOUT: the earliest NEAR function (by bound DOS address) whose candidate size differs from the DOS extent.
+    Every later intra-object reference shifts with it, so it is the function to fix first."""
+    placed = []
+    for r in rows:
+        a = orc.binds.game.get(r["function"])
+        if a and r.get("oracle_size") and r["size"] != r["oracle_size"]:
+            placed.append((a, r))
+    if not placed:
+        return None
+    a, r = min(placed, key=lambda t: t[0])
+    return f"{r['function']} at {a[0]}:{a[1]:05x} (candidate {r['size']} bytes, DOS ~{r['oracle_size']})"
+
+
+def brief(unit, rows=None, path=None, orc=None, src=None):
     orc = orc or Oracle()
     if rows is None:
         rows = [r for r in json.load(open(ROOT / "build" / "near_census.json")) if r["unit"] == unit]
@@ -340,9 +439,23 @@ def brief(unit, rows=None, path=None, orc=None):
            "SAME-STRUCTURE (SHAPE) -> the fix was shape-only in 28/30 past cases; DIFF pointers were real in ~16/30",
            "(sometimes the fix is outside the function: a missing/empty callee, a prototype). 'oracle-only' = DOS has",
            "it, candidate does not; 'cand-only' = the reverse. Addresses are resolved to bound names where possible.", ""]
+    units = load_json(ROOT / "config" / "units.json")["units"]
+    if src is None and unit in units:
+        src = ROOT / units[unit]["source"]
+    src_text = Path(src).read_text(encoding="utf-8", errors="replace") if src else ""
+    idx = decl_index((unit, src) if src and unit not in units else None)
+    out.append("Rule IDs refer to docs/COMPILER.md \"Matching rules\" (triage order: W-LAYOUT, W-PROTO, W-BIND, W-PORT).")
+    drift = first_size_drift(orc, rows)
+    if drift:
+        out.append("Layout (W-LAYOUT): first function whose size differs from DOS: " + drift +
+                   " - later functions' intra-object references shift with it; fix it first.")
+    out.append("")
     for r in sorted(rows, key=lambda r: -r["sim"]):
         cls = r["class"]
         out.append(f"## {r['function']}  [{cls}]  sim {r['sim']}  size cand {r['size']} / DOS ~{r['oracle_size']}")
+        out.append("- rules to try: " + ", ".join(rule_hints(r)))
+        for h in proto_hints(unit, src_text, r["function"], idx):
+            out.append("- callee prototype (W-PROTO): " + h)
         if cls in GUIDE:
             out.append("- " + GUIDE[cls])
         for k in ("calls", "globals", "fields", "consts"):
@@ -365,7 +478,7 @@ def brief_file(src, symbols=None):
     """Census of any candidate source (e.g. a worker's in-progress unit) -> <src>.census.md next to it."""
     orc = Oracle()
     res = compare_unit(orc, Path(src), symbols=symbols)
-    brief(Path(src).stem, rows_for(Path(src).stem, res), Path(src).with_suffix(".census.md"), orc)
+    brief(Path(src).stem, rows_for(Path(src).stem, res), Path(src).with_suffix(".census.md"), orc, src=src)
 
 
 def main(argv):
