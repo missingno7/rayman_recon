@@ -1007,7 +1007,6 @@ void DO_NOVA2(obj_t* obj) {
             nova_obj->y = obj->y;
             GET_ANIM_POS(nova_obj, &nova_x, &nova_y, &nova_w, &nova_h);
             GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);
-            /* Extent-correct equivalent form; arithmetic bytes remain NEAR. */
             new_x = in_x - nova_x - (nova_w >> 1);
             new_y = in_y - nova_y - (nova_h >> 1);
             nova_obj->is_active = 1;
@@ -1030,10 +1029,10 @@ void DO_NOVA2(obj_t* obj) {
                     new_y += in_h >> 1;
                     break;
             }
-            nova_obj->x += new_x;
             nova_obj->y += new_y;
             nova_obj->display_prio = 0;
             nova_obj->param = i * 5;
+            nova_obj->x += new_x;
             calc_obj_pos(nova_obj);
         }
     }
