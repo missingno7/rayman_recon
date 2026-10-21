@@ -702,7 +702,7 @@ s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
                 if (cur_zdc->flags & 2)
                 {
                     cur_anim = &obj->animations[obj->anim_index];
-                    cur_layer = &cur_anim->layers[(cur_anim->layers_per_frame & 0x3FFF) * obj->anim_frame];
+                    cur_layer = &cur_anim->layers[obj->anim_frame * (cur_anim->layers_per_frame & 0x3FFF)];
                     if (cur_layer[cur_zdc->sprite].sprite_index != 0)
                     {
                         GET_SPRITE_POS(obj, cur_zdc->sprite, &unk_x, &unk_y, &unk_w, &unk_h);
@@ -884,16 +884,16 @@ s16 possible_sprite(obj_t* obj, s16 index) {
 //2CE34
 s16 setToleranceDist(s16 x, s16 w, s16 y) {
     /* 1D11C 8014191C -O2 -msoft-float */
-    s16 dist;
     s16 ray_x = ray.x + ray.offset_bx;
     s16 ray_y = ray.y + ray.offset_by;
     s16 unk_1 = x + w - 1;
 
     s16 unk_2 = 8;
     if (RayEvts.tiny) unk_2 = 4;
+    /* DOS 1:1ced4..1cf09: conditional absolute value. */
     if (inrange(ray_x, x - unk_2, unk_1 + unk_2)) {
-        if (inrange(ray_x, x, unk_1)) return abs(ray_y - y);
-        else return -abs(ray_y - y) - 1;
+        if (inrange(ray_x, x, unk_1)) return ((ray_y - y < 0) ? -(ray_y - y) : ray_y - y);
+        else return -((ray_y - y < 0) ? -(ray_y - y) : ray_y - y) - 1;
     }
     return 10000;
 }
@@ -1114,7 +1114,7 @@ void DO_POING_COLLISION(void) {
     obj_t *obj;
     s16 sprite;
     s16 old_hp;
-    u8 unk_1;
+    s32 unk_1;
 
     btyp = 0;
     GET_SPRITE_POS(poing_obj, 0, &x, &y, &w, &h);
@@ -1142,7 +1142,8 @@ void DO_POING_COLLISION(void) {
                     ObjectsFonctions[obj->type].poing_collision(obj, sprite);
                     do_boum();
                     obj->gravity_value_1 = 0;
-                    unk_1 = get_eta(obj)->anim_speed >> 4;
+                    /* DOS 1:1d7c4..1d7d7: high nibble, then promotion. */
+                    unk_1 = get_eta(obj)->anim_speed_bits.high;
                     if (!(unk_1 == 11 || unk_1 == 10)) {
                         obj->gravity_value_2 = 0;
                     }
