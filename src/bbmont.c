@@ -1239,8 +1239,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
     {
         if (scroll_end_x == xmapmax)
         {
-            var_a0 = xmap;
-            if (var_a0 < temp_s2) var_a0 = temp_s2;
+            var_a0 = max32(xmap, temp_s2);
             scroll_end_x = var_a0;
         }
         else if (scroll_end_x < temp_s2)
@@ -1317,7 +1316,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
             }
             break;
         case 3:
-            var_a0 = ((s32)scroll_end_x < 5580 ? 5580 : (s32)scroll_end_x);
+            var_a0 = max32(scroll_end_x, 5580);
             scroll_end_x = var_a0;
 
             if ((ray_zdc_x > (temp_s2 + 32)) && (bb1.field1_0x2 == -1) && (temp_s3 < ray_zdc_h))
@@ -1342,9 +1341,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     scroll_end_x = xmap;
                     if (scroll_end_x < temp_s2)
                     {
-                        test_2 = 1;
-                        if (test_2 < ray.speed_x)
-                            test_2 = ray.speed_x;
+                        test_2 = max32(1, ray.speed_x);
                         scroll_end_x = scroll_end_x + test_2;
                     }
                 }
