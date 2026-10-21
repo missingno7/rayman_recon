@@ -93,9 +93,7 @@ void CALC_FIST_POS(void)
 
 void RAY_THROW_FIST(void)
 {
-    s32 unk_1;
     s16 unk_2;
-    eta_t *eta_row;
 
     if (ray.main_etat == 2 && (ray.sub_etat == 25 || ray.sub_etat == 26))
         set_sub_etat(&ray, 29);
@@ -110,21 +108,22 @@ void RAY_THROW_FIST(void)
         else
             decalage_en_cours += poing.charge * 1024 / 64;
     }
+    /* DOS 1:5684d..56898: the active store schedules after the object flags. */
     poing.is_charging = false;
+    poing.is_active = true;
     poing.is_boum = false;
     poing.is_returning = false;
     poing_obj->flags.flip_x = ray.flags.flip_x;
-    poing_obj->flags.alive = 1;
+    /* DOS 1:56878..56888: setting is_active first preserves the flags reload. */
     poing_obj->is_active = 1;
-    poing.is_active = true;
+    poing_obj->flags.alive = 1;
     del_alwobj(poing_obj_id);
     add_alwobj(poing_obj);
     poing_obj->speed_y = 0;
     poing_obj->anim_frame = 0;
     poing_obj->follow_id = -1;
     set_main_and_sub_etat(poing_obj, poing_obj->init_main_etat, poing_obj->init_sub_etat);
-    eta_row = poing_obj->eta[poing_obj->main_etat];
-    poing_obj->anim_index = eta_row[poing_obj->sub_etat].anim_index;
+    poing_obj->anim_index = poing_obj->eta[poing_obj->main_etat][poing_obj->sub_etat].anim_index;
     poing_obj->x = ray_zdc_x + (ray_zdc_w >> 1) - poing_obj->offset_bx;
     poing_obj->x += (ray.flags.flip_x ? -5 : 5);
     poing.damage = ashr16(poing.charge, 4) + 1;
@@ -150,8 +149,7 @@ void RAY_THROW_FIST(void)
     if ((ray.flags.flip_x && decalage_en_cours > 0) ||
         (!ray.flags.flip_x && decalage_en_cours < 0))
     {
-        unk_1 = max32(Abs((s32)ray.speed_x) - 5, 0);
-        poing.speed_x += unk_1;
+        poing.speed_x += max32(Abs((s32)ray.speed_x) - 5, 0);
     }
 
     poing.speed_x = min32(poing.speed_x, 16);
@@ -168,7 +166,7 @@ void RAY_THROW_FIST(void)
     poing.field_4 = unk_2;
     poing.charge = unk_2;
     poing.field_A = unk_2 * poing.speed_x / poing.field_A;
-    poing_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
+    poing_obj->y = (ray_zdc_y >> 1) + ray_zdc_h - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
     poing.y_16 = ashl16(poing_obj->y, 4);
     CALC_FIST_POS();
 }
