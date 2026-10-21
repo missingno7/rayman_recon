@@ -3,17 +3,36 @@
 .386p
 
 _DATA segment dword public use32 'DATA'
-public ll_state_00010
-public record_table_00014
-public rasterizer_state_01914
-ll_state_00010:
+; Partition from the rasterizer's accesses (build/workers/s_00010/NOTES.md); names INVENTED.
+public _raster_first_y, _raster_rows, _raster_descriptor, _raster_texture, _raster_du, _raster_neg_du
+public _raster_dv, _raster_neg_dv, _raster_destination, _raster_scanline, _raster_row_offset, _raster_rows_left
+_raster_first_y:            ; 2:00010
     dd 0
-
-record_table_00014:
+_raster_rows:               ; 2:00014, 200 rows of 32 bytes
     dd 200 dup (0ffffh, 0, 0, 0, 0, 0, 0, 0)
-
-rasterizer_state_01914:
-    db 70 dup (0)
+_raster_descriptor:         ; 2:01914
+    dd 0
+    db 10 dup (0)           ; 2:01918..01922, no access found (OPEN)
+_raster_texture:            ; 2:01922
+    dd 0
+    db 8 dup (0)            ; 2:01926..0192e, no access found (OPEN)
+_raster_du:                 ; 2:0192e
+    dd 0
+_raster_neg_du:             ; 2:01932
+    dd 0
+_raster_dv:                 ; 2:01936
+    dd 0
+_raster_neg_dv:             ; 2:0193a
+    dd 0
+_raster_destination:        ; 2:0193e
+    dd 0
+_raster_scanline:           ; 2:01942
+    dd 0
+_raster_row_offset:         ; 2:01946
+    dd 0
+_raster_rows_left:          ; 2:0194a
+    dd 0
+    db 12 dup (0)           ; 2:0194e..0195a, no access found (OPEN)
 _DATA ends
 
 _DATA2 segment dword public use32 'DATA'

@@ -15537,27 +15537,6 @@
     "name": "INVENTED",
     "evidence": "DOS dword timer reference at 1:2ae3e and store at 1:2ae72."
    },
-   "ll_state_00010": {
-    "addr": "2:0010",
-    "type": "u32",
-    "size": 4,
-    "name": "INVENTED",
-    "evidence": "DOS object2 low-level prefix; data_refs.json: 1:000c1 dword store and 1:00638 dword load."
-   },
-   "record_table_00014": {
-    "addr": "2:0014",
-    "type": "u8[200][32]",
-    "size": 6400,
-    "name": "INVENTED",
-    "evidence": "DOS refs at 1:00028 and 1:00663..1:00678 establish base and 32-byte record stride; all 200 initial records checked in obj2.bin against ffffh,0 then 28 zero bytes."
-   },
-   "rasterizer_state_01914": {
-    "addr": "2:1914",
-    "type": "u8[70]",
-    "size": 70,
-    "name": "INVENTED",
-    "evidence": "DOS data_refs.json has rasterizer accesses across 2:01914..2:0194a; opaque 70-byte range only, internal global/field partition remains OPEN."
-   },
    "saved_vga_registers_0196a": {
     "addr": "2:196a",
     "type": "u8[6]",
@@ -15618,6 +15597,90 @@
     "type": "u8[4]",
     "name": "INVENTED",
     "evidence": "DOS byte reads at 1:0316d and 1:031d7 index this table by ECX&3/EAX&3; address fixups at 1:0316f and 1:031d9. Four-byte extent follows the proven 0..3 index range."
+   },
+   "raster_first_y": {
+    "addr": "2:00010",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 000c1 stores clipped minimum scanline; 00638 reads it to calculate y*320 and y*32. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_rows": {
+    "addr": "2:00014",
+    "size": 6400,
+    "name": "INVENTED",
+    "type": "raster_row[200] (32 bytes per row)",
+    "evidence": "PROVEN DOS access/dataflow: 00028 loads start; 0002f/00035 initialize first two dwords, 0003c advances 32 bytes, CL=200 at 0002d. 00663/00672 read bounds; 001dd/001fa compare signed-bias row fields. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_descriptor": {
+    "addr": "2:01914",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 0004b..00050 stores ESI+4; 0022e/00387/004e0 reload descriptor for the next edges. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_texture": {
+    "addr": "2:01922",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00055..00057 copies descriptor first dword; 00758 and each pixel block add the pointer to the 16-bit texture index. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_du": {
+    "addr": "2:0192e",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 0005e..00064 computes unsigned byte bound difference; 003c1 reads as edge slope dividend. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_neg_du": {
+    "addr": "2:01932",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00069..0006b stores negated raster_du; 0010f reads as edge slope dividend. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_dv": {
+    "addr": "2:01936",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00072..00078 computes byte bound difference; 00519 reads as edge slope dividend. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_neg_dv": {
+    "addr": "2:0193a",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 0007d..0007f stores negated raster_dv; 00268 reads as edge slope dividend. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_destination": {
+    "addr": "2:0193e",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00046 saves incoming EAX; 0064b adds it to first_y*320. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_scanline": {
+    "addr": "2:01942",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00651 initializes destination scanline pointer; 00721 reads it; 02621 advances by 320. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_row_offset": {
+    "addr": "2:01946",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 00657 initializes first_y*32; 0065d reads index; 0262b advances by 32. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
+   },
+   "raster_rows_left": {
+    "addr": "2:0194a",
+    "size": 4,
+    "name": "INVENTED",
+    "type": "uint32_t",
+    "evidence": "PROVEN DOS access/dataflow: 000d3..000d6 stores clipped max_y-min_y+1; 02632 decrements and 02638 branches while nonzero. Android exact-name lookup: absent. Symbol at actual storage start, no biased aliases."
    }
   }
  }
