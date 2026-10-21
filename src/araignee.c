@@ -580,8 +580,7 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 }
 
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
- * Shared ashl16/sgn cores are present; clamp/register lowering remains OPEN.
- * Bound/value locals restore the 872-byte extent; this body remains NEAR. */
+ * Shared ashl16/sgn/min32/max32 cores are present; other body shape remains NEAR. */
 #define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
     s16 dx, dy, distance;
@@ -603,53 +602,42 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
             }
             bound = 32;
             speed = sgn(dy - obj->speed_y) + obj->speed_y;
-            if (speed <= bound) bound = speed;
-            speed = bound;
+            speed = min32(speed, bound);
             bound = 0;
-            if (speed >= bound) bound = speed;
-            speed = bound;
+            speed = max32(speed, bound);
             obj->speed_y = speed;
             if (obj->speed_y != 0) {
                 bound = 32;
                 speed = sgn(dx - obj->speed_x) + obj->speed_x;
-                if (speed <= bound) bound = speed;
-                speed = bound;
+                speed = min32(speed, bound);
                 bound = -32;
-                if (speed >= bound) bound = speed;
-                speed = bound;
+                speed = max32(speed, bound);
                 obj->speed_x = speed;
             } else if (obj->flags.flip_x) {
                 speed = obj->speed_x - (dx > obj->speed_x);
                 bound = 32;
-                if (speed <= bound) bound = speed;
-                speed = bound;
+                speed = min32(speed, bound);
                 bound = -32;
-                if (speed >= bound) bound = speed;
-                speed = bound;
+                speed = max32(speed, bound);
                 obj->speed_x = speed;
             } else {
                 speed = obj->speed_x + (dx < obj->speed_x);
                 bound = 32;
-                if (speed <= bound) bound = speed;
-                speed = bound;
+                speed = min32(speed, bound);
                 bound = -32;
-                if (speed >= bound) bound = speed;
-                speed = bound;
+                speed = max32(speed, bound);
                 obj->speed_x = speed;
             }
         } else {
             speed = obj->speed_x * 2;
             bound = 32;
-            if (speed <= bound) bound = speed;
-            speed = bound;
+            speed = min32(speed, bound);
             bound = -32;
-            if (speed >= bound) bound = speed;
-            speed = bound;
+            speed = max32(speed, bound);
             obj->speed_x = speed;
             speed = obj->speed_y * 2;
             bound = 32;
-            if (speed <= bound) bound = speed;
-            speed = bound;
+            speed = min32(speed, bound);
             obj->speed_y = speed;
         }
     } else {
