@@ -721,9 +721,10 @@ void horloges(u8 ticks)
 void init_allowed_time(void)
 {
     s16 world = 1;
-    s16 index = 0;
+    s16 index;
     s16 *p;
     do {
+        index = (world - 1) * 32;
         p = &allowed_time[index];
         switch (world) {
         case 1:
@@ -932,7 +933,6 @@ void init_allowed_time(void)
             break;
         }
         world++;
-        index += 32;
     } while (world <= 6);
 }
 
@@ -1100,27 +1100,25 @@ s32 instantSpeed(s16 speed) {
 }
 
 void SET_X_SPEED(obj_t* obj) {
-    s32 xspeed;
-    anim_t * anim;
+    s16 xspeed;
     u8 horloge_index;
 
-    xspeed = 0;
-    anim = obj->animations + obj->anim_index;
-    horloge_index = ((anim->layers_per_frame & 0xC000) >> 14) + 1;
+    horloge_index = ((obj->animations[obj->anim_index].layers_per_frame & 0xC000) >> 14) + 1;
     if (horloge[horloge_index] == 0) {
-    eta_t * eta;
+        eta_t *eta;
 
         eta = get_eta(obj);
-        if (obj->flags.flip_x) {
-            xspeed = eta->speed_x_right * horloge_index;
-        } else {
-            xspeed = eta->speed_x_left * horloge_index;
+        switch (obj->flags.flip_x) {
+        case 0: xspeed = eta->speed_x_left * horloge_index; break;
+        case 1: xspeed = eta->speed_x_right * horloge_index; break;
         }
-        if (obj->type == TYPE_23_RAYMAN && RayEvts.tiny) {
-            xspeed = ashr16((s16)xspeed, 1);
-        }
+    } else {
+        xspeed = 0;
     }
-    obj->speed_x = (s16)xspeed;
+    if (obj->type == TYPE_23_RAYMAN && RayEvts.tiny) {
+        xspeed = ashr16(xspeed, 1);
+    }
+    obj->speed_x = xspeed;
 }
 
 void make_active2(obj_t* obj, u8 do_nova) {
@@ -1361,25 +1359,26 @@ void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
 
 s16 DO_PESANTEUR(obj_t* obj) {
     s16 y_accel;
-    s32 res;
+    s16 res;
     u8 anim_speed_div;
 
     /* 2C214 80150A14 -O2 -msoft-float */
 
     res = 0;
     y_accel = 0;
-    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed >> 4;
+    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
+    anim_speed_div >>= 4;
 
     if (anim_speed_div != 0)
     {
         if (obj->type == TYPE_TAMBOUR1 || obj->type == TYPE_TAMBOUR2)
         {
-            if (obj->config != 0)
+            if (obj->config > 0)
                 obj->config--;
             else if (obj->gravity_value_1 == 0)
             {
-                obj->speed_y++;
                 res = 1;
+                obj->speed_y += res;
             }
         }
         else
@@ -1408,22 +1407,16 @@ s16 DO_PESANTEUR(obj_t* obj) {
                     }
                     break;
                 case 3:
-                    if (obj->speed_y > 0)
-                    {
-                        if (obj->speed_y > 1)
-                            y_accel = -1;
-                    }
-                    else
+                    if (obj->speed_y < 1)
                         y_accel = 1;
+                    else if (obj->speed_y > 1)
+                        y_accel = -1;
                     break;
                 case 4:
-                    if (obj->speed_y < -1)
-                    {
-                        if (obj->speed_y < -2)
-                            y_accel = 1;
-                    }
-                    else
+                    if (obj->speed_y > -2)
                         y_accel = -1;
+                    else if (obj->speed_y < -2)
+                        y_accel = 1;
                     break;
                 case 5:
                     if (obj->gravity_value_1 == 0)
@@ -1480,13 +1473,13 @@ void freezeAnim(obj_t *obj, u8 param_2)
 }
 
 void DO_ANIM(obj_t* obj) {
-    s32 prev_anim_frame;
-    s32 prev_anim_index;
+    s32 new_frame;
+    s16 prev_anim_index;
+    s16 prev_anim_frame;
     eta_t * eta;
     anim_t * prev_anim;
     u8 anim_speed;
     anim_t * anim;
-    u8 anim_changed_bit;
 
     prev_anim_frame = obj->anim_frame;
     prev_anim_index = obj->anim_index;
@@ -1494,59 +1487,63 @@ void DO_ANIM(obj_t* obj) {
     prev_anim = obj->animations + obj->anim_index;
     anim_speed = eta->anim_speed & 15;
     if (anim_speed != 0 && horloge[anim_speed] == 0) {
-        if (eta->flags & eta_flags_0x10_anim_reverse) {
-            --obj->anim_frame;
-        } else {
-            ++obj->anim_frame;
+        switch (eta->flags_bits.bit4) {
+        case 0: ++obj->anim_frame; break;
+        default: --obj->anim_frame; break;
         }
     }
     obj->anim_index = eta->anim_index;
 
 
     anim = obj->animations + obj->anim_index;
-    if ((obj->change_anim_mode == ANIMMODE_RESET_IF_NEW && obj->anim_index != prev_anim_index) || obj->change_anim_mode == ANIMMODE_RESET) {
-        if (eta->flags & eta_flags_0x10_anim_reverse) {
-            obj->anim_frame = anim->frames_count - 1;
-        } else {
+    switch (obj->change_anim_mode) {
+    case ANIMMODE_RESET_IF_NEW:
+        if (obj->anim_index != prev_anim_index) {
+            if (!(eta->flags & eta_flags_0x10_anim_reverse))
+                obj->anim_frame = 0;
+            else
+                obj->anim_frame = anim->frames_count - 1;
+        }
+        if (obj->is_active)
+            PlaySnd(get_eta(obj)->sound_index, obj->id);
+        break;
+    case ANIMMODE_RESET:
+        if (!(eta->flags & eta_flags_0x10_anim_reverse))
             obj->anim_frame = 0;
-        }
-        if (obj->is_active != 0) {
-            PlaySnd(eta->sound_index, obj->id);
-        }
+        else
+            obj->anim_frame = anim->frames_count - 1;
+        if (obj->is_active)
+            PlaySnd(get_eta(obj)->sound_index, obj->id);
+        break;
     }
     if (obj->anim_frame >= anim->frames_count || obj->anim_frame == 255) {
         // animation ended
-        obj->main_etat = eta->next_main_etat;
         obj->sub_etat = eta->next_sub_etat;
+        obj->main_etat = eta->next_main_etat;
         eta = get_eta(obj);
         obj->anim_index = eta->anim_index;
         anim = obj->animations + obj->anim_index;
         if ((obj->type == TYPE_23_RAYMAN && ray_old_sub_etat == 8 && (ray_old_main_etat == 2 || ray_old_main_etat == 6) && obj->sub_etat != 8) ||
                 (ray_old_sub_etat == 61 && ray_old_main_etat == 0 && obj->sub_etat != 61)
         ) {
-            if (ray.timer > 60 && !RayEvts.squashed) {
-                ray.timer = 60;
+            if (ray.iframes_timer > 60 && !RayEvts.squashed) {
+                ray.iframes_timer = 60;
             }
         }
-        if (eta->flags & eta_flags_0x10_anim_reverse) {
-            obj->anim_frame = anim->frames_count - 1;
-        } else {
-            obj->anim_frame = 0;
-        }
+        if (eta->flags & eta_flags_0x10_anim_reverse)
+            new_frame = anim->frames_count - 1;
+        else
+            new_frame = 0;
+        obj->anim_frame = new_frame;
         if (obj->is_active != 0) {
-            PlaySnd(eta->sound_index, obj->id);
+            PlaySnd(get_eta(obj)->sound_index, obj->id);
         }
     }
     obj->change_anim_mode = ANIMMODE_NONE;
     if (obj->flags.follow_enabled) {
         CALC_FOLLOW_SPRITE_SPEED(obj, anim, prev_anim, prev_anim_frame);
     }
-    anim_changed_bit = 0;
-    if (obj->anim_frame != prev_anim_frame || obj->anim_index != prev_anim_index) {
-        anim_changed_bit = 1;
-    }
-    obj->flags.anim_changed = anim_changed_bit;
-
+    obj->flags.anim_changed = (obj->anim_frame != prev_anim_frame || obj->anim_index != prev_anim_index) ? 1 : 0;
 }
 
 s16 prof_in_bloc(obj_t* obj) {
