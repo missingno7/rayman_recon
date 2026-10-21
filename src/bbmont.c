@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "game.h"
 #include "map.h"
+#include "inline_helpers.h"
 
 typedef struct bb_data_t {
     s16 speed_x;
@@ -411,13 +412,11 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
     if (nb_objs > 0) {
         do {
             if (cur_obj->type == TYPE_BBL && !cur_obj->is_active) {
-                // NOTE: added in PC version
                 if (param_2 == 4) {
                     cur_obj->flags.follow_enabled = 0;
                 } else {
                     cur_obj->flags.follow_enabled = 1;
                 }
-
                 if (param_2 != 0)
                     sprite_ind = 8;
                 else
@@ -542,10 +541,10 @@ void CreateFirstBBL(void) {
 void INIT_BBMONT(obj_t* obj) {
     calc_obj_pos(obj);
     obj->is_active = 0;
+    WaitForFinAtan = 10;
     obj->param = 0;
     obj->flags.alive = 1;
     obj->gravity_value_2 = 10;
-    WaitForFinAtan = 10;
     bb1.field8_0xe = 1;
     YaDesChiens = 0;
     screen_trembling2 = 0;
@@ -654,7 +653,6 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical
     s16 new_spd_x;
     eta_t **eta_rows;
-    s32 new_x;
     s16 x; s16 h; s16 y; s16 w;
     s16 nb_objs;
     s16 i = 0;
@@ -671,8 +669,7 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
                 new_spd_x = eta_rows[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
                 cur_obj->speed_x = cur_obj->flags.flip_x ? new_spd_x : -new_spd_x;
                 GET_SPRITE_POS(bb1_obj, 10, &x, &y, &w, &h);
-                new_x = (x + w) - cur_obj->offset_bx;
-                cur_obj->x = new_x + (bb1_obj->flags.flip_x ? 16 : -16);
+                cur_obj->x = ((x + w) - cur_obj->offset_bx) + (bb1_obj->flags.flip_x ? 16 : -16);
                 cur_obj->y = y;
                 cur_obj->init_x = cur_obj->x;
                 cur_obj->init_y = cur_obj->y;
@@ -1187,7 +1184,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
     s16 var_v0_2;
     s16 var_v1;
     s32 temp_v0;
-    u8 var_a0;
+    s32 var_a0;
     s32 var_v0_3;
     s32 var_v0_4;
     s32 var_v0_5;
@@ -1212,10 +1209,13 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
         FinAnim = 1;
     else
         FinAnim = 0;
-    if (((u8) Phase < 2) && (obj->main_etat != 2) && (ray_zdc_x - temp_s2 >= -16 && ray_zdc_x - temp_s2 <= 16) && (ray_zdc_h < (temp_s3 - 32))) {
-        set_main_and_sub_etat(obj, 0, 16);
-        obj->speed_x = 0;
-        obj->speed_y = 0;
+    if ((u8) Phase < 2) {
+        var_a0 = (obj->main_etat != 2);
+        if (var_a0 && inrange(ray_zdc_x - temp_s2, -16, 16) && (ray_zdc_h < (temp_s3 - 32))) {
+            set_main_and_sub_etat(obj, 0, 16);
+            obj->speed_x = 0;
+            obj->speed_y = 0;
+        }
     }
 
     if (obj->main_etat == 1)
@@ -1367,7 +1367,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     obj->gravity_value_2 = 5;
                     obj->gravity_value_1 = 0;
                 }
-                if ((obj->main_etat != 2) && (ray_zdc_x - temp_s2 >= -16 && ray_zdc_x - temp_s2 <= 16))
+                if ((obj->main_etat != 2) && inrange(ray_zdc_x - temp_s2, -16, 16))
                 {
                     if (ray_zdc_h < (temp_s3 - 32))
                     {
