@@ -1,7 +1,7 @@
-/* jumelle.c (1:32930..1:34580, binoculars/world-map zoom; software floating point, -fpc). Names RAYVERSE/ANDROID; workers tu_jumelle + fin_jumelle + gfin_jumelle. #pragma aux lines below only declare the register ABI of external hand-written assembly routines (no code). */
-/* jumelle.c -- DOS v1.21 candidate, 1:32930..1:34571.
- * Compile wc106 -zq -oaxt -s -5r -fpc; overlay symbols.json.
- * Partial reconstruction: 7/19 STRICT; see NOTES.md and final.json.
+/* jumelle.c (DOS v1.21, 1:32930..1:34580): binoculars/world-map zoom; -fpc. */
+/* Worker candidate. Compile wc106 -zq -oaxt -s -5r -fpc; see NOTES.md.
+ * Shared ORIGINAL_INLINE helpers are declared in inline_helpers.h.
+ * Local match: 7/19 STRICT; _TEXT remains non-contiguous.
  * DisplayJumellesNormal: explicit guarded midpoint-circle recurrences are STRICT.
  * Function/global names RAYVERSE except ChangeRealPosJumelle (ANDROID).
  * Descriptive locals INVENTED. No shared types changed.
@@ -10,6 +10,7 @@
 #include "game.h"
 #include "map.h"
 #include "lowlevel.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <math.h>
 
@@ -19,9 +20,6 @@ typedef int bool;
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define Abs(x) ((x) >= 0 ? (x) : -(x))
-#ifndef ashr16
-#define ashr16(v, b) ((v) >> (b))
-#endif
 
 extern u8 ChangeJumelleSizeOK;
 extern s32 HauteurJumelle;
@@ -121,7 +119,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v11;
                     } while (--count);
                 } else {
-                    memcpy(v10, v11, v58);
+                    copy(v10, v11, v58);
                 }
             }
 
@@ -138,7 +136,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v11;
                     } while (--count);
                 } else {
-                    memcpy(v10, v11, v58);
+                    copy(v10, v11, v58);
                 }
             }
         }
@@ -188,7 +186,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v30;
                     } while (--count);
                 } else {
-                    memcpy(v29, v30, v60);
+                    copy(v29, v30, v60);
                 }
             }
 
@@ -205,7 +203,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v35;
                     } while (--count);
                 } else {
-                    memcpy(v36, v35, v59);
+                    copy(v36, v35, v59);
                 }
             }
         }
@@ -227,7 +225,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v42;
                     } while (--count);
                 } else {
-                    memcpy(v41, v42, v60);
+                    copy(v41, v42, v60);
                 }
             }
 
@@ -243,7 +241,7 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                         ++v24;
                     } while (--count);
                 } else {
-                    memcpy(v18, v24, v59);
+                    copy(v18, v24, v59);
                 }
             }
         }
@@ -371,13 +369,13 @@ void CalculVitesseJumelle(void) {
         delta_y = (delta_y << 6) / dist;
     }
     dx = delta_x - XSpeedJumelle;
-    if (dx) dx = dx > 0 ? 1 : -1;
+    dx = sgn(dx);
     dx += XSpeedJumelle;
     if (dx > 16) dx = 16;
     if (dx < -16) dx = -16;
     XSpeedJumelle = dx;
     dy = delta_y - YSpeedJumelle;
-    if (dy) dy = dy > 0 ? 1 : -1;
+    dy = sgn(dy);
     dy += YSpeedJumelle;
     if (dy > 16) dy = 16;
     if (dy < -16) dy = -16;
