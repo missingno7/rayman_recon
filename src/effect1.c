@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 /* Worker w2_effect; partial finishing candidate, see NOTES.md.
  * effect.c part 1 (1:27b90..1:28a30: pause/screen effects; sub_* = Rayverse placeholder names, PC-only). Seeded by tools/seed.py, worker tu_effect. dummy_prg is a zero-size compiler alias of dummy_scene_func (identical adjacent bodies, docs/COMPILER.md). */
 #include "obj.h"
@@ -94,7 +95,7 @@ s16 sub_37B90(u32 par_0)
     s16 done;
 
     readinput();
-    memset(DrawBufferNormal, 0, 64000);
+    fill(DrawBufferNormal);
     if (sub_38ED4() == 0 || but0pressed() != 0 || but1pressed() != 0 ||
         but2pressed() != 0 || but3pressed() != 0 || TOUCHE(0x39) != 0)
         done = 1;
@@ -147,7 +148,7 @@ s16 sub_37CDC(u32 par_0)
     s16 done;
 
     readinput();
-    memset(DrawBufferNormal, 0, 64000);
+    fill(DrawBufferNormal);
     if (effect_helper_16404() == 0 || but0pressed() != 0 || but1pressed() != 0 ||
         but2pressed() != 0 || but3pressed() != 0 || TOUCHE(0x39) != 0)
         done = 1;
@@ -175,7 +176,7 @@ s16 sub_37D90(u32 par_0)
     s16 done;
 
     readinput();
-    memset(DrawBufferNormal, 0, 64000);
+    fill(DrawBufferNormal);
     if (effect_helper_348a4() == 0 || but0pressed() != 0 || but1pressed() != 0 ||
         but2pressed() != 0 || but3pressed() != 0 || TOUCHE(0x39) != 0)
         done = 1;
@@ -230,7 +231,7 @@ s16 sub_37EE0(u32 par_0)
     s16 done;
 
     readinput();
-    memset(DrawBufferNormal, 0, 64000);
+    fill(DrawBufferNormal);
     if (effect_helper_507f0() == 0 || but0pressed() != 0 || but1pressed() != 0 ||
         but2pressed() != 0 || but3pressed() != 0 || TOUCHE(0x39) != 0)
         done = 1;
@@ -574,7 +575,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
             TOUCHE(0x2a) != 0)
             effect_pause_bloque = 1;
         if (effect_pause_timer == 0) {
-            memset(DrawBufferNormal, 0, 0xfa00);
+            fill(DrawBufferNormal);
             effect_pause_counter = (u16)effect_helper_507f0();
             effect_helper_50aa8();
             DO_AFFICHE_PAUSE();
@@ -596,7 +597,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
             --effect_pause_timer;
         }
     } else if (effect_pause_counter != 0 || (s16)effect_speed >= 0) {
-        memset(DrawBufferNormal, 0, 0xfa00);
+        fill(DrawBufferNormal);
         effect_pause_counter = (u16)effect_helper_507f0();
         effect_helper_50aa8();
         if (effect_pause_counter != 0)
@@ -611,7 +612,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
                                DrawBufferNormal + 0xa0, 0xa0);
         endsynchro();
         synchro();
-        memcpy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
+        copy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
         for (;;) {
             if (TOUCHE(0x36) != 0 && TOUCHE(0x2a) != 0)
                 break;
@@ -637,7 +638,7 @@ finalize:
                                DrawBufferNormal + 0xa0, 0xa0);
         endsynchro();
         synchro();
-        memcpy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
+        copy(DisplayBufferNormal, DrawBufferNormal, 0xfa00);
     }
     return (in_pause == 0);
 }

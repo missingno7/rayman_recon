@@ -9585,7 +9585,7 @@
    "profile": "game",
    "functions": {
     "sub_37B90": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9609,7 +9609,7 @@
      ]
     },
     "sub_37CDC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9621,7 +9621,7 @@
      ]
     },
     "sub_37D90": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9645,7 +9645,7 @@
      ]
     },
     "sub_37EE0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
