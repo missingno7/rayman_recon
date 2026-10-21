@@ -9297,7 +9297,7 @@
      ]
     },
     "SYNCHRO_LOOP_PALETTE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

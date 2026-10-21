@@ -3129,10 +3129,7 @@ void SYNCHRO_LOOP_PALETTE(synchro_loop_palette_func_t func) {
     do {
         endsynchro();
         synchro();
-        menu_palette_index(0x3c8, 0);
-        menu_palette_disable();
-        menu_palette_stream(0x3c9, (const u8 *)&rvb_E40AC, 256 * 3);
-        menu_palette_enable();
+        palette_output(0, 255, &rvb_E40AC);
         SWAP_BUFFERS();
     } while (func() == 0);
 }
