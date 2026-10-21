@@ -365,8 +365,8 @@ void CalculVitesseJumelle(void) {
     if (absolute_y < 0) absolute_y = -absolute_y;
     dist = absolute_x + absolute_y;
     if (dist > 0) {
-        delta_x = (delta_x << 6) / dist;
-        delta_y = (delta_y << 6) / dist;
+        delta_x = ashl16(delta_x, 6) / dist;
+        delta_y = ashl16(delta_y, 6) / dist;
     }
     dx = delta_x - XSpeedJumelle;
     dx = sgn(dx);
