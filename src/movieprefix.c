@@ -767,6 +767,7 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
 
     if (movie_audio_enabled) {
         s32 width;
+        s32 rows;
         u8 *dst;
         const u8 *src;
         if (movie_playback_state == 1) {
@@ -776,12 +777,12 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
         dst = DisplayBufferNormal + work->surface_offset;
         src = surface->pixels + work->surface_offset;
         width = work->width;
-        i = work->height;
+        rows = work->height;
         do {
             memcpy(dst, src, width);
             dst += 320;
             src += 320;
-        } while (--i != 0);
+        } while (--rows != 0);
     }
     if (movie_audio_track != 0)
         movie_audio_enabled = 1;
