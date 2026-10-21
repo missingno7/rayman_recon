@@ -35,7 +35,7 @@ void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void SET_X_SPEED(obj_t *obj);
 u8 calc_typ_travd(obj_t *obj, u8 a2);
 void CALC_MOV_ON_BLOC(obj_t *obj);
-s32 sinYspeed(obj_t *obj, s16 a2, s16 a3, s16 *a4);
+s16 sinYspeed(obj_t *obj, s16 a2, s16 a3, s16 *a4);
 void obj_hurt(obj_t *obj);
 void GET_ANIM_POS(obj_t *obj, s16 *x, s16 *y, s16 *w, s16 *h);
 s16 inter_box(s32 x1, s32 y1, s32 w1, s32 h1, s16 x2, s16 y2, s32 w2, s32 h2);
@@ -170,8 +170,8 @@ void DO_BLK_NOP_COMMAND(obj_t* obj) {
 
             obj->speed_y = 0;
         } else {
-            obj->speed_y = 0;
             obj->timer--;
+            obj->speed_y = 0;
         }
     }
 
