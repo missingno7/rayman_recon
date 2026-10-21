@@ -5,8 +5,6 @@
 #include "map.h"
 #include "inline_helpers.h"
 
-#define MAX_1(x,y) ((x) < (y) ? (y) : (x))
-#define MIN_1(x,y) ((x) > (y) ? (y) : (x))
 #define BLOCK_SIZE 16
 #define MODE_NORMAL 0
 
@@ -47,8 +45,8 @@ void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y)
             if (diff_y_abs < 0) diff_y_abs = -diff_y_abs;
             diff_x_abs = diff_x_1;
             if (diff_x_abs < 0) diff_x_abs = -diff_x_abs;
-            unk_2 = MAX_1(diff_x_abs, diff_y_abs);
-            unk_1 = MIN_1(unk_2, unk_1);
+            unk_2 = max32(diff_x_abs, diff_y_abs);
+            unk_1 = min32(unk_2, unk_1);
             unk_3 = ashl16(unk_2, 4) / unk_1;
             unk_4 = ashl16(diff_x_1, 4) / unk_3;
             unk_5 = ashl16(diff_y_1, 4) / unk_3;
