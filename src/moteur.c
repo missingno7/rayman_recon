@@ -1442,20 +1442,17 @@ s16 DO_PESANTEUR(obj_t* obj) {
 void freezeAnim(obj_t *obj, u8 param_2)
 {
     s16 count;
-    s32 count_capped;
 
     count = obj->animations[obj->anim_index].frames_count - 1;
 
     if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x10)
     {
         /* duplicate... */
-        count_capped = min32(count, param_2);
-        obj->anim_frame = count - count_capped + 1;
+        obj->anim_frame = count - min32(count, param_2) + 1;
     }
     else
     {
-        count_capped = min32(count, param_2);
-        obj->anim_frame = count_capped;
+        obj->anim_frame = min32(count, param_2);
     }
 }
 
@@ -2768,8 +2765,6 @@ s16 RayCoince(s16 dir) {
 }
 
 void move_up_ray(void) {
-    eta_t *eta_row;
-    u8 main_state;
     s16 unk_y_1;
 
     /* 30E34 80155634 -O2 -msoft-float */
@@ -2777,9 +2772,10 @@ void move_up_ray(void) {
         ray.speed_y = 0;
     }
 
-    main_state = ray.main_etat;
-    eta_row = ray.eta[main_state];
-    unk_y_1 = ((eta_row[ray.sub_etat].flags & 0x40) || RayEvts.tiny) ? 40 : 25;
+    if ((get_eta(&ray)->flags & 0x40) || RayEvts.tiny)
+        unk_y_1 = 40;
+    else
+        unk_y_1 = 25;
 
     ray.y += ray.speed_y;
     if (ray.y < scroll_start_y - 20 - unk_y_1) {
