@@ -7327,6 +7327,71 @@
     "addr": "1:31354",
     "name": "RAYVERSE",
     "evidence": "Rayverse hybrid.c:103 (DOS address annotation //41354)"
+   },
+   "effect_cleanup_34688": {
+    "addr": "1:34688",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets the cleanup entry 1:34688; body loads global 2:50d14 and frees its allocations"
+   },
+   "effect_cleanup_6ee28": {
+    "addr": "1:6ee28",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets 1:6ee28; cleanup body loads global 2:57464 and frees its allocations"
+   },
+   "effect_cleanup_16200": {
+    "addr": "1:16200",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets 1:16200; cleanup body loads global 2:4e750"
+   },
+   "effect_cleanup_506fc": {
+    "addr": "1:506fc",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets 1:506fc; cleanup body loads global 2:54da8"
+   },
+   "effect_cleanup_6c7a0": {
+    "addr": "1:6c7a0",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets 1:6c7a0; cleanup body loads global 2:57460"
+   },
+   "effect_cleanup_634c4": {
+    "addr": "1:634c4",
+    "name": "INVENTED",
+    "evidence": "DOS switch table at 1:28270 targets 1:634c4; cleanup body loads global 2:55760"
+   },
+   "draw_effect_segment": {
+    "addr": "1:00045",
+    "name": "INVENTED",
+    "evidence": "DOS call at 1:291f7; routine at 1:00045 reads EAX, EDX, ESI and is hand-written assembly"
+   },
+   "effect_reset_geometry": {
+    "addr": "1:00010",
+    "name": "INVENTED",
+    "evidence": "DOS helper at 1:00010 initializes geometry arrays and returns at 1:00044; called from 1:28b94"
+   },
+   "effect_copy_band": {
+    "addr": "1:6e380",
+    "name": "INVENTED",
+    "evidence": "DOS calls at 1:28e95 and 1:28ea5 pass source in EAX, destination in EDX, and row width in EBX"
+   },
+   "effect_set_audio_status": {
+    "addr": "1:1a5a4",
+    "name": "INVENTED",
+    "evidence": "DOS call at 1:2895c passes AudioStatusByte in AL; routine stores resulting audio status"
+   },
+   "effect_restore_audio_status": {
+    "addr": "1:1a5cc",
+    "name": "INVENTED",
+    "evidence": "DOS call at 1:289fa passes AudioStatusByte in AL; routine restores resulting audio status"
+   },
+   "effect_copy_pause_band": {
+    "addr": "1:6e3cc",
+    "name": "INVENTED",
+    "evidence": "DOS call sites 1:285bf, 1:285df, 1:2872f and 1:28801 pass source EAX, destination EDX, width EBX"
+   },
+   "effect_activate": {
+    "addr": "1:5038c",
+    "name": "INVENTED",
+    "evidence": "DOS calls 1:286f4 and 1:28888 pass effect in EAX and signed effect speed in EDX"
    }
   },
   "data": {
@@ -13394,6 +13459,36 @@
     "type": "s16",
     "name": "PS1",
     "evidence": "PS1 dark_phase2.c; Android size 2; DOS word accesses at 1:30fe0 and 1:30ff1"
+   },
+   "effect_audio_clock_start": {
+    "addr": "2:4f7d4",
+    "type": "u32",
+    "name": "INVENTED",
+    "evidence": "DOS call at 1:2894d passes this address in ESI to the BIOS clock helper"
+   },
+   "effect_audio_clock_end": {
+    "addr": "2:4f7d8",
+    "type": "u32",
+    "name": "INVENTED",
+    "evidence": "DOS call at 1:289cf passes this address in ESI to the BIOS clock helper"
+   },
+   "effect_pause_count": {
+    "addr": "2:64d0",
+    "type": "u16",
+    "name": "INVENTED",
+    "evidence": "DOS writes and reads a 16-bit counter at 1:28595-2864c"
+   },
+   "effect_pause_timer": {
+    "addr": "2:64d2",
+    "type": "u16",
+    "name": "INVENTED",
+    "evidence": "DOS writes and reads a 16-bit timer at 1:28657-28775"
+   },
+   "effect_pause_counter": {
+    "addr": "2:64d4",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS increments and clears a 32-bit counter at 1:28600-28881"
    }
   }
  }
