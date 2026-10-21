@@ -1,5 +1,5 @@
 /* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
- * Worker c_objupdate2: 49/51 STRICT, contiguous _TEXT; see NOTES.md.
+ * Worker c2_objupdate2: 49/51 STRICT, contiguous _TEXT; see NOTES.md.
  * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -330,7 +330,8 @@ void TEST_WIZARD(obj_t* obj) {
                 x_diff_2 = x_diff_1 - (obj_w >> 1);
                 x_diff_3 = x_diff_1 + (obj_w >> 1);
                 y_diff_1 = (ray.y + ray.offset_by) - obj_y - obj_h;
-                if (iabs(y_diff_1) <= 8) {
+                y_diff_1 = iabs(y_diff_1);
+                if (y_diff_1 <= 8) {
                     if ((iabs(x_diff_2) <= 16 && ray.flags.flip_x) || (iabs(x_diff_3) <= 16 && !(ray.flags.flip_x))) {
                         if (iabs(x_diff_2) <= 16 && ray.flags.flip_x) {
                             obj->flags.flip_x = 0;
