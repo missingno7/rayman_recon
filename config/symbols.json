@@ -8597,6 +8597,11 @@
     "addr": "1:04d55",
     "name": "INVENTED",
     "evidence": "INVENTED: address-anchored DOS CFG at 1:04d55 begins a standalone PUSHAD body after the RET at 1:04d54; it has independent dimension guards and ends with RET at 1:04e63. routine_spans.json identifies 1:04d55..04e64 as a distinct candidate span. No external entry reference was found."
+   },
+   "asm_02640": {
+    "addr": "1:02640",
+    "name": "INVENTED",
+    "evidence": "Required public at CODE offset 0 for this slice; the address-anchored CFG shows a routine from 1:02640 through RET at 1:02689. No Android symbol (python tools/android.py asm_02640) and no external entry reference in entry_refs.json."
    }
   },
   "data": {
