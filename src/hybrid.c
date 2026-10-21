@@ -1,9 +1,10 @@
-/* 1:2e580..1:31ab0: hifi.c (sound driver config, banks; source boundary 1:2f040) + hybrid.c (hybrid bosses: Mosamsk, Stosko, BBF2, Dark phase 2, toons). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_hybrid. 15 functions not yet reconstructed. */
+/* 1:2e580..1:31ab0: hifi.c (sound driver config, banks, KeyOn/Off/Vol, Tchatch; source boundary 1:2f040) + hybrid.c (hybrid bosses). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_hybrid. 2:50c14 is temps_text (one DOS variable; PS1 PosYSin2 role, OPEN). */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #ifndef FLG
 #define FLG(x) (1 << x)
 #endif
@@ -25,6 +26,49 @@
 #ifndef ashr16
 #define ashr16(v, b) ((v) >> (b))
 #endif
+
+typedef struct archive_header_t {
+    s32 offset;
+    s32 size;
+    u8 xor_byte;
+    u8 checksum_byte;
+    u8 pad[2];
+} archive_header_t;
+
+typedef struct bnk_header_t {
+    u32 offset;
+    u32 size;
+    u32 field_8;
+    u32 field_C;
+} bnk_header_t;
+
+typedef struct dos_sound_config_t {
+    u32 reserved_00[4];
+    s32 timeout;
+    u32 reserved_14[2];
+    u32 arg0;
+    u16 arg1;
+    u16 pad_22;
+} dos_sound_config_t;
+
+typedef struct dos_sound_request_t {
+    u8 __far *data;
+    u16 pointer_pad;
+    u32 size;
+    s32 field_0c;
+    u32 field_10;
+    s32 volume;
+    u32 field_18[4];
+    u16 flags;
+    u16 flags_pad;
+    u32 field_2c;
+    u32 field_30;
+    u32 field_34;
+    s32 sample_rate;
+    u32 field_3c;
+    s32 pan;
+    u32 reserved[12];
+} dos_sound_request_t;
 
 #define GO_LEFT 0
 #define GO_NOP 30
@@ -113,6 +157,23 @@ extern char txt_dark2[100];
 extern s16 xmap;
 extern s16 xmapmax;
 extern s16 ymap;
+extern archive_header_t snd8b_header_infos[7];
+extern archive_header_t snd8b_data_infos[7];
+extern archive_header_t sndvig_infos[9];
+extern bnk_header_t bnkHeaderFixe[128];
+extern bnk_header_t bnkHeaderWorld[128];
+extern u8 *bnkDataFixe;
+extern u8 *bnkDataWorld;
+extern u8 *ptrTchatch;
+extern u8 *TchachPerduPtr;
+extern s32 TchachPerduSize;
+extern s16 pitchTab[128];
+extern s32 sound_driver_handle;
+extern s32 sound_detect_handle;
+extern s16 sound_voice_id;
+extern dos_sound_config_t sound_config;
+extern u8 CarteSonAutorisee;
+extern u8 SonLimite;
 void DO_NOVA(obj_t* obj);
 void DO_ONE_CMD(obj_t* obj);
 void RAY_DEMIRAY(void);
@@ -121,7 +182,7 @@ void calc_obj_pos(obj_t* obj);
 void obj_hurt(obj_t *obj);
 void RAY_HIT(u8 hurt, obj_t *obj);
 void display_text_sin(const char* text, s16 x, s16 y, u8 font_size, s8 color, u8 a6);
-extern void exit();
+void stop_cd(void);
 s16 firstFloorBelow(obj_t* obj);
 void setBossReachingSpeeds(obj_t* obj, u8 timer, u8 accuracyX, u8 accuracyY);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
@@ -170,38 +231,382 @@ void AllocateToons(void);
 void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj);
 void ToonDonnePoing(obj_t *d2fly_obj);
 
-/* sub_3E66C: no seed source */
+/* Address-identified routines in the DOS sound and file-driver modules. */
+extern s32 sub_71B0F(s32 driver);
+extern s32 sub_71B98(s32 a1, s32 a2);
+extern s32 sub_71CAE(s32 a1, s32 a2, u32 a3, s16 a4, void __far *a5);
+extern s32 sub_71C74(s32 a1);
+extern s32 sub_72033(s32 handle);
+extern s32 sub_7234F(s32 a1, s16 a2);
+extern s32 sub_7293D(const char __far *name, void __far *buffer);
+extern s32 sub_72DB5(s32 __far *value);
+extern s32 sub_72499(void);
+extern s32 sub_735C4(s32 a1, s32 a2, s32 a3);
+extern s32 sub_7367D(s32 device_id, s32 timeout, s32 __far *port,
+    void __far *init_data, void __far *driver_data);
+extern s32 sub_7363D(void);
+extern s32 sub_73F3D(s32 driver, s32 enabled);
+extern s16 sub_743F7(s32 driver, dos_sound_request_t __far *request);
+extern s32 sub_74A10(s32 driver, s16 voice);
+extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
+extern s32 sub_7512E(s32 driver, s16 voice, s32 pan);
+extern s32 sub_754E3(s32 driver, s16 voice);
+extern u8 *sub_6FBB4(u32 size);
+extern void JumelleFreeArray(void **address);
 
-/* sub_3E6B0: no seed source */
+void sub_3E66C(void);
+void sub_3E6B0(void);
+s32 sub_3E710(void);
+s32 sub_3E780(void);
+void LoadBnkFile(s32 header_index, s32 data_index,
+    bnk_header_t *headers, u8 **data);
+void LoadBnkFixe(void);
+void LoadBnkWorld(s16 world);
+s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan);
+void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note);
+void KeyVol(s16 voice, s16 volume, s16 pan);
+void DigiMusicDone(void);
+void LoadTchatchPerdu(void);
+void PlayTchatch(s32 sound, s32 volume);
+void FreeTchatchVignette(void);
+void FreeDetectDriver(void);
+
+void sub_3E66C(void)
+{
+    s16 voice;
+
+    for (voice = 0; voice <= 32; voice++)
+        KeyOff(voice, 0, 0, 0, 0);
+    while (sub_71B0F(sound_driver_handle) != 0)
+        ;
+    sub_72033(sound_detect_handle);
+    sub_71C74(0);
+}
+
+void sub_3E6B0(void)
+{
+    sub_71B98(0xff00, 0);
+    if (sub_71CAE(0x28, 0, sound_config.arg0, sound_config.arg1,
+            (void __far *)&sound_detect_handle) != 0)
+        sub_71C74(0);
+}
 
 void rayman_sound_fatal_error(const char* message) {
     printf("Rayman sound says fatal error :\n%s\n", message);
     exit(-1);
 }
 
-/* sub_3E710: no seed source */
+ s32 sub_3E710(void)
+{
+    s32 probe;
 
-/* sub_3E780: no seed source */
+    if (sub_7234F(0, 0) != 0)
+        return 1;
+    if (sub_7293D((const char __far *)current_device_name,
+            (void __far *)&probe) != 0) {
+        sub_72499();
+        return 2;
+    }
+    if (sub_72DB5((s32 __far *)&current_port) != 0) {
+        sub_72499();
+        return 3;
+    }
+    sub_72499();
+    return 0;
+}
 
-/* LoadBnkFile: no seed source */
+s32 sub_3E780(void)
+{
+    s32 result;
 
-/* LoadBnkFixe: no seed source */
+    sub_735C4(0, 0, 0);
+    sub_71B98(0xff00, 0);
+    sound_config.timeout = 10000;
+    result = sub_7367D(current_device_id, sound_config.timeout,
+        (s32 __far *)&current_port,
+        (void __far *)&sound_config,
+        (void __far *)&sound_driver_handle);
+    if (result != 0) {
+        sub_71C74(0);
+        sub_7363D();
+        return 1;
+    }
+    result = sub_71CAE(0x28, 0, sound_config.arg0, sound_config.arg1,
+        (void __far *)&sound_detect_handle);
+    if (result != 0) {
+        sub_71C74(0);
+        sub_73F3D(sound_driver_handle, 1);
+        return 2;
+    }
+    return 0;
+}
 
-/* LoadBnkWorld: no seed source */
+void LoadBnkFile(s32 header_index, s32 data_index,
+    bnk_header_t *headers, u8 **data)
+{
+    FILE *file;
+    s32 size;
+    s32 i;
+    u8 check;
+    u8 key;
+    u8 *bytes;
+    archive_header_t *info;
+    archive_header_t *data_info;
+    u8 *end;
+    u8 *word;
 
-/* KeyOn: no seed source */
+    stop_cd();
+    file = fopen("SNDH8B.DAT", "rb");
+    if (file == 0)
+        rayman_sound_fatal_error("Fichier data introuvable.\n");
+    info = &snd8b_header_infos[header_index];
+    fseek(file, info->offset, SEEK_SET);
+    fread(headers, 0x10, 0x80, file);
+    fclose(file);
 
-/* KeyOff: no seed source */
+    bytes = (u8 *)headers;
+    check = (u8)(info->checksum_byte - bytes[0]);
+    key = info->xor_byte;
+    end = bytes + 0x800;
+    while (bytes != end) {
+        *bytes ^= key;
+        bytes++;
+    }
+    if (check != 0)
+        rayman_sound_fatal_error("Load error in sndh8b.dat.\n");
 
-/* KeyVol: no seed source */
+    stop_cd();
+    file = fopen("SNDD8B.DAT", "rb");
+    if (file == 0)
+        rayman_sound_fatal_error("Fichier data introuvable.\n");
+    data_info = &snd8b_data_infos[data_index];
+    size = data_info->size;
+    if (*data != 0)
+        JumelleFreeArray((void **)data);
+    *data = sub_6FBB4((u32)size);
+    if (*data == 0)
+        rayman_sound_fatal_error("Mmoire insuffisante pour charger les samples.\n");
+    fseek(file, data_info->offset, SEEK_SET);
+    fread(*data, 1, size, file);
+    fclose(file);
 
-/* DigiMusicDone: no seed source */
+    bytes = *data;
+    check = data_info->checksum_byte;
+    key = data_info->xor_byte;
+    i = 0;
+    while (i < size) {
+        check -= bytes[i];
+        bytes[i] ^= key;
+        i++;
+    }
+    if (check != 0)
+        rayman_sound_fatal_error("Load error in sndd8b.dat.\n");
 
-/* LoadTchatchPerdu: no seed source */
+    word = (u8 *)headers;
+    end = word + 0x800;
+    while (word != end) {
+        *(u32 *)word += (u32)*data;
+        word += 0x10;
+    }
+}
 
-/* PlayTchatch: no seed source */
+void LoadBnkFixe(void)
+{
+    if (CarteSonAutorisee && !SonLimite)
+        LoadTchatchPerdu();
+    LoadBnkFile(2, 2, bnkHeaderFixe, &bnkDataFixe);
+}
 
-/* FreeTchatchVignette: no seed source */
+void LoadBnkWorld(s16 world)
+{
+    switch (world) {
+    case 1: LoadBnkFile(4, 4, bnkHeaderWorld, &bnkDataWorld); break;
+    case 2: LoadBnkFile(6, 6, bnkHeaderWorld, &bnkDataWorld); break;
+    case 3: LoadBnkFile(5, 5, bnkHeaderWorld, &bnkDataWorld); break;
+    case 4: LoadBnkFile(3, 3, bnkHeaderWorld, &bnkDataWorld); break;
+    case 5: LoadBnkFile(1, 1, bnkHeaderWorld, &bnkDataWorld); break;
+    case 6: LoadBnkFile(0, 0, bnkHeaderWorld, &bnkDataWorld); break;
+    default: break;
+    }
+}
+
+s16 KeyOn(u8 bank, s32 prog, u8 tone, u8 note, s16 volume, s16 pan)
+{
+    dos_sound_request_t request = {0};
+    s16 voice;
+
+    request.volume = ((s32)volume * 0x7fff) / 0x7f;
+    request.pan = ((s32)pan * 0xffff) / 0x7f;
+    request.sample_rate = ((s32)pitchTab[note]) << 8;
+    request.flags |= 0x720;
+
+    if (bank == 0) {
+        request.data = (u8 __far *)bnkHeaderFixe[(s16)prog].offset;
+        request.size = bnkHeaderFixe[(s16)prog].size;
+        if (bnkHeaderFixe[(s16)prog].field_C != 0) {
+            request.field_0c = -1;
+            request.field_30 = bnkHeaderFixe[(s16)prog].field_8;
+            request.field_34 = bnkHeaderFixe[(s16)prog].field_C;
+            request.flags |= 0x4760;
+        }
+    } else {
+        request.data = (u8 __far *)bnkHeaderWorld[(s16)prog].offset;
+        request.size = bnkHeaderWorld[(s16)prog].size;
+        if (bnkHeaderWorld[(s16)prog].field_C != 0) {
+            request.field_0c = -1;
+            request.field_30 = bnkHeaderWorld[(s16)prog].field_8;
+            request.field_34 = bnkHeaderWorld[(s16)prog].field_C;
+            request.flags |= 0x4760;
+        }
+    }
+    if (request.size == 0)
+        return -1;
+    voice = sub_743F7(sound_driver_handle,
+        (dos_sound_request_t __far *)&request);
+    if (voice == -1 || voice >= 0x20)
+        return -1;
+    return voice;
+}
+
+void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note)
+{
+    sub_74A10(sound_driver_handle, voice);
+}
+
+void KeyVol(s16 voice, s16 volume, s16 pan)
+{
+    s32 scaled_volume;
+    s32 scaled_pan;
+
+    scaled_volume = ((s32)volume * 0x7fff) / 0x7f;
+    sub_74E8B(sound_driver_handle, voice, scaled_volume);
+    scaled_pan = ((s32)pan * 0xffff) / 0x7f;
+    sub_7512E(sound_driver_handle, voice, scaled_pan);
+}
+
+void DigiMusicDone(void)
+{
+    s16 voice;
+
+    for (voice = 0; voice <= 32; voice++)
+        KeyOff(voice, 0, 0, 0, 0);
+    sub_72033(sound_detect_handle);
+    sub_71C74(0);
+    sub_73F3D(sound_driver_handle, 1);
+    sub_7363D();
+}
+
+void LoadTchatchPerdu(void)
+{
+    FILE *file;
+    s32 size;
+    s32 i;
+    u8 check;
+    u8 key;
+    u8 *bytes;
+    archive_header_t *info;
+
+    stop_cd();
+    info = &sndvig_infos[6];
+    file = fopen("SNDVIG.DAT", "rb");
+    if (file == 0)
+        rayman_sound_fatal_error("Fichier data introuvable.\n");
+    size = info->size;
+    ptrTchatch = sub_6FBB4((u32)size);
+    if (ptrTchatch == 0) {
+        fclose(file);
+        return;
+    }
+    fseek(file, info->offset, SEEK_SET);
+    fread(ptrTchatch, 1, size, file);
+    fclose(file);
+    bytes = ptrTchatch;
+    check = info->checksum_byte;
+    key = info->xor_byte;
+    for (i = 0; i < size; i++) {
+        check -= bytes[i];
+        bytes[i] ^= key;
+    }
+    if (check != 0)
+        rayman_sound_fatal_error("Load error in sndvig.dat.\n");
+    TchachPerduPtr = ptrTchatch;
+    TchachPerduSize = size;
+    ptrTchatch = 0;
+}
+
+void PlayTchatch(s32 sound, s32 volume)
+{
+    dos_sound_request_t request = {0};
+    s32 bank;
+    FILE *file;
+    s32 size;
+    s32 i;
+    u8 check;
+    u8 key;
+    u8 *bytes;
+    archive_header_t *info;
+    s16 voice;
+
+    request.volume = ((s32)(s16)volume * 0x7fff) / 0x7f;
+    ((u8 *)&request)[0x29] |= 1;
+    switch (sound) {
+    case 1: bank = 8; break;
+    case 2: bank = 5; break;
+    case 3: bank = 2; break;
+    case 4: bank = 0; break;
+    case 5: bank = 3; break;
+    case 6: bank = 7; break;
+    case 7: bank = 1; break;
+    case 8: bank = 6; break;
+    case 9: bank = 3; break;
+    default: return;
+    }
+    if (bank == 6) {
+        request.data = (u8 __far *)TchachPerduPtr;
+        request.size = TchachPerduSize;
+        request.flags |= 0x80;
+    } else {
+        stop_cd();
+        file = fopen("SNDVIG.DAT", "rb");
+        if (file == 0)
+            rayman_sound_fatal_error("Fichier data introuvable.\n");
+        info = &sndvig_infos[bank];
+        size = info->size;
+        if (ptrTchatch != 0)
+            JumelleFreeArray((void **)&ptrTchatch);
+        ptrTchatch = sub_6FBB4((u32)size);
+        if (ptrTchatch == 0) {
+            fclose(file);
+            return;
+        }
+        fseek(file, info->offset, SEEK_SET);
+        fread(ptrTchatch, 1, size, file);
+        fclose(file);
+        bytes = ptrTchatch;
+        check = info->checksum_byte;
+        key = info->xor_byte;
+        for (i = 0; i < size; i++) {
+            check -= bytes[i];
+            bytes[i] ^= key;
+        }
+        if (check != 0)
+            rayman_sound_fatal_error("Load error in sndvig.dat.\n");
+        request.data = (u8 __far *)ptrTchatch;
+        request.size = size;
+        request.flags |= 0x80;
+    }
+    voice = sub_743F7(sound_driver_handle,
+        (dos_sound_request_t __far *)&request);
+    sound_voice_id = voice;
+}
+
+void FreeTchatchVignette(void)
+{
+    while (sub_754E3(sound_driver_handle, sound_voice_id) != 1)
+        ;
+    JumelleFreeArray((void **)&ptrTchatch);
+    ptrTchatch = 0;
+}
 
 void SetPort_(u16 port) {
     current_port = port;
@@ -247,7 +652,10 @@ s32 *GetDeviceID_Ray(void) {
     return &current_device_id;
 }
 
-/* FreeDetectDriver: no seed source */
+void FreeDetectDriver(void)
+{
+    sub_72499();
+}
 
 void allocateSTOSKO(void)
 {

@@ -7442,6 +7442,96 @@
     "addr": "1:37c10",
     "name": "RAYVERSE",
     "evidence": "Rayverse load.c address annotation; DOS function boundary 1:37c10"
+   },
+   "sub_71B0F": {
+    "addr": "1:71b0f",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:71b0f; address-based helper label."
+   },
+   "sub_71B98": {
+    "addr": "1:71b98",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:71b98; address-based helper label."
+   },
+   "sub_71CAE": {
+    "addr": "1:71cae",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:71cae; address-based helper label."
+   },
+   "sub_71C74": {
+    "addr": "1:71c74",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:71c74; address-based helper label."
+   },
+   "sub_72033": {
+    "addr": "1:72033",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:72033; address-based helper label."
+   },
+   "sub_7234F": {
+    "addr": "1:7234f",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:7234f; address-based helper label."
+   },
+   "sub_72499": {
+    "addr": "1:72499",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:72499; address-based helper label."
+   },
+   "sub_7293D": {
+    "addr": "1:7293d",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:7293d; address-based helper label."
+   },
+   "sub_72DB5": {
+    "addr": "1:72db5",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:72db5; address-based helper label."
+   },
+   "sub_735C4": {
+    "addr": "1:735c4",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:735c4; address-based helper label."
+   },
+   "sub_7363D": {
+    "addr": "1:7363d",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:7363d; address-based helper label."
+   },
+   "sub_7367D": {
+    "addr": "1:7367d",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:7367d; address-based helper label."
+   },
+   "sub_73F3D": {
+    "addr": "1:73f3d",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:73f3d; address-based helper label."
+   },
+   "sub_743F7": {
+    "addr": "1:743f7",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:743f7; address-based helper label."
+   },
+   "sub_74A10": {
+    "addr": "1:74a10",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:74a10; address-based helper label."
+   },
+   "sub_74E8B": {
+    "addr": "1:74e8b",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:74e8b; address-based helper label."
+   },
+   "sub_7512E": {
+    "addr": "1:7512e",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:7512e; address-based helper label."
+   },
+   "sub_754E3": {
+    "addr": "1:754e3",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly call target at 1:754e3; address-based helper label."
    }
   },
   "data": {
@@ -13653,6 +13743,60 @@
     "type": "u32",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c //CD7BC; Android .bss size 4; DOS LOAD_ALL_FIX stores block_malloc result at 1:36d40"
+   },
+   "bnkHeaderFixe": {
+    "addr": "2:4faf0",
+    "type": "bnk_header_t[128]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //DFAF0; DOS entries stride 16 bytes and the next table starts at 2:502f0."
+   },
+   "bnkHeaderWorld": {
+    "addr": "2:502f0",
+    "type": "bnk_header_t[128]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E02F0; DOS entries stride 16 bytes."
+   },
+   "TchachPerduPtr": {
+    "addr": "2:50b00",
+    "type": "u8*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0B00; Android symbol size 4; DOS stores the decoded SNDVIG buffer here."
+   },
+   "TchachPerduSize": {
+    "addr": "2:50b04",
+    "type": "s32",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E0B04; Android symbol size 4; DOS stores the decoded SNDVIG length here."
+   },
+   "sound_driver_handle": {
+    "addr": "2:50b78",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS hifi routines load this dword as the first argument to driver calls."
+   },
+   "sound_detect_handle": {
+    "addr": "2:50b7c",
+    "type": "s32",
+    "name": "INVENTED",
+    "evidence": "DOS sound setup and cleanup routines load and pass this dword to driver calls."
+   },
+   "sound_voice_id": {
+    "addr": "2:50b80",
+    "type": "s16",
+    "name": "INVENTED",
+    "evidence": "DOS KeyOn stores a word here; FreeTchatchVignette reads it as a signed short voice index."
+   },
+   "sound_config": {
+    "addr": "2:6664",
+    "type": "dos_sound_config_t",
+    "name": "INVENTED",
+    "evidence": "DOS sub_3E780 passes this base to 1:7367d; it writes +0x10 and reads +0x1c/+0x20."
+   },
+   "SonLimite": {
+    "addr": "2:3fa13",
+    "type": "u8",
+    "name": "ANDROID",
+    "evidence": "Android .bss object size 1; DOS LoadBnkFixe reads this byte at 2:3fa13."
    }
   }
  }
