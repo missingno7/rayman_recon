@@ -7392,6 +7392,21 @@
     "addr": "1:5038c",
     "name": "INVENTED",
     "evidence": "DOS calls 1:286f4 and 1:28888 pass effect in EAX and signed effect speed in EDX"
+   },
+   "draw_normal_5755": {
+    "addr": "1:05755",
+    "name": "INVENTED",
+    "evidence": "DOS callback start loaded at 1:2da93, stored to drawflocon4NormalETX at 1:2dac4; Android draw_flocon4_Normal exists, but canonical binding incorrectly occupies 1:5725 (pluie4)."
+   },
+   "asm_03257": {
+    "addr": "1:03257",
+    "name": "INVENTED",
+    "evidence": "Hand-written assembly ABI proven by docs/reference/lowlevel_abi.h and DOS body; callee of sub_3BE20."
+   },
+   "asm_037e4": {
+    "addr": "1:037e4",
+    "name": "INVENTED",
+    "evidence": "Hand-written assembly ABI proven by docs/reference/lowlevel_abi.h and DOS body; callee of sub_3BE20."
    }
   },
   "data": {
@@ -13489,6 +13504,18 @@
     "type": "s32",
     "name": "INVENTED",
     "evidence": "DOS increments and clears a 32-bit counter at 1:28600-28881"
+   },
+   "frame_records_38888": {
+    "addr": "2:38888",
+    "type": "u32[14][32]",
+    "name": "INVENTED",
+    "evidence": "DOS 1:2be72/2bea4 and helper 1:3257: 14 scanline records, stride 128, dword reads; Android patai_line/vide_line each1792 bytes, exact name mapping OPEN."
+   },
+   "plan0bit_nb_bytes": {
+    "addr": "2:3d7f4",
+    "type": "u32",
+    "name": "ANDROID",
+    "evidence": "Android plan0bit_nb_bytes size4 .bss; DOS 1:2beab passes dword as row stride to plan0 renderer 1:3257; Rayverse dword_CD7F4."
    }
   }
  }

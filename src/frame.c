@@ -1,10 +1,11 @@
-/* 1:2b4d0..1:2e580: frame.c tail (fades, palettes, plan3, video modes, map building) + guetteur.c (pirate lookout); split candidate 1:2db40 (STRONG). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_frame. Pragmas declare assembly-routine register ABIs only. 3 renderer functions not yet reconstructed. */
+/* 1:2b4d0..1:2e580: frame.c tail (fades, palettes, plan3, video modes, map building) + guetteur.c (pirate lookout); split candidate 1:2db40 (STRONG). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_frame. Pragmas declare assembly-routine register ABIs only. Two renderer bodies remain unreconstructed; see worker NOTES.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <i86.h>
 
 typedef struct vec2b_t { u8 x, y; } vec2b_t;
 typedef void draw_func_t(s32 x, s32 sprite_field_A, s32 y, vec2b_t size, u8 *draw_buf, u8 *image_data);
@@ -34,12 +35,12 @@ extern u8 need_timer;
 extern u8 in_pause;
 typedef void block_copy_t(u8 *source, u8 *dest);
 typedef void block_clear_t(u8 *dest);
-#pragma aux block_copy_t parm [esi] [edi]
-#pragma aux block_clear_t parm [edi]
+#pragma aux block_copy_t parm [esi] [edi] modify exact []
+#pragma aux block_clear_t parm [edi] modify exact []
 extern block_copy_t block_copy;
 extern block_clear_t block_clear;
-typedef void display_anypicture_t(s32 height, s32 stride_and_plane, s32 source_width, u8 *source, u8 *dest);
-#pragma aux display_anypicture_t parm [eax] [edx] [ecx] [esi] [edi]
+typedef void display_anypicture_t(u8 *source, u8 *dest, s32 height, s32 stride_and_plane, s32 source_width, s32 width);
+#pragma aux display_anypicture_t parm [esi] [edi] [eax] [edx] [ecx] [ebx] modify exact [eax ecx edx esi edi]
 extern display_anypicture_t display_anypicture;
 extern void speaker_enable(void);
 extern s32 clock_ticks(void);
@@ -53,7 +54,7 @@ typedef void bios_wait_timer_t(s32 high, s32 low);
 #pragma aux bios_wait_timer_t parm [ecx] [edx]
 extern bios_wait_timer_t bios_wait_timer;
 typedef void copy_dwords_t(u32 *source, u32 *dest, s32 count);
-#pragma aux copy_dwords_t parm [esi] [edi] [ecx]
+#pragma aux copy_dwords_t parm [esi] [edi] [ecx] modify exact [ecx esi edi]
 extern copy_dwords_t copy_dwords;
 #ifndef SGN
 #define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)
@@ -61,6 +62,17 @@ extern copy_dwords_t copy_dwords;
 #ifndef ashr16
 #define ashr16(v, b) ((v) >> (b))
 #endif
+
+/* DOS record lists: helpers traverse 14 rows at 128-byte stride, reading dwords.
+   Names are INVENTED; Android patai_line/vide_line are each 1792 bytes, mapping OPEN. */
+extern u32 frame_records_38888[14][32];
+extern u32 plan0bit_nb_bytes;
+extern u8 P486;
+/* ABI evidence: docs/reference/lowlevel_abi.h, 1:03257 and 1:037e4. */
+void asm_03257(u32 mask, u32 stride, u32 offset, const u32 *context, const u32 *records, u32 dest);
+#pragma aux asm_03257 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]
+void asm_037e4(const void *records, u8 *dest);
+#pragma aux asm_037e4 parm [esi] [ecx] modify exact [eax ebx ecx edx esi edi]
 
 #define MODE_TEXT 255
 #define MODE_NORMAL 0
@@ -84,7 +96,7 @@ extern u16 nb_fade;
 extern poing_t poing;
 extern obj_t ray;
 extern rgb_palette_t rvb[3];
-extern u16 rvb_fade[256 * 3];
+extern s16 rvb_fade[256 * 3];
 extern rgb_palette_t rvb_save;
 extern u8 save_current_pal;
 extern u16 type_zdc[262];
@@ -137,6 +149,7 @@ extern u8 Main_Control;
 typedef s32 (swap_func_t)(u8 *, u8 *, s32, s32);
 #pragma aux swap_func_t parm [edi] [esi] [ecx] [eax]
 extern swap_func_t *Swap_And_Test_Joystick;
+extern void clear_memory(void *dest, s32 value, s32 count);
 void advance_frame(void);
 void set_fade_palette(rgb_palette_t *palette);
 void do_fade(rgb_palette_t *source_pal, rgb_palette_t *dest_pal);
@@ -196,6 +209,7 @@ extern void_func_t draw_flocon1_Normal;
 extern void_func_t draw_flocon2_Normal;
 extern void_func_t draw_flocon3_Normal;
 extern void_func_t draw_flocon4_Normal;
+extern void_func_t draw_normal_5755;
 extern void_func_t draw_flocon5_Normal;
 extern void_func_t draw_flocon6_Normal;
 extern void_func_t draw_flocon7_Normal;
@@ -234,7 +248,7 @@ void RESTORE_PALETTE(void);
 void InitTextMode(void);
 void swapGuetteurCollZones(obj_t *obj, u8 param_2);
 void guetteurFollowsShip(obj_t *obj);
-s32 hasGuetteurABomb(obj_t* obj);
+s16 hasGuetteurABomb(obj_t* obj);
 void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 param_4);
 void DO_PAR_TIR(obj_t* obj);
 void DO_PAR_POING_COLLISION(obj_t *obj, s16 param_2);
@@ -289,38 +303,41 @@ s32 sub_3B5E8(void) {
 }
 
 void calc_gros_type(void) {
-    s32 map_offset;
-    for (map_offset = 0; map_offset < mp.length; map_offset += 6) {
-        map_tile_t *tile = (map_tile_t*)((u8*)mp.map + map_offset);
-        u16 texture_id = tile->texture_id;
-        {
-            u8 *pixels = MAP_BLOCKS + 0x2800 +
-                (texture_id / 40) * 16 * 640 + (texture_id % 40) * 16;
-            s32 x;
-            s32 y;
-            s32 any_nonzero = 0;
-            s32 all_nonzero = 1;
-            for (y = 0; y < 16; ++y) {
-                for (x = 0; x < 16; ++x) {
-                    u8 pixel = pixels[y * 640 + x];
-                    if (pixel != 0)
-                        any_nonzero = 1;
-                    else
-                        all_nonzero = 0;
-                }
+    u8 *blocks = MAP_BLOCKS;
+    s32 i;
+    for (i = 0; i < mp.length; ++i) {
+        s32 texture_id = mp.map[i].texture_id;
+        s32 tile_x = (texture_id % 40) * 16;
+        s32 tile_y = (texture_id / 40) * 16 * 640;
+        u8 all_zero = 1;
+        u8 all_nonzero = 1;
+        s32 plane;
+        for (plane = 0; plane < 4; ++plane) {
+            u8 *pixels = blocks + tile_x + plane + tile_y;
+            u8 *end = blocks + 0x2800 + tile_x + plane + tile_y;
+            while (pixels != end) {
+                u8 a = pixels[0];
+                u8 b = pixels[4];
+                u8 c = pixels[8];
+                u8 d = pixels[12];
+                if (a || b || c || d)
+                    all_zero = 0;
+                if (!a || !b || !c || !d)
+                    all_nonzero = 0;
+                pixels += 640;
             }
-            if (all_nonzero)
-                tile->transparency = 0;
-            else if (!any_nonzero)
-                tile->transparency = 1;
-            else
-                tile->transparency = 2;
         }
-        if (tile->texture_id == 0 && tile->transparency != 1)
-            tile->transparency = 1;
-        if (tile->texture_id >= 0x4b0)
-            tile->texture_id = 0;
-        smap[tile->texture_id] = tile->transparency;
+        if (all_nonzero)
+            mp.map[i].transparency = 0;
+        else if (all_zero)
+            mp.map[i].transparency = 1;
+        else
+            mp.map[i].transparency = 2;
+        if (mp.map[i].texture_id == 0 && mp.map[i].transparency != 1)
+            mp.map[i].transparency = 1;
+        if (mp.map[i].texture_id >= 1200)
+            mp.map[i].texture_id = 0;
+        smap[mp.map[i].texture_id] = mp.map[i].transparency;
     }
 }
 
@@ -340,151 +357,180 @@ void end_find_in_map(void) {
 }
 
 void build_map(s16 x, s16 y) {
-    s32 plane;
-    s32 plane_offset = planar_copy_offset;
-    s32 start_tile = ((s32)(y >> 4) * mp.width) + (x >> 4);
     u8 *buffer = PLAN1_BUFFER;
+    map_tile_t *start;
+    s32 plane;
+    s32 dest_offset;
     PLAN1_BUFFER_START_POINTER = (u32)buffer;
-    if (type_fndscrX != 0)
-        plane_offset = 1;
-    for (plane = 0; plane < 4; ++plane) {
-        s32 row;
-        map_tile_t *row_tile = mp.map + start_tile;
-        u8 *row_dest = buffer;
-        for (row = 0; row < 14; ++row) {
-            s32 col;
-            map_tile_t *tile = row_tile;
-            u8 *dest = row_dest;
-            for (col = 0; col < 20; ++col) {
-                if ((s16)tile->texture_id >= 0 &&
-                    tile->texture_id < 0x4b0 && tile->transparency == 0) {
-                    u8 *source = (u8*)gros_patai_src[tile->texture_id] + plane_offset;
-                    block_copy(source, dest);
-                } else {
+    start = mp.map + ((y >> 4) * mp.width + (x >> 4));
+    dest_offset = 0;
+    for (plane = 0; plane != 256; plane += 64) {
+        map_tile_t *tile = start;
+        u8 *dest = buffer + dest_offset;
+        s16 row;
+        for (row = 0; row < 224; row += 16) {
+            s16 col;
+            for (col = 0; col < 320; col += 16) {
+                s16 texture_id = tile->texture_id;
+                if (texture_id >= 0 && texture_id < 1200 && tile->transparency == 0)
+                    block_copy((u8*)gros_patai_src[texture_id] + plane, dest);
+                else
                     block_clear(dest);
-                }
                 ++tile;
                 dest += 4;
             }
-            row_tile += mp.width;
-            row_dest += 0x500;
+            tile += mp.width - 20;
+            dest += 1200;
         }
-        buffer += 0x4600;
-        plane_offset *= 2;
-        if (plane_offset == 16)
-            plane_offset = 1;
+        dest_offset += 0x4600;
     }
 }
 
 void build_line_map(void *buffer, s16 x, s16 y, s16 row) {
-    s32 xoff = (s16)x >> 4;
-    s32 yoff = (s16)y >> 4;
-    s32 source_row = ((u32)buffer - (u32)PLAN1_BUFFER) / 0x50;
-    map_tile_t *tile = mp.map + yoff * mp.width + xoff;
-    u8 *dest = PLAN1_BUFFER + (yoff * mp.width + xoff) * 6;
-    s32 r;
-    for (r = 0; r < 14; ++r) {
-        s32 col;
-        map_tile_t *cur = tile;
-        u8 *out = dest;
-        for (col = 0; col < 20; ++col) {
-            if ((s16)cur->texture_id >= 0 && cur->texture_id < 0x4b0 && cur->transparency == 0) {
-                u8 *src = (u8 *)gros_patai_src[cur->texture_id] + source_row * 0x280 + row;
-                block_copy(src, out);
+    map_tile_t *start = mp.map + ((y >> 4) * mp.width + (x >> 4));
+    s32 position = ((u32)buffer - (u32)PLAN1_BUFFER) % 80;
+    s32 plane;
+    s32 dest_offset;
+    start += (row / 13) * mp.width;
+    dest_offset = 0;
+    for (plane = 0; plane != 256; plane += 64) {
+        map_tile_t *tile = start;
+        u8 *dest = (u8*)buffer + dest_offset;
+        s32 column = position;
+        s16 pixel;
+        for (pixel = 0; pixel < 320; pixel += 16) {
+            s16 texture_id = tile->texture_id;
+            if (texture_id >= 0 && texture_id < 1200 && tile->transparency == 0)
+                block_copy((u8*)gros_patai_src[texture_id] + plane, dest);
+            ++tile;
+            column += 4;
+            dest += 4;
+            if (column >= 80) {
+                dest -= 80;
+                column = 0;
             }
-            cur++;
-            out += 4;
         }
-        tile += mp.width;
-        dest += 0x4600;
+        dest_offset += 0x4600;
     }
 }
 
 void build_column_map(void *buffer, s16 x, s16 y, s16 column) {
-    s32 xoff = (s16)x >> 4;
-    s32 yoff = (s16)y >> 4;
-    s32 source_row = ((u32)buffer - (u32)PLAN1_BUFFER) / 0x50;
-    map_tile_t *tile = mp.map + yoff * mp.width + xoff;
-    u8 *dest = PLAN1_BUFFER + (yoff * mp.width + xoff) * 6;
-    s32 r;
-    for (r = 0; r < 14; ++r) {
-        s32 col;
-        map_tile_t *cur = tile;
-        u8 *out = dest;
-        for (col = 0; col < 20; ++col) {
-            if ((s16)cur->texture_id >= 0 && cur->texture_id < 0x4b0 && cur->transparency == 0) {
-                u8 *src = (u8 *)gros_patai_src[cur->texture_id] + source_row * 0x280 + column;
-                block_copy(src, out);
+    map_tile_t *start = mp.map + ((y >> 4) * mp.width + (x >> 4));
+    s32 position;
+    s32 plane;
+    s32 dest_offset;
+    start += column / 16;
+    position = ((u32)buffer - (u32)PLAN1_BUFFER) / 80;
+    dest_offset = 0;
+    for (plane = 0; plane != 256; plane += 64) {
+        u8 *dest = (u8*)buffer + dest_offset;
+        map_tile_t *tile = start;
+        s32 row = position;
+        s16 pixel;
+        for (pixel = 0; pixel < 224; pixel += 16) {
+            s16 texture_id = tile->texture_id;
+            if (texture_id >= 0 && texture_id < 1200 && tile->transparency == 0)
+                block_copy((u8*)gros_patai_src[texture_id] + plane, dest);
+            dest += 1280;
+            row += 16;
+            tile += mp.width;
+            if (row >= 224) {
+                dest -= 0x4600;
+                row = 0;
             }
-            cur++;
-            out += 4;
         }
-        tile += mp.width;
-        dest += 0x4600;
+        dest_offset += 0x4600;
     }
 }
 
 void update_map(s16 x1, s16 y1, s16 x2, s16 y2) {
-    s16 dx = (s16)((x2 & 0xfff0) - (x1 & 0xfff0));
-    s16 dy = (s16)((y2 & 0xfff0) - (y1 & 0xfff0));
-    if (dx == 0 && dy == 0)
+    s16 old_x = x1 & 0xfff0;
+    s16 old_y = y1 & 0xfff0;
+    s16 new_x = x2 & 0xfff0;
+    s16 new_y = y2 & 0xfff0;
+    s16 dx, dy;
+    s32 column, row;
+    u8 *previous, *current;
+    if (old_x == new_x && old_y == new_y)
         return;
-    if (dx > 0) build_column_map(PLAN1_BUFFER, x2, y1, 0x130);
-    else if (dx < 0) build_column_map(PLAN1_BUFFER, x2, y1, 0x130);
-    if (dy > 0) build_line_map(PLAN1_BUFFER, x1, y2, 0xb0);
-    else if (dy < 0) build_line_map(PLAN1_BUFFER, x1, y2, 0xb0);
+    column = (PLAN1_BUFFER_START_POINTER - (u32)PLAN1_BUFFER) % 80;
+    row = (PLAN1_BUFFER_START_POINTER - (u32)PLAN1_BUFFER) / 80;
+    dx = old_x - new_x;
+    dy = old_y - new_y;
+    row += dy;
+    column += dx / 4;
+    if (column >= 80) column -= 80;
+    if (column < 0) column += 80;
+    if (row >= 224) row -= 224;
+    if (row < 0) row += 224;
+    previous = (u8*)PLAN1_BUFFER_START_POINTER;
+    current = PLAN1_BUFFER + row * 80 + column;
+    PLAN1_BUFFER_START_POINTER = (u32)current;
+    if (dx > 0 && dy > 0) {
+        build_column_map(previous + 1280 +
+            (previous + 1280 > PLAN1_BUFFER + 0x4600 ? -0x4600 : 0), x1, y1, 304);
+        build_line_map(previous + (column == 0 ? -76 : 4), x1, y1, 176);
+    } else if (dx > 0 && dy < 0) {
+        build_column_map(previous - 1280 +
+            (previous - 1280 < PLAN1_BUFFER ? 0x4600 : 0), x1, y1, 304);
+        build_line_map(current, x1, y1, 0);
+    } else if (dx < 0 && dy > 0) {
+        build_column_map(current, x1, y1, 0);
+        build_line_map(previous + (column == 76 ? 76 : -4), x1, y1, 176);
+    } else {
+        if (dy > 0) build_line_map(previous, x1, y1, 176);
+        if (dx > 0) build_column_map(previous, x1, y1, 304);
+        if (dy < 0) build_line_map(current, x1, y1, 0);
+        if (dx < 0) build_column_map(current, x1, y1, 0);
+    }
 }
 
-/* sub_3BE20: entry stack local values and renderer-call layout still being reconstructed */
+/* DOS callers 1:795e and 1:7988 pass sign-extended camera x/y in EAX/EDX. */
+void sub_3BE20(s16 x, s16 y) {
+    u32 context[3];
+    s32 mask;
+    u32 dest = 0;
+    s16 plane;
+    context[0] = (u32)plan0bit_length >> 2;
+    context[1] = (u32)PLAN0BIT + plan0bit_length;
+    context[2] = plan0bit_length - 1;
+    mask = planar_copy_offset;
+    if (type_fndscrX)
+        mask = 1;
+    if (P486) {
+        asm_037e4(frame_records_38888, draw_buffer);
+    } else {
+        for (plane = 0; plane < 4; ++plane) {
+            u32 offset = plane * ((u32)plan0bit_length >> 2);
+            asm_03257(mask, plan0bit_nb_bytes, offset, context, &frame_records_38888[0][0], dest);
+            mask *= 2;
+            if (mask == 16) {
+                mask = 1;
+                dest = 1;
+            }
+        }
+    }
+}
 /* sub_3BEE0: renderer-call structure and map wrap logic still being reconstructed */
 
-void GetVideoRegister(void) {
-    saved_vga_registers[0] = (u8)inp(0x3cc);
-    outp(0x3d4, 0x10);
-    saved_vga_registers[1] = (u8)inp(0x3d5);
-    outp(0x3d4, 0x11);
-    saved_vga_registers[2] = (u8)inp(0x3d5);
-    outp(0x3d4, 6);
-    saved_vga_registers[3] = (u8)inp(0x3d5);
-    outp(0x3d4, 7);
-    saved_vga_registers[4] = (u8)inp(0x3d5);
-    outp(0x3d4, 0x16);
-    saved_vga_registers[5] = (u8)inp(0x3d5);
-}
-
-void SetVideoRegister(void) {
-    outp(0x3c2, saved_vga_registers[0]);
-    outp(0x3d4, 0x10);
-    outp(0x3d5, saved_vga_registers[1]);
-    outp(0x3d4, 0x11);
-    outp(0x3d5, saved_vga_registers[2]);
-    outp(0x3d4, 6);
-    outp(0x3d5, saved_vga_registers[3]);
-    outp(0x3d4, 7);
-    outp(0x3d5, saved_vga_registers[4]);
-    outp(0x3d4, 0x16);
-    outp(0x3d5, saved_vga_registers[5]);
-}
-
 void set_vga_frequency(u8 freq) {
-    register u8 current_freq = freq;
-    int value;
+    u8 value;
     SetVideoRegister();
-    if (current_freq == 100) {
+    if (freq == 100) {
         value = inp(0x3cc);
         value |= 8;
         value &= 0xfb;
         outp(0x3c2, value);
-    } else if (current_freq == 80) {
+    } else if (freq == 80) {
         value = inp(0x3cc);
         value |= 4;
         value &= 0xf7;
         outp(0x3c2, value);
-    } else if (current_freq == 70) {
+    } else if (freq == 70) {
         value = inp(0x3cc);
         value &= 0xf3;
         outp(0x3c2, value);
-    } else if (current_freq == 60) {
+    } else if (freq == 60) {
         outp(0x3c2, 0x63);
         outp(0x3d4, 0x11);
         value = inp(0x3d5) & 0x7f;
@@ -502,7 +548,7 @@ void set_vga_frequency(u8 freq) {
         outp(0x3d5, 0xc4);
         outp(0x3d4, 0x11);
     }
-    if (current_freq == 50) {
+    if (freq == 50) {
         outp(0x3d4, 0x11);
         value = inp(0x3d5) & 0x7f;
         outp(0x3d5, value);
@@ -519,9 +565,39 @@ void set_vga_frequency(u8 freq) {
         outp(0x3d5, 0xfc);
         outp(0x3d4, 0x11);
     }
-    VGA_FREQ = current_freq;
+    VGA_FREQ = freq;
     wait_milliseconds(500);
 }
+
+void GetVideoRegister(void) {
+    saved_vga_registers[2] = (u8)inp(0x3cc);
+    outp(0x3d4, 0x10);
+    saved_vga_registers[1] = (u8)inp(0x3d5);
+    outp(0x3d4, 0x11);
+    saved_vga_registers[0] = (u8)inp(0x3d5);
+    outp(0x3d4, 6);
+    saved_vga_registers[4] = (u8)inp(0x3d5);
+    outp(0x3d4, 7);
+    saved_vga_registers[3] = (u8)inp(0x3d5);
+    outp(0x3d4, 0x16);
+    saved_vga_registers[5] = (u8)inp(0x3d5);
+}
+
+void SetVideoRegister(void) {
+    outp(0x3c2, saved_vga_registers[2]);
+    outp(0x3d4, 0x10);
+    outp(0x3d5, saved_vga_registers[1]);
+    outp(0x3d4, 0x11);
+    outp(0x3d5, saved_vga_registers[0]);
+    outp(0x3d4, 6);
+    outp(0x3d5, saved_vga_registers[4]);
+    outp(0x3d4, 7);
+    outp(0x3d5, saved_vga_registers[3]);
+    outp(0x3d4, 0x16);
+    outp(0x3d5, saved_vga_registers[5]);
+}
+
+
 
 /* SetVideoRegister: no seed source */
 
@@ -530,7 +606,7 @@ void set_vga_frequency(u8 freq) {
 void clear_palette(rgb_palette_t* palette) {
     s16 i = 0;
     u8 *p = (u8*)palette;
-    u16 *q = rvb_fade;
+    s16 *q = rvb_fade;
     do {
         ++i;
         *p++ = 0;
@@ -540,7 +616,7 @@ void clear_palette(rgb_palette_t* palette) {
 
 void set_fade_palette(rgb_palette_t* palette) {
     s16 i;
-    u16 *q = rvb_fade;
+    s16 *q = rvb_fade;
     u8 *p = (u8*)palette;
     u8 c1;
     u32 temp;
@@ -579,8 +655,10 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
         s32 palette_byte; \
         u8 *palette_data = (u8*)(palette_ptr); \
         outp(0x3c8, 0); \
+        _disable(); \
         for (palette_byte = 0; palette_byte < (color_count) * 3; ++palette_byte) \
             outp(0x3c9, palette_data[palette_byte]); \
+        _enable(); \
     } while (0)
 
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
@@ -603,7 +681,7 @@ void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
             }
         }
         for (i = 0; i < 256 * 3; ++i) {
-            u16 temp = rvb_fade[i] >> 6;
+            s16 temp = rvb_fade[i] >> 6;
             ((u8*)dest_pal->colors)[i] = (u8)temp;
         }
         WRITE_PALETTE_BYTES(&current_rvb, 256);
@@ -611,10 +689,11 @@ void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
     }
 }
 
-void fade_out(s16 speed, rgb_palette_t* palette) {
-    u16 i;
+void fade_out(s16 speed, rgb_palette_t *palette) {
+    s16 i, steps;
     start_fade_out(speed, palette);
-    for (i = 0; i < nb_fade; ++i) {
+    steps = nb_fade;
+    for (i = 0; i < steps; ++i) {
         endsynchro();
         synchro();
         do_fade(palette, &current_rvb);
@@ -633,11 +712,19 @@ void actualize_palette(u8 new_pal_id) {
 }
 
 void cyclage_palette(s16 palette_id, s16 first_color, s16 last_color) {
-    s16 i;
-    rgb_t first = rvb[palette_id].colors[first_color];
-    for (i = first_color; i < last_color; ++i)
-        rvb[palette_id].colors[i] = rvb[palette_id].colors[i + 1];
-    rvb[palette_id].colors[last_color] = first;
+    s32 i;
+    rgb_t first;
+    first.r = rvb[palette_id].colors[first_color].r;
+    first.g = rvb[palette_id].colors[first_color].g;
+    first.b = rvb[palette_id].colors[first_color].b;
+    for (i = first_color; i < last_color; ++i) {
+        rvb[palette_id].colors[i].r = rvb[palette_id].colors[i + 1].r;
+        rvb[palette_id].colors[i].g = rvb[palette_id].colors[i + 1].g;
+        rvb[palette_id].colors[i].b = rvb[palette_id].colors[i + 1].b;
+    }
+    rvb[palette_id].colors[last_color].r = first.r;
+    rvb[palette_id].colors[last_color].g = first.g;
+    rvb[palette_id].colors[last_color].b = first.b;
     memcpy(&current_rvb, &rvb[palette_id], sizeof(current_rvb));
     set_fade_palette(&current_rvb);
     if (nb_fade == 0)
@@ -645,86 +732,43 @@ void cyclage_palette(s16 palette_id, s16 first_color, s16 last_color) {
 }
 
 void DO_SWAP_PALETTE(void) {
-    s32 i;
+    s16 i;
+    obj_t *obj;
+    u8 axis, left, right, above, below, new_pal;
+    s16 ray_pos, obj_pos;
     if (last_plan1_palette != 0) {
         if (fade & 0x40) {
-            for (i = 0; i < actobj.num_active_objects; ++i) {
-                obj_t* obj = level.objects + actobj.objects[i];
+            obj = level.objects + actobj.objects[0];
+            for (i = 0; i < actobj.num_active_objects; ++i, obj = level.objects + actobj.objects[i]) {
                 if (obj->type == TYPE_158_PALETTE_SWAPPER) {
-                    u8 pal_a = 0;
-                    u8 pal_b = 0;
-                    u8 new_pal = current_pal_id;
-                    s16 ray_pos;
-                    s16 obj_pos;
-                    switch(obj->sub_etat) {
-                        default: break;
+                    switch (obj->sub_etat) {
+                        case 0: left=1; right=0; axis=0; break;
+                        case 1: left=2; right=0; axis=0; break;
+                        case 2: left=2; right=1; axis=0; break;
+                        case 3: left=0; right=1; axis=0; break;
+                        case 4: left=0; right=2; axis=0; break;
+                        case 5: left=1; right=2; axis=0; break;
+                        case 6: above=1; below=0; axis=1; break;
+                        case 7: above=2; below=0; axis=1; break;
+                        case 8: above=2; below=1; axis=1; break;
+                        case 9: above=0; below=1; axis=1; break;
+                        case 10: above=0; below=2; axis=1; break;
+                        case 11: above=1; below=2; axis=1; break;
+                    }
+                    switch (axis) {
                         case 0:
-                            pal_a = 1;
-                            pal_b = 0;
-                            goto SwapHorizontal;
-                        case 1:
-                            pal_a = 2;
-                            pal_b = 0;
-                            goto SwapHorizontal;
-                        case 2:
-                            pal_a = 2;
-                            pal_b = 1;
-                            goto SwapHorizontal;
-                        case 3:
-                            pal_a = 0;
-                            pal_b = 1;
-                            goto SwapHorizontal;
-                        case 4:
-                            pal_a = 0;
-                            pal_b = 2;
-                            goto SwapHorizontal;
-                        case 5:
-                            pal_a = 1;
-                            pal_b = 2;
-                            goto SwapHorizontal;
-                        case 6:
-                            pal_a = 1;
-                            pal_b = 0;
-                            goto SwapVertical;
-                        case 7:
-                            pal_a = 2;
-                            pal_b = 0;
-                            goto SwapVertical;
-                        case 8:
-                            pal_a = 2;
-                            pal_b = 1;
-                            goto SwapVertical;
-                        case 9:
-                            pal_a = 0;
-                            pal_b = 1;
-                            goto SwapVertical;
-                        case 10:
-                            pal_a = 0;
-                            pal_b = 2;
-                            goto SwapVertical;
-                        case 11:
-                            pal_a = 1;
-                            pal_b = 2;
-                            goto SwapVertical;
-
-                        SwapVertical:
-                            ray_pos = ray.y + ray.offset_by;
-                            obj_pos = obj->y + obj->offset_by;
-                            if (ray_pos > obj_pos) {
-                                new_pal = pal_a;
-                            } else if (ray_pos < obj_pos) {
-                                new_pal = pal_b;
-                            }
+                            ray_pos = (s16)ray.offset_bx + (s16)ray.x;
+                            obj_pos = (s16)obj->offset_bx + (s16)obj->x;
+                            if (obj_pos < ray_pos) new_pal = left;
+                            else if (obj_pos > ray_pos) new_pal = right;
+                            else new_pal = current_pal_id;
                             break;
-
-                        SwapHorizontal:
-                            ray_pos = ray.x + ray.offset_bx;
-                            obj_pos = obj->x + obj->offset_bx;
-                            if (ray_pos > obj_pos) {
-                                new_pal = pal_a;
-                            } else if (ray_pos < obj_pos) {
-                                new_pal = pal_b;
-                            }
+                        case 1:
+                            ray_pos = (s16)ray.offset_by + (s16)ray.y;
+                            obj_pos = (s16)obj->offset_by + (s16)obj->y;
+                            if (obj_pos < ray_pos) new_pal = above;
+                            else if (obj_pos > ray_pos) new_pal = below;
+                            else new_pal = current_pal_id;
                             break;
                     }
                     actualize_palette(new_pal);
@@ -764,30 +808,31 @@ void EFFACE_VIDEO(void) {
 }
 
 void SYNCHRO_LOOP(scene_func_t scene_func) {
-    s16 scene_ended = 0;
+    s16 scene_ended;
+    u8 timer_enabled = 0;
     u8 do_fade = 1;
     u32 timer = 0;
-    speaker_enable();
     do {
+        speaker_enable();
         if (ModeVideoActuel == MODE_X) {
             endsynchro();
             SWAP_BUFFERS();
             synchro();
-            if ((u8)scene_ended != need_timer)
+            if (timer_enabled != need_timer)
                 timer = (u32)clock_ticks();
             if (do_fade == 0)
                 DO_FADE();
         } else {
             endsynchro();
             synchro();
-            if ((u8)scene_ended != need_timer)
+            if (timer_enabled != need_timer)
                 timer = (u32)clock_ticks();
             if (do_fade == 0)
                 DO_FADE();
             SWAP_BUFFERS();
         }
         scene_ended = scene_func(timer);
-        do_fade = (u8)scene_ended;
+        do_fade = timer_enabled;
     } while (scene_ended == 0);
     if (scene_func != dummy_prg)
         in_pause = 0;
@@ -795,11 +840,10 @@ void SYNCHRO_LOOP(scene_func_t scene_func) {
 
 void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
                              s16 x, s16 y, s16 height, s16 width) {
-    s32 source_length;
+    u32 source_length;
     s32 source_stride;
-    s32 width_was_defaulted = 0;
-    s32 source_plane = (u8)source_x & 3;
-    s32 source_column = (s16)source_x >> 2;
+    s16 width_was_defaulted = 0;
+    s16 source_plane;
     u8 *source;
     u8 *dest;
     if (image == PLAN2BIT) {
@@ -809,18 +853,22 @@ void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
         source_length = plan3bit_length;
         source_stride = plan3bit_nb_bytes;
     }
+    source_length >>= 2;
     if (width == 0) {
-        width = (s16)source_stride;
+        width = source_stride;
         width_was_defaulted = 1;
     }
     if (height == 0)
-        height = (s16)((source_length >> 2) / width - 4);
+        height = source_length / width - 4;
     if (width_was_defaulted)
-        width = (s16)(width >> 2);
-    source = (u8 *)image + source_plane * (source_length >> 2) + source_width * source_stride + source_column;
-    dest = draw_buffer + y * 80 + (x >> 2);
-    display_anypicture(height, ((1 << source_plane) << 8) + source_stride,
-                       source_length >> 2, source, dest);
+        width = (s32)width >> 2;
+    source_plane = source_x & 3;
+    source_x >>= 2;
+    source = (u8*)image + source_plane * source_length + source_width * source_stride + source_x;
+    x >>= 2;
+    dest = draw_buffer + (y << 6) + (y << 4) + x;
+    display_anypicture(source, dest, height, ((1 << source_plane) << 8) + source_stride,
+                       source_length, width);
 }
 
 void SAVE_PALETTE(rgb_palette_t* palette) {
@@ -856,26 +904,28 @@ void DISPLAY_FOND3(void) {
 }
 
 void DISPLAY_FOND_MENU(void) {
-    s32 v1;
-    s32 x;
+    s16 v1;
+    s16 x;
     s16 row;
     u8 *dest_pos;
     u8 *source_pos;
     v1 = 320 - (s16)Bloc_lim_W2 + (s16)Bloc_lim_W1;
-    if (OptionGame) {
+    if (!OptionGame) {
+        memcpy(draw_buffer, EffetBufferNormal, 320 * 200);
+    } else {
         if (prev_Bloc_lim_W1 != Bloc_lim_W1) {
             if (prev_Bloc_lim_W1 < Bloc_lim_W1)
-                ClearBorder((s16)(Bloc_lim_H1 >> 16), (s16)(Bloc_lim_H2 >> 16),
-                            (s16)(Bloc_lim_W1 >> 16), (s16)(Bloc_lim_W2 >> 16));
-            Bloc_lim_W1 = prev_Bloc_lim_W1;
+                ClearBorder((s16)Bloc_lim_H1, (s16)Bloc_lim_H2,
+                            (s16)Bloc_lim_W1, (s16)Bloc_lim_W2);
+            prev_Bloc_lim_W1 = Bloc_lim_W1;
         }
-        memset(draw_buffer, 0, Bloc_lim_H1 * 320);
-        dest_pos = draw_buffer + Bloc_lim_H1 * 320 + Bloc_lim_W1;
-        source_pos = EffetBufferNormal + Bloc_lim_H1 * 320 + Bloc_lim_W1;
+        clear_memory(draw_buffer, 0, Bloc_lim_H1 * 320);
+        dest_pos = draw_buffer + Bloc_lim_W1 + Bloc_lim_H1 * 320;
+        source_pos = EffetBufferNormal + Bloc_lim_W1 + Bloc_lim_H1 * 320;
         row = (s16)Bloc_lim_H1;
         while ((s32)row < Bloc_lim_H2) {
             x = (s16)Bloc_lim_W1;
-            while (x < (s16)Bloc_lim_W2) {
+            while (x < Bloc_lim_W2) {
                 *dest_pos++ = *source_pos++;
                 ++x;
             }
@@ -883,13 +933,11 @@ void DISPLAY_FOND_MENU(void) {
             source_pos += v1;
             ++row;
         }
-        memset(draw_buffer, 0, (200 - Bloc_lim_H2) * 320);
-    } else {
-        memcpy(draw_buffer, EffetBufferNormal, 320 * 200);
+        clear_memory(draw_buffer + Bloc_lim_H2 * 320, 0, (200 - Bloc_lim_H2) * 320);
     }
 }
 
-#define clip_palette_component(value) ((value) > 63 ? 63 : (u8)(value))
+#define clip_palette_component(value) (63 < (value) ? 63 : (value))
 
 void InitPaletteSpecialPC(void) {
     s32 i;
@@ -898,24 +946,27 @@ void InitPaletteSpecialPC(void) {
         (num_world == 2 && num_level == 4) ||
         (num_world == 4 && num_level == 9)) {
         for (i = 0; i < 256; ++i) {
-            rgb_t src = rvb[0].colors[i];
-            rvb_special[15].colors[i] = src;
-            rvb_special[0].colors[i].r = clip_palette_component((4 * src.r) / 8);
-            rvb_special[0].colors[i].g = clip_palette_component((4 * src.g) / 8);
-            rvb_special[0].colors[i].b = clip_palette_component((4 * src.b) / 5);
-            rvb_special[5].colors[i].r = clip_palette_component((4 * src.r) / 3);
-            rvb_special[5].colors[i].g = clip_palette_component((4 * src.g) / 3);
-            rvb_special[5].colors[i].b = clip_palette_component((4 * src.b) / 3);
-            rvb_special[7].colors[i].r = clip_palette_component((4 * src.r) / 6);
-            rvb_special[7].colors[i].g = clip_palette_component((4 * src.g) / 6);
-            rvb_special[7].colors[i].b = clip_palette_component(src.b);
-            rvb_special[10].colors[i].r = clip_palette_component(2 * src.r);
-            rvb_special[10].colors[i].g = clip_palette_component(2 * src.g);
-            rvb_special[10].colors[i].b = clip_palette_component(2 * src.b);
-            rvb_special[14].colors[i].r = clip_palette_component((4 * src.r) / 8);
-            rvb_special[14].colors[i].g = clip_palette_component((4 * src.g) / 8);
-            rvb_special[14].colors[i].b = clip_palette_component((4 * src.b) / 5);
-            rvb[0].colors[i] = rvb_special[0].colors[i];
+            rvb_special[15].colors[i].r = rvb[0].colors[i].r;
+            rvb_special[15].colors[i].g = rvb[0].colors[i].g;
+            rvb_special[15].colors[i].b = rvb[0].colors[i].b;
+            rvb_special[0].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 8);
+            rvb_special[0].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 8);
+            rvb_special[0].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 5);
+            rvb_special[5].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 3);
+            rvb_special[5].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 3);
+            rvb_special[5].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 3);
+            rvb_special[7].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 6);
+            rvb_special[7].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 6);
+            rvb_special[7].colors[i].b = clip_palette_component(rvb[0].colors[i].b);
+            rvb_special[10].colors[i].r = clip_palette_component(2 * rvb[0].colors[i].r);
+            rvb_special[10].colors[i].g = clip_palette_component(2 * rvb[0].colors[i].g);
+            rvb_special[10].colors[i].b = clip_palette_component(2 * rvb[0].colors[i].b);
+            rvb_special[14].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 8);
+            rvb_special[14].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 8);
+            rvb_special[14].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 5);
+            rvb[0].colors[i].r = rvb_special[0].colors[i].r;
+            rvb[0].colors[i].g = rvb_special[0].colors[i].g;
+            rvb[0].colors[i].b = rvb_special[0].colors[i].b;
         }
         DoFadePaletteSpecialPC(0, 5);
         DoFadePaletteSpecialPC(5, 7);
@@ -925,21 +976,27 @@ void InitPaletteSpecialPC(void) {
         ProchainEclair = (s16)(myRand(200) + 1);
     } else if (num_world == 5 && num_level == 4) {
         for (i = 0; i < 255; ++i) {
-            rgb_t src = rvb[0].colors[i];
-            rvb_special[15].colors[i] = src;
-            rvb_special[0].colors[i].r = clip_palette_component(src.r);
-            rvb_special[0].colors[i].g = clip_palette_component((77 * src.g) / 100);
-            rvb_special[0].colors[i].b = clip_palette_component((12 * src.b) / 100);
-            rvb_special[14].colors[i] = rvb_special[0].colors[i];
-            rvb[0].colors[i] = rvb_special[0].colors[i];
+            rvb_special[15].colors[i].r = rvb[0].colors[i].r;
+            rvb_special[15].colors[i].g = rvb[0].colors[i].g;
+            rvb_special[15].colors[i].b = rvb[0].colors[i].b;
+            rvb_special[0].colors[i].r = clip_palette_component(rvb[0].colors[i].r);
+            rvb_special[0].colors[i].g = clip_palette_component((77 * rvb[0].colors[i].g) / 100);
+            rvb_special[0].colors[i].b = clip_palette_component((12 * rvb[0].colors[i].b) / 100);
+            rvb_special[14].colors[i].r = rvb_special[0].colors[i].r;
+            rvb_special[14].colors[i].g = rvb_special[0].colors[i].g;
+            rvb_special[14].colors[i].b = rvb_special[0].colors[i].b;
+            rvb[0].colors[i].r = rvb_special[0].colors[i].r;
+            rvb[0].colors[i].g = rvb_special[0].colors[i].g;
+            rvb[0].colors[i].b = rvb_special[0].colors[i].b;
         }
         DoFadePaletteSpecialPC(0, 14);
         for (i = 128; i <= 174; ++i) {
-            rgb_t src = rvb[0].colors[i];
-            rvb_special[9].colors[i].r = clip_palette_component((84 * src.r) / 100);
-            rvb_special[9].colors[i].g = clip_palette_component((62 * src.g) / 100);
-            rvb_special[9].colors[i].b = clip_palette_component((12 * src.b) / 100);
-            rvb[0].colors[i] = rvb_special[9].colors[i];
+            rvb_special[9].colors[i].r = clip_palette_component((84 * rvb[0].colors[i].r) / 100);
+            rvb_special[9].colors[i].g = clip_palette_component((62 * rvb[0].colors[i].g) / 100);
+            rvb_special[9].colors[i].b = clip_palette_component((12 * rvb[0].colors[i].b) / 100);
+            rvb[0].colors[i].r = rvb_special[0].colors[i].r;
+            rvb[0].colors[i].g = rvb_special[0].colors[i].g;
+            rvb[0].colors[i].b = rvb_special[0].colors[i].b;
         }
         DoFadePaletteSpecialPC(0, 9);
         DoFadePaletteSpecialPC(9, 14);
@@ -965,6 +1022,15 @@ void DoFadePaletteSpecialPC(s16 start, s16 end) {
     }
 }
 
+#define WRITE_SPECIAL_PALETTE(palette_ptr) \
+    do { \
+        s32 palette_byte; \
+        u8 *palette_data = (u8*)(palette_ptr) + 3; \
+        outp(0x3c8, 1); \
+        for (palette_byte = 0; palette_byte < 765; ++palette_byte) \
+            outp(0x3c9, palette_data[palette_byte]); \
+    } while (0)
+
 void DoPaletteSpecialPC(void) {
     if (fade & 0x40) {
         if (num_world == 5 && num_level == 4) {
@@ -972,7 +1038,7 @@ void DoPaletteSpecialPC(void) {
                 if (numero_palette_special == 0)
                     numero_palette_special = 1;
             } else {
-                WRITE_PALETTE_BYTES(&rvb_special[numero_palette_special], 255);
+                WRITE_SPECIAL_PALETTE(&rvb_special[numero_palette_special]);
                 ++numero_palette_special;
             }
             if (numero_palette_special == 15)
@@ -982,7 +1048,7 @@ void DoPaletteSpecialPC(void) {
                    (num_world == 4 && num_level == 9)) {
             ++CompteurEclair;
             if (CompteurEclair >= ProchainEclair || numero_palette_special != 0) {
-                WRITE_PALETTE_BYTES(&rvb_special[numero_palette_special], 255);
+                WRITE_SPECIAL_PALETTE(&rvb_special[numero_palette_special]);
                 if (numero_palette_special == 0) {
                     PlaySnd_old(195);
                     ++numero_palette_special;
@@ -1000,6 +1066,8 @@ void DoPaletteSpecialPC(void) {
 }
 #undef clip_palette_component
 #undef WRITE_PALETTE_BYTES
+#undef WRITE_SPECIAL_PALETTE
+
 
 void InitModeXWithFrequency(u8 freq) {
     if (ModeVideoActuel == MODE_TEXT) {
@@ -1008,26 +1076,28 @@ void InitModeXWithFrequency(u8 freq) {
     }
     if (ModeVideoActuel != MODE_X) {
         InitModeX();
+        clear_memory(DisplayBufferNormal, 0, 0x10000);
         set_vga_frequency(freq);
         ModeVideoActuel = MODE_X;
+        draw_buffer = (u8 *)0xa0500;
         DrawSpriteNormalEtX = &DrawSpriteX;
+        DrawSpriteNoClipNormalEtX = &DrawSpriteFlipNoClipX;
         DrawSpriteFlipNormalEtX = &DrawSpriteFlipX;
-        DrawSpriteNoClipNormalEtX = &DrawSpriteNoClipX;
+        DrawSpriteFlipNoClipNormalEtX = &DrawSpriteNoClipX;
         DrawSpriteColorNormalEtX = &DrawSpriteColorX;
         DrawSpriteColorFlipNormalEtX = &DrawSpriteColorFlipX;
-        draw_buffer = (u8 *)0xa0500;
-        drawflocon5NormalETX = &mode_x_effect_2b3d;
-        drawflocon2NormalETX = &mode_x_effect_2c00;
-        drawflocon4NormalETX = &mode_x_effect_2d08;
-        drawflocon1NormalETX = &mode_x_effect_2bb7;
-        drawflocon7NormalETX = &mode_x_effect_2dfb;
         fplotNormalETX = &fplot_mode_x_2b86;
+        drawflocon5NormalETX = &mode_x_effect_2b3d;
+        drawflocon1NormalETX = &mode_x_effect_2bb7;
+        drawflocon2NormalETX = &mode_x_effect_2c00;
+        drawflocon3NormalETX = &mode_x_effect_2c59;
+        drawflocon4NormalETX = &mode_x_effect_2d08;
+        drawflocon7NormalETX = &mode_x_effect_2dfb;
+        drawflocon6NormalETX = &mode_x_effect_2f0c;
         drawpluie7NormalETX = &mode_x_effect_300f;
+        drawpluie6NormalETX = &mode_x_effect_2e9c;
         drawpluie5NormalETX = &mode_x_effect_2da9;
         drawpluie4NormalETX = &mode_x_effect_2cbf;
-        drawpluie6NormalETX = &mode_x_effect_2e9c;
-        drawflocon6NormalETX = &mode_x_effect_2f0c;
-        drawflocon3NormalETX = &mode_x_effect_2c59;
     }
 }
 
@@ -1043,30 +1113,30 @@ void InitModeNormalWithFrequency(u8 freq) {
     }
     if (ModeVideoActuel != MODE_NORMAL) {
         InitModeNormal();
-        memset(DrawBufferNormal, 0, 320 * 200);
-        memset(DisplayBufferNormal, 0, 320 * 200);
+        clear_memory(DrawBufferNormal, 0, 320 * 200);
+        clear_memory(DisplayBufferNormal, 0, 320 * 200);
         select_display_buffer(DisplayBufferNormal);
         set_vga_frequency(freq);
         ModeVideoActuel = MODE_NORMAL;
+        DrawSpriteNormalEtX = &DrawSpriteNormal;
         DrawSpriteNoClipNormalEtX = &DrawSpriteNormalNoClip;
+        draw_buffer = DrawBufferNormal;
+        DrawSpriteFlipNormalEtX = &DrawSpriteFlipNormal;
         DrawSpriteFlipNoClipNormalEtX = &DrawSpriteFlipNormalNoClip;
         DrawSpriteColorNormalEtX = &DrawSpriteColorNormal;
         DrawSpriteColorFlipNormalEtX = &DrawSpriteColorFlipNormal;
-        draw_buffer = DrawBufferNormal;
-        DrawSpriteFlipNormalEtX = &DrawSpriteFlipNormal;
-        DrawSpriteNormalEtX = &DrawSpriteNormal;
+        fplotNormalETX = &fplot_Normal;
+        drawflocon5NormalETX = &draw_flocon5_Normal;
         drawflocon1NormalETX = &draw_flocon1_Normal;
         drawflocon2NormalETX = &draw_flocon2_Normal;
         drawflocon3NormalETX = &draw_flocon3_Normal;
-        drawflocon4NormalETX = &draw_flocon4_Normal;
-        drawflocon5NormalETX = &draw_flocon5_Normal;
-        drawflocon6NormalETX = &draw_flocon6_Normal;
+        drawflocon4NormalETX = &draw_normal_5755;
         drawflocon7NormalETX = &draw_flocon7_Normal;
-        drawpluie4NormalETX = &draw_flocon4_Normal;
-        drawpluie5NormalETX = &draw_pluie5_Normal;
-        drawpluie6NormalETX = &draw_pluie6_Normal;
+        drawflocon6NormalETX = &draw_flocon6_Normal;
         drawpluie7NormalETX = &draw_pluie7_Normal;
-        fplotNormalETX = &fplot_Normal;
+        drawpluie6NormalETX = &draw_pluie6_Normal;
+        drawpluie5NormalETX = &draw_pluie5_Normal;
+        drawpluie4NormalETX = &draw_flocon4_Normal;
     }
 }
 
@@ -1084,16 +1154,18 @@ void swapGuetteurCollZones(obj_t *obj, u8 param_2)
     obj->zdc = type_zdc[obj->type];
 }
 
-void guetteurFollowsShip(obj_t *obj)
-{
-    if (bateau_obj_id != -1)
-        snapToSprite(obj, &level.objects[bateau_obj_id], 1, -52, -63);
-    else
+void guetteurFollowsShip(obj_t *obj) {
+    s16 ship_id = bateau_obj_id;
+    if (ship_id != -1)
+        snapToSprite(obj, &level.objects[ship_id], 1, -52, -63);
+    else {
+        obj->speed_y = 0;
         obj->speed_x = obj->speed_y;
+    }
 }
 
 void DO_ONE_PAR_COMMAND(obj_t* obj) {
-    s32 flip_x;
+    u8 flip_x;
     if (obj->timer != 0) obj->timer--;
     flip_x = obj->flags.flip_x;
     if (obj->type == TYPE_PIRATE_GUETTEUR2)
@@ -1155,7 +1227,7 @@ void DO_ONE_PAR_COMMAND(obj_t* obj) {
     if (obj->iframes_timer != 0) obj->iframes_timer--;
 }
 
-s32 hasGuetteurABomb(obj_t* obj) {
+s16 hasGuetteurABomb(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 unk_1;
     anim_t *anim;
