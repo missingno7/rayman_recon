@@ -1,8 +1,7 @@
 /*
  * UFO / moving platforms (GOG v1.21 object 1:6e760-1:6ec80). File name invented (Rayverse ufo.c; Rayverse has
- * stubs here, bodies adapted from the PS1 decomp). Status per function: config/units.json.
+ * stubs here, bodies adapted from the PS1 decomp). Worker candidate: see NOTES.md.
  */
-/* GOG v1.21 UFO object, 1:6e760..1:6ec80. PS1 C bodies adapted to DOS layout. */
 #include "obj.h"
 
 #include "map.h"
@@ -39,244 +38,233 @@ s16 test_block_chdir(obj_t *obj, s16 *out_unk, s16 off_x, s16 off_y)
 
 void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
 {
-    s16 sp10;
-    obj_t *var_a3;
-    s16 spd_y;
-    s16 spd_x;
-    s32 var_a0_2;
-    s16 var_a2_2;
-    s32 var_v1;
-    s32 temp_a0;
-    s32 temp_a1;
-    s32 var_a0_1;
-    s16 var_a2;
-    s32 var_a3_2;
-    s32 var_a3_3;
-    s32 var_v0_7;
-    u8 temp_s1;
-    u8 temp_v1;
+    s16 block_index;
+    s16 active_index;
+    obj_t *indicator;
+    s16 speed_x;
+    s16 speed_y;
+    s32 maximum_speed;
 
     ufo_idc_obj->flags.flip_x = 0;
     if (
         (ufo_idc_obj->main_etat == 0) && (ufo_idc_obj->sub_etat == 0x0E) &&
-        ((test_block_chdir(ufo_idc_obj, &sp10, ufo_idc_obj->offset_bx, ufo_idc_obj->offset_by)) != 0)
+        ((test_block_chdir(ufo_idc_obj, &block_index, ufo_idc_obj->offset_bx, ufo_idc_obj->offset_by)) != 0)
     )
     {
-        var_a2 = 0;
-        var_a3 = &level.objects[actobj.objects[var_a2]];
-        if (actobj.num_active_objects <= 0)
-            return;
-        do
+        active_index = 0;
+        indicator = &level.objects[actobj.objects[active_index]];
+        for (; active_index < actobj.num_active_objects;
+             ++active_index, indicator = &level.objects[actobj.objects[active_index]])
         {
-            if (var_a3->type == 0xA3)
+            if (indicator->type != TYPE_INDICATOR)
+                continue;
+            if ((s16)(((indicator->x + indicator->offset_bx) >> 4) +
+                (((indicator->offset_by + indicator->y) >> 4) * mp.width)) != block_index)
+                continue;
+            speed_y = ufo_idc_obj->speed_y;
+            speed_x = ufo_idc_obj->speed_x;
             {
-                if (
-                    sp10 == (s16) (((var_a3->x + var_a3->offset_bx) >> 4) +
-                    (((var_a3->offset_by + var_a3->y) >> 4) * mp.width))
-                )
-                {
-                    var_v1 = ufo_idc_obj->speed_y;
-                    spd_x = ufo_idc_obj->speed_x;
-                    spd_y = var_v1;
-                    var_a0_2 = Abs(spd_x);
-                    var_v1 = Abs(var_v1);
-                    if (var_a0_2 < var_v1)
-                    {
-                        var_a0_2 = var_v1;
-                    }
-                    switch (var_a3->sub_etat)
-                    {
-                    case 8:
-                        if (spd_x == 0)
-                        {
-                            if (spd_y > 0)
-                            {
-                                spd_y = -var_a0_2;
-                            }
-                            else if (spd_y < 0)
-                            {
-                                spd_y = var_a0_2;
-                            }
-                        }
-                        else if (spd_y == 0)
-                        {
-                            if (spd_x > 0)
-                            {
-                                spd_x = -var_a0_2;
-                            }
-                            else if (spd_x < 0)
-                            {
-                                spd_x = var_a0_2;
-                            }
-                        }
-                        else
-                        {
-                            spd_x = -spd_x;
-                            spd_y = -spd_y;
-                        }
-                        break;
-                    case 9:
-                    case 10:
-                        var_a3_2 = -1;
-                        if (var_a3->sub_etat == 9)
-                        {
-                            var_a3_2 = 1;
-                        }
-                        if (spd_y == 0)
-                        {
-                            if (spd_x > 0)
-                            {
-                                spd_x = var_a0_2 + var_a3_2;
-                                if (spd_x > 4)
-                                {
-                                    spd_x = 4;
-                                }
-                                if (spd_x < 2)
-                                {
-                                    spd_x = 2;
-                                }
-                            }
-                            else
-                            {
-                                if (spd_x < 0)
-                                {
-                                    spd_x = var_a3_2 + -var_a0_2;
-                                    if (spd_x > -2)
-                                    {
-                                        spd_x = -2;
-                                    }
-                                    if (spd_x < -4)
-                                    {
-                                        spd_x = -4;
-                                    }
-                                }
-                            }
-                        }
-                        if (spd_x != 0)
-                        {
-                            spd_y = 0;
-                        }
-                        break;
-                    case 11:
-                    case 12:
-                        var_a3_2 = -1;
-                        if (var_a3->sub_etat == 0x0B)
-                        {
-                            var_a3_2 = 1;
-                        }
-                        if (spd_x == 0)
-                        {
-                            if (spd_y > 0)
-                            {
-                                spd_y = var_a0_2 + var_a3_2;
-                                if (spd_y > 4)
-                                {
-                                    spd_y = 4;
-                                }
-                                if (spd_y < 2)
-                                {
-                                    spd_y = 2;
-                                }
-                            }
-                            else
-                            {
-                                if (spd_y < 0)
-                                {
-                                    spd_y = var_a3_2 + -var_a0_2;
-                                    if (spd_y > -2)
-                                    {
-                                        spd_y = -2;
-                                    }
-                                    if (spd_y < -4)
-                                    {
-                                        spd_y = -4;
-                                    }
-                                }
-                            }
-                        }
-                        if (spd_y != 0)
-                        {
-                            spd_x = 0;
-                        }
-                        break;
-                    case 4:
-                        if ((spd_x) != 0)
-                        {
-                            if (spd_y == 0)
-                            {
-                            case 3: /* ??? */
-                                spd_x = 0;
-                                spd_y = -var_a0_2;
-                            }
-                        }
-                        else
-                        {
-                            spd_x = var_a0_2;
-                            spd_y = 0;
-                        }
-                        break;
-                    case 5:
-                        if (spd_x == 0)
-                        {
-                            spd_x = var_a0_2;
-                            spd_y = 0;
-                        }
-                        else if (spd_y == 0)
-                        {
-                            spd_x = 0;
-                            spd_y = var_a0_2;
-                        }
-                        break;
-                    case 0:
-                        spd_x = var_a0_2;
-                        spd_y = 0;
-                        break;
-                    case 6:
-                        if (spd_x != 0)
-                        {
-                            if (spd_y == 0)
-                            {
-                                spd_x = 0;
-                                spd_y = -var_a0_2;
-                            }
-                        }
-                        else
-                        {
-                            spd_x = -var_a0_2;
-                            spd_y = 0;
-                        }
-                        break;
-
-                    case 7:
-                        if (spd_x == 0)
-                        {
-                            spd_x = -var_a0_2;
-                            spd_y = 0;
-                            break;
-                        }
-                        if (spd_y == 0)
-                        {
-                            spd_x = 0;
-                            spd_y = var_a0_2;
-                        }
-                        break;
-                    case 2:
-                        spd_x = -var_a0_2;
-                        spd_y = 0;
-                        break;
-                    case 1:
-                        spd_x = 0;
-                        spd_y = var_a0_2;
-                        break;
-                    }
-                    ufo_idc_obj->speed_x = spd_x;
-                    ufo_idc_obj->speed_y = spd_y;
-                    return;
-                }
+                s32 abs_y = Abs((s32)speed_y);
+                maximum_speed = Abs((s32)speed_x);
+                if (maximum_speed < abs_y)
+                    maximum_speed = abs_y;
             }
-            var_a2 = var_a2 + 1;
-            var_a3 = &level.objects[actobj.objects[var_a2]];
-        } while ((var_a2 < actobj.num_active_objects) != 0);
+            switch (indicator->sub_etat)
+            {
+            case 8:
+                if (speed_x == 0)
+                {
+                    if (speed_y > 0)
+                    {
+                        speed_y = -maximum_speed;
+                    }
+                    else if (speed_y < 0)
+                    {
+                        speed_y = maximum_speed;
+                    }
+                }
+                else if (speed_y == 0)
+                {
+                    if (speed_x > 0)
+                    {
+                        speed_x = -maximum_speed;
+                    }
+                    else if (speed_x < 0)
+                    {
+                        speed_x = maximum_speed;
+                    }
+                }
+                else
+                {
+                    speed_x = -speed_x;
+                    speed_y = -speed_y;
+                }
+                break;
+            case 9:
+            case 10:
+            {
+                s32 delta;
+                if (indicator->sub_etat == 9)
+                {
+                    delta = 1;
+                }
+                else
+                {
+                    delta = -1;
+                }
+                if (speed_y == 0)
+                {
+                    if (speed_x > 0)
+                    {
+                        speed_x = maximum_speed + delta;
+                        if (speed_x > 4)
+                        {
+                            speed_x = 4;
+                        }
+                        if (speed_x < 2)
+                        {
+                            speed_x = 2;
+                        }
+                    }
+                    else
+                    {
+                        if (speed_x < 0)
+                        {
+                            speed_x = delta - maximum_speed;
+                            if (speed_x > -2)
+                            {
+                                speed_x = -2;
+                            }
+                            if (speed_x < -4)
+                            {
+                                speed_x = -4;
+                            }
+                        }
+                    }
+                }
+                if (speed_x != 0)
+                {
+                    speed_y = 0;
+                }
+                break;
+            }
+            case 11:
+            case 12:
+            {
+                s32 delta;
+                if (indicator->sub_etat == 0x0B)
+                {
+                    delta = 1;
+                }
+                else
+                {
+                    delta = -1;
+                }
+                if (speed_x == 0)
+                {
+                    if (speed_y > 0)
+                    {
+                        speed_y = maximum_speed + delta;
+                        if (speed_y > 4)
+                        {
+                            speed_y = 4;
+                        }
+                        if (speed_y < 2)
+                        {
+                            speed_y = 2;
+                        }
+                    }
+                    else
+                    {
+                        if (speed_y < 0)
+                        {
+                            speed_y = delta - maximum_speed;
+                            if (speed_y > -2)
+                            {
+                                speed_y = -2;
+                            }
+                            if (speed_y < -4)
+                            {
+                                speed_y = -4;
+                            }
+                        }
+                    }
+                }
+                if (speed_y != 0)
+                {
+                    speed_x = 0;
+                }
+                break;
+            }
+            case 4:
+                if (speed_x == 0)
+                {
+                    speed_x = maximum_speed;
+                    speed_y = 0;
+                }
+                else if (speed_y == 0)
+                {
+                    speed_x = 0;
+                    speed_y = -maximum_speed;
+                }
+                break;
+            case 5:
+                if (speed_x == 0)
+                {
+                    speed_x = maximum_speed;
+                    speed_y = 0;
+                }
+                else if (speed_y == 0)
+                {
+                    speed_x = 0;
+                    speed_y = maximum_speed;
+                }
+                break;
+            case 0:
+                speed_x = maximum_speed;
+                speed_y = 0;
+                break;
+            case 6:
+                if (speed_x == 0)
+                {
+                    speed_x = -maximum_speed;
+                    speed_y = 0;
+                }
+                else if (speed_y == 0)
+                {
+                /* DOS case 3 enters this shared body at 1:6eb00. */
+                case 3:
+                    speed_x = 0;
+                    speed_y = -maximum_speed;
+                }
+                break;
+
+            case 7:
+                if (speed_x == 0)
+                {
+                    speed_x = -maximum_speed;
+                    speed_y = 0;
+                    break;
+                }
+                if (speed_y == 0)
+                {
+                    speed_x = 0;
+                    speed_y = maximum_speed;
+                }
+                break;
+            case 2:
+                speed_x = -maximum_speed;
+                speed_y = 0;
+                break;
+            case 1:
+                speed_x = 0;
+                speed_y = maximum_speed;
+                break;
+            }
+            ufo_idc_obj->speed_x = speed_x;
+            ufo_idc_obj->speed_y = speed_y;
+            return;
+        }
     }
 }
 
