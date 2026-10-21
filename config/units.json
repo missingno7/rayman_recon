@@ -12896,6 +12896,43 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "effect633e0": {
+   "source": "src/effect633e0.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "effect_update_table_633e0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_cleanup_634c4": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_634f0": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_63614": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "effect_helper_63838": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }
