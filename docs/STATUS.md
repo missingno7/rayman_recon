@@ -7,7 +7,7 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate)
 | level | state |
 |---|---|
-| function-level STRICT | **1347 recorded STRICT, 251,700 code bytes** (55.0% of game code 1:00000-1:6fbe6) in 249 units (C, hand-written assembly, data); 323 NEAR; `python tools/status.py` for the per-unit table |
+| function-level STRICT | **1359 recorded STRICT, 254,440 code bytes** (55.6% of game code 1:00000-1:6fbe6) in 249 units (C, hand-written assembly, data): 311 NEAR; `python tools/status.py` for the per-unit table |
 | whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
 | data closure | **46,246 bytes VERIFIED** `_DATA` (incl. the 5.2 KB ObjectsFonctions table and 12 gap blocks); mapped: 89.7% of game `_DATA` |
 | BSS | order rule PROVEN; layout VERIFIED **28,406 bytes** (99 central-BSS fragments in src/bss/ + earlier units) |
@@ -35,7 +35,7 @@ readable instructions, typed state only), plus lowlevel_data (2:00010-0215c, VER
 identity and original module count (slices are not claimed as original objects); consolidation into one module
 would also reconcile the two mask-table names at 1:0311d/03121 (local labels in _02640, extern names in _03125);
 record-field and timer partitions; runtime callback payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
-BEGTEXT (runtime). Remaining C work: 323 NEAR functions (layout drift, register/stack allocation, clamp
+BEGTEXT (runtime). Remaining C work: 311 NEAR functions (layout drift, register/stack allocation, clamp
 lowering, materialised booleans) and four effect drafts without a unit (1:633e0, 1:6c3b0, 1:6e380, part of 1:50350).
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)

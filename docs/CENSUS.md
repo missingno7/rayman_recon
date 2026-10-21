@@ -128,3 +128,13 @@ correcting the earlier "clamp is C" note) and one a composition (C abs + max32).
 (DO_RAY_CASSE_BRIQUE, load_record, PC_do_cheats, ChangeDeltaZoomAmpJumelle, effect_helper_6ee54): 1309 -> 1321 STRICT.
 Lesson: a helper placed in one function can move a shared RET that the next function's branches target (effect6ec80);
 the gate caught it and the placement was kept only where the DOS bytes need it.
+
+## 8. Continuous queue (2026-10-21/22)
+Near-closer tiers by remaining byte differences (<=40, 41-120, 41-400), a fourth drift round, a Luna "fresh-eyes"
+round, data and BSS workers, and research workers, run as a continuous queue (scratch/finish.py integrates each
+finished worker through tools/integrate.py). STRICT 1321 -> 1359 (+38); VERIFIED _DATA 38,590 -> 46,246 bytes
+(ObjectsFonctions table, 12 gap blocks); VERIFIED BSS layout 6,919 -> 28,406 bytes (99 central-BSS fragments).
+Yield by tier: <=40 bytes ~35% of units gained; 41-120 ~30%; 41-400 ~25%; drift round 4 3/8; fresh-eyes (Luna after
+exhausted sol passes) 1/12 - stop re-grinding exhausted units without a new rule. Research outcomes: copy helper
+contract settled (source-first, +3), TEST-register residue OPEN, register allocation: stack homes sorted by raw size
+PROVEN, no cross-unit register rule; second-proof hunt for copy_guarded/bare-shl/sar32 running.
