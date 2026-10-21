@@ -1,5 +1,5 @@
 /*
- * Cages and medallion toons (GOG v1.21 object 1:18b40-1:193b0; 9 of 10 functions STRICT, contiguous _TEXT).
+ * Cages and medallion toons (GOG v1.21; 10 of 10 functions STRICT, contiguous _TEXT 1:18b40-1:193a8).
  * File name invented (Rayverse cage.c). Names: Rayverse/Android. Status per function: config/units.json.
  */
 #include "obj.h"
@@ -155,14 +155,18 @@ void ALLOCATE_MEDAILLON_TOON(void)
     obj_t *cur_obj;
     s16 i;
     s16 num_objects;
+    s32 new_x;
+    s32 new_y;
 
     cur_obj = level.objects;
     num_objects = level.nb_objects;
     i = 0;
     while (i < num_objects) {
         if (cur_obj->type == TYPE_197_MEDAILLON_TOON && !cur_obj->is_active) {
-            cur_obj->init_x = cur_obj->x = xmap + 160 - cur_obj->offset_bx;
-            cur_obj->init_y = cur_obj->y = ymap - cur_obj->offset_by;
+            new_x = xmap + 160 - cur_obj->offset_bx;
+            cur_obj->init_x = cur_obj->x = new_x;
+            new_y = ymap - cur_obj->offset_by;
+            cur_obj->init_y = cur_obj->y = new_y;
             cur_obj->flags.alive = 1;
             cur_obj->is_active = 1;
             add_alwobj(cur_obj);
@@ -170,8 +174,8 @@ void ALLOCATE_MEDAILLON_TOON(void)
             set_sub_etat(cur_obj, t_world_info[world_index].nb_cages + 32);
             if (t_world_info[world_index].nb_cages == 6)
                 t_world_info[world_index].nb_cages = 5;
-            t_world_info[world_index].nb_cages++;
-            gele = 1;
+            /* DOS 1:18ec7 sets gele before the updated cage count is stored at 1:18ecd. */
+            t_world_info[world_index].nb_cages += (gele = 1);
             h_scroll_speed = 0;
             v_scroll_speed = 0;
             xmap = xmap_old;
