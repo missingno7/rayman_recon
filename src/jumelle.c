@@ -1,7 +1,7 @@
 /* jumelle.c (DOS v1.21, 1:32930..1:34580): binoculars/world-map zoom; -fpc. */
 /* Worker candidate. Compile wc106 -zq -oaxt -s -5r -fpc; see NOTES.md.
  * Shared ORIGINAL_INLINE helpers are declared in inline_helpers.h.
- * Local match: 7/19 STRICT; _TEXT remains non-contiguous.
+ * Local match: 8/19 STRICT; _TEXT remains non-contiguous.
  * DisplayJumellesNormal: explicit guarded midpoint-circle recurrences are STRICT.
  * Function/global names RAYVERSE except ChangeRealPosJumelle (ANDROID).
  * Descriptive locals INVENTED. No shared types changed.
@@ -491,24 +491,18 @@ void ChangeRealPosJumelle(s32 x, s32 y) {
     ChangeJumelleVariable();
 }
 
+/* W-TEMP: use the dimensions directly; -oa caches the globals and defers
+ * HauteurJumelle's store. DOS 1:3368c..1:33730, all 164 bytes STRICT. */
 void ChangeJumelleVariable(void) {
-    s32 half_width;
-    s32 height;
-    s32 half_height;
     LargeurJumelle = (7 * RayonJumelle) / 2;
-    half_width = LargeurJumelle / 2;
-    height = 2 * RayonJumelle;
-    JumelleXMin = JumellePosX - half_width;
-    half_height = height / 2;
-    JumelleYMin = JumellePosY - half_height;
-    scroll_start_x = half_width + 2;
-    scroll_start_y = half_height + 2;
-    scroll_end_x = WidthNworld - half_width - 4;
-    scroll_end_y = HeightNworld - half_height - 4;
-    HauteurJumelle = height;
-
+    HauteurJumelle = 2 * RayonJumelle;
+    JumelleXMin = JumellePosX - LargeurJumelle / 2;
+    JumelleYMin = JumellePosY - HauteurJumelle / 2;
+    scroll_start_x = LargeurJumelle / 2 + 2;
+    scroll_start_y = HauteurJumelle / 2 + 2;
+    scroll_end_x = WidthNworld - LargeurJumelle / 2 - 4;
+    scroll_end_y = HeightNworld - HauteurJumelle / 2 - 4;
 }
-
 
 void ChangeDeltaZoomAmpJumelle(s32 a1) {
     if ((-RayonJumelle * JumAmpDefMul + JumAmpDefPlus != JumelleZoomAmp ||
