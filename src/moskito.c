@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "obj.h"
 #include "game.h"
+#include "inline_helpers.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
@@ -54,7 +55,7 @@ void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd);
 void set_main_and_sub_etat(obj_t *obj, u8 etat, u8 sub_etat);
 s32 vblToEOA(obj_t *obj, u8 a2);
 void ChangeLevel(void);
-void calc_obj_dir(obj_t *obj);
+s16 calc_obj_dir(obj_t *obj);
 void setBossReachingSpeeds(obj_t *obj, u8 timer, u8 accuracy_x, u8 accuracy_y);
 void add_alwobj(obj_t *obj);
 u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
@@ -78,14 +79,11 @@ void getIdealStingCoords(obj_t* obj, s16* out_x, s16* out_y) {
 
 //53C2C
 u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
-    /* Keep the short subtraction before the promoted absolute value. */
-    s16 sting_y; s16 sting_x;
+    s16 sting_x; s16 sting_y;
 
     getIdealStingCoords(obj, &sting_x, &sting_y);
-    sting_x -= obj->x;
-    sting_x = Abs((s32)sting_x);
-    sting_y -= obj->y;
-    sting_y = Abs((s32)sting_y);
+    sting_x = Abs((s16)(sting_x - obj->x));
+    sting_y = Abs((s16)(sting_y - obj->y));
     if (sting_x < min_x && sting_y < min_y)
         return true;
     else
@@ -95,14 +93,12 @@ u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
 //53CAC
 u8 moskitoCanAttak(obj_t* obj) {
     if (!scrollLocked) {
-        if ((xmap >= bossScrollStartX - h_scroll_speed && xmap <= bossScrollEndX + h_scroll_speed) &&
-            (ymap >= bossScrollStartY - v_scroll_speed && ymap <= bossScrollEndY + v_scroll_speed))
-            scrollLocked = true;
-        else
-            scrollLocked = false;
+        scrollLocked =
+            inrange(xmap, bossScrollStartX - h_scroll_speed, bossScrollEndX + h_scroll_speed) &&
+            inrange(ymap, bossScrollStartY - v_scroll_speed, bossScrollEndY + v_scroll_speed);
         if (scrollLocked) {
-            scroll_start_x = xmap;
             scroll_end_x = xmap;
+            scroll_start_x = xmap;
             scroll_start_y = bossScrollStartY;
             scroll_end_y = bossScrollEndY;
         }
@@ -162,7 +158,9 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
     s16 nb_obj;
     s32 half_wid;
 
-    unk_2 = (scroll_end_x + scroll_start_x + SCREEN_WIDTH) / 2;
+    half_wid = scroll_start_x;
+    half_wid += scroll_end_x;
+    unk_2 = (half_wid + SCREEN_WIDTH) / 2;
     while (currentBossActionIsOver)
     {
         curAct = moskitoActionSequences[bossEncounter][currentBossAction++];
@@ -606,7 +604,7 @@ void moskitoDropFruitOnRay(obj_t* obj) {
     cen_x = ray_zdc_x + (ray_zdc_w >> 1);
     cen_y = ray_zdc_h + (ray_zdc_y >> 1);
     /* DOS 1:44d44: [scroll_end_x - 2] >> 16 is the signed short upper bound. */
-    if ((scroll_start_x <= x_2 && scroll_end_x + 304 >= x_2) &&
+    if (inrange(x_2, scroll_start_x, scroll_end_x + 304) &&
         cen_x >= x_1 && cen_y >= y_1 && cen_x <= x_1 + width && cen_y <= y_1 + height) {
         allocateMoskitoFruit(obj);
         set_main_and_sub_etat(obj, 0, 16);
@@ -788,8 +786,8 @@ void doMoskitoHit(obj_t* obj, s16 sprite) {
         }
         else
         {
-            bossEncounter = 9;
             bossSpeedFactor = 0x4000;
+            bossEncounter = 9;
             boss_mort = true;
         }
         currentBossAction = 0;
