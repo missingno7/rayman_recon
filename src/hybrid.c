@@ -170,8 +170,9 @@ void allocateMOSKITOMAMA(void)
 {
     obj_t *boss_obj;
 
+    /* DOS 1:2f126 loads NiveauSol at 2:50c20 through the -2 short-load addend. */
     YPosBBF2D =
-        YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
+        NiveauSol - (ray.offset_by - ray.offset_hy) + 90 -
         ((ray.x + 8 + ray.offset_bx - xmap) >> 1);
     boss_obj = &level.objects[moskitomama_droite_obj_id];
     boss_obj->x = 160;
@@ -451,7 +452,7 @@ void doBBF2command(obj_t *bbf2_obj)
             if (BBF2DEsk == 0)
             {
                 YPosBBF2D =
-                    YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
+                    NiveauSol - (ray.offset_by - ray.offset_hy) + 90 -
                     (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
             }
             else
@@ -478,7 +479,7 @@ void doBBF2command(obj_t *bbf2_obj)
                     else
                     {
                                 YPosBBF2D =
-                            YPosBBF2G - (ray.offset_by - ray.offset_hy) + 90 -
+                            NiveauSol - (ray.offset_by - ray.offset_hy) + 90 -
                             (((ray.x + 8) + ray.offset_bx - xmap) >> 1);
                     }
                 }
@@ -646,16 +647,20 @@ void AllocateTirBBF2(obj_t *bbf2_obj)
 
 void DO_HYB_BBF2_LAS(obj_t *las_obj)
 {
+    /* The type check and collision path independently form the owner address
+     * at DOS 1:2ff67 and 1:2ff95. */
+    obj_t *owner = &level.objects[las_obj->link];
     obj_t *unk_obj;
     obj_t *cur_obj;
     s16 i;
     s16 nb_objs;
     s16 j;
-    s16 las_x, las_y, las_w, las_h;
-    s16 cur_x, cur_y, cur_w, cur_h;
+    /* Stack slots inferred from DOS 1:2ffeb..30014, not an order search. */
+    s16 las_y, las_x, las_w, cur_y;
+    s16 cur_h, las_h, cur_w, cur_x;
 
-    if (level.objects[las_obj->link].type == TYPE_HYB_BBF2_D ||
-        level.objects[las_obj->link].type == TYPE_HYB_BBF2_G)
+    if (owner->type == TYPE_HYB_BBF2_D ||
+        owner->type == TYPE_HYB_BBF2_G)
     {
         unk_obj = &level.objects[las_obj->link];
         if (OBJ_IN_COL_ZDC(las_obj, unk_obj))
@@ -1404,17 +1409,14 @@ void AllocateToons(void)
 
 void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
 {
-    obj_t *poing_obj_1;
     s16 diff_x; s16 diff_y;
-    s16 ray_x; s16 ray_y;
+    s32 ray_x; s16 ray_y;
     obj_t *poing_obj_2;
     s16 dist;
     obj_t *unk_obj;
-    obj_t *linked_obj;
     s32 speed_y_step;
     s32 speed_x_step;
 
-    poing_obj_1 = poing_obj;
     if (d2fly_obj->hit_points == 0)
     {
         diff_x = PosArXToon1 - (d2fly_obj->x + d2fly_obj->offset_bx);
@@ -1426,47 +1428,29 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
         diff_y = PosArYToon2 - (d2fly_obj->y + d2fly_obj->offset_by);
     }
 
-    /*
-    TODO:
-    replace level.objects[d2fly_obj->link] ???
-    look at ToonDonnePoing?
-    */
+    /* DOS re-forms the linked address after updating the fist position. */
     if (d2fly_obj->param != 0 &&
-        (linked_obj = &level.objects[d2fly_obj->link])->param != 0)
+        level.objects[d2fly_obj->link].param != 0)
     {
-        if (d2fly_obj->is_active)
+        if (d2fly_obj->is_active && level.objects[d2fly_obj->link].is_active)
         {
-            if (linked_obj->is_active)
-            {
-                poing_obj_1->x = 
-                    ((
-                        d2fly_obj->x + d2fly_obj->offset_bx +
-                        linked_obj->x + linked_obj->offset_bx
-                    ) >> 1) - poing_obj_1->offset_bx;
-                poing_obj_1->y =
-                    ((
-                        d2fly_obj->y + d2fly_obj->offset_by +
-                        linked_obj->y + linked_obj->offset_by
-                    ) >> 1) - poing_obj_1->offset_by;
-            }
-            else
-            {
-                poing_obj_1->x = (d2fly_obj->x + d2fly_obj->offset_bx) - poing_obj_1->offset_bx;
-                poing_obj_1->y = (d2fly_obj->y + d2fly_obj->offset_by) - poing_obj_1->offset_by;
-            }
+            poing_obj->x = ((d2fly_obj->x + d2fly_obj->offset_bx +
+                level.objects[d2fly_obj->link].x + level.objects[d2fly_obj->link].offset_bx) >> 1) - poing_obj->offset_bx;
+            poing_obj->y = ((d2fly_obj->y + d2fly_obj->offset_by +
+                level.objects[d2fly_obj->link].y + level.objects[d2fly_obj->link].offset_by) >> 1) - poing_obj->offset_by;
         }
-        else
+        else if (d2fly_obj->is_active)
         {
-            if (linked_obj->is_active)
-            {
-                poing_obj_1->x = (linked_obj->offset_bx + linked_obj->x) - poing_obj_1->offset_bx;
-                poing_obj_1->y = (linked_obj->offset_by + linked_obj->y) - poing_obj_1->offset_by;
-                /*temp_v0 = &level.objects[d2fly_obj->link];
-                poing_obj->y = (temp_v0->offset_by + temp_v0->y) - poing_obj->offset_by;*/
-            }
+            poing_obj->x = d2fly_obj->x + d2fly_obj->offset_bx - poing_obj->offset_bx;
+            poing_obj->y = d2fly_obj->y + d2fly_obj->offset_by - poing_obj->offset_by;
+        }
+        else if (level.objects[d2fly_obj->link].is_active)
+        {
+            poing_obj->x = level.objects[d2fly_obj->link].offset_bx + level.objects[d2fly_obj->link].x - poing_obj->offset_bx;
+            poing_obj->y = level.objects[d2fly_obj->link].offset_by + level.objects[d2fly_obj->link].y - poing_obj->offset_by;
         }
 
-        /* get both ray_x, ray_y first? */
+        /* DOS 1:317f2..3182d keeps the horizontal center at full width. */
         ray_x = ray.x + ray.offset_bx;
         PosArXToon1 = (d2fly_obj->offset_bx >> 1) + ray_x;
         ray_y = ray.y + (ray.offset_by >> 1);
@@ -1486,7 +1470,16 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
         }
     }
 
-    dist = abs(diff_x) + abs(diff_y);
+    {
+        s32 abs_x = diff_x;
+        s32 abs_y;
+        if (abs_x < 0)
+            abs_x = -abs_x;
+        abs_y = diff_y;
+        if (abs_y < 0)
+            abs_y = -abs_y;
+        dist = abs_x + abs_y;
+    }
     if (dist < 2)
     {
         if (d2fly_obj->param == 0)
