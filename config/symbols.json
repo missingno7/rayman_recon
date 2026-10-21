@@ -7802,6 +7802,16 @@
     "addr": "1:71256",
     "name": "INVENTED",
     "evidence": "Invented helper name for DOS routine at 1:71256; callers pass signed value in EAX, radix in EBX, and destination in EDX; routine returns destination in EAX. Android x86 symbol lookup found no itoa function."
+   },
+   "sqrt": {
+    "addr": "1:70552",
+    "name": "RAYVERSE",
+    "evidence": "CalcTab call at 1:13f66; negative-input check, x87 fsqrt path and software-sqrt path at 1:70552..705ab. Standard C math function, also in Rayverse CalcTab."
+   },
+   "sin": {
+    "addr": "1:70872",
+    "name": "RAYVERSE",
+    "evidence": "CalcTab call at 1:13f93; trigonometric dispatcher mode zero at 1:70883, versus cos mode two at 1:708aa. Standard C math function also in Rayverse CalcTab."
    }
   },
   "data": {

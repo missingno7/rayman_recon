@@ -1,10 +1,12 @@
-/* box.c (1:13f30..1:14e90: plasma/fire boxes, gauges, palette/capture helpers; PC-only). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_box. Pragmas declare assembly-routine register ABIs only. */
-/* DOS v1.21 box.c candidate: object 1:13f30..1:14e90. */
+/* box.c (1:13f30..1:14e90: plasma/fire boxes, gauges, palette/capture helpers; PC-only). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_box. ABI pragmas describe external assembly; the marked ORIGINAL_INLINE pragmas contain only proven port/interrupt instructions. */
+/* Worker sfin_box: five STRICT functions; remaining bodies are DOS-informed NEAR candidates.
+ * See NOTES.md for measured status and unresolved source-shape differences. */
 #include "game.h"
 #include "rtypes.h"
 #include <conio.h>
 #include <math.h>
 #include <string.h>
+#pragma function(sqrt, sin)
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
@@ -13,7 +15,8 @@
 extern u8 *draw_buffer;
 extern u8 *EffetBufferNormal;
 extern u8 byte_DA43C[128 * 128];
-extern s16 p1[21000];
+/* Android p1: 42000 bytes; DOS InitFire 1:14491 has a 600-byte row stride. */
+extern s16 p1[70][300];
 extern rgb_palette_t rvb[3];
 extern rgb_palette_t MenuPalette;
 extern rgb_t PalPlasma[16];
@@ -42,29 +45,45 @@ extern s16 word_DE748;
 extern s16 word_DE74A;
 extern s16 word_DE74C;
 
-extern void DrawBlackBoxNormal(u8 *buffer, s16 x, s16 y, s16 width, s16 height);
-#pragma aux DrawBlackBoxNormal parm [edi] [eax] [ebx] [edx] [ecx] modify []
-extern void DrawBorderBoxNormal(u8 *buffer, s16 x, s16 y, s16 width, s16 height, u16 colors);
-#pragma aux DrawBorderBoxNormal parm [edi] [esi] [ebx] [edx] [ecx] [eax] modify [eax ebx ecx edx]
+extern void DrawBlackBoxNormal(u8 *buffer, s32 x, s32 y, s32 height, s32 width);
+#pragma aux DrawBlackBoxNormal parm [edi] [eax] [ebx] [ecx] [edx] modify []
+extern void DrawBorderBoxNormal(u8 *buffer, s32 x, s32 y, s32 height, s32 width, s32 colors);
+#pragma aux DrawBorderBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify [eax ebx ecx edx]
 extern s16 cosinus(s16 x);
 extern s16 sinus(s16 x);
 extern void MakeMyRand(int set_seed);
 extern s16 myRand(s16 max);
 
+/* ORIGINAL_INLINE: InitPlasma 1:14053, InitFire 1:1447c: OUT DX,AL. */
+extern void box_dac_index(u16 port, u8 index);
+#pragma aux box_dac_index = "out dx,al" parm [dx] [al] modify []
+/* ORIGINAL_INLINE: 1:14059 / 1:14482: CLI. */
+extern void box_palette_lock(void);
+#pragma aux box_palette_lock = "cli" modify []
+/* ORIGINAL_INLINE: 1:1405e..14060 / 1:14487..14489: REP OUTSB; STI. */
+extern void box_palette_write(u16 port, u8 *data, u32 count);
+#pragma aux box_palette_write = "rep outsb" "sti" parm [dx] [esi] [ecx] modify [esi ecx]
+
+#define BOX_SET_PALETTE(first, last) { \
+    s32 box_first = (first); \
+    s32 box_count = ((last) - box_first + 1) * 3; \
+    u8 *box_data = (u8 *)&rvb[0]; \
+    box_dac_index(0x3c8, box_first); \
+    box_data += box_first * 3; \
+    box_palette_lock(); \
+    box_palette_write(0x3c9, box_data, box_count); \
+}
+
 void CalcTab(void)
 {
     s16 j;
-
     for (j = 0; j < 128; ++j) {
         s16 i;
         for (i = 0; i < 128; ++i) {
-            s32 squared = (64 - i) * (64 - i);
-            double v;
-            squared += (64 - j) * (64 - j);
-            v = sqrt(squared);
-            v /= 9.5;
+            double v = (u8)sqrt((64 - j) * (64 - j) + (64 - i) * (64 - i));
+            v *= (1.0 / 9.5);
             v = sin(v);
-            byte_DA43C[128 * j + i] = (u8)((v + 1.0) * 40.0);
+            byte_DA43C[128 * j + i] = (v + 1.0) * 40.0;
         }
     }
 }
@@ -72,56 +91,46 @@ void CalcTab(void)
 void InitPlasma(u8 need_set_palette)
 {
     s16 i;
-
     if (menuEtape == 0)
         plasma_palette_color_index = 74;
     else
         plasma_palette_color_index = 112;
     for (i = 0; i < 16; ++i) {
-        rgb_t *color = rvb[0].colors + plasma_palette_color_index + i;
-        color->r = PalPlasma[i].b;
-        color->g = PalPlasma[i].g;
-        color->b = PalPlasma[i].r;
+        rvb[0].colors[plasma_palette_color_index + i].r = PalPlasma[i].b;
+        rvb[0].colors[plasma_palette_color_index + i].g = PalPlasma[i].g;
+        rvb[0].colors[plasma_palette_color_index + i].b = PalPlasma[i].r;
     }
-    if (need_set_palette) {
-        outp(0x3c8, plasma_palette_color_index);
-        for (i = 0; i < 16; ++i) {
-            rgb_t *color = rvb[0].colors + plasma_palette_color_index + i;
-            outp(0x3c9, color->r);
-            outp(0x3c9, color->g);
-            outp(0x3c9, color->b);
-        }
-    }
+    if (need_set_palette)
+        BOX_SET_PALETTE(plasma_palette_color_index, plasma_palette_color_index + 15);
 }
 
 void Plasma(s16 x, s16 y, s16 width, s16 height,
             s16 a5, s16 a6, s16 a7, s16 a8, s16 a9, s16 a10, s16 a11, s16 a12, s16 a13)
 {
-    u8 *row = draw_buffer + SCREEN_WIDTH * y + x;
-    u32 v17 = (u8)a6 | ((u8)a8 << 8) | ((u8)a10 << 16) | ((u8)a12 << 24);
-    s16 j;
-
+    u8 yy[4];
+    u8 xx[4];
+    u8 *pos = draw_buffer + x + SCREEN_WIDTH * y;
+    u16 skip = SCREEN_WIDTH - width;
+    u16 j;
+    yy[0] = a6; yy[1] = a8; yy[2] = a10; yy[3] = a12;
     for (j = 0; j < height; ++j) {
-        u32 v18;
-        u8 *pos;
-        s16 i;
-
-        v17 = (v17 + 0x01010101) & 0x7f7f7f7f;
-        v18 = (u8)a5 | ((u8)a7 << 8) | ((u8)a9 << 16) | ((u8)a11 << 24);
-        pos = row;
+        u16 i;
+        *(u32 *)yy += 0x01010101;
+        *(u32 *)yy &= 0x7f7f7f7f;
+        xx[0] = a5; xx[1] = a7; xx[2] = a9; xx[3] = a11;
         for (i = 0; i < width; ++i) {
             u8 value;
-
-            v18 = (v18 + 0x01010101) & 0x7f7f7f7f;
-            value = (u8)a13 + byte_DA43C[128 * (u8)v17 + (u8)v18];
-            value += byte_DA43C[128 * (u8)(v17 >> 8) + (u8)(v18 >> 8)];
-            value += byte_DA43C[128 * (u8)(v17 >> 16) + (u8)(v18 >> 16)];
-            value += byte_DA43C[128 * (u8)(v17 >> 24) + (u8)(v18 >> 24)];
-            value >>= 4;
-            value += plasma_palette_color_index;
-            *pos++ = value;
+            s32 color;
+            *(u32 *)xx += 0x01010101;
+            *(u32 *)xx &= 0x7f7f7f7f;
+            value = byte_DA43C[128 * yy[0] + xx[0]] + a13;
+            value += byte_DA43C[128 * yy[1] + xx[1]];
+            value += byte_DA43C[128 * yy[2] + xx[2]];
+            value += byte_DA43C[128 * yy[3] + xx[3]];
+            color = (value >> 4) + plasma_palette_color_index;
+            *pos++ = color;
         }
-        row += SCREEN_WIDTH;
+        pos += skip;
     }
 }
 
@@ -176,70 +185,50 @@ void InitFire(void)
     else
         plasma_palette_color_index = 112;
     for (i = 0; i < 16; ++i) {
-        rgb_t *color = rvb[0].colors + plasma_palette_color_index + i;
-        color->r = pal[i].r >> 2;
-        color->g = pal[i].b >> 2;
-        color->b = pal[i].g >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].r = pal[i].r >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].g = pal[i].b >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].b = pal[i].g >> 2;
     }
-    outp(0x3c8, plasma_palette_color_index);
-    for (i = 0; i < 16; ++i) {
-        rgb_t *color = rvb[0].colors + plasma_palette_color_index + i;
-        outp(0x3c9, color->r);
-        outp(0x3c9, color->g);
-        outp(0x3c9, color->b);
-    }
+    BOX_SET_PALETTE(plasma_palette_color_index, plasma_palette_color_index + 15);
     {
         s16 y;
         for (y = 0; y < 70; ++y) {
             s16 x;
             for (x = 0; x < 300; ++x)
-                p1[300 * y + x] = plasma_palette_color_index;
+                p1[y][x] = plasma_palette_color_index;
         }
     }
 }
 
 void Fire(s16 x, s16 y, s16 width, s16 height)
 {
-    u8 *row = draw_buffer + SCREEN_WIDTH * y + x;
-    u8 color = plasma_palette_color_index;
+    u8 *pos = draw_buffer + x + SCREEN_WIDTH * y;
+    s16 color = plasma_palette_color_index;
     s16 i;
-
     MakeMyRand(0);
     for (i = 0; i < width; ++i) {
-        s16 r = myRand(10);
-        if (r < 5)
+        if (myRand(10) < 5)
             color = 15 * myRand(1) + plasma_palette_color_index;
-        p1[300 * height + i] = color;
-        p1[300 * height + 300 + i] = color;
+        p1[height][i] = color;
+        p1[height + 1][i] = color;
     }
-
-    for (i = 1; i <= height; ++i) {
+    for (i = 1; i < height + 2; ++i) {
         s16 j;
         for (j = 0; j < width; ++j) {
-            if (j != 0) {
-                if (j == width - 1) {
-                    p1[300 * i - 300 + j] =
-                        (p1[300 * i + 300] + p1[300 * i + j] + p1[300 * i + j - 1] +
-                         p1[300 * i + j + 300]) >> 2;
-                } else {
-                    p1[300 * i - 300 + j] =
-                        (p1[300 * i + j + 1] + p1[300 * i + j] + p1[300 * i + j - 1] +
-                         p1[300 * i + j + 300]) >> 2;
-                }
+            if (j == 0) {
+                p1[i - 1][j] = (p1[i - 1][width - 1] + p1[i][j] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
+            } else if (j == width - 1) {
+                p1[i - 1][j] = (p1[i][j - 1] + p1[i][j] + p1[i + 1][0] + p1[i + 1][j]) >> 2;
             } else {
-                p1[300 * i - 300 + j] =
-                    (p1[300 * i - 301 + width] + p1[300 * i] + p1[300 * i - 1] +
-                     p1[300 * i + 300]) >> 2;
+                p1[i - 1][j] = (p1[i][j - 1] + p1[i][j] + p1[i][j + 1] + p1[i + 1][j]) >> 2;
             }
         }
     }
-
     for (i = 0; i < height; ++i) {
-        u8 *pos = row;
         s16 j;
         for (j = 0; j < width; ++j)
-            *pos++ = p1[300 * i + j];
-        row += SCREEN_WIDTH;
+            *pos++ = p1[i][j];
+        pos += SCREEN_WIDTH - width;
     }
 }
 
@@ -266,131 +255,130 @@ void FireBox(s16 x, s16 y, s16 width, s16 height)
 
 void InitMenuPalette(void)
 {
-    rgb_palette_t *cur_pal = rvb + current_pal_id;
     s16 i;
-
-    for (i = 0; i < 80; ++i)
-        MenuPalette.colors[i] = cur_pal->colors[i];
-    {
-        u8 r = 126;
-        u8 g = 0;
-        u8 b = 0;
-        for (i = 70; i < 102; ++i) {
-            MenuPalette.colors[i].r = r;
-            MenuPalette.colors[i].g = g;
-            MenuPalette.colors[i].b = b;
-            r -= 2;
-            g += 2;
-        }
+    for (i = 0; i < 80; ++i) {
+        MenuPalette.colors[i].r = rvb[current_pal_id].colors[i].r;
+        MenuPalette.colors[i].g = rvb[current_pal_id].colors[i].g;
+        MenuPalette.colors[i].b = rvb[current_pal_id].colors[i].b;
     }
-    for (i = 102; i < 112; ++i)
-        MenuPalette.colors[i] = cur_pal->colors[i];
-    for (i = 112; i < 128; ++i)
-        MenuPalette.colors[i] = PalPlasma[i - 112];
+    for (i = 70; i < 102; ++i) {
+        MenuPalette.colors[i].r = 10 - i * 2;
+        MenuPalette.colors[i].g = i * 2 - 140;
+        MenuPalette.colors[i].b = 0;
+    }
+    for (i = 102; i < 112; ++i) {
+        MenuPalette.colors[i].r = rvb[current_pal_id].colors[i].r;
+        MenuPalette.colors[i].g = rvb[current_pal_id].colors[i].g;
+        MenuPalette.colors[i].b = rvb[current_pal_id].colors[i].b;
+    }
+    for (i = 112; i < 128; ++i) {
+        MenuPalette.colors[i].r = PalPlasma[i - 112].b;
+        MenuPalette.colors[i].g = PalPlasma[i - 112].g;
+        MenuPalette.colors[i].b = PalPlasma[i - 112].r;
+    }
     for (i = 128; i < 192; ++i) {
-        u8 c = (u8)((i - 128) << 2);
-        MenuPalette.colors[i].r = c;
-        MenuPalette.colors[i].g = c;
-        MenuPalette.colors[i].b = c;
+        MenuPalette.colors[i].r = i - 128;
+        MenuPalette.colors[i].g = i - 128;
+        MenuPalette.colors[i].b = i - 128;
     }
     for (i = 192; i < 256; ++i) {
-        u8 c = i - 192;
-        if (c <= 3)
-            c = 3;
-        c <<= 2;
         MenuPalette.colors[i].r = 0;
         MenuPalette.colors[i].g = 0;
-        MenuPalette.colors[i].b = c;
+        {
+            u8 c = i - 192 > 3 ? i - 192 : 3;
+            MenuPalette.colors[i].b = c;
+        }
     }
     if (dans_la_map_monde) {
-        MenuPalette.colors[32].r = 16 << 2;
-        MenuPalette.colors[32].g = 14 << 2;
-        MenuPalette.colors[32].b = 13 << 2;
-        MenuPalette.colors[38].r = 49 << 2;
-        MenuPalette.colors[38].g = 47 << 2;
-        MenuPalette.colors[38].b = 45 << 2;
+        MenuPalette.colors[32].r = 16;
+        MenuPalette.colors[32].g = 14;
+        MenuPalette.colors[32].b = 13;
+        MenuPalette.colors[38].r = 49;
+        MenuPalette.colors[38].g = 47;
+        MenuPalette.colors[38].b = 45;
     }
-    (void)cur_pal;
 }
 
 void CaptureVideo(u8 *source_buf, u8 grayscale)
 {
     if (ModeVideoActuel == MODE_X) {
-        u8 *dest_buf = EffetBufferNormal;
-        s16 plane;
-
+        u16 plane;
         for (plane = 0; plane < 4; ++plane) {
-            u8 *dest_pos = dest_buf + plane;
-            s16 i;
-
+            u8 *source_pos = source_buf;
+            u8 *dest_pos = EffetBufferNormal + plane;
+            u16 i;
             outpw(0x3ce, (plane << 8) | 4);
             for (i = 0; i < 16000; ++i) {
-                u8 c = *source_buf++;
-
-                if (grayscale) {
-                    rgb_t rgb = rvb[current_pal_id].colors[c];
-                    c = (u8)((rgb.r + rgb.g + rgb.b) / 3 + 128);
-                }
+                u8 c = *source_pos;
+                if (grayscale)
+                    c = (rvb[current_pal_id].colors[c].g + rvb[current_pal_id].colors[c].r + rvb[current_pal_id].colors[c].b) / 3 + 128;
                 *dest_pos = c;
                 dest_pos += 4;
+                ++source_pos;
             }
         }
-    } else if (grayscale) {
-        u8 *dest_buf = EffetBufferNormal;
-        rgb_palette_t *palette = rvb + current_pal_id;
-        s16 i;
-
-        for (i = 0; i < 0xfa00; ++i) {
-            u8 c = *source_buf++;
-            rgb_t rgb = palette->colors[c];
-            *dest_buf++ = (u8)((rgb.r + rgb.g + rgb.b) / 3 + 128);
-        }
     } else {
-        memcpy(EffetBufferNormal, source_buf, 0xfa00);
+        u8 *source_pos = source_buf;
+        u8 *dest_pos = EffetBufferNormal;
+        if (grayscale) {
+            u16 i;
+            for (i = 0; i < 0xfa00; ++i) {
+                u8 c = *source_pos++;
+                *dest_pos++ = (rvb[current_pal_id].colors[c].r + rvb[current_pal_id].colors[c].g + rvb[current_pal_id].colors[c].b) / 3 + 128;
+            }
+        } else {
+            memcpy(dest_pos, source_pos, 0xfa00);
+        }
     }
 }
 
 void CadreTrans(s16 x, s16 y, s16 w, s16 h)
 {
-    u8 *line = draw_buffer + SCREEN_WIDTH * y + x;
+    u32 *pos;
+    s16 skip;
     s16 j;
-
+    s16 old_w;
+    x += 4 - (x & 3);
+    w += 4 - (w & 3);
+    skip = (320 - w) >> 2;
+    pos = (u32 *)(draw_buffer + x + SCREEN_WIDTH * y);
+    old_w = w;
+    w >>= 2;
     for (j = 0; j < h; ++j) {
-        u8 *pos = line;
         s16 i;
         for (i = 0; i < w; ++i) {
             if (*pos)
-                *pos += 0x40;
+                *pos += 0x40404040;
             else
-                *pos = 0xc8;
+                *pos = 0xc8c8c8c8;
             ++pos;
         }
-        line += SCREEN_WIDTH;
+        pos += skip;
     }
-    DrawBorderBoxNormal(draw_buffer, x, y, w, h, 0x2026);
+    DrawBorderBoxNormal(draw_buffer, x, y, h, old_w, 0x2026);
 }
 
-void DrawBlackBorderBox(s16 x, s16 y, s16 height, s16 width, u8 a5)
+void DrawBlackBorderBox(s16 x, s16 y, s16 width, s16 height, u8 a5)
 {
-    u16 colors = a5 ? 0x2026 : 0x2620;
+    s16 colors;
+    if (a5)
+        colors = 0x2026;
+    else
+        colors = 0x2620;
     DrawBlackBoxNormal(draw_buffer, x, y, height, width);
     DrawBorderBoxNormal(draw_buffer, x, y, height, width, colors);
 }
 
 void InitGauge(void)
 {
-    u8 pal_id = current_pal_id;
-
     if (menuEtape != 0 && OptionGame == 0) {
+        u8 i = 0;
         u8 r = 63;
-        u8 g = 0;
-        u8 i;
-
-        for (i = 0; i < 32; ++i) {
-            rgb_t *color = rvb[pal_id].colors + 70 + i;
-            color->r = r;
-            color->g = g;
-            color->b = 0;
+        for (; i < 32; ++i) {
+            u8 g = i + i;
+            rvb[current_pal_id].colors[70 + i].r = r;
+            rvb[current_pal_id].colors[70 + i].g = g;
+            rvb[current_pal_id].colors[70 + i].b = 0;
             r -= 2;
         }
     }
@@ -398,47 +386,48 @@ void InitGauge(void)
 
 void gauge(s16 x, s16 y, s16 width, s16 height, s16 min_value, s16 max_value, s16 value)
 {
-    s16 step = height >> 3;
-    s16 span;
-    s16 amount;
+    u8 *pos = draw_buffer + x + 1 + SCREEN_WIDTH * (y + 1);
+    s16 step;
     s16 fill;
-    s16 row;
-    u8 *pos;
-
-    if (step < 8)
-        step = 8;
-    span = max_value - min_value;
-    if (value > max_value)
-        amount = span;
-    else if (value < min_value)
-        amount = 0;
-    else
-        amount = value - min_value;
-    fill = (s16)(amount * (width - step - 3) / span);
-    DrawBorderBoxNormal(draw_buffer, x, y, width, height, 0x2026);
-    pos = draw_buffer + SCREEN_WIDTH * (y + 1) + x + 1;
+    u8 row, col, color, run;
+    if (value > max_value) value = max_value;
+    if (value < min_value) value = 0;
+    else value -= min_value;
+    step = 8;
+    if ((width >> 3) >= step) step = width >> 3;
+    fill = x + 1 + value * (s16)(width - step - 3) / (max_value - min_value);
+    DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2026);
+    color = 0;
     for (row = 0; row < height - 2; ++row) {
-        s16 col;
-        for (col = 0; col < step - 2; ++col)
-            pos[col] = (u8)(0x46 + col / 32);
-        pos += SCREEN_WIDTH;
+        for (col = 0, run = 0; col < width - 2; ++col) {
+            *pos = 70 + color;
+            if (run > ((width - 2) >> 5)) {
+                run = 0;
+                ++color;
+            }
+            ++pos;
+            ++run;
+        }
+        color = 0;
+        pos += SCREEN_WIDTH - width + 2;
     }
-    DrawBlackBoxNormal(draw_buffer, x + 1, y + 1, width - 3, height - 3);
-    DrawBorderBoxNormal(draw_buffer, x + 1, y + 1, width - 3, height - 3, 0x0308);
-    (void)fill;
+    DrawBlackBoxNormal(draw_buffer, fill, y + 1, height - 3, step);
+    DrawBorderBoxNormal(draw_buffer, fill, y + 1, height - 3, step, 0x0308);
 }
 
 void ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
 {
+    u8 *pos;
     s16 y;
-
     memset(draw_buffer, 0, lim_H1 * SCREEN_WIDTH);
-    memset(draw_buffer, 0, (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH);
+    pos = draw_buffer + lim_H1 * SCREEN_WIDTH;
+    memset(draw_buffer + lim_H2 * SCREEN_WIDTH, 0, (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH);
     for (y = lim_H1; y < lim_H2; ++y) {
-        u8 *row = draw_buffer + SCREEN_WIDTH * y;
-        if (lim_W1 > 0)
-            memset(row, 0, lim_W1);
-        if (lim_W2 < SCREEN_WIDTH)
-            memset(row + lim_W2, 0, SCREEN_WIDTH - lim_W2);
+        s16 x;
+        for (x = 0; x < lim_W1; ++x)
+            *pos++ = 0;
+        pos += lim_W2 - lim_W1;
+        for (x = lim_W2; x < SCREEN_WIDTH; ++x)
+            *pos++ = 0;
     }
 }
