@@ -762,12 +762,8 @@ void set_fade_palette(rgb_palette_t* palette) {
     s16 i;
     s16 *q = rvb_fade;
     u8 *p = (u8*)palette;
-    u8 c1;
-    u32 temp;
     for (i = 0; i < 256 * 3; ++i) {
-        c1 = *p++;
-        temp = c1 << 6;
-        *q++ = temp;
+        *q++ = ashl16(*p++, 6);
     }
 }
 
