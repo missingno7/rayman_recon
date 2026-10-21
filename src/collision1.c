@@ -474,7 +474,8 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
             break;
         case TYPE_164_GENERATING_DOOR:
             GET_ANIM_POS(obj, out_x, out_y, out_w, out_h);
-            inset = 24 - 12 * ((get_eta(obj)->flags >> 7 & 1) + 2 * (get_eta(obj)->flags >> 6 & 1));
+            /* DOS 1:1bfce..1:1bfe9 extracts the two flag bitfields separately. */
+            inset = 24 - 12 * (get_eta(obj)->flags_bits.bit7 + 2 * get_eta(obj)->flags_bits.bit6);
             *out_x += inset;
             *out_y += inset;
             *out_w -= inset * 2;
@@ -488,7 +489,8 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
 }
 
 //2C028
-s16 GET_SPRITE_ZDC(obj_t* obj, u16 index, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
+/* DOS BOX_IN_COLL_ZONES 1:1c9d0..1c9f9 passes a sign-extended index. */
+s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
     s16 unk_y; s16 unk_x; s16 unk_h; s16 unk_w; s16 spr_x; u16 type; s16 spr_y; s16 spr_w; s16 spr_h; s16 succ; s16 temp_h;
 
     type = obj->type;
@@ -901,55 +903,49 @@ s16 cosinus(s16 angle);
 
 void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
     s16 limit;
-    s16 angle;
+    s32 angle;
     s16 spr_x;
     s16 spr_y;
     s16 spr_w;
     s16 spr_h;
     s16 ray_x;
     s16 ray_y;
-    s16 slope_w;
-    s16 slope_x1;
+    s16 projected_w;
     s16 slope_x2;
     s16 diff_y;
     s16 diff_x;
 
-    limit = RayEvts.tiny ? 4 : 8;
+    limit = 8;
+    if (RayEvts.tiny) limit = 4;
     GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);
-
-    angle = (s8)obj->change_anim_mode;
-    if (angle < 0)
-        angle = -angle;
-    slope_w = ((s32)cosinus(pente[angle]) * spr_w) >> 9;
-
-    slope_x1 = spr_x + ((spr_w - slope_w) >> 1);
-    slope_x2 = slope_x1 + slope_w - 1;
+    /* DOS 1:1cf57 loads signed hit_points at +0x76 (dword at +0x73, SAR 24). */
+    angle = (s8)obj->hit_points;
+    if (angle < 0) angle = -angle;
+    projected_w = ((s32)cosinus(pente[angle]) * spr_w) >> 9;
+    spr_x += (spr_w - projected_w) >> 1;
+    spr_w = projected_w;
+    slope_x2 = spr_x + spr_w - 1;
     spr_y += obj->offset_hy;
     ray_x = ray.x + ray.offset_bx;
     ray_y = ray.y + ray.offset_by;
-
-    if (ray_x < slope_x1 - limit || ray_x > slope_x2 + limit) {
-        obj->ray_dist = 10000;
-        return;
+    if ((ray_x >= spr_x - limit && ray_x <= slope_x2 + limit) != 0) {
+        diff_y = spr_y - ray_y;
+        if (((s32)diff_y < 0 ? -(s32)diff_y : (s32)diff_y) < spr_w) {
+            diff_x = ray_x - (spr_x + (spr_w >> 1));
+            spr_h = diff_x * (s8)obj->hit_points;
+            /* DOS 1:1d058: negate at 16 bits before the arithmetic shift. */
+            if (spr_h < 0) spr_h = -((s16)-spr_h >> 4);
+            else spr_h >>= 4;
+            if ((ray_x >= spr_x && ray_x <= slope_x2) != 0) {
+                obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
+            } else {
+                obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
+                obj->ray_dist = -obj->ray_dist;
+            }
+            return;
+        }
     }
-
-    diff_y = spr_y - ray_y;
-    if ((diff_y < 0 ? -diff_y : diff_y) >= spr_w) {
-        obj->ray_dist = 10000;
-        return;
-    }
-
-    diff_x = ray_x - (spr_x + (spr_w >> 1));
-    spr_h = diff_x * (s8)obj->hit_points;
-    if (spr_h < 0)
-        spr_h = -((-spr_h) >> 4);
-    else
-        spr_h >>= 4;
-
-    if (ray_x >= spr_x && ray_x <= slope_x2)
-        obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
-    else
-        obj->ray_dist = -((diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h);
+    obj->ray_dist = 10000;
 }
 
 //2D0D4
@@ -1307,11 +1303,11 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
                 } else if (obj->type == TYPE_210_FIRE_RIGHT) {
                     eject_sens = -1;
                 } else {
-                    s16 xspeed_delta = obj->speed_x - ray.speed_x;
-                    if (xspeed_delta == 0) {
-                        eject_sens = ray.flags.flip_x ? 1 : -1;
-                    } else {
-                        eject_sens = xspeed_delta > 0 ? 1 : -1;
+                    /* DOS 1:1de27..1de5b: sign of the promoted difference; zero falls back to facing. */
+                    s32 xspeed_delta = (s32)obj->speed_x - ray.speed_x;
+                    eject_sens = xspeed_delta == 0 ? 0 : (xspeed_delta > 0 ? 1 : -1);
+                    if (eject_sens == 0) {
+                        eject_sens = ray.flags.flip_x ? -1 : 1;
                     }
                 }
                 if (flags[obj->type].raw & flags1_4_fast_bump) {
