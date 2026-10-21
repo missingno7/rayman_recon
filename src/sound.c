@@ -64,10 +64,11 @@ void sub_1a3b0(s32 track);
 void sub_1a384(s32 track);
 void sub_19768(void);
 void sub_2748(s32 *out);
-void AudioTrackCommand(s32 track);
+void AudioTrackCommand(u8 track);
 void sub_1a6c4(void);
-void sub_1a654(s32 track);
-#pragma aux sub_2748 parm [esi] modify [eax ebx ecx edx]
+void sub_1a654(u8 track);
+/* ESI parameter ABI, also used by the STRICT effect1 callers. */
+#pragma aux sub_2748 parm [esi]
 
 u8 snd_sqrt_table[128] = {
     40,46,51,55,60,64,67,70,72,74,77,80,83,86,89,91,
@@ -521,19 +522,19 @@ void PlaySnd(s16 snd, s16 obj_id) {
 
                     nettoie_pile_snd();
                     erase_pile_snd(obj_id);
-                    pile_snd[indice_trz_wait].obj = obj_id;
-                    pile_snd[indice_trz_wait].snd = snd;
-                    pile_snd[indice_trz_wait].prog = prog;
-                    pile_snd[indice_trz_wait].tone = tone;
-                    pile_snd[indice_trz_wait].note = note;
-                    pile_snd[indice_trz_wait].vol = hard_sound_table[snd].volume;
-                    pile_snd[indice_trz_wait].field_C = vol_snd;
-                    pile_snd[indice_trz_wait].pan = pan_snd;
-                    pile_snd[indice_trz_wait].end_time = frame_snd[snd] + map_time;
+                    pile_snd[pt_pile_snd].obj = obj_id;
+                    pile_snd[pt_pile_snd].snd = snd;
+                    pile_snd[pt_pile_snd].prog = prog;
+                    pile_snd[pt_pile_snd].tone = tone;
+                    pile_snd[pt_pile_snd].note = note;
+                    pile_snd[pt_pile_snd].vol = hard_sound_table[snd].volume;
+                    pile_snd[pt_pile_snd].field_C = vol_snd;
+                    pile_snd[pt_pile_snd].pan = pan_snd;
+                    pile_snd[pt_pile_snd].end_time = frame_snd[snd] + map_time;
                     if (snd_bis[snd] != 0) {
-                        pile_snd[indice_trz_wait].field_14 = 1;
+                        pile_snd[pt_pile_snd].field_14 = 1;
                     } else {
-                        pile_snd[indice_trz_wait].field_14 = 0;
+                        pile_snd[pt_pile_snd].field_14 = 0;
                     }
                     if (pt_pile_snd < 9) {
                         ++pt_pile_snd;
@@ -587,8 +588,8 @@ void PlaySnd_old(s16 sound_id) {
 
 void setvol(s16 obj_id, u8 unused) {
     s16 unk_pan;
-    s16 unk_pile;
     u8 unk_vol;
+    s16 unk_pile;
     s32 unk_map_time;
     s16 voice_ind;
     s16 cur_pile;
@@ -633,15 +634,12 @@ void setvol(s16 obj_id, u8 unused) {
                 pile_snd[unk_pile].end_time = unk_map_time + frame_snd_bis[pile_snd[unk_pile].snd];
                 pile_snd[unk_pile].snd = snd_bis[pile_snd[unk_pile].snd];
                 pile_snd[unk_pile].prog = hard_sound_table[pile_snd[unk_pile].snd].prog;
-                pile_snd[indice_trz_wait].tone = hard_sound_table[pile_snd[unk_pile].snd].tone;
-                pile_snd[indice_trz_wait].note = hard_sound_table[pile_snd[unk_pile].snd].note;
-                pile_snd[indice_trz_wait].vol = hard_sound_table[pile_snd[unk_pile].snd].volume;
+                pile_snd[pt_pile_snd].tone = hard_sound_table[pile_snd[unk_pile].snd].tone;
+                pile_snd[pt_pile_snd].note = hard_sound_table[pile_snd[unk_pile].snd].note;
+                pile_snd[pt_pile_snd].vol = hard_sound_table[pile_snd[unk_pile].snd].volume;
                 pile_snd[unk_pile].field_14 = 0;
             } else {
-                cur_pile = unk_pile;
-                if (cur_pile < pt_pile_snd) {
-                    s16 count = pt_pile_snd;
-                    do {
+                for (cur_pile = unk_pile; cur_pile < pt_pile_snd; ++cur_pile) {
                     next_pile = cur_pile + 1;
                     pile_snd[cur_pile].obj = pile_snd[next_pile].obj;
                     pile_snd[cur_pile].snd = pile_snd[next_pile].snd;
@@ -653,8 +651,6 @@ void setvol(s16 obj_id, u8 unused) {
                     pile_snd[cur_pile].pan = pile_snd[next_pile].pan;
                     pile_snd[cur_pile].end_time = pile_snd[next_pile].end_time;
                     pile_snd[cur_pile].field_14 = pile_snd[next_pile].field_14;
-                    ++cur_pile;
-                    } while (cur_pile < count);
                 }
                 if (pt_pile_snd > 0)
                     --pt_pile_snd;
@@ -674,8 +670,8 @@ void setvol(s16 obj_id, u8 unused) {
             else
                 unk_vol = get_vol_snd(level.objects + obj_id);
         }
-        voice_table[voice_ind].vol = unk_vol;
         unk_pan = voice_table[voice_ind].pan;
+        voice_table[voice_ind].vol = unk_vol;
         if (voice_is_working[voice_ind]) {
             vol_both = (Volume_Snd * unk_vol * hard_sound_table[voice_table[voice_ind].snd].volume) >> 14;
             KeyVol(voice_ind, vol_both, unk_pan);
@@ -715,13 +711,11 @@ void manage_snd(void) {
     s16 *cur_obj;
     s16 *cur_snd;
     if (CarteSonAutorisee) {
-        cur_snd = &voice_table[0].snd;
-        i = 0;
-        cur_obj = &voice_table[0].obj;
-        do {
+        for (cur_snd = &voice_table[0].snd, i = 0, cur_obj = &voice_table[0].obj;
+             i < 32; ++i, cur_snd += 6, cur_obj += 6) {
             if ((*cur_obj >= 0 && !level.objects[*cur_obj].is_active) ||
                 (*cur_obj == -2 && *cur_snd != -1) ||
-                level.nb_objects <= *cur_obj) {
+                *cur_obj >= level.nb_objects) {
                 if (sound_table[voice_table[i].snd] & 0x10) {
                     KeyOff(i, bank_to_use[*cur_snd],
                            hard_sound_table[*cur_snd].prog,
@@ -729,11 +723,8 @@ void manage_snd(void) {
                            hard_sound_table[*cur_snd].note);
                     voice_is_working[i] = 0;
                     stk_index = 0;
-                    do {
-                        if (stk_obj[stk_index] == *cur_obj)
-                            break;
+                    while (stk_index != 20 && stk_obj[stk_index] != *cur_obj)
                         ++stk_index;
-                    } while (stk_index != 20);
                     if (stk_index < 20)
                         stk_snd[stk_index] = -1;
                 }
@@ -744,12 +735,9 @@ void manage_snd(void) {
                 setvol(*cur_obj, 0);
                 setpan(*cur_obj, 0);
             }
-            ++i;
-            cur_snd += 6;
-            cur_obj += 6;
-        } while (i < 32);
+        }
         for (i = 0; i < pt_pile_snd; ++i) {
-            if (level.nb_objects > pile_snd[i].obj && level.objects[pile_snd[i].obj].is_active) {
+            if (pile_snd[i].obj < level.nb_objects && level.objects[pile_snd[i].obj].is_active) {
                 setvol(pile_snd[i].obj, 0);
                 setpan(pile_snd[i].obj, 0);
             }
@@ -815,8 +803,6 @@ void PlayTchatchVignette(s32 snd) {
 }
 
 void TestCdLoop(void) {
-    u32 elapsed;
-    u32 duration;
     if (cdTime == 0) {
         sub_2748(&cdTimeStart);
         AudioTrackCommand(((u8 *)mapCd - 1)[22 * (num_world - 1) + num_level]);
@@ -824,24 +810,24 @@ void TestCdLoop(void) {
         cdTime = 1;
     } else if (cdTime != -1) {
         sub_2748(&cdTimeEnd);
-        elapsed = (u32)(cdTimeEnd - cdTimeStart);
-        cdTime = (elapsed * 10) / 182;
+        cdTime = (10 * (u32)(cdTimeEnd - cdTimeStart)) / 182;
         cdTime += 2;
-        duration = timeCd[num_world - 1][num_level - 1];
-        if ((u32)cdTime >= duration) {
-            if (flagCDPlay == 0) {
-                ++flagCDPlay;
-                sub_1a6c4();
-            } else if (flagCDPlay < 4) {
-                ++flagCDPlay;
-            } else {
-                sub_2748(&cdTimeStart);
-                sub_1a654(((u8 *)mapCd - 1)[22 * (num_world - 1) + num_level]);
-                flagCDPlay = 0;
-                phaseCd = !phaseCd;
-                cdTime = 1;
-            }
+        if ((u32)cdTime < (u32)timeCd[num_world - 1][num_level - 1])
+            return;
+        if (flagCDPlay == 0) {
+            ++flagCDPlay;
+            sub_1a6c4();
+            return;
         }
+        if (flagCDPlay < 4) {
+            ++flagCDPlay;
+            return;
+        }
+        sub_2748(&cdTimeStart);
+        sub_1a654(((u8 *)mapCd - 1)[22 * (num_world - 1) + num_level]);
+        phaseCd = !phaseCd;
+        flagCDPlay = 0;
+        cdTime = 1;
     }
 }
 
