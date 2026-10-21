@@ -611,7 +611,7 @@ void moskitoDropFruitOnRay(obj_t* obj) {
     cen_y = ray_zdc_h + (ray_zdc_y >> 1);
     /* DOS 1:44d44: [scroll_end_x - 2] >> 16 is the signed short upper bound. */
     if (inrange(x_2, scroll_start_x, scroll_end_x + 304) &&
-        cen_x >= x_1 && cen_y >= y_1 && cen_x <= width + x_1 && cen_y <= y_1 + height) {
+        cen_x >= x_1 && cen_y >= y_1 && cen_x <= width + x_1 && y_1 + height >= cen_y) {
         allocateMoskitoFruit(obj);
         set_main_and_sub_etat(obj, 0, 16);
         bossYToReach -= 64;
