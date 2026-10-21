@@ -7302,6 +7302,724 @@
    "segments": {
     "CONST": "VERIFIED"
    }
+  },
+  "moteur": {
+   "source": "src/moteur.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "INIT_HORLOGES": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "horloges": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_allowed_time": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "fades": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "frapsol": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SCREEN_TREMBLE": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SCREEN_TREMBLE3": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SCREEN_TREMBLE2": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SCROLL": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "allocateLandingSmoke": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "instantSpeed": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SET_X_SPEED": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "make_active2": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "make_active": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "in_action_zone": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "kill_obj": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "SET_ACTIVE_FLAG": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_PESANTEUR": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "freezeAnim": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_ANIM": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "prof_in_bloc": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "do_boing": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "underSlope": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_STONEBOMB_REBOND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_THROWN_BOMB_REBOND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_FRUIT_REBOND": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Drop_Atter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "BadGuyAtter": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "MiteAtter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "LidolPinkAtter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "stoneDogAtter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "stoneDogBounces": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Spider_Atter": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "NormalAtter": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "OBJ_IN_THE_AIR": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "test_fall_in_water": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "MOVE_OBJECT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_RAY_IN_ZONE": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoRaymanInZDDDefault": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_ONE_OBJECT": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "build_active_table": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Add_One_RAY_lives": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_CLING_ANIMS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_OBJECTS_ANIMS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_OBJECTS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "MOVE_OBJECTS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RECALE_ALL_OBJECTS": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RayCoince": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "move_up_ray": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "move_down_ray": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "recale_ray_pos": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RAY_TO_THE_RIGHT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RAY_TO_THE_LEFT": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_FIXE": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "deactivate_ship_links": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "linkListHoldsAGendoor": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "correct_gendoor_link": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "suppressFromLinkList": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "correct_link": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_RAY_BEGIN": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_RAY": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "is_icy_pente": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "STOPPE_RAY_EN_XY": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_PLACE_RAY": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_AUTO_SCROLL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_MOTEUR": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_MOTEUR_BEGIN": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_MOTEUR_WORLD": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_MOTEUR_LEVEL": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "restore_gendoor_link": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DONE_MOTEUR_LEVEL": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_MOTEUR_DEAD": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "INIT_RAY_ON_MS": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MOTEUR": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MOTEUR2": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RAY_REVERSE_COMMANDS": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "RAY_DEMIRAY": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "Ray_RayEcrase": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_MOTEUR_GELE": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "neige": {
+   "source": "src/neige.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {
+    "DoFirstFlocons": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "add_one_floc": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "add_256_flocs": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_one_floc": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "init_flocons": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "do_flocons": {
+     "status": "NEAR_MATCH",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_snow_sequence": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DO_SNOW_SEQUENCE": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "DoNeigeRaymanCollision": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "set_SNSEQ_list": {
+     "status": "STRICT",
+     "provenance": [
+      "RAYVERSE_GUIDED",
+      "PS1_SOURCE_GUIDED",
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

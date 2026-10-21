@@ -5187,6 +5187,336 @@
     "addr": "1:21840",
     "name": "INVENTED",
     "evidence": "DOS disassembly returns byte at 2:6318; callers use it as save transform status"
+   },
+   "DoRaymanInZDDDefault": {
+    "addr": "1:4829c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_OBJECTS_ANIMS": {
+    "addr": "1:48754",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_AUTO_SCROLL": {
+    "addr": "1:49fb8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "add_one_floc": {
+    "addr": "1:4b848",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "recale_ray_pos": {
+    "addr": "1:48f70",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RECALE_ALL_OBJECTS": {
+    "addr": "1:48964",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "kill_obj": {
+    "addr": "1:46310",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "prof_in_bloc": {
+    "addr": "1:46a38",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SCROLL": {
+    "addr": "1:45c08",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_FIXE": {
+    "addr": "1:49518",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "do_flocons": {
+    "addr": "1:4bb78",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "in_action_zone": {
+    "addr": "1:45fe4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "MiteAtter": {
+    "addr": "1:472c4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DONE_MOTEUR_LEVEL": {
+    "addr": "1:4a8e4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "do_boing": {
+    "addr": "1:46a4c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_MOTEUR": {
+    "addr": "1:4a1e0",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_PLACE_RAY": {
+    "addr": "1:49e9c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_MOTEUR_WORLD": {
+    "addr": "1:4a6d8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "make_active2": {
+    "addr": "1:45f9c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "Spider_Atter": {
+    "addr": "1:474b8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "stoneDogBounces": {
+    "addr": "1:4736c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_MOTEUR_DEAD": {
+    "addr": "1:4a9d8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "linkListHoldsAGendoor": {
+    "addr": "1:4965c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_MOTEUR2": {
+    "addr": "1:4ac70",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "LidolPinkAtter": {
+    "addr": "1:472f8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SCREEN_TREMBLE": {
+    "addr": "1:45b48",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SCREEN_TREMBLE2": {
+    "addr": "1:45bcc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "stoneDogAtter": {
+    "addr": "1:47344",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_RAY_ON_MS": {
+    "addr": "1:4aa20",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "BadGuyAtter": {
+    "addr": "1:47230",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "is_icy_pente": {
+    "addr": "1:49cf4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "INIT_MOTEUR_BEGIN": {
+    "addr": "1:4a5b4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "RayCoince": {
+    "addr": "1:48aac",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "init_allowed_time": {
+    "addr": "1:454ec",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DoNeigeRaymanCollision": {
+    "addr": "1:4c3dc",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SNOW_SEQUENCE": {
+    "addr": "1:4c278",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "frapsol": {
+    "addr": "1:45b24",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "DO_SCREEN_TREMBLE3": {
+    "addr": "1:45b90",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "deactivate_ship_links": {
+    "addr": "1:495e8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "fades": {
+    "addr": "1:45ac8",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "add_256_flocs": {
+    "addr": "1:4b8a4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "set_SNSEQ_list": {
+    "addr": "1:4c43c",
+    "name": "RAYVERSE",
+    "evidence": "PROVEN DOS entry at 1:4c43c saves registers; DoNeigeRaymanCollision falls through; branches backwards to 1:4be8f cold fragment. Rayverse comment lists both addresses."
+   },
+   "sub_one_floc": {
+    "addr": "1:4b910",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "NormalAtter": {
+    "addr": "1:474f4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "MOVE_OBJECTS": {
+    "addr": "1:48908",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "underSlope": {
+    "addr": "1:46bc4",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "Drop_Atter": {
+    "addr": "1:4720c",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "build_active_table": {
+    "addr": "1:48388",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "set_snow_sequence": {
+    "addr": "1:4be74",
+    "name": "RAYVERSE",
+    "evidence": "seed: Rayverse address annotation"
+   },
+   "SET_ACTIVE_FLAG": {
+    "addr": "1:46338",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_THROWN_BOMB_REBOND": {
+    "addr": "1:46cd8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_OBJECTS": {
+    "addr": "1:487c8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_ONE_OBJECT": {
+    "addr": "1:482a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_CLING_ANIMS": {
+    "addr": "1:48680",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "test_fall_in_water": {
+    "addr": "1:47fec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_RAY_IN_ZONE": {
+    "addr": "1:48270",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_STONEBOMB_REBOND": {
+    "addr": "1:46bec",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "OBJ_IN_THE_AIR": {
+    "addr": "1:47530",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "INIT_MOTEUR_LEVEL": {
+    "addr": "1:4a6f4",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_MOTEUR": {
+    "addr": "1:4aae8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "init_flocons": {
+    "addr": "1:4b9a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_FRUIT_REBOND": {
+    "addr": "1:46f00",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DO_MOTEUR_GELE": {
+    "addr": "1:4b668",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "correct_link": {
+    "addr": "1:49888",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "PC_do_cheats": {
+    "addr": "1:2784c",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
+   },
+   "DoFirstFlocons": {
+    "addr": "1:4b7a0",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse address annotation; verify references against DOS"
    }
   },
   "data": {
@@ -9946,6 +10276,156 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "Display_Back_Screen 1:67c28 loads dword [3f8ca]; sar edx,16. True short start 3f8cc."
+   },
+   "SNSEQ_list": {
+    "addr": "2:397f8",
+    "type": "s16[256]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C97F8; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20629600, 'size': 512, 'section': '.bss', 'kind': 'O'}"
+   },
+   "invpy0": {
+    "addr": "2:39a70",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //C9A70; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639736, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "invpx0": {
+    "addr": "2:3ae90",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAE90; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639704, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "invpy200": {
+    "addr": "2:3aea0",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAEA0; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639752, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "invpx320": {
+    "addr": "2:3aec0",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAEC0; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639720, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "SNSEQ_len": {
+    "addr": "2:3aed0",
+    "type": "s16[64]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAED0; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20636416, 'size': 128, 'section': '.bss', 'kind': 'O'}"
+   },
+   "tot_nb_flocs": {
+    "addr": "2:3af68",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAF68; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639784, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "floc_ind": {
+    "addr": "2:3af78",
+    "type": "s16[8]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CAF78; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20639688, 'size': 16, 'section': '.bss', 'kind': 'O'}"
+   },
+   "scroll_obj_id": {
+    "addr": "2:3e5d0",
+    "type": "s16[50]",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CE5D0; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20637568, 'size': 100, 'section': '.bss', 'kind': 'O'}"
+   },
+   "display_mode": {
+    "addr": "2:3f7e8",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7E8; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641254, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "SNSEQ_list_ptr": {
+    "addr": "2:3f7fa",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7FA; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641094, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "SNSEQ_ptr": {
+    "addr": "2:3f7fe",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF7FE; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641098, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "SNSEQ_no": {
+    "addr": "2:3f800",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF800; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641096, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "MapAvecPluieOuNeige": {
+    "addr": "2:3f802",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF802; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641040, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "weather_wind": {
+    "addr": "2:3f874",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF874; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641622, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "ray_old_main_etat": {
+    "addr": "2:3f8c4",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8C4; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641500, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "ray_old_sub_etat": {
+    "addr": "2:3f8d4",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CF8D4; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641502, 'size': 2, 'section': '.bss', 'kind': 'O'}"
+   },
+   "type_fndscrX": {
+    "addr": "2:3fa24",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA24; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641871, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "First_Hist": {
+    "addr": "2:3fa41",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA41; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641708, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "First_Menu": {
+    "addr": "2:3fa42",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA42; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641709, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "RAY_MODE_SPEED": {
+    "addr": "2:3fa73",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA73; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641748, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "NbTramesEcrase": {
+    "addr": "2:3fa97",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CFA97; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641732, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "ot": {
+    "addr": "2:54da4",
+    "type": "u16",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DA4; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641454, 'size': 2, 'section': '.bss', 'kind': 'O'}; PROVEN unsigned word: DO_ONE_OBJECT 1:482a4 xor eax,eax / mov ax,[ot], then flags index; object type assignment from obj->type u16."
+   },
+   "oldPrio": {
+    "addr": "2:54da6",
+    "type": "u8",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //E4DA6; DOS range fixup to start (or -5 short load at start-2); Android {'addr': 20641833, 'size': 1, 'section': '.bss', 'kind': 'O'}"
+   },
+   "flocon_tab": {
+    "addr": "2:3d8bc",
+    "type": "flocon_t*",
+    "name": "RAYVERSE",
+    "evidence": "Rayverse data.c //CD8BC; init_flocons 1:4bb22 pointer load; Android size 4"
    }
   }
  }
