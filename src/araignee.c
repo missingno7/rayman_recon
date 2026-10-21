@@ -4,6 +4,7 @@
 #include "map.h"
 #include "palette.h"
 #include "action_local.h"
+#include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -391,14 +392,19 @@ void get_spi_zdc(obj_t *param_1, s16 *param_2, s16 *param_3, s16 *param_4, s16 *
 
 void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
-    s16 cen_x = get_center_x(spipl_obj);
-    s16 cen_y = get_center_y(spipl_obj);
-    s16 poing_x; s16 poing_y_1; s16 poing_y_2;
-    s16 spipl_x; s16 spipl_y_1; s16 spipl_y_2;
+    s16 poing_x;
+    s16 spipl_x;
+    s16 cen_x;
+    s16 cen_y;
+    s16 poing_y_1; s16 poing_y_2;
+    s16 spipl_y_1; s16 spipl_y_2;
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
     u8 new_flip;
+
+    cen_x = get_center_x(spipl_obj);
+    cen_y = get_center_y(spipl_obj);
 
     if (
         (
@@ -582,7 +588,6 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
  * Abs/Sign/Min/Max spellings are ordinary C; helper lowering remains OPEN. */
 #define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
-#define SPIDER_SIGN(x) ((x) == 0 ? 0 : ((x) > 0 ? 1 : -1))
 #define SPIDER_MIN(a,b) ((a) < (b) ? (a) : (b))
 #define SPIDER_MAX(a,b) ((a) > (b) ? (a) : (b))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
@@ -603,21 +608,34 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
                 dx = ((s32)dx << 5) / distance;
                 dy = ((s32)dy << 5) / distance;
             }
-            speed = obj->speed_y + SPIDER_SIGN(dy - obj->speed_y);
-            obj->speed_y = SPIDER_MAX(SPIDER_MIN(speed, 32), 0);
+            speed = obj->speed_y + sgn(dy - obj->speed_y);
+            if (speed > 32) speed = 32;
+            if (speed < 0) speed = 0;
+            obj->speed_y = speed;
             if (obj->speed_y != 0) {
-                speed = obj->speed_x + SPIDER_SIGN(dx - obj->speed_x);
-                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
+                speed = obj->speed_x + sgn(dx - obj->speed_x);
+                if (speed > 32) speed = 32;
+                if (speed < -32) speed = -32;
+                obj->speed_x = speed;
             } else if (obj->flags.flip_x) {
                 speed = obj->speed_x - (dx > obj->speed_x);
-                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
+                if (speed > 32) speed = 32;
+                if (speed < -32) speed = -32;
+                obj->speed_x = speed;
             } else {
                 speed = obj->speed_x + (dx < obj->speed_x);
-                obj->speed_x = SPIDER_MAX(SPIDER_MIN(speed, 32), -32);
+                if (speed > 32) speed = 32;
+                if (speed < -32) speed = -32;
+                obj->speed_x = speed;
             }
         } else {
-            obj->speed_x = SPIDER_MAX(SPIDER_MIN(obj->speed_x * 2, 32), -32);
-            obj->speed_y = SPIDER_MIN(obj->speed_y * 2, 32);
+            speed = obj->speed_x * 2;
+            if (speed > 32) speed = 32;
+            if (speed < -32) speed = -32;
+            obj->speed_x = speed;
+            speed = obj->speed_y * 2;
+            if (speed > 32) speed = 32;
+            obj->speed_y = speed;
         }
     } else {
         if (ray.x + ray.offset_bx > obj->x + obj->offset_bx)
