@@ -6,6 +6,7 @@
 #include "obj.h"
 
 #include "map.h"
+#include "inline_helpers.h"
 
 extern map_data_t mp;
 extern level_t level;
@@ -22,18 +23,15 @@ s16 test_block_chdir(obj_t *obj, s16 *out_index, s16 off_x, s16 off_y);
 
 s16 test_block_chdir(obj_t *obj, s16 *out_unk, s16 off_x, s16 off_y)
 {
-    u8 res = 0;
+    s16 res = 0;
     s16 obj_x = (obj->x + off_x) >> 4;
     s16 obj_y = (obj->y + off_y) >> 4;
-
-    *out_unk = obj_x + obj_y * mp.width;
-    if (*out_unk != obj->test_block_index)
+    *out_unk = obj_y * mp.width + obj_x;
+    if (*out_unk != (s16)obj->test_block_index)
     {
         obj->test_block_index = *out_unk;
-        if (
-            obj_x >= 0 && (mp.width - 1 >= obj_x) &&
-            obj_y >= 0 && (mp.height - 1 >= obj_y)
-        )
+        if (inrange(obj_x, 0, mp.width - 1) &&
+            inrange(obj_y, 0, mp.height - 1))
             res = mp.map[*out_unk].tile_type == 1;
     }
     return res;
@@ -43,9 +41,9 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
 {
     s16 sp10;
     obj_t *var_a3;
+    s16 spd_y;
     s16 spd_x;
     s32 var_a0_2;
-    s16 spd_y;
     s16 var_a2_2;
     s32 var_v1;
     s32 temp_a0;
@@ -66,14 +64,15 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
     {
         var_a2 = 0;
         var_a3 = &level.objects[actobj.objects[var_a2]];
-        while ((var_a2 < actobj.num_active_objects) != 0)
+        if (actobj.num_active_objects <= 0)
+            return;
+        do
         {
             if (var_a3->type == 0xA3)
             {
                 if (
-                    (s16) (((var_a3->x + var_a3->offset_bx) >> 4) +
-                    (((var_a3->y + var_a3->offset_by) >> 4) * mp.width))
-                    == sp10
+                    sp10 == (s16) (((var_a3->x + var_a3->offset_bx) >> 4) +
+                    (((var_a3->offset_by + var_a3->y) >> 4) * mp.width))
                 )
                 {
                     var_v1 = ufo_idc_obj->speed_y;
@@ -142,7 +141,7 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
                                 if (spd_x < 0)
                                 {
                                     spd_x = var_a3_2 + -var_a0_2;
-                                    if (spd_x >= -1)
+                                    if (spd_x > -2)
                                     {
                                         spd_x = -2;
                                     }
@@ -277,7 +276,7 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
             }
             var_a2 = var_a2 + 1;
             var_a3 = &level.objects[actobj.objects[var_a2]];
-        }
+        } while ((var_a2 < actobj.num_active_objects) != 0);
     }
 }
 
