@@ -10995,7 +10995,7 @@
    }
   },
   "cdaudio": {
-   "source": "src\\cdaudio.c",
+   "source": "src/cdaudio.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11410,7 +11410,7 @@
    }
   },
   "savecodec": {
-   "source": "src\\savecodec.c",
+   "source": "src/savecodec.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11504,7 +11504,7 @@
    }
   },
   "effecthelp": {
-   "source": "src\\effecthelp.c",
+   "source": "src/effecthelp.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11541,7 +11541,7 @@
    }
   },
   "dosmem": {
-   "source": "src\\dosmem.c",
+   "source": "src/dosmem.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11566,7 +11566,7 @@
    }
   },
   "effect50350": {
-   "source": "src\\effect50350.c",
+   "source": "src/effect50350.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11603,7 +11603,7 @@
    }
   },
   "cdsave": {
-   "source": "src\\cdsave.c",
+   "source": "src/cdsave.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11721,7 +11721,7 @@
    }
   },
   "cymbal": {
-   "source": "src\\cymbal.c",
+   "source": "src/cymbal.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11752,7 +11752,7 @@
    }
   },
   "effect34580": {
-   "source": "src\\effect34580.c",
+   "source": "src/effect34580.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11789,7 +11789,7 @@
    }
   },
   "effect6ec80": {
-   "source": "src\\effect6ec80.c",
+   "source": "src/effect6ec80.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11845,7 +11845,7 @@
    }
   },
   "fnd": {
-   "source": "src\\fnd.c",
+   "source": "src/fnd.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11872,7 +11872,7 @@
    }
   },
   "movie": {
-   "source": "src\\movie.c",
+   "source": "src/movie.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -11908,7 +11908,7 @@
    }
   },
   "movieprefix": {
-   "source": "src\\movieprefix.c",
+   "source": "src/movieprefix.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {
@@ -12161,7 +12161,7 @@
    }
   },
   "lowlevel_data": {
-   "source": "src\\lowlevel_data.asm",
+   "source": "src/lowlevel_data.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {},
@@ -12172,7 +12172,7 @@
    }
   },
   "lowlevel_03125": {
-   "source": "src\\lowlevel_03125.asm",
+   "source": "src/lowlevel_03125.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {
@@ -12215,7 +12215,7 @@
    }
   },
   "lowlevel_00010": {
-   "source": "src\\lowlevel_00010.asm",
+   "source": "src/lowlevel_00010.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {
@@ -12234,7 +12234,7 @@
    }
   },
   "lowlevel_04ab7": {
-   "source": "src\\lowlevel_04ab7.asm",
+   "source": "src/lowlevel_04ab7.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {
@@ -12344,7 +12344,7 @@
    }
   },
   "lowlevel_05609": {
-   "source": "src\\lowlevel_05609.asm",
+   "source": "src/lowlevel_05609.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {
@@ -12479,7 +12479,7 @@
    }
   },
   "lowlevel_0611e": {
-   "source": "src\\lowlevel_0611e.asm",
+   "source": "src/lowlevel_0611e.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {
@@ -12537,7 +12537,7 @@
    }
   },
   "lowlevel_04430": {
-   "source": "src\\lowlevel_04430.asm",
+   "source": "src/lowlevel_04430.asm",
    "oracle": "gog_v121_us",
    "profile": "asm",
    "functions": {

@@ -252,8 +252,8 @@ def main(argv):
                 raise SystemExit("promote (bindings) failed:\n" + out[-1500:])
         w.touch(ROOT / "config" / "units.json")
         for unit, dst in targets:
-            code, out = run(sys.executable, "tools/promote.py", "--unit", unit, str(dst.relative_to(
-                Path(os.path.realpath(ROOT)))))
+            code, out = run(sys.executable, "tools/promote.py", "--unit", unit, (dst.relative_to(
+                Path(os.path.realpath(ROOT)))).as_posix())
             print(f"  {unit}: " + (out.strip().splitlines() or ["(no output)"])[-1])
             if code:
                 raise SystemExit(f"promote --unit {unit} failed (exit {code}):\n" + out[-1500:])
