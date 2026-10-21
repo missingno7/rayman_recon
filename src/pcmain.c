@@ -553,8 +553,8 @@ void DO_MAIN_LOOP_PC_NORMAL(u8* key_state) {
         if (MapAvecPluieOuNeige)
             display_flocons_before();
         Display_and_free_luciole(DrawBufferNormal);
-        clear_borders_Normal(DrawBufferNormal + Bloc_lim_W1 + (Bloc_lim_H1 << 8) - 4 +
-                             (Bloc_lim_H1 << 6), Bloc_lim_H2 - Bloc_lim_H1,
+        clear_borders_Normal(DrawBufferNormal + Bloc_lim_W1 + (Bloc_lim_H1 << 8) +
+                             (Bloc_lim_H1 << 6) - 4, Bloc_lim_H2 - Bloc_lim_H1,
                              Bloc_lim_W2 - Bloc_lim_W1 + 4);
         if (is_fee)
             DISPLAY_TEXT_FEE();
@@ -1006,12 +1006,26 @@ void main_Ray(int argc, char** argv) {
 
 void PcMain(void) {
     u8 level_init = 0;
+    u8 tick, next_tick;
+    u8 *bios_tick;
     TheProcesseur = DetectCpu();
     sub_5BB78();
     sub_5BB94();
-    /* OPEN: DOS 1:08442..08481 debug-register/timer block is not reconstructed.
-     * It arms DR0/DR7 and waits for two BIOS tick changes, then disarms them.
-     * Do not replace its memory reads or arithmetic with pragma code. */
+    /* DOS 1:08442..08481: monitor BIOS tick writes for two intervals.
+     * OPEN byte differences: C schedules the pointer in EDX, DOS uses ESI;
+     * C clears EAX with XOR below, DOS preserves flags with MOV EAX,0. */
+    write_debug_address0(0x46c);
+    write_debug_control(read_debug_control() | 0x30003);
+    enable_tick_interrupts();
+    bios_tick = (u8 *)0x46c;
+    tick = *bios_tick;
+    do { next_tick = *bios_tick; } while (tick == next_tick);
+    enable_tick_interrupts();
+    bios_tick = (u8 *)0x46c;
+    tick = *bios_tick;
+    do { next_tick = *bios_tick; } while (tick == next_tick);
+    write_debug_address0(0);
+    write_debug_control(read_debug_control() & 0xde00);
     sub_5BAE0();
     MakeMyRand(1);
     printf("CD ROM's Initialization.\n");
@@ -1045,7 +1059,7 @@ void PcMain(void) {
         DO_NEW_MENUS();
         if (!fin_de_rayman && !ModeDemo && Frequence != 'F')
             playVideo(demo_video_mem, "intro.dat", 20);
-        while (!fin_du_jeu && status_bar.lives > -1 && new_world) {
+        while (!fin_du_jeu && status_bar.lives >= 0 && new_world) {
             MakeMyRand(1);
             SPECIAL_INIT();
             default_sprite_clipping();
@@ -1099,12 +1113,11 @@ void PcMain(void) {
                     InitModeNormalWithFrequency(VGA_FREQ);
                     sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
                     START_LEVEL_ANIM();
-                    if (ExitMenu)
-                        INIT_CONTINUE();
-                    else {
+                    if (!ExitMenu) {
                         DO_CONTINUE();
                         DO_VICTOIRE();
-                    }
+                    } else
+                        INIT_CONTINUE();
                     ExitMenu = 0;
                 }
                 DONE_MOTEUR_LEVEL();

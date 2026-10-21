@@ -34,4 +34,8 @@ u32 read_debug_control(void);
 /* ORIGINAL_INLINE 1:083ea MOV DR7,EAX: EAX preserved, writes DR7. */
 void write_debug_control(u32);
 #pragma aux write_debug_control = "mov dr7,eax" parm [eax] modify exact []
+/* ORIGINAL_INLINE: PcMain 1:08455 and 1:08463, STI only.
+ * Enables maskable interrupts; no general register changes. Name INVENTED. */
+void enable_tick_interrupts(void);
+#pragma aux enable_tick_interrupts = "sti" modify exact []
 #endif
