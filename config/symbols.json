@@ -8627,6 +8627,26 @@
     "addr": "1:75f19",
     "name": "HISTORICAL_LIBRARY",
     "evidence": "PROVEN MATH3R.LIB exact+sites match by tools/libscan.py; public atan2+0x25 (see math_library.txt). Same-address aliases in library module are proven."
+   },
+   "world_free": {
+    "addr": "1:6fb04",
+    "name": "ANDROID",
+    "evidence": "DOS 1:6fb04 clears loaded_eta[nb_fix_eta..nb_loaded_eta), restores nb_des; Android world_free has the same operations."
+   },
+   "fix_free": {
+    "addr": "1:6fbb0",
+    "name": "ANDROID",
+    "evidence": "DOS 1:6fbb0 shared RET of preceding align_mem_desc; Android fix_free size1 is RET. Empty body leaves CMP in free_main_mem, matching DOS."
+   },
+   "calloc": {
+    "addr": "1:760f5",
+    "name": "WATCOM",
+    "evidence": "Watcom 10.6 CLIB3R.LIB calloc member (24 bytes), independently STRICT at 1:760f5; see calloc_member.txt. Default libscan anchor threshold misses this short function."
+   },
+   "pack_temp_zone": {
+    "addr": "1:6f824",
+    "name": "ANDROID",
+    "evidence": "Android temp_free calls pack_temp_zone; both bodies coalesce adjacent free temp_mem records. DOS call 1:6fab7 -> 1:6f824. Android symbol size168."
    }
   },
   "data": {
