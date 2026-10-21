@@ -2,8 +2,10 @@
 
 1. **Low-level assembly: done** (2026-10-21): 1:00010-06f7e in 8 STRICT `.asm` slices + VERIFIED data prefix. Open:
    one-module consolidation (only with evidence for the original module structure), assembler identity.
-2. **Layout drift first**: after the helper waves most NEAR helper sites have exact helper bytes displaced by an earlier
-   size-drifting function; fix that function per object (census W-LAYOUT line) before reshaping bodies.
+2. **Layout drift**: three drift rounds gave +44, +6, +0 (plus menu's trampoline +2); the units whose drift did not move
+   are blocked by register/stack allocation or by OPEN shift helpers (bare shl / sar32 through CL: one proof each,
+   docs/COMPILER.md). Re-run a unit only when its first drift has a new lead. Consolidation: write_movie_palette (same
+   ORIGINAL_INLINE sequence at 1:2ae90 and 1:2b2ed) belongs in inline_helpers.h.
 3. **Finishing passes only with new evidence.** Most NEAR pools have had >=2 sol passes; wave-4 passes on exhausted
    units returned in 3-9 minutes with no gain (effect1/2, cymbal/save/display, affiche, pcfee). Re-open a unit when a
    new compiler fact appears (docs/COMPILER.md evidence log) or a layout fix lands before its NEAR functions.
