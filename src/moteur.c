@@ -1253,22 +1253,17 @@ void kill_obj(obj_t *obj)
 }
 
 void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
-    s32 was_active;
+    u8 was_active;
 
     ot = obj->type;
     was_active = obj->is_active;
     obj->is_active = 0;
     if (obj->flags.alive) {
         if (in_action_zone(screen_x, screen_y, obj, was_active)) {
-            if (obj->active_timer != 0 ||
-                    (!(flags[ot].raw & flags1_1_keep_linked_objects_active) &&
-                    obj->active_flag >= 2 &&
-                     (obj->active_flag == 2 || ot != TYPE_10_FISH))
-            ) {
-                if (obj->active_timer > 0) {
-                    --obj->active_timer;
-                }
-            } else {
+            if (obj->active_timer == 0 &&
+                    ((flags[ot].raw & flags1_1_keep_linked_objects_active) ||
+                     obj->active_flag < 2 ||
+                     (obj->active_flag != 2 && ot == TYPE_10_FISH))) {
                 obj->is_active = was_active;
                 if ((flags[ot].raw & flags0_1_always) || (flags[ot].raw & flags3_0x40_no_link)) {
                     make_active2(obj, !obj->is_active && (flags[ot].raw & flags1_1_keep_linked_objects_active));
@@ -1284,41 +1279,44 @@ void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
                         id = link_init[cur_obj->id];
                     } while (id != obj->id);
                 }
+            } else {
+                if ((s16)obj->active_timer > 0)
+                    --obj->active_timer;
             }
         } else {
-            if (obj->active_flag != 1) {
+            s16 active_flag;
+            active_flag = obj->active_flag;
+            if (active_flag != 1) {
                 obj->active_timer = 0;
                 if (flags[ot].raw & flags2_0x20_kill_if_outside_active_zone) {
                     kill_obj(obj);
-                } else if (obj->active_flag == 2) {
+                } else if (active_flag == 2) {
                     obj->active_flag = 1;
-                } else if (obj->active_flag == 0 || obj->active_flag == 4) {
+                } else if (active_flag == 0 || active_flag == 4) {
                     if (flags[ot].raw & flags0_1_always) {
                         REINIT_OBJECT(obj);
                     } else {
-    s32 dont_reinit_linked_objects;
+    u8 dont_reinit_linked_objects;
 
                         obj->active_flag = 4;
                         obj->is_active = 1;
 
                         dont_reinit_linked_objects = 0;
-                        if (obj->type != TYPE_10_FISH) {
-    s16 id;
-
+                        {
+                            s16 id;
+                            u16 type;
+                            type = ot;
                             id = obj->id;
-                            while (1) {
-    obj_t * cur_obj;
-
-                                cur_obj = level.objects + id;
-                                if (cur_obj->active_flag != 4) {
-                                    dont_reinit_linked_objects = 1;
-                                    break;
-                                } else {
-                                    id = link_init[cur_obj->id];
-                                    if (id == obj->id) {
+                            if (type != TYPE_10_FISH) {
+                                do {
+                                    obj_t *cur_obj;
+                                    cur_obj = level.objects + id;
+                                    if (cur_obj->active_flag != 4) {
+                                        dont_reinit_linked_objects = 1;
                                         break;
                                     }
-                                }
+                                    id = link_init[cur_obj->id];
+                                } while (id != obj->id);
                             }
                         }
 
@@ -1764,25 +1762,27 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
 }
 
 void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
+    s16 gravity;
+    s16 bounce;
     u8 under;
     u8 btyp;
     u8 anim_speed;
     s16 accel_x;
     s16 speed_x_bnd;
-    s32 mul_45;
-    s32 mul_30;
-    u8 div_45;
-    u8 div_30;
+    s16 mul_45;
+    s16 mul_30;
+    s16 div_30;
     u16 obj_type;
 
     /* 2D008 80151808 -O2 -msoft-float */
 
+    gravity = pesanteur;
+    bounce = a3;
     if (obj->type == TYPE_GRAINE) {
         accel_x = 1;
         speed_x_bnd = 1;
         mul_45 = 1;
         mul_30 = 1;
-        div_45 = 1;
         div_30 = 2;
     }
     else {
@@ -1790,7 +1790,6 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
         speed_x_bnd = 4;
         mul_45 = 5;
         mul_30 = 3;
-        div_45 = 1;
         div_30 = 1;
     }
 
@@ -1810,20 +1809,25 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             btyp = obj->btypes[0];
 
         switch (btyp) {
-            case BTYP_NONE:
+            case BTYP_SOLID_PASSTHROUGH:
+            case BTYP_SOLID:
             case BTYP_SLIPPERY:
+            case 8:
+            case 12:
+            case 24:
+            case 25:
                 break;
             case BTYP_SOLID_RIGHT_45:
             case BTYP_SLIPPERY_RIGHT_45:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x -= mul_45 * obj->speed_y / div_45;
+                obj->speed_x -= mul_45 * obj->speed_y;
                 break;
             case BTYP_SOLID_LEFT_45:
             case BTYP_SLIPPERY_LEFT_45:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x += mul_45 * obj->speed_y / div_45;
+                obj->speed_x += mul_45 * obj->speed_y;
                 break;
             case BTYP_SOLID_RIGHT1_30:
             case BTYP_SOLID_RIGHT2_30:
@@ -1847,10 +1851,10 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
                 break;
         }
 
-        if (a3 > 0) {
+        if (bounce > 0) {
             if (obj->speed_y >= 2) {
-                obj->speed_y = a3 - obj->speed_y;
-                if (pesanteur)
+                obj->speed_y = bounce - obj->speed_y;
+                if (gravity)
                     obj->speed_y++;
             } else {
                 obj->speed_y = 0;
@@ -1862,7 +1866,10 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
                 obj_type == TYPE_FALLING_YING || obj_type == TYPE_FALLING_YING_OUYE
             ) {
                 if (ray.follow_id == obj->id) {
-                    obj->speed_y = RayEvts.tiny ? -4 : -3;
+                    if (RayEvts.tiny)
+                        obj->speed_y = -4;
+                    else
+                        obj->speed_y = -3;
                 }
                 else
                     obj->speed_y = -5;
@@ -2470,57 +2477,71 @@ void DO_ONE_OBJECT(obj_t* obj) {
     }
 }
 
-void build_active_table(void) {
-    s32 screen_center_x;
-    s32 screen_center_y;
+void build_active_table(void)
+{
+    s32 min_x, min_y, max_x, max_y;
+    s32 half_x, half_y;
     s32 i;
+    s32 added;
+    s16 *out;
+    s16 *out_start;
+    obj_t *obj;
 
     actobj.objects[0] = -1;
     actobj.num_active_objects = 0;
-    screen_center_x = xmap + 160;
-    screen_center_y = ymap + 100;
- for (i = 0; i < level_obj.nb_objects; ++i) {
-    obj_t * obj;
+    min_x = xmap;
+    min_y = ymap;
+    max_x = min_x + 1320;
+    max_y = min_y + 1200;
+    half_x = (max_x - min_x) >> 1;
+    half_y = (max_y - min_y) >> 1;
+    min_x = min_x + half_x - 500;
+    min_y = min_y + half_y - 500;
 
-        obj = &level.objects[level_obj.obj_ids[i]];
+    added = 0;
+    i = 0;
+    obj = &level.objects[level_obj.obj_ids[i]];
+    while (i < level_obj.nb_objects) {
         obj->field_1C = 0;
-    }
-
- for (i = level_obj.nb_objects - 1; i >= 0; --i) {
-    obj_t * obj;
-
+        i++;
         obj = &level.objects[level_obj.obj_ids[i]];
+    }
+    out = &actobj.objects[actobj.num_active_objects];
+    out_start = out;
+    i = level_obj.nb_objects - 1;
+    obj = &level.objects[level_obj.obj_ids[i]];
+    while (i >= 0) {
         if (obj->field_1C == 0) {
-            if (Abs(obj->x - screen_center_x) < 660 && Abs(obj->y - screen_center_y) < 600) {
+            if ((obj->x - min_x < 0 ? -(obj->x - min_x) : obj->x - min_x) < half_x &&
+                (obj->y - min_y < 0 ? -(obj->y - min_y) : obj->y - min_y) < half_y) {
                 SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
-            } else if (flags[obj->type].raw & flags2_0x10_do_not_check_ray_collision) {
+            } else if (flags[obj->type].flags0 & 0x10) {
                 SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
             } else {
                 obj->is_active = 0;
             }
         }
-    }
-
- for (i = level_obj.nb_objects - 1; i >= 0; --i) {
-    obj_t * obj;
-
+        i--;
         obj = &level.objects[level_obj.obj_ids[i]];
+    }
+    i = level_obj.nb_objects - 1;
+    obj = &level.objects[level_obj.obj_ids[i]];
+    while (i >= 0) {
         if (obj->is_active) {
             obj->screen_x = obj->x - xmap + 8;
             obj->screen_y = obj->y - ymap;
-            actobj.objects[actobj.num_active_objects++] = obj->id;
-            if (actobj.num_active_objects > COUNT(actobj.objects)) {
+            *out++ = obj->id;
+            added++;
+            if (added > 100)
                 FatalError("Error On MAX_ACTOBJ.");
-            }
-        } else {
-            if (flags[obj->type].raw & flags0_1_always) {
-                del_alwobj(obj->id);
-            }
+        } else if (flags[obj->type].flags0 & 1) {
+            del_alwobj(obj->id);
         }
+        i--;
+        obj = &level.objects[level_obj.obj_ids[i]];
     }
-    if (actobj.num_active_objects < COUNT(actobj.objects)) {
-        actobj.objects[actobj.num_active_objects] = -1;
-    }
+    *out = -1;
+    actobj.num_active_objects += out - out_start;
 }
 
 void Add_One_RAY_lives(void) {
@@ -2667,7 +2688,7 @@ void RECALE_ALL_OBJECTS(void)
                 s32 dx;
 
                 dx = (ray.x + ray.offset_bx) - ((x >> 1) + w);
-                ray.y -= ashr16((s16)((s8)cur_obj->change_anim_mode * dx), 4);
+                ray.y -= ashr16((s16)((s8)cur_obj->hit_points * dx), 4);
             }
             calc_obj_pos(&ray);
         }
