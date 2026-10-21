@@ -47,8 +47,6 @@ void DO_POING(obj_t *obj);
 void allocatePoingBoum(void);
 
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define false 0
 #define true 1
@@ -152,13 +150,11 @@ void RAY_THROW_FIST(void)
     if ((ray.flags.flip_x && decalage_en_cours > 0) ||
         (!ray.flags.flip_x && decalage_en_cours < 0))
     {
-        unk_1 = Abs((s32)ray.speed_x) - 5;
-        if (unk_1 < 0)
-            unk_1 = 0;
+        unk_1 = max32(Abs((s32)ray.speed_x) - 5, 0);
         poing.speed_x += unk_1;
     }
 
-    poing.speed_x = MIN(poing.speed_x, 16);
+    poing.speed_x = min32(poing.speed_x, 16);
 
     if (poing_obj->flags.flip_x) {
         poing_obj->speed_x = poing.speed_x;
@@ -328,7 +324,7 @@ void DO_POING(obj_t *obj)
 
                     {
                         unk_1 = obj->speed_y + poing.y_16;
-                        if (inrange(unk_1, MIN(poing.y_16, ray_diff_y), MAX(poing.y_16, ray_diff_y)))
+                        if (inrange(unk_1, min32(poing.y_16, ray_diff_y), max32(poing.y_16, ray_diff_y)))
                             obj->speed_y >>= 4;
                         else
                             obj->speed_y = (ray_diff_y - poing.y_16) >> 4;
