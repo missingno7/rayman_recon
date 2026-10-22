@@ -1,3 +1,18 @@
+; Reconstruction module; historical ownership remains OPEN (see NOTES.md).
+.386p
+.model flat
+; Proven WLINK first-declaration precedence, docs/LINK.md / lk_stage2.
+_DATA segment para public use32 'DATA'
+_DATA ends
+CONST segment dword public use32 'DATA'
+CONST ends
+CONST2 segment dword public use32 'DATA'
+CONST2 ends
+DATA32 segment dword public use32 'DATA'
+DATA32 ends
+DGROUP group _DATA, CONST, CONST2, DATA32
+
+; ---- Accepted source: lowlevel_00010.asm ----
 ; DOS gog_v121_us 1:00010..1:02640, complete assembly slice.
 ; Canonical routine names INVENTED. Local address labels cite cfg.dis.
 ; No data directives or inferred padding: every line is an original instruction.
@@ -30,7 +45,7 @@ extrn _raster_rows_left:dword
 ; Explicit PTR widths below describe each field access. No shifted external aliases.
 _TEXT segment para public use32 'CODE'
 ; Flat DS addresses both object-2 data and writable instruction operands.
-assume cs:_TEXT, ds:_TEXT
+assume cs:FLAT, ds:FLAT
 public effect_reset_geometry_, draw_effect_segment_
 effect_reset_geometry_:
     pushad ; 1:00010

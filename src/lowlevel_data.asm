@@ -1,8 +1,9 @@
-; GOG v1.21 obj2 low-level initialized data only.
+ ; GOG v1.21 obj2 low-level initialized data, 2:00010..2:0215c.
+; Replaces lowlevel_data + data_195a + data_2140 (see NOTES.md).
 ; Values below are declarations; no executable code or relocation fields occur in these spans.
 .386p
 
-_DATA segment dword public use32 'DATA'
+_DATA segment para public use32 'DATA'
 ; Partition from the rasterizer's accesses (build/workers/s_00010/NOTES.md); names INVENTED.
 public _raster_first_y, _raster_rows, _raster_descriptor, _raster_texture, _raster_du, _raster_neg_du
 public _raster_dv, _raster_neg_dv, _raster_destination, _raster_scanline, _raster_row_offset, _raster_rows_left
@@ -33,9 +34,11 @@ _raster_row_offset:         ; 2:01946
 _raster_rows_left:          ; 2:0194a
     dd 0
     db 12 dup (0)           ; 2:0194e..0195a, no access found (OPEN)
-_DATA ends
-
-_DATA2 segment dword public use32 'DATA'
+ ; Assembly-owned table at 2:0195a (2 mod 4); no C contribution boundary.
+; DOS 1:04a91 (fixup 1:04a94) indexes four dwords; Android TableImageX size=16.
+public _TableImageX
+_TableImageX:
+    dd 0, 16000, 32000, 48000
 public saved_vga_registers_0196a
 public row_offsets_320_01b00
 public row_offsets_80_01e20
@@ -145,9 +148,12 @@ row_offsets_80_01e20:
     dd 15040, 15120, 15200, 15280
     dd 15360, 15440, 15520, 15600
     dd 15680, 15760, 15840, 15920
-_DATA2 ends
-
-_DATA3 segment dword public use32 'DATA'
+ ; DOS sprite code consumes these two true-start s32 state variables.
+public _saved_sprite_color, _saved_sprite_width
+_saved_sprite_color: ; 2:02140
+    dd 0
+_saved_sprite_width: ; 2:02144
+    dd 0
 public lowlevel_timer_02148
 public lowlevel_timer_02150
 public lowlevel_timer_02154
@@ -162,6 +168,7 @@ lowlevel_timer_02154:
     dd 0
 lowlevel_timer_02158:
     dd 0
-_DATA3 ends
+_DATA ends
+DGROUP group _DATA
 
 end
