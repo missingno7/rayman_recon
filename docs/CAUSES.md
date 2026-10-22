@@ -33,13 +33,15 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   10.0/10.5/10.6: zero STRICT gains; isolated diff reductions do not generalise. These objects use the game profile;
   their NEAR functions are the same allocation problem as the rest (H1 refuted, B4).
 
-## H4 - A source-available compiler is codegen-equivalent to Watcom 10.6 (TESTING: worker cc_equiv)
-- Why it matters: H1/H3 refuted; the remaining game NEAR set is the 10.6 function-local allocation tie mechanism.
-  If Watcom 11.0 / Open Watcom 1.x produce byte-identical code for our sources, OW source is the 10.6 allocator and the
-  tie rule can be read from source instead of probed (r_owcg used OW2 HEAD, whose register order differs).
-- Facts: 10.6a compilers are byte-identical to 10.6 GA (only WLINK changed; archive.org collection notes) - no new
-  version candidate there. Pinned for the test: wc110 (Watcom 11.0), ow14 (Open Watcom 1.4 + source).
-- Smallest experiment: compile the whole corpus with each compiler, compare CODE bytes with wc106 output per function.
+## H4 - A source-available compiler is codegen-equivalent to Watcom 10.6 (REFUTED, cc_equiv)
+- Whole corpus with frozen 10.6 headers, STRICT C entries vs DOS: wc106 1,345, wc105 1,345 (10.5 = 10.6 codegen),
+  wc100 1,198, Watcom 11.0 307, Open Watcom 1.4 77. 11.0 and OW 1.4 already change register allocation in myRand and
+  getbit. OW source cannot model 10.6 allocation; 10.6a is byte-identical to 10.6 (only WLINK changed).
+
+## H5 - The 10.6 tie rule can be read from the 10.6 compiler binary (TESTING: worker cg_re)
+- Bounded reverse engineering of C:/tools/watcom-10.6/BINW/WCC386.EXE (Ghidra headless), guided by the structure of
+  the Open Watcom 1.4 code generator source (bld/cg: register allocator, conflict ordering): locate the function-local
+  register/home assignment and its tie-breaking order, then explain the ra_probe tie observations and one real NEAR.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
