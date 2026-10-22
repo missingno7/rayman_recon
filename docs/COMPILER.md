@@ -296,3 +296,12 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   OPEN, kept out of src). 13 CLD sites (movieprefix x7, luciole plot2line x4, effect633e0 x2) are missing in our builds:
   a CLD-only pragma reproduces them but gains no function (the surrounding clear/copy bodies differ) - NEGATIVE.
   outpw for effect1 SaveScreen/RestoreScreen: NEGATIVE (adds promotion, 10->84 diffs).
+- REP string instructions (h_fill, PROVEN inventory: 287 sites / 99 functions / 26 units; 156 in 56 STRICT functions):
+  plain-C origins in STRICT code are the `<string.h>` memcpy intrinsic (`57 89 c8 c1 e9 02 f2 a5 8a c8 80 e1 03 f2 a4
+  5f`, 94 sites), str* intrinsics (F2 SCASB, 32), and aggregate assignment / automatic aggregate initialisation
+  (F3 MOVSD, 14 sites in 8 functions / 4 units - this answers the earlier OPEN "F3 rep movs" question: F3 MOVSD comes
+  from struct/array aggregate copies, not memcpy). Watcom's 386 string.h does NOT make memset intrinsic; explicit
+  `#pragma intrinsic(memset)` emits F2 word/byte stores. The remaining NEAR fill/copy variants (PC main-loop clears 16008
+  and 4000 dwords, movieprefix CLD/XOR/STOSD x3 in one unit, luciole zero-tail x4 in one function, colour fills,
+  rectangle PUSHAD copies, guarded copy) are singletons or single-unit: no helper meets the gate; seven bounded plain-C
+  trials (zero aggregates, colour fills, guarded copies, zero-tail fills) gained nothing - NEGATIVE, source OPEN.
