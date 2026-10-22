@@ -38,3 +38,18 @@
   finishing passes stopped (measured yield too low).
 Wave 7/8 yield (2026-10-22): 29 finishing passes on exhausted NEAR pools gave +7 STRICT; whole-object/new-unit work
 (sysutils +12) and BSS/data fragments gave the larger gains. Remaining NEAR are dominated by register/stack allocation.
+
+## Link stage, first step - result (2026-10-22, build/workers/lk_pmw122/NOTES.md)
+PROVEN on a minimal Watcom 10.6 program (pointer table, BSS, 297 relocations), PMODE/W 1.22 run under MS-DOS Player:
+- WLINK `system pmodew` (shipped PMODEW.LNK) emits LE (LE at 0x2728); PMWLITE turns it into PMW1 at 0x2730. PMWBIND
+  /B or /R + PMWLITE gives the identical file; PMWBIND never emits PMW1.
+- The shipped utilities reproduce the oracle's complete first 10,032 bytes (64-byte MZ header, unchanged stub body,
+  13 zero bytes) with no PMWSETUP change; PMW1 header fields (version 0x1601, flags, table offsets, object flags
+  0x2045/0x2043) match the oracle.
+- PMWLITE is deterministic (120 runs; PMWBIND 25) across names/dirs/timestamps; default = /C2; levels /C0../C4 all
+  round-trip byte-exactly through tools/pmw1.py, and re-packing the decoded content reproduces the whole file.
+OPEN: the oracle's compression level (no stored level field; levels change only encoding choices) and multi-block
+behaviour (the oracle has 13+2 relocation blocks of 16,380 bytes; the probe had one block per object).
+Proposed next step (needs user approval - it is packer reproducibility on oracle data): re-pack the decoded oracle
+objects/fixups with PMWLITE /C0../C4 and compare with the oracle stream; this would fix the level and test
+multi-block behaviour without any Rayman linking.
