@@ -11,7 +11,7 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 | whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
 | data closure | **47,143 bytes VERIFIED** `_DATA`/`CONST` (incl. the 5.2 KB ObjectsFonctions table, gap blocks, menu/savecodec/block_malloc CONST); game `_DATA` gaps left: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets |
 | BSS | order rule PROVEN; layout VERIFIED **148,811 of 152,302 game-BSS bytes (97.7%)**, 2:3218a..2:57478; runtime (CLIB) BSS starts at 2:57478 (PROVEN, atexit `_BSS`). Fragments in src/bss/ are layout units, not original TU boundaries; 3.6 KB OPEN |
-| linked binary / packed EXE | not started (by design; first step only: PMODE/W 1.22 PMWLITE determinism, docs/NEXT_STEPS.md) |
+| linked binary / packed EXE | **packer stage PROVEN**: PMWLITE 1.22 /C4 rebuilds all 428,743 bytes of RAYMAN.EXE from the decoded objects + ordered relocations; linker stage: facts and plan in docs/LINK.md (DGROUP order OPEN) |
 
 Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
 
