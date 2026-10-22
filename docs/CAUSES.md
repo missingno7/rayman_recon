@@ -70,6 +70,11 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - B5 TEST residues LOCATED (inv_a): the DOS EAX sign predicate exists after global allocation and LdStAlloc; the Score
   pass rewrites it to the copied source register (IS_MIT_PAF ECX, DO_STONEWOMAN_COMMAND EDX, Display_and_free_luciole
   EDX x2). The original Score input differs; which source produces it is OPEN.
+- Construct -> record table (inv_shape, 58 probes; docs/COMPILER.md "C constructs and backend records"): naming, compound
+  assignment, result reuse, snapshots, pointer post-increment, casts change record count/ownership/order in calibrated
+  ways; but six full-unit trials on constrained functions gained nothing - record count/ownership alone does not fix the
+  combined colour/home/scheduling constraints. STATUS: allocation (B4) is now well understood mechanically, but the
+  original record graphs remain unrecoverable from the bytes without more source evidence. EXHAUSTED for now.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
