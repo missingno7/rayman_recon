@@ -1,5 +1,7 @@
 /* INVENTED names. DOS 1:79099..790ed; lookup is unchecked, as in the oracle.
  * 2:2eb30 is a near-pointer table, not a far-pointer table. */
+#include "hmi_local.h"
+
 char *hmi_error_strings[20] = {
     "Error Code Does Not Indicate An Error",
     "Specified Driver Is Not Loaded",

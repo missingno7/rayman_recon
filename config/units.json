@@ -15932,6 +15932,10 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED",
+    "_DATA": "VERIFIED"
    }
   },
   "hmi_timer_asm": {
