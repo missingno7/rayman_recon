@@ -412,6 +412,20 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   (also opaque control flow: a near JE over 14 bytes, an explicit success JMP). Not covered by the current pragma rule
   (only DR/INT themselves may be inline) - user decision pending.
 
+## Double constants: the 10.x front end snaps to 16 significant digits (PROVEN 2026-10-23, build/workers/fpu_cw)
+- Every double constant emitted by stock Watcom 10.0/10.0a/10.5/10.6 (wcc386 and wpp386, native NT loader and the
+  DOS4GW/W32RUN-hosted BINW compiler under DOSBox-X) equals the correctly rounded value of its decimal rounded to 16
+  significant digits: `0.10526315789473684` -> 3fbaf286bca1af25 (= 0.1052631578947368), `...685`..`...694` -> ...af2d,
+  `...695`.. -> ...af34. Folded expressions (`1.0/9.5`, `2.0/19.0`, `1/(9.0+0.5)`, `L`/`f` suffixes, casts; 26 forms in
+  initialisers and code) land on the same grid. Independent of the x87 control word (0x27F vs 0x37F forced in the
+  compiler process: identical output). Watcom 11.0 and OW 1.4 convert exactly (...af28).
+- DOS anomaly: box CalcTab (1:13f70, also v1.12 1:13b55) multiplies by 3fbaf286bca1af28 = the correctly rounded
+  1/9.5, which is OFF this grid - no 10.x literal or fold can produce it. Every other double constant in DOS game code
+  (6 sites: init_calcbloc_func, collision_rayman, DoneMusic, SpriteWorldBlocksFree) is on the grid. box compiled by
+  11.0 matches 0/14 functions (10.6: 9/14), so the object's code generator is 10.x. OPEN: the original front end
+  (a patched 10.x with exact conversion?) or a non-literal origin. CalcTab stays NEAR (1 byte); never patch the
+  constant by other means.
+
 ## Tools for allocator analysis (adopted 2026-10-23 from build/workers/t_cgtrace)
 `python tools/explain.py UNIT FUNC [--source FILE.c] --out build/cgtrace/<new>` traces the pinned compiler (observation
 harness; refuses when the observed object differs from a normal build) and prints each difference against DOS by

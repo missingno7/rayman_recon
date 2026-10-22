@@ -8,7 +8,9 @@
 #include <math.h>
 #include <string.h>
 /* CalcTab calls the software intrinsic register entries IF@DSQRT/IF@DSIN
- * (DOS 1:13f66 / 1:13f93), as declared by the historical <math.h>. */
+ * (DOS 1:13f66 / 1:13f93), as declared by the historical <math.h>.
+ * CalcTab stays NEAR by one byte: DOS multiplies by 3fbaf286bca1af28 (exact 1/9.5), a value stock Watcom 10.x
+ * cannot emit from any literal or folded expression (docs/COMPILER.md "Double constants", BLOCKERS B17). */
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200

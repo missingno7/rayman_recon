@@ -103,7 +103,11 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   colour decision 152, rover 137, home sort 108, Score 71, selection 22.
 - Consequence: per-function single-edit fixes are available only for a handful of functions; the bulk differs in IR
   shape (size/structure) before allocation. Report: build/workers/explain_sweep/sweep.md (+ out/<unit>_<function>/).
-- Follow-up wave fx_ufo / fx_basic / fx_small / fx_score targets the A/B set with explain.py as the acceptance check.
+- Follow-up wave fx_ufo / fx_basic / fx_small / fx_score (2026-10-23): 0 closures, 0 losses. ufo: one equal-savings
+  (61) conflict pair needs the opposite temporary creation order; two natural conditional forms fix EDX but add 368
+  diffs. basic: 108/108 home positions replay; equal-count source variants keep wrong homes. moskito/special: 5
+  variants all worse. Score: ring confirmed at 5 sites, 4 candidates rejected. The A/B set is EXHAUSTED without new
+  source evidence; small-diff triage also found box CalcTab = compiler anomaly (B17), not a source error.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
