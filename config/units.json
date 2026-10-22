@@ -1452,7 +1452,8 @@
    "profile": "game",
    "functions": {},
    "segments": {
-    "_DATA": "VERIFIED"
+    "_DATA": "VERIFIED",
+    "CONST": "VERIFIED"
    }
   },
   "data_2b37c": {
