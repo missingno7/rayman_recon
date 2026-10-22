@@ -11,15 +11,9 @@
 #include <stdlib.h>
 #include <i86.h>
 #include <dos.h>
+#include "cheat_inline.h"
 
 
-/* Helper names below are INVENTED (Android symbol queries: absent).
- * ORIGINAL_INLINE: DOS 1:26d81, INT 10h; AX selects video service/mode. */
-void video_interrupt(u32 service);
-#pragma aux video_interrupt = "int 10h" parm [eax] modify exact []
-/* ORIGINAL_INLINE: DOS 1:26d88, INT 21h process exit. */
-void terminate_interrupt(u32 service);
-#pragma aux terminate_interrupt = "int 21h" parm [eax] modify exact []
 /* ORIGINAL_INLINE: DOS 1:26164, 1:26fbb, 1:270c5, CLI; no general register changes. */
 void inhibit_interrupts(void);
 #pragma aux inhibit_interrupts = "cli" modify exact []
@@ -727,11 +721,7 @@ void FIN_MAP_LOOP(void) {
     if (RayEvts.tiny) {
         RAY_DEMIRAY();
     }
-    if (cracked) {
-        /* Inline interrupts are exact; the preceding predicate remains NEAR. */
-        video_interrupt(3);
-        terminate_interrupt(0x4c00);
-    }
+    exit_if_cracked(cracked);
 }
 
 void FIN_DEAD_LOOP(void) {
