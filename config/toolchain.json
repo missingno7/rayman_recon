@@ -122,6 +122,16 @@
    ],
    "status": "STRONG for -oa -ot -s -5r on GOG v1.21 rand TU (2 STRICT functions); -on/-oe undetermined (-oneatx/-otexan equally STRICT there); compiler release: 10.6 tested, 10.0/10.0a/10.6 code-identical on myRand probes; runtime libs = 10.6 (libscan). See docs/COMPILER.md. -fpc PROVEN by jumelle InitMatriceJumelle (software FP, CLIB3R __FD* helpers + MATH3R exp); neutral for all integer units."
   },
+  "hmi": {
+   "install": "wc106",
+   "flags": [
+    "-zq",
+    "-od",
+    "-s",
+    "-3r"
+   ],
+   "status": "STRONG: HMI SOS sound library code linked after the game (1:71afa..1:797f5) is unoptimised Watcom output; -od -s -3r reproduces hmi_active/hmi_status/hmi_errors (10 functions STRICT, build/workers/lk_libs). Third-party library, not game code; never use for game units."
+  },
   "asm": {
    "install": "wc106",
    "flags": [

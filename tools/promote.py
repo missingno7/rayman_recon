@@ -1,7 +1,7 @@
 """Integrator helper: merge a worker's overlay bindings into config/symbols.json and register a unit.
 
     python tools/promote.py SYMBOLS_OVERLAY.json [--rename OLD=NEW ...]
-    python tools/promote.py --unit NAME SRC.c [--oracle O] [--provenance TAG,TAG]   (default tags: from available reference bodies)
+    python tools/promote.py --unit NAME SRC.c [--oracle O] [--provenance TAG,TAG] [--profile P]   (default tags: from available reference bodies)
 
 Bindings: a name already bound to a different address, or an address already bound under a different name in
 the same section, is refused. --unit adds/updates config/units.json with the statuses that tools/verify.py
@@ -160,10 +160,13 @@ def default_provenance(fname):
     return tags + ["DOS_BINARY_DERIVED"]
 
 
-def register_unit(name, src, oracle, prov):
+def register_unit(name, src, oracle, prov, profile=None):
     units = load_json(CONFIG / "units.json")
-    units["units"].setdefault(name, {"source": src, "oracle": oracle, "profile": "asm" if src.lower().endswith(".asm") else "game",
-                                        "functions": {}})
+    if profile and profile not in load_json(CONFIG / "toolchain.json")["profiles"]:
+        raise SystemExit(f"unknown profile {profile!r} (config/toolchain.json profiles)")
+    units["units"].setdefault(name, {"source": src, "oracle": oracle,
+                                     "profile": profile or ("asm" if src.lower().endswith(".asm") else "game"),
+                                     "functions": {}})
     dump_json(CONFIG / "units.json", units)
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "verify.py"), "--accept", name], cwd=ROOT)
     units = load_json(CONFIG / "units.json")
@@ -179,7 +182,8 @@ def main(argv):
         name, src = argv[2], argv[3]
         oracle = argv[argv.index("--oracle") + 1] if "--oracle" in argv else "gog_v121_us"
         prov = argv[argv.index("--provenance") + 1].split(",") if "--provenance" in argv else []
-        return register_unit(name, src, oracle, prov)
+        profile = argv[argv.index("--profile") + 1] if "--profile" in argv else None
+        return register_unit(name, src, oracle, prov, profile)
     renames = {}
     for a in argv[2:]:
         if a.startswith("--rename"):

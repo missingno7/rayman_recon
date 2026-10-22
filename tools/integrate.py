@@ -155,6 +155,7 @@ def parse(argv):
     ap.add_argument("--new", action="store_true")
     ap.add_argument("--subdir", default="", help="with --new: place new sources under src/SUBDIR/")
     ap.add_argument("--rename", action="append", default=[], metavar="OLD=NEW")
+    ap.add_argument("--profile", default="", help="with --new: compiler profile for the new units (config/toolchain.json)")
     ap.add_argument("-m", dest="msg", required=True)
     a = ap.parse_args(argv)
     renames = {}
@@ -258,7 +259,7 @@ def main(argv):
         w.touch(ROOT / "config" / "units.json")
         for unit, dst in targets:
             code, out = run(sys.executable, "tools/promote.py", "--unit", unit, (dst.relative_to(
-                Path(os.path.realpath(ROOT)))).as_posix())
+                Path(os.path.realpath(ROOT)))).as_posix(), *(["--profile", a.profile] if a.profile else []))
             print(f"  {unit}: " + (out.strip().splitlines() or ["(no output)"])[-1])
             if code:
                 raise SystemExit(f"promote --unit {unit} failed (exit {code}):\n" + out[-1500:])
