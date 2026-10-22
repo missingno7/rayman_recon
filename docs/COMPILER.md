@@ -374,3 +374,13 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
 **PROVEN conditional inverse negatives:** on the frozen slope graph, neither conversion-owner replacement at the five actual sprite-declaration positions (10 cases) nor one added byte snapshot there (5 cases) yields all five DOS homes. On the observed new pixel-X graph, seven declaration positions retain Y-before-X. These are calculations on JSON under the stated record assumptions, not C permutation compiles or impossibility proofs.
 
 **OPEN:** original record graphs and combined colour/home/scheduling constraints. The table gives no calibrated way to suppress the late Score TEST substitution, change a call-live eligibility set, or select an original fill/helper implementation. Prior negatives and helper gates remain in force.
+
+## Watcom 10.6 Score pass: register-equivalence substitution (PROVEN from the binary, build/workers/cg_score)
+- TryRegOp (RVA 7375a) replaces an operand by the FIRST accepted older member of its register-equivalence ring (preferred
+  next-live search, then an unconditional-liveness fallback); ChangeIns (73515) checks operand size, a valid generation
+  entry and CC compatibility. Replayed 1,482/1,482 captured decisions. There is no per-expression/no-score flag.
+- Ordinary copies (ScoreMove/RegAdd/RegInsert) create the rings; a physical (also partial) redefinition of the source
+  register severs the equivalence; rings propagate through single-input blocks and reset at multi-input joins.
+- B5: the four DOS `TEST EAX` sites survive only if EAX's ring has no older member at the predicate (a join or a source
+  redefinition before it). C edits that create that state flip the TEST but change other instructions (stoneman 1 ->
+  470 diffs, luciole 2 -> 87) - the original differs in more than this decision. OPEN which original IR fact held.

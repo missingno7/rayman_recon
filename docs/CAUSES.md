@@ -69,7 +69,9 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   stoneman GetY register pair recovered by a derived inverse but the function stays NEAR (scheduling).
 - B5 TEST residues LOCATED (inv_a): the DOS EAX sign predicate exists after global allocation and LdStAlloc; the Score
   pass rewrites it to the copied source register (IS_MIT_PAF ECX, DO_STONEWOMAN_COMMAND EDX, Display_and_free_luciole
-  EDX x2). The original Score input differs; which source produces it is OPEN.
+  EDX x2). The original Score input differs; which source produces it is OPEN. cg_score read the Score rule from the
+  binary: equivalence-ring substitution, severed by redefinitions, reset at joins. C forms that create a join or
+  redefinition DO flip the TEST, but change many other bytes - the original's surrounding structure differs too.
 - Construct -> record table (inv_shape, 58 probes; docs/COMPILER.md "C constructs and backend records"): naming, compound
   assignment, result reuse, snapshots, pointer post-increment, casts change record count/ownership/order in calibrated
   ways; but six full-unit trials on constrained functions gained nothing - record count/ownership alone does not fix the
