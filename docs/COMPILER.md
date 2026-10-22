@@ -252,3 +252,23 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   sites (dark DARK_phase1 +0x15, DO_DARK_SORT_COMMAND +0x11, hybrid doMOSAMScommand +0x10c): stdlib abs/labs with and
   without intrinsic, `#pragma function`, ternary forms, s16/s32 operands - none close them. An EAX-only helper would, but
   is rejected as allocation steering (build/workers/r_abs). The blocker there is context (allocation), not the idiom.
+
+## Cross-unit register/stack allocation investigation (2026-10-22; build/workers/ra_tax, ra_probe, ra_pairs)
+- Taxonomy (ra_tax, PROVEN mechanical classification of all 301 NEAR): register renaming only 0; stack displacement
+  only 3; instruction order only 7; extra/missing instructions only 2; reference/layout only (bytes equal) 17; mixed
+  272. There is no pure register-permutation class: register choice is entangled with instruction selection and
+  frame layout, so no single colouring rule can close a group of functions.
+- TEST/CMP after a register copy (ra_probe, STRONG scoped predictor, 44/44 sites in 33 STRICT functions / 23 units):
+  for `mov dst,src` immediately followed in the same machine basic block by `test r,r`/`cmp r,imm`, the comparison
+  uses the SOURCE register's part at the comparison width; at a join (branch target) it uses the destination; if the
+  source is EBP and the comparison is word-sized, the destination (BP is not a selectable word register: 5,938 word
+  operands in 71 units, zero BP). It predicts from emitted MOVs, not the MOV's allocation from C, and does NOT explain
+  the five OPEN residues (DO_STONEWOMAN_COMMAND, IS_MIT_PAF, Display_and_free_luciole x2, RAY_BALANCE_ANIM).
+- Spill cost (PROVEN probes, STRONG interpretation): uses inside one more loop level weigh about 20x (crossover at
+  20/21 uses at depth 0 vs 1 and again at 1 vs 2). Not a validated source-rewrite rule.
+- Stack homes: ascending raw size (rounded to 4) stays PROVEN, but equal-size ties are NOT a declaration-order rule -
+  removing an unrelated array or changing the width of a register-resident local flips tie order (hidden backend
+  records participate). Incoming stack parameters keep 4-byte ABI slots (22/22 accesses, 33/33 callee pops).
+- NEGATIVE (ra_pairs, 12 NEAR in 12 units, 72 trials with STRICT controls): staging temporaries broke 10/12 controls,
+  operand reordering 6/12, predicate extraction 12/12; 0 functions closed. NEGATIVE (ra_probe): moving branch results
+  before a join (RAY_BALANCE_ANIM) and naming the scanner lookahead pointer (deter_num_let) - no gain.
