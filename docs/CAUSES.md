@@ -33,6 +33,14 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   10.0/10.5/10.6: zero STRICT gains; isolated diff reductions do not generalise. These objects use the game profile;
   their NEAR functions are the same allocation problem as the rest (H1 refuted, B4).
 
+## H4 - A source-available compiler is codegen-equivalent to Watcom 10.6 (TESTING: worker cc_equiv)
+- Why it matters: H1/H3 refuted; the remaining game NEAR set is the 10.6 function-local allocation tie mechanism.
+  If Watcom 11.0 / Open Watcom 1.x produce byte-identical code for our sources, OW source is the 10.6 allocator and the
+  tie rule can be read from source instead of probed (r_owcg used OW2 HEAD, whose register order differs).
+- Facts: 10.6a compilers are byte-identical to 10.6 GA (only WLINK changed; archive.org collection notes) - no new
+  version candidate there. Pinned for the test: wc110 (Watcom 11.0), ow14 (Open Watcom 1.4 + source).
+- Smallest experiment: compile the whole corpus with each compiler, compare CODE bytes with wc106 output per function.
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
