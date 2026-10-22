@@ -320,3 +320,8 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   both complete contributions (TASM 2.01 differs in an operand-size prefix) and emits Phar Lap-style LOC=5 32-bit fixups
   (tools/omf.py reads them only for proven TASM 2.0 /op modules). The game's low-level block matches WASM 10.6 (identity
   still OPEN).
+- HMI assembler identity (2026-10-22): the vendor library sosdw1cr.lib names **Turbo Assembler 3.1** in the asm modules'
+  translator records (not available locally). Reproducers tested (asm_id2): TASM 4.0/4.1 emit standard LOC=9 OFF32
+  fixups that link correctly but differ in 15 prefixes (timer 8/10, DPMI 36/40); MASM 6.0b/6.11 give timer 10/10 and
+  DPMI 39/40 (F2 vs F3 MOVSB); MASM 6.14 untested (its OS/2 patcher fails under MS-DOS Player). TASM 2.0 /op stays the
+  byte reproducer for src/hmi (50/50); the natural link uses the original library instead.
