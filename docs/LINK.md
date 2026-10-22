@@ -43,3 +43,19 @@ Natural WLINK image of fresh sources + pinned runtime members, compared (objects
 before packing with /C4. Preconditions, in order: DGROUP precedence probe; ordered manifest of original contributions
 (code TUs, central data/BSS TU(s), assembly modules, runtime members); central data/BSS ownership; relocation-order
 model validation on mixed-width/cross-page inputs. No raw oracle payload, address patches or artificial padding.
+
+## First natural link (2026-10-22, build/workers/lk_stage3: link.py, natural.lnk, gaps.json, contribution_diff.md)
+Pipeline works end to end and is reproducible (compile all 446 units + asset step + declaration-only layout.asm ->
+WLINK 10.6 `system pmodew` stack=8192 CASEEXACT, manifest-ordered modules, CLIB3R/MATH3R/MATH387R as libraries -> LE ->
+per-contribution diff -> PMWLITE /C4); a fresh rebuild reproduces every artifact byte for byte. Asset step (decision
+2026-10-22, reversible): Def_Bande/PalPlasma/PalFire bytes are extracted at build time from the user's own
+assets/GOG/RAYMAN.EXE into build/ - never tracked; any other missing byte is reported, never filled.
+The full link does not resolve yet (135 names): 97 dt_str_* string literals with no defining contribution (data_51d4
+credits table 82, data_62d8 DOS error table 15, data_4d5c 1), 18 calls into the unassigned sound-driver code
+1:71afa..1:755ce, 10 names needing the open BSS holes, 10 assembly labels not exported across slices.
+First differences, PROVEN: _TEXT 1:03125 because the 8 assembly reconstruction slices are separate modules that WLINK
+paragraph-aligns (not NEAR drift); _DATA 2:0195a because TableImageX is a dword-aligned C unit inside the assembly data;
+lowlevel_data.asm's ungrouped _DATA2/_DATA3 form a third LE object; sound's 128-byte data prefix belongs to object 1
+(1:61b80) but WLINK places it in object 2. Later code drift follows NEAR size differences at TU intervals.
+Byte-equal, correctly placed contributions keep their ordered relocations (436/436 in the leading assembly).
+Unassigned code envelopes after the game range: 1:71afa..755ce (15 KB, sound library), ~5 KB more (1:785dc..797f5).
