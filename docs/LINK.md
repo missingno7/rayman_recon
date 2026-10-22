@@ -38,11 +38,15 @@ DOS utilities run only under MS-DOS Player.
   append-buffer model (capacity ~512 bytes, STRONG) predicted 2,006/2,006 positions in probes. Record width 16/32 by
   target offset affects run splitting.
 
-## Next stage
-Natural WLINK image of fresh sources + pinned runtime members, compared (objects, virtual metadata, ordered relocations)
-before packing with /C4. Preconditions, in order: DGROUP precedence probe; ordered manifest of original contributions
-(code TUs, central data/BSS TU(s), assembly modules, runtime members); central data/BSS ownership; relocation-order
-model validation on mixed-width/cross-page inputs. No raw oracle payload, address patches or artificial padding.
+## Current state and next steps (living; updated 2026-10-22)
+Done: DGROUP precedence, contribution manifest, relocation-order model, first natural link (stage 3), stage-4 fixes,
+assembly module structure (lk_asm), string-literal ownership (data_4d5c/cdaudio, now inside data_215c), const sound
+table, HMI = original vendor library sosdw1cr.lib (pinned; linked as a library - resolves the stage-4 HMI object-format
+blocker), central initialised-data TU data_215c.
+Next, in order of the earliest structural divergence: (1) re-run the natural link with the vendor HMI library instead of
+src/hmi; (2) language_txt/menu_to_display identities (last non-HMI unresolved names; worker id_conflicts); (3) central
+BSS TU(s) replacing layout fragments (7 holes / 2,988 B, credits_init index anomaly); (4) runtime member order vs pcmain's
+memset dependency; (5) remaining NEAR size drift (game C allocation). Never sort relocations, pad, or patch addresses.
 
 ## First natural link (2026-10-22, build/workers/lk_stage3: link.py, natural.lnk, gaps.json, contribution_diff.md)
 Pipeline works end to end and is reproducible (compile all 446 units + asset step + declaration-only layout.asm ->
@@ -58,7 +62,7 @@ paragraph-aligns (not NEAR drift); _DATA 2:0195a because TableImageX is a dword-
 lowlevel_data.asm's ungrouped _DATA2/_DATA3 form a third LE object; sound's 128-byte data prefix belongs to object 1
 (1:61b80) but WLINK places it in object 2. Later code drift follows NEAR size differences at TU intervals.
 Byte-equal, correctly placed contributions keep their ordered relocations (436/436 in the leading assembly).
-Unassigned code envelopes after the game range: 1:71afa..755ce (15 KB, sound library), ~5 KB more (1:785dc..797f5).
+(Historical note: the "unassigned" code after the game range was later identified as the HMI SOS library, 1:71afa..797f5.)
 
 ## Natural link, stage 4 (2026-10-22, build/workers/lk_stage4)
 - Applied: sound's snd_sqrt_table is `const` (C const data goes to _TEXT; 128 bytes back in object 1 at 1:61b80);
@@ -71,7 +75,6 @@ Unassigned code envelopes after the game range: 1:71afa..755ce (15 KB, sound lib
 - BSS: WLINK concatenates same-segment contributions in defining-module order; the current module order has 0
   inversions, but 103 fragments start at non-dword oracle addresses while their OMF segments are dword-aligned - so the
   original defining TUs (central data TU structure) must be reconstructed; no fragment order can place them.
-- HMI link format: the TASM 2.0 /op objects put _TEXT/_DATA in a FLAT group (conflicts with DGROUP), and WLINK 10.6 turns
-  their LOC=5 fixups into 16-bit LE fixups where the oracle has OFF32. So the original HMI objects were NOT linked in
-  this form: TASM 2.0 reproduces the bytes, but the historical assembler/object format is OPEN (candidates: a later
-  TASM emitting standard 32-bit fixups, or MASM - MASM 5.10 gives timer 10/10, DPMI 37/40 with standard OMF).
+- HMI link format (RESOLVED): the TASM 2.0 /op reconstruction objects (FLAT group, LOC=5 fixups) do not link to OFF32
+  with WLINK 10.6. The original vendor library sosdw1cr.lib (asm members TASM 3.1, standard LOC=9) was found and is
+  linked directly; src/hmi remains a byte-level source reconstruction only.

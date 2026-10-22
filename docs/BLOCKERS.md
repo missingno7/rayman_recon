@@ -1,7 +1,7 @@
 # Blocker inventory (living document; choose work from here)
 
-Baseline 2026-10-22: 1,385 STRICT functions (262,197 code bytes, 57.3% of game code), 301 NEAR, every game code range
-has a unit. Classification sources: `python tools/census.py` (tags), build/workers/ra_tax/taxonomy.md (mechanical
+Baseline 2026-10-22 (updated): game code 262,325 STRICT bytes (57.3%), 301 game NEAR; HMI = pinned vendor library; every
+game code range has a unit. Classification sources: `python tools/census.py` (tags), build/workers/ra_tax/taxonomy.md (mechanical
 difference classes), docs/COMPILER.md (rules and negatives). Status: ACTIONABLE / IN PROGRESS / BLOCKED / EXHAUSTED.
 
 | # | Blocker | Functions (bytes) | Root cause / hypothesis | Dependencies | Evidence / tried | Next / value | Status |
@@ -18,6 +18,6 @@ difference classes), docs/COMPILER.md (rules and negatives). Status: ACTIONABLE 
 | B10 | `_DATA` 2:01970 400-byte zero run | 400 B | no reference identifies the object | lowlevel_data.asm covers bytes | dt_196a | low | BLOCKED |
 | B11 | Natural-link structure | whole image | asm slices paragraph-aligned, lowlevel_data third object, TableImageX ownership, unexported asm labels (lk_stage3) | - | lk_stage3 | lk_asm - high (prerequisite for any natural link) | IN PROGRESS |
 | B12 | Missing string literals / initialised data for link | 97 dt_str_* names, 62 uncovered intervals | pointer tables reference externs instead of literals in their own CONST | data units | lk_stage3 | lk_strdata - high | IN PROGRESS |
-| B13 | HMI SOS sound library (linked) | 1:71afa..797f5, ~20 KB, 13 groups | PROVEN vendor HMI; 11 C groups unoptimised Watcom (-od -s -3r, profile `hmi`), 2 hand-written asm; no SDK/library available locally; names INVENTED | - | asm 50/50 (TASM 2.0 profile hmi_tasm), C 65/78; profile alternatives (wc100/wc105, -3s, pack4) gained nothing for the 13 NEAR | finishing pass on 13 NEAR (system 5, loader 3, samples 2, detect 2, voice_params 1) - medium | ACTIONABLE |
+| B13 | HMI SOS sound library | 1:71afa..797f5, 19,815 B | RESOLVED for the rebuild: original vendor library pinned and linked; src/hmi reconstruction 115/128 (13 NEAR need original local declarations - not in the library) | - | lk_libs, hm_*, hm_finish | SDK names (hm_names); further HMI matching low value | RESOLVED (link); reconstruction EXHAUSTED |
 | B14 | Central data/BSS TU structure for a natural link | 139 BSS fragments + data units | initialised part merged: data_215c = 2:0215c..05e2c one TU (tu_central); initialised sequence needs further TU cuts (four 2-byte residual holes); BSS: 7 holes / 2,988 B and language/menu identity conflicts block a whole-BSS TU; declaration-index model fails by +2 mod 25 inside credits_init (mechanism OPEN) | lk_stage2 manifest | lk_stage4, tu_central | resolve BSS identities (language_txt, menu_to_display) and the credits index anomaly - medium | ACTIONABLE |
 | B15 | HMI object format for linking | 2 asm modules | RESOLVED for the link: original vendor library sosdw1cr.lib pinned (asm members TASM 3.1, standard LOC=9); link uses the library | - | hm_finish, lk_stage4 | asm_id2 checks TASM 4.x as a reproducer of the src/hmi asm | RESOLVED (link) |
