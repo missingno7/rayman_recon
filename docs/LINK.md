@@ -1,5 +1,13 @@
 # Link and pack stages
 
+How to run the natural link (tools adopted 2026-10-22 from build/workers/t_link):
+`python tools/verify.py` (fresh report), `python tools/manifest.py` (writes build/link/manifest.json; rerun after any
+config/source/oracle/library change), `python tools/link.py all` (or compile|link|report|pack). Outputs only under
+build/link/. The natural link exits nonzero while `_language_txt` is unresolved; the UNDEFSOK diagnostic image is
+measurement output only (packed with PMWLITE /C4 and round-tripped) and must never be run. src/hmi is excluded; the
+pinned vendor library sosdw1cr.lib is linked. tests/test_link.py covers manifest schema, asset/unit symbol overlap and
+response-file generation.
+
 Evidence: build/workers/lk_pmw122 (first step) and build/workers/lk_repack (oracle repack, WLINK probes), 2026-10-22.
 Tools: PMODE/W 1.22 (config/toolchain.json `pmodew122`, stub authenticated against RAYMAN.EXE), Watcom 10.6 WLINK.
 DOS utilities run only under MS-DOS Player.
