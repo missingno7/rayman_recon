@@ -312,3 +312,6 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   occupy registers. High-byte registers are first-class allocation results (AH does not imply a packed word). NEGATIVE:
   "reserve AL, take the next free byte register" predicts 220/834 (26%); no general predictor. Applying snapshot
   removal reproduced DOS's DH (collision1 1:1e0e2) and AX (meredenis) locally but neither owner closed (0/8 switch owners).
+- Cross-version NEAR check (v112_near, all 301 NEAR mapped to DOS v1.12): 0 functions STRICT on v1.12 but NEAR on v1.21;
+  275 have identical DOS bytes in both versions (our mismatch is ours, no version information); 26 differ between the
+  versions only by already-reproduced edits (glyph ABI, protection, archive banks, palette state). NEGATIVE as a lever.
