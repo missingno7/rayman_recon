@@ -59,3 +59,19 @@ lowlevel_data.asm's ungrouped _DATA2/_DATA3 form a third LE object; sound's 128-
 (1:61b80) but WLINK places it in object 2. Later code drift follows NEAR size differences at TU intervals.
 Byte-equal, correctly placed contributions keep their ordered relocations (436/436 in the leading assembly).
 Unassigned code envelopes after the game range: 1:71afa..755ce (15 KB, sound library), ~5 KB more (1:785dc..797f5).
+
+## Natural link, stage 4 (2026-10-22, build/workers/lk_stage4)
+- Applied: sound's snd_sqrt_table is `const` (C const data goes to _TEXT; 128 bytes back in object 1 at 1:61b80);
+  init_data_state and record are real BSS aggregates (5 interior field bindings removed). Unresolved non-HMI names:
+  only `_language_txt` and `_menu_to_display` remain (their extents overlap other accepted globals - OPEN).
+- Runtime member order: natural extraction starts set386 (aliases and pcmain's early memset_ reference - the PC
+  main-loop memset is a known NEAR blocker, the original uses inline REP STOSD); an explicit runtime member FILE list
+  reproduces 160/160 oracle runtime CODE members in order (diagnostic, not historical evidence). LIBFILE pulls 667
+  members; reversed library order selects the wrong acos member.
+- BSS: WLINK concatenates same-segment contributions in defining-module order; the current module order has 0
+  inversions, but 103 fragments start at non-dword oracle addresses while their OMF segments are dword-aligned - so the
+  original defining TUs (central data TU structure) must be reconstructed; no fragment order can place them.
+- HMI link format: the TASM 2.0 /op objects put _TEXT/_DATA in a FLAT group (conflicts with DGROUP), and WLINK 10.6 turns
+  their LOC=5 fixups into 16-bit LE fixups where the oracle has OFF32. So the original HMI objects were NOT linked in
+  this form: TASM 2.0 reproduces the bytes, but the historical assembler/object format is OPEN (candidates: a later
+  TASM emitting standard 32-bit fixups, or MASM - MASM 5.10 gives timer 10/10, DPMI 37/40 with standard OMF).
