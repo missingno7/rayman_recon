@@ -16572,6 +16572,12 @@
     "name": "INVENTED",
     "type": "u8 *",
     "evidence": "DOS fixups 1:6f3de and 1:6f3e8 pass the address of this storage to the allocator; 1:6f404 loads the resulting dword pointer; 1:70378 passes its address to SpriteWorldBlocksFree. Pointer type/4-byte size; name INVENTED."
+   },
+   "word_CF79E": {
+    "addr": "2:3f79e",
+    "type": "s16",
+    "name": "RAYVERSE",
+    "evidence": "DOS 1:3ae45 and 1:3ae74 load dword [2:3f79c], SAR EDX,16 at 1:3ae4b/3ae7a: signed word at 2:3f79e. Independent Rayverse data.c declaration s16 word_CF79E //CF79E. Android query absent. Address is outside 2-byte ecart_barre at 2:3f79c; no shifted alias."
    }
   }
  },

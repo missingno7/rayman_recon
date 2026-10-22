@@ -189,6 +189,8 @@ extern s16 delai_stereo;
 extern display_item_t* dialog_display_item_ptr;
 extern u8* display_buffer;
 extern s16 ecart_barre;
+/* RAYVERSE placeholder; signed word actually read at DOS 1:3ae45/3ae74. */
+extern s16 word_CF79E;
 extern u8 fin_de_rayman;
 extern u8 fin_du_jeu;
 extern u8 first_option;
@@ -1157,9 +1159,9 @@ void AFFICHE_ECRAN_OPTIONS(void)
             for (i = 0; i < options.sound_volume; ++i) {
                 if (i < max_sound / 3) {
                     v5 = 5;
-                } else if (i < (2 * max_sound) / 3 && i >= ecart_barre / 3) {
+                } else if (i < (2 * max_sound) / 3 && i >= word_CF79E / 3) {
                     v5 = 3;
-                } else if (i < max_sound && i >= (2 * ecart_barre) / 3) {
+                } else if (i < max_sound && i >= (2 * word_CF79E) / 3) {
                     v5 = 1;
                 }
                 /* DOS 3aec3..3aecc uses the outer row index here. */
