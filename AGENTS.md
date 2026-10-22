@@ -35,8 +35,9 @@ Hard rules
   with the mechanism PROVEN from the DOS bytes (writers, targets) at the cited site. Also covered (user decision
   2026-10-23): a whole copy-protection / interrupt sequence whose DOS bytes contain instructions Watcom 10.6 C provably
   cannot select (e.g. `CMP reg,0`, docs/COMPILER.md "Compare with zero") next to its DR/INT instructions may be one
-  ORIGINAL_INLINE pragma spanning exactly that sequence (first DR/INT instruction through the end of its compare/branch
-  logic), each site cited by address, nothing outside the evidenced sequence. Otherwise never use
+  ORIGINAL_INLINE pragma spanning exactly that sequence (from its first DR/INT or C-unselectable instruction through
+  the end of its compare/branch logic), each site cited by address, nothing outside the evidenced sequence. Ordinary
+  C-expressible setup before that point (e.g. a service-number MOV) stays C. Otherwise never use
   an inline pragma for anything C can express (arithmetic, loads/stores, calls, branches) or to patch register
   allocation - with ONE exception (user decision 2026-10-21, ai_decomp review): original inline helpers. A
   C-expressible sequence may be an ORIGINAL_INLINE helper only when its exact DOS bytes recur with fixed registers
