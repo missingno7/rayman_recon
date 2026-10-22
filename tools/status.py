@@ -16,7 +16,8 @@ def main():
     units = load_json(CONFIG / "units.json")["units"]
     rep_p = BUILD / "verify" / "report.json"
     rep = load_json(rep_p) if rep_p.exists() else {}
-    counts, strict_bytes, total = {}, 0, 0
+    counts, strict_bytes, lib_bytes, total = {}, 0, 0, 0
+    end = GAME_CODE_END["gog_v121_us"]
     data_b = sum(g["size"] for segs in rep.get("_segments", {}).values() for g in segs
                  if g["status"] == "VERIFIED" and not g.get("layout_only"))
     bss_b = sum(g["size"] for segs in rep.get("_segments", {}).values() for g in segs
@@ -27,13 +28,16 @@ def main():
             total += 1
         for r in rep.get(name, []):
             if r["status"] == "STRICT":
-                strict_bytes += r["verified_bytes"]
+                addr = r.get("oracle") or ""
+                if addr.startswith("1:") and int(addr[2:], 16) >= end:
+                    lib_bytes += r["verified_bytes"]     # linked third-party code (HMI SOS), not game code
+                else:
+                    strict_bytes += r["verified_bytes"]
     sym = load_json(CONFIG / "symbols.json").get("gog_v121_us", {})
     print(f"units: {len(units)}   functions recorded: {total}   " +
           "  ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
-    end = GAME_CODE_END["gog_v121_us"]
     print(f"STRICT code bytes (last verify): {strict_bytes} of ~{end} game code bytes in 1:00000-1:{end:05x} "
-          f"({100.0 * strict_bytes / end:.2f}%)")
+          f"({100.0 * strict_bytes / end:.2f}%); linked library code (HMI SOS, above 1:{end:05x}): {lib_bytes}")
     # mapped = bytes of game _DATA covered by named bindings with a known size (claims, not reconstruction)
     import promote
     from image import parse_addr
