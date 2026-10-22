@@ -86,6 +86,13 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   (e.g. moskito needs one unexcluded request between requests 6 and 7; bbmont COMMAND one before 55; ray's removal is
   cancelled by a new AL exclusion), but no source construct inserting exactly those requests was found; duplicated
   bodies/separate labels insert requests at other points. Constraints retained in build/workers/sw_rover/NOTES.md.
+- Focused wave (mos/bb/saxo/ray_rover, 2026-10-22): 0 closures, constraints sharpened. moskito: request 7 is case 26's
+  already-correct AL clear; the gap is between requests 46 and 47 (case 12's clear). bbmont COMMAND: insertion must be
+  among requests 39-46; guard splits recover the registers but leave extra emitted tests; COMMAND2: no single
+  insertion/deletion/rotation fits. saxo: request 16 serves FinAnim with live DX = x_pos (excludes DL/DH); boolean
+  assignment breaks the prefix, nested conditions add a request that is absorbed at request 8. ray: the snapshot holds
+  AL across joy_done++ (the AL exclusion cancels the removed request); a one-case switch restores DL/BL/AH but counter,
+  dispatch and predicate differences remain. STATUS: EXHAUSTED for these owners without new source evidence.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
