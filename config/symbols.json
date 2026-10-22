@@ -8818,6 +8818,236 @@
     "addr": "1:7bb8c",
     "name": "HISTORICAL_LIBRARY",
     "evidence": "Pinned Watcom 10.6 LIB386/DOS/CLIB3R.LIB:save8087; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json; both named save8087 data pointers at 2:2fe40 and 2:2fe44 independently resolve here."
+   },
+   "hmi_timer_irq0": {
+    "addr": "1:784ad",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:784ad; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_call_callback": {
+    "addr": "1:78514",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78514; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_set_divisor": {
+    "addr": "1:78529",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78529; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_install_irq0": {
+    "addr": "1:7856f",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:7856f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_mask_irq0": {
+    "addr": "1:78631",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78631; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_unmask_irq0": {
+    "addr": "1:7865d",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:7865d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_restore_irq0": {
+    "addr": "1:78689",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78689; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_timer_chain_irq0": {
+    "addr": "1:78705",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78705; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_lock": {
+    "addr": "1:787b5",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:787b5; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_unlock": {
+    "addr": "1:787f2",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:787f2; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_alloc_linear_selector": {
+    "addr": "1:7882f",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:7882f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_free_linear_selector": {
+    "addr": "1:788bd",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:788bd; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_alias_code_selector": {
+    "addr": "1:788f3",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:788f3; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_build_voice_slots": {
+    "addr": "1:78950",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78950; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_alloc_dos_extra": {
+    "addr": "1:78980",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78980; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_free_dos_wide": {
+    "addr": "1:789b6",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:789b6; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op8_copy": {
+    "addr": "1:789e1",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:789e1; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op8_copy_selectors": {
+    "addr": "1:78a16",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78a16; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op5": {
+    "addr": "1:78a64",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78a64; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op0": {
+    "addr": "1:78a87",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78a87; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op1_detect_results": {
+    "addr": "1:78aaa",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78aaa; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op2_copy_selectors": {
+    "addr": "1:78aee",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78aee; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op3_parameters": {
+    "addr": "1:78b3c",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78b3c; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op1": {
+    "addr": "1:78b6c",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78b6c; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op10_callbacks": {
+    "addr": "1:78b8f",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78b8f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op0_parameters": {
+    "addr": "1:78be2",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78be2; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op4_parameters": {
+    "addr": "1:78c17",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78c17; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op2_parameter": {
+    "addr": "1:78c40",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78c40; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op3_bx8": {
+    "addr": "1:78c66",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78c66; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_windows_query_passthrough": {
+    "addr": "1:78c8d",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78c8d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_windows_vds_lock": {
+    "addr": "1:78cb7",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78cb7; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_windows_vds_unlock": {
+    "addr": "1:78cec",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78cec; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op4_tables": {
+    "addr": "1:78d21",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78d21; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_copy_record": {
+    "addr": "1:78d60",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78d60; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_set_table_callback": {
+    "addr": "1:78daa",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78daa; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_op11_op12_transfer": {
+    "addr": "1:78de0",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78de0; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_largest_free_block": {
+    "addr": "1:78e15",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78e15; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_windows_query": {
+    "addr": "1:78e40",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78e40; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_alloc_dos": {
+    "addr": "1:78e5d",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78e5d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_free_dos": {
+    "addr": "1:78e9e",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78e9e; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_vds_lock_real_interrupt": {
+    "addr": "1:78ecc",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78ecc; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_vds_unlock_real_interrupt": {
+    "addr": "1:78f38",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78f38; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_map_physical_selector": {
+    "addr": "1:78f85",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:78f85; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_dpmi_free_selector": {
+    "addr": "1:79005",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:79005; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_get_ds_selector": {
+    "addr": "1:7902f",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:7902f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_get_cs_selector": {
+    "addr": "1:79033",
+    "name": "INVENTED",
+    "evidence": "DOS instruction-aligned entry at 1:79033; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
    }
   },
   "data": {
@@ -16762,6 +16992,54 @@
     "evidence": "1:790bf..790cb indexes dword table by error*4; object-2 fixups point to error strings at 2:31860..31a34.",
     "type": "char *[20]",
     "size": 80
+   },
+   "hmi_timer_asm_data_begin": {
+    "addr": "2:2ec2c",
+    "size": 4,
+    "type": "unsigned long",
+    "name": "INVENTED",
+    "evidence": "PROVEN lock/unlock address fixups at 1:73564, 1:73571, 1:7329e, 1:732ab. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_timer_asm_state": {
+    "addr": "2:2ec30",
+    "size": 4152,
+    "type": "hmi_timer_asm_state_t",
+    "name": "INVENTED",
+    "evidence": "IRQ vector at +0, callback at +0xc, LSS private/saved stacks at +0x16/+0x1e; initialized stack-top fixup at 2:2ec46 targets 2:2fc56; 4096 zero stack bytes.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_timer_asm_data_end": {
+    "addr": "2:2fc68",
+    "size": 4,
+    "type": "unsigned long",
+    "name": "INVENTED",
+    "evidence": "PROVEN lock/unlock address fixups at 1:73569, 1:732a3. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_dpmi_asm_data_begin": {
+    "addr": "2:2fc6c",
+    "size": 4,
+    "type": "unsigned long",
+    "name": "INVENTED",
+    "evidence": "PROVEN lock/unlock address fixups at 1:7358c, 1:73599, 1:732c6, 1:732d3. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_dpmi_asm_state": {
+    "addr": "2:2fc70",
+    "size": 252,
+    "type": "hmi_dpmi_asm_state_t",
+    "name": "INVENTED",
+    "evidence": "1:78d60 copies 0x50 bytes at +0; 1:78d21 stores two far table pointers at +0x50/+0x58; DPMI buffers at +0x60/+0x9c, four word results at +0xec/+0xf0/+0xf4/+0xf8.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_dpmi_asm_data_end": {
+    "addr": "2:2fd6c",
+    "size": 4,
+    "type": "unsigned long",
+    "name": "INVENTED",
+    "evidence": "PROVEN lock/unlock address fixups at 1:73591, 1:732cb. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
+    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
    }
   }
  },
