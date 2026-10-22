@@ -78,6 +78,8 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - CONFIRMED: HMI link blocker = wrong assembler/object format; original library resolves it.
 - CONFIRMED (inverse of H2, HMI): our invented aggregates spanned the vendor library's individual data publics; replaced
   by the original publics (hm_names2) - ownership must follow the original definitions in both directions.
+- CONFIRMED (H2-type, undersized object): 2:32190 is the 48-byte DPMI 0500h memory-info record (implicit API writes hid its
+  size; Android DPMIMemoryInfo 0x30) - our 4-byte pointer binding left a 44-byte gap (dt_cells).
 - CONFIRMED (instances of H2): game_title = language_txt[231]; menu row 9 = text_to_display[0]; init_data_state/record fields.
 - REFUTED: another third-party library beyond Watcom runtime and HMI SOS (lib_audit coverage map).
 - REFUTED: pure register renaming class (0 functions); case-order hypothesis; v1.12 source changes as NEAR cause;

@@ -49,8 +49,8 @@ First raw differences: _TEXT 1:052e6 (an asm reference into moved BSS), _DATA 2:
 code), CONST 2:2fea8, CONST2 2:31b60, DATA32 2:31ec5. Relocations: 20,287/20,461 (obj1), 1,897/1,897 (obj2); the 939
 leading-assembly records are in exact order. Runtime extraction still starts set386 instead of strupr (pcmain's memset
 dependency: the original inlines REP STOSD - a NEAR blocker).
-Next frontiers (earliest first): (1) contents/ownership of the zero cells 2:06540..44 and 06548..4c; (2) first BSS gap
-2:32194..321c0, language_txt capacity (237 used, reserved size unknown), original defining TUs of the BSS (central BSS
+Next frontiers (earliest first): (1) contents/ownership of the zero cells 2:06540..44 and 06548..4c (OPEN after dt_cells);
+(2) first BSS gap CLOSED (DPMI record, dt_cells); language_txt capacity (237 used, reserved size unknown), original defining TUs of the BSS (central BSS
 needs ~5 more declaration groups than known publics - docs/DATA.md); (3) pcmain fill mechanism (runtime order);
 (4) NEAR allocation/size drift. Never fill holes, prescribe addresses, pad, or force member order.
 
