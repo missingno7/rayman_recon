@@ -2564,6 +2564,9 @@ s16 RayEstIlBloque(void) {
 }
 
 void stackRay(void) {
+    u8 anim_index; /* INVENTED local: snapshot for the history entry. */
+    u8 active;
+
     /* 63A6C 8018826C -O2 -msoft-float */
     ray_stack_t *cur;
     
@@ -2577,11 +2580,13 @@ void stackRay(void) {
     cur->anim_frame = ray.anim_frame;
     cur->flip_x = ray.flags.flip_x;
     cur->scale = ray.scale;
-    cur->poing_is_active = poing.is_active;
-    if (cur->poing_is_active) {
+    active = poing.is_active;
+    cur->poing_is_active = active;
+    if (active) {
         cur->poing_x_pos = poing_obj->x;
         cur->poing_y_pos = poing_obj->y;
-        cur->poing_anim_index = poing_obj->anim_index;
+        anim_index = poing_obj->anim_index;
+        cur->poing_anim_index = anim_index;
         cur->poing_anim_frame = poing_obj->anim_frame;
         cur->poing_flip_x = poing_obj->flags.flip_x;
     }
