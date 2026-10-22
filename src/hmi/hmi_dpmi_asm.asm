@@ -1,9 +1,16 @@
+.386p
+_TEXT segment para public use32 'CODE'
+_TEXT ends
+_DATA segment para public use32 'DATA'
+_DATA ends
+FLAT group _TEXT, _DATA
+assume cs:_TEXT, ds:FLAT, ss:FLAT
 ; ORIGINAL_ASM: DOS v1.21 lock-delimited dpmi_asm group.
 ; Names INVENTED unless already canonical. Original assembler/version OPEN.
-; Pinned WASM reproducer; whole CODE contribution begins at a public.
+; Pinned TASM 2.0 /ml /op reproducer; whole CODE contribution begins at a public.
 ; NOP islands are observed original instructions, not invented padding.
 .386p
-.model flat
+
 _TEXT segment para public use32 'CODE'
 assume ds:FLAT
 
@@ -206,7 +213,7 @@ hmi_dpmi_alloc_linear_selector_:
 hmi_dpmi_free_linear_selector_:
     push eax ; 1:788bd
     mov ax, ds ; 1:788be
-    mov gs, ax ; 1:788c1
+    mov gs, eax ; 1:788c1
     pop eax ; 1:788c3
     push ebp ; 1:788c4
     mov ebp, esp ; 1:788c5
@@ -349,9 +356,9 @@ hmi_dpmi_alloc_dos_extra_:
 ; 1:789b6: dpmi_free_dos_wide
 hmi_dpmi_free_dos_wide_:
     mov ax, ds ; 1:789b6
-    mov gs, ax ; 1:789b9
-    mov es, ax ; 1:789bb
-    mov fs, ax ; 1:789bd
+    mov gs, eax ; 1:789b9
+    mov es, eax ; 1:789bb
+    mov fs, eax ; 1:789bd
     push ebp ; 1:789bf
     mov ebp, esp ; 1:789c0
     push esi ; 1:789c2
@@ -1000,7 +1007,7 @@ hmi_driver_op11_op12_transfer_:
     lfs edi, fword ptr [ebp + 020h] ; 1:78df2
     call fword ptr [ebp + 018h] ; 1:78df6
     mov esi, eax ; 1:78df9
-    mov es, dx ; 1:78dfb
+    mov es, edx ; 1:78dfb
     mov ax, 0ch ; 1:78dfd
     lfs edi, fword ptr [ebp + 010h] ; 1:78e01
     call fword ptr [ebp + 8] ; 1:78e05
@@ -1115,9 +1122,9 @@ dpmi_asm_at_78e93:
 ; 1:78e9e: dpmi_free_dos
 hmi_dpmi_free_dos_:
     mov ax, ds ; 1:78e9e
-    mov gs, ax ; 1:78ea1
-    mov fs, ax ; 1:78ea3
-    mov es, ax ; 1:78ea5
+    mov gs, eax ; 1:78ea1
+    mov fs, eax ; 1:78ea3
+    mov es, eax ; 1:78ea5
     push ebp ; 1:78ea7
     mov ebp, esp ; 1:78ea8
     push esi ; 1:78eaa
@@ -1284,9 +1291,9 @@ hmi_dpmi_map_physical_selector_:
 ; 1:79005: dpmi_free_selector
 hmi_dpmi_free_selector_:
     mov ax, ds ; 1:79005
-    mov gs, ax ; 1:79008
-    mov fs, ax ; 1:7900a
-    mov es, ax ; 1:7900c
+    mov gs, eax ; 1:79008
+    mov fs, eax ; 1:7900a
+    mov es, eax ; 1:7900c
     push ebp ; 1:7900e
     mov ebp, esp ; 1:7900f
     push esi ; 1:79011

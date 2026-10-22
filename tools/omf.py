@@ -5,6 +5,8 @@ Pure data: turns .OBJ/.LIB bytes into modules with segments (bytes + coverage),
 fixups, publics, externs.  Unsupported records are kept and reported, never
 silently dropped.  Handles Phar Lap "Easy OMF-386" modules (COMENT class 0xAA),
 which carry 32-bit fields inside 16-bit record types.
+Also recognizes the proven TASM 2.0 /op LOC=5 dialect from module evidence;
+raw location codes are retained and Intel LOC=5 remains a two-byte offset.
 
     python tools/omf.py FILE.OBJ          # JSON summary of each module
     python tools/omf.py FILE.LIB --list   # module names + public names
@@ -45,10 +47,16 @@ class Fixup:
     target: tuple       # (method, datum)  method 0=seg,1=grp,2=ext,(|4 = no disp)
     disp: int
 
+    dialect: str = "intel"  # raw loc is retained; interpretation is module-scoped
+
     def kind(self):
+        if self.loc == 5 and self.dialect == "borland-pharlap32":
+            return "off32-pharlap"
         return LOC_NAMES.get(self.loc, f"loc{self.loc}")
 
     def size(self):
+        if self.loc == 5 and self.dialect == "borland-pharlap32":
+            return 4
         return LOC_SIZE.get(self.loc, 0)
 
 
@@ -65,8 +73,26 @@ class Module:
         self.chunks: list = []         # (seg index, offset, length) per LEDATA/LIDATA, in record order
         self.comments = []
         self.unsupported = {}
+        self.dialect = "intel"
         self.easy = False
         self.records = 0
+
+    def _detect_dialect(self, comments, fixup_records):
+        # PROVEN by asm_id/fixup_probe: TASM 2.0 /op emits LOC=5 in
+        # FIXUPP (9C), unlike its default LOC=1 in FIXUPP32 (9D).
+        # Translator and extension comments alone occur in BOTH modes.
+        # Do not infer this from field values, target addresses, or matching.
+        translators = [b[2:] for b in comments if b[:2] == b"\x00\x00"]
+        loc5 = [(f, typ) for f, typ in zip(self.fixups, fixup_records) if f.loc == 5]
+        if not any(t.startswith(b"Turbo Assembler") for t in translators) or not loc5:
+            return
+        if (translators != [b"Turbo Assembler  Version 2.0"] or self.easy
+                or b"\x40\xa1" not in comments
+                or any(typ != 0x9C or not self.segments[f.seg].use32 for f, typ in loc5)):
+            raise ValueError("unrecognized TASM 2.0 location-5 dialect (refusing width guess)")
+        self.dialect = "borland-pharlap32"
+        for f in self.fixups:
+            f.dialect = self.dialect
 
     def target_name(self, f: Fixup):
         m, d = f.target
@@ -90,6 +116,7 @@ class Module:
                          **({"local": True} if loc else {})} for n, s, o, loc in self.publics],
             "comdefs": self.comdefs,
             "fixups": len(self.fixups),
+            **({"dialect": self.dialect} if self.dialect != "intel" else {}),
             "unsupported": {hex(k): v for k, v in self.unsupported.items()},
         }
 
@@ -149,6 +176,7 @@ def _clen(r: _R):
 def parse_module(data: bytes, pos: int = 0):
     """Parse one module starting at pos; returns (Module, end_pos)."""
     m = Module()
+    dialect_comments, fixup_records = [], []
     last = None  # (seg_index, offset) of last LEDATA/LIDATA
     threads = {("T", i): None for i in range(4)}
     threads.update({("F", i): None for i in range(4)})
@@ -162,6 +190,7 @@ def parse_module(data: bytes, pos: int = 0):
         if typ in (0x80, 0x82):
             m.name = r.name()
         elif typ == 0x88:
+            dialect_comments.append(body)
             m.comments.append(body[:2].hex() + ":" + body[2:].decode("latin-1", "replace"))
             if body[1:2] == b"\xaa":
                 m.easy = True
@@ -252,7 +281,9 @@ def parse_module(data: bytes, pos: int = 0):
                 disp = 0 if target[0] & 4 else r.off()
                 si, base = last
                 m.fixups.append(Fixup(si, base + doff, loc, self_rel, frame, target, disp))
+                fixup_records.append(typ)
         elif typ in (0x8A, 0x8B):
+            m._detect_dialect(dialect_comments, fixup_records)
             return m, pos
         elif typ in (0x94, 0x95):
             pass  # LINNUM: no code effect

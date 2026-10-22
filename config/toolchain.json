@@ -108,6 +108,23 @@
   "wc105_iso": {
    "product": "WATCOM C/C++ 10.5 verbatim ISO tree (compiler truncated; libraries/headers usable)",
    "dir": "watcom-10.5"
+  },
+  "tasm200": {
+   "kind": "dos_assembler",
+   "product": "Turbo Assembler Version 2.0",
+   "dir": "tasm-2.00/files/disk01/expanded/TASM",
+   "dos_assembler": "TASM.EXE",
+   "key_files": {
+    "TASM.EXE": "672cc3814fb66fcb73550aa5ad98049bb52ebcd66c66dcdedbe81d83335e62ff"
+   },
+   "runner": {
+    "path": "nmlgcdos/msdos.exe",
+    "sha256": "f7f6cb0a3e816c5edb13112d327c1bddbf7463fe7bf9a005ca1eb5317751bd02",
+    "flags": [
+     "-e",
+     "-v5.00"
+    ]
+   }
   }
  },
  "profiles": {
@@ -140,6 +157,15 @@
     "-bt=dos"
    ],
    "status": "WASM 10.6 reproduces the low-level block encodings (build/workers/w5_asmscope/REPORT.md: 10.5/10.6 and -3r/-5r give identical bytes on the probes); historical assembler identity OPEN. Used for .asm units (hand-written assembly only, AGENTS.md)."
+  },
+  "hmi_tasm": {
+   "kind": "dos_assembler",
+   "install": "tasm200",
+   "flags": [
+    "/ml",
+    "/op"
+   ],
+   "status": "PROVEN reproducer for HMI timer/DPMI; historical identity STRONG, not unique."
   }
  }
 }

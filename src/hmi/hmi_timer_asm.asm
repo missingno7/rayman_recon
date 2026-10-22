@@ -1,9 +1,16 @@
+.386p
+_TEXT segment para public use32 'CODE'
+_TEXT ends
+_DATA segment para public use32 'DATA'
+_DATA ends
+FLAT group _TEXT, _DATA
+assume cs:_TEXT, ds:FLAT, ss:FLAT
 ; ORIGINAL_ASM: DOS v1.21 lock-delimited timer_asm group.
 ; Names INVENTED unless already canonical. Original assembler/version OPEN.
-; Pinned WASM reproducer; whole CODE contribution begins at a public.
+; Pinned TASM 2.0 /ml /op reproducer; whole CODE contribution begins at a public.
 ; NOP islands are observed original instructions, not invented padding.
 .386p
-.model flat
+
 _TEXT segment para public use32 'CODE'
 assume ds:FLAT
 
@@ -195,7 +202,7 @@ timer_asm_at_785e5:
     mov word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR], es ; 1:785f1
     push ds ; 1:785f8
     xor ax, ax ; 1:785f9
-    mov es, ax ; 1:785fc
+    mov es, eax ; 1:785fc
     mov ax, 02508h ; 1:785fe
     mov edx, offset hmi_timer_irq0_ ; 1:78602
     push cs ; 1:78607
@@ -341,7 +348,7 @@ timer_asm_at_786d1:
     mov ax, 02508h ; 1:786d2
     mov cx, word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR] ; 1:786d6
     mov edx, dword ptr [_hmi_timer_asm_state] ; 1:786dd
-    mov ds, cx ; 1:786e3
+    mov ds, ecx ; 1:786e3
     int 021h ; 1:786e5
     pop ds ; 1:786e7
 
@@ -395,7 +402,7 @@ hmi_timer_chain_irq0_:
     mov eax, dword ptr [_hmi_timer_asm_state + TIMER_SAVED_EAX] ; 1:7874d
     push eax ; 1:78752
     mov ax, word ptr [_hmi_timer_asm_state + TIMER_SAVED_ESP] ; 1:78753
-    mov ds, ax ; 1:78759
+    mov ds, eax ; 1:78759
     pop eax ; 1:7875b
     retf ; 1:7875c
 
