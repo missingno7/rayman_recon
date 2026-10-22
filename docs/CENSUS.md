@@ -138,3 +138,12 @@ Yield by tier (units with >= 1 new STRICT, approximate counts): <=40 bytes ~15/3
 exhausted sol passes) 1/12 - stop re-grinding exhausted units without a new rule. Research outcomes: copy helper
 contract settled (source-first, +3), TEST-register residue OPEN, register allocation: stack homes sorted by raw size
 PROVEN, no cross-unit register rule; second-proof hunt for copy_guarded/bare-shl/sar32 running.
+
+## Census false-positive fixes (2026-10-22, build/workers/t_census)
+The semantic audits (sem_a/b/c, 96 DIFF functions) proved most DIFF tags false. tools/census.py now treats EBP as a data
+base, LEA displacement as arithmetic, load/store across a pointer increment, cached-base vs indexed/next-record fixups,
+immediates in fixup-bearing instructions, negative full-width constants and word sentinels correctly, stops decoding at
+the extent's real end (jump tables/strings after RET), recognises the CONST segment by name, includes internal calls
+without fixups and keeps callback identities. DIFF functions 98 -> 37 (calls 16->7, globals 34->3, fields 42->0,
+constants 45->36); both real controls (menu word_CF79E read, LOAD_CONTINUE_SCREEN missing INT 21h) stay detected.
+Regression tests: tests/test_census_audit.py (fixture classes skip without build/workers/t_census).

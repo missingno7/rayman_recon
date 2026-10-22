@@ -8,7 +8,8 @@ For every accepted NEAR function the compiled candidate is compared with the DOS
   calls   ordered callee identities          globals  data targets (address+addend; CONST literals folded)
   fields  struct displacements (non-stack)   consts   program constants (width masks, 0/1, +-1 comparison
   frame   prologue push set / sub esp                 rewrites and width shifts ignored)
--5 short loads (`mov r,[x-2] ... sar r,16`) are normalised so width changes do not look like new targets.
+-5 short loads (`mov r,[x-2] ... sar r,16`) and affine addresses within blocks are normalised.
+RET stops trailing-data decoding after all forward branch arms. Known callbacks and INT operations retain identity.
 Classes: REFS_LAYOUT (bytes equal, only intra-object references differ), SHAPE/REGALLOC/FRAME/TYPE_WIDTH/CALL_ORDER
 (same calls/globals/fields/constants: Watcom shape only), DIFF_<what> (pointers to a logic/binding/prototype fix).
 Validation (docs/CENSUS.md): SAME-structure verdicts were shape-only fixes in 28/30 historical NEAR->STRICT cases;
@@ -22,7 +23,8 @@ import struct
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = next(p for p in Path(__file__).resolve().parents if (p / "config/units.json").exists())
+OUT = ROOT / "build" if Path(__file__).resolve().parent == ROOT / "tools" else Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "tools"))
 import capstone  # noqa: E402
 import match  # noqa: E402
@@ -32,10 +34,15 @@ import seed  # noqa: E402
 from common import load_json  # noqa: E402
 
 MD = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
+MD.detail = True
 REG = re.compile(r"\b(e?[abcd]x|[abcd][lh]|e?[sd]i|e?bp|e?sp)\b")
 LIT_LO, LIT_HI = 0x2fd00, 0x3218a          # runtime/CONST literal area of obj2 (docs/DATA.md)
 PAD = {"nop", "int3"}
 WIDTH = {0xff, 0xffff}                   # masks from width conversions, not program constants
+PARENT = {part: reg for reg, parts in {
+    "eax": ("al", "ah", "ax"), "ebx": ("bl", "bh", "bx"), "ecx": ("cl", "ch", "cx"),
+    "edx": ("dl", "dh", "dx"), "esi": ("si",), "edi": ("di",), "ebp": ("bp",)}.items() for part in parts}
+TRACKED = {"eax", "ebx", "ecx", "edx", "esi", "edi", "ebp"}
 
 
 def is_pad(ins):
@@ -45,12 +52,158 @@ def is_pad(ins):
 
 def insns(code):
     out = list(MD.disasm(code, 0))
+    # Keep later branch arms after an early RET, but never decode trailing tables/strings as code.
+    # Forward targets are enough here: Watcom places switch arms before their common epilogue.
+    frontier = 0
+    for k, i in enumerate(out):
+        if (i.group(capstone.CS_GRP_JUMP) and i.operands[0].type == capstone.CS_OP_IMM
+                and 0 <= i.operands[0].imm < len(code)):
+            frontier = max(frontier, i.operands[0].imm)
+        if i.group(capstone.CS_GRP_RET) and i.address >= frontier:
+            out = out[:k + 1]
+            break
     while out and is_pad(out[-1]):
         out.pop()
     return out
 
 
-def features(code, refs, rel_calls):
+def signed(v, size):
+    """Canonical signed bit pattern (word FFFEh and a full-width -2 are the same sentinel)."""
+    # Byte IDs (e.g. sound 214) are commonly materialised in a full register elsewhere.
+    bits = max(16, size * 8)
+    v &= (1 << bits) - 1
+    return v - (1 << bits) if v & (1 << (bits - 1)) else v
+
+
+def memory_features(ins, refs, short_at, call_effects):
+    """Affine addresses: undo scheduled increments and retain cached global bases.
+
+    MOV/LEA, constant arithmetic and scaled indices are propagated. Joins keep only agreeing
+    facts; loop headers forget them. This is a diagnostic, not an alias/equivalence proof.
+    """
+    fields, globals_ = collections.Counter(), collections.Counter()
+    state, stack = {}, {}
+    esp = 0
+    targets = {i.operands[0].imm for i in ins if i.group(capstone.CS_GRP_JUMP)
+               and i.operands[0].type == capstone.CS_OP_IMM}
+    loops = {i.operands[0].imm for i in ins if i.group(capstone.CS_GRP_JUMP)
+             and i.operands[0].type == capstone.CS_OP_IMM and i.operands[0].imm <= i.address}
+    incoming, fallthrough = collections.defaultdict(list), True
+    frame = any(i.mnemonic == "mov" and i.op_str == "ebp, esp" for i in ins[:12])
+
+    def val(reg):
+        if reg == capstone.x86.X86_REG_ESP:
+            return "STACK", esp
+        return state.get(reg, (None, 0))
+
+    def address(op, ref):
+        b, d = val(op.mem.base)
+        ib, delta = val(op.mem.index)
+        d += delta * op.mem.scale
+        # An off32 fixup is the displacement, not the Capstone numeric placeholder.
+        if ref:
+            return ref, d
+        if not b and ib and op.mem.scale == 1:
+            b = ib
+        return b, d + op.mem.disp
+
+    for i in ins:
+        if i.address in targets:
+            paths = incoming[i.address] + ([(state, stack, esp)] if fallthrough else [])
+            if paths:
+                state = {r: v for r, v in paths[0][0].items() if all(p[0].get(r) == v for p in paths)}
+                stack = {s: v for s, v in paths[0][1].items() if all(p[1].get(s) == v for p in paths)}
+                if len({p[2] for p in paths}) != 1:
+                    stack.clear()
+                esp = paths[0][2]
+            if i.address in loops:
+                state.clear()
+                stack.clear()
+        fallthrough = True
+        ops, m = i.operands, i.mnemonic
+        ref = next((refs[s] for s in range(i.address, i.address + i.size) if s in refs), None)
+        for op in ops:
+            if op.type != capstone.CS_OP_MEM or m == "lea":
+                continue
+            if op.mem.base == capstone.x86.X86_REG_ESP or (frame and op.mem.base == capstone.x86.X86_REG_EBP):
+                continue
+            b, d = address(op, ref)
+            d += short_at.get(i.address, 0)
+            if b == "STACK":
+                continue
+            if b:
+                if b.startswith("1:"):
+                    b = "TEXT"  # reading code/initialiser bytes, not taking a callback address
+                if re.fullmatch(r"\d:[0-9a-f]+", b):
+                    o, a = b.split(":")
+                    b = f"{o}:{int(a, 16) + d:x}"
+                globals_[b] += 1
+            elif d and abs(d) < 0x10000:
+                fields[d] += 1
+        # Preserve a cached address through a local stack spill, including PUSH/POP scheduling.
+        if m == "push":
+            esp -= 4
+        elif m == "pop":
+            esp += 4
+        if len(ops) == 2 and ops[0].type == capstone.CS_OP_REG and ops[0].reg == capstone.x86.X86_REG_ESP:
+            if m in ("add", "sub") and ops[1].type == capstone.CS_OP_IMM:
+                esp += ops[1].imm * (1 if m == "add" else -1)
+        if m == "mov" and ops[0].type == capstone.CS_OP_MEM and ops[0].mem.base == capstone.x86.X86_REG_ESP:
+            key = esp + ops[0].mem.disp
+            stack.pop(key, None)
+            if ops[1].type == capstone.CS_OP_REG and ops[1].size == 4:
+                stack[key] = val(ops[1].reg)
+        new = None
+        if ops and ops[0].type == capstone.CS_OP_REG and ops[0].size == 4:
+            dst = ops[0].reg
+            if m == "mov" and ops[1].type == capstone.CS_OP_REG:
+                new = val(ops[1].reg)
+            elif m == "mov" and ops[1].type == capstone.CS_OP_IMM and ref:
+                new = (ref, 0)
+            elif m == "mov" and ops[1].type == capstone.CS_OP_MEM and ops[1].mem.base == capstone.x86.X86_REG_ESP:
+                new = stack.get(esp + ops[1].mem.disp)
+            elif m == "lea":
+                new = address(ops[1], ref)
+            elif m in ("add", "sub"):
+                b, d = val(dst)
+                if ops[1].type == capstone.CS_OP_IMM:
+                    new = (ref, 0) if ref else (b, d + ops[1].imm * (1 if m == "add" else -1))
+                elif m == "add" and ops[1].type == capstone.CS_OP_REG and b:
+                    ib, delta = val(ops[1].reg)
+                    if not ib:
+                        new = (b, d + delta)
+                elif m == "add" and ops[1].type == capstone.CS_OP_REG:
+                    ib, delta = val(ops[1].reg)
+                    new = (ib, d + delta)
+            elif m in ("shl", "sal", "imul") and ops[-1].type == capstone.CS_OP_IMM:
+                b, d = val(ops[1].reg if len(ops) == 3 else dst)
+                if not b:
+                    new = (None, d * (1 << ops[-1].imm if m != "imul" else ops[-1].imm))
+            elif m in ("inc", "dec"):
+                b, d = val(dst)
+                new = (b, d + (1 if m == "inc" else -1))
+        for reg in i.regs_access()[1]:
+            # Partial register writes also invalidate their 32-bit parent.
+            name = i.reg_name(reg)
+            parent = PARENT.get(name, name)
+            state.pop(getattr(capstone.x86, "X86_REG_" + parent.upper(), reg), None)
+        if new is not None:
+            state[dst] = new
+        if m == "call":
+            pop, preserved = call_effects.get(i.address + 1, (0, set()))
+            esp += pop
+            for reg in TRACKED - preserved:
+                state.pop(getattr(capstone.x86, "X86_REG_" + reg.upper()), None)
+        if i.group(capstone.CS_GRP_JUMP) and ops[0].type == capstone.CS_OP_IMM:
+            incoming[ops[0].imm].append((state.copy(), stack.copy(), esp))
+        if m == "jmp" or i.group(capstone.CS_GRP_RET):
+            state.clear()
+            stack.clear()
+            fallthrough = False
+    return fields, globals_
+
+
+def features(code, refs, rel_calls, call_effects=None):
     """refs: {site: target_id} for absolute data refs; rel_calls: {site: target_id} for rel32 calls/jmps."""
     f = {"calls": [], "globals": collections.Counter(), "fields": collections.Counter(),
          "consts": collections.Counter(), "jcc": 0, "frame": [], "toks": [], "rtoks": []}
@@ -90,7 +243,10 @@ def features(code, refs, rel_calls):
                 if i.address in short_at and re.match(r"\d:[0-9a-f]+$", g):
                     o, a = g.split(":")
                     g = f"{o}:{int(a, 16) + short_at[i.address]:x}"
-                f["globals"][g] += 1
+                if not any(op.type == capstone.CS_OP_MEM for op in i.operands) or m == "lea":
+                    f["globals"][g] += 1
+        if m == "int":
+            f["calls"].append("int:" + format(i.operands[0].imm, "x"))
         if m.startswith("j") and m != "jmp":
             f["jcc"] += 1
         t = m + " " + re.sub(r"0x[0-9a-f]{5,}", "A", ops)
@@ -98,21 +254,29 @@ def features(code, refs, rel_calls):
             t = m + " " + ("T" if (m.startswith("j") or m == "loop") else re.sub(r"0x[0-9a-f]+", "A", ops))
             f["rtoks"].append(t)
             f["toks"].append(REG.sub("R", t))
+        else:
+            f["rtoks"].append(t)
+            f["toks"].append(REG.sub("R", t))
+        if m.startswith("j") or m in ("call", "loop", "ret", "retf"):
             continue
-        for d in re.findall(r"\[(e[a-z]{2})[^\]]*?([+-] 0x[0-9a-f]+|[+-] \d+)\]", ops):
-            base, disp = d
-            if base not in ("esp", "ebp"):
-                v = int(disp.replace(" ", ""), 0) + short_at.get(i.address, 0)
-                if abs(v) < 0x10000:
-                    f["fields"][v] += 1
-        for imm in re.findall(r"(?:, |^)(0x[0-9a-f]+|\d+)$", ops):
-            v = int(imm, 0)
-            if m in ("shl", "sar", "shr", "sal") and v in (16, 24):
-                continue                  # width conversion shifts, not program constants
-            if v < 0x10000 and not (m in ("sub", "add") and ops.startswith("esp")):
-                f["consts"][v] += 1
-        f["rtoks"].append(t)
-        f["toks"].append(REG.sub("R", t))
+        # The immediate can coexist with an off32 displacement: MOV [global],7 still contains 7.
+        imm_fix = i.address + i.imm_offset in refs or i.address + i.imm_offset in rel_calls
+        if not imm_fix:
+            for op in i.operands:
+                if op.type != capstone.CS_OP_IMM:
+                    continue
+                v = signed(op.imm, op.size)
+                if m in ("add", "sub"):
+                    v = abs(v)  # LEA [r-k] and SUB r,k use the same arithmetic magnitude
+                if m in ("shl", "sar", "shr", "sal") and v in (16, 24):
+                    continue
+                if not (m in ("sub", "add") and ops.startswith("esp")):
+                    f["consts"][v] += 1
+        if (m == "lea" and i.operands[1].mem.disp and not has_fix
+                and i.operands[1].mem.base not in (capstone.x86.X86_REG_ESP, capstone.x86.X86_REG_EBP)):
+            f["consts"][abs(i.operands[1].mem.disp)] += 1
+    f["fields"], mem_globals = memory_features(ins, refs, short_at, call_effects or {})
+    f["globals"].update(mem_globals)
     return f
 
 
@@ -127,8 +291,8 @@ def ext_only(a, b):
 def const_diff(a, b):
     """Program constants that differ, ignoring width masks, 0/1 (boolean materialisation) and +-1 pairs (the same
     comparison written as `< n` or `<= n-1`)."""
-    a = set(a) - WIDTH - {0, 1}
-    b = set(b) - WIDTH - {0, 1}
+    a = set(a) - WIDTH - {-1, 0, 1}
+    b = set(b) - WIDTH - {-1, 0, 1}
     ma, mb = a - b, b - a
     for x in sorted(ma):
         for y in (x - 1, x + 1):
@@ -174,6 +338,7 @@ class Oracle:
         starts = sorted({a for a in list(self.binds.game.values()) + list(self.binds.lib.values()) if a[0] == 1})
         self.starts = [a[1] for a in starts]
         self.name_at = {}
+        self.pop_cache = {}
         for n, a in list(self.binds.game.items()) + list(self.binds.lib.items()):
             self.name_at.setdefault(a, n)
 
@@ -187,9 +352,45 @@ class Oracle:
     def target_id(self, obj, off, text=None):
         if obj == 2 and LIT_LO <= off < LIT_HI:
             return "LIT"
-        if obj == 1 and text and text[0] <= off < text[1]:
+        if obj == 1 and text and text[0] <= off < text[1] and (obj, off) not in self.name_at:
             return "TEXT"
         return f"{obj}:{off:x}"
+
+    def call_effects(self, calls):
+        """DOS call effects: RET argument cleanup and registers saved/restored on every exit."""
+        for target in set(calls.values()):
+            if target not in self.pop_cache:
+                pops = set()
+                preserved = set()
+                if target.startswith("1:"):
+                    addr = int(target[2:], 16)
+                    if 0 <= addr < len(self.img.obj[1]):
+                        code = bytes(self.img.obj[1][addr:self.extent(addr)])
+                        body = insns(code)
+                        saved = []
+                        for i in body:
+                            if i.mnemonic != "push" or i.operands[0].type != capstone.CS_OP_REG:
+                                break
+                            saved.append(i.op_str)
+                        exits = []
+                        for k, i in enumerate(body):
+                            if not i.group(capstone.CS_GRP_RET):
+                                continue
+                            pops.add(i.operands[0].imm if i.operands else 0)
+                            restored = []
+                            for prev in reversed(body[:k]):
+                                if prev.mnemonic != "pop":
+                                    break
+                                restored.append(prev.op_str)
+                            exits.append(set(saved) if restored == saved else set())
+                        if exits:
+                            preserved = set.intersection(*exits)
+                            written = {PARENT.get(i.reg_name(r), i.reg_name(r)) for i in body for r in i.regs_access()[1]}
+                            if any(i.mnemonic == "call" for i in body):
+                                written |= TRACKED  # nested callees are not summarized recursively
+                            preserved |= TRACKED - written
+                self.pop_cache[target] = (pops.pop() if len(pops) == 1 else 0, preserved)
+        return {site: self.pop_cache[target] for site, target in calls.items()}
 
     def oracle_features(self, addr, size_hint):
         end = self.extent(addr, size_hint)
@@ -202,7 +403,7 @@ class Oracle:
             if i.mnemonic in ("call", "jmp") and i.size == 5 and code[i.address] in (0xE8, 0xE9):
                 t = addr + i.address + 5 + struct.unpack_from("<i", code, i.address + 1)[0]
                 calls[i.address + 1] = f"1:{t:x}"
-        return features(code, refs, calls), end - addr
+        return features(code, refs, calls, self.call_effects(calls)), end - addr
 
 
 def candidate_features(orc, mod, r):
@@ -212,6 +413,13 @@ def candidate_features(orc, mod, r):
     code = bytes(seg.data[o0:o0 + r["size"]])
     si = mod.segments.index(seg)
     refs, calls = {}, {}
+    def code_target(si, off, fallback="TEXT"):
+        off &= 0xffffffff
+        for n, s, o, _ in mod.publics:
+            if (s, o) == (si, off):
+                a, _ = orc.binds.lookup(n)
+                return f"1:{a[1]:x}" if a else "name:" + match.demangle(n)
+        return fallback
     for f in mod.fixups:
         if f.seg != si or not (o0 <= f.off < o0 + r["size"]):
             continue
@@ -219,24 +427,32 @@ def candidate_features(orc, mod, r):
         tname = mod.target_name(f)
         a, _ = orc.binds.lookup(tname)
         if f.self_rel:
-            calls[rel] = f"1:{a[1]:x}" if a else "name:" + match.demangle(tname)
+            calls[rel] = f"1:{a[1] + f.disp:x}" if a else "name:" + match.demangle(tname)
         else:
             field = struct.unpack_from("<i", seg.data, f.off)[0] if f.size() == 4 else 0
             if (f.target[0] & 3) == 0:          # segment-relative: own CONST/DATA literal
-                cls = mod.segments[f.target[1]].cls.upper()
-                refs[rel] = "LIT" if cls == "CONST" else "TEXT" if cls == "CODE" else "SEG"
+                target = mod.segments[f.target[1]]
+                refs[rel] = ("LIT" if target.name.upper() == "CONST" else
+                             code_target(f.target[1], field + f.disp) if target.cls.upper() == "CODE" else "SEG")
             else:
-                refs[rel] = (("TEXT" if a[0] == 1 else orc.target_id(a[0], a[1] + f.disp + field)) if a
+                refs[rel] = (orc.target_id(a[0], a[1] + f.disp + field) if a
                              else "name:" + match.demangle(tname))
-    return features(code, refs, calls)
+    # Same-TU direct calls are often already resolved in LEDATA and have no OMF fixup.
+    for i in insns(code):
+        if i.mnemonic == "call" and i.size == 5 and code[i.address] == 0xE8:
+            target = (o0 + i.operands[0].imm) & 0xffffffff
+            calls.setdefault(i.address + 1, code_target(si, target, f"unresolved:{si}:{target:x}"))
+    return features(code, refs, calls, orc.call_effects(calls))
 
 
 def compare_unit(orc, src, symbols=None, only=None):
     """Compile src with the game profile and return [(result, cand_features, oracle_features, class, sim)]."""
     import wcc
-    obj = ROOT / "build" / "tmp" / ("structcmp_" + Path(src).stem + ".obj")
+    obj = OUT / "tmp" / ("structcmp_" + Path(src).stem + ".obj")
     obj.parent.mkdir(parents=True, exist_ok=True)
     prof = wcc.profile("game")
+    if OUT != ROOT / "build":
+        wcc.BUILD = OUT
     rc, text = wcc.compile_c(Path(src), obj, prof["flags"], prof["install"], extra_include=[ROOT / "src"])
     if rc:
         raise SystemExit(f"compile failed: {src}\n{text[-800:]}")
@@ -305,7 +521,7 @@ def census():
             continue
         rows += rows_for(un, res)
         print(un, collections.Counter(x["class"] for x in rows if x["unit"] == un), flush=True)
-    out = ROOT / "build" / "near_census.json"
+    out = OUT / "near_census.json"
     out.write_text(json.dumps(rows, indent=1), encoding="utf-8")
     print("total", len(rows), collections.Counter(x["class"] for x in rows))
 
@@ -313,8 +529,8 @@ def census():
 GUIDE = {
     "REFS_LAYOUT": "code bytes already equal; only references into this object (jump tables / calls) differ - fixed "
                    "by making earlier functions the right size. Do not edit this function.",
-    "SHAPE": "calls, globals, struct fields and constants all agree with DOS: logic is right, only Watcom shape "
-             "differs (operand/branch order, temporaries, types/widths, loop form). Do not change semantics.",
+    "SHAPE": "observed calls, globals, struct fields and constants agree with DOS; investigate Watcom shape "
+             "(operand/branch order, temporaries, types/widths, loop form). This is not a semantic-equivalence proof.",
 }
 
 
@@ -433,7 +649,7 @@ def first_size_drift(orc, rows):
 def brief(unit, rows=None, path=None, orc=None, src=None):
     orc = orc or Oracle()
     if rows is None:
-        rows = [r for r in json.load(open(ROOT / "build" / "near_census.json")) if r["unit"] == unit]
+        rows = [r for r in json.load(open(OUT / "near_census.json")) if r["unit"] == unit]
     out = [f"# NEAR census for `{unit}` ({len(rows)} functions)", "",
            "Structural comparison of the accepted candidate vs DOS (tools/census.py; docs/CENSUS.md). Validated:",
            "SAME-STRUCTURE (SHAPE) -> the fix was shape-only in 28/30 past cases; DIFF pointers were real in ~16/30",
@@ -468,7 +684,7 @@ def brief(unit, rows=None, path=None, orc=None, src=None):
         if r["frame"][0] != r["frame"][1]:
             out.append(f"- prologue: cand {r['frame'][0]}  DOS {r['frame'][1]}")
         out.append("")
-    p = Path(path) if path else ROOT / "build" / f"near_census_{unit}.md"
+    p = Path(path) if path else OUT / f"near_census_{unit}.md"
     p.write_text("\n".join(out), encoding="utf-8")
     print(p)
 
