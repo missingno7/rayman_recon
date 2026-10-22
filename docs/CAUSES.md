@@ -78,10 +78,14 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   combined colour/home/scheduling constraints. STATUS: allocation (B4) is now well understood mechanically, but the
   original record graphs remain unrecoverable from the bytes without more source evidence. EXHAUSTED for now.
 
-## H8 - Switch owners' byte registers come from case SOURCE order incl. merged duplicate bodies (TESTING: worker sw_rover)
+## H8 - Switch owners' byte registers come from case SOURCE order incl. merged duplicate bodies (1 proof; sw_rover 0 more)
 - fee DO_FEE_ETAPE closed (whole fee object 8/8): a separate first `case 0` with default's body adds one early rover
   request; merged identical blocks hide it in the final code. B1 (13 switch owners; 8 with byte-register length
   changes) may share this cause - sw_layout verified entry order, not the source order of merged bodies.
+- sw_rover (13 functions / 11 units, 668/668 rover choices replayed): exact per-function request offsets computed
+  (e.g. moskito needs one unexcluded request between requests 6 and 7; bbmont COMMAND one before 55; ray's removal is
+  cancelled by a new AL exclusion), but no source construct inserting exactly those requests was found; duplicated
+  bodies/separate labels insert requests at other points. Constraints retained in build/workers/sw_rover/NOTES.md.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
