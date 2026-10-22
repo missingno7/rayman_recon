@@ -62,6 +62,13 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   the two pointers provably does nothing). Non-homed names shape home ties in 4 units (18/18 homes). Three-address
   expansion temporaries can survive into the home sort (AfficheEntete) - some inverses need a change before
   instruction expansion. Next: scale the method across NEAR functions with pure ties (workers inv_*).
+- Scaled run (inv_a/b/c, 25 units): 0 further closures. Typical limit: the tie needs a different SET of local
+  conflicts/records (created by the frontend from a different expression/statement shape), not a different order, so a
+  declaration permutation cannot reach it; derived constraints are retained per function (inv_*/NOTES.md). One partial:
+  stoneman GetY register pair recovered by a derived inverse but the function stays NEAR (scheduling).
+- B5 TEST residues LOCATED (inv_a): the DOS EAX sign predicate exists after global allocation and LdStAlloc; the Score
+  pass rewrites it to the copied source register (IS_MIT_PAF ECX, DO_STONEWOMAN_COMMAND EDX, Display_and_free_luciole
+  EDX x2). The original Score input differs; which source produces it is OPEN.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
