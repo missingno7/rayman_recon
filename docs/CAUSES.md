@@ -50,8 +50,13 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - CONFIRMED for CAPACITY: frame/sub_3BE20 - DOS reserves 24 bytes with a 4-byte gap after three written context words;
   context[3] -> context[4] gives STRICT (9 -> 0 diffs). A larger DOS frame is evidence of larger original aggregates
   (arrays/structs), which change home offsets and sizes.
-- Scan: 39 of 301 NEAR functions have larger DOS frames; two unexplained four-byte gaps. Follow-up: apply the capacity
-  rule (evidence: hole size/alignment adjacent to an aggregate we already have) across all 39.
+- Scan: 39 of 301 NEAR functions have larger DOS frames. h6_capacity audited all 39: 31 have no local aggregate, none of
+  the other 8 supports a further capacity edit (movieprefix sub_3AF20's tail follows a pointer - owner OPEN). EXHAUSTED.
+
+## H7 - Inverse allocation: derive the record order DOS needs, map it to source (TESTING: worker inv_alloc)
+- With the 10.6 rules known (H5), a pure home/register tie in a NEAR function can be inverted: which backend record
+  set/order produces DOS's choice under the unstable sort and colouring rule? Map the required records to source
+  variables/temporaries and change the source accordingly (a derived edit, not a grid).
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
