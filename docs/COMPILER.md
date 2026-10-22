@@ -272,3 +272,10 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
 - NEGATIVE (ra_pairs, 12 NEAR in 12 units, 72 trials with STRICT controls): staging temporaries broke 10/12 controls,
   operand reordering 6/12, predicate extraction 12/12; 0 functions closed. NEGATIVE (ra_probe): moving branch results
   before a join (RAY_BALANCE_ANIM) and naming the scanner lookahead pointer (deter_num_let) - no gain.
+- Reference/layout-only NEAR (ra_eclass, PROVEN for all 17): 13 functions in 11 units carry a FOLLOWING function's
+  switch jump table inside their extent; the table entries fail because that later function's internal blocks
+  differ, even when object base and the table owner's bytes agree - they close only when the later body is fixed
+  (W-LAYOUT refinement, not a binding fix). The other 4 (basic deter_num_let, cheat LOAD_CREDITS_VIGNET, menu
+  AFFICHE_BUTTON_JOYSTICK, AFFICHE_VIDEOMODE_SCREEN) reference automatic-aggregate initialisers at the object's _TEXT
+  prefix, which are correct; earlier size drift moves the implied base. Class b (3 displacement-only functions, 26
+  differences mapped): no source fix validated.
