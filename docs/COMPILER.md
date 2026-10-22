@@ -400,3 +400,14 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   KEEP stack homes and take part in the unstable home sort, unlike the game profile (-oaxt), where they create no backend
   record (h6_locals). Local declaration order derived from the traced sort closed hmi_system sosDIGIUnInitDriver and
   sosFreeVDSPage; the sample functions' homes are recovered by the same inverse but pointer-lowering differences remain.
+
+## Compare with zero: TEST is selected, CMP reg,0 is never generated (PROVEN from the 10.6 binary, build/workers/cg_cmp)
+- Comparison opcodes (all widths) select generation tables whose register-vs-constant entry with verify V_OP2ZERO
+  (constant kind ABSOLUTE, fits I16, value 0) comes BEFORE the immediate CMP rows and emits G_TEST (TEST r,r). This is
+  instruction selection during expansion (not a peephole); no flag-user or block-context condition exists. Hence
+  Watcom 10.6 C never emits `CMP reg,0` for a register compared with an absolute zero.
+- Audit of all 296 game NEAR: 150 DOS `CMP reg,0` sites - 40 inside the sgn ORIGINAL_INLINE helper, 104 in Watcom's
+  strcpy intrinsic loop, 6 in protection/interrupt sequences next to DR/INT instructions (INIT_OPTIONS_CHOICE x4,
+  FIN_MAP_LOOP x1, LOAD_CONTINUE_SCREEN x1). Those 6 are STRONG evidence of whole-sequence original inline assembly
+  (also opaque control flow: a near JE over 14 bytes, an explicit success JMP). Not covered by the current pragma rule
+  (only DR/INT themselves may be inline) - user decision pending.
