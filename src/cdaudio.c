@@ -4,6 +4,30 @@
 #include <i86.h>
 #include "cd_local.h"
 
+/* Typed initializers with original TU string literals. See NOTES.md. */
+#include "rtypes.h"
+
+
+char *dos_error_messages[16] = {
+    "Write Protect Violation",
+    "Unknown unit",
+    "Drive not ready",
+    "Unknown command",
+    "CRC error",
+    "Bad drive request structure length",
+    "Seek error",
+    "Unknown media",
+    "Sector not found",
+    "Printer out of paper",
+    "Write fault",
+    "Read fault",
+    "General failure",
+    "Reserved",
+    "Reserved",
+    "Invalid disk change",
+};
+
+
 extern u8 byte_DEEFB, byte_DEEFC, byte_DEEFD, byte_DEF00;
 extern u16 word_DE8BC;
 extern u8 WindowsLance, byte_CFA14, JeuCracker;

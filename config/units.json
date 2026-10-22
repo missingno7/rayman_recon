@@ -11122,6 +11122,10 @@
       "DOS_BINARY_DERIVED"
      ]
     }
+   },
+   "segments": {
+    "CONST": "VERIFIED",
+    "_DATA": "VERIFIED"
    }
   },
   "savecodec": {
@@ -12926,7 +12930,8 @@
    "profile": "game",
    "functions": {},
    "segments": {
-    "_DATA": "VERIFIED"
+    "_DATA": "VERIFIED",
+    "CONST": "VERIFIED"
    }
   },
   "data_51d4": {
