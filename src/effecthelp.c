@@ -358,11 +358,12 @@ void effect_helper_168c8(void)
 {
     effect5_state_t *state;
     effect5_point_t *points;
-    effect5_item_t *item;
-    /* DOS scratch roles at 1:16905..16995 (W-DECL); allocation is still NEAR. */
+    u16 i;
+    /* DOS scratch roles at 1:16905..16995; pointer/index declaration order
+     * reproduces the equal-savings descriptor/point tie (H7). */
     s32 v2, u3, v0, u0;
     s32 u1, v1, u2, v3;
-    u16 i;
+    effect5_item_t *item;
 
     state = effect5_state;
     points = state->points;
