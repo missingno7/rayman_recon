@@ -38,10 +38,20 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   wc100 1,198, Watcom 11.0 307, Open Watcom 1.4 77. 11.0 and OW 1.4 already change register allocation in myRand and
   getbit. OW source cannot model 10.6 allocation; 10.6a is byte-identical to 10.6 (only WLINK changed).
 
-## H5 - The 10.6 tie rule can be read from the 10.6 compiler binary (TESTING: worker cg_re)
-- Bounded reverse engineering of C:/tools/watcom-10.6/BINW/WCC386.EXE (Ghidra headless), guided by the structure of
-  the Open Watcom 1.4 code generator source (bld/cg: register allocator, conflict ordering): locate the function-local
-  register/home assignment and its tie-breaking order, then explain the ra_probe tie observations and one real NEAR.
+## H5 - The 10.6 tie rule can be read from the compiler binary (CONFIRMED mechanism, cg_re)
+- Recovered: unstable Shell sort over all backend names for homes and conflicts, savings-only conflict order, colouring
+  rule with EBX-before-ECX, byte rover pre-increment (AH first), loop cost 20^depth (docs/COMPILER.md). Validated on
+  thousands of real decisions. Our NEAR choices are now predicted exactly from OUR records; what remains is which
+  ORIGINAL source produced DOS's record graph.
+
+## H6 - NEAR ties come from original locals/temporaries our source lacks (TESTING: worker h6_locals)
+- Follows from H5: the home/colour tie order depends on ALL backend names, including locals that are later optimised
+  away. Independent evidence exists: hm_finish saw unused frame capacity in five HMI routines; a DOS frame larger than
+  ours (or homes at offsets our locals do not explain) indicates an original local we do not declare.
+- Rule: a local may be added only with independent evidence (frame size/capacity, a store/load to that home, Rayverse/
+  PS1/Android showing the variable); never as unexplained padding to steer bytes.
+- Smallest experiment: list NEAR functions whose DOS frame size or home set exceeds ours; for each, test whether the
+  evidenced local (type/size from the hole) reproduces DOS's homes and registers under the recovered rule.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).

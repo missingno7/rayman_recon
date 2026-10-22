@@ -328,3 +328,16 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
 - String-literal pooling (idx_credits, PROVEN): Watcom 10.6 merges identical string literals of <= 28 content bytes
   within a TU, but a repeated literal of 29..32 bytes is emitted as separate CONST copies (and takes two frontend index
   entries per occurrence). Relevant for CONST-run layouts with repeated long literals (docs/DATA.md).
+
+## Watcom 10.6 allocator internals (PROVEN from the WCC386 10.6 binary, build/workers/cg_re, 2026-10-22)
+- Stack homes: an UNSTABLE Shell exchange sort over ALL backend names of the function, then filtering to the names that
+  need homes; no declaration-order key; same-ID aliases sort by descending offset (168/168 real sorts; 19/19 homes in
+  four NEAR functions). Hence tie order depends on the complete set/order of backend names (incl. temporaries and
+  locals later optimised away) - this is the "hidden backend records" effect.
+- Global conflicts are sorted by unsigned savings only, through the same unstable sorter (218/218 sorts).
+- Colouring (GiveBestReg): maximise full/half-size move affinity, then prefer a fully contained GivenRegisters choice,
+  then the first eligible list entry (3,575/3,575 decisions). 10.6's dword list has EBX before ECX (OW1.4: ECX before
+  EBX; table at RVA 7f674); byte/word lists equal OW1.4 (AH=1, AL=2 order index).
+- LdStAlloc::FindRegister uses per-width rovers that advance BEFORE testing: with no exclusions its first byte choice is
+  AH, while an unconstrained global temp gets AL - explains direct-predicate AH vs explicit-snapshot AL (ra_byte).
+- Loop cost = 20^min(depth,5) (SetLoopCost table 1,20,400,8000,160000,3200000).
