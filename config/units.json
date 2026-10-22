@@ -15874,6 +15874,15 @@
      ]
     }
    }
+  },
+  "bss_3f79e": {
+   "source": "src/bss/bss_3f79e.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
   }
  }
 }
