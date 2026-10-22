@@ -48,6 +48,8 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
 - CONFIRMED: first natural-link divergences were structural (asm slicing, data ownership, const table), not NEAR drift.
 - CONFIRMED: HMI link blocker = wrong assembler/object format; original library resolves it.
+- CONFIRMED (inverse of H2, HMI): our invented aggregates spanned the vendor library's individual data publics; replaced
+  by the original publics (hm_names2) - ownership must follow the original definitions in both directions.
 - CONFIRMED (instances of H2): game_title = language_txt[231]; menu row 9 = text_to_display[0]; init_data_state/record fields.
 - REFUTED: another third-party library beyond Watcom runtime and HMI SOS (lib_audit coverage map).
 - REFUTED: pure register renaming class (0 functions); case-order hypothesis; v1.12 source changes as NEAR cause;
