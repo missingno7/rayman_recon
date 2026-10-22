@@ -66,7 +66,7 @@ def main():
         segs = " ".join(f"{k}:{v}" for k, v in u.get("segments", {}).items())
         print(f"  {name:10s} {u['source']:18s} " + " ".join(f"{k}={v}" for k, v in sorted(st.items()))
               + (f"  [{segs}]" if segs else ""))
-    print(f"  + {len(data_units)} data-only units (src/data_coll.c, src/data/*.c)")
+    print(f"  + {len(data_units)} data-only units (src/data*.c, src/data/*.c, src/bss/*.c)")
     return 0
 
 
