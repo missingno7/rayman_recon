@@ -396,3 +396,7 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   store is the first request. Moving it closed DO_FEE_ETAPE and, through its jump table, wait_for_dialogue_fee.
 - Tool: build/workers/inv_alloc/debug_compile.py now records the IR instruction served by each rover request
   (`instruction` field), so a register mismatch can be traced to the exact request order.
+- Profile difference in the home sort (hm_inverse, PROVEN): under the HMI profile (-od, unoptimised) unused scalar locals
+  KEEP stack homes and take part in the unstable home sort, unlike the game profile (-oaxt), where they create no backend
+  record (h6_locals). Local declaration order derived from the traced sort closed hmi_system sosDIGIUnInitDriver and
+  sosFreeVDSPage; the sample functions' homes are recovered by the same inverse but pointer-lowering differences remain.
