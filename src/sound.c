@@ -70,7 +70,7 @@ void sub_1a654(u8 track);
 /* ESI parameter ABI, also used by the STRICT effect1 callers. */
 #pragma aux sub_2748 parm [esi]
 
-u8 snd_sqrt_table[128] = {
+const u8 snd_sqrt_table[128] = {
     40,46,51,55,60,64,67,70,72,74,77,80,83,86,89,91,
     93,95,96,98,101,104,107,109,111,113,115,117,120,122,124,125,
     127,129,131,133,135,137,138,140,142,144,145,147,149,150,152,153,

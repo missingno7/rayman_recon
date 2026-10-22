@@ -8260,11 +8260,17 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
+    },
+    "snd_sqrt_table": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ],
+     "kind": "CODE_DATA_PUBLIC",
+     "note": "128-byte const table in _TEXT, not an executable function or new code coverage"
     }
    },
-   "segments": {
-    "_DATA": "VERIFIED"
-   }
+   "segments": {}
   },
   "frame": {
    "source": "src/frame.c",
