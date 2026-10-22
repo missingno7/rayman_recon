@@ -17540,8 +17540,11 @@
    "mem_32190": {
     "addr": "2:32190",
     "name": "INVENTED",
-    "type": "u8 *",
-    "evidence": "DOS fixups 1:6f3de and 1:6f3e8 pass the address of this storage to the allocator; 1:6f404 loads the resulting dword pointer; 1:70378 passes its address to SpriteWorldBlocksFree. Pointer type/4-byte size; name INVENTED."
+    "type": "dpmi_memory_info_t",
+    "evidence": "48-byte DPMI 0500h output record, not an allocated pointer. Existing INVENTED name retained to avoid duplicate-address aliases. Original Android identifier DPMIMemoryInfo; exact DOS identifier spelling and defining historical TU remain OPEN. See build/workers/dt_cells/NOTES.md.",
+    "size": 48,
+    "original_name": "DPMIMemoryInfo",
+    "dos_size_evidence": "DOS get_avail_memory 1:6f3d8 sets AX=0500h; 1:6f3dd/6f3e7 supplies DS:32190 to int386x at 1:6f3fe; DPMI 0500h requires 48 bytes; +0 dword read at 1:6f403. Android 1.txt and 2.txt DPMIMemoryInfo .bss size 0x30. End 321c0 equals independently bound init_data_state."
    },
    "word_CF79E": {
     "addr": "2:3f79e",
