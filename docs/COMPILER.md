@@ -305,3 +305,10 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   and 4000 dwords, movieprefix CLD/XOR/STOSD x3 in one unit, luciole zero-tail x4 in one function, colour fills,
   rectangle PUSHAD copies, guarded copy) are singletons or single-unit: no helper meets the gate; seven bounded plain-C
   trials (zero aggregates, colour fills, guarded copies, zero-tail fills) gained nothing - NEGATIVE, source OPEN.
+- Byte-register choice (ra_byte, corpus 5,910 byte instructions in 729 STRICT functions): PROVEN probe facts - a
+  direct memory predicate/increment (`if (a==2||a==3)`, `++a`) uses AH where the same code through an explicit `u8 x = a`
+  snapshot uses AL; independent byte values share one dword's lanes (AL/AH, DL/DH, CL/CH - 70 witnesses in 61 STRICT
+  functions); a byte surviving an opaque call goes to DL, then BL, then CL, then a stack home as more byte arguments
+  occupy registers. High-byte registers are first-class allocation results (AH does not imply a packed word). NEGATIVE:
+  "reserve AL, take the next free byte register" predicts 220/834 (26%); no general predictor. Applying snapshot
+  removal reproduced DOS's DH (collision1 1:1e0e2) and AX (meredenis) locally but neither owner closed (0/8 switch owners).
