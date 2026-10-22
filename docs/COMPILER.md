@@ -411,3 +411,10 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   FIN_MAP_LOOP x1, LOAD_CONTINUE_SCREEN x1). Those 6 are STRONG evidence of whole-sequence original inline assembly
   (also opaque control flow: a near JE over 14 bytes, an explicit success JMP). Not covered by the current pragma rule
   (only DR/INT themselves may be inline) - user decision pending.
+
+## Tools for allocator analysis (adopted 2026-10-23 from build/workers/t_cgtrace)
+`python tools/explain.py UNIT FUNC [--source FILE.c] --out build/cgtrace/<new>` traces the pinned compiler (observation
+harness; refuses when the observed object differs from a normal build) and prints each difference against DOS by
+mechanism with the IR instruction involved. `python tools/cgtrace.py SRC.c [--profile P] [--func F] --out DIR` writes
+the raw per-function trace (IR per phase, home and conflict sorts, colour decisions, rover requests with served
+instructions, Score substitutions). Validated on the fee, effect_helper_168c8 and INIT_OPTIONS_CHOICE histories.
