@@ -9048,6 +9048,231 @@
     "addr": "1:79033",
     "name": "INVENTED",
     "evidence": "DOS instruction-aligned entry at 1:79033; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
+   },
+   "hmi_driver_callback_update": {
+    "addr": "1:79102",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:79102; 145-byte function extent is bounded by begin/end lock markers, with direct driver table and sub_78A16 references."
+   },
+   "hmi_set_driver_callback": {
+    "addr": "1:7977e",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:7977e; 98-byte function extent is bounded by begin/end lock markers, with direct loaded-handle and callback-table references."
+   },
+   "hmi_timer_set_period": {
+    "addr": "1:71ebb",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:71ebb; 376-byte extent bounded by timer lock markers; two register parameters and indexed period/count references."
+   },
+   "hmi_timer_get_period": {
+    "addr": "1:721e2",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:721e2; returns one dword from period table at 2:2e76b using index*4."
+   },
+   "hmi_timer_program_divisor": {
+    "addr": "1:7220c",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:7220c; stores divisor at 2:2e707 and calls the PIT helper at 1:78529."
+   },
+   "hmi_timer_dispatch": {
+    "addr": "1:72241",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:72241; far-returning callback scheduler, directly bounded by timer lock markers."
+   },
+   "hmi_timer_irq_tail": {
+    "addr": "1:7230b",
+    "name": "INVENTED",
+    "evidence": "DOS entry at 1:7230b; far-returning wrapper with direct call to 1:78705."
+   },
+   "hmi_get_driver_buffer_offset": {
+    "addr": "1:74e5f",
+    "name": "INVENTED",
+    "evidence": "DOS disassembly at 1:74e5f reads the dword at offset 0 through a six-byte far-pointer table rooted at 2:2e2a0."
+   },
+   "hmi_get_voice_word_32": {
+    "addr": "1:74f0f",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:74f0f..74f75: active flag +0x30, signed word +0x32."
+   },
+   "hmi_set_voice_word_36": {
+    "addr": "1:74f76",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:74f76..74ff9: active flag +0x30, signed word +0x36, value in EBX."
+   },
+   "hmi_get_voice_word_36": {
+    "addr": "1:74ffa",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:74ffa..75060: active flag +0x30, signed word +0x36."
+   },
+   "hmi_get_voice_dword_4c": {
+    "addr": "1:75061",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:75061..750c6: active flag +0x30, dword +0x4c."
+   },
+   "hmi_get_voice_word_38": {
+    "addr": "1:750c7",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:750c7..7512d: active flag +0x30, signed word +0x38."
+   },
+   "hmi_get_voice_word_54": {
+    "addr": "1:751b2",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:751b2..75218: active flag +0x30, signed word +0x54."
+   },
+   "hmi_set_voice_word_56": {
+    "addr": "1:75219",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:75219..7529c: active flag +0x30, signed word +0x56, value in EBX."
+   },
+   "hmi_get_voice_word_56": {
+    "addr": "1:7529d",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:7529d..75303: active flag +0x30, signed word +0x56."
+   },
+   "hmi_set_voice_dword_44": {
+    "addr": "1:75304",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:75304..75385: active flag +0x30, dword +0x44, value in EBX."
+   },
+   "hmi_get_voice_dword_44": {
+    "addr": "1:75386",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:75386..753eb: active flag +0x30, dword +0x44."
+   },
+   "hmi_get_voice_word_34": {
+    "addr": "1:753ec",
+    "name": "INVENTED",
+    "evidence": "DOS field offsets at 1:753ec..75423 read signed word +0x34 unconditionally."
+   },
+   "hmi_find_voice_by_word_34": {
+    "addr": "1:75424",
+    "name": "INVENTED",
+    "evidence": "DOS loop at 1:75424..75482 scans 32 records for signed word +0x34 and returns the index or -1."
+   },
+   "hmi_set_driver_buffer_selector": {
+    "addr": "1:75483",
+    "name": "INVENTED",
+    "evidence": "DOS code at 1:75483..754b8 writes a word at offset +4 through the six-byte far-pointer table rooted at 2:2e2a0."
+   },
+   "hmi_configure_sample_voice": {
+    "addr": "1:74abe",
+    "name": "INVENTED",
+    "evidence": "DOS function boundary at 1:74abe; EAX driver, EDX voice, far sample pointer in EBX:ECX. DOS code copies observed sample fields into the voice record and tests driver ID threshold 0xe106."
+   },
+   "hmi_lock_system_regions": {
+    "addr": "1:73038",
+    "name": "INVENTED",
+    "evidence": "DOS direct call-site and function boundary at 1:73038; descriptive HMI group name."
+   },
+   "hmi_unlock_system_regions": {
+    "addr": "1:732fe",
+    "name": "INVENTED",
+    "evidence": "DOS direct call-site and function boundary at 1:732fe; descriptive HMI group name."
+   },
+   "sub_797F5": {
+    "addr": "1:797f5",
+    "name": "INVENTED",
+    "evidence": "DOS call target from 1:73620; helper body at 1:797f5 copies a NUL-terminated byte string from DS:EBX to ES:EAX with ES=DX and DS=CX."
+   },
+   "hmi_get_dma_area": {
+    "addr": "1:74155",
+    "name": "INVENTED",
+    "evidence": "DOS function boundary at 1:74155; 64-bit return is EDX:EAX and outputs are written through the two register pointers."
+   },
+   "hmi_allocate_dma": {
+    "addr": "1:74235",
+    "name": "INVENTED",
+    "evidence": "DOS function boundary at 1:74235; allocates the 0x20-byte DMA selector record and returns status in EAX."
+   },
+   "hmi_free_dma": {
+    "addr": "1:74351",
+    "name": "INVENTED",
+    "evidence": "DOS function boundary at 1:74351; releases the temporary selector/memory block."
+   },
+   "sub_79824": {
+    "addr": "1:79824",
+    "name": "INVENTED",
+    "evidence": "DOS direct near-call site: Call sites 1:742e5 and 1:743aa; assembly copy helper, target returns with ret 4."
+   },
+   "sub_791BD": {
+    "addr": "1:791bd",
+    "name": "INVENTED",
+    "evidence": "DOS direct near-call site: Call site 1:73804; direct entry target."
+   },
+   "sub_793E0": {
+    "addr": "1:793e0",
+    "name": "INVENTED",
+    "evidence": "DOS direct near-call site: Call sites 1:73931, 1:740a6 and 1:73fc5; direct entry target."
+   },
+   "sub_794B8": {
+    "addr": "1:794b8",
+    "name": "INVENTED",
+    "evidence": "DOS direct near-call site: Call sites in 1:7367d; direct entry target."
+   },
+   "sub_79692": {
+    "addr": "1:79692",
+    "name": "INVENTED",
+    "evidence": "DOS direct near-call site: Call site 1:740ae; direct entry target."
+   },
+   "hmi_loader_empty_result": {
+    "addr": "1:7972d",
+    "name": "INVENTED",
+    "evidence": "DOS entry 1:7972d inside lock interval 1:791a8..79769; copies incoming register parameters to homes and returns zero."
+   },
+   "sub_7875F": {
+    "addr": "1:7875f",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:79246 and 1:79512; target entry from the linked HMI code."
+   },
+   "sub_7877E": {
+    "addr": "1:7877e",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:79255 and 1:79521; target entry from the linked HMI code."
+   },
+   "sub_713E7": {
+    "addr": "1:713e7",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:79265 and 1:79531; target entry from the linked HMI code."
+   },
+   "sub_7560B": {
+    "addr": "1:7560b",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:7928d, 1:792b3, 1:79559 and 1:7957f; target entry from the linked HMI code."
+   },
+   "sub_7165A": {
+    "addr": "1:7165a",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:7934b and 1:7961e; target entry from the linked HMI code."
+   },
+   "sub_716AB": {
+    "addr": "1:716ab",
+    "name": "INVENTED",
+    "evidence": "DOS direct calls at 1:79399 and 1:7966c; target entry from the linked HMI code."
+   },
+   "sub_72524": {
+    "addr": "1:72524",
+    "name": "INVENTED",
+    "evidence": "DOS public entry boundary at 1:72524; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
+   },
+   "sub_727A7": {
+    "addr": "1:727a7",
+    "name": "INVENTED",
+    "evidence": "DOS public entry boundary at 1:727a7; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
+   },
+   "sub_72B8F": {
+    "addr": "1:72b8f",
+    "name": "INVENTED",
+    "evidence": "DOS public entry boundary at 1:72b8f; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
+   },
+   "sub_72F3D": {
+    "addr": "1:72f3d",
+    "name": "INVENTED",
+    "evidence": "DOS public entry boundary at 1:72f3d; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
+   },
+   "sub_79038": {
+    "addr": "1:79038",
+    "name": "INVENTED",
+    "evidence": "DOS direct call target from the detect group; entry confirmed by target disassembly. See NOTES.md."
    }
   },
   "data": {
@@ -17040,6 +17265,181 @@
     "name": "INVENTED",
     "evidence": "PROVEN lock/unlock address fixups at 1:73591, 1:732cb. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
     "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
+   },
+   "hmi_driver_entrypoints": {
+    "addr": "2:2dd3c",
+    "name": "INVENTED",
+    "type": "hmi_far_value[]",
+    "evidence": "DOS references at 1:7911c/79159 and 1:797c7; six-byte stride, offsets +0 and selector +4; index max 5 is checked at 1:791bd. Merge audit: stride/start proven; count OPEN because the next table starts after five entries; <=5 does not prove allocation length."
+   },
+   "hmi_driver_contexts": {
+    "addr": "2:2dd5a",
+    "name": "INVENTED",
+    "type": "hmi_far_value[]",
+    "evidence": "DOS references at 1:7916b and function_map.json; six-byte stride, paired far-pointer fields; index max 5 is checked at 1:791bd. Merge audit: stride/start proven; count OPEN because the next table starts after five entries; <=5 does not prove allocation length."
+   },
+   "hmi_loaded_driver_handles": {
+    "addr": "2:2de04",
+    "name": "INVENTED",
+    "type": "unsigned long[6]",
+    "size": 24,
+    "evidence": "DOS references at 1:79209 and 1:79797; dword stride, driver index <=5 checked in 1:791bd."
+   },
+   "hmi_driver_callback_values": {
+    "addr": "2:2de40",
+    "name": "INVENTED",
+    "type": "unsigned long[6]",
+    "size": 24,
+    "evidence": "DOS store at 1:797b2 with driver*4 index; six driver slots bounded by 1:791bd."
+   },
+   "hmi_timer_divisor": {
+    "addr": "2:2e707",
+    "name": "INVENTED",
+    "type": "unsigned long",
+    "size": 4,
+    "evidence": "DOS dword store at 1:72220 and reads at 1:71d4e, 1:71d65, 1:71f22, and 1:71f7d; object-2 bytes at 2:2e707 start ff ff ff ff."
+   },
+   "hmi_timer_callbacks": {
+    "addr": "2:2e70b",
+    "name": "INVENTED",
+    "type": "void __far *[16]",
+    "size": 96,
+    "evidence": "DOS indexed far pointer array, stride 6, offset/selector checked at 1:71ce3/71cec; slot 15 receives far target 1:7230b at 1:71c44. Object-2 range 2:2e70b..2:2e76b is 96 zero bytes."
+   },
+   "hmi_timer_periods": {
+    "addr": "2:2e76b",
+    "name": "INVENTED",
+    "type": "unsigned long[16]",
+    "size": 64,
+    "evidence": "DOS indexed dword table at 1:71d3e and 1:721f9; stride 4, 16 slots, object-2 range 2:2e76b..2:2e7ab is zero."
+   },
+   "hmi_timer_counts": {
+    "addr": "2:2e7ab",
+    "name": "INVENTED",
+    "type": "unsigned long[16]",
+    "size": 64,
+    "evidence": "DOS indexed dword table at 1:71dd9 and 1:722a0; stride 4, 16 slots, object-2 range 2:2e7ab..2:2e7eb is zero."
+   },
+   "hmi_timer_fractions": {
+    "addr": "2:2e7eb",
+    "name": "INVENTED",
+    "type": "unsigned long[16]",
+    "size": 64,
+    "evidence": "DOS indexed dword table at 1:71e54 and 1:722a6; stride 4, 16 slots, object-2 range 2:2e7eb..2:2e82b is zero."
+   },
+   "hmi_timer_options": {
+    "addr": "2:2e82b",
+    "name": "INVENTED",
+    "type": "unsigned char[16]",
+    "size": 16,
+    "evidence": "DOS indexed byte reads at 1:722d3; object-2 bytes at 2:2e82b..2:2e83b are sixteen ff bytes."
+   },
+   "hmi_timer_last_option": {
+    "addr": "2:2e83b",
+    "name": "INVENTED",
+    "type": "unsigned char",
+    "size": 1,
+    "evidence": "DOS byte store at 1:722e7; object-2 byte at 2:2e83b is 00 after the 16-byte options table."
+   },
+   "hmi_timer_reentry_count": {
+    "addr": "2:2ea3a",
+    "name": "INVENTED",
+    "type": "unsigned long",
+    "size": 4,
+    "evidence": "DOS dword increment/decrement at 1:7224f and 1:722fe."
+   },
+   "hmi_timer_dispatch_index": {
+    "addr": "2:2ec24",
+    "name": "INVENTED",
+    "type": "unsigned long",
+    "size": 4,
+    "evidence": "DOS dword loop counter at 1:72255..72304, indexed with stride 6/4."
+   },
+   "hmi_driver_buffers": {
+    "addr": "2:2e2a0",
+    "name": "INVENTED",
+    "evidence": "DOS fixups at 1:74e74, 1:7549a address the table as driver*6; 1:74e7b reads the pointed record dword at +0 and 1:754a4 writes its selector at +4.",
+    "type": "hmi_driver_buffer_info __far *[]"
+   },
+   "hmi_driver_ids": {
+    "addr": "2:2deae",
+    "name": "INVENTED",
+    "evidence": "Independent DOS fixups at 1:7442b and 1:74af4 index dwords by driver*4 and compare with 0xe106; natural array base 2:2deae.",
+    "type": "unsigned long[]"
+   },
+   "hmi_system_data_2dd10": {
+    "addr": "2:2dd10",
+    "name": "INVENTED",
+    "evidence": "The lock function at 1:73275 passes the address as the start and 0xf18 as byte count; endpoint is 2:2ec28.",
+    "type": "unsigned char[] (lock boundary marker, not owning extent)"
+   },
+   "hmi_system_data_2ec28": {
+    "addr": "2:2ec28",
+    "name": "INVENTED",
+    "evidence": "Second endpoint used with 2:2dd10; directly loaded in the lock routine at 1:73275.",
+    "type": "unsigned char[] (lock boundary marker, not owning extent)"
+   },
+   "hmi_system_path": {
+    "addr": "2:2e83c",
+    "name": "INVENTED",
+    "evidence": "DOS store at 1:73627 and destination of the path-copy call at 1:73620; local notes identify the path buffer through 2:2e93a.",
+    "type": "char[0xff]",
+    "size": 255
+   },
+   "hmi_system_initialized": {
+    "addr": "2:2eb94",
+    "name": "INVENTED",
+    "evidence": "DOS dword writes at 1:735f0 and 1:73662 set/clear this state; direct dword access establishes a 32-bit scalar.",
+    "type": "unsigned",
+    "size": 4
+   },
+   "hmi_system_dma_record": {
+    "addr": "2:2eb98",
+    "name": "INVENTED",
+    "evidence": "DOS references at 1:742d4 and 1:74393 use this data start as the 16-byte DMA runtime record; 1:742fe accesses its selector word at +0x0c.",
+    "type": "hmi_dma_record",
+    "size": 16
+   },
+   "hmi_detect_path": {
+    "addr": "2:2e93b",
+    "name": "INVENTED",
+    "type": "char[]",
+    "evidence": "DOS 1:7238f..723b4 passes 2:2e93b as the filename buffer to two HMI helpers and the file opener; next observed buffer starts at 2:2ea3e, leaving three alignment bytes. Merge audit: 256-byte count withdrawn; timer reentry dword at 2:2ea3a leaves only 255 bytes before that symbol. Capacity and allocation extent OPEN; buffer start established by destination arguments."
+   },
+   "hmi_detect_file_header": {
+    "addr": "2:2ea3e",
+    "name": "INVENTED",
+    "type": "hmi_detect_header",
+    "size": 44,
+    "evidence": "DOS 1:723ee and 1:725b1 read 0x2c bytes into this address; 1:725c5 reads the dword at +0x20 and 1:723f8 reads +0x28."
+   },
+   "hmi_detect_info": {
+    "addr": "2:2ea6a",
+    "name": "INVENTED",
+    "type": "hmi_detect_driver_info",
+    "size": 48,
+    "evidence": "DOS 1:723f3, 1:725f9, and 1:7286e read 0x30 bytes into this address; direct field accesses at +0x24, +0x28, and +0x2d."
+   },
+   "hmi_detect": {
+    "addr": "2:2ea9a",
+    "name": "INVENTED",
+    "type": "hmi_detect_state",
+    "size": 104,
+    "evidence": "DOS direct absolute accesses begin at 2:2ea9a; fields through +0x67 are accessed by 1:72363..72f9a. Extent inferred to the last observed byte; padding/ownership remain OPEN."
+   },
+   "hmi_loader_header_a": {
+    "addr": "2:2ebc8",
+    "name": "INVENTED",
+    "type": "hmi_detect_header",
+    "size": 44,
+    "evidence": "Full buffer start, not a field alias: DOS 1:79282..7928d and 1:7954e..79559 pass this start to the read wrapper with a 0x2c-byte count; dword +0x20 is tested at 1:79295. Independent read/dereference evidence; ownership remains OPEN."
+   },
+   "hmi_loader_header_b": {
+    "addr": "2:2ebf4",
+    "name": "INVENTED",
+    "type": "hmi_detect_driver_info",
+    "size": 48,
+    "evidence": "Full buffer start, not a field alias: DOS 1:792a8..792b3 reads 0x30 bytes here; 1:792b8..792d1 reads +0x24/+0x28/+0x2d. Buffer follows the 44-byte loader file header. Ownership remains OPEN."
    }
   }
  },
