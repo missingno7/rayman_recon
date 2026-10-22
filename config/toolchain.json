@@ -135,6 +135,33 @@
      "-v5.00"
     ]
    }
+  },
+  "wc110": {
+   "product": "WATCOM C/C++ 11.0 (Sybase installer ZIP, 1997)",
+   "dir": "watcom-11.0",
+   "source": "https://archive.org/details/watcom-c-cpp-compilers-collection file watcom-11.0/Sybase - Watcom C++ 11.0.zip; local C:/tools/download/watcom-11.0/",
+   "archive_sha256": "f75dcfc21e1df0b4db5ccf8ce65686ecf288d6b36eb0f83c7d3398388dbb781a",
+   "derivation": "7-Zip 'x' of the ZIP, tree verbatim, no setup program run",
+   "wcc386": {
+    "nt": "BINNT/WCC386.EXE",
+    "payload": "BINW/WCC386.EXE"
+   },
+   "key_files": {
+    "BINNT/WCC386.EXE": "506dc43c0fb7034e71a309729121ab2d89cebbdce22631a60e2e2f94b1a03e89",
+    "BINW/WCC386.EXE": "ffb9d956b1e0832a0c1c8e0f980915797562e6e33e32b744cf1f50a48e9bdf68"
+   },
+   "use": "compiler-equivalence research only (is 11.0 / Open Watcom codegen identical to 10.6 on the corpus?); never the game profile"
+  },
+  "ow14": {
+   "product": "Open Watcom C/C++ 1.4 (DOS package openwatcom-1.4.zip, 2005) + source open_watcom_1.4.0-src.zip",
+   "dir": "openwatcom-1.4/watcom",
+   "source": "https://ftp.gwdg.de/pub/misc/freedos/files/devel/c/openwatcom/1.4/ ; local C:/tools/download/openwatcom-1.4/",
+   "archive_sha256": "51c6925bb04db261e0161de892f7813f124e58b07b73d67abf8f8c4472b515ec",
+   "source_sha256": "e8fdb01120df2b6b86462c8d850dd95f31b6806cf929dc664618725a2933fe82",
+   "key_files": {
+    "binw/wcc386.exe": "d68ecdd92b49cc2fb8857f3c2c1ad4023d1f1cc2ab06ef27319709e826dde699"
+   },
+   "use": "compiler-equivalence research only (binw is a DOS-extended program: run under emulation)"
   }
  },
  "profiles": {
