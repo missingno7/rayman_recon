@@ -54,9 +54,10 @@ lowering, materialised booleans) and four effect drafts without a unit (1:633e0,
 PROVEN from HMIDET/HMIDRV banners and string fixups; SDK version OPEN; no library binary available). 11 groups are
 unoptimised Watcom C - profile `hmi` = wc106 `-zq -od -s -3r` - and 2 are hand-written assembly, PROVEN reproduced by
 **Borland TASM 2.0 /ml /op** (profile `hmi_tasm`, run under MS-DOS Player; the game's own low-level assembly still
-matches WASM, so HMI and the game used different assemblers). Units live in src/hmi/ (names INVENTED). STRICT so far:
-hmi_active, hmi_status, hmi_errors (10 functions), hmi_timer_asm 10/10, hmi_dpmi_asm 40/40 (whole objects). These count
-in the STRICT totals but are not game code.
+matches WASM, so HMI and the game used different assemblers). Units live in src/hmi/ (names INVENTED; one shared
+hmi_local.h). STRICT: assembly 50/50 (hmi_timer_asm, hmi_dpmi_asm - whole objects); C 65/78 (active, status, errors,
+timer, driver_callback, callback_set whole groups; detect 8/10, voice_params 17/18, system 6/11, loader 4/7, samples
+3/5). These count in the STRICT totals but are not game code.
 
 ## Cross-version: DOS v1.12 (2026-10-22, build/workers/v112/REPORT.md)
 The 1,359 v1.21 STRICT functions (86 units) rebuilt unchanged against the `dos_v112_us` oracle (worker overlay
