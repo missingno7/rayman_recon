@@ -325,3 +325,6 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   fixups that link correctly but differ in 15 prefixes (timer 8/10, DPMI 36/40); MASM 6.0b/6.11 give timer 10/10 and
   DPMI 39/40 (F2 vs F3 MOVSB); MASM 6.14 untested (its OS/2 patcher fails under MS-DOS Player). TASM 2.0 /op stays the
   byte reproducer for src/hmi (50/50); the natural link uses the original library instead.
+- String-literal pooling (idx_credits, PROVEN): Watcom 10.6 merges identical string literals of <= 28 content bytes
+  within a TU, but a repeated literal of 29..32 bytes is emitted as separate CONST copies (and takes two frontend index
+  entries per occurrence). Relevant for CONST-run layouts with repeated long literals (docs/DATA.md).

@@ -19,10 +19,13 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   text_to_display[0] (id_conflicts); inverse case: HMI aggregates spanning vendor publics (hm_names2). Effect: BSS
   holes 7 -> 5, +1,984 BSS bytes, last non-HMI unresolved name reduced to _language_txt.
 - alias_audit (all 1,281 game-data bindings classified by DOS access): no further phantom proven; weak candidates
-  listed in build/workers/alias_audit/CANDIDATES.md. REFUTED as the cause of the credits_init declaration-index +2
+  listed in build/workers/alias_audit/CANDIDATES.md. not the cause of the credits_init declaration-index +2 (RESOLVED by idx_credits: 29..32-byte literals take two index entries
+  and are not merged)
   (unchanged after the known consolidations). Remaining: 5 central BSS holes, language_txt capacity (237 used,
   Android 300) - both need independent size/ownership evidence, not adjacency.
-- Next only with new evidence (e.g. original TU partition of the central data, an allocation size).
+- Next only with new evidence (e.g. original TU partition of the central data, an allocation size). New OPEN constraint:
+  the central BSS needs 29 rank-2 index groups, the known publics allow 24 - ~5 groups of original declarations
+  interleaved in the central TU are unidentified (headers/prototypes/statics?); never fill with dummy identifiers.
 
 ## H3 - Some objects were built with a different compiler profile (REFUTED, causal_profile)
 - 11 objects without Rayman source ancestry (effect*, effecthelp, movieprefix, savecodec, dosmem, cdaudio) + 3 controls,

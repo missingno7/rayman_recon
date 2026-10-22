@@ -95,3 +95,13 @@ implied base, and no other bound global inside the span (tests/test_match.py Bss
   data fixups (match.py currently marks such segments MISMATCH rather than claiming them).
 - CONST alignment/padding between objects (bonus 13 bytes + pad -> next literal at 2:30a28: consistent with 4-byte
   or 8-byte alignment; not yet determined).
+
+## String literals in the BSS declaration index [PROVEN 2026-10-22, build/workers/idx_credits]
+For the Watcom 10.6 frontend index behind the `_BSS` 25-declaration groups, string literals with at most 28 content
+bytes are counted by distinct contents (repeats share one entry). Literals of 29..32 content bytes consume TWO index
+entries per occurrence and are not merged: a repeated 29-byte literal emits two separate CONST copies. The 30- and
+32-byte strings in credits_init explain the former +2 mod 25 exactly; no earlier context changes. Validated for 29..32
+bytes only (a 1,100-byte control measured three slots; longer literals not generalised). Enum constants do not
+advance the index. With this rule the central-TU ledger matches through credits_init (phase 12 measured and predicted).
+Next OPEN constraint: the central BSS order needs 29 rank-2 index groups but the 568 known remaining BSS publics allow
+at most 24, so ~5 groups of declarations interleaved in the original TU are still unidentified (no dummy declarations).
