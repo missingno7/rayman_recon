@@ -78,6 +78,11 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   combined colour/home/scheduling constraints. STATUS: allocation (B4) is now well understood mechanically, but the
   original record graphs remain unrecoverable from the bytes without more source evidence. EXHAUSTED for now.
 
+## H8 - Switch owners' byte registers come from case SOURCE order incl. merged duplicate bodies (TESTING: worker sw_rover)
+- fee DO_FEE_ETAPE closed (whole fee object 8/8): a separate first `case 0` with default's body adds one early rover
+  request; merged identical blocks hide it in the final code. B1 (13 switch owners; 8 with byte-register length
+  changes) may share this cause - sw_layout verified entry order, not the source order of merged bodies.
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.

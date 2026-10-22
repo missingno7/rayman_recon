@@ -384,3 +384,15 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
 - B5: the four DOS `TEST EAX` sites survive only if EAX's ring has no older member at the predicate (a join or a source
   redefinition before it). C edits that create that state flip the TEST but change other instructions (stoneman 1 ->
   470 diffs, luciole 2 -> 87) - the original differs in more than this decision. OPEN which original IR fact held.
+
+## Byte-register rover and case source order (PROVEN 2026-10-22, fee DO_FEE_ETAPE)
+- LdStAlloc's byte rover list is AL, AH, DL, DH, BL, BH, CL, CH (Watcom hw bits AL=2, AH=1, DL=0x80, DH=0x40, BL=8,
+  BH=4, CL=0x20, CH=0x10); it advances one entry per request BEFORE testing and skips excluded registers. Requests are
+  made in IR block order (source order), including requests whose instruction LdStCompress later folds back into a
+  memory operand - those still consume a rover step.
+- Consequence: one extra/missing early request shifts EVERY later byte register by one list position (DL<->DH,
+  BL<->BH, AL<->AH). DO_FEE_ETAPE: the original has `case 0:` as a separate FIRST case with the same body as `default:`
+  (Watcom merges the identical blocks, so the final code and jump table look like one shared block at the end); its
+  store is the first request. Moving it closed DO_FEE_ETAPE and, through its jump table, wait_for_dialogue_fee.
+- Tool: build/workers/inv_alloc/debug_compile.py now records the IR instruction served by each rover request
+  (`instruction` field), so a register mismatch can be traced to the exact request order.
