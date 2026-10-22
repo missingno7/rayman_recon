@@ -4,16 +4,21 @@ Live numbers: `python tools/verify.py && python tools/status.py` (config/units.j
 the per-unit table is printed by tools/status.py and is not duplicated here). NEAR diagnosis: `python tools/census.py`
 (docs/CENSUS.md). Wave history and measured worker effectiveness: docs/CENSUS.md.
 
-## Closure levels (kept separate)
+## Closure levels (kept separate; 2026-10-22)
 | level | state |
 |---|---|
-| function-level STRICT | **1385 recorded STRICT, 262,197 code bytes** (57.3% of game code 1:00000-1:6fbe6), C + hand-written assembly: 301 NEAR; every game code range now has a unit (new: sysutils 1:6f3b0 replacing block_malloc/init_memory/sprite_blocks, blood 1:13800); `python tools/status.py` for the per-unit table |
-| whole-object code closure | rand, audiocd, mathutil, bonus, clown, objupdate1, objupdate3, block_malloc, init_memory, sprite_blocks, savecodec, cdsave, dosprobe, trumpet, poisson; the whole hand-written block 1:00010-06f7e (8 asm slices) |
-| data closure | **47,143 bytes VERIFIED** `_DATA`/`CONST` (incl. the 5.2 KB ObjectsFonctions table, gap blocks, menu/savecodec/block_malloc CONST); game `_DATA` gaps left: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets |
-| BSS | order rule PROVEN; layout VERIFIED **148,811 of 152,302 game-BSS bytes (97.7%)**, 2:3218a..2:57478; runtime (CLIB) BSS starts at 2:57478 (PROVEN, atexit `_BSS`). Fragments in src/bss/ are layout units, not original TU boundaries; 3.6 KB OPEN |
-| linked binary / packed EXE | **packer stage PROVEN**: PMWLITE 1.22 /C4 rebuilds all 428,743 bytes of RAYMAN.EXE from the decoded objects + ordered relocations; linker stage: facts and plan in docs/LINK.md (DGROUP order OPEN) |
+| game C code (1:06f80-1:6fbe6) | **1,279 STRICT functions + 1 STRICT code-data extent (snd_sqrt_table), 233,799 bytes**; 301 NEAR. Every game code range has a unit |
+| game hand-written assembly (1:00010-1:06f7e) | **all 106 original entries STRICT, 28,526 bytes** (116 public extents incl. 10 labels made public; 3 WASM modules + lowlevel_data) |
+| game code total | **262,325 of ~457,702 bytes (57.3%)** in 1:00000-1:6fbe6 (`python tools/status.py`) |
+| HMI SOS vendor library (1:71afa-1:797f5) | original library PINNED (`hmisos3`, all 13 contributions match) - the natural link uses it; separate source reconstruction in src/hmi: 115/128 STRICT (12,077 bytes; asm 50/50, C 65/78). Not game code; not counted above |
+| Watcom runtime (CLIB3R, MATH3R, MATH387R) | pinned libraries, linked as-is (library identity, not reconstruction) |
+| initialised data / CONST | **50,174 bytes VERIFIED** (no double counting after unit merges); central initialised TU data_215c = 2:0215c..05e2c in one object; game `_DATA` gaps: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets (Def_Bande, PalPlasma, PalFire) |
+| BSS layout | **148,857 of 152,302 game-BSS bytes VERIFIED** (2:3218a..2:57478; runtime BSS from 2:57478 PROVEN). Mostly layout fragments in src/bss/, not original TU boundaries; 2,988 B in 7 holes OPEN |
+| packer | **PROVEN**: PMWLITE 1.22 /C4 rebuilds all 428,743 bytes of RAYMAN.EXE from the decoded objects + ordered relocations (oracle-data repack, not a source rebuild) |
+| natural link | pipeline works (all units + pinned libraries -> WLINK 10.6 -> PMWLITE); not yet byte-identical; first divergences and blockers in docs/LINK.md / docs/BLOCKERS.md |
 
-Compiler profile: Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`. Bindings: 1715 functions, 1155 data. Tests: 29.
+Profiles: game C Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`; game asm WASM 10.6; HMI reconstruction `hmi` (`-od -s -3r`)
+and `hmi_tasm` (TASM 2.0, byte reproducer only). Tests: 87.
 
 ## Original inline helpers (2026-10-21)
 Ten ORIGINAL_INLINE helpers in src/include/inline_helpers.h (ashr16, inrange, sgn, fill, copy, ashl16, palette_output, min32, max32, write_movie_palette; AGENTS.md
@@ -36,8 +41,8 @@ original entries + 10 labels/helpers made public for cross-module references - n
 DGROUP-order rule). OPEN: historical assembler identity and original module count (boundaries at 02640/04430 need zero
 padding and are compatible, not proven original objects); record-field and timer partitions; runtime callback
 payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
-BEGTEXT (runtime). Remaining C work: 311 NEAR functions (layout drift, register/stack allocation, clamp
-lowering, materialised booleans) and four effect drafts without a unit (1:633e0, 1:6c3b0, 1:6e380, part of 1:50350).
+BEGTEXT (runtime). Remaining game C work: 301 NEAR functions (register/stack allocation entangled with instruction
+selection - docs/COMPILER.md 2026-10-22 investigation; layout drift; a few semantic omissions listed in docs/BLOCKERS.md).
 
 ## Proven in Phase 2 (docs/COMPILER.md, docs/DATA.md)
 - Structs pack to 1 byte by default; bitfields LSB-first; `_DATA` items naturally aligned (short 2, int 4).
@@ -50,20 +55,16 @@ lowering, materialised booleans) and four effect drafts without a unit (1:633e0,
   BSS 2:3218a. String literals belong to the referencing object's CONST.
 
 ## Linked third-party code: HMI SOS (2026-10-22)
-**Original vendor library found and pinned** (config/toolchain.json `hmisos3`, C:/tools/hmi-sos3/sosdw1cr.lib from
-github.com/Wohlstand/SOSPLAY): all 13 HMI contributions match its members exactly (12 Watcom C modules from
-C:\DONS\SOSDIGIW\SOSLIB\SRC\SOS*.C, plus sostimer.asm/sosdrv.asm assembled by **TASM 3.1** - the OMF translator record;
-TASM 3.1 is not available locally, TASM 2.0 reproduces the bytes but not the linkable 32-bit fixup format). Decision
-(reversible): the natural link uses this library like CLIB3R; src/hmi stays as a verified source reconstruction with
-the original SDK names to be adopted from the library publics (e.g. sosTIMERInitSystem_, sosDIGIStartSample_).
-1:71afa..1:797f5 (~20 KB) is the HMI (Human Machine Interfaces) SOS sound library linked after the game code (vendor
-PROVEN from HMIDET/HMIDRV banners and string fixups; SDK version OPEN; no library binary available). 11 groups are
-unoptimised Watcom C - profile `hmi` = wc106 `-zq -od -s -3r` - and 2 are hand-written assembly, PROVEN reproduced by
-**Borland TASM 2.0 /ml /op** (profile `hmi_tasm`, run under MS-DOS Player; the game's own low-level assembly still
-matches WASM, so HMI and the game used different assemblers). Units live in src/hmi/ (names INVENTED; one shared
-hmi_local.h). STRICT: assembly 50/50 (hmi_timer_asm, hmi_dpmi_asm - whole objects); C 65/78 (active, status, errors,
-timer, driver_callback, callback_set whole groups; detect 8/10, voice_params 17/18, system 6/11, loader 4/7, samples
-3/5). These count in the STRICT totals but are not game code.
+1:71afa..1:797f5 (19,815 bytes, 13 contributions) is the HMI (Human Machine Interfaces) SOS digital-audio library. The
+**original vendor library is pinned** (config/toolchain.json `hmisos3`, C:/tools/hmi-sos3/sosdw1cr.lib + sos.h, from
+github.com/Wohlstand/SOSPLAY; PROVENANCE.md): every contribution matches a member exactly. Members: 12 Watcom C modules
+from C:\DONS\SOSDIGIW\SOSLIB\SRC\SOS*.C and sostimer.asm / sosdrv.asm assembled by **TASM 3.1** (OMF translator record).
+The natural link links this library like CLIB3R (decision 2026-10-22, reversible). Redistribution: the library is a
+third-party binary - it stays in C:/tools and is never tracked or copied into the repository.
+src/hmi is a separate, verified source reconstruction: C profile `hmi` (wc106 -od -s -3r) 65/78 STRICT; the two asm
+modules 50/50 STRICT under `hmi_tasm` (TASM 2.0 reproduces the bytes but not TASM 3.1's linkable 32-bit fixups; TASM 3.1
+is not available - TASM 4.x/MASM 6.x results in docs/COMPILER.md). Original SDK names are being adopted from the
+library publics (sosTIMERInitSystem_, sosDIGIStartSample_, ...).
 
 ## Cross-version: DOS v1.12 (2026-10-22, build/workers/v112/REPORT.md)
 The 1,359 v1.21 STRICT functions (86 units) rebuilt unchanged against the `dos_v112_us` oracle (worker overlay
@@ -91,9 +92,4 @@ content matches (61 bindings), x86 code by name (semantic reference). Android wi
 natural struct alignment; DOS evidence overrides (dos_size_evidence).
 
 ## Unresolved
-- basic 22 NEAR (register/stack allocation, range-helper shapes, layout drift); moskito/poing/mite frame and
-  register allocation; cymbal (large functions, frame layout); blood; start_cd_gameover; bat_dir jump-table offset.
-- Whole-object layout conflicts block intra-object reference verification in several units.
-- Data: ObjectsFonctions pointer table (2:035fa..2:04a74) and t_world_info pointers unbound; BSS not reconstructed;
-  `_DATA` object boundaries unknown (blocks are invented splits); hand-written low-level code/data at 1:00000/2:00000.
-- No WLINK / PMWLITE experiments yet.
+See docs/BLOCKERS.md (living, prioritised inventory) and docs/LINK.md (natural-link state).
