@@ -2,7 +2,7 @@
  * 2:2eb30 is a near-pointer table, not a far-pointer table. */
 #include "hmi_local.h"
 
-char *hmi_error_strings[20] = {
+char *_pSOSErrorStrings[20] = {
     "Error Code Does Not Indicate An Error",
     "Specified Driver Is Not Loaded",
     "Specified Pointer Is NULL",
@@ -24,9 +24,9 @@ char *hmi_error_strings[20] = {
     "Incorrect DMA",
     "Incorrect DMA/IRQ",
 };
-void hmi_errors_begin(void) {}
-char *hmi_get_error_string(unsigned error)
+void sosDIGIErr_Start(void) {}
+char *sosGetErrorString(unsigned error)
 {
-    return hmi_error_strings[error];
+    return _pSOSErrorStrings[error];
 }
-void hmi_errors_end(void) {}
+void sosDIGIErr_End(void) {}

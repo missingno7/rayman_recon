@@ -6,7 +6,7 @@ _DATA ends
 FLAT group _TEXT, _DATA
 assume cs:_TEXT, ds:FLAT, ss:FLAT
 ; ORIGINAL_ASM: DOS v1.21 lock-delimited dpmi_asm group.
-; Names INVENTED unless already canonical. Original assembler/version OPEN.
+; SDK public names; private labels INVENTED. Vendor assembler TASM 3.1 (OMF).
 ; Pinned TASM 2.0 /ml /op reproducer; whole CODE contribution begins at a public.
 ; NOP islands are observed original instructions, not invented padding.
 .386p
@@ -14,7 +14,7 @@ assume cs:_TEXT, ds:FLAT, ss:FLAT
 _TEXT segment para public use32 'CODE'
 assume ds:FLAT
 
-; Packed storage-field displacements; one state symbol at its true start.
+; Private assembly labels are local; only original SDK publics own bindings.
 BRIDGE_RECORD_TABLE equ 050h
 BRIDGE_RECORD_SELECTOR equ 054h
 BRIDGE_CALLBACK_TABLE equ 058h
@@ -26,53 +26,53 @@ BRIDGE_DETECT_CL equ 0f0h
 BRIDGE_DETECT_CH equ 0f4h
 BRIDGE_DETECT_DX equ 0f8h
 
-public hmi_dpmi_asm_begin_
-public hmi_dpmi_lock_
-public hmi_dpmi_unlock_
-public hmi_dpmi_alloc_linear_selector_
-public hmi_dpmi_free_linear_selector_
-public hmi_dpmi_alias_code_selector_
-public hmi_build_voice_slots_
-public hmi_dpmi_alloc_dos_extra_
-public hmi_dpmi_free_dos_wide_
-public hmi_driver_op8_copy_
-public hmi_driver_op8_copy_selectors_
-public hmi_driver_op5_
-public hmi_driver_op0_
-public hmi_driver_op1_detect_results_
-public hmi_driver_op2_copy_selectors_
-public hmi_driver_op3_parameters_
-public hmi_driver_op1_
-public hmi_driver_op10_callbacks_
-public hmi_driver_op0_parameters_
-public hmi_driver_op4_parameters_
-public hmi_driver_op2_parameter_
-public hmi_driver_op3_bx8_
-public hmi_windows_query_passthrough_
-public hmi_windows_vds_lock_
-public hmi_windows_vds_unlock_
-public hmi_driver_op4_tables_
-public hmi_driver_copy_record_
-public hmi_driver_set_table_callback_
-public hmi_driver_op11_op12_transfer_
-public hmi_dpmi_largest_free_block_
-public hmi_windows_query_
-public hmi_dpmi_alloc_dos_
-public hmi_dpmi_free_dos_
-public hmi_vds_lock_real_interrupt_
-public hmi_vds_unlock_real_interrupt_
-public hmi_dpmi_map_physical_selector_
-public hmi_dpmi_free_selector_
-public hmi_get_ds_selector_
+public sosDIGIDrv_Start_
+public sosDRVLockMemory_
+public sosDRVUnLockMemory_
+public sosAllocateFarMem_
+public sosFreeSelector_
+public sosCreateAliasCS_
+public sosFillSampleStructs_
+public sosRealAlloc_
+public sosRealFree_
+public sosDRVGetCapsInfo_
+public sosDRVGetCapsPtr_
+public sosDRVStop_
+public sosDetDRVExist_
+public sosDetDRVGetSettings_
+public sosDetDRVGetCapsInfo_
+public sosDetDRVVerifySettings_
+public sosDRVUnInit_
+public sosDRVGetFillInfo_
+public sosDRVInit_
+public sosDRVStart_
+public sosDRVSetRate_
+public sosDRVSetAction_
+public sosDIGIHandleVDS_
+public sosDIGIInitForWindows_
+public sosDIGIUnInitForWindows_
+public sosDetDRVEnvStringInit_
+public sosDetDRVGetEnvString_
+public sosDetDRVSetEnvString_
+public sosDRVSetupCallFunctions_
+public sosDRVGetFreeMemory_
+public sosDRVIsWindowsActive_
+public sosDRVAllocVDSStruct_
+public sosDRVFreeVDSStruct_
+public sosDRVVDSGetBuffer_
+public sosDRVVDSFreeBuffer_
+public sosDRVMakeDMASelector_
+public sosDRVFreeDMASelector_
+public getDS_
 public hmi_get_cs_selector_
-public hmi_dpmi_asm_end_
+public sosDIGIDrv_End_
 
 ; 1:787b4: dpmi_asm_begin
-hmi_dpmi_asm_begin_:
+sosDIGIDrv_Start_:
     ret ; 1:787b4
 
 ; 1:787b5: dpmi_lock
-hmi_dpmi_lock_:
+sosDRVLockMemory_:
     push ebp ; 1:787b5
     mov ebp, esp ; 1:787b6
     push esi ; 1:787b8
@@ -109,7 +109,7 @@ dpmi_asm_at_787e7:
     ret ; 1:787f1
 
 ; 1:787f2: dpmi_unlock
-hmi_dpmi_unlock_:
+sosDRVUnLockMemory_:
     push ebp ; 1:787f2
     mov ebp, esp ; 1:787f3
     push esi ; 1:787f5
@@ -146,7 +146,7 @@ dpmi_asm_at_78824:
     ret ; 1:7882e
 
 ; 1:7882f: dpmi_alloc_linear_selector
-hmi_dpmi_alloc_linear_selector_:
+sosAllocateFarMem_:
     push ebp ; 1:7882f
     mov ebp, esp ; 1:78830
     push esi ; 1:78832
@@ -210,7 +210,7 @@ hmi_dpmi_alloc_linear_selector_:
     ret ; 1:788bc
 
 ; 1:788bd: dpmi_free_linear_selector
-hmi_dpmi_free_linear_selector_:
+sosFreeSelector_:
     push eax ; 1:788bd
     mov ax, ds ; 1:788be
     mov gs, eax ; 1:788c1
@@ -242,7 +242,7 @@ hmi_dpmi_free_linear_selector_:
     ret ; 1:788f2
 
 ; 1:788f3: dpmi_alias_code_selector
-hmi_dpmi_alias_code_selector_:
+sosCreateAliasCS_:
     push ebp ; 1:788f3
     mov ebp, esp ; 1:788f4
     push esi ; 1:788f6
@@ -291,7 +291,7 @@ hmi_dpmi_alias_code_selector_:
     ret ; 1:7894f
 
 ; 1:78950: build_voice_slots
-hmi_build_voice_slots_:
+sosFillSampleStructs_:
     push ebp ; 1:78950
     mov ebp, esp ; 1:78951
     push esi ; 1:78953
@@ -323,7 +323,7 @@ dpmi_asm_at_78967:
     ret ; 1:7897f
 
 ; 1:78980: dpmi_alloc_dos_extra
-hmi_dpmi_alloc_dos_extra_:
+sosRealAlloc_:
     push ebp ; 1:78980
     mov ebp, esp ; 1:78981
     push esi ; 1:78983
@@ -354,7 +354,7 @@ hmi_dpmi_alloc_dos_extra_:
     ret ; 1:789b5
 
 ; 1:789b6: dpmi_free_dos_wide
-hmi_dpmi_free_dos_wide_:
+sosRealFree_:
     mov ax, ds ; 1:789b6
     mov gs, eax ; 1:789b9
     mov es, eax ; 1:789bb
@@ -383,7 +383,7 @@ hmi_dpmi_free_dos_wide_:
     ret ; 1:789e0
 
 ; 1:789e1: driver_op8_copy
-hmi_driver_op8_copy_:
+sosDRVGetCapsInfo_:
     push ebp ; 1:789e1
     mov ebp, esp ; 1:789e2
     push esi ; 1:789e4
@@ -415,7 +415,7 @@ hmi_driver_op8_copy_:
     ret ; 1:78a15
 
 ; 1:78a16: driver_op8_copy_selectors
-hmi_driver_op8_copy_selectors_:
+sosDRVGetCapsPtr_:
     push ebp ; 1:78a16
     mov ebp, esp ; 1:78a17
     push esi ; 1:78a19
@@ -454,7 +454,7 @@ hmi_driver_op8_copy_selectors_:
     ret ; 1:78a63
 
 ; 1:78a64: driver_op5
-hmi_driver_op5_:
+sosDRVStop_:
     push ebp ; 1:78a64
     mov ebp, esp ; 1:78a65
     push esi ; 1:78a67
@@ -478,7 +478,7 @@ hmi_driver_op5_:
     ret ; 1:78a86
 
 ; 1:78a87: driver_op0
-hmi_driver_op0_:
+sosDetDRVExist_:
     push ebp ; 1:78a87
     mov ebp, esp ; 1:78a88
     push esi ; 1:78a8a
@@ -502,7 +502,7 @@ hmi_driver_op0_:
     ret ; 1:78aa9
 
 ; 1:78aaa: driver_op1_detect_results
-hmi_driver_op1_detect_results_:
+sosDetDRVGetSettings_:
     push ebp ; 1:78aaa
     mov ebp, esp ; 1:78aab
     push esi ; 1:78aad
@@ -515,14 +515,14 @@ hmi_driver_op1_detect_results_:
     mov eax, 1 ; 1:78ab6
     lfs edi, fword ptr [ebp + 010h] ; 1:78abb
     call fword ptr [ebp + 8] ; 1:78abf
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_DETECT_AX], ax ; 1:78ac2
+    mov word ptr [_wDetectPort], ax ; 1:78ac2
     mov al, ch ; 1:78ac8
     cbw ; 1:78aca
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_DETECT_CH], ax ; 1:78acc
+    mov word ptr [_wDetectIRQ], ax ; 1:78acc
     mov al, cl ; 1:78ad2
     cbw ; 1:78ad4
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_DETECT_CL], ax ; 1:78ad6
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_DETECT_DX], dx ; 1:78adc
+    mov word ptr [_wDetectDMA], ax ; 1:78ad6
+    mov word ptr [_wDetectParam], dx ; 1:78adc
     pop es ; 1:78ae3
     pop gs ; 1:78ae4
     pop fs ; 1:78ae6
@@ -534,7 +534,7 @@ hmi_driver_op1_detect_results_:
     ret ; 1:78aed
 
 ; 1:78aee: driver_op2_copy_selectors
-hmi_driver_op2_copy_selectors_:
+sosDetDRVGetCapsInfo_:
     push ebp ; 1:78aee
     mov ebp, esp ; 1:78aef
     push esi ; 1:78af1
@@ -573,7 +573,7 @@ hmi_driver_op2_copy_selectors_:
     ret ; 1:78b3b
 
 ; 1:78b3c: driver_op3_parameters
-hmi_driver_op3_parameters_:
+sosDetDRVVerifySettings_:
     push ebp ; 1:78b3c
     mov ebp, esp ; 1:78b3d
     push esi ; 1:78b3f
@@ -602,7 +602,7 @@ hmi_driver_op3_parameters_:
     ret ; 1:78b6b
 
 ; 1:78b6c: driver_op1
-hmi_driver_op1_:
+sosDRVUnInit_:
     push ebp ; 1:78b6c
     mov ebp, esp ; 1:78b6d
     push esi ; 1:78b6f
@@ -626,7 +626,7 @@ hmi_driver_op1_:
     ret ; 1:78b8e
 
 ; 1:78b8f: driver_op10_callbacks
-hmi_driver_op10_callbacks_:
+sosDRVGetFillInfo_:
     push ebp ; 1:78b8f
     mov ebp, esp ; 1:78b90
     push esi ; 1:78b92
@@ -667,7 +667,7 @@ hmi_driver_op10_callbacks_:
     ret ; 1:78be1
 
 ; 1:78be2: driver_op0_parameters
-hmi_driver_op0_parameters_:
+sosDRVInit_:
     push ebp ; 1:78be2
     mov ebp, esp ; 1:78be3
     push esi ; 1:78be5
@@ -696,7 +696,7 @@ hmi_driver_op0_parameters_:
     ret ; 1:78c16
 
 ; 1:78c17: driver_op4_parameters
-hmi_driver_op4_parameters_:
+sosDRVStart_:
     push ebp ; 1:78c17
     mov ebp, esp ; 1:78c18
     push esi ; 1:78c1a
@@ -722,7 +722,7 @@ hmi_driver_op4_parameters_:
     ret ; 1:78c3f
 
 ; 1:78c40: driver_op2_parameter
-hmi_driver_op2_parameter_:
+sosDRVSetRate_:
     push ebp ; 1:78c40
     mov ebp, esp ; 1:78c41
     push esi ; 1:78c43
@@ -747,7 +747,7 @@ hmi_driver_op2_parameter_:
     ret ; 1:78c65
 
 ; 1:78c66: driver_op3_bx8
-hmi_driver_op3_bx8_:
+sosDRVSetAction_:
     push ebp ; 1:78c66
     mov ebp, esp ; 1:78c67
     push esi ; 1:78c69
@@ -772,7 +772,7 @@ hmi_driver_op3_bx8_:
     ret ; 1:78c8c
 
 ; 1:78c8d: windows_query_passthrough
-hmi_windows_query_passthrough_:
+sosDIGIHandleVDS_:
     push ebp ; 1:78c8d
     mov ebp, esp ; 1:78c8e
     push esi ; 1:78c90
@@ -805,7 +805,7 @@ dpmi_asm_at_78cac:
     ret ; 1:78cb6
 
 ; 1:78cb7: windows_vds_lock
-hmi_windows_vds_lock_:
+sosDIGIInitForWindows_:
     push ebp ; 1:78cb7
     mov ebp, esp ; 1:78cb8
     push esi ; 1:78cba
@@ -843,7 +843,7 @@ dpmi_asm_at_78ce1:
     ret ; 1:78ceb
 
 ; 1:78cec: windows_vds_unlock
-hmi_windows_vds_unlock_:
+sosDIGIUnInitForWindows_:
     push ebp ; 1:78cec
     mov ebp, esp ; 1:78ced
     push esi ; 1:78cef
@@ -881,7 +881,7 @@ dpmi_asm_at_78d16:
     ret ; 1:78d20
 
 ; 1:78d21: driver_op4_tables
-hmi_driver_op4_tables_:
+sosDetDRVEnvStringInit_:
     push ebp ; 1:78d21
     mov ebp, esp ; 1:78d22
     push esi ; 1:78d24
@@ -894,11 +894,11 @@ hmi_driver_op4_tables_:
     lfs edi, fword ptr [ebp + 010h] ; 1:78d2d
     mov eax, 4 ; 1:78d31
     call fword ptr [ebp + 8] ; 1:78d36
-    mov dword ptr [_hmi_dpmi_asm_state + BRIDGE_RECORD_TABLE], esi ; 1:78d39
-    mov dword ptr [_hmi_dpmi_asm_state + BRIDGE_CALLBACK_TABLE], edi ; 1:78d3f
+    mov dword ptr [driver_record_buffer + BRIDGE_RECORD_TABLE], esi ; 1:78d39
+    mov dword ptr [driver_record_buffer + BRIDGE_CALLBACK_TABLE], edi ; 1:78d3f
     mov ax, word ptr [ebp + 014h] ; 1:78d45
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_RECORD_SELECTOR], ax ; 1:78d49
-    mov word ptr [_hmi_dpmi_asm_state + BRIDGE_CALLBACK_SELECTOR], ax ; 1:78d4f
+    mov word ptr [driver_record_buffer + BRIDGE_RECORD_SELECTOR], ax ; 1:78d49
+    mov word ptr [driver_record_buffer + BRIDGE_CALLBACK_SELECTOR], ax ; 1:78d4f
     pop es ; 1:78d55
     pop gs ; 1:78d56
     pop fs ; 1:78d58
@@ -910,7 +910,7 @@ hmi_driver_op4_tables_:
     ret ; 1:78d5f
 
 ; 1:78d60: driver_copy_record
-hmi_driver_copy_record_:
+sosDetDRVGetEnvString_:
     push ebp ; 1:78d60
     mov ebp, esp ; 1:78d61
     push esi ; 1:78d63
@@ -923,9 +923,9 @@ hmi_driver_copy_record_:
     push ds ; 1:78d6c
     push ds ; 1:78d6d
     pop es ; 1:78d6e
-    mov edi, offset _hmi_dpmi_asm_state ; 1:78d6f
+    mov edi, offset driver_record_buffer ; 1:78d6f
     mov ebx, dword ptr [ebp + 8] ; 1:78d74
-    lds esi, fword ptr [_hmi_dpmi_asm_state + BRIDGE_RECORD_TABLE] ; 1:78d77
+    lds esi, fword ptr [driver_record_buffer + BRIDGE_RECORD_TABLE] ; 1:78d77
     mov esi, dword ptr [esi + ebx*4] ; 1:78d7d
     cmp esi, -1 ; 1:78d80
     jne short dpmi_asm_at_78d91 ; 1:78d83
@@ -946,7 +946,7 @@ dpmi_asm_at_78d91:
     cld ; 1:78d96
     repne movsb ; 1:78d97
     pop ds ; 1:78d99
-    mov eax, offset _hmi_dpmi_asm_state ; 1:78d9a
+    mov eax, offset driver_record_buffer ; 1:78d9a
 
 ; 1:78d9f: internal control-flow target
 dpmi_asm_at_78d9f:
@@ -961,7 +961,7 @@ dpmi_asm_at_78d9f:
     ret ; 1:78da9
 
 ; 1:78daa: driver_set_table_callback
-hmi_driver_set_table_callback_:
+sosDetDRVSetEnvString_:
     push ebp ; 1:78daa
     mov ebp, esp ; 1:78dab
     push esi ; 1:78dad
@@ -971,7 +971,7 @@ hmi_driver_set_table_callback_:
     push fs ; 1:78db1
     push gs ; 1:78db3
     push es ; 1:78db5
-    les esi, fword ptr [_hmi_dpmi_asm_state + BRIDGE_CALLBACK_TABLE] ; 1:78db6
+    les esi, fword ptr [driver_record_buffer + BRIDGE_CALLBACK_TABLE] ; 1:78db6
     mov eax, dword ptr [ebp + 8] ; 1:78dbc
     mov ebx, eax ; 1:78dbf
     shl eax, 1 ; 1:78dc1
@@ -991,7 +991,7 @@ hmi_driver_set_table_callback_:
     ret ; 1:78ddf
 
 ; 1:78de0: driver_op11_op12_transfer
-hmi_driver_op11_op12_transfer_:
+sosDRVSetupCallFunctions_:
     push ebp ; 1:78de0
     mov ebp, esp ; 1:78de1
     push esi ; 1:78de3
@@ -1024,7 +1024,7 @@ hmi_driver_op11_op12_transfer_:
     ret ; 1:78e14
 
 ; 1:78e15: dpmi_largest_free_block
-hmi_dpmi_largest_free_block_:
+sosDRVGetFreeMemory_:
     push ebp ; 1:78e15
     mov ebp, esp ; 1:78e16
     push esi ; 1:78e18
@@ -1038,9 +1038,9 @@ hmi_dpmi_largest_free_block_:
     int 031h ; 1:78e25
     push ds ; 1:78e27
     pop es ; 1:78e28
-    mov edi, offset _hmi_dpmi_asm_state + BRIDGE_MEMORY_INFO ; 1:78e29
+    mov edi, offset driver_record_buffer + BRIDGE_MEMORY_INFO ; 1:78e29
     int 031h ; 1:78e2e
-    mov eax, dword ptr [_hmi_dpmi_asm_state + BRIDGE_MEMORY_INFO] ; 1:78e30
+    mov eax, dword ptr [driver_record_buffer + BRIDGE_MEMORY_INFO] ; 1:78e30
     pop es ; 1:78e35
     pop gs ; 1:78e36
     pop fs ; 1:78e38
@@ -1052,7 +1052,7 @@ hmi_dpmi_largest_free_block_:
     ret ; 1:78e3f
 
 ; 1:78e40: windows_query
-hmi_windows_query_:
+sosDRVIsWindowsActive_:
     push ebp ; 1:78e40
     mov ebp, esp ; 1:78e41
     push esi ; 1:78e43
@@ -1075,7 +1075,7 @@ hmi_windows_query_:
     ret ; 1:78e5c
 
 ; 1:78e5d: dpmi_alloc_dos
-hmi_dpmi_alloc_dos_:
+sosDRVAllocVDSStruct_:
     push ebp ; 1:78e5d
     mov ebp, esp ; 1:78e5e
     push esi ; 1:78e60
@@ -1120,7 +1120,7 @@ dpmi_asm_at_78e93:
     ret ; 1:78e9d
 
 ; 1:78e9e: dpmi_free_dos
-hmi_dpmi_free_dos_:
+sosDRVFreeVDSStruct_:
     mov ax, ds ; 1:78e9e
     mov gs, eax ; 1:78ea1
     mov fs, eax ; 1:78ea3
@@ -1149,7 +1149,7 @@ hmi_dpmi_free_dos_:
     ret ; 1:78ecb
 
 ; 1:78ecc: vds_lock_real_interrupt
-hmi_vds_lock_real_interrupt_:
+sosDRVVDSGetBuffer_:
     push ebp ; 1:78ecc
     mov ebp, esp ; 1:78ecd
     push esi ; 1:78ecf
@@ -1159,7 +1159,7 @@ hmi_vds_lock_real_interrupt_:
     push fs ; 1:78ed3
     push gs ; 1:78ed5
     push es ; 1:78ed7
-    mov esi, offset _hmi_dpmi_asm_state + BRIDGE_REAL_REGS ; 1:78ed8
+    mov esi, offset driver_record_buffer + BRIDGE_REAL_REGS ; 1:78ed8
     mov dword ptr [esi + 01ch], 08107h ; 1:78edd
     mov dword ptr [esi + 014h], 0 ; 1:78ee4
     mov ax, word ptr [ebp + 8] ; 1:78eeb
@@ -1169,11 +1169,11 @@ hmi_vds_lock_real_interrupt_:
     mov bl, 04bh ; 1:78efd
     mov bh, 0 ; 1:78eff
     mov cx, 0 ; 1:78f01
-    mov edi, offset _hmi_dpmi_asm_state + BRIDGE_REAL_REGS ; 1:78f05
+    mov edi, offset driver_record_buffer + BRIDGE_REAL_REGS ; 1:78f05
     push ds ; 1:78f0a
     pop es ; 1:78f0b
     int 031h ; 1:78f0c
-    mov esi, offset _hmi_dpmi_asm_state + BRIDGE_REAL_REGS ; 1:78f0e
+    mov esi, offset driver_record_buffer + BRIDGE_REAL_REGS ; 1:78f0e
     and word ptr [esi + 020h], 1 ; 1:78f13
     jne short dpmi_asm_at_78f28 ; 1:78f18
     nop ; 1:78f1a
@@ -1203,7 +1203,7 @@ dpmi_asm_at_78f2d:
     ret ; 1:78f37
 
 ; 1:78f38: vds_unlock_real_interrupt
-hmi_vds_unlock_real_interrupt_:
+sosDRVVDSFreeBuffer_:
     push ebp ; 1:78f38
     mov ebp, esp ; 1:78f39
     push esi ; 1:78f3b
@@ -1213,7 +1213,7 @@ hmi_vds_unlock_real_interrupt_:
     push fs ; 1:78f3f
     push gs ; 1:78f41
     push es ; 1:78f43
-    mov esi, offset _hmi_dpmi_asm_state + BRIDGE_REAL_REGS ; 1:78f44
+    mov esi, offset driver_record_buffer + BRIDGE_REAL_REGS ; 1:78f44
     mov dword ptr [esi + 01ch], 08108h ; 1:78f49
     mov dword ptr [esi + 014h], 0 ; 1:78f50
     mov ax, word ptr [ebp + 8] ; 1:78f57
@@ -1223,7 +1223,7 @@ hmi_vds_unlock_real_interrupt_:
     mov bl, 04bh ; 1:78f69
     mov bh, 0 ; 1:78f6b
     mov cx, 0 ; 1:78f6d
-    mov edi, offset _hmi_dpmi_asm_state + BRIDGE_REAL_REGS ; 1:78f71
+    mov edi, offset driver_record_buffer + BRIDGE_REAL_REGS ; 1:78f71
     push ds ; 1:78f76
     pop es ; 1:78f77
     int 031h ; 1:78f78
@@ -1238,7 +1238,7 @@ hmi_vds_unlock_real_interrupt_:
     ret ; 1:78f84
 
 ; 1:78f85: dpmi_map_physical_selector
-hmi_dpmi_map_physical_selector_:
+sosDRVMakeDMASelector_:
     push ebp ; 1:78f85
     mov ebp, esp ; 1:78f86
     push esi ; 1:78f88
@@ -1289,7 +1289,7 @@ hmi_dpmi_map_physical_selector_:
     ret ; 1:79004
 
 ; 1:79005: dpmi_free_selector
-hmi_dpmi_free_selector_:
+sosDRVFreeDMASelector_:
     mov ax, ds ; 1:79005
     mov gs, eax ; 1:79008
     mov fs, eax ; 1:7900a
@@ -1317,7 +1317,7 @@ hmi_dpmi_free_selector_:
     ret ; 1:7902e
 
 ; 1:7902f: get_ds_selector
-hmi_get_ds_selector_:
+getDS_:
     mov ax, ds ; 1:7902f
     ret ; 1:79032
 
@@ -1327,7 +1327,7 @@ hmi_get_cs_selector_:
     ret ; 1:79036
 
 ; 1:79037: dpmi_asm_end
-hmi_dpmi_asm_end_:
+sosDIGIDrv_End_:
     ret ; 1:79037
 
 _TEXT ends
@@ -1335,9 +1335,10 @@ _TEXT ends
 ; Object-2 lock interval 2:2fc6c..2:2fd6c, plus its four-byte end marker.
 ; Storage field names are INVENTED. Unknown spans are kept explicit.
 _DATA segment para public use32 'DATA'
-public _hmi_dpmi_asm_data_begin, _hmi_dpmi_asm_state, _hmi_dpmi_asm_data_end
-_hmi_dpmi_asm_data_begin dd 0
-_hmi_dpmi_asm_state label byte
+public __sosDIGIData2_Start, __sosDIGIData2_End
+public _wDetectPort, _wDetectDMA, _wDetectIRQ, _wDetectParam
+__sosDIGIData2_Start dd 0
+driver_record_buffer label byte
     db 050h dup (0)              ; driver record copy buffer, +00
     dd 0                         ; record-table offset, +50
     dw 0, 0                      ; selector and reserved word, +54
@@ -1348,11 +1349,11 @@ _hmi_dpmi_asm_state label byte
     dd 8 dup (0)                 ; real-mode GPR image, +9c
     dw 9 dup (0)                 ; flags/segments/IP/CS/SP/SS, +bc
     db 01eh dup (0)              ; unidentified storage, +ce
-    dw 0, 0                      ; detected AX, reserved, +ec
-    dw 0, 0                      ; sign-extended CL, reserved, +f0
-    dw 0, 0                      ; sign-extended CH, reserved, +f4
-    dw 0, 0                      ; detected DX, reserved, +f8
-_hmi_dpmi_asm_data_end dd 0
+_wDetectPort dw 0, 0                      ; detected AX, reserved, +ec
+_wDetectDMA dw 0, 0                      ; sign-extended CL, reserved, +f0
+_wDetectIRQ dw 0, 0                      ; sign-extended CH, reserved, +f4
+_wDetectParam dw 0, 0                      ; detected DX, reserved, +f8
+__sosDIGIData2_End dd 0
 _DATA ends
 
 end

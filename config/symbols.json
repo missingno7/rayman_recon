@@ -7443,102 +7443,6 @@
     "name": "RAYVERSE",
     "evidence": "Rayverse load.c address annotation; DOS function boundary 1:37c10"
    },
-   "sub_71B0F": {
-    "addr": "1:71b0f",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:71b0f; address-based helper label.",
-    "aliases": [
-     "hmi_count_active_voices"
-    ]
-   },
-   "sub_71B98": {
-    "addr": "1:71b98",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:71b98; address-based helper label."
-   },
-   "sub_71CAE": {
-    "addr": "1:71cae",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:71cae; address-based helper label."
-   },
-   "sub_71C74": {
-    "addr": "1:71c74",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:71c74; address-based helper label."
-   },
-   "sub_72033": {
-    "addr": "1:72033",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:72033; address-based helper label."
-   },
-   "sub_7234F": {
-    "addr": "1:7234f",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:7234f; address-based helper label."
-   },
-   "sub_72499": {
-    "addr": "1:72499",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:72499; address-based helper label."
-   },
-   "sub_7293D": {
-    "addr": "1:7293d",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:7293d; address-based helper label."
-   },
-   "sub_72DB5": {
-    "addr": "1:72db5",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:72db5; address-based helper label."
-   },
-   "sub_735C4": {
-    "addr": "1:735c4",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:735c4; address-based helper label."
-   },
-   "sub_7363D": {
-    "addr": "1:7363d",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:7363d; address-based helper label."
-   },
-   "sub_7367D": {
-    "addr": "1:7367d",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:7367d; address-based helper label."
-   },
-   "sub_73F3D": {
-    "addr": "1:73f3d",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:73f3d; address-based helper label."
-   },
-   "sub_743F7": {
-    "addr": "1:743f7",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:743f7; address-based helper label."
-   },
-   "sub_74A10": {
-    "addr": "1:74a10",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:74a10; address-based helper label."
-   },
-   "sub_74E8B": {
-    "addr": "1:74e8b",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:74e8b; address-based helper label."
-   },
-   "sub_7512E": {
-    "addr": "1:7512e",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:7512e; address-based helper label."
-   },
-   "sub_754E3": {
-    "addr": "1:754e3",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:754e3; address-based helper label.",
-    "aliases": [
-     "hmi_sample_done"
-    ]
-   },
    "PcMain": {
     "addr": "1:08420",
     "name": "RAYVERSE",
@@ -8654,146 +8558,6 @@
     "name": "ANDROID",
     "evidence": "Android temp_free calls pack_temp_zone; both bodies coalesce adjacent free temp_mem records. DOS call 1:6fab7 -> 1:6f824. Android symbol size168."
    },
-   "hmi_active_begin": {
-    "addr": "1:71afa",
-    "name": "INVENTED",
-    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
-   },
-   "hmi_active_end": {
-    "addr": "1:71b6e",
-    "name": "INVENTED",
-    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
-   },
-   "hmi_errors_begin": {
-    "addr": "1:79099",
-    "name": "INVENTED",
-    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
-   },
-   "hmi_get_error_string": {
-    "addr": "1:790ae",
-    "name": "INVENTED",
-    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
-   },
-   "hmi_errors_end": {
-    "addr": "1:790d8",
-    "name": "INVENTED",
-    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
-   },
-   "hmi_status_begin": {
-    "addr": "1:754ce",
-    "name": "INVENTED",
-    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
-   },
-   "hmi_sample_playing": {
-    "addr": "1:7553c",
-    "name": "INVENTED",
-    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
-   },
-   "hmi_status_end": {
-    "addr": "1:755b9",
-    "name": "INVENTED",
-    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
-   },
-   "hmi_driver_callback_begin": {
-    "addr": "1:790ed",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73071; mirrored by unlock function 1:732fe; literal code fixups delimit driver_callback. See module_plan.json."
-   },
-   "hmi_driver_callback_end": {
-    "addr": "1:79193",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73071; mirrored by unlock function 1:732fe; literal code fixups delimit driver_callback. See module_plan.json."
-   },
-   "hmi_system_begin": {
-    "addr": "1:73023",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:730c7; mirrored by unlock function 1:732fe; literal code fixups delimit system. See module_plan.json."
-   },
-   "hmi_system_end": {
-    "addr": "1:743cd",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:730c7; mirrored by unlock function 1:732fe; literal code fixups delimit system. See module_plan.json."
-   },
-   "hmi_loader_begin": {
-    "addr": "1:791a8",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:730f2; mirrored by unlock function 1:732fe; literal code fixups delimit loader. See module_plan.json."
-   },
-   "hmi_loader_end": {
-    "addr": "1:79754",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:730f2; mirrored by unlock function 1:732fe; literal code fixups delimit loader. See module_plan.json."
-   },
-   "hmi_callback_set_begin": {
-    "addr": "1:79769",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73148; mirrored by unlock function 1:732fe; literal code fixups delimit callback_set. See module_plan.json."
-   },
-   "hmi_callback_set_end": {
-    "addr": "1:797e0",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73148; mirrored by unlock function 1:732fe; literal code fixups delimit callback_set. See module_plan.json."
-   },
-   "hmi_samples_begin": {
-    "addr": "1:743e2",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73173; mirrored by unlock function 1:732fe; literal code fixups delimit samples. See module_plan.json."
-   },
-   "hmi_samples_end": {
-    "addr": "1:74e35",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:73173; mirrored by unlock function 1:732fe; literal code fixups delimit samples. See module_plan.json."
-   },
-   "hmi_timer_begin": {
-    "addr": "1:71b83",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7319e; mirrored by unlock function 1:732fe; literal code fixups delimit timer. See module_plan.json."
-   },
-   "hmi_timer_end": {
-    "addr": "1:72325",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7319e; mirrored by unlock function 1:732fe; literal code fixups delimit timer. See module_plan.json."
-   },
-   "hmi_voice_params_begin": {
-    "addr": "1:74e4a",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:731c9; mirrored by unlock function 1:732fe; literal code fixups delimit voice_params. See module_plan.json."
-   },
-   "hmi_voice_params_end": {
-    "addr": "1:754b9",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:731c9; mirrored by unlock function 1:732fe; literal code fixups delimit voice_params. See module_plan.json."
-   },
-   "hmi_detect_begin": {
-    "addr": "1:7233a",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:731f4; mirrored by unlock function 1:732fe; literal code fixups delimit detect. See module_plan.json."
-   },
-   "hmi_detect_end": {
-    "addr": "1:7300e",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:731f4; mirrored by unlock function 1:732fe; literal code fixups delimit detect. See module_plan.json."
-   },
-   "hmi_timer_asm_begin": {
-    "addr": "1:784ac",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7321f; mirrored by unlock function 1:732fe; literal code fixups delimit timer_asm. See module_plan.json."
-   },
-   "hmi_timer_asm_end": {
-    "addr": "1:7875e",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7321f; mirrored by unlock function 1:732fe; literal code fixups delimit timer_asm. See module_plan.json."
-   },
-   "hmi_dpmi_asm_begin": {
-    "addr": "1:787b4",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7324a; mirrored by unlock function 1:732fe; literal code fixups delimit dpmi_asm. See module_plan.json."
-   },
-   "hmi_dpmi_asm_end": {
-    "addr": "1:79037",
-    "name": "INVENTED",
-    "evidence": "Lock function pair at 1:7324a; mirrored by unlock function 1:732fe; literal code fixups delimit dpmi_asm. See module_plan.json."
-   },
    "__cnvs2d_": {
     "addr": "1:7abe7",
     "name": "HISTORICAL_LIBRARY",
@@ -8819,405 +8583,20 @@
     "name": "HISTORICAL_LIBRARY",
     "evidence": "Pinned Watcom 10.6 LIB386/DOS/CLIB3R.LIB:save8087; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json; both named save8087 data pointers at 2:2fe40 and 2:2fe44 independently resolve here."
    },
-   "hmi_timer_irq0": {
-    "addr": "1:784ad",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:784ad; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_call_callback": {
-    "addr": "1:78514",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78514; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_set_divisor": {
-    "addr": "1:78529",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78529; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_install_irq0": {
-    "addr": "1:7856f",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:7856f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_mask_irq0": {
-    "addr": "1:78631",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78631; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_unmask_irq0": {
-    "addr": "1:7865d",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:7865d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_restore_irq0": {
-    "addr": "1:78689",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78689; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_timer_chain_irq0": {
-    "addr": "1:78705",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78705; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_lock": {
-    "addr": "1:787b5",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:787b5; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_unlock": {
-    "addr": "1:787f2",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:787f2; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_alloc_linear_selector": {
-    "addr": "1:7882f",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:7882f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_free_linear_selector": {
-    "addr": "1:788bd",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:788bd; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_alias_code_selector": {
-    "addr": "1:788f3",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:788f3; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_build_voice_slots": {
-    "addr": "1:78950",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78950; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_alloc_dos_extra": {
-    "addr": "1:78980",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78980; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_free_dos_wide": {
-    "addr": "1:789b6",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:789b6; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op8_copy": {
-    "addr": "1:789e1",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:789e1; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op8_copy_selectors": {
-    "addr": "1:78a16",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78a16; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op5": {
-    "addr": "1:78a64",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78a64; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op0": {
-    "addr": "1:78a87",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78a87; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op1_detect_results": {
-    "addr": "1:78aaa",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78aaa; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op2_copy_selectors": {
-    "addr": "1:78aee",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78aee; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op3_parameters": {
-    "addr": "1:78b3c",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78b3c; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op1": {
-    "addr": "1:78b6c",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78b6c; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op10_callbacks": {
-    "addr": "1:78b8f",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78b8f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op0_parameters": {
-    "addr": "1:78be2",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78be2; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op4_parameters": {
-    "addr": "1:78c17",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78c17; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op2_parameter": {
-    "addr": "1:78c40",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78c40; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op3_bx8": {
-    "addr": "1:78c66",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78c66; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_windows_query_passthrough": {
-    "addr": "1:78c8d",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78c8d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_windows_vds_lock": {
-    "addr": "1:78cb7",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78cb7; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_windows_vds_unlock": {
-    "addr": "1:78cec",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78cec; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op4_tables": {
-    "addr": "1:78d21",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78d21; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_copy_record": {
-    "addr": "1:78d60",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78d60; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_set_table_callback": {
-    "addr": "1:78daa",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78daa; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_op11_op12_transfer": {
-    "addr": "1:78de0",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78de0; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_largest_free_block": {
-    "addr": "1:78e15",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78e15; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_windows_query": {
-    "addr": "1:78e40",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78e40; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_alloc_dos": {
-    "addr": "1:78e5d",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78e5d; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_free_dos": {
-    "addr": "1:78e9e",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78e9e; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_vds_lock_real_interrupt": {
-    "addr": "1:78ecc",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78ecc; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_vds_unlock_real_interrupt": {
-    "addr": "1:78f38",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78f38; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_map_physical_selector": {
-    "addr": "1:78f85",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:78f85; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_dpmi_free_selector": {
-    "addr": "1:79005",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:79005; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_get_ds_selector": {
-    "addr": "1:7902f",
-    "name": "INVENTED",
-    "evidence": "DOS instruction-aligned entry at 1:7902f; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
    "hmi_get_cs_selector": {
     "addr": "1:79033",
     "name": "INVENTED",
     "evidence": "DOS instruction-aligned entry at 1:79033; assembly save/restore and return boundary. See NOTES.md and entry_evidence.json; descriptive operation names, no recovered SDK name."
-   },
-   "hmi_driver_callback_update": {
-    "addr": "1:79102",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:79102; 145-byte function extent is bounded by begin/end lock markers, with direct driver table and sub_78A16 references."
-   },
-   "hmi_set_driver_callback": {
-    "addr": "1:7977e",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:7977e; 98-byte function extent is bounded by begin/end lock markers, with direct loaded-handle and callback-table references."
-   },
-   "hmi_timer_set_period": {
-    "addr": "1:71ebb",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:71ebb; 376-byte extent bounded by timer lock markers; two register parameters and indexed period/count references."
-   },
-   "hmi_timer_get_period": {
-    "addr": "1:721e2",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:721e2; returns one dword from period table at 2:2e76b using index*4."
-   },
-   "hmi_timer_program_divisor": {
-    "addr": "1:7220c",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:7220c; stores divisor at 2:2e707 and calls the PIT helper at 1:78529."
-   },
-   "hmi_timer_dispatch": {
-    "addr": "1:72241",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:72241; far-returning callback scheduler, directly bounded by timer lock markers."
-   },
-   "hmi_timer_irq_tail": {
-    "addr": "1:7230b",
-    "name": "INVENTED",
-    "evidence": "DOS entry at 1:7230b; far-returning wrapper with direct call to 1:78705."
-   },
-   "hmi_get_driver_buffer_offset": {
-    "addr": "1:74e5f",
-    "name": "INVENTED",
-    "evidence": "DOS disassembly at 1:74e5f reads the dword at offset 0 through a six-byte far-pointer table rooted at 2:2e2a0."
-   },
-   "hmi_get_voice_word_32": {
-    "addr": "1:74f0f",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:74f0f..74f75: active flag +0x30, signed word +0x32."
-   },
-   "hmi_set_voice_word_36": {
-    "addr": "1:74f76",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:74f76..74ff9: active flag +0x30, signed word +0x36, value in EBX."
-   },
-   "hmi_get_voice_word_36": {
-    "addr": "1:74ffa",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:74ffa..75060: active flag +0x30, signed word +0x36."
-   },
-   "hmi_get_voice_dword_4c": {
-    "addr": "1:75061",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:75061..750c6: active flag +0x30, dword +0x4c."
-   },
-   "hmi_get_voice_word_38": {
-    "addr": "1:750c7",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:750c7..7512d: active flag +0x30, signed word +0x38."
-   },
-   "hmi_get_voice_word_54": {
-    "addr": "1:751b2",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:751b2..75218: active flag +0x30, signed word +0x54."
-   },
-   "hmi_set_voice_word_56": {
-    "addr": "1:75219",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:75219..7529c: active flag +0x30, signed word +0x56, value in EBX."
-   },
-   "hmi_get_voice_word_56": {
-    "addr": "1:7529d",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:7529d..75303: active flag +0x30, signed word +0x56."
-   },
-   "hmi_set_voice_dword_44": {
-    "addr": "1:75304",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:75304..75385: active flag +0x30, dword +0x44, value in EBX."
-   },
-   "hmi_get_voice_dword_44": {
-    "addr": "1:75386",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:75386..753eb: active flag +0x30, dword +0x44."
-   },
-   "hmi_get_voice_word_34": {
-    "addr": "1:753ec",
-    "name": "INVENTED",
-    "evidence": "DOS field offsets at 1:753ec..75423 read signed word +0x34 unconditionally."
-   },
-   "hmi_find_voice_by_word_34": {
-    "addr": "1:75424",
-    "name": "INVENTED",
-    "evidence": "DOS loop at 1:75424..75482 scans 32 records for signed word +0x34 and returns the index or -1."
-   },
-   "hmi_set_driver_buffer_selector": {
-    "addr": "1:75483",
-    "name": "INVENTED",
-    "evidence": "DOS code at 1:75483..754b8 writes a word at offset +4 through the six-byte far-pointer table rooted at 2:2e2a0."
-   },
-   "hmi_configure_sample_voice": {
-    "addr": "1:74abe",
-    "name": "INVENTED",
-    "evidence": "DOS function boundary at 1:74abe; EAX driver, EDX voice, far sample pointer in EBX:ECX. DOS code copies observed sample fields into the voice record and tests driver ID threshold 0xe106."
-   },
-   "hmi_lock_system_regions": {
-    "addr": "1:73038",
-    "name": "INVENTED",
-    "evidence": "DOS direct call-site and function boundary at 1:73038; descriptive HMI group name."
-   },
-   "hmi_unlock_system_regions": {
-    "addr": "1:732fe",
-    "name": "INVENTED",
-    "evidence": "DOS direct call-site and function boundary at 1:732fe; descriptive HMI group name."
    },
    "sub_797F5": {
     "addr": "1:797f5",
     "name": "INVENTED",
     "evidence": "DOS call target from 1:73620; helper body at 1:797f5 copies a NUL-terminated byte string from DS:EBX to ES:EAX with ES=DX and DS=CX."
    },
-   "hmi_get_dma_area": {
-    "addr": "1:74155",
-    "name": "INVENTED",
-    "evidence": "DOS function boundary at 1:74155; 64-bit return is EDX:EAX and outputs are written through the two register pointers."
-   },
-   "hmi_allocate_dma": {
-    "addr": "1:74235",
-    "name": "INVENTED",
-    "evidence": "DOS function boundary at 1:74235; allocates the 0x20-byte DMA selector record and returns status in EAX."
-   },
-   "hmi_free_dma": {
-    "addr": "1:74351",
-    "name": "INVENTED",
-    "evidence": "DOS function boundary at 1:74351; releases the temporary selector/memory block."
-   },
    "sub_79824": {
     "addr": "1:79824",
     "name": "INVENTED",
     "evidence": "DOS direct near-call site: Call sites 1:742e5 and 1:743aa; assembly copy helper, target returns with ret 4."
-   },
-   "sub_791BD": {
-    "addr": "1:791bd",
-    "name": "INVENTED",
-    "evidence": "DOS direct near-call site: Call site 1:73804; direct entry target."
-   },
-   "sub_793E0": {
-    "addr": "1:793e0",
-    "name": "INVENTED",
-    "evidence": "DOS direct near-call site: Call sites 1:73931, 1:740a6 and 1:73fc5; direct entry target."
-   },
-   "sub_794B8": {
-    "addr": "1:794b8",
-    "name": "INVENTED",
-    "evidence": "DOS direct near-call site: Call sites in 1:7367d; direct entry target."
-   },
-   "sub_79692": {
-    "addr": "1:79692",
-    "name": "INVENTED",
-    "evidence": "DOS direct near-call site: Call site 1:740ae; direct entry target."
-   },
-   "hmi_loader_empty_result": {
-    "addr": "1:7972d",
-    "name": "INVENTED",
-    "evidence": "DOS entry 1:7972d inside lock interval 1:791a8..79769; copies incoming register parameters to homes and returns zero."
    },
    "sub_7875F": {
     "addr": "1:7875f",
@@ -9249,30 +8628,1028 @@
     "name": "INVENTED",
     "evidence": "DOS direct calls at 1:79399 and 1:7966c; target entry from the linked HMI code."
    },
-   "sub_72524": {
-    "addr": "1:72524",
-    "name": "INVENTED",
-    "evidence": "DOS public entry boundary at 1:72524; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
-   },
-   "sub_727A7": {
-    "addr": "1:727a7",
-    "name": "INVENTED",
-    "evidence": "DOS public entry boundary at 1:727a7; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
-   },
-   "sub_72B8F": {
-    "addr": "1:72b8f",
-    "name": "INVENTED",
-    "evidence": "DOS public entry boundary at 1:72b8f; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
-   },
-   "sub_72F3D": {
-    "addr": "1:72f3d",
-    "name": "INVENTED",
-    "evidence": "DOS public entry boundary at 1:72f3d; address label follows the established sub_XXXXX HMI convention. See NOTES.md."
-   },
    "sub_79038": {
     "addr": "1:79038",
     "name": "INVENTED",
     "evidence": "DOS direct call target from the detect group; entry confirmed by target disassembly. See NOTES.md."
+   },
+   "sosDIGITmr_Start": {
+    "addr": "1:71b83",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosDIGITmr_Start_ at segment +0x0; member base 1:71b83; public address 1:71b83; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_begin"
+    ]
+   },
+   "sosTIMERInitSystem": {
+    "addr": "1:71b98",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERInitSystem_ at segment +0x15; member base 1:71b83; public address 1:71b98; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_71B98"
+    ]
+   },
+   "sosTIMERUnInitSystem": {
+    "addr": "1:71c74",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERUnInitSystem_ at segment +0xf1; member base 1:71b83; public address 1:71c74; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_71C74"
+    ]
+   },
+   "sosTIMERRegisterEvent": {
+    "addr": "1:71cae",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERRegisterEvent_ at segment +0x12b; member base 1:71b83; public address 1:71cae; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_71CAE"
+    ]
+   },
+   "sosTIMERAlterEventRate": {
+    "addr": "1:71ebb",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERAlterEventRate_ at segment +0x338; member base 1:71b83; public address 1:71ebb; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_set_period"
+    ]
+   },
+   "sosTIMERRemoveEvent": {
+    "addr": "1:72033",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERRemoveEvent_ at segment +0x4b0; member base 1:71b83; public address 1:72033; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72033"
+    ]
+   },
+   "sosTIMERGetEventRate": {
+    "addr": "1:721e2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERGetEventRate_ at segment +0x65f; member base 1:71b83; public address 1:721e2; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_get_period"
+    ]
+   },
+   "sosTIMERSetRate": {
+    "addr": "1:7220c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERSetRate_ at segment +0x689; member base 1:71b83; public address 1:7220c; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_program_divisor"
+    ]
+   },
+   "sosTIMERHandler": {
+    "addr": "1:72241",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMERHandler_ at segment +0x6be; member base 1:71b83; public address 1:72241; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_dispatch"
+    ]
+   },
+   "sosTIMEROldHandler": {
+    "addr": "1:7230b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosTIMEROldHandler_ at segment +0x788; member base 1:71b83; public address 1:7230b; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_irq_tail"
+    ]
+   },
+   "sosDIGITmr_End": {
+    "addr": "1:72325",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSTMR.C; public sosDIGITmr_End_ at segment +0x7a2; member base 1:71b83; public address 1:72325; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_end"
+    ]
+   },
+   "sosDIGICntl_Start": {
+    "addr": "1:74e4a",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGICntl_Start_ at segment +0x0; member base 1:74e4a; public address 1:74e4a; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_voice_params_begin"
+    ]
+   },
+   "sosDIGIGetDMAPosition": {
+    "addr": "1:74e5f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetDMAPosition_ at segment +0x15; member base 1:74e4a; public address 1:74e5f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_driver_buffer_offset"
+    ]
+   },
+   "sosDIGISetSampleVolume": {
+    "addr": "1:74e8b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetSampleVolume_ at segment +0x41; member base 1:74e4a; public address 1:74e8b; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_74E8B"
+    ]
+   },
+   "sosDIGIGetSampleVolume": {
+    "addr": "1:74f0f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetSampleVolume_ at segment +0xc5; member base 1:74e4a; public address 1:74f0f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_32"
+    ]
+   },
+   "sosDIGISetChannel": {
+    "addr": "1:74f76",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetChannel_ at segment +0x12c; member base 1:74e4a; public address 1:74f76; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_set_voice_word_36"
+    ]
+   },
+   "sosDIGIGetChannel": {
+    "addr": "1:74ffa",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetChannel_ at segment +0x1b0; member base 1:74e4a; public address 1:74ffa; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_36"
+    ]
+   },
+   "sosDIGIGetBytesProcessed": {
+    "addr": "1:75061",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetBytesProcessed_ at segment +0x217; member base 1:74e4a; public address 1:75061; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_dword_4c"
+    ]
+   },
+   "sosDIGIGetLoopCount": {
+    "addr": "1:750c7",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetLoopCount_ at segment +0x27d; member base 1:74e4a; public address 1:750c7; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_38"
+    ]
+   },
+   "sosDIGISetPanLocation": {
+    "addr": "1:7512e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetPanLocation_ at segment +0x2e4; member base 1:74e4a; public address 1:7512e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_7512E"
+    ]
+   },
+   "sosDIGIGetPanLocation": {
+    "addr": "1:751b2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetPanLocation_ at segment +0x368; member base 1:74e4a; public address 1:751b2; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_54"
+    ]
+   },
+   "sosDIGISetPanSpeed": {
+    "addr": "1:75219",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetPanSpeed_ at segment +0x3cf; member base 1:74e4a; public address 1:75219; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_set_voice_word_56"
+    ]
+   },
+   "sosDIGIGetPanSpeed": {
+    "addr": "1:7529d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetPanSpeed_ at segment +0x453; member base 1:74e4a; public address 1:7529d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_56"
+    ]
+   },
+   "sosDIGISetPitch": {
+    "addr": "1:75304",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetPitch_ at segment +0x4ba; member base 1:74e4a; public address 1:75304; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_set_voice_dword_44"
+    ]
+   },
+   "sosDIGIGetPitch": {
+    "addr": "1:75386",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetPitch_ at segment +0x53c; member base 1:74e4a; public address 1:75386; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_dword_44"
+    ]
+   },
+   "sosDIGIGetSampleID": {
+    "addr": "1:753ec",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetSampleID_ at segment +0x5a2; member base 1:74e4a; public address 1:753ec; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_voice_word_34"
+    ]
+   },
+   "sosDIGIGetSampleHandle": {
+    "addr": "1:75424",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGIGetSampleHandle_ at segment +0x5da; member base 1:74e4a; public address 1:75424; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_find_voice_by_word_34"
+    ]
+   },
+   "sosDIGISetMasterVolume": {
+    "addr": "1:75483",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGISetMasterVolume_ at segment +0x639; member base 1:74e4a; public address 1:75483; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_set_driver_buffer_selector"
+    ]
+   },
+   "sosDIGICntl_End": {
+    "addr": "1:754b9",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCNTL.C; public sosDIGICntl_End_ at segment +0x66f; member base 1:74e4a; public address 1:754b9; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_voice_params_end"
+    ]
+   },
+   "sosDIGIErr_Start": {
+    "addr": "1:79099",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSERR.C; public sosDIGIErr_Start_ at segment +0x0; member base 1:79099; public address 1:79099; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_errors_begin"
+    ]
+   },
+   "sosGetErrorString": {
+    "addr": "1:790ae",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSERR.C; public sosGetErrorString_ at segment +0x15; member base 1:79099; public address 1:790ae; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_error_string"
+    ]
+   },
+   "sosDIGIErr_End": {
+    "addr": "1:790d8",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSERR.C; public sosDIGIErr_End_ at segment +0x3f; member base 1:79099; public address 1:790d8; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_errors_end"
+    ]
+   },
+   "sosTIMERDRVInit": {
+    "addr": "1:7856f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVInit at segment +0xc3; member base 1:784ac; public address 1:7856f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_install_irq0"
+    ]
+   },
+   "sosTIMERDRVFHandler": {
+    "addr": "1:78514",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVFHandler at segment +0x68; member base 1:784ac; public address 1:78514; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_call_callback"
+    ]
+   },
+   "sosTIMERDRVHandler": {
+    "addr": "1:784ad",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVHandler at segment +0x1; member base 1:784ac; public address 1:784ad; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_irq0"
+    ]
+   },
+   "sosTIMERDRVUnInit": {
+    "addr": "1:78689",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVUnInit at segment +0x1dd; member base 1:784ac; public address 1:78689; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_restore_irq0"
+    ]
+   },
+   "sosDIGITimer_End": {
+    "addr": "1:7875e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosDIGITimer_End at segment +0x2b2; member base 1:784ac; public address 1:7875e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_asm_end"
+    ]
+   },
+   "sosTIMERDRVCallOld": {
+    "addr": "1:78705",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVCallOld at segment +0x259; member base 1:784ac; public address 1:78705; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_chain_irq0"
+    ]
+   },
+   "sosTIMERDRVDisable": {
+    "addr": "1:78631",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVDisable at segment +0x185; member base 1:784ac; public address 1:78631; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_mask_irq0"
+    ]
+   },
+   "sosDIGITimer_Start": {
+    "addr": "1:784ac",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosDIGITimer_Start at segment +0x0; member base 1:784ac; public address 1:784ac; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_asm_begin"
+    ]
+   },
+   "sosTIMERDRVSetRate": {
+    "addr": "1:78529",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVSetRate at segment +0x7d; member base 1:784ac; public address 1:78529; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_set_divisor"
+    ]
+   },
+   "sosTIMERDRVEnable": {
+    "addr": "1:7865d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; public _sosTIMERDRVEnable at segment +0x1b1; member base 1:784ac; public address 1:7865d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_timer_unmask_irq0"
+    ]
+   },
+   "sosDIGIDetec_Start": {
+    "addr": "1:7233a",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetec_Start_ at segment +0x0; member base 1:7233a; public address 1:7233a; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_detect_begin"
+    ]
+   },
+   "sosDIGIDetectInit": {
+    "addr": "1:7234f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectInit_ at segment +0x15; member base 1:7233a; public address 1:7234f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_7234F"
+    ]
+   },
+   "sosDIGIDetectUnInit": {
+    "addr": "1:72499",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectUnInit_ at segment +0x15f; member base 1:7233a; public address 1:72499; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72499"
+    ]
+   },
+   "sosDIGIDetectFindHardware": {
+    "addr": "1:72524",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectFindHardware_ at segment +0x1ea; member base 1:7233a; public address 1:72524; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72524"
+    ]
+   },
+   "sosDIGIDetectGetCaps": {
+    "addr": "1:727a7",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectGetCaps_ at segment +0x46d; member base 1:7233a; public address 1:727a7; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_727A7"
+    ]
+   },
+   "sosDIGIDetectFindFirst": {
+    "addr": "1:7293d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectFindFirst_ at segment +0x603; member base 1:7233a; public address 1:7293d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_7293D"
+    ]
+   },
+   "sosDIGIDetectFindNext": {
+    "addr": "1:72b8f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectFindNext_ at segment +0x855; member base 1:7233a; public address 1:72b8f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72B8F"
+    ]
+   },
+   "sosDIGIDetectGetSettings": {
+    "addr": "1:72db5",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectGetSettings_ at segment +0xa7b; member base 1:7233a; public address 1:72db5; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72DB5"
+    ]
+   },
+   "sosDIGIDetectVerifySettings": {
+    "addr": "1:72f3d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetectVerifySettings_ at segment +0xc03; member base 1:7233a; public address 1:72f3d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_72F3D"
+    ]
+   },
+   "sosDIGIDetec_End": {
+    "addr": "1:7300e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDETEC.C; public sosDIGIDetec_End_ at segment +0xcd4; member base 1:7233a; public address 1:7300e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_detect_end"
+    ]
+   },
+   "sosDIGICaps_Start": {
+    "addr": "1:790ed",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCAPS.C; public sosDIGICaps_Start_ at segment +0x0; member base 1:790ed; public address 1:790ed; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_callback_begin"
+    ]
+   },
+   "sosDIGIGetDeviceCaps": {
+    "addr": "1:79102",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCAPS.C; public sosDIGIGetDeviceCaps_ at segment +0x15; member base 1:790ed; public address 1:79102; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_callback_update"
+    ]
+   },
+   "sosDIGICaps_End": {
+    "addr": "1:79193",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSCAPS.C; public sosDIGICaps_End_ at segment +0xa6; member base 1:790ed; public address 1:79193; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_callback_end"
+    ]
+   },
+   "sosDIGIInit_Start": {
+    "addr": "1:73023",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIInit_Start_ at segment +0x0; member base 1:73023; public address 1:73023; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_system_begin"
+    ]
+   },
+   "sosDIGILockMemory": {
+    "addr": "1:73038",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGILockMemory_ at segment +0x15; member base 1:73023; public address 1:73038; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_lock_system_regions"
+    ]
+   },
+   "sosDIGIUnLockMemory": {
+    "addr": "1:732fe",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIUnLockMemory_ at segment +0x2db; member base 1:73023; public address 1:732fe; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_unlock_system_regions"
+    ]
+   },
+   "sosDIGIInitSystem": {
+    "addr": "1:735c4",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIInitSystem_ at segment +0x5a1; member base 1:73023; public address 1:735c4; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_735C4"
+    ]
+   },
+   "sosDIGIUnInitSystem": {
+    "addr": "1:7363d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIUnInitSystem_ at segment +0x61a; member base 1:73023; public address 1:7363d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_7363D"
+    ]
+   },
+   "sosDIGIInitDriver": {
+    "addr": "1:7367d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIInitDriver_ at segment +0x65a; member base 1:73023; public address 1:7367d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_7367D"
+    ]
+   },
+   "sosDIGIUnInitDriver": {
+    "addr": "1:73f3d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIUnInitDriver_ at segment +0xf1a; member base 1:73023; public address 1:73f3d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_73F3D"
+    ]
+   },
+   "sosDIGIAllocateBuffer": {
+    "addr": "1:74155",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIAllocateBuffer_ at segment +0x1132; member base 1:73023; public address 1:74155; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_dma_area"
+    ]
+   },
+   "sosAllocVDSPage": {
+    "addr": "1:74235",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosAllocVDSPage_ at segment +0x1212; member base 1:73023; public address 1:74235; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_allocate_dma"
+    ]
+   },
+   "sosFreeVDSPage": {
+    "addr": "1:74351",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosFreeVDSPage_ at segment +0x132e; member base 1:73023; public address 1:74351; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_free_dma"
+    ]
+   },
+   "sosDIGIInit_End": {
+    "addr": "1:743cd",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSINIT.C; public sosDIGIInit_End_ at segment +0x13aa; member base 1:73023; public address 1:743cd; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_system_end"
+    ]
+   },
+   "sosDIGIPlyng_Start": {
+    "addr": "1:71afa",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSPLYNG.C; public sosDIGIPlyng_Start_ at segment +0x0; member base 1:71afa; public address 1:71afa; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_active_begin"
+    ]
+   },
+   "sosDIGISamplesPlaying": {
+    "addr": "1:71b0f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSPLYNG.C; public sosDIGISamplesPlaying_ at segment +0x15; member base 1:71afa; public address 1:71b0f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_count_active_voices",
+     "sub_71B0F"
+    ]
+   },
+   "sosDIGIPlyng_End": {
+    "addr": "1:71b6e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSPLYNG.C; public sosDIGIPlyng_End_ at segment +0x74; member base 1:71afa; public address 1:71b6e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_active_end"
+    ]
+   },
+   "sosDIGIStart_Start": {
+    "addr": "1:743e2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSSTART.C; public sosDIGIStart_Start_ at segment +0x0; member base 1:743e2; public address 1:743e2; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_samples_begin"
+    ]
+   },
+   "sosDIGIStartSample": {
+    "addr": "1:743f7",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSSTART.C; public sosDIGIStartSample_ at segment +0x15; member base 1:743e2; public address 1:743f7; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_743F7"
+    ]
+   },
+   "sosDIGIStopSample": {
+    "addr": "1:74a10",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSSTART.C; public sosDIGIStopSample_ at segment +0x62e; member base 1:743e2; public address 1:74a10; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_74A10"
+    ]
+   },
+   "sosDIGIContinueSample": {
+    "addr": "1:74abe",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSSTART.C; public sosDIGIContinueSample_ at segment +0x6dc; member base 1:743e2; public address 1:74abe; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_configure_sample_voice"
+    ]
+   },
+   "sosDIGIStart_End": {
+    "addr": "1:74e35",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSSTART.C; public sosDIGIStart_End_ at segment +0xa53; member base 1:743e2; public address 1:74e35; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_samples_end"
+    ]
+   },
+   "sosDIGIDone_Start": {
+    "addr": "1:754ce",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDONE.C; public sosDIGIDone_Start_ at segment +0x0; member base 1:754ce; public address 1:754ce; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_status_begin"
+    ]
+   },
+   "sosDIGISampleDone": {
+    "addr": "1:754e3",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDONE.C; public sosDIGISampleDone_ at segment +0x15; member base 1:754ce; public address 1:754e3; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_sample_done",
+     "sub_754E3"
+    ]
+   },
+   "sosDIGISampleFilling": {
+    "addr": "1:7553c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDONE.C; public sosDIGISampleFilling_ at segment +0x6e; member base 1:754ce; public address 1:7553c; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_sample_playing"
+    ]
+   },
+   "sosDIGIDone_End": {
+    "addr": "1:755b9",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDONE.C; public sosDIGIDone_End_ at segment +0xeb; member base 1:754ce; public address 1:755b9; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_status_end"
+    ]
+   },
+   "sosDIGIRate_Start": {
+    "addr": "1:79769",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSRATE.C; public sosDIGIRate_Start_ at segment +0x0; member base 1:79769; public address 1:79769; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_callback_set_begin"
+    ]
+   },
+   "sosDIGISetOutputRate": {
+    "addr": "1:7977e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSRATE.C; public sosDIGISetOutputRate_ at segment +0x15; member base 1:79769; public address 1:7977e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_set_driver_callback"
+    ]
+   },
+   "sosDIGIRate_End": {
+    "addr": "1:797e0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSRATE.C; public sosDIGIRate_End_ at segment +0x77; member base 1:79769; public address 1:797e0; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_callback_set_end"
+    ]
+   },
+   "sosDIGILoad_Start": {
+    "addr": "1:791a8",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGILoad_Start_ at segment +0x0; member base 1:791a8; public address 1:791a8; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_loader_begin"
+    ]
+   },
+   "sosDIGILoadDriver": {
+    "addr": "1:791bd",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGILoadDriver_ at segment +0x15; member base 1:791a8; public address 1:791bd; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_791BD"
+    ]
+   },
+   "sosDIGIUnLoadDriver": {
+    "addr": "1:793e0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGIUnLoadDriver_ at segment +0x238; member base 1:791a8; public address 1:793e0; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_793E0"
+    ]
+   },
+   "sosDIGILoadTimer": {
+    "addr": "1:794b8",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGILoadTimer_ at segment +0x310; member base 1:791a8; public address 1:794b8; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_794B8"
+    ]
+   },
+   "sosDIGIUnLoadTimer": {
+    "addr": "1:79692",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGIUnLoadTimer_ at segment +0x4ea; member base 1:791a8; public address 1:79692; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "sub_79692"
+    ]
+   },
+   "sosDIGISetActiveTimer": {
+    "addr": "1:7972d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGISetActiveTimer_ at segment +0x585; member base 1:791a8; public address 1:7972d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_loader_empty_result"
+    ]
+   },
+   "sosDIGILoad_End": {
+    "addr": "1:79754",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSLOAD.C; public sosDIGILoad_End_ at segment +0x5ac; member base 1:791a8; public address 1:79754; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_loader_end"
+    ]
+   },
+   "sosDRVVDSGetBuffer": {
+    "addr": "1:78ecc",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVVDSGetBuffer at segment +0x718; member base 1:787b4; public address 1:78ecc; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_vds_lock_real_interrupt"
+    ]
+   },
+   "sosDRVUnInit": {
+    "addr": "1:78b6c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVUnInit at segment +0x3b8; member base 1:787b4; public address 1:78b6c; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op1"
+    ]
+   },
+   "getDS": {
+    "addr": "1:7902f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _getDS at segment +0x87b; member base 1:787b4; public address 1:7902f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_get_ds_selector"
+    ]
+   },
+   "sosDetDRVGetEnvString": {
+    "addr": "1:78d60",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVGetEnvString at segment +0x5ac; member base 1:787b4; public address 1:78d60; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_copy_record"
+    ]
+   },
+   "sosDRVSetAction": {
+    "addr": "1:78c66",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVSetAction at segment +0x4b2; member base 1:787b4; public address 1:78c66; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op3_bx8"
+    ]
+   },
+   "sosDRVLockMemory": {
+    "addr": "1:787b5",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVLockMemory at segment +0x1; member base 1:787b4; public address 1:787b5; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_lock"
+    ]
+   },
+   "sosDIGIUnInitForWindows": {
+    "addr": "1:78cec",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDIGIUnInitForWindows at segment +0x538; member base 1:787b4; public address 1:78cec; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_windows_vds_unlock"
+    ]
+   },
+   "sosDRVSetRate": {
+    "addr": "1:78c40",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVSetRate at segment +0x48c; member base 1:787b4; public address 1:78c40; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op2_parameter"
+    ]
+   },
+   "sosDetDRVEnvStringInit": {
+    "addr": "1:78d21",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVEnvStringInit at segment +0x56d; member base 1:787b4; public address 1:78d21; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op4_tables"
+    ]
+   },
+   "sosDetDRVGetCapsInfo": {
+    "addr": "1:78aee",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVGetCapsInfo at segment +0x33a; member base 1:787b4; public address 1:78aee; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op2_copy_selectors"
+    ]
+   },
+   "sosDRVGetCapsPtr": {
+    "addr": "1:78a16",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVGetCapsPtr at segment +0x262; member base 1:787b4; public address 1:78a16; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op8_copy_selectors"
+    ]
+   },
+   "sosDRVMakeDMASelector": {
+    "addr": "1:78f85",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVMakeDMASelector at segment +0x7d1; member base 1:787b4; public address 1:78f85; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_map_physical_selector"
+    ]
+   },
+   "sosDRVFreeDMASelector": {
+    "addr": "1:79005",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVFreeDMASelector at segment +0x851; member base 1:787b4; public address 1:79005; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_free_selector"
+    ]
+   },
+   "sosRealAlloc": {
+    "addr": "1:78980",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosRealAlloc at segment +0x1cc; member base 1:787b4; public address 1:78980; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_alloc_dos_extra"
+    ]
+   },
+   "sosDRVIsWindowsActive": {
+    "addr": "1:78e40",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVIsWindowsActive at segment +0x68c; member base 1:787b4; public address 1:78e40; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_windows_query"
+    ]
+   },
+   "sosDRVGetCapsInfo": {
+    "addr": "1:789e1",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVGetCapsInfo at segment +0x22d; member base 1:787b4; public address 1:789e1; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op8_copy"
+    ]
+   },
+   "sosDetDRVGetSettings": {
+    "addr": "1:78aaa",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVGetSettings at segment +0x2f6; member base 1:787b4; public address 1:78aaa; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op1_detect_results"
+    ]
+   },
+   "sosDetDRVSetEnvString": {
+    "addr": "1:78daa",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVSetEnvString at segment +0x5f6; member base 1:787b4; public address 1:78daa; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_set_table_callback"
+    ]
+   },
+   "sosDRVUnLockMemory": {
+    "addr": "1:787f2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVUnLockMemory at segment +0x3e; member base 1:787b4; public address 1:787f2; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_unlock"
+    ]
+   },
+   "sosDRVFreeVDSStruct": {
+    "addr": "1:78e9e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVFreeVDSStruct at segment +0x6ea; member base 1:787b4; public address 1:78e9e; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_free_dos"
+    ]
+   },
+   "sosDRVVDSFreeBuffer": {
+    "addr": "1:78f38",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVVDSFreeBuffer at segment +0x784; member base 1:787b4; public address 1:78f38; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_vds_unlock_real_interrupt"
+    ]
+   },
+   "sosDRVStop": {
+    "addr": "1:78a64",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVStop at segment +0x2b0; member base 1:787b4; public address 1:78a64; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op5"
+    ]
+   },
+   "sosDIGIDrv_End": {
+    "addr": "1:79037",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDIGIDrv_End at segment +0x883; member base 1:787b4; public address 1:79037; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_asm_end"
+    ]
+   },
+   "sosDRVGetFillInfo": {
+    "addr": "1:78b8f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVGetFillInfo at segment +0x3db; member base 1:787b4; public address 1:78b8f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op10_callbacks"
+    ]
+   },
+   "sosAllocateFarMem": {
+    "addr": "1:7882f",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosAllocateFarMem at segment +0x7b; member base 1:787b4; public address 1:7882f; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_alloc_linear_selector"
+    ]
+   },
+   "sosDIGIHandleVDS": {
+    "addr": "1:78c8d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDIGIHandleVDS at segment +0x4d9; member base 1:787b4; public address 1:78c8d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_windows_query_passthrough"
+    ]
+   },
+   "sosDRVStart": {
+    "addr": "1:78c17",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVStart at segment +0x463; member base 1:787b4; public address 1:78c17; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op4_parameters"
+    ]
+   },
+   "sosRealFree": {
+    "addr": "1:789b6",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosRealFree at segment +0x202; member base 1:787b4; public address 1:789b6; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_free_dos_wide"
+    ]
+   },
+   "sosDRVGetFreeMemory": {
+    "addr": "1:78e15",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVGetFreeMemory at segment +0x661; member base 1:787b4; public address 1:78e15; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_largest_free_block"
+    ]
+   },
+   "sosDRVAllocVDSStruct": {
+    "addr": "1:78e5d",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVAllocVDSStruct at segment +0x6a9; member base 1:787b4; public address 1:78e5d; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_alloc_dos"
+    ]
+   },
+   "sosDRVSetupCallFunctions": {
+    "addr": "1:78de0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVSetupCallFunctions at segment +0x62c; member base 1:787b4; public address 1:78de0; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op11_op12_transfer"
+    ]
+   },
+   "sosFillSampleStructs": {
+    "addr": "1:78950",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosFillSampleStructs at segment +0x19c; member base 1:787b4; public address 1:78950; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_build_voice_slots"
+    ]
+   },
+   "sosFreeSelector": {
+    "addr": "1:788bd",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosFreeSelector at segment +0x109; member base 1:787b4; public address 1:788bd; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_free_linear_selector"
+    ]
+   },
+   "sosDetDRVVerifySettings": {
+    "addr": "1:78b3c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVVerifySettings at segment +0x388; member base 1:787b4; public address 1:78b3c; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op3_parameters"
+    ]
+   },
+   "sosDRVInit": {
+    "addr": "1:78be2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDRVInit at segment +0x42e; member base 1:787b4; public address 1:78be2; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op0_parameters"
+    ]
+   },
+   "sosDIGIDrv_Start": {
+    "addr": "1:787b4",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDIGIDrv_Start at segment +0x0; member base 1:787b4; public address 1:787b4; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_asm_begin"
+    ]
+   },
+   "sosDIGIInitForWindows": {
+    "addr": "1:78cb7",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDIGIInitForWindows at segment +0x503; member base 1:787b4; public address 1:78cb7; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_windows_vds_lock"
+    ]
+   },
+   "sosCreateAliasCS": {
+    "addr": "1:788f3",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosCreateAliasCS at segment +0x13f; member base 1:787b4; public address 1:788f3; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_dpmi_alias_code_selector"
+    ]
+   },
+   "sosDetDRVExist": {
+    "addr": "1:78a87",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; public _sosDetDRVExist at segment +0x2d3; member base 1:787b4; public address 1:78a87; exact+sites member match (hm_finish/reference/library_hits.json).",
+    "aliases": [
+     "hmi_driver_op0"
+    ]
    }
   },
   "data": {
@@ -17171,241 +17548,671 @@
     "name": "RAYVERSE",
     "evidence": "DOS 1:3ae45 and 1:3ae74 load dword [2:3f79c], SAR EDX,16 at 1:3ae4b/3ae7a: signed word at 2:3f79e. Independent Rayverse data.c declaration s16 word_CF79E //CF79E. Android query absent. Address is outside 2-byte ecart_barre at 2:3f79c; no shifted alias."
    },
-   "hmi_voice_slots": {
-    "addr": "2:2dee0",
-    "name": "INVENTED",
-    "evidence": "1:71b3b..71b54 addresses driver*0xc0 + voice*6, LGS then signed word flags +0x30; 1:78950 fills 32 six-byte slots; base fixup 1:71b4b.",
-    "type": "hmi_voice_state __far *[][32]"
-   },
-   "hmi_error_strings": {
-    "addr": "2:2eb30",
-    "name": "INVENTED",
-    "evidence": "1:790bf..790cb indexes dword table by error*4; object-2 fixups point to error strings at 2:31860..31a34.",
-    "type": "char *[20]",
-    "size": 80
-   },
-   "hmi_timer_asm_data_begin": {
-    "addr": "2:2ec2c",
-    "size": 4,
-    "type": "unsigned long",
-    "name": "INVENTED",
-    "evidence": "PROVEN lock/unlock address fixups at 1:73564, 1:73571, 1:7329e, 1:732ab. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_timer_asm_state": {
-    "addr": "2:2ec30",
-    "size": 4152,
-    "type": "hmi_timer_asm_state_t",
-    "name": "INVENTED",
-    "evidence": "IRQ vector at +0, callback at +0xc, LSS private/saved stacks at +0x16/+0x1e; initialized stack-top fixup at 2:2ec46 targets 2:2fc56; 4096 zero stack bytes.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_timer_asm_data_end": {
-    "addr": "2:2fc68",
-    "size": 4,
-    "type": "unsigned long",
-    "name": "INVENTED",
-    "evidence": "PROVEN lock/unlock address fixups at 1:73569, 1:732a3. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_dpmi_asm_data_begin": {
-    "addr": "2:2fc6c",
-    "size": 4,
-    "type": "unsigned long",
-    "name": "INVENTED",
-    "evidence": "PROVEN lock/unlock address fixups at 1:7358c, 1:73599, 1:732c6, 1:732d3. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_dpmi_asm_state": {
-    "addr": "2:2fc70",
-    "size": 252,
-    "type": "hmi_dpmi_asm_state_t",
-    "name": "INVENTED",
-    "evidence": "1:78d60 copies 0x50 bytes at +0; 1:78d21 stores two far table pointers at +0x50/+0x58; DPMI buffers at +0x60/+0x9c, four word results at +0xec/+0xf0/+0xf4/+0xf8.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_dpmi_asm_data_end": {
-    "addr": "2:2fd6c",
-    "size": 4,
-    "type": "unsigned long",
-    "name": "INVENTED",
-    "evidence": "PROVEN lock/unlock address fixups at 1:73591, 1:732cb. Four initialized zero bytes delimit this locked storage interval; semantic marker name INVENTED.",
-    "evidence_level": "PROVEN layout and accesses; original source declaration OPEN"
-   },
-   "hmi_driver_entrypoints": {
-    "addr": "2:2dd3c",
-    "name": "INVENTED",
-    "type": "hmi_far_value[]",
-    "evidence": "DOS references at 1:7911c/79159 and 1:797c7; six-byte stride, offsets +0 and selector +4; index max 5 is checked at 1:791bd. Merge audit: stride/start proven; count OPEN because the next table starts after five entries; <=5 does not prove allocation length."
-   },
-   "hmi_driver_contexts": {
-    "addr": "2:2dd5a",
-    "name": "INVENTED",
-    "type": "hmi_far_value[]",
-    "evidence": "DOS references at 1:7916b and function_map.json; six-byte stride, paired far-pointer fields; index max 5 is checked at 1:791bd. Merge audit: stride/start proven; count OPEN because the next table starts after five entries; <=5 does not prove allocation length."
-   },
-   "hmi_loaded_driver_handles": {
-    "addr": "2:2de04",
-    "name": "INVENTED",
-    "type": "unsigned long[6]",
-    "size": 24,
-    "evidence": "DOS references at 1:79209 and 1:79797; dword stride, driver index <=5 checked in 1:791bd."
-   },
-   "hmi_driver_callback_values": {
-    "addr": "2:2de40",
-    "name": "INVENTED",
-    "type": "unsigned long[6]",
-    "size": 24,
-    "evidence": "DOS store at 1:797b2 with driver*4 index; six driver slots bounded by 1:791bd."
-   },
-   "hmi_timer_divisor": {
-    "addr": "2:2e707",
-    "name": "INVENTED",
-    "type": "unsigned long",
-    "size": 4,
-    "evidence": "DOS dword store at 1:72220 and reads at 1:71d4e, 1:71d65, 1:71f22, and 1:71f7d; object-2 bytes at 2:2e707 start ff ff ff ff."
-   },
-   "hmi_timer_callbacks": {
-    "addr": "2:2e70b",
-    "name": "INVENTED",
-    "type": "void __far *[16]",
-    "size": 96,
-    "evidence": "DOS indexed far pointer array, stride 6, offset/selector checked at 1:71ce3/71cec; slot 15 receives far target 1:7230b at 1:71c44. Object-2 range 2:2e70b..2:2e76b is 96 zero bytes."
-   },
-   "hmi_timer_periods": {
-    "addr": "2:2e76b",
-    "name": "INVENTED",
-    "type": "unsigned long[16]",
-    "size": 64,
-    "evidence": "DOS indexed dword table at 1:71d3e and 1:721f9; stride 4, 16 slots, object-2 range 2:2e76b..2:2e7ab is zero."
-   },
-   "hmi_timer_counts": {
-    "addr": "2:2e7ab",
-    "name": "INVENTED",
-    "type": "unsigned long[16]",
-    "size": 64,
-    "evidence": "DOS indexed dword table at 1:71dd9 and 1:722a0; stride 4, 16 slots, object-2 range 2:2e7ab..2:2e7eb is zero."
-   },
-   "hmi_timer_fractions": {
-    "addr": "2:2e7eb",
-    "name": "INVENTED",
-    "type": "unsigned long[16]",
-    "size": 64,
-    "evidence": "DOS indexed dword table at 1:71e54 and 1:722a6; stride 4, 16 slots, object-2 range 2:2e7eb..2:2e82b is zero."
-   },
-   "hmi_timer_options": {
-    "addr": "2:2e82b",
-    "name": "INVENTED",
-    "type": "unsigned char[16]",
-    "size": 16,
-    "evidence": "DOS indexed byte reads at 1:722d3; object-2 bytes at 2:2e82b..2:2e83b are sixteen ff bytes."
-   },
-   "hmi_timer_last_option": {
-    "addr": "2:2e83b",
-    "name": "INVENTED",
-    "type": "unsigned char",
-    "size": 1,
-    "evidence": "DOS byte store at 1:722e7; object-2 byte at 2:2e83b is 00 after the 16-byte options table."
-   },
-   "hmi_timer_reentry_count": {
-    "addr": "2:2ea3a",
-    "name": "INVENTED",
-    "type": "unsigned long",
-    "size": 4,
-    "evidence": "DOS dword increment/decrement at 1:7224f and 1:722fe."
-   },
-   "hmi_timer_dispatch_index": {
-    "addr": "2:2ec24",
-    "name": "INVENTED",
-    "type": "unsigned long",
-    "size": 4,
-    "evidence": "DOS dword loop counter at 1:72255..72304, indexed with stride 6/4."
-   },
-   "hmi_driver_buffers": {
-    "addr": "2:2e2a0",
-    "name": "INVENTED",
-    "evidence": "DOS fixups at 1:74e74, 1:7549a address the table as driver*6; 1:74e7b reads the pointed record dword at +0 and 1:754a4 writes its selector at +4.",
-    "type": "hmi_driver_buffer_info __far *[]"
-   },
-   "hmi_driver_ids": {
-    "addr": "2:2deae",
-    "name": "INVENTED",
-    "evidence": "Independent DOS fixups at 1:7442b and 1:74af4 index dwords by driver*4 and compare with 0xe106; natural array base 2:2deae.",
-    "type": "unsigned long[]"
-   },
-   "hmi_system_data_2dd10": {
+   "_sosDIGIData_Start": {
     "addr": "2:2dd10",
-    "name": "INVENTED",
-    "evidence": "The lock function at 1:73275 passes the address as the start and 0xf18 as byte count; endpoint is 2:2ec28.",
-    "type": "unsigned char[] (lock boundary marker, not owning extent)"
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sosDIGIData_Start at segment +0x0; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd10; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_system_data_2dd10"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData_Start;",
+    "size": 4,
+    "type": "u32"
    },
-   "hmi_system_data_2ec28": {
-    "addr": "2:2ec28",
-    "name": "INVENTED",
-    "evidence": "Second endpoint used with 2:2dd10; directly loaded in the lock routine at 1:73275.",
-    "type": "unsigned char[] (lock boundary marker, not owning extent)"
+   "_wSOSDriverLinear": {
+    "addr": "2:2dd14",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverLinear at segment +0x4; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd14; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDriverLinear[];",
+    "size": 20,
+    "type": "u32[5]"
    },
-   "hmi_system_path": {
+   "_wSOSTimerLinear": {
+    "addr": "2:2dd28",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerLinear at segment +0x18; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd28; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSTimerLinear[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_lpSOSDriver": {
+    "addr": "2:2dd3c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSDriver at segment +0x2c; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd3c; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_driver_entrypoints"
+    ],
+    "sdk_declaration": "extern LPSTR _lpSOSDriver[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_lpSOSDriverCS": {
+    "addr": "2:2dd5a",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSDriverCS at segment +0x4a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd5a; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_driver_contexts"
+    ],
+    "sdk_declaration": "extern LPSTR _lpSOSDriverCS[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_wSOSDriverSize": {
+    "addr": "2:2dd78",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverSize at segment +0x68; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd78; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDriverSize[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_wSOSTimerSize": {
+    "addr": "2:2dd8c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerSize at segment +0x7c; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dd8c; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSTimerSize[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_lpSOSTimer": {
+    "addr": "2:2dda0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSTimer at segment +0x90; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dda0; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSTR _lpSOSTimer[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_lpSOSTimerCS": {
+    "addr": "2:2ddbe",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSTimerCS at segment +0xae; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ddbe; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSTR _lpSOSTimerCS[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_wSOSDriverMemHandle": {
+    "addr": "2:2dddc",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverMemHandle at segment +0xcc; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dddc; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDriverMemHandle[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_wSOSTimerMemHandle": {
+    "addr": "2:2ddf0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerMemHandle at segment +0xe0; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ddf0; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSTimerMemHandle[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_wSOSDriverLoaded": {
+    "addr": "2:2de04",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverLoaded at segment +0xf4; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de04; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_loaded_driver_handles"
+    ],
+    "sdk_declaration": "extern BOOL _wSOSDriverLoaded[];",
+    "size": 20,
+    "type": "s32[5]"
+   },
+   "_wSOSTimerLoaded": {
+    "addr": "2:2de18",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerLoaded at segment +0x108; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de18; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BOOL _wSOSTimerLoaded[];",
+    "size": 20,
+    "type": "s32[5]"
+   },
+   "_wSOSDriverInitialized": {
+    "addr": "2:2de2c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverInitialized at segment +0x11c; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de2c; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BOOL _wSOSDriverInitialized[];",
+    "size": 20,
+    "type": "s32[5]"
+   },
+   "_wSOSOutputRate": {
+    "addr": "2:2de40",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSOutputRate at segment +0x130; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de40; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_driver_callback_values"
+    ],
+    "sdk_declaration": "extern WORD _wSOSOutputRate[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_wSOSDMABuffersize": {
+    "addr": "2:2de54",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDMABuffersize at segment +0x144; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de54; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDMABuffersize[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_lpSOSDMABuffer": {
+    "addr": "2:2de68",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSDMABuffer at segment +0x158; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de68; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSTR _lpSOSDMABuffer[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_dwSOSDMABufferPhysical": {
+    "addr": "2:2de86",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __dwSOSDMABufferPhysical at segment +0x176; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de86; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LONG _dwSOSDMABufferPhysical[];",
+    "size": 20,
+    "type": "s32[5]"
+   },
+   "_wSOSRealSeg": {
+    "addr": "2:2de9a",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSRealSeg at segment +0x18a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2de9a; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSRealSeg[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_wSOSDriverType": {
+    "addr": "2:2deae",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverType at segment +0x19e; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2deae; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_driver_ids"
+    ],
+    "sdk_declaration": "extern WORD _wSOSDriverType[];",
+    "size": 20,
+    "type": "u32[5]"
+   },
+   "_lpSOSFillHandler": {
+    "addr": "2:2dec2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSFillHandler at segment +0x1b2; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dec2; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern VOID ( far *_lpSOSFillHandler[] )( VOID );",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_lpSOSSampleList": {
+    "addr": "2:2dee0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSSampleList at segment +0x1d0; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2dee0; library public offset and DOS-bound start marker. Storage span 960 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_voice_slots"
+    ],
+    "sdk_declaration": "extern _SOS_SAMPLE far * _lpSOSSampleList[][ _MAX_VOICES ];",
+    "size": 960,
+    "type": "u8[960]"
+   },
+   "_lpSOSDMAFillCount": {
+    "addr": "2:2e2a0",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpSOSDMAFillCount at segment +0x590; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e2a0; library public offset and DOS-bound start marker. Storage span 30 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_driver_buffers"
+    ],
+    "sdk_declaration": "extern LPWORD _lpSOSDMAFillCount[];",
+    "size": 30,
+    "type": "u8[30]"
+   },
+   "_wSOSTmrNextCount": {
+    "addr": "2:2e2be",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTmrNextCount at segment +0x5ae; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e2be; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSTmrNextCount;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_wSOSDriverID": {
+    "addr": "2:2e2c2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDriverID at segment +0x5b2; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e2c2; library public offset and DOS-bound start marker. Storage span 24 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDriverID[];",
+    "size": 24,
+    "type": "u32[6]"
+   },
+   "_sSOSDriverCaps": {
+    "addr": "2:2e2da",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sSOSDriverCaps at segment +0x5ca; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e2da; library public offset and DOS-bound start marker. Storage span 648 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern _SOS_CAPABILITIES _sSOSDriverCaps[];",
+    "size": 648,
+    "type": "u8[648]"
+   },
+   "_wSOSDMAPortList": {
+    "addr": "2:2e562",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSDMAPortList at segment +0x852; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e562; library public offset and DOS-bound start marker. Storage span 32 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wSOSDMAPortList[];",
+    "size": 32,
+    "type": "u32[8]"
+   },
+   "_bSOSDMAChannel": {
+    "addr": "2:2e582",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __bSOSDMAChannel at segment +0x872; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e582; library public offset and DOS-bound start marker. Storage span 5 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BYTE _bSOSDMAChannel[];",
+    "size": 5,
+    "type": "u8[5]"
+   },
+   "_sSOSDIGIInitDriver": {
+    "addr": "2:2e587",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sSOSDIGIInitDriver at segment +0x877; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e587; library public offset and DOS-bound start marker. Storage span 380 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern _SOS_INIT_DRIVER _sSOSDIGIInitDriver[];",
+    "size": 380,
+    "type": "u8[380]"
+   },
+   "_wTIMERUsed": {
+    "addr": "2:2e703",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wTIMERUsed at segment +0x9f3; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e703; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BOOL _wTIMERUsed;",
+    "size": 4,
+    "type": "s32"
+   },
+   "_wTIMERValue": {
+    "addr": "2:2e707",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wTIMERValue at segment +0x9f7; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e707; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_divisor"
+    ],
+    "sdk_declaration": "extern WORD _wTIMERValue;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_lpTIMEREvents": {
+    "addr": "2:2e70b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpTIMEREvents at segment +0x9fb; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e70b; library public offset and DOS-bound start marker. Storage span 96 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_callbacks"
+    ],
+    "sdk_declaration": "extern VOID ( far * _lpTIMEREvents[] )( VOID );",
+    "size": 96,
+    "type": "u8[96]"
+   },
+   "_wTIMEREventRate": {
+    "addr": "2:2e76b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wTIMEREventRate at segment +0xa5b; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e76b; library public offset and DOS-bound start marker. Storage span 64 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_periods"
+    ],
+    "sdk_declaration": "extern WORD _wTIMEREventRate[];",
+    "size": 64,
+    "type": "u32[16]"
+   },
+   "_dwTIMEREventFraction": {
+    "addr": "2:2e7ab",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __dwTIMEREventFraction at segment +0xa9b; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e7ab; library public offset and DOS-bound start marker. Storage span 64 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_counts"
+    ],
+    "sdk_declaration": "extern WORD _dwTIMEREventFraction[];",
+    "size": 64,
+    "type": "u32[16]"
+   },
+   "_dwTIMEREventFractionCurrent": {
+    "addr": "2:2e7eb",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __dwTIMEREventFractionCurrent at segment +0xadb; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e7eb; library public offset and DOS-bound start marker. Storage span 64 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_fractions"
+    ],
+    "sdk_declaration": "extern WORD _dwTIMEREventFractionCurrent[];",
+    "size": 64,
+    "type": "u32[16]"
+   },
+   "_bSOSMIDITimerSongHandler": {
+    "addr": "2:2e82b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __bSOSMIDITimerSongHandler at segment +0xb1b; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e82b; library public offset and DOS-bound start marker. Storage span 16 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_options"
+    ],
+    "sdk_declaration": "extern BYTE _bSOSMIDITimerSongHandler[];",
+    "size": 16,
+    "type": "u8[16]"
+   },
+   "_bSOSMIDISongHandle": {
+    "addr": "2:2e83b",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __bSOSMIDISongHandle at segment +0xb2b; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e83b; library public offset and DOS-bound start marker. Storage span 1 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_last_option"
+    ],
+    "sdk_declaration": "extern BYTE _bSOSMIDISongHandle;",
+    "size": 1,
+    "type": "u8"
+   },
+   "_pSOSDriverPath": {
     "addr": "2:2e83c",
-    "name": "INVENTED",
-    "evidence": "DOS store at 1:73627 and destination of the path-copy call at 1:73620; local notes identify the path buffer through 2:2e93a.",
-    "type": "char[0xff]",
-    "size": 255
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __pSOSDriverPath at segment +0xb2c; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e83c; library public offset and DOS-bound start marker. Storage span 255 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_system_path"
+    ],
+    "sdk_declaration": "extern BYTE _pSOSDriverPath[];",
+    "size": 255,
+    "type": "u8[255]"
    },
-   "hmi_system_initialized": {
-    "addr": "2:2eb94",
-    "name": "INVENTED",
-    "evidence": "DOS dword writes at 1:735f0 and 1:73662 set/clear this state; direct dword access establishes a 32-bit scalar.",
-    "type": "unsigned",
-    "size": 4
-   },
-   "hmi_system_dma_record": {
-    "addr": "2:2eb98",
-    "name": "INVENTED",
-    "evidence": "DOS references at 1:742d4 and 1:74393 use this data start as the 16-byte DMA runtime record; 1:742fe accesses its selector word at +0x0c.",
-    "type": "hmi_dma_record",
-    "size": 16
-   },
-   "hmi_detect_path": {
+   "_pSOSTempDriverPath": {
     "addr": "2:2e93b",
-    "name": "INVENTED",
-    "type": "char[]",
-    "evidence": "DOS 1:7238f..723b4 passes 2:2e93b as the filename buffer to two HMI helpers and the file opener; next observed buffer starts at 2:2ea3e, leaving three alignment bytes. Merge audit: 256-byte count withdrawn; timer reentry dword at 2:2ea3a leaves only 255 bytes before that symbol. Capacity and allocation extent OPEN; buffer start established by destination arguments."
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __pSOSTempDriverPath at segment +0xc2b; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2e93b; library public offset and DOS-bound start marker. Storage span 255 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_detect_path"
+    ],
+    "sdk_declaration": "extern BYTE _pSOSTempDriverPath[];",
+    "size": 255,
+    "type": "u8[255]"
    },
-   "hmi_detect_file_header": {
+   "_wSOSTimerEntered": {
+    "addr": "2:2ea3a",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerEntered at segment +0xd2a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ea3a; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_reentry_count"
+    ],
+    "sdk_declaration": "extern WORD _wSOSTimerEntered;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_sDETFileHeader": {
     "addr": "2:2ea3e",
-    "name": "INVENTED",
-    "type": "hmi_detect_header",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sDETFileHeader at segment +0xd2e; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ea3e; library public offset and DOS-bound start marker. Storage span 44 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_detect_file_header"
+    ],
+    "sdk_declaration": "extern _FILEHEADER _sDETFileHeader;",
     "size": 44,
-    "evidence": "DOS 1:723ee and 1:725b1 read 0x2c bytes into this address; 1:725c5 reads the dword at +0x20 and 1:723f8 reads +0x28."
+    "type": "u8[44]"
    },
-   "hmi_detect_info": {
+   "_sDETDriverHeader": {
     "addr": "2:2ea6a",
-    "name": "INVENTED",
-    "type": "hmi_detect_driver_info",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sDETDriverHeader at segment +0xd5a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ea6a; library public offset and DOS-bound start marker. Storage span 48 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_detect_info"
+    ],
+    "sdk_declaration": "extern _DRIVERHEADER _sDETDriverHeader;",
     "size": 48,
-    "evidence": "DOS 1:723f3, 1:725f9, and 1:7286e read 0x30 bytes into this address; direct field accesses at +0x24, +0x28, and +0x2d."
+    "type": "u8[48]"
    },
-   "hmi_detect": {
+   "_wDETInitialized": {
     "addr": "2:2ea9a",
-    "name": "INVENTED",
-    "type": "hmi_detect_state",
-    "size": 104,
-    "evidence": "DOS direct absolute accesses begin at 2:2ea9a; fields through +0x67 are accessed by 1:72363..72f9a. Extent inferred to the last observed byte; padding/ownership remain OPEN."
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wDETInitialized at segment +0xd8a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ea9a; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_detect"
+    ],
+    "sdk_declaration": "extern BOOL _wDETInitialized;",
+    "size": 4,
+    "type": "s32"
    },
-   "hmi_loader_header_a": {
+   "_lpDETDriverBuffer": {
+    "addr": "2:2ea9e",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpDETDriverBuffer at segment +0xd8e; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ea9e; library public offset and DOS-bound start marker. Storage span 6 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSTR _lpDETDriverBuffer;",
+    "size": 6,
+    "type": "u8[6]"
+   },
+   "_lpDETDriverBufferCS": {
+    "addr": "2:2eaa4",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpDETDriverBufferCS at segment +0xd94; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eaa4; library public offset and DOS-bound start marker. Storage span 6 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSTR _lpDETDriverBufferCS;",
+    "size": 6,
+    "type": "u8[6]"
+   },
+   "_hDETFile": {
+    "addr": "2:2eaaa",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __hDETFile at segment +0xd9a; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eaaa; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _hDETFile;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_dwDETDriverIndex": {
+    "addr": "2:2eaae",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __dwDETDriverIndex at segment +0xd9e; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eaae; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern DWORD _dwDETDriverIndex;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_wDETDriverIndexCur": {
+    "addr": "2:2eab2",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wDETDriverIndexCur at segment +0xda2; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eab2; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wDETDriverIndexCur;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_wDETMemHandle": {
+    "addr": "2:2eab6",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wDETMemHandle at segment +0xda6; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eab6; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wDETMemHandle;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_wDETLinear": {
+    "addr": "2:2eaba",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wDETLinear at segment +0xdaa; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eaba; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD _wDETLinear;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_lpDETDeviceCaps": {
+    "addr": "2:2eabe",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __lpDETDeviceCaps at segment +0xdae; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eabe; library public offset and DOS-bound start marker. Storage span 6 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern LPSOSDEVICECAPS _lpDETDeviceCaps;",
+    "size": 6,
+    "type": "u8[6]"
+   },
+   "_sDETCaps": {
+    "addr": "2:2eac4",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sDETCaps at segment +0xdb4; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eac4; library public offset and DOS-bound start marker. Storage span 108 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern _SOS_CAPABILITIES _sDETCaps;",
+    "size": 108,
+    "type": "u8[108]"
+   },
+   "_pSOSErrorStrings": {
+    "addr": "2:2eb30",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __pSOSErrorStrings at segment +0xe20; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eb30; library public offset and DOS-bound start marker. Storage span 80 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_error_strings"
+    ],
+    "sdk_declaration": "extern PSTR _pSOSErrorStrings[];",
+    "size": 80,
+    "type": "u8[80]"
+   },
+   "_wSOSBufferAllocated": {
+    "addr": "2:2eb80",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSBufferAllocated at segment +0xe70; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eb80; library public offset and DOS-bound start marker. Storage span 20 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BOOL _wSOSBufferAllocated[];",
+    "size": 20,
+    "type": "s32[5]"
+   },
+   "_wSOSSystemInitialized": {
+    "addr": "2:2eb94",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSSystemInitialized at segment +0xe84; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eb94; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_system_initialized"
+    ],
+    "sdk_declaration": "extern BOOL _wSOSSystemInitialized;",
+    "size": 4,
+    "type": "s32"
+   },
+   "_sSOSVDSInfo": {
+    "addr": "2:2eb98",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sSOSVDSInfo at segment +0xe88; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eb98; library public offset and DOS-bound start marker. Storage span 16 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_system_dma_record"
+    ],
+    "sdk_declaration": "extern VDS_STRUCT _sSOSVDSInfo;",
+    "size": 16,
+    "type": "u8[16]"
+   },
+   "_sSOSFillInfo": {
+    "addr": "2:2eba8",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sSOSFillInfo at segment +0xe98; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2eba8; library public offset and DOS-bound start marker. Storage span 32 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern _SOS_FILL_INFO _sSOSFillInfo;",
+    "size": 32,
+    "type": "u8[32]"
+   },
+   "sLOADFileHeader": {
     "addr": "2:2ebc8",
-    "name": "INVENTED",
-    "type": "hmi_detect_header",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public _sLOADFileHeader at segment +0xeb8; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ebc8; library public offset and DOS-bound start marker. Storage span 44 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_loader_header_a"
+    ],
+    "sdk_declaration": "extern _FILEHEADER sLOADFileHeader;",
     "size": 44,
-    "evidence": "Full buffer start, not a field alias: DOS 1:79282..7928d and 1:7954e..79559 pass this start to the read wrapper with a 0x2c-byte count; dword +0x20 is tested at 1:79295. Independent read/dereference evidence; ownership remains OPEN."
+    "type": "u8[44]"
    },
-   "hmi_loader_header_b": {
+   "sLOADDriverHeader": {
     "addr": "2:2ebf4",
-    "name": "INVENTED",
-    "type": "hmi_detect_driver_info",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public _sLOADDriverHeader at segment +0xee4; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ebf4; library public offset and DOS-bound start marker. Storage span 48 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_loader_header_b"
+    ],
+    "sdk_declaration": "extern _DRIVERHEADER sLOADDriverHeader;",
     "size": 48,
-    "evidence": "Full buffer start, not a field alias: DOS 1:792a8..792b3 reads 0x30 bytes here; 1:792b8..792d1 reads +0x24/+0x28/+0x2d. Buffer follows the 44-byte loader file header. Ownership remains OPEN."
+    "type": "u8[48]"
+   },
+   "_wSOSTimerEventIndex": {
+    "addr": "2:2ec24",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __wSOSTimerEventIndex at segment +0xf14; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ec24; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_dispatch_index"
+    ],
+    "sdk_declaration": "extern WORD _wSOSTimerEventIndex;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_sosDIGIData_End": {
+    "addr": "2:2ec28",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member C:\\DONS\\SOSDIGIW\\SOSLIB\\SRC\\SOSDATA.C; _DATA public __sosDIGIData_End at segment +0xf18; segment anchor hmi_system_data_2dd10 = 2:2dd10; public address 2:2ec28; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_system_data_2ec28"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData_End;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_bTIMERInstalled": {
+    "addr": "2:2fc60",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; _DATA public __bTIMERInstalled at segment +0x1034; segment anchor hmi_timer_asm_data_begin = 2:2ec2c; public address 2:2fc60; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BYTE _bTIMERInstalled;",
+    "size": 1,
+    "type": "u8",
+    "storage_note": "SDK BYTE; asm reserves a four-byte slot; trailing bytes remain zero."
+   },
+   "_sosDIGIData1_Start": {
+    "addr": "2:2ec2c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; _DATA public __sosDIGIData1_Start at segment +0x0; segment anchor hmi_timer_asm_data_begin = 2:2ec2c; public address 2:2ec2c; library public offset and DOS-bound start marker. Storage span 4148 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_asm_data_begin"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData1_Start;",
+    "size": 4148,
+    "type": "u32[1037]"
+   },
+   "_bTIMERDPMI": {
+    "addr": "2:2fc64",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; _DATA public __bTIMERDPMI at segment +0x1038; segment anchor hmi_timer_asm_data_begin = 2:2ec2c; public address 2:2fc64; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern BYTE _bTIMERDPMI;",
+    "size": 1,
+    "type": "u8",
+    "storage_note": "SDK BYTE; asm reserves a four-byte slot; trailing bytes remain zero."
+   },
+   "_sosDIGIData1_End": {
+    "addr": "2:2fc68",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sostimer.asm; _DATA public __sosDIGIData1_End at segment +0x103c; segment anchor hmi_timer_asm_data_begin = 2:2ec2c; public address 2:2fc68; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_timer_asm_data_end"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData1_End;",
+    "size": 4,
+    "type": "u32"
+   },
+   "wDetectParam": {
+    "addr": "2:2fd68",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public _wDetectParam at segment +0xfc; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fd68; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD wDetectParam;",
+    "size": 4,
+    "type": "u32"
+   },
+   "wDetectIRQ": {
+    "addr": "2:2fd64",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public _wDetectIRQ at segment +0xf8; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fd64; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD wDetectIRQ;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_sosDIGIData2_Start": {
+    "addr": "2:2fc6c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public __sosDIGIData2_Start at segment +0x0; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fc6c; library public offset and DOS-bound start marker. Storage span 240 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_dpmi_asm_data_begin"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData2_Start;",
+    "size": 240,
+    "type": "u32[60]"
+   },
+   "wDetectDMA": {
+    "addr": "2:2fd60",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public _wDetectDMA at segment +0xf4; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fd60; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD wDetectDMA;",
+    "size": 4,
+    "type": "u32"
+   },
+   "wDetectPort": {
+    "addr": "2:2fd5c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public _wDetectPort at segment +0xf0; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fd5c; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "sdk_declaration": "extern WORD wDetectPort;",
+    "size": 4,
+    "type": "u32"
+   },
+   "_sosDIGIData2_End": {
+    "addr": "2:2fd6c",
+    "name": "HMI_SDK",
+    "evidence": "HMI_SDK; C:/tools/hmi-sos3/sosdw1cr.lib member sosdrv.asm; _DATA public __sosDIGIData2_End at segment +0x100; segment anchor hmi_dpmi_asm_data_begin = 2:2fc6c; public address 2:2fd6c; library public offset and DOS-bound start marker. Storage span 4 bytes: next OMF public or segment end; SDK declaration retained separately; DOS pointers are 4-byte near / 6-byte far.",
+    "aliases": [
+     "hmi_dpmi_asm_data_end"
+    ],
+    "sdk_declaration": "extern WORD _sosDIGIData2_End;",
+    "size": 4,
+    "type": "u32"
    }
   }
  },

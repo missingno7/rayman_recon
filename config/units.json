@@ -15792,19 +15792,19 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_active_begin": {
+    "sosDIGIPlyng_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_71B0F": {
+    "sosDIGISamplesPlaying": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_active_end": {
+    "sosDIGIPlyng_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -15817,25 +15817,25 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_status_begin": {
+    "sosDIGIDone_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_754E3": {
+    "sosDIGISampleDone": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_sample_playing": {
+    "sosDIGISampleFilling": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_status_end": {
+    "sosDIGIDone_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -15848,19 +15848,19 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_errors_begin": {
+    "sosDIGIErr_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_error_string": {
+    "sosGetErrorString": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_errors_end": {
+    "sosDIGIErr_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -15877,61 +15877,61 @@
    "oracle": "gog_v121_us",
    "profile": "hmi_tasm",
    "functions": {
-    "hmi_timer_asm_begin": {
+    "sosDIGITimer_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_irq0": {
+    "sosTIMERDRVHandler": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_call_callback": {
+    "sosTIMERDRVFHandler": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_set_divisor": {
+    "sosTIMERDRVSetRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_install_irq0": {
+    "sosTIMERDRVInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_mask_irq0": {
+    "sosTIMERDRVDisable": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_unmask_irq0": {
+    "sosTIMERDRVEnable": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_restore_irq0": {
+    "sosTIMERDRVUnInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_chain_irq0": {
+    "sosTIMERDRVCallOld": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_asm_end": {
+    "sosDIGITimer_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -15944,229 +15944,229 @@
    "oracle": "gog_v121_us",
    "profile": "hmi_tasm",
    "functions": {
-    "hmi_dpmi_asm_begin": {
+    "sosDIGIDrv_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_lock": {
+    "sosDRVLockMemory": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_unlock": {
+    "sosDRVUnLockMemory": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_alloc_linear_selector": {
+    "sosAllocateFarMem": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_free_linear_selector": {
+    "sosFreeSelector": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_alias_code_selector": {
+    "sosCreateAliasCS": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_build_voice_slots": {
+    "sosFillSampleStructs": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_alloc_dos_extra": {
+    "sosRealAlloc": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_free_dos_wide": {
+    "sosRealFree": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op8_copy": {
+    "sosDRVGetCapsInfo": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op8_copy_selectors": {
+    "sosDRVGetCapsPtr": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op5": {
+    "sosDRVStop": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op0": {
+    "sosDetDRVExist": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op1_detect_results": {
+    "sosDetDRVGetSettings": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op2_copy_selectors": {
+    "sosDetDRVGetCapsInfo": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op3_parameters": {
+    "sosDetDRVVerifySettings": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op1": {
+    "sosDRVUnInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op10_callbacks": {
+    "sosDRVGetFillInfo": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op0_parameters": {
+    "sosDRVInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op4_parameters": {
+    "sosDRVStart": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op2_parameter": {
+    "sosDRVSetRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op3_bx8": {
+    "sosDRVSetAction": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_windows_query_passthrough": {
+    "sosDIGIHandleVDS": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_windows_vds_lock": {
+    "sosDIGIInitForWindows": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_windows_vds_unlock": {
+    "sosDIGIUnInitForWindows": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op4_tables": {
+    "sosDetDRVEnvStringInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_copy_record": {
+    "sosDetDRVGetEnvString": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_set_table_callback": {
+    "sosDetDRVSetEnvString": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_op11_op12_transfer": {
+    "sosDRVSetupCallFunctions": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_largest_free_block": {
+    "sosDRVGetFreeMemory": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_windows_query": {
+    "sosDRVIsWindowsActive": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_alloc_dos": {
+    "sosDRVAllocVDSStruct": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_free_dos": {
+    "sosDRVFreeVDSStruct": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_vds_lock_real_interrupt": {
+    "sosDRVVDSGetBuffer": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_vds_unlock_real_interrupt": {
+    "sosDRVVDSFreeBuffer": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_map_physical_selector": {
+    "sosDRVMakeDMASelector": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_free_selector": {
+    "sosDRVFreeDMASelector": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_ds_selector": {
+    "getDS": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16178,7 +16178,7 @@
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_dpmi_asm_end": {
+    "sosDIGIDrv_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16194,67 +16194,67 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_timer_begin": {
+    "sosDIGITmr_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_71B98": {
+    "sosTIMERInitSystem": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_71C74": {
+    "sosTIMERUnInitSystem": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_71CAE": {
+    "sosTIMERRegisterEvent": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_set_period": {
+    "sosTIMERAlterEventRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72033": {
+    "sosTIMERRemoveEvent": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_get_period": {
+    "sosTIMERGetEventRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_program_divisor": {
+    "sosTIMERSetRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_dispatch": {
+    "sosTIMERHandler": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_irq_tail": {
+    "sosTIMEROldHandler": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_timer_end": {
+    "sosDIGITmr_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16270,19 +16270,19 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_driver_callback_begin": {
+    "sosDIGICaps_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_callback_update": {
+    "sosDIGIGetDeviceCaps": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_driver_callback_end": {
+    "sosDIGICaps_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16295,19 +16295,19 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_callback_set_begin": {
+    "sosDIGIRate_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_set_driver_callback": {
+    "sosDIGISetOutputRate": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_callback_set_end": {
+    "sosDIGIRate_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16320,61 +16320,61 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_detect_begin": {
+    "sosDIGIDetec_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_7234F": {
+    "sosDIGIDetectInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72499": {
+    "sosDIGIDetectUnInit": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72524": {
+    "sosDIGIDetectFindHardware": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_727A7": {
+    "sosDIGIDetectGetCaps": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_7293D": {
+    "sosDIGIDetectFindFirst": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72B8F": {
+    "sosDIGIDetectFindNext": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72DB5": {
+    "sosDIGIDetectGetSettings": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_72F3D": {
+    "sosDIGIDetectVerifySettings": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_detect_end": {
+    "sosDIGIDetec_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16390,31 +16390,31 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_samples_begin": {
+    "sosDIGIStart_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_743F7": {
+    "sosDIGIStartSample": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_74A10": {
+    "sosDIGIStopSample": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_configure_sample_voice": {
+    "sosDIGIContinueSample": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_samples_end": {
+    "sosDIGIStart_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16427,43 +16427,43 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_loader_begin": {
+    "sosDIGILoad_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_791BD": {
+    "sosDIGILoadDriver": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_793E0": {
+    "sosDIGIUnLoadDriver": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_794B8": {
+    "sosDIGILoadTimer": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_79692": {
+    "sosDIGIUnLoadTimer": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_loader_empty_result": {
+    "sosDIGISetActiveTimer": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_loader_end": {
+    "sosDIGILoad_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16479,67 +16479,67 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_system_begin": {
+    "sosDIGIInit_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_lock_system_regions": {
+    "sosDIGILockMemory": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_unlock_system_regions": {
+    "sosDIGIUnLockMemory": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_735C4": {
+    "sosDIGIInitSystem": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_7363D": {
+    "sosDIGIUnInitSystem": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_7367D": {
+    "sosDIGIInitDriver": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_73F3D": {
+    "sosDIGIUnInitDriver": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_dma_area": {
+    "sosDIGIAllocateBuffer": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_allocate_dma": {
+    "sosAllocVDSPage": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_free_dma": {
+    "sosFreeVDSPage": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_system_end": {
+    "sosDIGIInit_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
@@ -16552,109 +16552,109 @@
    "oracle": "gog_v121_us",
    "profile": "hmi",
    "functions": {
-    "hmi_voice_params_begin": {
+    "sosDIGICntl_Start": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_driver_buffer_offset": {
+    "sosDIGIGetDMAPosition": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_74E8B": {
+    "sosDIGISetSampleVolume": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_32": {
+    "sosDIGIGetSampleVolume": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_set_voice_word_36": {
+    "sosDIGISetChannel": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_36": {
+    "sosDIGIGetChannel": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_dword_4c": {
+    "sosDIGIGetBytesProcessed": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_38": {
+    "sosDIGIGetLoopCount": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "sub_7512E": {
+    "sosDIGISetPanLocation": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_54": {
+    "sosDIGIGetPanLocation": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_set_voice_word_56": {
+    "sosDIGISetPanSpeed": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_56": {
+    "sosDIGIGetPanSpeed": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_set_voice_dword_44": {
+    "sosDIGISetPitch": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_dword_44": {
+    "sosDIGIGetPitch": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_get_voice_word_34": {
+    "sosDIGIGetSampleID": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_find_voice_by_word_34": {
+    "sosDIGIGetSampleHandle": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_set_driver_buffer_selector": {
+    "sosDIGISetMasterVolume": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
     },
-    "hmi_voice_params_end": {
+    "sosDIGICntl_End": {
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"

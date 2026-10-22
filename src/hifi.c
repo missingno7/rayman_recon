@@ -81,25 +81,25 @@ s32 *GetDma(void);
 s32 *GetParam(void);
 s32 *GetDeviceID_Ray(void);
 /* Address-identified routines in the DOS sound and file-driver modules. */
-extern s32 sub_71B0F(s32 driver);
-extern s32 sub_71B98(s32 a1, s32 a2);
-extern s32 sub_71CAE(s32 a1, void __far *callback, void __far *a5);
-extern s32 sub_71C74(s32 a1);
-extern s32 sub_72033(s32 handle);
-extern s32 sub_7234F(s32 a1, s16 a2);
-extern s32 sub_7293D(const char __far *name, void __far *buffer);
-extern s32 sub_72DB5(s32 __far *value);
-extern s32 sub_72499(void);
-extern s32 sub_735C4(s32 a1, s32 a2, s32 a3);
-extern s32 sub_7367D(s32 device_id, s32 timeout, s32 __far *port,
+extern s32 sosDIGISamplesPlaying(s32 driver);
+extern s32 sosTIMERInitSystem(s32 a1, s32 a2);
+extern s32 sosTIMERRegisterEvent(s32 a1, void __far *callback, void __far *a5);
+extern s32 sosTIMERUnInitSystem(s32 a1);
+extern s32 sosTIMERRemoveEvent(s32 handle);
+extern s32 sosDIGIDetectInit(s32 a1, s16 a2);
+extern s32 sosDIGIDetectFindFirst(const char __far *name, void __far *buffer);
+extern s32 sosDIGIDetectGetSettings(s32 __far *value);
+extern s32 sosDIGIDetectUnInit(void);
+extern s32 sosDIGIInitSystem(s32 a1, s32 a2, s32 a3);
+extern s32 sosDIGIInitDriver(s32 device_id, s32 timeout, s32 __far *port,
     void __far *init_data, void __far *driver_data);
-extern s32 sub_7363D(void);
-extern s32 sub_73F3D(s32 driver, s32 enabled, s32 flags);
-extern s32 sub_743F7(s32 driver, dos_sound_request_t __far *request);
-extern s32 sub_74A10(s32 driver, s16 voice);
-extern s32 sub_74E8B(s32 driver, s16 voice, s32 volume);
-extern s32 sub_7512E(s32 driver, s16 voice, s32 pan);
-extern s32 sub_754E3(s32 driver, s16 voice);
+extern s32 sosDIGIUnInitSystem(void);
+extern s32 sosDIGIUnInitDriver(s32 driver, s32 enabled, s32 flags);
+extern s32 sosDIGIStartSample(s32 driver, dos_sound_request_t __far *request);
+extern s32 sosDIGIStopSample(s32 driver, s16 voice);
+extern s32 sosDIGISetSampleVolume(s32 driver, s16 voice, s32 volume);
+extern s32 sosDIGISetPanLocation(s32 driver, s16 voice, s32 pan);
+extern s32 sosDIGISampleDone(s32 driver, s16 voice);
 extern void *sub_6FBB4(s32 size);
 extern void JumelleFreeArray(s32 **address);
 void sub_3E66C(void);
@@ -125,18 +125,18 @@ void sub_3E66C(void)
 
     for (voice = 0; voice <= 32; voice++)
         KeyOff(voice, 0, 0, 0, 0);
-    while (sub_71B0F(sound_driver_handle) != 0)
+    while (sosDIGISamplesPlaying(sound_driver_handle) != 0)
         ;
-    sub_72033(sound_detect_handle);
-    sub_71C74(0);
+    sosTIMERRemoveEvent(sound_detect_handle);
+    sosTIMERUnInitSystem(0);
 }
 
 void sub_3E6B0(void)
 {
-    sub_71B98(0xff00, 0);
-    if (sub_71CAE(0x28, sound_config.callback,
+    sosTIMERInitSystem(0xff00, 0);
+    if (sosTIMERRegisterEvent(0x28, sound_config.callback,
             (void __far *)&sound_detect_handle) != 0)
-        sub_71C74(0);
+        sosTIMERUnInitSystem(0);
 }
 
 /* INVENTED helper name. ORIGINAL_INLINE: 1:2e6f4, BIOS video service. EAX is its input/output;
@@ -154,18 +154,18 @@ s32 sub_3E710(void)
 {
     s32 probe;
 
-    if (sub_7234F(0, 0) != 0)
+    if (sosDIGIDetectInit(0, 0) != 0)
         return 1;
-    if (sub_7293D((const char __far *)current_device_name,
+    if (sosDIGIDetectFindFirst((const char __far *)current_device_name,
             (void __far *)&probe) != 0) {
-        sub_72499();
+        sosDIGIDetectUnInit();
         return 2;
     }
-    if (sub_72DB5((s32 __far *)&current_port) != 0) {
-        sub_72499();
+    if (sosDIGIDetectGetSettings((s32 __far *)&current_port) != 0) {
+        sosDIGIDetectUnInit();
         return 3;
     }
-    sub_72499();
+    sosDIGIDetectUnInit();
     return 0;
 }
 
@@ -173,23 +173,23 @@ s32 sub_3E780(void)
 {
     s32 result;
 
-    sub_735C4(0, 0, 0);
-    sub_71B98(0xff00, 0);
+    sosDIGIInitSystem(0, 0, 0);
+    sosTIMERInitSystem(0xff00, 0);
     sound_config.timeout = 10000;
-    result = sub_7367D(current_device_id, sound_config.timeout,
+    result = sosDIGIInitDriver(current_device_id, sound_config.timeout,
         (s32 __far *)&current_port,
         (void __far *)&sound_config,
         (void __far *)&sound_driver_handle);
     if (result != 0) {
-        sub_71C74(0);
-        sub_7363D();
+        sosTIMERUnInitSystem(0);
+        sosDIGIUnInitSystem();
         return 1;
     }
-    result = sub_71CAE(0x28, sound_config.callback,
+    result = sosTIMERRegisterEvent(0x28, sound_config.callback,
         (void __far *)&sound_detect_handle);
     if (result != 0) {
-        sub_71C74(0);
-        sub_73F3D(sound_driver_handle, 1, 1);
+        sosTIMERUnInitSystem(0);
+        sosDIGIUnInitDriver(sound_driver_handle, 1, 1);
         return 2;
     }
     return 0;
@@ -310,7 +310,7 @@ s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
         }
     }
     if (request.size != 0) {
-        voice = sub_743F7(sound_driver_handle,
+        voice = sosDIGIStartSample(sound_driver_handle,
             (dos_sound_request_t __far *)&request);
         if (voice != -1 && voice < 0x20)
             return voice;
@@ -320,7 +320,7 @@ s16 KeyOn(s32 bank, s32 prog, u8 tone, s16 note, s16 volume, s16 pan)
 
 void KeyOff(s16 voice, u8 bank, u8 prog, u8 tone, u8 note)
 {
-    sub_74A10(sound_driver_handle, voice);
+    sosDIGIStopSample(sound_driver_handle, voice);
 }
 
 void KeyVol(s16 voice, s16 volume, s16 pan)
@@ -329,9 +329,9 @@ void KeyVol(s16 voice, s16 volume, s16 pan)
     s32 scaled_pan;
 
     scaled_volume = ((s32)volume * 0x7fff) / 0x7f;
-    sub_74E8B(sound_driver_handle, voice, scaled_volume);
+    sosDIGISetSampleVolume(sound_driver_handle, voice, scaled_volume);
     scaled_pan = ((s32)pan * 0xffff) / 0x7f;
-    sub_7512E(sound_driver_handle, voice, scaled_pan);
+    sosDIGISetPanLocation(sound_driver_handle, voice, scaled_pan);
 }
 
 void DigiMusicDone(void)
@@ -340,10 +340,10 @@ void DigiMusicDone(void)
 
     for (voice = 0; voice <= 32; voice++)
         KeyOff(voice, 0, 0, 0, 0);
-    sub_72033(sound_detect_handle);
-    sub_71C74(0);
-    sub_73F3D(sound_driver_handle, 1, 1);
-    sub_7363D();
+    sosTIMERRemoveEvent(sound_detect_handle);
+    sosTIMERUnInitSystem(0);
+    sosDIGIUnInitDriver(sound_driver_handle, 1, 1);
+    sosDIGIUnInitSystem();
 }
 
 void LoadTchatchPerdu(void)
@@ -434,14 +434,14 @@ void PlayTchatch(s32 sound, s32 volume)
         request.size = TchachPerduSize;
         request.flags |= 0x80;
     }
-    voice = sub_743F7(sound_driver_handle,
+    voice = sosDIGIStartSample(sound_driver_handle,
         (dos_sound_request_t __far *)&request);
     sound_voice_id = voice;
 }
 
 void FreeTchatchVignette(void)
 {
-    while (sub_754E3(sound_driver_handle, sound_voice_id) != 1)
+    while (sosDIGISampleDone(sound_driver_handle, sound_voice_id) != 1)
         ;
     JumelleFreeArray((s32 **)&ptrTchatch);
     ptrTchatch = 0;
@@ -493,6 +493,6 @@ s32 *GetDeviceID_Ray(void) {
 
 void FreeDetectDriver(void)
 {
-    sub_72499();
+    sosDIGIDetectUnInit();
 }
 

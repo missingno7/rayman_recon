@@ -6,7 +6,7 @@ _DATA ends
 FLAT group _TEXT, _DATA
 assume cs:_TEXT, ds:FLAT, ss:FLAT
 ; ORIGINAL_ASM: DOS v1.21 lock-delimited timer_asm group.
-; Names INVENTED unless already canonical. Original assembler/version OPEN.
+; SDK public names; private labels INVENTED. Vendor assembler TASM 3.1 (OMF).
 ; Pinned TASM 2.0 /ml /op reproducer; whole CODE contribution begins at a public.
 ; NOP islands are observed original instructions, not invented padding.
 .386p
@@ -14,72 +14,73 @@ assume cs:_TEXT, ds:FLAT, ss:FLAT
 _TEXT segment para public use32 'CODE'
 assume ds:FLAT
 
-; Packed storage-field displacements; one state symbol at its true start.
-TIMER_CALLBACK equ 0ch
-TIMER_CALLBACK_SELECTOR equ 010h
-TIMER_CALLBACK_DS equ 014h
-TIMER_PRIVATE_STACK equ 016h
-TIMER_PRIVATE_SS equ 01ah
-TIMER_INTERRUPTED_STACK equ 01eh
-TIMER_INTERRUPTED_SS equ 022h
-TIMER_SAVED_ESP equ 01026h
-TIMER_SAVED_EAX equ 0102ah
-TIMER_IN_IRQ equ 0102eh
-TIMER_ENABLED equ 01030h
-TIMER_USE_DPMI_VECTOR equ 01034h
-TIMER_PREVIOUS_SELECTOR equ 04h
+; Private fields are offsets from the real SDK marker (2:2ec2c).
+TIMER_CALLBACK equ 010h
+TIMER_CALLBACK_SELECTOR equ 014h
+TIMER_CALLBACK_DS equ 018h
+TIMER_PRIVATE_STACK equ 01ah
+TIMER_PRIVATE_SS equ 01eh
+TIMER_INTERRUPTED_STACK equ 022h
+TIMER_INTERRUPTED_SS equ 026h
+TIMER_SAVED_ESP equ 0102ah
+TIMER_SAVED_EAX equ 0102eh
+TIMER_IN_IRQ equ 01032h
+TIMER_ENABLED equ 01034h
+TIMER_USE_DPMI_VECTOR equ 01038h
+TIMER_PREVIOUS_SELECTOR equ 08h
 
-public hmi_timer_asm_begin_
-public hmi_timer_irq0_
-public hmi_timer_call_callback_
-public hmi_timer_set_divisor_
-public hmi_timer_install_irq0_
-public hmi_timer_mask_irq0_
-public hmi_timer_unmask_irq0_
-public hmi_timer_restore_irq0_
-public hmi_timer_chain_irq0_
-public hmi_timer_asm_end_
+public sosDIGITimer_Start_
+public sosTIMERDRVHandler_
+public sosTIMERDRVFHandler_
+public sosTIMERDRVSetRate_
+public sosTIMERDRVInit_
+public sosTIMERDRVDisable_
+public sosTIMERDRVEnable_
+public sosTIMERDRVUnInit_
+public sosTIMERDRVCallOld_
+public sosDIGITimer_End_
 extrn __GETDS:near
 ; Default keeps the previously STRICT external-reference proof.
 ; Define HMI_DEFINE_TIMER_DATA only for the owned-data audit.
 ; The current matcher cannot certify code references into a data
 ; segment containing a relocation; see NOTES.md.
 ifndef HMI_DEFINE_TIMER_DATA
-extrn _hmi_timer_asm_state:byte
+extrn __sosDIGIData1_Start:byte
+extrn __bTIMERInstalled:byte, __bTIMERDPMI:byte
 endif
 
 ; 1:784ac: timer_asm_begin
-hmi_timer_asm_begin_:
+sosDIGITimer_Start_:
     ret ; 1:784ac
 
 ; 1:784ad: timer_irq0
-hmi_timer_irq0_:
+sosTIMERDRVHandler_:
     push ds ; 1:784ad
     call __GETDS ; 1:784ae
-    cmp word ptr [_hmi_timer_asm_state + TIMER_IN_IRQ], 1 ; 1:784b3
+    cmp word ptr [__sosDIGIData1_Start + TIMER_IN_IRQ], 1 ; 1:784b3
     je short timer_asm_at_78508 ; 1:784bb
     nop ; 1:784bd
     nop ; 1:784be
     nop ; 1:784bf
     nop ; 1:784c0
-    mov word ptr [_hmi_timer_asm_state + TIMER_IN_IRQ], 1 ; 1:784c1
-    mov dword ptr [_hmi_timer_asm_state + TIMER_INTERRUPTED_STACK], esp ; 1:784ca
-    mov word ptr [_hmi_timer_asm_state + TIMER_INTERRUPTED_SS], ss ; 1:784d0
-    lss esp, fword ptr [_hmi_timer_asm_state + TIMER_PRIVATE_STACK] ; 1:784d7
+    mov word ptr [__sosDIGIData1_Start + TIMER_IN_IRQ], 1 ; 1:784c1
+    mov dword ptr [__sosDIGIData1_Start + TIMER_INTERRUPTED_STACK], esp ; 1:784ca
+    mov word ptr [__sosDIGIData1_Start + TIMER_INTERRUPTED_SS], ss ; 1:784d0
+    lss esp, fword ptr [__sosDIGIData1_Start + TIMER_PRIVATE_STACK] ; 1:784d7
     pushad ; 1:784de
     push es ; 1:784df
     push fs ; 1:784e0
     push gs ; 1:784e2
     push ds ; 1:784e4
     pop es ; 1:784e5
-    mov dword ptr [_hmi_timer_asm_state + TIMER_SAVED_ESP], esp ; 1:784e6
-    call fword ptr [_hmi_timer_asm_state + TIMER_CALLBACK] ; 1:784ec
+    mov dword ptr [__sosDIGIData1_Start + TIMER_SAVED_ESP], esp ; 1:784e6
+    call fword ptr [__sosDIGIData1_Start + TIMER_CALLBACK] ; 1:784ec
     pop gs ; 1:784f2
     pop fs ; 1:784f4
     pop es ; 1:784f6
     popad ; 1:784f7
-    lss esp, fword ptr [_hmi_timer_asm_state + TIMER_INTERRUPTED_STACK] ; 1:784f8
-    mov word ptr [_hmi_timer_asm_state + TIMER_IN_IRQ], 0 ; 1:784ff
+    lss esp, fword ptr [__sosDIGIData1_Start + TIMER_INTERRUPTED_STACK] ; 1:784f8
+    mov word ptr [__sosDIGIData1_Start + TIMER_IN_IRQ], 0 ; 1:784ff
 
 ; 1:78508: internal control-flow target
 timer_asm_at_78508:
@@ -91,13 +92,13 @@ timer_asm_at_78508:
     iretd ; 1:78513
 
 ; 1:78514: timer_call_callback
-hmi_timer_call_callback_:
+sosTIMERDRVFHandler_:
     pushad ; 1:78514
     push ds ; 1:78515
     push es ; 1:78516
     push fs ; 1:78517
     push gs ; 1:78519
-    call fword ptr [_hmi_timer_asm_state + TIMER_CALLBACK] ; 1:7851b
+    call fword ptr [__sosDIGIData1_Start + TIMER_CALLBACK] ; 1:7851b
     pop gs ; 1:78521
     pop fs ; 1:78523
     pop es ; 1:78525
@@ -106,7 +107,7 @@ hmi_timer_call_callback_:
     ret ; 1:78528
 
 ; 1:78529: timer_set_divisor
-hmi_timer_set_divisor_:
+sosTIMERDRVSetRate_:
     push ebp ; 1:78529
     mov ebp, esp ; 1:7852a
     push esi ; 1:7852c
@@ -116,7 +117,7 @@ hmi_timer_set_divisor_:
     push fs ; 1:78530
     push gs ; 1:78532
     push es ; 1:78534
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:78535
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:78535
     je short timer_asm_at_78564 ; 1:7853c
     nop ; 1:7853e
     nop ; 1:7853f
@@ -152,7 +153,7 @@ timer_asm_at_78564:
     ret ; 1:7856e
 
 ; 1:7856f: timer_install_irq0
-hmi_timer_install_irq0_:
+sosTIMERDRVInit_:
     push ebp ; 1:7856f
     mov ebp, esp ; 1:78570
     push esi ; 1:78572
@@ -163,17 +164,17 @@ hmi_timer_install_irq0_:
     push gs ; 1:78578
     push es ; 1:7857a
     les edi, fword ptr [ebp + 0ch] ; 1:7857b
-    mov dword ptr [_hmi_timer_asm_state + TIMER_CALLBACK], edi ; 1:7857e
-    mov word ptr [_hmi_timer_asm_state + TIMER_CALLBACK_SELECTOR], es ; 1:78584
-    mov word ptr [_hmi_timer_asm_state + TIMER_CALLBACK_DS], ds ; 1:7858b
-    mov word ptr [_hmi_timer_asm_state + TIMER_PRIVATE_SS], ds ; 1:78592
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:78599
+    mov dword ptr [__sosDIGIData1_Start + TIMER_CALLBACK], edi ; 1:7857e
+    mov word ptr [__sosDIGIData1_Start + TIMER_CALLBACK_SELECTOR], es ; 1:78584
+    mov word ptr [__sosDIGIData1_Start + TIMER_CALLBACK_DS], ds ; 1:7858b
+    mov word ptr [__sosDIGIData1_Start + TIMER_PRIVATE_SS], ds ; 1:78592
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:78599
     je near ptr timer_asm_at_78626 ; 1:785a0
     mov dx, 021h ; 1:785a6
     in al, dx ; 1:785aa
     or al, 1 ; 1:785ab
     out dx, al ; 1:785ad
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_USE_DPMI_VECTOR], 0 ; 1:785ae
+    cmp dword ptr [__bTIMERDPMI], 0 ; 1:785ae
     je short timer_asm_at_785e5 ; 1:785b5
     nop ; 1:785b7
     nop ; 1:785b8
@@ -182,11 +183,11 @@ hmi_timer_install_irq0_:
     mov ax, 0204h ; 1:785bb
     mov bl, 8 ; 1:785bf
     int 031h ; 1:785c1
-    mov dword ptr [_hmi_timer_asm_state], edx ; 1:785c3
-    mov word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR], cx ; 1:785c9
+    mov dword ptr [__sosDIGIData1_Start + 4], edx ; 1:785c3
+    mov word ptr [__sosDIGIData1_Start + TIMER_PREVIOUS_SELECTOR], cx ; 1:785c9
     mov ax, 0205h ; 1:785d0
     mov bl, 8 ; 1:785d4
-    mov edx, offset hmi_timer_irq0_ ; 1:785d6
+    mov edx, offset sosTIMERDRVHandler_ ; 1:785d6
     mov cx, cs ; 1:785db
     int 031h ; 1:785de
     jmp short timer_asm_at_7860c ; 1:785e0
@@ -198,13 +199,13 @@ hmi_timer_install_irq0_:
 timer_asm_at_785e5:
     mov ax, 03508h ; 1:785e5
     int 021h ; 1:785e9
-    mov dword ptr [_hmi_timer_asm_state], ebx ; 1:785eb
-    mov word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR], es ; 1:785f1
+    mov dword ptr [__sosDIGIData1_Start + 4], ebx ; 1:785eb
+    mov word ptr [__sosDIGIData1_Start + TIMER_PREVIOUS_SELECTOR], es ; 1:785f1
     push ds ; 1:785f8
     xor ax, ax ; 1:785f9
     mov es, eax ; 1:785fc
     mov ax, 02508h ; 1:785fe
-    mov edx, offset hmi_timer_irq0_ ; 1:78602
+    mov edx, offset sosTIMERDRVHandler_ ; 1:78602
     push cs ; 1:78607
     pop ds ; 1:78608
     int 021h ; 1:78609
@@ -238,7 +239,7 @@ timer_asm_at_78626:
     ret ; 1:78630
 
 ; 1:78631: timer_mask_irq0
-hmi_timer_mask_irq0_:
+sosTIMERDRVDisable_:
     push ebp ; 1:78631
     mov ebp, esp ; 1:78632
     push esi ; 1:78634
@@ -248,7 +249,7 @@ hmi_timer_mask_irq0_:
     push fs ; 1:78638
     push gs ; 1:7863a
     push es ; 1:7863c
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:7863d
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:7863d
     je short timer_asm_at_78652 ; 1:78644
     nop ; 1:78646
     nop ; 1:78647
@@ -272,7 +273,7 @@ timer_asm_at_78652:
     ret ; 1:7865c
 
 ; 1:7865d: timer_unmask_irq0
-hmi_timer_unmask_irq0_:
+sosTIMERDRVEnable_:
     push ebp ; 1:7865d
     mov ebp, esp ; 1:7865e
     push esi ; 1:78660
@@ -282,7 +283,7 @@ hmi_timer_unmask_irq0_:
     push fs ; 1:78664
     push gs ; 1:78666
     push es ; 1:78668
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:78669
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:78669
     je short timer_asm_at_7867e ; 1:78670
     nop ; 1:78672
     nop ; 1:78673
@@ -306,7 +307,7 @@ timer_asm_at_7867e:
     ret ; 1:78688
 
 ; 1:78689: timer_restore_irq0
-hmi_timer_restore_irq0_:
+sosTIMERDRVUnInit_:
     push ebp ; 1:78689
     mov ebp, esp ; 1:7868a
     push esi ; 1:7868c
@@ -316,7 +317,7 @@ hmi_timer_restore_irq0_:
     push fs ; 1:78690
     push gs ; 1:78692
     push es ; 1:78694
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:78695
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:78695
     je short timer_asm_at_786fa ; 1:7869c
     nop ; 1:7869e
     nop ; 1:7869f
@@ -326,7 +327,7 @@ hmi_timer_restore_irq0_:
     in al, dx ; 1:786a6
     or al, 1 ; 1:786a7
     out dx, al ; 1:786a9
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_USE_DPMI_VECTOR], 0 ; 1:786aa
+    cmp dword ptr [__bTIMERDPMI], 0 ; 1:786aa
     je short timer_asm_at_786d1 ; 1:786b1
     nop ; 1:786b3
     nop ; 1:786b4
@@ -334,8 +335,8 @@ hmi_timer_restore_irq0_:
     nop ; 1:786b6
     mov ax, 0205h ; 1:786b7
     mov bl, 8 ; 1:786bb
-    mov cx, word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR] ; 1:786bd
-    mov edx, dword ptr [_hmi_timer_asm_state] ; 1:786c4
+    mov cx, word ptr [__sosDIGIData1_Start + TIMER_PREVIOUS_SELECTOR] ; 1:786bd
+    mov edx, dword ptr [__sosDIGIData1_Start + 4] ; 1:786c4
     int 031h ; 1:786ca
     jmp short timer_asm_at_786e8 ; 1:786cc
     nop ; 1:786ce
@@ -346,8 +347,8 @@ hmi_timer_restore_irq0_:
 timer_asm_at_786d1:
     push ds ; 1:786d1
     mov ax, 02508h ; 1:786d2
-    mov cx, word ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR] ; 1:786d6
-    mov edx, dword ptr [_hmi_timer_asm_state] ; 1:786dd
+    mov cx, word ptr [__sosDIGIData1_Start + TIMER_PREVIOUS_SELECTOR] ; 1:786d6
+    mov edx, dword ptr [__sosDIGIData1_Start + 4] ; 1:786dd
     mov ds, ecx ; 1:786e3
     int 021h ; 1:786e5
     pop ds ; 1:786e7
@@ -376,32 +377,32 @@ timer_asm_at_786fa:
     ret ; 1:78704
 
 ; 1:78705: timer_chain_irq0
-hmi_timer_chain_irq0_:
-    cmp dword ptr [_hmi_timer_asm_state + TIMER_ENABLED], 0 ; 1:78705
+sosTIMERDRVCallOld_:
+    cmp dword ptr [__bTIMERInstalled], 0 ; 1:78705
     je short timer_asm_at_7875d ; 1:7870c
     nop ; 1:7870e
     nop ; 1:7870f
     nop ; 1:78710
     nop ; 1:78711
-    mov word ptr [_hmi_timer_asm_state + TIMER_IN_IRQ], 0 ; 1:78712
-    mov esp, dword ptr [_hmi_timer_asm_state + TIMER_SAVED_ESP] ; 1:7871b
+    mov word ptr [__sosDIGIData1_Start + TIMER_IN_IRQ], 0 ; 1:78712
+    mov esp, dword ptr [__sosDIGIData1_Start + TIMER_SAVED_ESP] ; 1:7871b
     pop gs ; 1:78721
     pop fs ; 1:78723
     pop es ; 1:78725
     popad ; 1:78726
-    lss esp, fword ptr [_hmi_timer_asm_state + TIMER_INTERRUPTED_STACK] ; 1:78727
-    mov dword ptr [_hmi_timer_asm_state + TIMER_SAVED_EAX], eax ; 1:7872e
+    lss esp, fword ptr [__sosDIGIData1_Start + TIMER_INTERRUPTED_STACK] ; 1:78727
+    mov dword ptr [__sosDIGIData1_Start + TIMER_SAVED_EAX], eax ; 1:7872e
     pop eax ; 1:78733
-    mov word ptr [_hmi_timer_asm_state + TIMER_SAVED_ESP], ax ; 1:78734
+    mov word ptr [__sosDIGIData1_Start + TIMER_SAVED_ESP], ax ; 1:78734
     push eax ; 1:7873a
     push eax ; 1:7873b
-    mov eax, dword ptr [_hmi_timer_asm_state] ; 1:7873c
+    mov eax, dword ptr [__sosDIGIData1_Start + 4] ; 1:7873c
     mov dword ptr [esp], eax ; 1:78741
-    mov eax, dword ptr [_hmi_timer_asm_state + TIMER_PREVIOUS_SELECTOR] ; 1:78744
+    mov eax, dword ptr [__sosDIGIData1_Start + TIMER_PREVIOUS_SELECTOR] ; 1:78744
     mov dword ptr [esp + 4], eax ; 1:78749
-    mov eax, dword ptr [_hmi_timer_asm_state + TIMER_SAVED_EAX] ; 1:7874d
+    mov eax, dword ptr [__sosDIGIData1_Start + TIMER_SAVED_EAX] ; 1:7874d
     push eax ; 1:78752
-    mov ax, word ptr [_hmi_timer_asm_state + TIMER_SAVED_ESP] ; 1:78753
+    mov ax, word ptr [__sosDIGIData1_Start + TIMER_SAVED_ESP] ; 1:78753
     mov ds, eax ; 1:78759
     pop eax ; 1:7875b
     retf ; 1:7875c
@@ -411,18 +412,19 @@ timer_asm_at_7875d:
     ret ; 1:7875d
 
 ; 1:7875e: timer_asm_end
-hmi_timer_asm_end_:
+sosDIGITimer_End_:
     ret ; 1:7875e
 
 _TEXT ends
 ifdef HMI_DEFINE_TIMER_DATA
 
 ; Object-2 lock interval 2:2ec2c..2:2fc68, plus its four-byte end marker.
-; Storage field names are INVENTED. See hmi_local.h for the packed C view.
+; Private storage labels are local; SDK publics are independently bound.
 _DATA segment para public use32 'DATA'
-public _hmi_timer_asm_data_begin, _hmi_timer_asm_state, _hmi_timer_asm_data_end
-_hmi_timer_asm_data_begin dd 0
-_hmi_timer_asm_state label byte
+public __sosDIGIData1_Start, __sosDIGIData1_End
+public __bTIMERInstalled, __bTIMERDPMI
+__sosDIGIData1_Start dd 0
+timer_previous_vector label byte
     dd 0                         ; previous IRQ0 offset, +00
     dw 0                         ; previous IRQ0 selector, +04
     db 6 dup (0)                 ; unidentified storage, +06
@@ -430,7 +432,7 @@ _hmi_timer_asm_state label byte
     dw 0                         ; callback selector, +10
     dw 0                         ; unidentified word, +12
     dw 0                         ; callback DS, +14
-    dd offset _hmi_timer_asm_state + 01026h ; private stack top, +16
+    dd offset __sosDIGIData1_Start + 0102ah ; private stack top, +16
     dw 0                         ; private stack SS, +1a
     dw 0                         ; unidentified word, +1c
     dd 0                         ; interrupted ESP, +1e
@@ -440,9 +442,9 @@ _hmi_timer_asm_state label byte
     dd 0                         ; saved ESP / reused DS word, +1026
     dd 0                         ; saved EAX, +102a
     dw 0                         ; IRQ reentrancy flag, +102e
-    dd 0                         ; timer enabled, +1030
-    dd 0                         ; use DPMI vector API, +1034
-_hmi_timer_asm_data_end dd 0
+__bTIMERInstalled dd 0            ; timer enabled, +1030
+__bTIMERDPMI dd 0                 ; use DPMI vector API, +1034
+__sosDIGIData1_End dd 0
 _DATA ends
 endif
 

@@ -1,7 +1,28 @@
 #ifndef HMI_LOCAL_H
 #define HMI_LOCAL_H
-/* INVENTED descriptive names, DOS evidence in NOTES.md. Watcom default packing = 1.
- * Unknown ranges describe observed prefixes, not proven complete SDK types. */
+/* HMI_SDK public identifiers are taken from the pinned SOS library. Private
+ * field views retain only DOS-observed names and extents. */
+/* Exact SOS scalar typedefs from the pinned sos.h/sosdefs.h prelude. */
+#ifndef _SOSDEFS_DEFINED
+#define _SOSDEFS_DEFINED
+typedef int BOOL;
+typedef unsigned int UINT;
+typedef unsigned char BYTE;
+typedef unsigned WORD;
+typedef signed long LONG;
+typedef unsigned long DWORD;
+typedef BYTE *PBYTE;
+typedef char *PSTR;
+typedef WORD *PWORD;
+typedef LONG *PLONG;
+typedef void *PVOID;
+typedef BYTE __far *LPBYTE;
+typedef BYTE __far *LPSTR;
+typedef WORD __far *LPWORD;
+typedef LONG __far *LPLONG;
+typedef void __far *LPVOID;
+typedef unsigned HANDLE;
+#endif
 typedef signed long s32;
 typedef unsigned long u32;
 typedef signed short s16;
@@ -69,6 +90,9 @@ typedef struct hmi_voice_state {
     unsigned long dword_64;              /* +0x64 */
     unsigned short word_68;              /* +0x68 */
 } hmi_voice_state;
+/* SOS public pointer table type; the DOS-used prefix is laid out at the
+ * offsets in the pinned sos.h _SOS_SAMPLE declaration. */
+typedef hmi_voice_state _SOS_SAMPLE;
 
 typedef hmi_far_address hmi_driver_buffer_info;
 
@@ -117,18 +141,26 @@ typedef struct hmi_sample_template {
     unsigned short word_56;
     unsigned short word_58;              /* +0x58 */
 } hmi_sample_template;
+/* sosDIGIStartSample/ContinueSample use the _SOS_START_SAMPLE SDK type.
+ * This local view names the DOS-observed members at those SDK offsets. */
+typedef hmi_sample_template _SOS_START_SAMPLE;
 
-/* Overlapping word and dword accesses at the same DMA selector storage. */
-typedef union hmi_selector_storage {
-    unsigned value;
-    unsigned short low;
-} hmi_selector_storage;
-
-/* DMA selector storage observed at 2:2eba4, within the runtime record at 2:2eb98. */
-typedef struct hmi_dma_record {
-    unsigned char unknown_00[0x0c];
-    hmi_selector_storage selector;
-} hmi_dma_record;
+/* Pinned sos.h VDS_STRUCT layout. The DOS view exposes a typed overlay on
+ * physical because the target masks its low word at +0x0c. */
+typedef union hmi_vds_physical {
+    unsigned physical;
+    struct {
+        unsigned short low;
+        unsigned short high;
+    } words;
+} hmi_vds_physical;
+typedef struct VDS_STRUCT {
+    unsigned region_size;
+    unsigned offset;
+    unsigned short segment;
+    unsigned short ID;
+    hmi_vds_physical dos_physical;
+} VDS_STRUCT;
 
 /* Packed six-byte far-address entry: driver arrays advance by six bytes. */
 typedef struct hmi_far_slot {
@@ -164,6 +196,9 @@ typedef struct hmi_driver_init_state {
     unsigned value_44;
     unsigned value_48;
 } hmi_driver_init_state;
+/* sosDIGIInitDriver receives this SDK record; the local split members preserve
+ * the observed six-byte far-pointer pairs and padding. */
+typedef hmi_driver_init_state _SOS_INIT_DRIVER;
 
 /* Four observed dwords at offsets 0, 4, 8, and 0x0c of the register far pointer. */
 typedef struct hmi_driver_record {
@@ -172,47 +207,40 @@ typedef struct hmi_driver_record {
     unsigned value_08;
     unsigned value_0c;
 } hmi_driver_record;
+typedef struct _SOS_HARDWARE {
+    unsigned wPort;
+    unsigned wIRQ;
+    unsigned wDMA;
+    unsigned wParam;
+} _SOS_HARDWARE;
 
-
-/* Candidate view of shared loader state. Field offsets/strides are observed,
- * but the global start and total extent remain OPEN (lk_libs/NOTES.md). */
-typedef struct hmi_driver_tables {
-    hmi_u32 unknown_00;
-    hmi_u32 slot_a[5];
-    hmi_u32 slot_b[5];
-    hmi_far_value far_a[5];
-    hmi_far_value far_b[5];
-    hmi_u32 slot_c[5];
-    hmi_u32 slot_d[5];
-    hmi_far_value far_c[5];
-    hmi_far_value far_d[5];
-    hmi_u32 slot_e[5];
-    hmi_u32 slot_f[5];
-    hmi_u32 loaded[6];
-} hmi_driver_tables_t;
-/* A view over observed lock-region addresses, not an owning C declaration.
- * Five-entry spans delimit the next table; valid allocation count remains OPEN. */
-extern unsigned char hmi_system_data_2dd10[];
-#define hmi_driver_tables (*(hmi_driver_tables_t *)hmi_system_data_2dd10)
+/* SDK globals are independent objects, not fields of the lock marker. */
+extern WORD _sosDIGIData_Start;
+extern WORD _sosDIGIData_End;
+extern WORD _wSOSDriverLinear[], _wSOSTimerLinear[];
+extern WORD _wSOSDriverSize[], _wSOSTimerSize[];
+extern WORD _wSOSDriverMemHandle[], _wSOSTimerMemHandle[];
+extern hmi_far_value _lpSOSTimer[], _lpSOSTimerCS[];
 
 /* Separate HMI driver identifier list, loaded from 2:2deae. */
-extern hmi_u32 hmi_driver_ids[];
+extern WORD _wSOSDriverType[];
 
-typedef struct hmi_detect_header {
-    hmi_u8 unknown_00[0x20];
-    hmi_u32 record_count;
-    hmi_u8 unknown_24[4];
-    hmi_u32 length;
-} hmi_detect_header;
+/* SOS file and driver headers. Layouts match the pinned sos.h fields at the
+ * DOS-read offsets 0x20, 0x24, 0x28, and 0x2c. */
+typedef struct _FILEHEADER {
+    unsigned char szName[32];
+    unsigned wDrivers;
+    unsigned lOffset;
+    unsigned lFileSize;
+} _FILEHEADER;
 
-typedef struct hmi_detect_driver_info {
-    hmi_u8 unknown_00[0x24];
-    hmi_u32 value_24;
-    hmi_u32 value_28;
-    hmi_u8 unknown_2c;
-    hmi_u8 flags_2d;
-    hmi_u8 unknown_2e[2];
-} hmi_detect_driver_info;
+typedef struct _DRIVERHEADER {
+    unsigned char szName[32];
+    unsigned lNextDriver;
+    unsigned wSize;
+    unsigned wDeviceID;
+    unsigned wExtenderType;
+} _DRIVERHEADER;
 
 /* 1:72e02..72e41: resource list is a far pointer at +0x48,
  * not the beginning of the outer detector request. */
@@ -221,75 +249,76 @@ typedef struct hmi_detect_request {
     hmi_s16 __far *resources;
 } hmi_detect_request;
 
-typedef struct hmi_detect_state {
-    hmi_u32 initialized;
-    void __far *memory_a;
-    void __far *memory_b;
-    hmi_s32 file_handle;
-    hmi_u32 unknown_14;
-    hmi_u32 record_index;
-    hmi_u32 unknown_1c;
-    hmi_u32 unknown_20;
-    void __far *table;
-    hmi_u16 data_selector;
-    hmi_u8 unknown_2c[0x3a];
-    hmi_u8 flags_66;
-    hmi_u8 flags_67;
-} hmi_detect_state;
+#pragma pack(4)
+typedef struct _SOS_CAPABILITIES {
+    unsigned char szDeviceName[32];
+    unsigned wDeviceVersion;
+    unsigned wBitsPerSample;
+    unsigned wChannels;
+    unsigned wMinRate;
+    unsigned wMaxRate;
+    unsigned wMixerOnBoard;
+    unsigned wMixerFlags;
+    unsigned wFlags;
+    short __far *lpPortList;
+    short __far *lpDMAList;
+    short __far *lpIRQList;
+    short __far *lpRateList;
+    unsigned fBackground;
+    unsigned wDeviceID;
+    unsigned wTimerID;
+} _SOS_CAPABILITIES;
+typedef _SOS_CAPABILITIES __far *LPSOSDEVICECAPS;
+#pragma pack()
 
 typedef struct hmi_detect_results {
     hmi_u32 values[4];
 } hmi_detect_results;
 
-extern char hmi_system_path[0xff];
-extern hmi_detect_header hmi_loader_header_a;
-extern hmi_detect_driver_info hmi_loader_header_b;
-extern char hmi_detect_path[];
-extern hmi_detect_header hmi_detect_file_header;
-extern hmi_detect_driver_info hmi_detect_info;
-extern hmi_detect_state hmi_detect;
-/* Canonical assembly-owned state; interior C views are fields, never bindings. */
-typedef struct hmi_dpmi_asm_state_t {
-    hmi_u8 unknown_00[0xec];
-    hmi_detect_results results;
-} hmi_dpmi_asm_state_t;
-extern hmi_dpmi_asm_state_t hmi_dpmi_asm_state;
-#define hmi_results (hmi_dpmi_asm_state.results)
+extern BYTE _pSOSDriverPath[0xff];
+extern _FILEHEADER sLOADFileHeader;
+extern _DRIVERHEADER sLOADDriverHeader;
+extern BYTE _pSOSTempDriverPath[];
+extern _FILEHEADER _sDETFileHeader;
+extern _DRIVERHEADER _sDETDriverHeader;
+extern BOOL _wDETInitialized;
+extern LPSTR _lpDETDriverBuffer;
+extern LPSTR _lpDETDriverBufferCS;
+extern WORD _hDETFile;
+extern DWORD _dwDETDriverIndex;
+extern WORD _wDETDriverIndexCur;
+extern WORD _wDETMemHandle;
+extern WORD _wDETLinear;
+extern LPSOSDEVICECAPS _lpDETDeviceCaps;
+extern _SOS_CAPABILITIES _sDETCaps;
+/* SDK WORD results occupy four bytes (word result and reserved zero word). */
+extern WORD wDetectPort, wDetectDMA, wDetectIRQ, wDetectParam;
 /* HMI timer event tables. The entry counts and widths are read from the
  * indexed accesses in 1:71cae..72309. */
-extern unsigned long hmi_timer_divisor;
-extern void __far *hmi_timer_callbacks[16];
-extern unsigned long hmi_timer_periods[16];
-extern unsigned long hmi_timer_counts[16];
-extern unsigned long hmi_timer_fractions[16];
-extern unsigned char hmi_timer_options[16];
-extern unsigned char hmi_timer_last_option;
-extern unsigned long hmi_timer_reentry_count;
-extern unsigned long hmi_timer_dispatch_index;
-typedef struct hmi_timer_asm_state_t {
-    hmi_u8 unknown_00[0x1030];
-    hmi_u8 enabled;
-    hmi_u8 unknown_1031[3];
-    hmi_u8 install_mode;
-    hmi_u8 unknown_1035[3];
-} hmi_timer_asm_state_t;
-extern hmi_timer_asm_state_t hmi_timer_asm_state;
-#define hmi_timer_enabled (hmi_timer_asm_state.enabled)
-#define hmi_timer_install_mode (hmi_timer_asm_state.install_mode)
-extern unsigned long hmi_timer_asm_data_begin;
-extern unsigned long hmi_timer_asm_data_end;
-extern unsigned long hmi_dpmi_asm_data_begin;
-extern unsigned long hmi_dpmi_asm_data_end;
-s32 hmi_timer_program_divisor(u32 divisor);
+extern WORD _wTIMERValue;
+extern void __far *_lpTIMEREvents[16];
+extern WORD _wTIMEREventRate[16];
+extern WORD _dwTIMEREventFraction[16];
+extern WORD _dwTIMEREventFractionCurrent[16];
+extern BYTE _bSOSMIDITimerSongHandler[16];
+extern BYTE _bSOSMIDISongHandle;
+extern WORD _wSOSTimerEntered;
+extern WORD _wSOSTimerEventIndex;
+extern BYTE _bTIMERInstalled, _bTIMERDPMI;
+extern WORD _sosDIGIData1_Start;
+extern WORD _sosDIGIData1_End;
+extern WORD _sosDIGIData2_Start;
+extern WORD _sosDIGIData2_End;
+s32 sosTIMERSetRate(u32 divisor);
 
 /* HMI driver tables: six-byte stride, starts proven by 1:79102/7977e.
  * Allocation count OPEN: adjacent starts are five entries apart even though
  * 1:791bd accepts index <= 5. Do not infer six-element owning objects. */
-extern hmi_far_value hmi_driver_entrypoints[];
-extern hmi_far_value hmi_driver_contexts[];
-extern unsigned long hmi_loaded_driver_handles[6];
-extern unsigned long hmi_driver_callback_values[6];
+extern hmi_far_value _lpSOSDriver[];
+extern hmi_far_value _lpSOSDriverCS[];
+extern BOOL _wSOSDriverLoaded[5];
+extern WORD _wSOSOutputRate[5];
 
-extern hmi_voice_state __far *hmi_voice_slots[][32];
-extern hmi_driver_buffer_info __far *hmi_driver_buffers[];
+extern _SOS_SAMPLE __far *_lpSOSSampleList[][32];
+extern hmi_driver_buffer_info __far *_lpSOSDMAFillCount[];
 #endif

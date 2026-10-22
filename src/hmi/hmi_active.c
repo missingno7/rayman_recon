@@ -3,16 +3,16 @@
  * Empty begin/end routines recur around HMI modules; retain their real extents. */
 #include "hmi_local.h"
 
-void hmi_active_begin(void) {}
-unsigned sub_71B0F(unsigned driver)
+void sosDIGIPlyng_Start(void) {}
+unsigned sosDIGISamplesPlaying(unsigned driver)
 {
     unsigned voice;
     unsigned count;
     count = 0;
     for (voice = 0; voice < 32; voice++) {
-        if (hmi_voice_slots[driver][voice]->flags.raw & 0x8000)
+        if (_lpSOSSampleList[driver][voice]->flags.raw & 0x8000)
             count++;
     }
     return count;
 }
-void hmi_active_end(void) {}
+void sosDIGIPlyng_End(void) {}
