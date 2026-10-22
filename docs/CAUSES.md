@@ -14,20 +14,15 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - Consequence: reconstruct header sets/declaration order only where BSS ownership needs it; do not use extra/arbitrary
   declarations, Android order or PS1 file boundaries as an allocation fix. The credits_init +2 belongs to H2 (data).
 
-## H2 - Phantom globals: Rayverse-derived bindings split original objects (TESTING: worker alias_audit)
-- Observations (3 PROVEN instances so far): init_data_state/record fields were bound as separate globals (lk_stage4);
-  game_title is language_txt[231] (id_conflicts: DOS ToDoAtExit reads slot 231); menu_to_display "row 9" is
-  text_to_display[0] scratch (9 menu rows, not 10). Each caused an overlap/unresolved name; fixing them closed BSS
-  (+44, +1,940 B) with no STRICT change. Remaining: 1,505 BSS bytes uncovered, language_txt capacity OPEN (237 used,
-  Android 300), credits_init declaration-index model off by +2 mod 25 (tu_central).
-- Hypothesis: more bound "globals" are interior elements/fields of original arrays/structs (Rayverse names every
-  address it saw). Phantom globals add symbol-table declarations that the original TU did not have -> the BSS
-  declaration-index groups drift (credits_init +2?), holes and overlaps appear, and fragments cannot be merged into a TU.
-- Relation to H1: H1 is refuted for code, so the declaration-set question matters only for data/BSS (this hypothesis).
-- Smallest experiment: classify every data binding by DOS access pattern (only ever accessed as base+k of a neighbour,
-  same stride as an adjacent array, address inside a typed extent); count candidates around the credits_init and the
-  remaining holes; remove/merge the proven ones and recompute the declaration-index model - does the +2 disappear?
-- Would unblock: central BSS TU(s), remaining holes, natural-link BSS placement.
+## H2 - Phantom globals: Rayverse-derived bindings split original objects (PARTLY CONFIRMED, exhausted for now)
+- CONFIRMED instances (fixed): init_data_state/record fields (lk_stage4); game_title = language_txt[231]; menu row 9 =
+  text_to_display[0] (id_conflicts); inverse case: HMI aggregates spanning vendor publics (hm_names2). Effect: BSS
+  holes 7 -> 5, +1,984 BSS bytes, last non-HMI unresolved name reduced to _language_txt.
+- alias_audit (all 1,281 game-data bindings classified by DOS access): no further phantom proven; weak candidates
+  listed in build/workers/alias_audit/CANDIDATES.md. REFUTED as the cause of the credits_init declaration-index +2
+  (unchanged after the known consolidations). Remaining: 5 central BSS holes, language_txt capacity (237 used,
+  Android 300) - both need independent size/ownership evidence, not adjacency.
+- Next only with new evidence (e.g. original TU partition of the central data, an allocation size).
 
 ## H3 - Some objects were built with a different compiler profile (REFUTED, causal_profile)
 - 11 objects without Rayman source ancestry (effect*, effecthelp, movieprefix, savecodec, dosmem, cdaudio) + 3 controls,
