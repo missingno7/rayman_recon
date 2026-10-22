@@ -41,3 +41,10 @@ milestones (TU data verification, relink of `_TEXT`, PMW1 re-packing).
 ## Provenance tags (config/units.json)
 DOS_BINARY_DERIVED, RAYVERSE_GUIDED, PS1_SOURCE_GUIDED, CROSS_VERSION_CONFIRMED, HISTORICAL_LIBRARY,
 ORIGINAL_ASM, NEW_TOOLING - evidence ancestry, not matching status.
+
+## Own data-segment placement from data relocations (2026-10-22, build/workers/t_match)
+An initialised segment that no code fixup or bound public places (e.g. the CONST literal pool of a data-only unit
+whose `_DATA` pointer table points into it) is placed from the object's own off32 data relocations whose source segment
+is anchored by consistent bound publics: every vote (oracle target - field - displacement) must agree, otherwise the
+segment is MISMATCH; inferred segments never anchor further inference. All existing checks (complete bytes, coverage,
+fixup sites, targets) still apply. tests/test_data_placement.py has positive and negative controls.

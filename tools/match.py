@@ -18,6 +18,8 @@ For every public function of the object's CODE segment (or only FUNC...):
               (b) config/symbols.json game bindings, (c) build/oracles/<o>/libsyms.json library bindings,
               (d) the object's own initialised data segments, located from the first reference and accepted
               only if their entire contents equal the oracle bytes there and every reference agrees.
+              Unplaced data segments can also be located by unanimous off32 relocations in data segments
+              anchored by consistent bound publics; the complete segment checks still apply.
 Status: STRICT (all of the above), CODE_BYTES_MATCH (bytes + sites equal, some reference unverified),
 NEAR_MATCH (differences, reported), UNPLACED (no binding). Masked equality is never reported as STRICT.
 """
@@ -101,6 +103,59 @@ def side_by_side(cand, orig, start, base, n=10):
     return out
 
 
+def infer_data_bases(img, mod, seg_base, binds, data_si):
+    """Place missing initialized segments from unanimous, publicly anchored data fixups.
+
+    This is placement evidence only: segment_report still checks complete contents, coverage,
+    fixup sites and targets. Inferred segments never become anchors for further inference.
+    Existing placements (including CODE-fixup inference) are left alone.
+    """
+    anchors = {}
+    for si in data_si:
+        seg = mod.segments[si]
+        if seg.cls.upper() == "BSS":
+            continue
+        bases = set()
+        for n, s, off, _ in mod.publics:
+            if s == si:
+                addr, _src = binds.lookup(n)
+                if addr:
+                    bases.add((addr[0], addr[1] - off))
+        if len(bases) == 1 and seg_base.get(si) == next(iter(bases)):
+            anchors[si] = seg_base[si]
+    votes = {}
+    for f in mod.fixups:
+        if f.seg not in anchors or (f.target[0] & 3) != 0:
+            continue
+        target = f.target[1]
+        if target in seg_base or target not in data_si or mod.segments[target].cls.upper() == "BSS":
+            continue
+        seg = mod.segments[f.seg]
+        if f.self_rel or f.kind() not in ("off32", "off32l") or not (0 <= f.off <= seg.size - 4):
+            continue
+        if bytes(seg.covered[f.off:f.off + 4]) != b"\x01" * 4:
+            continue
+        obj, base = anchors[f.seg]
+        if obj not in img.obj or base < 0 or base + seg.size > len(img.obj[obj]):
+            continue
+        oracle_fixup = img.fixups.get((obj, base + f.off))
+        if oracle_fixup is None:
+            continue
+        _, tobj, toff = oracle_fixup
+        field = struct.unpack_from("<i", seg.data, f.off)[0]
+        votes.setdefault(target, []).append((tobj, toff - f.disp - field))
+    evidence = {}
+    for si, candidates in votes.items():
+        bases = set(candidates)
+        evidence[si] = {"placement_votes": len(candidates)}
+        if len(bases) == 1:
+            seg_base[si] = next(iter(bases))
+        else:
+            evidence[si]["placement_problem"] = "data relocation votes imply inconsistent bases " + ", ".join(
+                f"{o}:{b:x}" for o, b in sorted(bases))
+    return evidence
+
+
 def segment_report(img, mod, seg_base, binds):
     """Status of the object's data segments: VERIFIED (whole contents equal the oracle at one consistent base and
     every relocation inside the segment is verified), MISMATCH, UNPLACED (no reference or binding fixes a base),
@@ -120,9 +175,11 @@ def segment_report(img, mod, seg_base, binds):
                 a, _src = binds.lookup(n)
                 if a and si not in seg_base:
                     seg_base[si] = (a[0], a[1] - o)
+    placement = infer_data_bases(img, mod, seg_base, binds, data_si)
     for si in data_si:
         seg = mod.segments[si]
         ent = {"segment": seg.name, "class": seg.cls, "size": seg.size}
+        ent.update(placement.get(si, {}))
         bases = set()
         if si in seg_base:
             bases.add(seg_base[si])
@@ -154,6 +211,9 @@ def segment_report(img, mod, seg_base, binds):
                 else:
                     ent["status"] = "VERIFIED"
                     ent["layout_only"] = True
+        elif ent.get("placement_problem"):
+            ent["status"] = "MISMATCH"
+            ent["problem"] = ent.pop("placement_problem")
         elif not bases:
             ent["status"] = "UNPLACED"
         elif len(bases) > 1:
@@ -430,7 +490,9 @@ def main(argv):
     report(results)
     for g in segs:
         print(f"# data segment {g['segment']:7s} {g['size']:5d} bytes: {g['status']}"
-              + (f" at {g['oracle']}" if g.get("oracle") else "") + (f" ({g['problem']})" if g.get("problem") else ""))
+              + (f" at {g['oracle']}" if g.get("oracle") else "")
+              + (f" ({g['placement_votes']} anchored data relocation votes)" if "placement_votes" in g else "")
+              + (f" ({g['problem']})" if g.get("problem") else ""))
     strict = [r for r in results if r["status"] == "STRICT"]
     print(f"# STRICT {len(strict)}/{len(results)} functions, {sum(r['verified_bytes'] for r in strict)} bytes")
     if "--json" in opts:
