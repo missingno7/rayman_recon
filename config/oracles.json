@@ -38,7 +38,8 @@
    },
    "runtime_libs": [
     "watcom-10.6/LIB386/DOS/CLIB3R.LIB",
-    "watcom-10.6/LIB386/MATH387R.LIB"
+    "watcom-10.6/LIB386/MATH387R.LIB",
+    "watcom-10.6/LIB386/MATH3R.LIB"
    ]
   },
   "dos_v112_us": {
