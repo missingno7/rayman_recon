@@ -20,19 +20,26 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - Would unblock: if confirmed, reconstruct original header/declaration context (original per-file includes, extern
   order) as a structural fix across units instead of per-function work.
 
-## H2 - Central data ownership mistakes behind BSS holes, credits_init index anomaly and overlapping bindings (OPEN)
-- Observations: 7 BSS holes / 2,988 B; language_txt (300 pointers) overlaps game_title etc.; menu_to_display overlaps
-  text_to_display; credits_init +2 index anomaly; 103 BSS fragments cannot be placed by any link order.
-- Hypothesis: some bound "globals" are fields/sub-arrays of larger original objects (or vice versa), and the true objects
-  belong to TUs we have not reconstructed; the same wrong partition creates holes, overlaps and index drift.
-- Smallest experiment: pending id_conflicts (identity of the overlapping objects); then test whether the corrected
-  identities close holes and change the index count in the predicted direction.
-- Would unblock: whole-BSS central TU(s) -> natural-link BSS placement; last non-HMI unresolved names.
+## H2 - Phantom globals: Rayverse-derived bindings split original objects (TESTING: worker alias_audit)
+- Observations (3 PROVEN instances so far): init_data_state/record fields were bound as separate globals (lk_stage4);
+  game_title is language_txt[231] (id_conflicts: DOS ToDoAtExit reads slot 231); menu_to_display "row 9" is
+  text_to_display[0] scratch (9 menu rows, not 10). Each caused an overlap/unresolved name; fixing them closed BSS
+  (+44, +1,940 B) with no STRICT change. Remaining: 1,505 BSS bytes uncovered, language_txt capacity OPEN (237 used,
+  Android 300), credits_init declaration-index model off by +2 mod 25 (tu_central).
+- Hypothesis: more bound "globals" are interior elements/fields of original arrays/structs (Rayverse names every
+  address it saw). Phantom globals add symbol-table declarations that the original TU did not have -> the BSS
+  declaration-index groups drift (credits_init +2?), holes and overlaps appear, and fragments cannot be merged into a TU.
+- Links to H1: both are "our declaration set differs from the original".
+- Smallest experiment: classify every data binding by DOS access pattern (only ever accessed as base+k of a neighbour,
+  same stride as an adjacent array, address inside a typed extent); count candidates around the credits_init and the
+  remaining holes; remove/merge the proven ones and recompute the declaration-index model - does the +2 disappear?
+- Would unblock: central BSS TU(s), remaining holes, natural-link BSS placement.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
 - CONFIRMED: first natural-link divergences were structural (asm slicing, data ownership, const table), not NEAR drift.
 - CONFIRMED: HMI link blocker = wrong assembler/object format; original library resolves it.
+- CONFIRMED (instances of H2): game_title = language_txt[231]; menu row 9 = text_to_display[0]; init_data_state/record fields.
 - REFUTED: pure register renaming class (0 functions); case-order hypothesis; v1.12 source changes as NEAR cause;
   generic source rewrites (staging, operand order, predicate extraction) as cross-unit rules.
