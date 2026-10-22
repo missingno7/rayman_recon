@@ -289,3 +289,10 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   duplicated bodies may be indistinguishable after optimisation (blocs init_calcbloc_func); no 4-byte case alignment
   (573 entries unaligned); a case block may lie OUTSIDE its public extent via tail sharing/fallthrough into the next
   function (neige DoNeigeRaymanCollision: case 31/default -> previous RET 1:4c3ab, case 30 -> after set_SNSEQ_list).
+- Special instructions in C code (h_int, PROVEN): 209 sites / 54 functions / 19 units scanned; 194 already reproduced
+  (all IN/OUT, REP OUTSB, CLI/STI, debug registers, INT3, PUSHFD/POPFD, IRETD). Watcom 10.6 intrinsics: inp/outp inline
+  through DX (even for immediate ports), _disable = CLI, _enable = STI;CLD, int386 = marshalling call. Six real INT
+  sites; only LOAD_CONTINUE_SCREEN 1:2662a/2663f missing (DRM disk check, AX/BX results: every tested C carrier spills -
+  OPEN, kept out of src). 13 CLD sites (movieprefix x7, luciole plot2line x4, effect633e0 x2) are missing in our builds:
+  a CLD-only pragma reproduces them but gains no function (the surrounding clear/copy bodies differ) - NEGATIVE.
+  outpw for effect1 SaveScreen/RestoreScreen: NEGATIVE (adds promotion, 10->84 diffs).
