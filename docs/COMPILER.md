@@ -279,3 +279,13 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   AFFICHE_BUTTON_JOYSTICK, AFFICHE_VIDEOMODE_SCREEN) reference automatic-aggregate initialisers at the object's _TEXT
   prefix, which are correct; earlier size drift moves the implied base. Class b (3 displacement-only functions, 26
   differences mapped): no source fix validated.
+- Switch layout (sw_layout, PROVEN on 13 blocked owners / 17 tables / 202 entries and 85 tables in 68 STRICT functions):
+  our case-entry order, grouping (shared targets incl. repeated defaults), table placement and RET counts already equal
+  DOS for all 13 table owners of reference-only NEAR functions; their wrong table destinations come from local
+  instruction-LENGTH changes inside the bodies: byte-register choice changes encodings (accumulator AL/AX absolute
+  loads/stores and AL immediate compares are 1 byte shorter: 8 of 13 owners), [esp] vs [esp+4] homes, scaled
+  addressing vs LEA/SHL, CSE snapshots, predicate lowering. So B1 reduces to allocation/lowering (no case-order fix).
+  W-SWITCH limits: case bodies are not sorted by value (moskito tellNextMoskitoAction 2,3,5,12,default); grouped and
+  duplicated bodies may be indistinguishable after optimisation (blocs init_calcbloc_func); no 4-byte case alignment
+  (573 entries unaligned); a case block may lie OUTSIDE its public extent via tail sharing/fallthrough into the next
+  function (neige DoNeigeRaymanCollision: case 31/default -> previous RET 1:4c3ab, case 30 -> after set_SNSEQ_list).
