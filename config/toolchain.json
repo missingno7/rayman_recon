@@ -89,6 +89,22 @@
    },
    "use": "format reference only (DOCS/PMW1FMT.TXT, PMWLITE/PMW1.H, DECODE.ASM); nothing executed"
   },
+  "pmodew122": {
+   "product": "PMODE/W 1.22 (1996-02-13) binaries: PMODEW.EXE stub, PMWLITE.EXE, PMWBIND.EXE, PMWSETUP.EXE",
+   "dir": "pmodew-1.22",
+   "source": "http://www.retroarchive.org/cdrom/garbo_dos/c-lang/pmw122.zip (Garbo c-lang mirror, 127,288 bytes, fetched 2026-10-22); local C:/tools/download/pmodew122/",
+   "archives": {
+    "pmw122.zip": "417a358e7315e4ff97463eb4c93bf78fddff445d36f425b9c877cae52d0bb177"
+   },
+   "authentication": "PMODEW.EXE body after its 32-byte MZ header (9,955 bytes) is byte-identical to the RAYMAN.EXE (gog_v121_us) stub body after its 64-byte header; banner 'PMODE/W v1.22 DOS extender - Copyright 1994-1996, Daredevil and Tran.'",
+   "key_files": {
+    "PMODEW.EXE": "f71dab8f52163fa5ad01c5a9df13e4090cb12858452684ddafc53a703c573198",
+    "PMWLITE.EXE": "44af4d99391ee2b442bdfe408e0f71a37177e357d7fd495996835cf4cb7af2e1",
+    "PMWBIND.EXE": "9d5bfefd784b731ceff0e8682d6933e4d39c1e16df5e5466689a53e2a139c8cb",
+    "PMWSETUP.EXE": "cdb878a45572fb0c036c98ee7083e8083944139b547981948edcaaf622cf87e8"
+   },
+   "use": "link-stage exploration only (user decision 2026-10-22): run PMWLITE/PMWBIND under emulation (MS-DOS Player, else DOSBox-X) on minimal test executables; no Rayman packing yet"
+  },
   "wc105_iso": {
    "product": "WATCOM C/C++ 10.5 verbatim ISO tree (compiler truncated; libraries/headers usable)",
    "dir": "watcom-10.5"
