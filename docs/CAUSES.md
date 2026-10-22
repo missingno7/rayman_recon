@@ -53,10 +53,15 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - Scan: 39 of 301 NEAR functions have larger DOS frames. h6_capacity audited all 39: 31 have no local aggregate, none of
   the other 8 supports a further capacity edit (movieprefix sub_3AF20's tail follows a pointer - owner OPEN). EXHAUSTED.
 
-## H7 - Inverse allocation: derive the record order DOS needs, map it to source (TESTING: worker inv_alloc)
+## H7 - Inverse allocation: derive the record order DOS needs, map it to source (CONFIRMED in an instance, inv_alloc)
 - With the 10.6 rules known (H5), a pure home/register tie in a NEAR function can be inverted: which backend record
   set/order produces DOS's choice under the unstable sort and colouring rule? Map the required records to source
   variables/temporaries and change the source accordingly (a derived edit, not a grid).
+- Result: effecthelp effect_helper_168c8 STRICT - equal savings (122) between descriptor and points, descriptor must
+  colour first; inverting the EARLIER name sort shows the local declaration order item/i decides it (the obvious swap of
+  the two pointers provably does nothing). Non-homed names shape home ties in 4 units (18/18 homes). Three-address
+  expansion temporaries can survive into the home sort (AfficheEntete) - some inverses need a change before
+  instruction expansion. Next: scale the method across NEAR functions with pure ties (workers inv_*).
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
