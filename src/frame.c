@@ -494,7 +494,10 @@ void update_map(s16 x1, s16 y1, s16 x2, s16 y2) {
 
 /* DOS callers 1:795e and 1:7988 pass sign-extended camera x/y in EAX/EDX. */
 void sub_3BE20(s16 x, s16 y) {
-    u32 context[3];
+    /* DOS 1:2be25 reserves 24 bytes: context starts at ESP, dest is at
+       +0x10 and plane at +0x14. Reconstruct the context's 16-byte capacity;
+       the purpose of the unaccessed fourth word is OPEN. */
+    u32 context[4];
     s32 mask;
     u32 dest = 0;
     s16 plane;
