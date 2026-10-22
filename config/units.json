@@ -16733,6 +16733,24 @@
      ]
     }
    }
+  },
+  "bss_record": {
+   "source": "src/bss/bss_record.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_init_state": {
+   "source": "src/bss/bss_init_state.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
   }
  }
 }

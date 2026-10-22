@@ -4,6 +4,8 @@
    Existing frame_local.h contains original port-only inline instructions.
    All new pragmas below declare external assembly register ABIs only. */
 #include "obj.h"
+#include "init_data_state.h"
+extern init_data_state_t init_data_state;
 #include "game.h"
 #include "map.h"
 #include "inline_helpers.h"
@@ -529,8 +531,8 @@ typedef struct frame_context_t {
     u8 *background_end;
     u32 background_length;
 } frame_context_t;
-extern u8 *frame_buffer_origin;
-extern s32 frame_scroll_x, frame_scroll_y;
+
+
 extern u32 frame_records_38f88[14][32];
 extern s32 block_add[1200];
 void asm_03912(u32 mask, u32 stride, u32 offset, const frame_context_t *context,
@@ -553,9 +555,9 @@ void asm_04493(u32 phase, map_tile_t *tiles, const frame_context_t *context,
 
 void sub_3BEE0(s16 x, s16 y) {
     frame_context_t context;
-    u8 *origin = frame_buffer_origin;
-    s32 scroll_x = frame_scroll_x;
-    s32 scroll_y = frame_scroll_y;
+    u8 *origin = ((u8 *)init_data_state.draw_origin);
+    s32 scroll_x = init_data_state.scroll_x;
+    s32 scroll_y = init_data_state.scroll_y;
     u32 tile_stride = plan0bit_nb_bytes * 16;
     map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
     s32 mask = planar_copy_offset;
@@ -708,8 +710,8 @@ void SetVideoRegister(void) {
 
 /* INVENTED purpose names. DOS 1:06fd4 stores draw-buffer-relative origin;
    1:07075 stores the PLAN0BIT-relative source pointer. */
-extern u8 *frame_buffer_origin;
-extern u8 *frame_source_origin;
+
+
 extern u32 frame_records_38f88[14][32];
 extern u8 BackgroundOn, FondAutorise;
 /* External assembly ABIs proven by 1:02850..02b2f; see lowlevel_abi.h.
@@ -728,9 +730,9 @@ void sub_3C3BC(s16 x, s16 y) {
     s32 row, column;
     u8 *buffer_start = (u8*)PLAN1_BUFFER_START_POINTER;
     s32 row_skip = mp.width - 20;
-    u8 *dest = frame_buffer_origin;
+    u8 *dest = ((u8 *)init_data_state.draw_origin);
     map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
-    u8 *source = frame_source_origin;
+    u8 *source = ((u8 *)init_data_state.source_origin);
     if (BackgroundOn && FondAutorise) {
         u32 stride = plan0bit_nb_bytes * 16;
         if (P486) {

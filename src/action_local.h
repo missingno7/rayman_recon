@@ -56,14 +56,7 @@ typedef struct deform_blit_t {
     s32 source_height;
 } deform_blit_t;
 
-typedef struct init_data_state_t {
-    s16 x;
-    s16 y;
-    s32 c4;
-    s32 c8;
-    s32 cc;
-    s32 d0;
-} init_data_state_t;
+#include "init_data_state.h"
 
 typedef struct grp_star_t {
     u8 timer;

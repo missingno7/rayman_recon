@@ -13943,12 +13943,6 @@
     "type": "s16",
     "evidence": "Android size 2; DOS word load at Get_PosLave_Y 1:6a338"
    },
-   "data_23af64": {
-    "addr": "2:3af64",
-    "name": "INVENTED",
-    "type": "u8",
-    "evidence": "DOS byte comparison at 1:68ea1; semantic identity OPEN"
-   },
    "nb_floc": {
     "addr": "2:3aeb0",
     "type": "s16[8]",
@@ -16092,35 +16086,11 @@
     "name": "INVENTED",
     "evidence": "DOS references a 32-bit pointer at 2:57464; 1:6ee54 allocates 0xbc bytes for its pointee, and Android lookup for effect_state_6e returned no symbol"
    },
-   "frame_buffer_origin": {
-    "addr": "2:321c4",
-    "name": "INVENTED",
-    "type": "u8 *",
-    "evidence": "DOS 1:6f80..6fd4 computes draw_buffer-relative pointer, 1:2c3e8 reads dword"
-   },
-   "frame_source_origin": {
-    "addr": "2:321d0",
-    "name": "INVENTED",
-    "type": "u8 *",
-    "evidence": "DOS 1:700f..7075 computes PLAN0BIT-relative pointer, 1:2c403 reads dword"
-   },
    "frame_records_38f88": {
     "addr": "2:38f88",
     "name": "INVENTED",
     "type": "u32[14][32]",
     "evidence": "DOS 1:2c4d8 passes array; 1:2850..29d2 writes 14 record rows at 128-byte stride; 1:2bfa6 passes its second row 2:39008"
-   },
-   "frame_scroll_x": {
-    "addr": "2:321c8",
-    "name": "INVENTED",
-    "type": "s32",
-    "evidence": "DOS 1:6fe4/6ff4 and 1:700a dword stores; 1:2bef2/2befc reads; camera offsets from 1:6f80..7082"
-   },
-   "frame_scroll_y": {
-    "addr": "2:321cc",
-    "name": "INVENTED",
-    "type": "s32",
-    "evidence": "DOS 1:6fe4/6ff4 and 1:700a dword stores; 1:2bef2/2befc reads; camera offsets from 1:6f80..7082"
    },
    "sp_y": {
     "addr": "2:540a9",

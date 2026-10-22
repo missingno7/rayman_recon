@@ -102,7 +102,7 @@ extern s16 sko_rayon_dx;
 extern s16 sko_rayon_dy;
 extern s16 sko_final_x;
 extern s16 sko_final_y;
-extern u8 data_23af64;
+extern record_t record;
 s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj);
 void TEST_SIGNPOST(void);
 void set_main_etat(obj_t* obj, u8 etat);
@@ -584,7 +584,7 @@ void set_rubis_list(void)
         }
     } while (swapped);
 
-    if (ModeDemo != 0 || data_23af64 != 0) {
+    if (ModeDemo != 0 || record.is_recording != 0) {
         ecroule_plat_index = 8;
     } else {
         ecroule_plat_index = (s16)myRand(177) % 3 << 3;

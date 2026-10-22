@@ -444,15 +444,15 @@ void InitData(s16 x, s16 y, s16 origin_x, s16 origin_y) {
     init_data_state.y = y & 0x0F;
     offset = (s32)draw_buffer - init_data_state.x / 4 -
                         ((init_data_state.y * 5) << 4);
-    init_data_state.c4 = offset + 1;
+    init_data_state.draw_origin = offset + 1;
     if (type_fndscrX)
-        init_data_state.c8 = 0;
+        init_data_state.scroll_x = 0;
     else
-        init_data_state.c8 = origin_x + 16 - init_data_state.x;
-    init_data_state.cc = origin_y + 16 - init_data_state.y;
-    init_data_state.d0 = (s32)PLAN0BIT + init_data_state.c8 / 4 +
-        init_data_state.c8 % 4 * ((u32)plan0bit_length >> 2) +
-        init_data_state.cc * plan0bit_nb_bytes;
+        init_data_state.scroll_x = origin_x + 16 - init_data_state.x;
+    init_data_state.scroll_y = origin_y + 16 - init_data_state.y;
+    init_data_state.source_origin = (s32)PLAN0BIT + init_data_state.scroll_x / 4 +
+        init_data_state.scroll_x % 4 * ((u32)plan0bit_length >> 2) +
+        init_data_state.scroll_y * plan0bit_nb_bytes;
     mask = 1 << (3 - (init_data_state.x & 3));
     planar_copy_offset = mask;
 }
