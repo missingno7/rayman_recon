@@ -94,6 +94,17 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   AL across joy_done++ (the AL exclusion cancels the removed request); a one-case switch restores DL/BL/AH but counter,
   dispatch and predicate differences remain. STATUS: EXHAUSTED for these owners without new source evidence.
 
+## H9 - Most NEAR functions have several independent allocator causes, not one (explain_sweep, 2026-10-23)
+- tools/explain.py over all 295 game NEAR functions (277 traced; 18 attribution failures: 2 sound snd_sqrt_table,
+  16 frame): class A (one isolated cause) 2 - mite IS_MIT_PAF (Score, joint payoff with DO_MIT_ATTAK/DO_MIT_COMMAND),
+  ray RAY_BALANCE_ANIM (Score); class B (2-3 cause fingerprints, no structural finding) 4 - ufo
+  DO_MOVING_WITH_INDICATOR_COMMAND (colour), basic calc_btyp_square / INIT_TXT_BOX (home sort), and one Score case;
+  class C (structural or mixed) 271. Functions with at least one finding: size/structure 255, colour tie 220,
+  colour decision 152, rover 137, home sort 108, Score 71, selection 22.
+- Consequence: per-function single-edit fixes are available only for a handful of functions; the bulk differs in IR
+  shape (size/structure) before allocation. Report: build/workers/explain_sweep/sweep.md (+ out/<unit>_<function>/).
+- Follow-up wave fx_ufo / fx_basic / fx_small / fx_score targets the A/B set with explain.py as the acceptance check.
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
