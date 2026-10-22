@@ -315,3 +315,8 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
 - Cross-version NEAR check (v112_near, all 301 NEAR mapped to DOS v1.12): 0 functions STRICT on v1.12 but NEAR on v1.21;
   275 have identical DOS bytes in both versions (our mismatch is ours, no version information); 26 differ between the
   versions only by already-reproduced edits (glyph ABI, protection, archive banks, palette state). NEGATIVE as a lever.
+- Assemblers (asm_id, t_tasm): HMI's two assembly modules differ from WASM only in 73 reg-reg ModRM directions
+  (DOS `8b ec`, WASM `89 e5`); MASM 5.10/5.10A/6.x and TASM 1.0-2.01 all emit DOS's direction; TASM 2.0 /ml /op reproduces
+  both complete contributions (TASM 2.01 differs in an operand-size prefix) and emits Phar Lap-style LOC=5 32-bit fixups
+  (tools/omf.py reads them only for proven TASM 2.0 /op modules). The game's low-level block matches WASM 10.6 (identity
+  still OPEN).

@@ -52,9 +52,11 @@ lowering, materialised booleans) and four effect drafts without a unit (1:633e0,
 ## Linked third-party code: HMI SOS (2026-10-22)
 1:71afa..1:797f5 (~20 KB) is the HMI (Human Machine Interfaces) SOS sound library linked after the game code (vendor
 PROVEN from HMIDET/HMIDRV banners and string fixups; SDK version OPEN; no library binary available). 11 groups are
-unoptimised Watcom C - profile `hmi` = wc106 `-zq -od -s -3r` - and 2 are hand-written assembly. Units live in src/hmi/
-(names INVENTED). First groups STRICT: hmi_active, hmi_status, hmi_errors (10 functions, 477 bytes). These count in the
-STRICT totals but are not game code.
+unoptimised Watcom C - profile `hmi` = wc106 `-zq -od -s -3r` - and 2 are hand-written assembly, PROVEN reproduced by
+**Borland TASM 2.0 /ml /op** (profile `hmi_tasm`, run under MS-DOS Player; the game's own low-level assembly still
+matches WASM, so HMI and the game used different assemblers). Units live in src/hmi/ (names INVENTED). STRICT so far:
+hmi_active, hmi_status, hmi_errors (10 functions), hmi_timer_asm 10/10, hmi_dpmi_asm 40/40 (whole objects). These count
+in the STRICT totals but are not game code.
 
 ## Cross-version: DOS v1.12 (2026-10-22, build/workers/v112/REPORT.md)
 The 1,359 v1.21 STRICT functions (86 units) rebuilt unchanged against the `dos_v112_us` oracle (worker overlay
