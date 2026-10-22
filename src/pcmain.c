@@ -336,7 +336,7 @@ s16 test_allowed(obj_t* obj, s16 center_x, s16 center_y);
 void InitMemoryVariable(void);
 void wait_milliseconds(u32 duration);
 void AfficheEntete(void);
-void main_Ray(int argc, char** argv);
+void main(int argc, char** argv);
 void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y);
 s16 testActionEnd(obj_t *obj);
 s16 firstFloorBelow(obj_t* obj);
@@ -984,7 +984,7 @@ u8 detect_windows(u8 *major, u8 *minor);
 void sub_5BAD8(void);
 extern u8 HVerDos, LVerDos;
 extern char saved_argv[255];
-void main_Ray(int argc, char** argv) {
+void main(int argc, char** argv) {
     unlink("c:\\raytmp.tmp");
     AfficheEntete();
     DosDetect = detect_dos_version(&HVerDos, &LVerDos);

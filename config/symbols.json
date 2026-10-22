@@ -7528,11 +7528,6 @@
     "name": "PS1",
     "evidence": "tools/disasm.py exact function header; ps1 name"
    },
-   "main_Ray": {
-    "addr": "1:0836c",
-    "name": "RAYVERSE",
-    "evidence": "tools/disasm.py exact function header; rayverse name"
-   },
    "DisplayCrackers": {
     "addr": "1:093a8",
     "name": "RAYVERSE",
@@ -9650,6 +9645,12 @@
     "aliases": [
      "hmi_driver_op0"
     ]
+   },
+   "main": {
+    "addr": "1:0836c",
+    "name": "RAYVERSE",
+    "evidence": "tools/disasm.py exact function header; rayverse name; PROVEN runtime cmain386 rel32 calls main_ at this address; Watcom main-specific startup dependencies restored (lk_stage5)",
+    "previous_reconstruction_name": "main_Ray"
    }
   },
   "data": {

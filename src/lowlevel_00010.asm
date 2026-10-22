@@ -8,9 +8,29 @@ CONST segment dword public use32 'DATA'
 CONST ends
 CONST2 segment dword public use32 'DATA'
 CONST2 ends
+XIB segment word public use32 'DATA'
+XIB ends
+XI segment word public use32 'DATA'
+XI ends
+XIE segment word public use32 'DATA'
+XIE ends
+YIB segment word public use32 'DATA'
+YIB ends
+YI segment word public use32 'DATA'
+YI ends
+YIE segment word public use32 'DATA'
+YIE ends
+TIB segment byte public use32 'DATA'
+TIB ends
+TI segment byte public use32 'DATA'
+TI ends
+TIE segment byte public use32 'DATA'
+TIE ends
+DATA segment word public use32 'DATA'
+DATA ends
 DATA32 segment dword public use32 'DATA'
 DATA32 ends
-DGROUP group _DATA, CONST, CONST2, DATA32
+DGROUP group _DATA, CONST, CONST2, XIB, XI, XIE, YIB, YI, YIE, TIB, TI, TIE, DATA, DATA32
 
 ; ---- Accepted source: lowlevel_00010.asm ----
 ; DOS gog_v121_us 1:00010..1:02640, complete assembly slice.

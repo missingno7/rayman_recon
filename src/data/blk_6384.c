@@ -168,3 +168,42 @@ u8 effect_choice = 0; //964C9
 u8 byte_964CA = 1; //964CA
 u16 effect_speed = 0; //964CC
 u8 effect_pause_bloque = 0; //964CE
+
+/* GOG v1.21 _DATA 2:064d0. Typed reconstruction; see NOTES.md.
+ * Block split and dt_str_* names INVENTED. No literal pointer addresses. */
+#include "rtypes.h"
+
+
+u16 effect_pause_count = 0;
+u16 effect_pause_timer = 0;
+s32 effect_pause_counter = 0;
+u8 movie_saved_frequency = 60;
+s8 movie_audio_track = 0;
+u8 movie_audio_enabled = 0;
+u8 movie_audio_state = 2;
+u8 movie_audio_counter = 0;
+
+/* Part of the central data TU (GOG v1.21 obj2 _DATA). Block file and split INVENTED; values verified against the
+   oracle by tools/verify.py (data segment check). From build/workers/data_rv (Rayverse data.c + DOS corrections). */
+#include "rtypes.h"
+
+u8 playing_intro_video = 0; //964DD
+
+/* GOG v1.21 _DATA 2:064e0. Typed reconstruction; see NOTES.md.
+ * Block split and dt_str_* names INVENTED. No literal pointer addresses. */
+#include "rtypes.h"
+
+
+s32 movie_audio_limits[5][4] = {
+    {3840, 1, 215, 223},
+    {7936, 223, 412, 468},
+    {65832, 468, 890, 920},
+    {70656, 920, 1170, 1195},
+    {16777215, 1195, 1800, 1805},
+};
+u8 movie_saved_mode = 60;
+u8 movie_palette_flag = 0;
+u8 movie_playback_state = 0;
+s32 movie_palette_xmin = 0;
+s32 movie_palette_xmax = 256;
+u8 *movie_draw_buffer = 0;
