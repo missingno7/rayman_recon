@@ -94,7 +94,7 @@ extern u8 horloge[25];
 extern s16 stosko_obj_id;
 extern s16 temps_text;
 extern char txt_dark2[100];
-extern char *language_txt[300];
+extern char *language_txt[];
 extern s16 xmap;
 extern s16 xmapmax;
 extern s16 ymap;

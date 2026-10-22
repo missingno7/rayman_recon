@@ -192,7 +192,6 @@ extern u8 use_sync;
 void init_all_memory(u32 size);
 void sub_4212C(s32 value);
 void FatalError(const char *message);
-extern char *game_title;
 extern u8 ALL_WORLD;
 extern u8 Frequence;
 extern u8 GameModeVideo;
@@ -217,7 +216,7 @@ extern u8 fin_boss;
 extern u8 gele;
 extern s16 joy_buttonA1;
 extern u8 language;
-extern char* language_txt[300];
+extern char* language_txt[];
 extern mem_t main_mem_level;
 extern mem_t main_mem_world;
 extern u8 need_check_cheats;
@@ -950,7 +949,7 @@ void ToDoAtExit(void) {
     if (ModeVideoActuel != MODE_TEXT) {
         InitTextMode();
     }
-    printf("\n%s\n", game_title);
+    printf("\n%s\n", language_txt[231]);
 }
 
 void PC_clear_text_input_buffer(void) {

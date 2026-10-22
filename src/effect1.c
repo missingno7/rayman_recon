@@ -405,7 +405,7 @@ extern u8 GameModeVideo;
 extern u8 *EffetBufferNormal;
 extern u8 *display_buffer;
 extern u8 *draw_buffer;
-extern char *language_txt[304];
+extern char *language_txt[];
 extern void display_text(const char *text, s16 x, s16 y, u8 font_size, s8 color);
 
 typedef union vga_register {

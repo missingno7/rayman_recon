@@ -16,7 +16,7 @@ typedef struct cb_collision_t {
     u8 reflect_x, reflect_y, index, reserved;
 } cb_collision_t;
 extern cb_collision_t CBCollis[1];
-extern char *language_txt[300];
+extern char *language_txt[];
 #ifndef ABS
 #define ABS(x) (x >= 0 ? (x) : -(x))
 #endif

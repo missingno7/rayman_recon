@@ -9500,9 +9500,9 @@
    },
    "language_txt": {
     "addr": "2:32b48",
-    "type": "char*[300]",
+    "type": "char*[]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c declares language_txt[304] at 0xC2B48; indices 157 and 158 match DOS pointer loads; Android .bss size 0x4b0 = 300 pointers"
+    "evidence": "DOS LoadLanguageTxt 1:3800c stores sequential dword pointers; all five GOG RAY.LNG blocks initialize indices 0..236. ToDoAtExit 1:272df reads slot 231, whose localized file contents are the exit message; game_title is an interior-element alias. Reserved DOS array capacity remains OPEN; no defining BSS object proposed."
    },
    "rvb_plan3": {
     "addr": "2:37c88",
@@ -13036,8 +13036,10 @@
    "menu_to_display": {
     "addr": "2:3bd08",
     "name": "RAYVERSE",
-    "type": "display_item_t[10]",
-    "evidence": "external/rayverse/src/data.c:2546 comment CBD08; DOS obj2 offset 3bd08"
+    "type": "display_item_t[9]",
+    "evidence": "DOS indexed rows have stride216; key screen initializes/selects 0..8 (INIT_KEY_SCREEN/INIT_AFFICHE_KEY_SCREEN). Four stores formerly spelled menu[9] at 1:3a646/3a659/3a65f/3a667 are text[0] scratch header fields used by AFFICHE_ECRAN_OPTIONS; other menu paths stay <=8. Corrected partition ends at independently bound text_to_display 2:3c4a0; all scratch stores retained.",
+    "size": 1944,
+    "dos_size_evidence": "Nine menu rows, 1944 bytes. The shared-looking tenth row is text_to_display[0], used as scratch separately from selectable menu rows; see exhaustive access/screen-bound audit in build/workers/id_conflicts."
    },
    "TempsDemo": {
     "addr": "2:3d134",
@@ -14638,12 +14640,6 @@
     "type": "u8",
     "name": "RAYVERSE",
     "evidence": "Rayverse data.c annotation CFA10; DOS byte toggle at 1:278? in programmer-message cheat path."
-   },
-   "game_title": {
-    "addr": "2:32ee4",
-    "type": "char *",
-    "name": "INVENTED",
-    "evidence": "DOS ToDoAtExit loads a dword from 2:32EE4 and passes it as the %s argument at 1:272DF..272EB; BSS pointer, size 4."
    },
    "word_CF7E6": {
     "addr": "2:3f7e6",

@@ -92,7 +92,7 @@ extern s16 EtapeFondu;
 extern u8 is_fee;
 extern s8 byte_49290[4];
 extern u8 current_pal_id;
-extern char *language_txt[300];
+extern char *language_txt[];
 extern char title[100];
 extern s16 max_compteur;
 extern u8 msg_box_being_displayed;
@@ -205,7 +205,7 @@ extern mem_t main_mem_level;
 extern s16 max_sound;
 extern u8 menuEtape;
 extern rgb_palette_t menu_rvb;
-extern display_item_t menu_to_display[10];
+extern display_item_t menu_to_display[9];
 extern display_item_t msg_to_display[2];
 extern u16 nb_fade;
 extern u8 new_txt_fee;
@@ -995,10 +995,10 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
     char v32[4] = "off";
 //    u8 v29[4] = {5, 5, 3, 0}; // 0x30505; //dword_49294[1]
     s16 i;
-    menu_to_display[9].is_fond = 1;
-    menu_to_display[9].font_size = 2;
-    menu_to_display[9].field_D5 = 0;
-    menu_to_display[9].color = 1;
+    text_to_display[0].is_fond = 1;
+    text_to_display[0].font_size = 2;
+    text_to_display[0].field_D5 = 0;
+    text_to_display[0].color = 1;
     for (i = first_option; i <= first_option + nbre_options; ++i) {
 
         menu_to_display[i].font_size = 2;

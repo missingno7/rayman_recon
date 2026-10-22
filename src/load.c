@@ -42,7 +42,7 @@ extern u8 *alpha_image_atlas, *alpha2_image_atlas;
 extern s16 alpha_sprite_count, alpha2_sprite_count;
 extern eta_t **loaded_eta[100];
 extern archive_header_t HeaderFilevignet[71], language_infos[5];
-extern char *language_txt[300];
+extern char *language_txt[];
 extern rgb_palette_t current_rvb, rvb[3];
 extern map_data_t mp;
 extern level_local_t level;

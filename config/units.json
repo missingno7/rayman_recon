@@ -15145,15 +15145,6 @@
     "_BSS": "VERIFIED"
    }
   },
-  "bss_32ee4": {
-   "source": "src/bss/bss_32ee4.c",
-   "oracle": "gog_v121_us",
-   "profile": "game",
-   "functions": {},
-   "segments": {
-    "_BSS": "VERIFIED"
-   }
-  },
   "bss_32f58": {
    "source": "src/bss/bss_32f58.c",
    "oracle": "gog_v121_us",
@@ -16688,6 +16679,16 @@
    "segments": {
     "_BSS": "VERIFIED"
    }
+  },
+  "bss_menu_to_display": {
+   "source": "src/bss/bss_menu_to_display.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   },
+   "note": "Layout fragment; original central BSS TU ownership OPEN"
   }
  }
 }
