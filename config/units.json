@@ -11900,9 +11900,7 @@
    "profile": "asm",
    "functions": {},
    "segments": {
-    "_DATA": "VERIFIED",
-    "_DATA2": "VERIFIED",
-    "_DATA3": "VERIFIED"
+    "_DATA": "VERIFIED"
    }
   },
   "lowlevel_03125": {
