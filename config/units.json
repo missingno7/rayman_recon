@@ -16444,7 +16444,7 @@
      ]
     },
     "sosDIGIUnInitDriver": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -16462,7 +16462,7 @@
      ]
     },
     "sosFreeVDSPage": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

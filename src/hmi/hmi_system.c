@@ -74,6 +74,7 @@ extern unsigned long __far *sosDIGIAllocateBuffer(unsigned, unsigned *, unsigned
 #define HMI_SYSTEM_U16(offset) (*(unsigned short *)(HMI_SYSTEM_BASE + (offset)))
 #define HMI_SYSTEM_U8(offset) (*(unsigned char *)(HMI_SYSTEM_BASE + (offset)))
 #define HMI_SYSTEM_U32_PTR(offset, index) ((unsigned *)(HMI_SYSTEM_BASE + (offset)) + (index))
+#define HMI_SYSTEM_FAR(offset, index) (((hmi_far_value *)(HMI_SYSTEM_BASE + (offset)))[index].pointer)
 #define HMI_SYSTEM_FAR_SLOT(offset, index) ((hmi_far_slot *)(HMI_SYSTEM_BASE + (offset)) + (index))
 
 unsigned sosDIGILockMemory(void)
@@ -428,9 +429,9 @@ unsigned sosDIGIInitDriver(unsigned driver_id,
 
 unsigned sosDIGIUnInitDriver(unsigned driver, unsigned enabled, unsigned extra_cleanup)
 {
-    hmi_far_address previous_dma;
-    hmi_far_address first_address;
-    hmi_far_address second_address;
+    void __far *first_address;
+    void __far *second_address;
+    void __far *previous_dma;
 
     if (HMI_SYSTEM_U32(0xf4 + driver * 4) == 0)
         return 1;
@@ -438,43 +439,33 @@ unsigned sosDIGIUnInitDriver(unsigned driver, unsigned enabled, unsigned extra_c
     HMI_SYSTEM_U32(0x11c + driver * 4) = 0;
     if (HMI_SYSTEM_U32(0x19e + driver * 4) < 0xe106) {
         if (HMI_SYSTEM_U32(0xe70 + driver * 4) != 0 && enabled != 0) {
-            previous_dma.selector = HMI_SYSTEM_U16(0x15c + driver * 6);
-            previous_dma.offset = HMI_SYSTEM_U32(0x158 + driver * 6);
+            previous_dma = HMI_SYSTEM_FAR(0x158, driver);
             if ((sosDRVIsWindowsActive() & 0xff) == 3) {
-                sosFreeVDSPage(previous_dma.selector,
+                sosFreeVDSPage(FP_SEG(previous_dma),
                              HMI_SYSTEM_U32(0x18a + driver * 4),
                              HMI_SYSTEM_U32(0x176 + driver * 4));
             } else {
-                sosRealFree(previous_dma.selector);
+                sosRealFree(FP_SEG(previous_dma));
             }
             HMI_SYSTEM_U32(0xe70 + driver * 4) = 0;
         }
     }
 
-    first_address.offset = HMI_SYSTEM_U32(0x2c + driver * 6);
-    first_address.selector = HMI_SYSTEM_U16(0x30 + driver * 6);
-    second_address.offset = HMI_SYSTEM_U32(0x4a + driver * 6);
-    second_address.selector = HMI_SYSTEM_U16(0x4e + driver * 6);
-    sosDRVStop(MK_FP(first_address.selector, first_address.offset),
-              MK_FP(second_address.selector, second_address.offset));
-    sosDRVUnInit(MK_FP(first_address.selector, first_address.offset),
-              MK_FP(second_address.selector, second_address.offset));
+    first_address = _lpSOSDriver[driver].pointer;
+    second_address = _lpSOSDriverCS[driver].pointer;
+    sosDRVStop(second_address, first_address);
+    sosDRVUnInit(second_address, first_address);
     sosDIGIUnInitForWindows(HMI_SYSTEM_U8(0x872 + driver));
     if (extra_cleanup != 0) {
         sosDIGIUnLoadDriver(driver);
         sosDIGIUnLoadTimer(driver);
     }
 
-    HMI_SYSTEM_U16(0x30 + driver * 6) = 0;
-    HMI_SYSTEM_U32(0x2c + driver * 6) = 0;
-    HMI_SYSTEM_U16(0x4e + driver * 6) = 0;
-    HMI_SYSTEM_U32(0x4a + driver * 6) = 0;
-    HMI_SYSTEM_U16(0x1b6 + driver * 6) = 0;
-    HMI_SYSTEM_U32(0x1b2 + driver * 6) = 0;
-    HMI_SYSTEM_U16(0x94 + driver * 6) = 0;
-    HMI_SYSTEM_U32(0x90 + driver * 6) = 0;
-    HMI_SYSTEM_U16(0xb2 + driver * 6) = 0;
-    HMI_SYSTEM_U32(0xae + driver * 6) = 0;
+    HMI_SYSTEM_FAR(0x2c, driver) = 0;
+    HMI_SYSTEM_FAR(0x4a, driver) = 0;
+    HMI_SYSTEM_FAR(0x1b2, driver) = 0;
+    HMI_SYSTEM_FAR(0x90, driver) = 0;
+    HMI_SYSTEM_FAR(0xae, driver) = 0;
     HMI_SYSTEM_U32(0x5b2 + driver * 4) = 0;
     HMI_SYSTEM_U32(0xf4 + driver * 4) = 0;
     return 0;
@@ -546,9 +537,9 @@ unsigned sosAllocVDSPage(hmi_far_address *address, unsigned *selector_out,
 
 void sosFreeVDSPage(unsigned driver, unsigned unused, unsigned unused2)
 {
+    unsigned __far *memory;
     unsigned base;
     unsigned selector;
-    unsigned __far *memory;
 
     sosDRVFreeDMASelector(driver);
     sosDRVAllocVDSStruct(0x20, &base, &selector);
