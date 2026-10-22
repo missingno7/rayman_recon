@@ -50,6 +50,12 @@ lowering, materialised booleans) and four effect drafts without a unit (1:633e0,
   BSS 2:3218a. String literals belong to the referencing object's CONST.
 
 ## Linked third-party code: HMI SOS (2026-10-22)
+**Original vendor library found and pinned** (config/toolchain.json `hmisos3`, C:/tools/hmi-sos3/sosdw1cr.lib from
+github.com/Wohlstand/SOSPLAY): all 13 HMI contributions match its members exactly (12 Watcom C modules from
+C:\DONS\SOSDIGIW\SOSLIB\SRC\SOS*.C, plus sostimer.asm/sosdrv.asm assembled by **TASM 3.1** - the OMF translator record;
+TASM 3.1 is not available locally, TASM 2.0 reproduces the bytes but not the linkable 32-bit fixup format). Decision
+(reversible): the natural link uses this library like CLIB3R; src/hmi stays as a verified source reconstruction with
+the original SDK names to be adopted from the library publics (e.g. sosTIMERInitSystem_, sosDIGIStartSample_).
 1:71afa..1:797f5 (~20 KB) is the HMI (Human Machine Interfaces) SOS sound library linked after the game code (vendor
 PROVEN from HMIDET/HMIDRV banners and string fixups; SDK version OPEN; no library binary available). 11 groups are
 unoptimised Watcom C - profile `hmi` = wc106 `-zq -od -s -3r` - and 2 are hand-written assembly, PROVEN reproduced by

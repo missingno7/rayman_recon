@@ -89,6 +89,16 @@
    },
    "use": "format reference only (DOCS/PMW1FMT.TXT, PMWLITE/PMW1.H, DECODE.ASM); nothing executed"
   },
+  "hmisos3": {
+   "product": "HMI SOS digital audio library sosdw1cr.lib + sos.h (vendor build, C:/DONS/SOSDIGIW; asm members TASM 3.1)",
+   "dir": "hmi-sos3",
+   "source": "https://github.com/Wohlstand/SOSPLAY sos3/lib/sosdw1cr.lib (blob 4a1bb9c4...), sos3/include/sos.h; see C:/tools/hmi-sos3/PROVENANCE.md",
+   "key_files": {
+    "sosdw1cr.lib": "d5c1ff976131d7e3d9a31ae2f3f6b49ce8dacd3ca59fb8030a8938c566768952",
+    "sos.h": "92f285db65d65fe10ed0f931f9183808f4aacc304640cb7a3172f7cbada1278f"
+   },
+   "use": "third-party library linked into RAYMAN.EXE: all 13 HMI contributions (1:71afa..1:797f5) match its members exactly; the natural link uses this library like CLIB3R; src/hmi is a verified reconstruction, original SDK names come from its publics"
+  },
   "pmodew122": {
    "product": "PMODE/W 1.22 (1996-02-13) binaries: PMODEW.EXE stub, PMWLITE.EXE, PMWBIND.EXE, PMWSETUP.EXE",
    "dir": "pmodew-1.22",
