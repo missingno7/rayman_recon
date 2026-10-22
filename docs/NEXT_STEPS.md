@@ -25,10 +25,16 @@
    our decoder round-trips its output. Only then ask whether decoded oracle objects re-compress to the original
    stream (packer reproducibility before link work, as in earlier projects).
 
-## Open user decisions (2026-10-22)
-- **Abs helper** (build/workers/r_abs/NOTES.md, proposed.h): `test eax,eax; jge; neg eax` as ORIGINAL_INLINE `Abs` closes
-  dark DARK_phase1, DO_DARK_SORT_COMMAND and hybrid doMOSAMScommand (0 losses; Android has a real 10-byte `Abs`), but the
-  same core is produced by plain C in 26 STRICT functions, so the AGENTS.md helper gate is not literally met.
-- **Link stage**: acquire PMODE/W 1.22 PMWLITE and test determinism (first step only).
+## User decisions (2026-10-22)
+- **Abs helper: NOT accepted** (gate kept strict). Evidence kept in build/workers/r_abs (NOTES.md, proposed.h): an
+  EAX-only `test/jge/neg` helper would close dark DARK_phase1, DO_DARK_SORT_COMMAND and hybrid doMOSAMScommand, but plain
+  C produces the same core in 26 STRICT functions, so a helper would only steer allocation. Revisit only with new
+  independent evidence of an original inline helper or macro.
+- **Link stage: first exploratory step approved only** - find/authenticate PMODE/W 1.22 (PMWLITE.EXE), test
+  deterministic compression on a minimal Watcom/WLINK executable (repeat builds, relocations, decoder round-trip).
+  No Rayman linking/packing reconstruction yet.
+- **Next investigation: cross-unit register/stack allocation rules** (controlled experiments, STRICT vs NEAR
+  structural pairs across unrelated units; rules enter docs/COMPILER.md only after multi-unit validation). One-unit
+  finishing passes stopped (measured yield too low).
 Wave 7/8 yield (2026-10-22): 29 finishing passes on exhausted NEAR pools gave +7 STRICT; whole-object/new-unit work
 (sysutils +12) and BSS/data fragments gave the larger gains. Remaining NEAR are dominated by register/stack allocation.
