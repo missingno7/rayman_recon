@@ -1,4 +1,4 @@
-# Status (Phase 2 continued - systematic DOS matching, 2026-10-22)
+# Status (Phase 2 continued - systematic DOS matching, 2026-10-22; causal map in docs/CAUSES.md)
 
 Live numbers: `python tools/verify.py && python tools/status.py` (config/units.json + the verifier are the record;
 the per-unit table is printed by tools/status.py and is not duplicated here). NEAR diagnosis: `python tools/census.py`
@@ -7,13 +7,13 @@ the per-unit table is printed by tools/status.py and is not duplicated here). NE
 ## Closure levels (kept separate; 2026-10-22)
 | level | state |
 |---|---|
-| game C code (1:06f80-1:6fbe6) | **1,279 STRICT functions + 1 STRICT code-data extent (snd_sqrt_table), 233,799 bytes**; 301 NEAR. Every game code range has a unit |
+| game C code (1:06f80-1:6fbe6) | **1,282 STRICT functions + 1 STRICT code-data extent (snd_sqrt_table), 234,523 bytes**; 298 NEAR. Every game code range has a unit |
 | game hand-written assembly (1:00010-1:06f7e) | **all 106 original entries STRICT, 28,526 bytes** (116 public extents incl. 10 labels made public; 3 WASM modules + lowlevel_data) |
-| game code total | **262,325 of ~457,702 bytes (57.3%)** in 1:00000-1:6fbe6 (`python tools/status.py`) |
+| game code total | **263,049 of ~457,702 bytes (57.5%)** in 1:00000-1:6fbe6 (`python tools/status.py`) |
 | HMI SOS vendor library (1:71afa-1:797f5) | original library PINNED (`hmisos3`, all 13 contributions match) - the natural link uses it; separate source reconstruction in src/hmi: 115/128 STRICT (12,077 bytes; asm 50/50, C 65/78). Not game code; not counted above |
 | Watcom runtime (CLIB3R, MATH3R, MATH387R) | pinned libraries, linked as-is (library identity, not reconstruction) |
-| initialised data / CONST | **50,174 bytes VERIFIED** (no double counting after unit merges); central initialised TU data_215c = 2:0215c..05e2c in one object; game `_DATA` gaps: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets (Def_Bande, PalPlasma, PalFire) |
-| BSS layout | **148,857 of 152,302 game-BSS bytes VERIFIED** (2:3218a..2:57478; runtime BSS from 2:57478 PROVEN). Mostly layout fragments in src/bss/, not original TU boundaries; 2,988 B in 7 holes OPEN |
+| initialised data / CONST | **50,227 bytes VERIFIED** (no double counting after unit merges); central initialised TU data_215c = 2:0215c..05e2c in one object; game `_DATA` gaps: only the 400-byte anonymous zero run 2:01970 (in lowlevel_data.asm) and external assets (Def_Bande, PalPlasma, PalFire) |
+| BSS layout | **150,841 of 152,302 game-BSS bytes VERIFIED** (2:3218a..2:57478; runtime BSS from 2:57478 PROVEN). Mostly layout fragments in src/bss/, not original TU boundaries; remaining holes OPEN (central BSS needs ~5 more declaration groups than the known publics) |
 | packer | **PROVEN**: PMWLITE 1.22 /C4 rebuilds all 428,743 bytes of RAYMAN.EXE from the decoded objects + ordered relocations (oracle-data repack, not a source rebuild) |
 | natural link | pipeline works (all units + pinned libraries -> WLINK 10.6 -> PMWLITE); not yet byte-identical; first divergences and blockers in docs/LINK.md / docs/BLOCKERS.md |
 
