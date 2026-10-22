@@ -44,14 +44,14 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   thousands of real decisions. Our NEAR choices are now predicted exactly from OUR records; what remains is which
   ORIGINAL source produced DOS's record graph.
 
-## H6 - NEAR ties come from original locals/temporaries our source lacks (TESTING: worker h6_locals)
-- Follows from H5: the home/colour tie order depends on ALL backend names, including locals that are later optimised
-  away. Independent evidence exists: hm_finish saw unused frame capacity in five HMI routines; a DOS frame larger than
-  ours (or homes at offsets our locals do not explain) indicates an original local we do not declare.
-- Rule: a local may be added only with independent evidence (frame size/capacity, a store/load to that home, Rayverse/
-  PS1/Android showing the variable); never as unexplained padding to steer bytes.
-- Smallest experiment: list NEAR functions whose DOS frame size or home set exceeds ours; for each, test whether the
-  evidenced local (type/size from the hole) reproduces DOS's homes and registers under the recovered rule.
+## H6 - Original locals/capacity our source lacks (PARTLY CONFIRMED, h6_locals; follow-up h6_capacity)
+- REFUTED for unused scalars: an extra unused local creates no backend record (22 -> 22 records, same sort/homes) - it
+  cannot change ties (2 no-effect trials; 1 worsening with a pointer local).
+- CONFIRMED for CAPACITY: frame/sub_3BE20 - DOS reserves 24 bytes with a 4-byte gap after three written context words;
+  context[3] -> context[4] gives STRICT (9 -> 0 diffs). A larger DOS frame is evidence of larger original aggregates
+  (arrays/structs), which change home offsets and sizes.
+- Scan: 39 of 301 NEAR functions have larger DOS frames; two unexplained four-byte gaps. Follow-up: apply the capacity
+  rule (evidence: hole size/alignment adjacent to an aggregate we already have) across all 39.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
