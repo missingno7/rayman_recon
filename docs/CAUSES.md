@@ -4,21 +4,15 @@ Purpose: find what we still misunderstand about the original source/build, so on
 Each entry: observations -> hypothesis -> who else might share it -> evidence for/against -> smallest discriminating
 experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTED. Keep refuted entries (negatives).
 
-## H1 - Our TUs' symbol-table context differs from the original (TESTING: worker causal_symtab)
-- Observations: (a) _BSS order depends on a declaration index counting every prior symbol-table entry incl. headers
-  (PROVEN; one extra extern in game.h broke bss_palettes); (b) equal-size stack-home ties flip when an unrelated
-  declaration is added/removed - "hidden backend records participate" (ra_probe, PROVEN); (c) the declaration-index
-  model fails by +2 mod 25 exactly inside credits_init (tu_central); (d) 244 SHAPE NEAR functions resist every
-  source-shape rewrite and probe (ra_tax/ra_pairs/ra_probe/ra_byte negatives).
-- Hypothesis: Watcom 10.6 breaks allocation ties (register colour, stack homes, maybe CSE/spill choice) by symbol or
-  temporary creation order; our units include large shared Rayverse-derived headers (game.h, obj.h, ...) and different
-  extern/prototype lists and function order than the original files, so ties resolve differently.
-- Would also explain: some "allocation" NEAR in many units; switch owners' byte-register lengths (B1); B5 TEST residues.
-- Against: ra_probe's lookahead-naming trial (deter_num_let) changed nothing; generic rewrites never helped.
-- Smallest experiment: identical function body, vary ONLY the declarations before it (count/order of externs,
-  typedefs, prototypes, preceding function definitions) and check whether its register/home choices change at all.
-- Would unblock: if confirmed, reconstruct original header/declaration context (original per-file includes, extern
-  order) as a structural fix across units instead of per-function work.
+## H1 - Unrelated declaration context steers allocation (REFUTED in controlled tests, causal_symtab)
+- Test: 4 frozen synthetic bodies (equal-size homes, call-live spills, competing byte values, CSE) x 30 prefix variants
+  (extern count up to 241, order, hash collisions, typedefs, prototypes, static/extern, enums, preceding functions,
+  literals): 120/120 identical bytes and fixups; a real store-order change (positive control) does change registers.
+  Real code: 6 NEAR functions from 6 units compiled in-unit / alone / headers reordered / extra extern: 18/18 identical.
+- Mechanism separated: the frontend declaration index (BSS order) IS context-sensitive; executable allocation is NOT.
+  The function-local tie mechanism (ra_probe) remains OPEN and is not the frontend index.
+- Consequence: reconstruct header sets/declaration order only where BSS ownership needs it; do not use extra/arbitrary
+  declarations, Android order or PS1 file boundaries as an allocation fix. The credits_init +2 belongs to H2 (data).
 
 ## H2 - Phantom globals: Rayverse-derived bindings split original objects (TESTING: worker alias_audit)
 - Observations (3 PROVEN instances so far): init_data_state/record fields were bound as separate globals (lk_stage4);
@@ -29,7 +23,7 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - Hypothesis: more bound "globals" are interior elements/fields of original arrays/structs (Rayverse names every
   address it saw). Phantom globals add symbol-table declarations that the original TU did not have -> the BSS
   declaration-index groups drift (credits_init +2?), holes and overlaps appear, and fragments cannot be merged into a TU.
-- Links to H1: both are "our declaration set differs from the original".
+- Relation to H1: H1 is refuted for code, so the declaration-set question matters only for data/BSS (this hypothesis).
 - Smallest experiment: classify every data binding by DOS access pattern (only ever accessed as base+k of a neighbour,
   same stride as an adjacent array, address inside a typed extent); count candidates around the credits_init and the
   remaining holes; remove/merge the proven ones and recompute the declaration-index model - does the +2 disappear?
