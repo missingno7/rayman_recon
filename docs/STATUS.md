@@ -29,12 +29,13 @@ destinations, exact rollback of written files only, literal-pathspec commit of w
 replaced only when private to the run's units. tests/test_integrate.py.
 
 ## Coverage
-Hand-written assembly 1:00010-06f7e (28,526 bytes) is reconstructed as 8 contiguous `.asm` slices, 106 entries, all
-STRICT (lowlevel_00010, _02640, _03125, _04430, _04ab7, _05609, _0611e, _066df; WASM 10.6 via tools/wcc.py build;
-readable instructions, typed state only), plus lowlevel_data (2:00010-0215c, VERIFIED). OPEN: historical assembler
-identity and original module count (slices are not claimed as original objects); consolidation into one module
-would also reconcile the two mask-table names at 1:0311d/03121 (local labels in _02640, extern names in _03125);
-record-field and timer partitions; runtime callback payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
+Hand-written assembly 1:00010-06f7e (28,526 bytes) is reconstructed as 3 code modules (lowlevel_00010, _02640,
+_04430; merged 2026-10-22 so a natural link adds no false paragraph gaps) with 116 STRICT public extents (the 106
+original entries + 10 labels/helpers made public for cross-module references - not new coverage), plus lowlevel_data
+(2:00010-0215c, one PARA _DATA incl. TableImageX, VERIFIED; it declares _DATA before CONST/CONST2/DATA32, the proven
+DGROUP-order rule). OPEN: historical assembler identity and original module count (boundaries at 02640/04430 need zero
+padding and are compatible, not proven original objects); record-field and timer partitions; runtime callback
+payloads (table 2:34268). 1:00000-00010 is Watcom cstrt386
 BEGTEXT (runtime). Remaining C work: 311 NEAR functions (layout drift, register/stack allocation, clamp
 lowering, materialised booleans) and four effect drafts without a unit (1:633e0, 1:6c3b0, 1:6e380, part of 1:50350).
 
