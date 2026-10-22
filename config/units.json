@@ -2372,7 +2372,7 @@
      ]
     },
     "wait_for_dialogue_fee": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2380,7 +2380,7 @@
      ]
     },
     "DO_FEE_ETAPE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

@@ -214,6 +214,12 @@ void DO_FEE_ETAPE(obj_t* obj) {
     /* 4E020 80172820 -O2 -msoft-float */
 
     switch (obj->config) {
+        /* DOS: case 0 is a separate first case with the same body as default (Watcom merges the
+           identical blocks); its store comes first in LdStAlloc order and shifts every later byte
+           register pick by one (traced 10.6 rover, see docs/COMPILER.md). */
+        case 0:
+            display_txt_fee = 255;
+            break;
         case 1:
             wait_for_dialogue_fee(obj, 100);
             if (display_txt_fee == 5 || (text_to_display + 1)[display_txt_fee].text[0] == '\0')
@@ -249,7 +255,6 @@ void DO_FEE_ETAPE(obj_t* obj) {
             if (display_txt_fee < 9 && (text_to_display + 1)[display_txt_fee + 1].text[0] != '\0')
                 wait_for_dialogue_fee(obj, 120);
             break;
-        case 0:
         default:
             display_txt_fee = 255;
             break;
