@@ -718,13 +718,13 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
         ChangeJumelleSizeOK &= ~2;
     }
 
-    if (delta_pos_x == 0 && delta_pos_y == 0 && ray.speed_y == 0 && ray.speed_x == 0 && ChangeJumelleSizeOK != 4) {
+    if (delta_pos_x == 0 && delta_pos_y == 0 && ray.speed_y == 0 && ray.speed_x == 0 && !(ChangeJumelleSizeOK & 0xfb)) {
         if (RayonJumelle < 64 && !ModeAutoJumelle) {
             ChangeDeltaSizeJumelle(1);
         }
 
-        if (JumAmpDefPlus + JumAmpDefMul * -RayonJumelle >= JumelleZoomAmp || ModeAutoJumelle) {
-            if (JumAmpDefPlus + JumAmpDefMul * -RayonJumelle > JumelleZoomAmp && !ModeAutoJumelle) {
+        if ((u32)(JumAmpDefPlus + JumAmpDefMul * -RayonJumelle) >= (u32)JumelleZoomAmp || ModeAutoJumelle) {
+            if ((u32)(JumAmpDefPlus + JumAmpDefMul * -RayonJumelle) > (u32)JumelleZoomAmp && !ModeAutoJumelle) {
                 ChangeDeltaZoomAmpJumelle(300);
             }
         } else {
@@ -779,24 +779,24 @@ void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
         }
 
         if (ModeAutoJumelle & 2) {
-            if (JumelleZoomAmp < ModeAutoJumelleZoomAmp) {
+            if ((u32)JumelleZoomAmp < (u32)ModeAutoJumelleZoomAmp) {
                 ChangeDeltaZoomAmpJumelle(300);
-                if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
+                if ((u32)JumelleZoomAmp > (u32)ModeAutoJumelleZoomAmp) {
                     JumelleZoomAmp = ModeAutoJumelleZoomAmp;
                 }
-            } else if (JumelleZoomAmp > ModeAutoJumelleZoomAmp) {
+            } else if ((u32)JumelleZoomAmp > (u32)ModeAutoJumelleZoomAmp) {
                 ChangeDeltaZoomAmpJumelle(-300);
-                if (JumelleZoomAmp < ModeAutoJumelleZoomAmp) {
+                if ((u32)JumelleZoomAmp < (u32)ModeAutoJumelleZoomAmp) {
                     JumelleZoomAmp = ModeAutoJumelleZoomAmp;
                 }
             }
         }
 
         if (ModeAutoJumelle & 4) {
-            if (RayonJumelle < ModeAutoRayonJumelle) {
+            if ((u32)RayonJumelle < (u32)ModeAutoRayonJumelle) {
                 ChangeDeltaSizeJumelle(1);
                 ModeAutoJumelleZoomAmp = 26 * -RayonJumelle + 32150;
-            } else if (RayonJumelle > ModeAutoRayonJumelle) {
+            } else if ((u32)RayonJumelle > (u32)ModeAutoRayonJumelle) {
                 ChangeDeltaSizeJumelle(-1);
                 ModeAutoJumelleZoomAmp = 26 * -RayonJumelle + 32150;
             }

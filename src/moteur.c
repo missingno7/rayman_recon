@@ -3199,6 +3199,8 @@ void INIT_RAY(u8 new_lvl) {
     ray.follow_id = -1;
     ray.link = -1;
     ray.iframes_timer = -1;
+    /* DOS 1:49a5b: reset horizontal inertia on initialization. */
+    decalage_en_cours = 0;
     ray.is_active = 1;
     ray.flags.alive = 1;
     ray.flags.flip_x = 1;
@@ -3235,9 +3237,9 @@ void INIT_RAY(u8 new_lvl) {
             RAY_REVERSE_COMMANDS();
         }
     } else {
-        //TODO: figure out what is happening here (seems to be wrong right now)
-//        RayEvts.reverse = 1;
-//        RAY_REVERSE_COMMANDS();
+        /* DOS 1:49b92..49bac: no saved reverse state. */
+        RayEvts.reverse = 1;
+        RAY_REVERSE_COMMANDS();
     }
 
     if (level.objects && level.nb_objects > 0) {
@@ -3911,8 +3913,8 @@ void DO_MOTEUR2(void) {
                         }
                         break;
                 }
-                if (xmap == xmapmax)
-                    scroll_start_x = xmap;
+                /* DOS 1:4aec2..4aecd: unconditional within this substate arm. */
+                scroll_start_x = xmap;
             }
             poing_obj->x += h_scroll_speed;
             poing_obj->y += v_scroll_speed;
