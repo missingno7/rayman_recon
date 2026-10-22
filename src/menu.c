@@ -941,23 +941,21 @@ void END_GENERAL_SCREEN(void) {
 
 /* DOS 1:3a44c; menu.c:579 */
 void INIT_OPTIONS_CHOICE(void) {
-    if (!WindowsLance && (menu_read_dr0() != 0 || menu_read_dr1() != 0 ||
-                         menu_read_dr2() != 0 || menu_read_dr3() != 0)) {
-        menu_dos_interrupt(0x4c00);
-    }
+    if (!WindowsLance)
+        menu_check_debug_breakpoints();
     pINIT_AFFICHE_SCREEN = INIT_AFFICHE_ECRAN_OPTIONS;
     pAFFICHE_SCREEN = AFFICHE_ECRAN_OPTIONS;
     pDO_COMMANDE = DO_COMMANDE_OPTIONS;
     pEND_SCREEN = END_OPTIONS_SCREEN;
-    delai_repetition = 12;
-    repetition = 6;
     max_sound = 20;
     ecart_barre = 4;
     compteur = 0;
     max_compteur = 100;
+    delai_repetition = 12;
+    repetition = 6;
     button_released = 1;
-    delai_barre = 3;
     delai_stereo = 8;
+    delai_barre = 3;
     switch (language) {
     case 0: byte_E4CFC = 75; break;
     case 1: byte_E4CFC = 90; break;
@@ -967,13 +965,13 @@ void INIT_OPTIONS_CHOICE(void) {
     if (OptionGame) {
         position = 6;
         option_exit = 6;
-        nbre_options = 6;
         first_option = 0;
+        nbre_options = 6;
     } else {
         position = 5;
         option_exit = 5;
-        nbre_options = 5;
         first_option = 0;
+        nbre_options = 5;
     }
     general_init_screen(20, 60, 5);
     if (byte_96883) {

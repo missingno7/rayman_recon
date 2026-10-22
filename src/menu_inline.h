@@ -32,23 +32,33 @@ void menu_patch_once(void);
     "ret" \
     "done:" \
     modify exact [ebx ecx]
-/* INVENTED purpose names. ORIGINAL_INLINE instructions verified in DOS v1.21.
-   Arithmetic, comparisons and register setup remain ordinary C. */
-u32 menu_read_dr0(void);
-#pragma aux menu_read_dr0 = "mov eax,dr0" value [eax] modify exact [eax]
-/* ORIGINAL_INLINE 1:3a45a (0f21c0). */
-u32 menu_read_dr1(void);
-#pragma aux menu_read_dr1 = "mov eax,dr1" value [eax] modify exact [eax]
-/* ORIGINAL_INLINE 1:3a462 (0f21c8). */
-u32 menu_read_dr2(void);
-#pragma aux menu_read_dr2 = "mov eax,dr2" value [eax] modify exact [eax]
-/* ORIGINAL_INLINE 1:3a46a (0f21d0). */
-u32 menu_read_dr3(void);
-#pragma aux menu_read_dr3 = "mov eax,dr3" value [eax] modify exact [eax]
-/* ORIGINAL_INLINE 1:3a472 (0f21d8). */
-void menu_dos_interrupt(u32 service);
-#pragma aux menu_dos_interrupt = "int 21h" parm [eax] modify exact [eax]
-/* ORIGINAL_INLINE 1:3a481 (cd21); EAX=4c00 is set by C at the call. */
+/* ORIGINAL_INLINE, INVENTED purpose name (Android absent).
+ * DOS v1.21 1:3a45a..3a482 inclusive; continuation 1:3a483.
+ * Four DR reads and CMP EAX,0 predicates, explicit success jump, and DOS exit.
+ * No inputs/results. EAX and flags destroyed; other GPRs preserved on success.
+ * The WindowsLance guard at 1:3a451..3a459 stays C, as do all initializers.
+ * Proof: cg_cmp/FINDINGS.md; exact sequence and live context in NOTES.md. */
+void menu_check_debug_breakpoints(void);
+#pragma aux menu_check_debug_breakpoints = \
+    "mov eax,dr0" \
+    "cmp eax,0" \
+    "jne short breakpoint_found" \
+    "mov eax,dr1" \
+    "cmp eax,0" \
+    "jne short breakpoint_found" \
+    "mov eax,dr2" \
+    "cmp eax,0" \
+    "jne short breakpoint_found" \
+    "mov eax,dr3" \
+    "cmp eax,0" \
+    "jne short breakpoint_found" \
+    "jmp short breakpoint_done" \
+    "breakpoint_found:" \
+    "mov eax,4c00h" \
+    "int 21h" \
+    "breakpoint_done:" \
+    modify exact [eax]
+/* Existing instruction-only palette declarations retained verbatim. */
 void menu_palette_index(u16 port, u8 index);
 #pragma aux menu_palette_index = "out dx,al" parm [dx] [al] modify exact []
 /* ORIGINAL_INLINE 1:3ff19 (ee). */
