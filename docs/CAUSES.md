@@ -29,19 +29,11 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   remaining holes; remove/merge the proven ones and recompute the declaration-index model - does the +2 disappear?
 - Would unblock: central BSS TU(s), remaining holes, natural-link BSS placement.
 
-## H3 - Some objects were built with a different compiler profile (TESTING: worker causal_profile)
-- Observations: lib_audit (2026-10-22) finds no third-party library beyond Watcom and HMI, but 24 KB of code without
-  Rayman source ancestry (effect34580/50350/633e0/6c3b0/6e380/6ec80, effecthelp, movieprefix FLC decoder, cdaudio MSCDEX
-  part, savecodec, dosmem). Those units are among the worst matched (effecthelp 1/5, effect6c3b0 1/5, other effect
-  units 3/5) although their code is small. HMI proved a linked component can use other flags (-od -s -3r).
-- Hypothesis: these objects (possibly an in-house effects/FLC/CD module) were compiled with a different option set
-  (CPU target -3r/-4r/-5r, optimisation subset, stack checks, -zp, possibly another Watcom release).
-- Against: the game profile was settled on game units; earlier per-unit passes on these objects found allocation
-  differences only.
-- Smallest experiment: per OBJECT (not per function), compile the unchanged source with a small, justified set of
-  alternative profiles and compare total diff counts across all its functions; a real profile difference shows as a
-  large, consistent improvement across the whole object, not a single function.
-- Would unblock: whole groups of effect NEAR functions; per-object profile records in config/units.json.
+## H3 - Some objects were built with a different compiler profile (REFUTED, causal_profile)
+- 11 objects without Rayman source ancestry (effect*, effecthelp, movieprefix, savecodec, dosmem, cdaudio) + 3 controls,
+  168 whole-object builds over CPU -3r/-4r/-5r, optimisation subsets (-ox/-oaxt/-oneatx/-od), -s, -zp, releases
+  10.0/10.5/10.6: zero STRICT gains; isolated diff reductions do not generalise. These objects use the game profile;
+  their NEAR functions are the same allocation problem as the rest (H1 refuted, B4).
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
