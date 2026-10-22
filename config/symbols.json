@@ -7446,7 +7446,10 @@
    "sub_71B0F": {
     "addr": "1:71b0f",
     "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:71b0f; address-based helper label."
+    "evidence": "DOS disassembly call target at 1:71b0f; address-based helper label.",
+    "aliases": [
+     "hmi_count_active_voices"
+    ]
    },
    "sub_71B98": {
     "addr": "1:71b98",
@@ -7531,7 +7534,10 @@
    "sub_754E3": {
     "addr": "1:754e3",
     "name": "INVENTED",
-    "evidence": "DOS disassembly call target at 1:754e3; address-based helper label."
+    "evidence": "DOS disassembly call target at 1:754e3; address-based helper label.",
+    "aliases": [
+     "hmi_sample_done"
+    ]
    },
    "PcMain": {
     "addr": "1:08420",
@@ -8647,6 +8653,171 @@
     "addr": "1:6f824",
     "name": "ANDROID",
     "evidence": "Android temp_free calls pack_temp_zone; both bodies coalesce adjacent free temp_mem records. DOS call 1:6fab7 -> 1:6f824. Android symbol size168."
+   },
+   "hmi_active_begin": {
+    "addr": "1:71afa",
+    "name": "INVENTED",
+    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
+   },
+   "hmi_active_end": {
+    "addr": "1:71b6e",
+    "name": "INVENTED",
+    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
+   },
+   "hmi_errors_begin": {
+    "addr": "1:79099",
+    "name": "INVENTED",
+    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
+   },
+   "hmi_get_error_string": {
+    "addr": "1:790ae",
+    "name": "INVENTED",
+    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
+   },
+   "hmi_errors_end": {
+    "addr": "1:790d8",
+    "name": "INVENTED",
+    "evidence": "DOS direct disassembly: function prologue/return boundary. See NOTES.md; descriptive names are not recovered SDK symbols."
+   },
+   "hmi_status_begin": {
+    "addr": "1:754ce",
+    "name": "INVENTED",
+    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
+   },
+   "hmi_sample_playing": {
+    "addr": "1:7553c",
+    "name": "INVENTED",
+    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
+   },
+   "hmi_status_end": {
+    "addr": "1:755b9",
+    "name": "INVENTED",
+    "evidence": "DOS function boundaries and unsigned voice<32, signed short flags+0x30 bit15 active / bit12 paused. 1:754e3..755b9; hifi caller waits for done==1."
+   },
+   "hmi_driver_callback_begin": {
+    "addr": "1:790ed",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73071; mirrored by unlock function 1:732fe; literal code fixups delimit driver_callback. See module_plan.json."
+   },
+   "hmi_driver_callback_end": {
+    "addr": "1:79193",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73071; mirrored by unlock function 1:732fe; literal code fixups delimit driver_callback. See module_plan.json."
+   },
+   "hmi_system_begin": {
+    "addr": "1:73023",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:730c7; mirrored by unlock function 1:732fe; literal code fixups delimit system. See module_plan.json."
+   },
+   "hmi_system_end": {
+    "addr": "1:743cd",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:730c7; mirrored by unlock function 1:732fe; literal code fixups delimit system. See module_plan.json."
+   },
+   "hmi_loader_begin": {
+    "addr": "1:791a8",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:730f2; mirrored by unlock function 1:732fe; literal code fixups delimit loader. See module_plan.json."
+   },
+   "hmi_loader_end": {
+    "addr": "1:79754",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:730f2; mirrored by unlock function 1:732fe; literal code fixups delimit loader. See module_plan.json."
+   },
+   "hmi_callback_set_begin": {
+    "addr": "1:79769",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73148; mirrored by unlock function 1:732fe; literal code fixups delimit callback_set. See module_plan.json."
+   },
+   "hmi_callback_set_end": {
+    "addr": "1:797e0",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73148; mirrored by unlock function 1:732fe; literal code fixups delimit callback_set. See module_plan.json."
+   },
+   "hmi_samples_begin": {
+    "addr": "1:743e2",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73173; mirrored by unlock function 1:732fe; literal code fixups delimit samples. See module_plan.json."
+   },
+   "hmi_samples_end": {
+    "addr": "1:74e35",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:73173; mirrored by unlock function 1:732fe; literal code fixups delimit samples. See module_plan.json."
+   },
+   "hmi_timer_begin": {
+    "addr": "1:71b83",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7319e; mirrored by unlock function 1:732fe; literal code fixups delimit timer. See module_plan.json."
+   },
+   "hmi_timer_end": {
+    "addr": "1:72325",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7319e; mirrored by unlock function 1:732fe; literal code fixups delimit timer. See module_plan.json."
+   },
+   "hmi_voice_params_begin": {
+    "addr": "1:74e4a",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:731c9; mirrored by unlock function 1:732fe; literal code fixups delimit voice_params. See module_plan.json."
+   },
+   "hmi_voice_params_end": {
+    "addr": "1:754b9",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:731c9; mirrored by unlock function 1:732fe; literal code fixups delimit voice_params. See module_plan.json."
+   },
+   "hmi_detect_begin": {
+    "addr": "1:7233a",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:731f4; mirrored by unlock function 1:732fe; literal code fixups delimit detect. See module_plan.json."
+   },
+   "hmi_detect_end": {
+    "addr": "1:7300e",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:731f4; mirrored by unlock function 1:732fe; literal code fixups delimit detect. See module_plan.json."
+   },
+   "hmi_timer_asm_begin": {
+    "addr": "1:784ac",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7321f; mirrored by unlock function 1:732fe; literal code fixups delimit timer_asm. See module_plan.json."
+   },
+   "hmi_timer_asm_end": {
+    "addr": "1:7875e",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7321f; mirrored by unlock function 1:732fe; literal code fixups delimit timer_asm. See module_plan.json."
+   },
+   "hmi_dpmi_asm_begin": {
+    "addr": "1:787b4",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7324a; mirrored by unlock function 1:732fe; literal code fixups delimit dpmi_asm. See module_plan.json."
+   },
+   "hmi_dpmi_asm_end": {
+    "addr": "1:79037",
+    "name": "INVENTED",
+    "evidence": "Lock function pair at 1:7324a; mirrored by unlock function 1:732fe; literal code fixups delimit dpmi_asm. See module_plan.json."
+   },
+   "__cnvs2d_": {
+    "addr": "1:7abe7",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "Pinned Watcom 10.6 LIB386/MATH3R.LIB:cnvs2d; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json"
+   },
+   "__matherr": {
+    "addr": "1:7c70c",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "Pinned Watcom 10.6 LIB386/MATH3R.LIB:__mtherr; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json; independent math2err call locates _matherr_ in full exact+sites module, whose __RWD_matherr pointer at 2:2fd8c names this veneer (short_identity_chain.json)."
+   },
+   "matherr": {
+    "addr": "1:7ced0",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "Pinned Watcom 10.6 LIB386/MATH3R.LIB:matherr; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json; independently named __matherr veneer jumps to matherr_ here (short_identity_chain.json)."
+   },
+   "strtod_": {
+    "addr": "1:7c4fe",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "stage2 manifest runtime:MATH3R.LIB:strtod unique exact+sites at 1:7c4fe, public strtod_ at OMF offset 0. Independently from cnvs2d call."
+   },
+   "_do_nothing_": {
+    "addr": "1:7bb8c",
+    "name": "HISTORICAL_LIBRARY",
+    "evidence": "Pinned Watcom 10.6 LIB386/DOS/CLIB3R.LIB:save8087; short exact+sites candidate, all references checked by unchanged match.verify_object; see runtime_certificates.json; both named save8087 data pointers at 2:2fe40 and 2:2fe44 independently resolve here."
    }
   },
   "data": {
@@ -16578,6 +16749,19 @@
     "type": "s16",
     "name": "RAYVERSE",
     "evidence": "DOS 1:3ae45 and 1:3ae74 load dword [2:3f79c], SAR EDX,16 at 1:3ae4b/3ae7a: signed word at 2:3f79e. Independent Rayverse data.c declaration s16 word_CF79E //CF79E. Android query absent. Address is outside 2-byte ecart_barre at 2:3f79c; no shifted alias."
+   },
+   "hmi_voice_slots": {
+    "addr": "2:2dee0",
+    "name": "INVENTED",
+    "evidence": "1:71b3b..71b54 addresses driver*0xc0 + voice*6, LGS then signed word flags +0x30; 1:78950 fills 32 six-byte slots; base fixup 1:71b4b.",
+    "type": "hmi_voice_state __far *[][32]"
+   },
+   "hmi_error_strings": {
+    "addr": "2:2eb30",
+    "name": "INVENTED",
+    "evidence": "1:790bf..790cb indexes dword table by error*4; object-2 fixups point to error strings at 2:31860..31a34.",
+    "type": "char *[20]",
+    "size": 80
    }
   }
  },

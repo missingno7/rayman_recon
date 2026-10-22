@@ -15883,6 +15883,87 @@
    "segments": {
     "_BSS": "VERIFIED"
    }
+  },
+  "hmi_active": {
+   "source": "src/hmi/hmi_active.c",
+   "oracle": "gog_v121_us",
+   "profile": "hmi",
+   "functions": {
+    "hmi_active_begin": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_71B0F": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "hmi_active_end": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "hmi_status": {
+   "source": "src/hmi/hmi_status.c",
+   "oracle": "gog_v121_us",
+   "profile": "hmi",
+   "functions": {
+    "hmi_status_begin": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "sub_754E3": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "hmi_sample_playing": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "hmi_status_end": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
+  },
+  "hmi_errors": {
+   "source": "src/hmi/hmi_errors.c",
+   "oracle": "gog_v121_us",
+   "profile": "hmi",
+   "functions": {
+    "hmi_errors_begin": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "hmi_get_error_string": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    },
+    "hmi_errors_end": {
+     "status": "STRICT",
+     "provenance": [
+      "DOS_BINARY_DERIVED"
+     ]
+    }
+   }
   }
  }
 }

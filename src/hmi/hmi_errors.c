@@ -1,0 +1,30 @@
+/* INVENTED names. DOS 1:79099..790ed; lookup is unchecked, as in the oracle.
+ * 2:2eb30 is a near-pointer table, not a far-pointer table. */
+char *hmi_error_strings[20] = {
+    "Error Code Does Not Indicate An Error",
+    "Specified Driver Is Not Loaded",
+    "Specified Pointer Is NULL",
+    "Detection System Is Already Initialized",
+    "File Open Failure",
+    "Memory Allocation Failure",
+    "Invalid Driver ID",
+    "Driver Not Found",
+    "Detection System Failed To Find Hardware",
+    "Driver Already Loaded Using Specified Handle",
+    "Invalid Handle",
+    "No Handles Available",
+    "Hardware Already Paused",
+    "Hardware Not Paused",
+    "Data Is Not Valid",
+    "HMI*.386 File Open Failure",
+    "Incorrect Port",
+    "Incorrect IRQ",
+    "Incorrect DMA",
+    "Incorrect DMA/IRQ",
+};
+void hmi_errors_begin(void) {}
+char *hmi_get_error_string(unsigned error)
+{
+    return hmi_error_strings[error];
+}
+void hmi_errors_end(void) {}
