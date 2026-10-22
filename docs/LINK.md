@@ -84,3 +84,10 @@ Byte-equal, correctly placed contributions keep their ordered relocations (436/4
 - HMI link format (RESOLVED): the TASM 2.0 /op reconstruction objects (FLAT group, LOC=5 fixups) do not link to OFF32
   with WLINK 10.6. The original vendor library sosdw1cr.lib (asm members TASM 3.1, standard LOC=9) was found and is
   linked directly; src/hmi remains a byte-level source reconstruction only.
+
+## Stage 6 re-measure (2026-10-22, build/workers/lk_stage6)
+Only `_language_txt` unresolved. Recipe fix: PalFire is now defined by data_5fa0, so the asset step must not also
+generate it (duplicate removed; map anchor errors 1 -> 0). With that, the first BSS difference moves from bss_32190 to
+bss_32f58 (the 1,040-byte language_txt region) - the next open data question; the movie zero cells 2:06540..4c remain.
+Relocations: obj1 first divergence index 526 (1:05ee9), obj2 index 0 (2:03fa4). NEAR drift (e.g. affiche..araignee
+-96 B, pcmain InitData +0x51) and runtime extraction (set386 first; pcmain memset) are unchanged.
