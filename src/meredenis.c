@@ -198,7 +198,7 @@ void mereDenisDropBomb(obj_t *smama_obj)
     s16 j; u8 i;
     s16 nb_objs;
     u8 new_sub_etat;
-    u8 new_flip_x;
+    s16 new_flip_x;
 
     if (currentBombSequence == 0xfe && lastDroppedBombXCenterPos == -32000)
     {
@@ -415,9 +415,9 @@ void prepareNewMereDenisAttack(obj_t* smama_obj) {
 
                     case 42:
                         wep_obj->flags.alive = 0;
+                        bossEncounter = 6;
                         currentBossAction = 0;
                         currentBossActionIsOver = 1;
-                        bossEncounter = 6;
                         
                         break;
                     }

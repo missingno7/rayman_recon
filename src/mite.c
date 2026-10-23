@@ -201,9 +201,10 @@ void DO_MIT_ATTAK(obj_t *obj)
             s32 abs_distance;
             s32 abs_ray_distance;
             s16 diff_y;
+            s16 distance_copy;
 
             abs_distance = ABS(obj->x - obj->follow_x);
-            distance = abs_distance;
+            distance = abs_distance; distance_copy = distance;
             abs_ray_distance = ABS(ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10);
             ray_distance = abs_ray_distance;
             if (distance > obj->config || (distance > ray_distance && obj->config == 140)) {
@@ -238,25 +239,22 @@ void DO_MIT_ATTAK(obj_t *obj)
                         obj->speed_y = 0;
                     else
                         obj->speed_y = 1;
-                    if ((distance < 8 && !obj->flags.flip_x) ||
-                        (distance > 8 && obj->flags.flip_x)) {
+                    if ((distance_copy < 8 && !obj->flags.flip_x) ||
+                        (distance_copy > 8 && obj->flags.flip_x)) {
                         --obj->speed_x;
                         MAX_2(obj->speed_x, -4);
                     } else {
                         ++obj->speed_x;
                         MIN_2(obj->speed_x, 4);
                     }
-                    if (obj->speed_x == 0 && distance < 8) {
+                    if (obj->speed_x == 0 && distance_copy < 8) {
                         obj->follow_id = 0;
                         set_sub_etat(obj, 0);
                     }
                 }
             }
             if (block_flags[calc_typ_travd(obj, false)].bits.unused0) {
-                if (obj->speed_x > 0)
-                    obj->speed_x = -1;
-                else
-                    obj->speed_x = 1;
+                { s16 new_speed; new_speed = obj->speed_x > 0 ? -1 : 1; obj->speed_x = new_speed; }
             }
         }
     }

@@ -1102,10 +1102,13 @@ void DO_SAXO2_COMMAND(obj_t* obj) {
                     obj->speed_x = 0;
                 } else if (obj->x + 150 > xmap) {
                     if (Sax.field10_0x10 == 2) {
-                        if (horloge[2] != 0) {
+                        /* COMPILER_STEERED: same predicate and arms, emitted in reverse order. */
+                        if (!(horloge[2] != 0)) {
+                            obj->speed_x = 2;
+                        } else {
                             obj->speed_x = 1;
                             if (horloge[4] < 2) obj->anim_frame--;
-                        } else obj->speed_x = 2;
+                        }
                     } else {
                         obj->speed_x = 1;
                         if (horloge[2] != 0) obj->anim_frame--;

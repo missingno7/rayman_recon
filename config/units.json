@@ -1287,7 +1287,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "IS_MIT_PAF": {
      "status": "NEAR_MATCH",
@@ -2744,7 +2745,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_SAXO2_ATTER": {
      "status": "STRICT",
@@ -3067,7 +3069,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "swapWeaponAnimState": {
      "status": "STRICT",
@@ -3088,7 +3091,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "snapLaserToWeapon": {
      "status": "STRICT",
@@ -4158,12 +4162,13 @@
      ]
     },
     "allocateTir": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "CreateFirstBBL": {
      "status": "STRICT",
@@ -4195,7 +4200,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "BBMONT_ETINCELLES": {
      "status": "NEAR_MATCH",
@@ -4203,7 +4209,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "BBMONT_TIRE": {
      "status": "STRICT",
@@ -4259,7 +4266,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "DO_BBMONT_TOUCHE": {
      "status": "NEAR_MATCH",
@@ -4275,7 +4283,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "DO_BBMONT2_MARCHE": {
      "status": "STRICT",

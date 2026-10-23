@@ -425,7 +425,7 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                 GET_SPRITE_POS(bb1_obj, sprite_ind, &x, &y, &w, &h);
                 if (param_2 == 1) {
                     bb1_x = x - cur_obj->offset_bx;
-                    new_x_1 = bb1_x + (w >> 1);
+                    new_x_1 = (w >> 1) + bb1_x;
                     cur_obj->x = new_x_1 + (bb1_obj->flags.flip_x ? 64 : -64);
                     cur_obj->y = y - 40;
                     if (bb1_obj->flags.flip_x)
@@ -437,7 +437,7 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                     cur_obj->flags.flip_x = bb1_obj->flags.flip_x;
                 } else if (param_2 == 0) {
                     bb1_x = x - cur_obj->offset_bx;
-                    new_x_1 = (w >> 1) + bb1_x;
+                    new_x_1 = bb1_x; new_x_1 += w >> 1;
                     cur_obj->x = new_x_1 + (bb1_obj->flags.flip_x ? 9 : -9);
                     cur_obj->y = y - 40;
                     if (bb1_obj->flags.flip_x)
@@ -670,7 +670,7 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
                 new_spd_x = eta_rows[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
                 cur_obj->speed_x = cur_obj->flags.flip_x ? new_spd_x : -new_spd_x;
                 GET_SPRITE_POS(bb1_obj, 10, &x, &y, &w, &h);
-                cur_obj->x = ((x + w) - cur_obj->offset_bx) + (bb1_obj->flags.flip_x ? 16 : -16);
+                { s32 width; width = w; cur_obj->x = ((x + width) - cur_obj->offset_bx) + (bb1_obj->flags.flip_x ? 16 : -16); }
                 cur_obj->y = y;
                 cur_obj->init_x = cur_obj->x;
                 cur_obj->init_y = cur_obj->y;
@@ -738,7 +738,7 @@ void BBMONT_ETINCELLES(obj_t* in_obj) {
             if (!in_obj->flags.flip_x)
                 in_w = 0;
 
-            new_x = in_x + in_w - cur_obj->offset_bx;
+            { s32 width; width = in_w; new_x = in_x + width - cur_obj->offset_bx; }
             cur_obj->x = new_x;
             cur_obj->y = in_y - 8;
             cur_obj->init_x = cur_obj->x;
@@ -865,7 +865,14 @@ void DO_BBMONT_COMMAND(obj_t* obj) {
     }
     GET_SPRITE_POS(obj, 6, &bb1.sprite6_x, &bb1.sprite6_y, &unk_1, &unk_2);
     unk_1 = obj->x;
-    unk_2 = obj->y;
+    /* SYNTHETIC: preserve the original s16 assignment via a local address. */
+    {
+        s16 y_snapshot;
+        s16 *y_address;
+        y_address = &y_snapshot;
+        *y_address = obj->y;
+        unk_2 = y_snapshot;
+    }
     if (obj->anim_frame == obj->animations[obj->anim_index].frames_count - 1 &&
             horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf] == 0
     ) {
@@ -921,7 +928,7 @@ void DO_BBMONT_COMMAND(obj_t* obj) {
                     Phase = 8;
                 }
 
-                if (Phase == 7) {
+                if ((Phase == 7) != 0) {
                     if (PosPierre + 4 + (obj->flags.flip_x ? 10 : -10) > obj->x &&
                         PosPierre - 4 + (obj->flags.flip_x ? 10 : -10) < obj->x) {
                         set_main_and_sub_etat(obj, 0, 2);
@@ -1001,7 +1008,7 @@ void DO_BBMONT_COMMAND(obj_t* obj) {
                         break;
                     case 4:
                         if (obj->sub_etat == 7 && obj->anim_frame == 44 &&
-                            horloge[obj->eta[(s16)obj->main_etat][obj->sub_etat].anim_speed & 0xf] == 0
+                            horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf] == 0
                         ) {
                             BBMONT_ETINCELLES(obj);
                             PlaySnd(114, obj->id);
@@ -1111,10 +1118,10 @@ void DO_BBMONT_COMMAND(obj_t* obj) {
                             case 6:
                                 if (FinAnim) {
                                     set_main_and_sub_etat(obj, 1, 0);
-                                    if (obj->flags.flip_x)
-                                        skipToLabel(obj, 5, 1);
-                                    else
+                                    if (!obj->flags.flip_x)
                                         skipToLabel(obj, 4, 1);
+                                    else
+                                        skipToLabel(obj, 5, 1);
                                 }
                                 break;
                         }
@@ -1204,7 +1211,12 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
     u32 test_6;
 
     temp_s2 = (s16) obj->x + obj->offset_bx;
-    temp_s3 = obj->offset_hy + (s16) obj->y + 0x40;
+    /* COMPILER_STEERED: retain the same s16 conversion through a scoped copy. */
+    {
+        s16 reach_y;
+        reach_y = obj->offset_hy + (s16) obj->y + 0x40;
+        temp_s3 = reach_y;
+    }
     if (obj->anim_frame == obj->animations[obj->anim_index].frames_count - 1 &&
         horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0xf] == 0)
         FinAnim = 1;
@@ -1408,11 +1420,11 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     obj->speed_y = 0;
                     obj->speed_x = 0;
                     /* see also: makeUturn() case TYPE_SPIDER_PLAFOND */
-                    obj->flags.flip_x = 1 - obj->flags.flip_x;
+                    obj->flags.flip_x = !obj->flags.flip_x;
                     set_main_and_sub_etat(obj, 0, 5);
                 }
             }
-            if (Abs((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 250) {
+            if (((!((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1))) >= 0)) ? -((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) : (s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 250) {
                 obj->is_active = 0;
                 IsBossThere = 0;
                 Phase = 0;
@@ -1426,7 +1438,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
             {
                 ++bb1.field1_0x2;
                 /* DOS 1:1284b..1:12857 branches on zero after the increment. */
-                if (bb1.field1_0x2 == 0)
+                if ((bb1.field1_0x2 == 0) != 0)
                     scroll_end_y = ymapmax;
                 else
                     scroll_end_y = bb1.sprite6_y - horloge[5];
@@ -1465,7 +1477,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     {
                         obj->speed_y = 0;
                         obj->speed_x = 0;
-                        obj->flags.flip_x = 1 - obj->flags.flip_x;
+                        obj->flags.flip_x = !obj->flags.flip_x;
                         set_main_and_sub_etat(obj, 0, 5);
                     }
                 }
