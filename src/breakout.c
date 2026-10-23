@@ -306,21 +306,28 @@ void move_ball(obj_t *obj)
     u8 old_undestroy;
     s16 dx;
     s16 dy;
-
     old_undestroy = undestroy;
     dx = 0;
     dy = 0;
-    if (old_undestroy > 5 || upscreen != 0) {
+    if ((old_undestroy > 5) || (upscreen != 0))
+    {
         if (undestroy > 5)
+        {
             undestroy = 0;
-        dx = myRand(257) - 128;
+        }
+        {
+            /* SYNTHETIC: retain an INVENTED short snapshot of the random result. */
+            s16 random_dx;
+            random_dx = myRand(257) - 128;
+            dx = random_dx;
+        }
         dy = myRand(257) - 128;
         upscreen = 0;
     }
     ball_x += dx + speed_ball_x;
     ball_y += dy + speed_ball_y;
-    obj->x = (s16)(ball_x ? ball_x >> 8 : -((-ball_x) >> 8));
-    obj->y = (s16)(ball_y ? ball_y >> 8 : -((-ball_y) >> 8));
+    obj->x = (s16) ((!ball_x) ? (-((-ball_x) >> 8)) : (ball_x >> 8));
+    obj->y = (s16) ((!ball_y) ? (-((-ball_y) >> 8)) : (ball_y >> 8));
 }
 
 void get_brik_bonus(void)
@@ -451,21 +458,29 @@ void AllocateCasseBriqueBoum(obj_t *obj)
     s16 i;
     s16 count;
     obj_t *explosion;
-
     explosion = level.objects;
     count = level.nb_objects;
-    for (i = 0; i < count; i++, explosion++) {
-        if (explosion->type == 0xb && explosion->is_active == 0) {
+    for (i = 0; i < count; i++, explosion++)
+    {
+        if ((explosion->type == 0xb) && (explosion->is_active == 0))
+        {
             GET_ANIM_POS(obj, &x, &y, &w, &h);
             explosion->anim_frame = 0;
-            explosion->x = x + (w >> 1) - explosion->offset_bx;
-            explosion->y = y + h - explosion->offset_by;
+            explosion->x = ((w >> 1) + x) - explosion->offset_bx;
+            {
+                s32 top; /* SYNTHETIC: promote Y through an INVENTED local address. */
+                s32 *y_slot;
+                y_slot = &top;
+                *y_slot = y;
+                explosion->y = (top + h) - explosion->offset_by;
+            }
             explosion->flags.alive = 1;
             explosion->is_active = 1;
             add_alwobj(explosion);
             return;
         }
     }
+
 }
 
 void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)

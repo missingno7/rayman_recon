@@ -556,10 +556,10 @@ void INIT_BBMONT(obj_t* obj) {
     bb1.speed_x = 0;
     bb1.saved_cmd = 0;
     Phase = 0;
+    PosPierre = 9999; /* COMPILER_STEERED: independent post-call store order. */
     WaitForAnim = 0;
     bb1.field1_0x2 = -1;
     bb1.field2_0x4 = 0;
-    PosPierre = 9999;
 }
 
 void DO_BBL_COMMAND(obj_t* obj) {
@@ -670,7 +670,11 @@ void BBMONT_ECLAIR(obj_t* bb1_obj) {
                 new_spd_x = eta_rows[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
                 cur_obj->speed_x = cur_obj->flags.flip_x ? new_spd_x : -new_spd_x;
                 GET_SPRITE_POS(bb1_obj, 10, &x, &y, &w, &h);
-                { s32 width; width = w; cur_obj->x = ((x + width) - cur_obj->offset_bx) + (bb1_obj->flags.flip_x ? 16 : -16); }
+                { /* COMPILER_STEERED: INVENTED local left names the promoted X operand. */
+                    s32 left;
+                    left = x;
+                    cur_obj->x = ((w + left) - cur_obj->offset_bx) + (bb1_obj->flags.flip_x ? 16 : -16);
+                }
                 cur_obj->y = y;
                 cur_obj->init_x = cur_obj->x;
                 cur_obj->init_y = cur_obj->y;
@@ -738,7 +742,11 @@ void BBMONT_ETINCELLES(obj_t* in_obj) {
             if (!in_obj->flags.flip_x)
                 in_w = 0;
 
-            { s32 width; width = in_w; new_x = in_x + width - cur_obj->offset_bx; }
+            { /* COMPILER_STEERED: INVENTED local left names the promoted X operand. */
+                    s32 left;
+                    left = in_x;
+                    new_x = in_w + left - cur_obj->offset_bx;
+            }
             cur_obj->x = new_x;
             cur_obj->y = in_y - 8;
             cur_obj->init_x = cur_obj->x;

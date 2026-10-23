@@ -4196,7 +4196,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_BBL_COMMAND": {
      "status": "NEAR_MATCH",
@@ -4207,7 +4208,7 @@
      ]
     },
     "BBMONT_ECLAIR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -4216,7 +4217,7 @@
      "quality": "COMPILER_STEERED"
     },
     "BBMONT_ETINCELLES": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -5328,7 +5329,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "get_brik_bonus": {
      "status": "STRICT",
@@ -5358,7 +5360,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "AllocateBonus": {
      "status": "NEAR_MATCH",
