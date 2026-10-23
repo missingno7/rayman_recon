@@ -525,36 +525,56 @@ void Init_Effet_Chaleur(u16 width, u16 height, u8* source_buf, u8* dest_buf) {
 }
 
 void Do_Effet_Chaleur(u16 width, u16 height) {
-    s16 max_y;
-    s16 start_y;
-    s16 y;
-    u8 phase;
-    s16 counter;
+  s16 max_y;
+  s16 start_y;
+  s16 y;
+  u8 phase;
+  s16 counter;
+  counter = height - 201;
+  {
+    s16 height_value;
+    s16 *height_address = &height_value;
+    *height_address = ymap >> 2;
+    max_y = height_value;
+  }
+  if (max_y > counter)
+  {
+    max_y = counter;
+  }
+  start_y = (((s16) (Get_PosLave_Y() - ymap)) + max_y) - 20;
+  if (gele == 0)
+  {
+    ++data_22d948;
+  }
+  if (data_22d948 == 16)
+  {
+    data_22d948 = 0;
+  }
+  y = start_y;
+  {
+    u8 phase_value;
+    phase_value = data_22d948;
+    phase = phase_value;
+  }
+  counter = 90;
+  for (; (y < (start_y + 90)) && (y < height); ++y)
+  {
+    --counter;
+    if (counter < 16)
+    {
+      counter = 16;
+    }
+    if (y > 0)
+    {
+      Bande[y].field_6 = (((s16) ((SinTabFeu[phase] * 16) / counter)) + (Bande[y].field_6 + width)) % width;
+    }
+    ++phase;
+    if (phase == 16)
+    {
+      phase = 0;
+    }
+  }
 
-    counter = height - 201;
-    max_y = ymap >> 2;
-    if (max_y > counter) max_y = counter;
-    start_y = (s16)(Get_PosLave_Y() - ymap) + max_y - 20;
-    if (gele == 0) {
-        ++data_22d948;
-    }
-    if (data_22d948 == 16) data_22d948 = 0;
-    y = start_y;
-    phase = data_22d948;
-    counter = 90;
-    for (; y < start_y + 90 && y < height; ++y) {
-        --counter;
-        if (counter < 16) {
-            counter = 16;
-        }
-        if (y > 0) {
-            Bande[y].field_6 = ((s16)(SinTabFeu[phase] * 16 / counter) + (Bande[y].field_6 + width)) % width;
-        }
-        ++phase;
-        if (phase == 16) {
-            phase = 0;
-        }
-    }
 }
 
 

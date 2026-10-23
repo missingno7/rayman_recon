@@ -6965,7 +6965,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "swap": {
      "status": "STRICT",
@@ -8180,7 +8181,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "setpan": {
      "status": "STRICT",
@@ -10182,7 +10184,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "LoadPcxInVignet": {
      "status": "NEAR_MATCH",
@@ -10557,7 +10560,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DISPLAY_DEFORMATION": {
      "status": "NEAR_MATCH",
@@ -12943,7 +12947,7 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "effect_cleanup_6c7a0": {
      "status": "STRICT",

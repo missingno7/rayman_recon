@@ -728,7 +728,11 @@ void setvol(s16 obj_id, u8 unused) {
         unk_pan = voice_table[voice_ind].pan;
         voice_table[voice_ind].vol = unk_vol;
         if (voice_is_working[voice_ind]) {
-            vol_both = (Volume_Snd * unk_vol * hard_sound_table[voice_table[voice_ind].snd].volume) >> 14;
+            {
+            s32 combined_volume;
+            combined_volume = (Volume_Snd * unk_vol * hard_sound_table[voice_table[voice_ind].snd].volume) >> 14;
+            vol_both = combined_volume;
+        }
             KeyVol(voice_ind, vol_both, unk_pan);
         }
     }

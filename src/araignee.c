@@ -393,11 +393,11 @@ void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
     s16 i;
     s16 cen_y;
     s16 spipl_y_2;
-    s16 spipl_x;
+    s16 poing_x;
     obj_t *cur_obj;
     s16 nb_objs;
     s16 poing_y_1;
-    s16 poing_x;
+    s16 spipl_x;
     s16 spipl_y_1;
     s16 spipl_spr_w;
     s16 spipl_spr_h;

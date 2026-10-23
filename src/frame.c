@@ -371,7 +371,7 @@ void build_map(s16 x, s16 y) {
     PLAN1_BUFFER_START_POINTER = (u32)buffer;
     start = mp.map + ((y >> 4) * mp.width + (x >> 4));
     /* DOS 1:2b88e..2b938: four planes, source step 64 and dest step 0x4600. */
-    for (plane = 0; plane < 4; ++plane) {
+    for (plane = 0; 4 > plane; ++plane) {
         map_tile_t *tile = start;
         u8 *dest = buffer + plane * 0x4600;
         s32 row;

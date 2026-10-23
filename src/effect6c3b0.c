@@ -32,75 +32,102 @@ extern void effect_cleanup_6c7a0(void);
 
 void effect_helper_6c3b0(s16 x, s16 y, s16 velocity, u16 step)
 {
-    s32 random_value;
-    double cosine;
-    double coordinate_x;
-    double amplitude;
-    double sine;
-    double transformed_y;
-    double angle;
-    double coordinate_y;
-    double transformed_x;
-    double distance;
-    effect_state_6c_t *state;
-    s32 radius;
-    double scale;
-    u8 *map;
-
-    state = effect_state_6c;
-    map = state->map;
-
-    state->frame = 0;
-    state->step = max32(1, step);
+  s32 random_value;
+  double cosine;
+  double coordinate_x;
+  double amplitude;
+  double sine;
+  double transformed_y;
+  double angle;
+  double coordinate_y;
+  double transformed_x;
+  double distance;
+  effect_state_6c_t *state;
+  s32 radius;
+  double scale;
+  u8 *map;
+  state = effect_state_6c;
+  map = state->map;
+  state->frame = 0;
+  state->step = max32(1, step);
+  {
+    s16 adjusted;
+    if (velocity >= 0)
     {
-        s16 adjusted;
-        if (velocity >= 0)
-            adjusted = max32(1, velocity);
-        else
-            adjusted = -max32(1, -velocity);
-        state->velocity = adjusted;
+      adjusted = max32(1, velocity);
     }
-
-    if (x != -1)
-        state->x = x;
-    if (y != -1)
-        state->y = y;
-
-    state->x = max32(state->radius, min32(state->x, 319 - state->radius));
-    state->y = max32(state->radius, min32(state->y, 199 - state->radius));
-    random_value = rand() & 7;
-    state->velocity_x = random_value < 4 ? state->velocity : (s16)-state->velocity;
-    random_value = rand() & 7;
-    state->velocity_y = random_value < 4 ? state->velocity : (s16)-state->velocity;
-
-    if (x == -1 || y == -1)
-        return;
-
-    radius = state->radius;
+    else
     {
-        double factor = 100.0 / (radius * 50);
-        scale = factor * factor;
+      adjusted = -max32(1, -velocity);
     }
-    for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0) {
-        double square_y = coordinate_y * coordinate_y;
-        for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0) {
-            distance = sqrt(coordinate_x * coordinate_x + square_y);
-            amplitude = distance * exp(-scale * distance * distance);
-            if (coordinate_x == 0.0 && coordinate_y == 0.0) {
-                transformed_x = coordinate_x;
-                transformed_y = coordinate_y;
-            } else {
-                angle = atan2(coordinate_y, coordinate_x);
-                cosine = cos(angle);
-                sine = sin(angle);
-                transformed_x = distance * cosine - amplitude * sine;
-                transformed_y = distance * sine + amplitude * cosine;
-            }
-            map[0] = (s32)(transformed_x - coordinate_x);
-            map[1] = (s32)(transformed_y - coordinate_y);
-            map += 2;
-        }
+    state->velocity = adjusted;
+  }
+  if (x != (-1))
+  {
+    state->x = x;
+  }
+  if (y != (-1))
+  {
+    state->y = y;
+  }
+  state->x = max32(state->radius, min32(state->x, 319 - state->radius));
+  state->y = max32(state->radius, min32(state->y, 199 - state->radius));
+  {
+    s32 perm_value_0;
+    s32 *perm_address_0;
+    perm_address_0 = &perm_value_0;
+    *perm_address_0 = rand() & 7;
+    random_value = perm_value_0;
+  }
+  state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity));
+  {
+    s32 perm_value_1;
+    s32 *perm_address_1;
+    perm_address_1 = &perm_value_1;
+    *perm_address_1 = rand() & 7;
+    random_value = perm_value_1;
+  }
+  state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity));
+  if ((x == (-1)) || (y == (-1)))
+  {
+    return;
+  }
+  {
+    s32 perm_value_2;
+    perm_value_2 = state->radius;
+    radius = perm_value_2;
+  }
+  {
+    double factor = 100.0 / (radius * 50);
+    scale = factor * factor;
+  }
+  for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)
+  {
+    double square_y = coordinate_y * coordinate_y;
+    for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)
+    {
+      distance = sqrt((coordinate_x * coordinate_x) + square_y);
+      amplitude = distance * exp(((-scale) * distance) * distance);
+      if ((coordinate_x == 0.0) && (coordinate_y == 0.0))
+      {
+        transformed_x = coordinate_x;
+        transformed_y = coordinate_y;
+      }
+      else
+      {
+        angle = atan2(coordinate_y, coordinate_x);
+        cosine = cos(angle);
+        sine = sin(angle);
+        transformed_x = (distance * cosine) - (amplitude * sine);
+        transformed_y = (distance * sine) + (amplitude * cosine);
+      }
+      map[0] = (s32) (transformed_x - coordinate_x);
+      map[1] = (s32) (transformed_y - coordinate_y);
+      map += 2;
     }
+
+  }
+
 }
 
 void effect_cleanup_6c7a0(void)
@@ -129,7 +156,7 @@ u8 effect_helper_6c7cc(u16 x, u16 y, u16 radius, s16 speed,
             state->radius = max32(8, min32(radius, 48));
             state->width = (u16)(state->radius * 2 + 1);
             state->height = (u16)(state->radius * 2 + 1);
-            copy(screen, EffetBufferNormal, 0xfa00);
+            copy_guarded(screen, EffetBufferNormal, 0xfa00);
             state->screen = EffetBufferNormal;
             state->output = output;
             bytes = (s32)state->height * state->width * 2;
@@ -185,7 +212,7 @@ void effect_helper_6c9bc(void)
     s32 y;
     s32 stride;
 
-    copy(state->screen, state->output, 0xfa00);
+    copy_guarded(state->screen, state->output, 0xfa00);
     x = state->x - state->radius;
     y = state->y - state->radius;
     x = x + y * 64 + y * 256;

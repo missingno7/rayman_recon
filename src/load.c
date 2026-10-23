@@ -735,8 +735,8 @@ void LOAD_ALL_FIX(void)
             }
             fread(&RaymanExeCheckSum2, 4, 1, fp);
             fread(&wldobj[index].nb_sprites, 2, 1, fp);
-            wldobj[index].sprites = (sprite_t *)block_malloc(&main_mem_fix, wldobj[index].nb_sprites * sizeof(sprite_t));
-            fread(wldobj[index].sprites, sizeof(sprite_t), wldobj[index].nb_sprites, fp);
+            wldobj[index].sprites = (sprite_t *)block_malloc(&main_mem_fix, (u16)wldobj[index].nb_sprites * sizeof(sprite_t));
+            fread(wldobj[index].sprites, sizeof(sprite_t), (u16)wldobj[index].nb_sprites, fp);
             fread(&wldobj[index].anim_count, 1, 1, fp);
             if (wldobj[index].anim_count != 0) {
                 wldobj[index].animations = (anim_t *)block_malloc(&main_mem_fix, wldobj[index].anim_count * sizeof(anim_t));

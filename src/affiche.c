@@ -1425,6 +1425,7 @@ void DISPLAY_CONTINUE_SPR(void) {
 
 void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
                             s16 x1, s16 y1, s16 x2, s16 y2, s16 x3, s16 y3) {
+    u8 *screen_pixels;
     deform_blit_t geometry;
     s16 min_x;
     s16 max_x;
@@ -1478,8 +1479,9 @@ void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
     geometry.source_width = sprite->outer_width;
     geometry.source_height = sprite->outer_height;
     draw_sprite_deform(image + sprite->offset_in_atlas, new_sprite_deform, &geometry);
+    screen_pixels = draw_buffer;
     DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,
-        (u16)((max_x - min_x) + ((max_y - min_y) << 8)), draw_buffer, new_sprite_deform);
+        (u16)((max_x - min_x) + ((max_y - min_y) << 8)), screen_pixels, new_sprite_deform);
 }
 
 void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
