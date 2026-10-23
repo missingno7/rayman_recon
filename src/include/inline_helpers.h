@@ -188,4 +188,72 @@ s32 max32(s32 a,s32 b);
  * STRICT proofs: set_ball_pos (breakout), RAY_GOING_BALANCE (ray); 0 STRICT losses in six audited units. */
 s32 ashl32(s32 value, u8 shift);
 #pragma aux ashl32 =   "shl eax,cl"   parm [eax] [cl] value [eax] modify exact [eax cx]
+/* ORIGINAL_INLINE, ashr32 is RAYVERSE/Android; ashr32_inline is an INVENTED
+ * conflict-avoiding C spelling (tools/android.py ashr32_inline: absent).
+ * DOS uses a zero test, unlike Android's negative test. For nonzero inputs
+ * this is an arithmetic shift (rounding down); zero takes the negate path.
+ * Exact recurrence in two currently non-STRICT C functions:
+ * instantSpeed 1:45e9f..45ead and 1:45eb5..45ec3;
+ * ray_inertia_speed 1:5d04d..5d05b. Additional sites 1:0f639,0f6b0,
+ * 0f7b2,0f828,16e1b,16e34. EAX signed value/result, CL count.
+ * EDX survives instantSpeed (used by sgn at 1:45ec5) and ray_inertia_speed
+ * (a2 used at 1:5d08b); EBX/ESI/EDI survive the instantSpeed sites.
+ * Count reloads 1:45eb1 and 1:5d061 establish advertised CL destruction.
+ * As for ashr16/ashl16, the advertised upper count-register width is OPEN;
+ * [eax cx] is the existing shared-helper convention, subject to matching.
+ * All sequences and surrounding register use are in helper_evidence.txt.
+ * Register uniformity: the exact 7-instruction sequence occurs 4 times (1:0f639, 0f6b0, 0f7b2, 0f828), always EAX/CL.
+ * User decision 2026-10-23: accepted.
+ */
+s32 ashr32_inline(s32 value, u8 shift);
+#pragma aux ashr32_inline = \
+ "test eax,eax" \
+ "jz short ashr32_zero" \
+ "sar eax,cl" \
+ "jmp short ashr32_end" \
+ "ashr32_zero:" \
+ "neg eax" \
+ "sar eax,cl" \
+ "neg eax" \
+ "ashr32_end:" \
+ parm [eax] [cl] value [eax] modify exact [eax cx]
+
+/* ORIGINAL_INLINE, INVENTED name (Android abs32_inline: absent).
+ * Two-site gate: instantSpeed 1:45e85..45e8b and RAY_BALANCE_ANIM
+ * 1:5f291..5f297 have the exact TEST EAX / JGE +2 / NEG EAX sequence.
+ * Neither current function is STRICT through plain C (97 and 1 bytes,
+ * respectively before this worker); plain-C experiments and traces are
+ * retained under build/workers/co_ray/out, manual, and perm.
+ * EAX signed input/result, physically only EAX/flags change. EDX survives
+ * instantSpeed through its later sgn (1:45ec5); EBX integral speed survives
+ * through 1:45ed8. RAY_BALANCE_ANIM returns the EAX result at 1:5f298
+ * without any intervening transformation. Exact contract: EAX only;
+ * no code/register-allocation pragma is added to an individual unit.
+ * Inputs at both cited sites lie within -32768..32768, excluding INT_MIN.
+ * Register uniformity (supervisor scan 2026-10-23): all 190 TEST/JGE/NEG absolute sequences in DOS game code use
+ * EAX (none uses another register; 27 lie in functions already STRICT) - a C macro would vary registers with
+ * allocation, so the original was a fixed-EAX inline routine. User decision 2026-10-23: accepted (supersedes the
+ * 2026-10-22 rejection of an abs helper).
+ */
+s32 abs32_inline(s32 value);
+#pragma aux abs32_inline = \
+ "test eax,eax" \
+ "jge short abs32_nonnegative" \
+ "neg eax" \
+ "abs32_nonnegative:" \
+ parm [eax] value [eax] modify exact [eax]
+
+/* Additional verified DOS fixed-EAX absolute sites (co_ray):
+ * RAY_BALANCE_ANIM: 1:5f291
+ * determineRayAirInertia: 1:5cd1c
+ * set_air_speed: 1:5ca93
+ * instantSpeed: 1:45e85
+ * retour_couteau: 1:5539d, 1:553af, 1:553dd, 1:553ea
+ * RAY_THROW_FIST: 1:569d3
+ * alter_fist_speed: 1:56cf7, 1:56d0c
+ */
+/* Additional retained original Abs sites: rayMayLandOnAnObject 1:5c2cd,1:5c310,1:5c8ed */
+/* Additional retained original Abs sites: RAY_RESPOND_TO_NOTHING 1:5ed49 */
+/* Additional retained original Abs sites: RAY_SURF 1:609de,1:60a3d */
+/* Additional retained original Abs sites: DO_AUTO_SCROLL 1:4a0ec */
 #endif

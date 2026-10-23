@@ -91,6 +91,12 @@ compare instead. Families shown to be ordinary C (no helper): flag bitfield extr
 (W-BITF), animation index arithmetic `8d 04 95 .. 29 d0` (struct indexing), menu screen call setup.
 First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, ray, effect1, menu, cheat, 0 losses.
 
+- **abs32_inline / ashr32_inline** (accepted 2026-10-23, co_ray; supersedes the 2026-10-22 abs-helper rejection):
+  all 190 branching absolute sequences (TEST EAX,EAX / JGE / NEG EAX) in DOS game code use EAX - a C macro would let
+  the allocator pick other registers at some of 190 sites; the zero-tested shift (TEST/JZ/SAR/JMP/NEG/SAR/NEG) occurs 4
+  times, always EAX/CL. Two-site gates and contracts in inline_helpers.h. First use closed 6 functions (+2,740 bytes;
+  poing 11/11). The C ternary reproduces the instructions but not the fixed register (CAUSES H11 abs experiment).
+
 ## Evidence log (established facts, with their proofs)
 - **Watcom C, 32-bit flat, register calling convention** [PROVEN]: args in EAX, EDX, EBX, ECX; callee saves used
   registers (`push ebx/ecx/edx`); symbols `name_` for functions, `_name` for data (OMF from wcc386 matches).
