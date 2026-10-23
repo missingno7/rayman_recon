@@ -2457,13 +2457,13 @@
      ]
     },
     "poing_face_obj": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "SYNTHETIC"
+     "quality": "COMPILER_STEERED"
     },
     "DARK_phase1": {
      "status": "NEAR_MATCH",
@@ -10872,7 +10872,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "sub_196c4": {
      "status": "STRICT",
@@ -11110,10 +11111,11 @@
      ]
     },
     "sub_1a4ac": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "effect_set_audio_status": {
      "status": "STRICT",
@@ -11297,7 +11299,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "effect_cleanup_16200": {
      "status": "STRICT",
@@ -11316,7 +11319,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "effect_helper_168c8": {
      "status": "STRICT",

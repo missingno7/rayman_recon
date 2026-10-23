@@ -66,15 +66,14 @@ extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
 
 void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
 {
+    /* COMPILER_STEERED: coefficient scopes and declaration order. */
+    effect5_state_t *state;
     double longitude_step;
-    double scaled_cos;
     double longitude;
     u16 y;
     double latitude_step;
-    effect5_state_t *state;
     u8 height_step;
     u8 width_step;
-    double scaled_sin;
     effect5_item_t *item;
     double latitude;
     u8 column;
@@ -102,6 +101,8 @@ void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
     point = state->points;
     latitude = -3.141592654 / 2;
     for (row = 0; row <= state->rows; row++) {
+        double scaled_sin;
+        double scaled_cos;
         scaled_sin = state->radius * sin(latitude);
         scaled_cos = state->radius * cos(latitude);
         longitude = 0;
@@ -316,7 +317,12 @@ s16 effect_helper_16404(void)
         step *= magnitude;
         step = state->center_x + step;
         state->center_x = step;
-        step = state->velocity_y / 4;
+        {
+            /* COMPILER_STEERED; local y_velocity_step INVENTED. */
+            s32 y_velocity_step;
+            y_velocity_step = state->velocity_y / 4;
+            step = y_velocity_step;
+        }
         magnitude = state->speed;
         if (magnitude < 0) magnitude = -magnitude;
         step *= magnitude;
@@ -326,8 +332,8 @@ s16 effect_helper_16404(void)
         sine_x = sine;
         cosine_x = cosine;
         sinus_cosinus(state->angle_y, &sine, &cosine);
-        sine_y = sine;
         cosine_y = cosine;
+        sine_y = sine;
         for (row = 0; row <= state->rows; row++) {
             for (column = 0; column <= state->columns; column++) {
                 y = sine_y * point->x + cosine_y * point->y;

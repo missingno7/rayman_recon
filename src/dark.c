@@ -1,7 +1,7 @@
 /*
  * Mr Dark boss (GOG v1.21 object 1:22a70-1:240f0). File name invented (Rayverse dark.c). Names: Rayverse/Android.
- * Worker candidate: 18/22 STRICT; four functions remain NEAR_MATCH; contiguous _TEXT.
- * Detailed evidence and negative results: NOTES.md in this directory.
+ * Wave 3 worker candidate; current whole-unit statuses are in RESULTS.json.
+ * Wave 3 evidence and negative results: worker FINDINGS.md.
  */
 #include "obj.h"
 #include "game.h"
@@ -139,7 +139,19 @@ void init_vitraux(void)
 }
 
 u8 poing_face_obj(obj_t *obj)
-{ /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */u8 facing = 0; u8 ahead; u8 flip;      s32 diff_x = obj->x; diff_x += obj->offset_bx; diff_x -= poing_obj->x + poing_obj->offset_bx;               ahead = diff_x > 0; flip = poing_obj->flags.flip_x; { u8 *p = &flip; flip = *p; } if (ahead == flip)         facing = 1;     return facing; }
+{
+    u8 facing = 0;
+    u8 ahead, flip;
+    /* COMPILER_STEERED; locals INVENTED: grouping and fist-addition order matter. */
+    s32 diff_x = obj->x + obj->offset_bx -
+        (poing_obj->offset_bx + poing_obj->x);
+
+    ahead = diff_x > 0;
+    flip = poing_obj->flags.flip_x;
+    if (ahead == flip)
+        facing = 1;
+    return facing;
+}
 
 
 

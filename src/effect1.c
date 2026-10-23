@@ -539,6 +539,7 @@ void Do_Effect_Pause_Simple(void)
 
 s16 Do_Effect_Pause_unknown(u32 par_0)
 {
+    /* COMPILER_STEERED: explicit truth normalization preserves short-circuit calls. */
     u8 effect;
     s32 duration;
 
@@ -550,7 +551,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
         effect_copy_pause_band(EffetBufferNormal, DrawBufferNormal, 0xa0);
         effect_copy_pause_band(EffetBufferNormal + 0xc800,
                                DrawBufferNormal + 0xa0, 0xa0);
-        if (TOUCHE(0x36) != 0 && TOUCHE(0x2a) != 0) {
+        if ((TOUCHE(0x36) != 0 && TOUCHE(0x2a) != 0) != 0) {
             ++effect_pause_counter;
             if (effect_pause_counter >= 5) {
                 effect_pause_counter = 0;

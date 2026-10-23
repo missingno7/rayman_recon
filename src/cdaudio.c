@@ -214,6 +214,9 @@ u32 AudioStatusCheck(u8 command)
     return (cd_buffer_878[4] & 2) != 0;
 }
 
+/* INVENTED type alias; same far-word pointer, avoids the permuter macro guard. */
+typedef u16 __far *cd_status_word_ptr_t;
+
 void sub_195ec(u8 command)
 {
     sub_194a8(cd_buffer_878, cd_offset_844, 3, 11);
@@ -223,11 +226,11 @@ void sub_195ec(u8 command)
     cd_request_regs.bx = (u16)cd_offset_850;
     cd_request_regs.ax = 0x1510;
     sub_193f0((s32)&cd_request_regs);
-    cd_status_playing = (*(u16 __far *)(cd_buffer_878 + 3) & 0x200) != 0;
-    cd_status_ready = (cd_buffer_890[1] & 1) ? 1 : 0;
+    cd_status_playing = (*(cd_status_word_ptr_t)(cd_buffer_878 + 3) & 0x200) != 0;
+    cd_status_ready = (u32)((cd_buffer_890[1] & 1) != 0);
     cd_status_error = !(cd_status_playing | cd_status_ready);
     {
-        u16 status = *(u16 __far *)(cd_buffer_878 + 3);
+        u16 status = *(cd_status_word_ptr_t)(cd_buffer_878 + 3);
         word_DE8BC = sub_19400(status);
     }
 }
@@ -707,10 +710,9 @@ void sub_1a4ac(u8 command, u8 track, u8 minute, u8 second)
             if ((u8)sub_1a348(track) == 1) {
                 s32 requested;
                 {
-                    s32 base;
-                    requested = (second + (minute << 8)) << 8;
-                    base = cd_disc_info.track_start[track];
-                    requested += base;
+                    /* COMPILER_STEERED; local time INVENTED: name it before adding the base. */
+                    s32 time = ((minute << 8) + second) << 8;
+                    requested = time + cd_disc_info.track_start[track];
                 }
                 if (requested < (s32)(track < cd_disc_info.last_track ? cd_disc_info.track_start[track + 1] : cd_disc_info.leadout_lba)) {
                     word_DE8BC = sub_19c74(command);
