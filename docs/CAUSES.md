@@ -109,6 +109,12 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   variants all worse. Score: ring confirmed at 5 sites, 4 candidates rejected. The A/B set is EXHAUSTED without new
   source evidence; small-diff triage also found box CalcTab = compiler anomaly (B17), not a source error.
 
+## H10 - Pure instruction-order differences come from the scheduler (REFUTED as a source-order lever; sched 2026-10-23)
+- The 10.6 scheduler is recovered (docs/COMPILER.md). In all 7 pure-reorder NEAR functions DOS's order is not a legal
+  schedule of our IR: the difference already exists in the IR (value lifetimes, address-taken status, copies), so the
+  fix is upstream in lowering/allocation, not in statement order. Natural trials (direct return in dosmem, moving the
+  second-screen computation in effect_helper_50738, a typed workspace view) gained nothing.
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.

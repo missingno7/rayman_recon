@@ -426,6 +426,26 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   (a patched 10.x with exact conversion?) or a non-literal origin. CalcTab stays NEAR (1 byte); never patch the
   constant by other means.
 
+## Watcom 10.6 instruction scheduler (PROVEN from the binary, build/workers/sched, 2026-10-23)
+- Runs in PostOptimize after register allocation, **inside each basic block** (blocks of <=2 IR instructions are
+  skipped); it never moves code across a join or branch. Model build/workers/sched/model.py replays 118/118 block DAGs
+  and 867/867 selections (11 real functions in 9 units + 12 synthetic alias probes + 3 trials).
+- Dependences: RAW/WAR/WAW by name identity, not addresses or C pointer types (no TBAA). Different direct globals never
+  alias, however adjacent; same global aliases iff byte ranges overlap; a store through a free pointer aliases a global
+  read only if that global is address-taken (USE_ADDRESS) - otherwise -oa separates them; identical-base indexed pairs
+  are separated if the index is not redefined in between. HiddenDependancy (6d1e5) also links instructions that share
+  a register READ (result + operand 0 of two-operand forms; full register family, so AL/AH serialize) - validated by 23
+  pair edges in 7 functions.
+- Selection builds the block bottom-up: lowest StallCost against the built suffix, then highest DAG height, then the
+  index-adjust preference, then stallability (+3 per indexed operand, +2 register, +1 direct memory, +3 indexed result),
+  then the greatest backend instruction ID. Pentium FU table at 782e3 (CPU >= 5). The generation-table row, not the
+  emitted bytes, decides FU class, so identical machine instructions need not mean identical scheduler input.
+- Consequence: source statement order is not a general scheduler control. Of 306 NEAR functions, 7 differ only in
+  order (allocate_splash, AllocateBonus, InitPcSoundCard, AFFICHE_KEY_SCREEN, SaveScreen,
+  dos_allocate_conventional_block, effect_helper_50738); in each, DOS's order is not a legal schedule of our IR (e.g. a
+  load of an address-taken global cannot sink below a pointer store), so the original IR differs before scheduling.
+  y_floor and CalculVitesseJumelle are not scheduler cases (copy missing / placed in another block). 0 closures.
+
 ## Tools for allocator analysis (adopted 2026-10-23 from build/workers/t_cgtrace)
 `python tools/explain.py UNIT FUNC [--source FILE.c] --out build/cgtrace/<new>` traces the pinned compiler (observation
 harness; refuses when the observed object differs from a normal build) and prints each difference against DOS by
