@@ -1666,13 +1666,14 @@ void DO_STONEBOMB_REBOND(obj_t* obj) {
 }
 
 void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
-    u8 under;
-    u8 btyp;
-    u8 anim_speed;
     s32 mul_45;
-    s32 mul_30;
+    u8 btyp;
     u16 old_type;
+    u8 under;
+    s32 mul_30;
+    u8 anim_speed;
 
+    /* COMPILER_STEERED: declaration order and high-nibble test reproduce DOS allocation/selection; private values and control flow are unchanged. */
     /* 2CBC4 801513C4 -O2 -msoft-float */
 
     mul_45 = 5;
@@ -1766,8 +1767,8 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             recale_position(obj);
     }
     obj->gravity_value_1 = 0;
-    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
-    if (!((anim_speed & 0xf0) == 0xa0 || (anim_speed & 0xf0) == 0xb0))
+    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed_bits.high;
+    if(anim_speed != 11 && anim_speed != 10)
         obj->gravity_value_2 = 0;
 }
 

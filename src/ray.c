@@ -2150,7 +2150,7 @@ void STOPPE_RAY_CONTRE_PAROIS(u8 block) {
 }
 
 void RAY_IN_THE_AIR(void) {
-    /* COMPILER_STEERED: reachable states have valid eta rows (already read above); only the pointer calculation moves before the guard. */
+    /* COMPILER_STEERED: guard the eta pointer, use the existing absolute-value helper, and reverse the equivalent final X comparison (w3_ray/FINDINGS.md). */
     u8 may_land_obj;
     s16 anim_speed;
     eta_t **eta = ray.eta;
@@ -2216,8 +2216,8 @@ void RAY_IN_THE_AIR(void) {
     }
     STOPPE_RAY_CONTRE_PAROIS(block);
     {
-    eta_t* ray_eta = &eta[ray.main_etat][ray.sub_etat];
     if (ray.speed_y < -3 && ray.sub_etat == 15 && anim_speed == 11) {
+        eta_t *ray_eta = &eta[ray.main_etat][ray.sub_etat];
         ray_eta->anim_speed_bits.high = 1;
         ray.gravity_value_1 = 0;
         ray.gravity_value_2 = 0;
@@ -2294,7 +2294,7 @@ void RAY_IN_THE_AIR(void) {
                 s32 run_speed;
                 if (RayEvts.run) {
                     run_speed = ashr16(ray.eta[1][3].speed_x_right, 4);
-                    if (Abs(ray.speed_x) >= run_speed)
+                    if (abs32_inline(ray.speed_x) >= run_speed)
                         set_main_and_sub_etat(&ray, 1, 7);
                     else
                         set_main_and_sub_etat(&ray, 0, 43);
@@ -2341,7 +2341,7 @@ void RAY_IN_THE_AIR(void) {
             ray.speed_y = -10;
         }
     }
-    if (num_world == world_2_music && num_level == 15 && (xmapmax < ray.x + 150) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
+    if (num_world == world_2_music && num_level == 15 && (ray.x + 150 > xmapmax) && (mp.height * 16 - 100 < ray.y) && ray.hit_points != (u8)-1) {
         ChangeLevel();
         DO_FADE_OUT();
     }

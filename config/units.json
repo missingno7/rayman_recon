@@ -1047,7 +1047,7 @@
      ]
     },
     "calc_btyp_square": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6775,7 +6775,7 @@
      ]
     },
     "RAY_IN_THE_AIR": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -7467,7 +7467,7 @@
      ]
     },
     "DO_THROWN_BOMB_REBOND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

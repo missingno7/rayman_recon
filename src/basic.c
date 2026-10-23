@@ -887,13 +887,13 @@ void calc_btyp_square(obj_t* obj) {
     tile_y = ashr16(y, 4);
     tile_x = ashr16(x, 4);
     tile_x_left = ashr16(x - x_offset, 4);
-    tile_x_right = ashr16(x_offset + x, 4);
+    tile_x_right = ashr16(x + x_offset, 4);
   }
   obj->btypes[3] = BTYP(tile_x, tile_y - 1);
   obj->btypes[1] = BTYP(tile_x_left, tile_y);
   {
-    /* DOS 1:0e71e: signed narrow result (CWDE); only AL is consumed. */
-    s16 center_btyp = (obj->main_etat == 2) ? (bloc_floor((u8) BTYP(tile_x, tile_y), x & 15, y & 15)) : ((u8) BTYP(tile_x, tile_y));
+    /* COMPILER_STEERED: both arms fit s16; s32 center plus x + x_offset reproduces the DOS homes and operand order (1:0e6a5, 1:0e71e). */
+    s32 center_btyp = (obj->main_etat == 2) ? (bloc_floor((u8) BTYP(tile_x, tile_y), x & 15, y & 15)) : ((u8) BTYP(tile_x, tile_y));
     obj->btypes[0] = center_btyp;
   }
   obj->btypes[2] = BTYP(tile_x_right, tile_y);
