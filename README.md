@@ -6,9 +6,9 @@ optional modernisation. The original executable is the authority; matching comes
 Primary oracle: GOG `RAYMAN.EXE` **v1.21** (SHA-256 `599b1df2…09eb6`); secondary: CD/installed **v1.12**; PS1
 `SLUS-000.05` as a semantic reference. See `docs/ORIGINALS.md`, `docs/VERSIONS.md`.
 
-Status: extraction pipeline, runtime/compiler identification and a strict verifier work; 4 units in `src/` with
-STRICT functions, two of them complete original objects. Numbers: `python tools/status.py`; details:
-`docs/STATUS.md`, plan: `docs/NEXT_STEPS.md`.
+Status: 1,520 STRICT functions (57.7% of game code bytes), all original hand-written assembly STRICT, the complete
+program links from source (not yet byte-identical). Numbers: `python tools/status.py`; details: `docs/STATUS.md`;
+priorities: `docs/NEXT_STEPS.md`.
 
 ## Layout
 | path | content |
@@ -23,7 +23,7 @@ STRICT functions, two of them complete original objects. Numbers: `python tools/
 | `build/`, `scratch/` | generated data, worker dirs, experiments (ignored) |
 
 ## Requirements
-Python 3.10+ with `capstone` (5.0.x); historical tools under `C:\tools` (override with `RAYMAN_TOOLS`), pinned in
+Python 3.10+ with `capstone` (5.0.x) and `pycparser` (permuter only); historical tools under `C:\tools` (override with `RAYMAN_TOOLS`), pinned in
 `config/toolchain.json` and listed in `docs/TOOLCHAIN.md`: Watcom C/C++ 10.6 at `C:\tools\watcom-10.6` (required),
 10.5/10.0/10.0a as controls.
 
@@ -47,6 +47,9 @@ python tools/promote.py --unit NAME src/X.c         # integrator: register a uni
 python tools/seed.py draft 14e90 15e60      # seed an untouched object from PS1/Rayverse C into a draft unit (docs/SEEDING.md)
 python tools/seed.py try NAME           # seed one function, compile in context, diagnose against the oracle
 python tools/census.py && python tools/census.py --brief UNIT   # structural NEAR diagnosis + worker brief (docs/CENSUS.md)
+python tools/explain.py UNIT FUNC         # why a NEAR function differs (allocator/scheduler mechanisms)
+python tools/permute.py SRC.c FUNC --aggressive --seed 1 --max-compiles 800 --out build/permute/X   # source permuter
+python -B tools/manifest.py && python -B tools/link.py all   # natural link of the whole program (build/link)
 python tools/wpack.py verify             # one-off: unpack the Watcom 10.5 CD install set (provisioning, docs/TOOLCHAIN.md)
 ```
 `--oracle dos_v112_us` selects the secondary oracle for `libscan`, `disasm`, `tumap`, `match`.
