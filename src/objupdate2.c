@@ -274,12 +274,14 @@ s16 get_next_bonus_level(u8 lvl)
 }
 
 void TEST_WIZARD(obj_t* obj) {
-    /* 375BC 8015BDBC -O2 -msoft-float */
-
-    s16 obj_y; s16 obj_h; s16 obj_w; s16 obj_x;
+    /* COMPILER_STEERED: declaration order and existing ABS helpers preserve DOS allocation. */
+    s16 obj_h;
+    s16 obj_x;
+    s16 obj_w;
+    s16 x_diff_3;
+    s16 obj_y;
     s32 x_diff_1;
     s16 x_diff_2;
-    s16 x_diff_3;
     s32 y_diff_1;
 
     if (RayEvts.tiny || (!ray.flags.hurtbyfist && (!(ray.main_etat == 0 || ray.main_etat == 3) || nb_wiz_collected != 0))) {
@@ -330,14 +332,13 @@ void TEST_WIZARD(obj_t* obj) {
                 x_diff_1 = obj->x + obj->offset_bx - ray.x - ray.offset_bx;
                 x_diff_2 = x_diff_1 - (obj_w >> 1);
                 x_diff_3 = x_diff_1 + (obj_w >> 1);
-                y_diff_1 = (ray.y + ray.offset_by) - obj_y - obj_h;
-                y_diff_1 = iabs(y_diff_1);
+                y_diff_1 = abs32_inline((ray.y + ray.offset_by) - obj_y - obj_h);
                 if (y_diff_1 <= 8) {
-                    if ((iabs(x_diff_2) <= 16 && ray.flags.flip_x) || (iabs(x_diff_3) <= 16 && !(ray.flags.flip_x))) {
-                        if (iabs(x_diff_2) <= 16 && ray.flags.flip_x) {
+                    if ((abs32_inline(x_diff_2) <= 16 && ray.flags.flip_x) || (abs32_inline(x_diff_3) <= 16 && !(ray.flags.flip_x))) {
+                        if (abs32_inline(x_diff_2) <= 16 && ray.flags.flip_x) {
                             obj->flags.flip_x = 0;
                             ray.x = obj->x + obj->offset_bx - ray.offset_bx - (obj_w >> 1) - 12;
-                        } else if (iabs(x_diff_3) <= 16 && !(ray.flags.flip_x)) {
+                        } else if (abs32_inline(x_diff_3) <= 16 && !(ray.flags.flip_x)) {
                             obj->flags.flip_x = 1;
                             ray.x = obj->x + obj->offset_bx - ray.offset_bx + (obj_w >> 1) + 12;
                         }
@@ -1230,6 +1231,7 @@ void DoAudioStartRaymanCollision(obj_t* obj) {
 
 void DO_SLOPEY_PLAT_CMD(obj_t *obj)
 {
+    /* COMPILER_STEERED: Existing ABS helper also reproduces the DOS stack-home order. */
     s16 sign;
     sign = (s16)sgn((s8)obj->hit_points);
     if (ray.follow_id != obj->id) {
@@ -1242,7 +1244,7 @@ void DO_SLOPEY_PLAT_CMD(obj_t *obj)
         /* DOS 1:532f9 overwrites the height output with the horizontal distance. */
         sprite_h = ray.x + ray.offset_bx - (sprite_x + (sprite_w >> 1));
         obj->hit_points -= ashr16(sprite_h, 3);
-        if (iabs((s8)obj->hit_points) >= 16)
+        if (abs32_inline((s8)obj->hit_points) >= 16)
             obj->hit_points = sign * 15;
     }
 }

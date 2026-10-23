@@ -946,77 +946,80 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
 
 //2D0D4
 void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
-    /* 1D228 80141A28 -O2 -msoft-float */
-
-    s16 i;
-    s16 new_dist;
-    s16 spr_y;
-    s16 unk_1;
-    s16 spr_w;
-    s16 sprite;
-    s16 spr_x;
-    s16 spr_h;
-    s16 diff_x;
-    s16 ray_y;
-
-    s16 ray_x;
-    unk_1 = 8;
-    if (RayEvts.tiny) unk_1 = 4;
-    i = 0;
-    new_dist = 10000;
-    ray_x = ray.x + ray.offset_bx;
-    ray_y = ray.y + ray.offset_by;
-
-    if (ray.follow_id == obj->id) {
-        GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);
-        spr_y += obj->offset_hy;
-        if (obj->type == TYPE_ROULETTE || obj->type == TYPE_ROULETTE2 || obj->type == TYPE_ROULETTE3) {
-            spr_w -= 10;
-            spr_x += 5;
-        }
-
-        if (obj->type == TYPE_TIBETAIN_6 && ray.main_etat == 0 && (obj->anim_frame > 9 && obj->anim_frame < 40))
-        {
-            diff_x = (ray.x + ray.offset_bx) - (spr_x + (spr_w >> 1));
-            if (diff_x > 0)
-                ray.x--;
-            else if (diff_x < 0)
-                ray.x++;
-            ray_x = ray.x + ray.offset_bx;
-        }
-        new_dist = setToleranceDist(spr_x, spr_w, spr_y);
-    }
-
-    if (new_dist == 10000)
+    /* COMPILER_STEERED: Existing ABS helper, declaration order and scope steer stack homes. */
     {
-        sprite = possible_sprite(obj, i++);
-        while (((s32)new_dist < 0 ? -(s32)new_dist : (s32)new_dist) > 7 && sprite != 0xFF) {
-            GET_SPRITE_POS(obj, sprite, &spr_x, &spr_y, &spr_w, &spr_h);
+        s16 unk_1;
+
+        s16 ray_x;
+
+        s16 i;
+        s16 new_dist;
+        s16 spr_x;
+        s16 spr_y;
+        s16 spr_w;
+        s16 ray_y;
+        s16 spr_h;
+        s16 sprite;
+        s16 diff_x;
+
+        /* 1D228 80141A28 -O2 -msoft-float */
+
+        unk_1 = 8;
+        if (RayEvts.tiny) unk_1 = 4;
+        i = 0;
+        new_dist = 10000;
+        ray_x = ray.x + ray.offset_bx;
+        ray_y = ray.y + ray.offset_by;
+
+        if (ray.follow_id == obj->id) {
+            GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);
             spr_y += obj->offset_hy;
-            if (obj->type == TYPE_ROULETTE || obj->type == TYPE_ROULETTE2 || obj->type == TYPE_ROULETTE3)
-            {
+            if (obj->type == TYPE_ROULETTE || obj->type == TYPE_ROULETTE2 || obj->type == TYPE_ROULETTE3) {
                 spr_w -= 10;
                 spr_x += 5;
             }
 
-            if ((ray_x <= spr_w + spr_x + unk_1) && (ray_x >= spr_x - unk_1))
+            if (obj->type == TYPE_TIBETAIN_6 && ray.main_etat == 0 && (obj->anim_frame > 9 && obj->anim_frame < 40))
             {
-                new_dist = ray_y - spr_y;
-                if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist < 11))
-                    new_dist = 0;
+                diff_x = (ray.x + ray.offset_bx) - (spr_x + (spr_w >> 1));
+                if (diff_x > 0)
+                    ray.x--;
+                else if (diff_x < 0)
+                    ray.x++;
+                ray_x = ray.x + ray.offset_bx;
             }
-            else
-                new_dist = 10000;
-
-            if (new_dist != 10000)
-                obj->follow_sprite = sprite;
-
-
-
-            sprite = possible_sprite(obj, i++);
+            new_dist = setToleranceDist(spr_x, spr_w, spr_y);
         }
+
+        if (new_dist == 10000)
+        {
+            sprite = possible_sprite(obj, i++);
+            while (abs32_inline(new_dist) > 7 && sprite != 0xFF) {
+                GET_SPRITE_POS(obj, sprite, &spr_x, &spr_y, &spr_w, &spr_h);
+                spr_y += obj->offset_hy;
+                if (obj->type == TYPE_ROULETTE || obj->type == TYPE_ROULETTE2 || obj->type == TYPE_ROULETTE3)
+                {
+                    spr_w -= 10;
+                    spr_x += 5;
+                }
+
+                if ((ray_x <= spr_x + spr_w + unk_1) && (ray_x >= spr_x - unk_1))
+                {
+                    new_dist = ray_y - spr_y;
+                    if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist < 11))
+                        new_dist = 0;
+                }
+                else
+                    new_dist = 10000;
+
+                if (new_dist != 10000)
+                    obj->follow_sprite = sprite;
+
+                sprite = possible_sprite(obj, i++);
+            }
+        }
+        obj->ray_dist = new_dist;
     }
-    obj->ray_dist = new_dist;
 }
 
 //2D334
@@ -1109,11 +1112,12 @@ void do_boum(void) {
 
 //2D5FC
 void DO_POING_COLLISION(void) {
+    /* COMPILER_STEERED: Private sprite result stays promoted; CHECK_BOX_COLLISION returns s16. */
     s16 x, y, w, h;
     u8 btyp;
     s16 i;
     obj_t *obj;
-    s16 sprite;
+    s32 sprite;
     s16 old_hp;
     s32 unk_1;
 
@@ -1253,6 +1257,7 @@ void RAY_KO(void) {
 
 //2DBDC
 void RAY_HIT(u8 hurt, obj_t* obj) {
+    /* COMPILER_STEERED: Zero assignment chain reduces allocation drift; no intervening observable operation. */
     if (hurt) {
         s16 tile_x;
         RAY_HURT();
@@ -1264,9 +1269,7 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
     }
     if (ray.main_etat == 6) {
         set_main_and_sub_etat(&ray, 6, 8);
-        ray.speed_y = 0;
-        ray.speed_x = 0;
-        poing.is_charging = 0;
+        ray.speed_y = ray.speed_x = poing.is_charging = 0;
     } else if (ray.flags.alive) {
         if (!(ray.main_etat == 3 && (ray.sub_etat == 22 || ray.sub_etat == 32)) &&
             !(ray.main_etat == 2 && ray.sub_etat == 31)

@@ -2233,7 +2233,7 @@
      ]
     },
     "GetY": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -3348,12 +3348,13 @@
      ]
     },
     "DO_POING_COLLISION": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DoPoingCollisionDefault": {
      "status": "STRICT",
@@ -3401,7 +3402,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "standard_frontZone": {
      "status": "NEAR_MATCH",
@@ -3667,12 +3669,13 @@
      ]
     },
     "DO_POELLE_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_CORDE_COMMAND": {
      "status": "NEAR_MATCH",
@@ -3707,12 +3710,13 @@
      ]
     },
     "doShipCommand": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_DROP_COMMAND": {
      "status": "STRICT",
@@ -4567,12 +4571,13 @@
      ]
     },
     "TEST_WIZARD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_TARZAN": {
      "status": "STRICT",
@@ -4908,10 +4913,11 @@
      ]
     },
     "DO_SLOPEY_PLAT_CMD": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     }
    }
   },

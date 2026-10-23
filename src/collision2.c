@@ -964,19 +964,20 @@ void doBlKRayRaymanCollision(obj_t* obj) {
 
 //30BF8
 void DO_POELLE_COMMAND(obj_t* po_obj) {
+    /* COMPILER_STEERED: Existing ABS helpers and output declaration order reproduce DOS allocation. */
     /* 4F818 80174018 -O2 -msoft-float */
     extern u8 RAY_DEAD(void);
     s32 abs_ray_spd_x;
-    s16 po_y; s16 po_x; s16 po_h; s16 po_w;
+    s16 po_x; s16 po_h; s16 po_y; s16 po_w;
     s32 sub_etat;
 
     po_obj->flags.flip_x = 1;
     if (ray_on_poelle == true) {
         po_obj->flags.follow_enabled = 0;
         if ((ray.speed_x > 0 && ray.flags.flip_x) || (ray.speed_x < 0 && !ray.flags.flip_x)) {
-            if (Abs((s32)ray.speed_x) < 2)
+            if (abs32_inline((s32)ray.speed_x) < 2)
                 po_obj->param = ray.speed_x > 0 ? 2 : -2;
-            else if (Abs((s32)ray.speed_x) >= 7)
+            else if (abs32_inline((s32)ray.speed_x) >= 7)
                 po_obj->param = ray.speed_x > 0 ? 7 : -7;
             else
                 po_obj->param = ray.speed_x;
@@ -1039,6 +1040,7 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
 
 //30EA8
 void DO_CORDE_COMMAND(obj_t* obj) {
+    /* COMPILER_STEERED: Materialized result keeps the preceding switch-table carrier STRICT. */
     /* 4FB58 80174358 -O2 -msoft-float */
     extern s16 inter_box(s32, s32, s32, s32, s16, s16, s32, s32);
     extern void DO_FUMEE_CORDE(s16, s16);
@@ -1098,7 +1100,9 @@ void DO_CORDE_COMMAND(obj_t* obj) {
                     bVar2 = false;
                     break;
             }
-            if (bVar2 && inter_box(ray_x_pos + 57, ray_y_pos + 26, 46, 4, obj_x_pos + 126, obj_y_pos + obj_y_offs, 4, obj_h)) {
+            inter = bVar2;
+            if (inter) inter = inter_box(ray_x_pos + 57, ray_y_pos + 26, 46, 4, obj_x_pos + 126, obj_y_pos + obj_y_offs, 4, obj_h);
+            if (inter) {
                 if (--obj->hit_points < 1)
                 {
                     obj->hit_points = obj->init_hit_points;
@@ -1261,7 +1265,15 @@ void doShipCommand(obj_t* obj) {
                             test_3 = obj->id;
                             do
                             {
-                                test_3 = link_init[test_3];
+                                {
+                                    /* COMPILER_STEERED: named signed index and pointer update preserve DOS allocation. */
+                                    s32 index;
+                                    s16 *links;
+                                    index = test_3;
+                                    links = link_init;
+                                    links += index;
+                                    test_3 = *links;
+                                }
                                 temp_s0_2 = &level.objects[test_3];
                                 if (var_s3 == temp_s0_2->type)
                                 {

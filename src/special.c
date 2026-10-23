@@ -1429,6 +1429,7 @@ void DO_FUMEE_CORDE(s16 x, s16 y) {
 
 //7C10C
 s32 GetY(s16 x) {
+    /* COMPILER_STEERED: Bounded ABS argument and DecEau operand order reproduce DOS allocation. */
     /* 3ED10 80163510 -O2 -msoft-float */
     s16 unk_1;
     s32 unk_2;
@@ -1437,7 +1438,6 @@ s32 GetY(s16 x) {
     obj_t* unk_obj;
 
     s32 result;
-    s32 distance;
     if (eau_obj_id == -1) {
         result = 0;
     } else {
@@ -1445,13 +1445,10 @@ s32 GetY(s16 x) {
     unk_1 = (x + 50) / 101;
     unk_obj_id = eau_obj_id + unk_1 % 5;
     unk_2 = unk_1 * 101;
-    distance = x;
-    distance -= unk_2;
-    if (distance < 0) distance = -distance;
-    unk_3 = 51 - distance;
+    unk_3 = 51 - abs32_inline(x - unk_2);
     unk_obj = &level.objects[unk_obj_id];
 
-    result = unk_obj->y - EauDy[(s16)((unk_obj->anim_frame + DecEau[unk_obj->anim_index]) % 14)] * unk_3 / 50;
+    result = unk_obj->y - EauDy[(s16)((DecEau[unk_obj->anim_index] + unk_obj->anim_frame) % 14)] * unk_3 / 50;
     }
     return result;
 }
