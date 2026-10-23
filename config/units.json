@@ -418,11 +418,12 @@
      ]
     },
     "DO_MOVING_WITH_INDICATOR_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_IDC_COMMAND": {
      "status": "STRICT",

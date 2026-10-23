@@ -38,8 +38,8 @@ s16 test_block_chdir(obj_t *obj, s16 *out_unk, s16 off_x, s16 off_y)
 
 void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
 {
-    s16 block_index;
     s16 active_index;
+    s16 block_index;
     obj_t *indicator;
     s16 speed_y;
     s16 speed_x;
@@ -97,7 +97,12 @@ void DO_MOVING_WITH_INDICATOR_COMMAND(obj_t *ufo_idc_obj)
                 else
                 {
                     speed_x = -speed_x;
-                    speed_y = -speed_y;
+                    {
+                        /* COMPILER_STEERED (permuter pilot, minimized): with active_index declared first, this
+                         * temporary gives the DOS conflict order (EDX at 1:6eb5b); each change alone gives 363 diffs. */
+                        s16 negated_y = -speed_y;
+                        speed_y = negated_y;
+                    }
                 }
                 break;
             case 9:
