@@ -265,7 +265,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "BAT_ray_in_zone": {
      "status": "STRICT",
@@ -11661,7 +11662,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "sub_3A2AC": {
      "status": "STRICT",
@@ -11822,7 +11824,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "sub_3AA4C": {
      "status": "STRICT",
@@ -11844,16 +11847,18 @@
      "quality": "COMPILER_STEERED"
     },
     "sub_3AF20": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "sub_3AFB4": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "sub_3B014": {
      "status": "STRICT",

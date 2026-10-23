@@ -189,7 +189,7 @@ s32 sub_3A238(u8 *surface)
     VGA_FREQ = 0x3c;
     movie_saved_frequency = old_frequency;
     set_vga_frequency(0x3c);
-    memset(DisplayBufferNormal, 0, 64000);
+    fill(DisplayBufferNormal);
     memset(movie_video_buffer, 0, 0x300);
     return 0;
 }
@@ -240,7 +240,7 @@ void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width)
     u32 i;
     dst = (u16 *)(surface->pixels + (x + y * 64 + y * 256));
     i = 0;
-    while (i < width) {
+    while ((i < width) != 0) {
         dst[i] = color;
         ++i;
     }
@@ -638,7 +638,11 @@ void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface)
     const u8 *src;
 
     dst = surface->pixels + work->surface_offset;
-    rows = work->height;
+    {
+        s32 height_snapshot;
+        height_snapshot = work->height;
+        rows = height_snapshot;
+    }
     width = work->width;
     src = data;
     do {
@@ -830,7 +834,8 @@ s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer)
 {
     movie_frame_header_t header;
     s32 size;
-    u8 *buffer;
+    /* SYNTHETIC: the local array preserves the DOS 0x18-byte frame; only [0] is used. */
+    u8 *buffer[2];
     s32 status;
 
     ++work->frame_index;
@@ -839,10 +844,10 @@ s32 sub_3AF20(movie_work_t *work, movie_surface_t *surface, s32 *timer)
         if (header.magic == 0xf1fa) {
             size = header.size - sizeof(header);
             if (size > 0) {
-                buffer = EffetBufferNormal;
-                status = sub_3A578(work->fd, &buffer, size);
+                buffer[0] = EffetBufferNormal;
+                status = sub_3A578(work->fd, &buffer[0], size);
                 if (status >= 0)
-                    status = sub_3ABE4(work, &header, buffer, surface, timer);
+                    status = sub_3ABE4(work, &header, buffer[0], surface, timer);
             } else {
                 status = sub_3ABE4(work, &header, 0, surface, timer);
             }
@@ -857,7 +862,7 @@ void sub_3AFB4(movie_work_t *work, movie_surface_t *surface)
 {
     work->x_offset = (sub_3A2C4(surface) - work->width) / 2;
     work->y_offset = (sub_3A2C8(surface) - work->height) / 2;
-    work->surface_offset = work->x_offset + work->y_offset * 320;
+    work->surface_offset = work->x_offset + work->y_offset * 64 + work->y_offset * 256;
 }
 
 s32 sub_3B014(movie_work_t *work, movie_surface_t *surface)

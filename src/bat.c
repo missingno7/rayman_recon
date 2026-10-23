@@ -131,17 +131,24 @@ s16 bat_dir(obj_t *obj)
 
 void DO_BAT_COMMAND(obj_t *obj)
 {
-    s16 offs_by;
-    s16 offs_bx;
     s16 obj_sub_etat;
     s32 speed;
     u8 horl_0;
+    s16 offs_by;
+    s16 offs_bx;
 
-    obj_sub_etat = obj->sub_etat;
-    /* This conditional form preserves the DOS switch-table destinations. */
-    horl_0 = 1;
-    if (horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f] != 0)
-        horl_0 = 0;
+    {
+        s16 state_snapshot;
+        s16 *state_ptr = &state_snapshot;
+        *state_ptr = obj->sub_etat;
+        obj_sub_etat = state_snapshot;
+    }
+    /* SYNTHETIC: coupled state/tick snapshots and declaration order steer allocation. */
+    {
+        u8 clock_tick;
+        clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];
+        horl_0 = clock_tick == 0;
+    }
 
     switch (obj_sub_etat) {
     default:
