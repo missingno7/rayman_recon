@@ -12,7 +12,7 @@ verifier reports STRICT; mark compiler-steered or synthetic source with `quality
    EQUIVALENT lowerings, 0 behaviour errors. The ~12 DIFF functions in pilot units (moteur, ray, basic, pmama,
    luciole, menu) are still to be triaged.
 2. **Large coherent SHAPE functions.** ~150 NEAR functions (~125 KB) already have DOS calls/globals/fields/constants
-   and differ only in Watcom code shape. An agent restructures one coherent region (a unit or a jump-table owner and
+   and differ mainly in Watcom code shape (strong evidence, not a certified equivalence). An agent restructures one coherent region (a unit or a jump-table owner and
    its neighbour) until it is close or STRICT; a bounded permuter run (tools/permute.py) finishes the last bytes.
    Jump-table owners (docs/BLOCKERS.md B1) come first because each also unlocks its preceding function.
 3. **Small residues with the permuter** (<= ~20 differing bytes, ~80 functions, ~30 KB): bounded aggressive runs;
