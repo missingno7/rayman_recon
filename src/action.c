@@ -28,21 +28,25 @@ void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y)
     s16 diff_x_1;
     s16 diff_y_1;
     s32 unk_1;
-    s16 unk_2;
+    s32 unk_2;
     s32 unk_3;
     s16 unk_4;
     s16 unk_5;
+    s32 factor;
+    s32 diff_y_wide;
     if ((bossXToReach != -32000) && (bossYToReach != -32000))
     {
-        unk_1 = obj->eta[obj->main_etat][obj->sub_etat].speed_x_right * (bossSpeedFactor + alternateBossSpeedFactor);
+        factor = alternateBossSpeedFactor;
+        unk_1 = obj->eta[obj->main_etat][obj->sub_etat].speed_x_right * (bossSpeedFactor + factor);
         unk_1 /= 0x4000;
         diff_x_1 = (bossXToReach - obj->x) * 16;
-        diff_y_1 = (bossYToReach - obj->y) * 16;
+        diff_y_1 = bossYToReach - obj->y; diff_y_1 *= 16;
         if ((diff_x_1 != 0 || diff_y_1 != 0) && unk_1 != 0)
         {
+            diff_y_wide = diff_y_1;
             unk_2 = max32((s32)diff_x_1 >= 0 ? (s32)diff_x_1 : -(s32)diff_x_1,
-                          (s32)diff_y_1 >= 0 ? (s32)diff_y_1 : -(s32)diff_y_1);
-            unk_1 = min32(unk_2, unk_1);
+                          diff_y_wide < 0 ? -diff_y_wide : diff_y_wide);
+            unk_1 = min32((s16)unk_2, unk_1);
             unk_3 = ashl16(unk_2, 4) / unk_1;
             unk_4 = ashl16(diff_x_1, 4) / unk_3;
             unk_5 = ashl16(diff_y_1, 4) / unk_3;
@@ -51,7 +55,7 @@ void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y)
                 obj->speed_x = (obj->speed_x * (s16)(0xFF - unk_x) + (unk_4 * unk_x)) / 255;
                 if (obj->main_etat == 2)
                 {
-                    if (diff_y_1 <= unk_1)
+                    if (diff_y_wide <= unk_1)
                         unk_y = 0xFF;
                 }
                 obj->speed_y = (obj->speed_y * (s16)(0xFF - unk_y) + (unk_5 * unk_y)) / 255;

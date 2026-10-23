@@ -99,9 +99,9 @@ u8 *Copy_Blocks(mem_t *mem, u8 *blocks, u16 width, u16 height)
     u32 width_in_tiles;
     u32 height_in_tiles;
     u32 partial_count;
-    u32 tile_x;
+    s32 tile_x;
     s32 tile_y;
-    u32 tile_count = 0;
+    u32 tile_count;
     s32 row;
     u32 empty_count;
     u8 nonzero_count;
@@ -117,6 +117,7 @@ u8 *Copy_Blocks(mem_t *mem, u8 *blocks, u16 width, u16 height)
     u32 *flags;
 
     nb_blocks_plein = 1;
+    tile_count = 0;
     partial_count = 0;
     width_in_tiles = width / 16;
     height_in_tiles = height / 16;

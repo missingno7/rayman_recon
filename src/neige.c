@@ -846,8 +846,8 @@ void init_flocons(void) {
 void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     s16 unk_x_1;
     s16 unk_y_1;
-    s16 unk_x_2;
-    s16 unk_y_2;
+    s32 unk_x_2;
+    s32 unk_y_2;
     s16 i;
     s16 unk_1;
     s16 flc_i_1;
@@ -860,7 +860,7 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     flocon_t *cur_floc;
     s16 unk_2;
     s16 flc_i_2;
-    s16 prev_vy;
+    s32 prev_vy;
     s16 prev_vx;
 
     /* 3B718 8015FF18 -O2 -msoft-float */
