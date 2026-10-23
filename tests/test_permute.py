@@ -41,6 +41,18 @@ class SourceTests(unittest.TestCase):
     def setUp(self):
         self.model = Model.parse(FIXTURE, FIXTURE, "pilot")
 
+    def test_nested_if_keeps_its_else(self):
+        # pilot_mine 2026-10-23: an unbraced nested if in the true arm of an if/else captured the outer else.
+        text = "int f(int a, int b) { int r; r = 0; if (a) { if (b) r = 1; } else r = 2; return r; }\n"
+        m = Model.parse(text, text, "f")
+        fn = copy.deepcopy(m.target())
+        outer = fn.body.block_items[2]
+        outer.iftrue = outer.iftrue.block_items[0]  # what a branch rewrite can produce
+        body = m.unit(fn)
+        again = Model.parse(body, body, "f").target().body.block_items[2]
+        self.assertIsNotNone(again.iffalse)
+        self.assertIsNone(again.iftrue.block_items[0].iffalse)
+
     def test_scope_and_signature_preserved(self):
         a, b = body_bounds(FIXTURE, "pilot")
         fn, _ = mutate(self.model, self.model.target(), random.Random(4), "aggressive")

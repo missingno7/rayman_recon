@@ -92,8 +92,24 @@ def sanitize(pp):
     return LEX.sub(fix, pp)
 
 
+def braced(node):
+    """Copy of node whose if/else branches are compound statements.
+
+    pycparser's generator braces only Compound nodes, so an unbraced nested if in the true arm of an if/else would
+    capture the outer else when the C is re-read (pilot_mine 2026-10-23: alter_fist_speed). Braces never change
+    the meaning of a statement."""
+    node = copy.deepcopy(node)
+    for n in walk(node):
+        if isinstance(n, C.If):
+            if n.iftrue is not None and not isinstance(n.iftrue, C.Compound):
+                n.iftrue = C.Compound([n.iftrue])
+            if n.iffalse is not None and not isinstance(n.iffalse, (C.Compound, C.If)):
+                n.iffalse = C.Compound([n.iffalse])
+    return node
+
+
 def emit(node):
-    out = c_generator.CGenerator().visit(node)
+    out = c_generator.CGenerator().visit(braced(node))
     return LEX.sub(lambda m: {"restrict": "__far", "_Atomic": "__near"}.get(m[0], m[0]), out)
 
 
@@ -142,6 +158,19 @@ class Model:
     function: str
     ast: C.FileAST
     macros: frozenset = frozenset()
+    context: str = ""
+
+    def round_trip(self, text):
+        """The emitted body must re-read as exactly the intended tree (refuse otherwise)."""
+        if not self.context:
+            return
+        a, b = body_bounds(self.context, self.function)
+        try:
+            again = c_parser.CParser().parse(self.context[:a] + sanitize(text) + self.context[b:])
+        except Exception as exc:
+            raise Refusal(f"emitted body does not re-parse: {exc}") from exc
+        if emit(self.target(again).body).rstrip() != text:
+            raise Refusal("emitted body re-reads as a different tree")
 
     @classmethod
     def parse(cls, source, pp, function, macros=()):
@@ -168,7 +197,7 @@ class Model:
             if isinstance(n, C.ArrayDecl) and n.dim is not None and not (isinstance(n.dim, C.Constant) and "int" in n.dim.type):
                 raise Refusal("nonliteral array extent (possible VLA) is outside the safe subset")
         macros = frozenset(macros) | frozenset(re.findall(r"(?m)^\s*#\s*define\s+(\w+)", source))
-        model = cls(source, function, ast, macros)
+        model = cls(source, function, ast, macros, sanitize(pp))
         model.unit(fns[0])  # reject possible second macro expansion before search
         return model
 
@@ -178,7 +207,9 @@ class Model:
 
     def unit(self, fn):
         a, b = body_bounds(self.source, self.function)
-        body = preserve_lines(emit(fn.body).rstrip(), self.source[a:b])
+        text = emit(fn.body).rstrip()
+        self.round_trip(text)
+        body = preserve_lines(text, self.source[a:b])
         residual = sorted({m[0] for m in LEX.finditer(body) if m[0].isidentifier()} & self.macros)
         if residual:
             raise Refusal("emitted body could re-expand macro(s): " + ", ".join(residual[:8]))
