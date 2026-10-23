@@ -12,7 +12,7 @@ Priorities: docs/NEXT_STEPS.md. Blockers: docs/BLOCKERS.md. Causes: docs/CAUSES.
 | Watcom runtime | pinned CLIB3R/MATH3R/MATH387R, linked as-is |
 | initialised data / CONST | 50,227 bytes VERIFIED; 94.1% of game `_DATA` mapped by named, sized bindings |
 | BSS layout | 151,789 bytes VERIFIED (incl. language_txt at its proven 237-entry minimum) |
-| natural link | **complete**: all units + pinned libraries -> WLINK 10.6 -> image, no unresolved symbols; /C4 packing works; not byte-identical (NEAR drift/layout) |
+| natural link | **complete**: all units + pinned libraries -> WLINK 10.6 -> image, no unresolved symbols; /C4 packing works; not byte-identical (NEAR drift/layout). **Runtime (2026-10-23): the naturally built game reaches the first level and is controllable** (bounded DOSBox-X run, docs/LINK.md) |
 | packer | PMWLITE 1.22 /C4 rebuilds the original file from its decoded objects (PROVEN) |
 
 Profiles: game C Watcom 10.6 `wcc386 -zq -oaxt -s -5r -fpc`; game asm WASM 10.6. Tests: `python -m unittest discover -s tests`.

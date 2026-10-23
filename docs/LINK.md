@@ -143,4 +143,8 @@ time-limited, AUTOTYPE input, window captures (scratch/runtime_run.py).
   ending at the object, shifted array bases, original asm base arithmetic) or src/hmi reconstruction units that the
   natural link does not use; no game reference runs forward into the next object. B18 is the only known split object
   that breaks the natural build.
+- Confirmed from main (611ebf0, B18 resolved, 1,544 STRICT, 0 regressions): fresh manifest + natural link (rc 0, no
+  unresolved) + pack_natural (sha256 a6c17337...); bounded DOSBox-X run with the read-only CD image: no MSCDEX errors,
+  title, menu, save-slot screen, first level (The Dream Forest), Rayman scrolls right under keyboard input
+  (build/runtime/main1/shots). Runtime observation only; no STRICT/EQUIVALENT claim.
 
