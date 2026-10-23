@@ -9082,7 +9082,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_COMMANDE_OPTIONS": {
      "status": "STRICT",
@@ -9209,14 +9210,16 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "fondu_prg": {
      "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "change_couleur_prg": {
      "status": "STRICT",
@@ -9236,7 +9239,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "FonduPixel": {
      "status": "STRICT",
@@ -9264,7 +9268,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "INIT_KEY_SCREEN": {
      "status": "STRICT",
@@ -9276,7 +9281,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "AFFICHE_KEY_SCREEN": {
      "status": "NEAR_MATCH",
@@ -9306,7 +9312,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "AFFICHE_BUTTON_JOYSTICK": {
      "status": "NEAR_MATCH",
@@ -9336,13 +9343,15 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "AFFICHE_PAD_SCREEN": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_COMMANDE_PAD": {
      "status": "STRICT",
@@ -9372,13 +9381,15 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "AFFICHE_GRAPHIC_SCREEN": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_COMMANDE_GRAPHIC": {
      "status": "NEAR_MATCH",
@@ -9402,7 +9413,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "AFFICHE_VIDEOMODE_SCREEN": {
      "status": "NEAR_MATCH",
@@ -9468,7 +9480,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "confirmation_msg": {
      "status": "STRICT",

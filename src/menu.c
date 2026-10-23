@@ -993,8 +993,8 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
     char v32[4] = "off";
 //    u8 v29[4] = {5, 5, 3, 0}; // 0x30505; //dword_49294[1]
     s16 i;
-    text_to_display[0].is_fond = 1;
     text_to_display[0].font_size = 2;
+    text_to_display[0].is_fond = 1;
     text_to_display[0].field_D5 = 0;
     text_to_display[0].color = 1;
     for (i = first_option; i <= first_option + nbre_options; ++i) {
@@ -1074,7 +1074,7 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
             new_right = w + x;
             width = new_right < old_right ? old_right - left : new_right - left;
             bottom = word_E4CEE_h + word_E4CF0_y;
-            new_bottom = y + h;
+            new_bottom = h + y;
             if (bottom <= new_bottom) bottom = new_bottom;
             height = bottom - top;
             word_E4CEC_x = x;
@@ -1093,7 +1093,7 @@ void DrawBlackBorderBox(s16 x, s16 y, s16 width, s16 height, u8 color);
 void AFFICHE_ECRAN_OPTIONS(void)
 {
     u8 option_index;
-    u8 i;
+    u16 i;
     /* DOS 3ac82 / 3ae22..3ae95: width and bar color share this value. */
     s16 v5;
     s16 v6;
@@ -1325,7 +1325,7 @@ void INIT_AFFICHE_KEY_SCREEN(void) {
     s16 i;
     u8 language_offset;
     s16 new_x, new_y, new_w, new_h;
-    s16 left, top, width, height;
+    s16 left, height, top, width;
     u8 color[10] = {5, 5, 5, 5, 5, 5, 5, 5, 3, 0};
 
     switch (language) {
@@ -1354,8 +1354,8 @@ void INIT_AFFICHE_KEY_SCREEN(void) {
             menu_to_display[i].ypos = i * (ecart_options + 15) + debut_options;
         }
         menu_to_display[i].font_size = 2;
-        menu_to_display[i].field_D5 = 0;
         menu_to_display[i].is_fond = 1;
+        menu_to_display[i].field_D5 = 0;
         INIT_TXT_BOX(&menu_to_display[i]);
     }
     text_to_display[0].is_fond = 1;
@@ -1554,8 +1554,8 @@ void INIT_AFFICHE_BUTTON_SCREEN(void) {
         menu_to_display[i].is_fond = 1;
         menu_to_display[i].field_D5 = 0;
         if (i == 4) {
-            menu_to_display[i].ypos = 155;
             menu_to_display[i].xpos = 160;
+            menu_to_display[i].ypos = 155;
             strcpy(menu_to_display[i].text, language_txt[232]);
             menu_to_display[i].color = color[4];
         } else {
@@ -1770,18 +1770,21 @@ void INIT_AFFICHE_PAD_SCREEN(void) {
     x = basex;
     y = debut_titre - 25;
     h = menu_to_display[option_exit].ypos - debut_titre + 35;
-    left = x < word_E4CEC_x ? x : word_E4CEC_x;
-    top = y < word_E4CF0_y ? y : word_E4CF0_y;
-    width = word_E4CEC_x + word_E4CF4_w > x + w ?
-        word_E4CEC_x + word_E4CF4_w - left : x + w - left;
-    height = word_E4CEE_h + word_E4CF0_y > y + h ?
-        word_E4CEE_h + word_E4CF0_y - top : y + h - top;
-    word_E4CEC_x = x;
-    word_E4CF0_y = y;
-    word_E4CF4_w = w;
-    word_E4CEE_h = h;
-    if (OptionGame) FonduOption(left, top, width, height, 1);
-    else FonduPixel(left, top, width, height);
+    {
+        s32 edge_value = word_E4CEC_x + word_E4CF4_w;
+        left = x < word_E4CEC_x ? x : word_E4CEC_x;
+        top = y < word_E4CF0_y ? y : word_E4CF0_y;
+        width = edge_value > x + w ?
+            edge_value - left : x + w - left;
+        height = word_E4CEE_h + word_E4CF0_y > y + h ?
+            word_E4CEE_h + word_E4CF0_y - top : y + h - top;
+        word_E4CEC_x = x;
+        word_E4CF0_y = y;
+        word_E4CF4_w = w;
+        word_E4CEE_h = h;
+        if (OptionGame) FonduOption(left, top, width, height, 1);
+        else FonduPixel(left, top, width, height);
+    }
 }
 
 /* DOS 1:3c854; menu.c:971 */
@@ -1796,7 +1799,7 @@ void AFFICHE_PAD_SCREEN(void) {
     }
     display_text(title, 160, debut_titre, 1, 1);
 
-    for (i = first_option; i <= first_option + nbre_options; ++i) {
+    for (i = first_option; i <= nbre_options + first_option; ++i) {
 
         x = menu_to_display[i].xpos;
         y = menu_to_display[i].ypos;
@@ -2052,12 +2055,12 @@ void INIT_GRAPHIC_SCREEN(void) {
 void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
     s16 i;
     s16 x, w, y, h;
-    s16 left, top, width, height;
+    s16 height, width, left, top;
 
     menu_to_display[0].ypos = debut_options;
-    text_to_display[0].font_size = 2;
     text_to_display[0].field_D5 = 0;
     text_to_display[0].is_fond = 1;
+    text_to_display[0].font_size = 2;
     text_to_display[0].color = 1;
     {
         u8 colors[8] = {5, 5, 5, 5, 5, 5, 5, 3};
@@ -2098,18 +2101,22 @@ void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
             h = menu_to_display[option_exit].ypos - debut_titre + 35;
         }
         w = byte_E4CFC * 2;
-        left = x < word_E4CEC_x ? x : word_E4CEC_x;
-        top = y < word_E4CF0_y ? y : word_E4CF0_y;
-        width = word_E4CEC_x + word_E4CF4_w > x + w ?
-            word_E4CEC_x + word_E4CF4_w - left : x + w - left;
-        height = word_E4CF0_y + word_E4CEE_h > y + h ?
-            word_E4CF0_y + word_E4CEE_h - top : y + h - top;
-        word_E4CEC_x = x;
-        word_E4CF0_y = y;
-        word_E4CEE_h = h;
-        word_E4CF4_w = w;
-        if (OptionGame) FonduOption(left, top, width, height, 1);
-        else FonduPixel(left, top, width, height);
+        {
+            s32 old_bound_0 = word_E4CF4_w;
+            s32 old_bound_1 = word_E4CEE_h;
+            left = x < word_E4CEC_x ? x : word_E4CEC_x;
+            top = y < word_E4CF0_y ? y : word_E4CF0_y;
+            width = word_E4CEC_x + old_bound_0 > x + w ?
+                word_E4CEC_x + old_bound_0 - left : x + w - left;
+            height = word_E4CF0_y + old_bound_1 > y + h ?
+                word_E4CF0_y + old_bound_1 - top : y + h - top;
+            word_E4CEC_x = x;
+            word_E4CF0_y = y;
+            word_E4CEE_h = h;
+            word_E4CF4_w = w;
+            if (OptionGame) FonduOption(left, top, width, height, 1);
+            else FonduPixel(left, top, width, height);
+        }
     }
 }
 
@@ -2121,9 +2128,9 @@ void AFFICHE_GRAPHIC_SCREEN(void) {
     char sixty_text[3] = "60";
     char fifty_text[3] = "50";
     const char *mode_names[3] = {"pci1", "pci2", "vesa"};
-    s16 x, y, selected_x, other_x, third_x;
+    s16 y, selected_x, other_x, third_x, x;
     const char *selected_text, *other_text, *third_text;
-    u8 option_index, control_index;
+    u8 control_index, option_index;
     display_item_t *item;
 
     DISPLAY_FOND_MENU();
@@ -2160,7 +2167,7 @@ void AFFICHE_GRAPHIC_SCREEN(void) {
             break;
         case 2: {
             /* DOS 3d7ee..3d91d has separate frequency-choice temporaries. */
-            s16 selected_x, other_x, third_x;
+            s16 selected_x, third_x, other_x;
             const char *selected_text, *other_text, *third_text;
             if ((options.Frequence == 0 && GameModeVideo == 0) ||
                 ((options.Frequence == 0 || options.Frequence == 70 ||
@@ -2182,8 +2189,8 @@ void AFFICHE_GRAPHIC_SCREEN(void) {
                 other_text = fifty_text;
                 selected_text = max_text;
                 third_text = sixty_text;
-                other_x = byte_E4CFC + 134;
                 third_x = byte_E4CFC + 102;
+                other_x = byte_E4CFC + 134;
                 selected_x = byte_E4CFC + 54;
             }
             display_text(other_text, other_x, y, 2, 5);
@@ -2414,11 +2421,11 @@ void INIT_VIDEOMODE_SCREEN(void) {
 void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
     s16 i;
     s16 x, h, y, w;
-    s16 left, top, width, height;
+    s16 top, left, width, height;
     u8 color[4] = {5, 5, 5, 3};
+    text_to_display[0].color = 1;
     text_to_display[0].font_size = 2;
     text_to_display[0].field_D5 = 0;
-    text_to_display[0].color = 1;
     text_to_display[0].is_fond = 1;
     strcpy(title, language_txt[203]);
     for (i = first_option; i <= first_option + nbre_options; ++i) {
@@ -2441,18 +2448,21 @@ void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
     x = basex;
     h = menu_to_display[option_exit].ypos - debut_titre + 35;
     y = debut_titre - 25;
-    left = x < word_E4CEC_x ? x : word_E4CEC_x;
-    top = y < word_E4CF0_y ? y : word_E4CF0_y;
-    width = word_E4CEC_x + word_E4CF4_w > x + w ?
-        word_E4CEC_x + word_E4CF4_w - left : x + w - left;
-    height = word_E4CF0_y + word_E4CEE_h > y + h ?
-        word_E4CF0_y + word_E4CEE_h - top : y + h - top;
-    word_E4CEC_x = x;
-    word_E4CF0_y = y;
-    word_E4CF4_w = w;
-    word_E4CEE_h = h;
-    if (OptionGame) FonduOption(left, top, width, height, 1);
-    else FonduPixel(left, top, width, height);
+    {
+        s16 edge_value = h + y;
+        left = x < word_E4CEC_x ? x : word_E4CEC_x;
+        top = y < word_E4CF0_y ? y : word_E4CF0_y;
+        width = word_E4CEC_x + word_E4CF4_w > x + w ?
+            word_E4CEC_x + word_E4CF4_w - left : x + w - left;
+        height = word_E4CF0_y + word_E4CEE_h > edge_value ?
+            word_E4CF0_y + word_E4CEE_h - top : edge_value - top;
+        word_E4CEC_x = x;
+        word_E4CF0_y = y;
+        word_E4CF4_w = w;
+        word_E4CEE_h = h;
+        if (OptionGame) FonduOption(left, top, width, height, 1);
+        else FonduPixel(left, top, width, height);
+    }
 }
 
 /* DOS 1:3e470; menu.c:1026 */
@@ -2874,15 +2884,15 @@ void new_key(void) {
 /* DOS 1:3f50c; menu.c:1183 */
 s16 CalcSpeed(void) {
     s16 speed;
-    s16 sprite_flag;
     s32 sprite_speed;
     if (options.sound_volume == 0) {
         if (options.Frequence == 2) {
             speed = 0;
         } else {
+            s16 normal_flag;
             speed = tRefSpriteNormal[options.Frequence];
-            sprite_flag = options.fixon;
-            if (sprite_flag) {
+            normal_flag = options.fixon;
+            if (normal_flag) {
                 speed += tRefRam2VramNormalFix[options.Frequence][options.SizeScreen];
             } else {
                 speed += tRefRam2VramNormal[options.Frequence][options.SizeScreen];
@@ -2890,15 +2900,19 @@ s16 CalcSpeed(void) {
             if (options.ScrollDiffOn) {
                 speed += tRefTransFondNormal[options.Frequence][options.SizeScreen] * 2;
             } else {
-                speed += tRefTransFondNormal[options.Frequence][options.SizeScreen];
+                {
+                    s32 index_value = options.Frequence;
+                    speed += tRefTransFondNormal[index_value][options.SizeScreen];
+                }
             }
         }
     } else if (!P486) {
+        s16 mode_flag;
         sprite_speed = tRefSpriteX[options.Frequence];
         speed = sprite_speed >> 1;
         speed += sprite_speed >> 1;
-        sprite_flag = options.fixon;
-        if (sprite_flag) {
+        mode_flag = options.fixon;
+        if (mode_flag) {
             speed += sprite_speed >> 3;
         }
         if (options.BackgroundOn) {
@@ -3158,7 +3172,11 @@ void SYNCHRO_LOOP_PALETTE(synchro_loop_palette_func_t func) {
 
 /* DOS 1:3ff3c; menu.c:1426 */
 s16 apparition_prg(u32 a1) {
-    s16 yoff, row_skip, xoff, dst_y, dst_x;
+    s32 row_skip;
+    s32 yoff;
+    s32 xoff;
+    s16 dst_y;
+    s16 dst_x;
     u8 *src, *dst_row;
     row_skip = 320 - wFondu;
     DoCdRap();
@@ -3191,21 +3209,27 @@ s16 apparition_prg(u32 a1) {
 
 /* DOS 1:400fc; menu.c:1484 */
 s16 fondu_prg(u32 a1) {
-    u16 row_skip = 320 - wFondu;
+    /* COMPILER_STEERED: menu rectangles are at most 286 pixels wide.
+     * DOS 1:40158/401b1 shares the initial Y advance with each row tail. */
+    s16 row_skip = 320 - wFondu;
     u16 i, j;
-    u8 *dst = yFondu * 320 + (xFondu + DrawBufferNormal);
-    /* DOS 1:401b1: the first loop-tail entry adds the initial Y offset. */
-    u8 *src = yFondu * 320 + (xFondu + (EffetBufferNormal + 64000));
-    for (j = 0; j < hFondu;) {
-        for (i = 0; i < wFondu; ++i, ++dst, ++src) {
-            if (*dst != *src) {
-                *dst = (*dst * (16 - EtapeFondu) + *src) / (17 - EtapeFondu);
-            }
+    s32 offset = yFondu * 320;
+    u8 *dst = offset + (xFondu + DrawBufferNormal);
+    u8 *src = xFondu + (EffetBufferNormal + 64000);
+    j = 0;
+    goto advance_src;
+row_body:
+    for (i = 0; i < wFondu; ++i, ++dst, ++src) {
+        if (*dst != *src) {
+            *dst = (*dst * (16 - EtapeFondu) + *src) / (17 - EtapeFondu);
         }
-        ++j;
-        dst += row_skip;
-        src += row_skip;
     }
+    ++j;
+    offset = row_skip;
+    dst += offset;
+advance_src:
+    src += offset;
+    if (j < hFondu) goto row_body;
     ++EtapeFondu;
     return EtapeFondu == 16;
 }
@@ -3393,7 +3417,7 @@ s16 FonduPixel_prg(u32 arg) {
     row_skip = 320 - wFondu;
     /* DOS 1:40a77/40ad9: both buffers begin at the rectangle origin. */
     src = yFondu * 320 + (xFondu + DrawBufferNormal);
-    dst = yFondu * 320 + (xFondu + (EffetBufferNormal + 64000));
+    dst = ((EffetBufferNormal + 64000) + yFondu * 320) + xFondu;
     phase = 0;
     for (row = 0; row < hFondu;) {
         for (column = 0; column < wFondu;) {
