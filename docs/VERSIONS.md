@@ -106,4 +106,9 @@ Regional / preview comparison (ev_regional, build/workers/ev_regional/REPORT.md)
 NEAR re-check against older builds (ev_nearcheck): 24 current NEAR units compiled unchanged vs 46 December-demo
 mappings: 0 reproduce the demo body (38 differ from both, 6 weakly mapped, 2 = GOG body) - our NEAR sources are not
 simply the older source; no version-change localisation follows.
+- PROVEN negative (language capacity): RAYKIT sizes its text table from the language script (`NB_LAST_TEXT in script`,
+  "One sentence is out of array"); NOMBRE_MAX_LANGUE counts languages. No build in hand fixes v1.21's static
+  language_txt capacity; the +0x410 envelope is constant across December 1995, v1.12, Preview, FR and GOG v1.21.
+- Unit-boundary audit (2026-10-23): every game _TEXT contribution now starts paragraph-aligned after zero padding;
+  the only violation was movieprefix/movie (merged). Boundaries ending exactly on 16 bytes stay undetectable.
 
