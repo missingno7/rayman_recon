@@ -1775,8 +1775,7 @@ void INIT_AFFICHE_PAD_SCREEN(void) {
         s32 edge_value = word_E4CEC_x + word_E4CF4_w;
         left = x < word_E4CEC_x ? x : word_E4CEC_x;
         top = y < word_E4CF0_y ? y : word_E4CF0_y;
-        width = edge_value > x + w ?
-            edge_value - left : x + w - left;
+        if (!(edge_value > x + w)) { width = x + w - left; } else { width = edge_value - left; }
         height = word_E4CEE_h + word_E4CF0_y > y + h ?
             word_E4CEE_h + word_E4CF0_y - top : y + h - top;
         word_E4CEC_x = x;
@@ -2124,15 +2123,15 @@ void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
 /* DOS 1:3d55c; menu.c:1001 */
 void AFFICHE_GRAPHIC_SCREEN(void) {
     char on_text[3] = "on";
+    const char *selected_text, *other_text, *third_text;
+    display_item_t *item;
     char off_text[4] = "off";
     char max_text[4] = "max";
     char sixty_text[3] = "60";
     char fifty_text[3] = "50";
     const char *mode_names[3] = {"pci1", "pci2", "vesa"};
     s16 y, selected_x, other_x, third_x, x;
-    const char *selected_text, *other_text, *third_text;
     u8 control_index, option_index;
-    display_item_t *item;
 
     DISPLAY_FOND_MENU();
     if (OptionGame) {
@@ -2452,7 +2451,7 @@ void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
     {
         s16 edge_value = h + y;
         left = x < word_E4CEC_x ? x : word_E4CEC_x;
-        top = y < word_E4CF0_y ? y : word_E4CF0_y;
+        { s32 top_value; if (y < word_E4CF0_y) { top_value = y; } else { top_value = word_E4CF0_y; } top = top_value; }
         width = word_E4CEC_x + word_E4CF4_w > x + w ?
             word_E4CEC_x + word_E4CF4_w - left : x + w - left;
         height = word_E4CF0_y + word_E4CEE_h > edge_value ?
@@ -2902,16 +2901,15 @@ s16 CalcSpeed(void) {
                 speed += tRefTransFondNormal[options.Frequence][options.SizeScreen] * 2;
             } else {
                 {
-                    s32 index_value = options.Frequence;
-                    speed += tRefTransFondNormal[index_value][options.SizeScreen];
+                    s32 index_value = options.SizeScreen;
+                    speed += tRefTransFondNormal[options.Frequence][index_value];
                 }
             }
         }
     } else if (!P486) {
         s16 mode_flag;
         sprite_speed = tRefSpriteX[options.Frequence];
-        speed = sprite_speed >> 1;
-        speed += sprite_speed >> 1;
+        speed = (s16)(sprite_speed >> 1) + (sprite_speed >> 1);
         mode_flag = options.fixon;
         if (mode_flag) {
             speed += sprite_speed >> 3;
@@ -2921,8 +2919,7 @@ s16 CalcSpeed(void) {
         }
     } else {
         sprite_speed = tRefSpriteX[options.Frequence];
-        speed = sprite_speed >> 1;
-        speed += sprite_speed >> 1;
+        speed = sprite_speed >> 1; speed = speed + (sprite_speed >> 1);
         if (options.fixon) {
             speed += sprite_speed >> 3;
         }
