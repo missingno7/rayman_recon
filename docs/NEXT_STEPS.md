@@ -8,6 +8,9 @@ verifier reports STRICT; mark compiler-steered or synthetic source with `quality
 1. **Behaviour first: DIFF-class functions.** tools/census.py tags ~30 NEAR functions DIFF_* (a call, global or
    constant differs from DOS). Real behaviour errors matter for the port and are fixed before any matching work;
    equivalent lowerings (memset vs inline REP STOSD fill, mask spellings) become ordinary matching work.
+   Result 2026-10-23 (sem_triage, DOS disassembly at every flagged site): 18/18 non-pilot DIFF functions are
+   EQUIVALENT lowerings, 0 behaviour errors. The ~12 DIFF functions in pilot units (moteur, ray, basic, pmama,
+   luciole, menu) are still to be triaged.
 2. **Large coherent SHAPE functions.** ~150 NEAR functions (~125 KB) already have DOS calls/globals/fields/constants
    and differ only in Watcom code shape. An agent restructures one coherent region (a unit or a jump-table owner and
    its neighbour) until it is close or STRICT; a bounded permuter run (tools/permute.py) finishes the last bytes.
