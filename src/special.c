@@ -688,7 +688,9 @@ void DO_TIR(obj_t* obj) {
                     set_main_and_sub_etat(cur_obj, 2, 2);
                     cur_obj->anim_frame = 0;
                     cur_obj->anim_index = (u8) cur_obj->eta[2][2].anim_index;
-                    x = (obj->x + obj->offset_bx) - cur_obj->offset_bx;
+                    x = obj->x;
+                    x += obj->offset_bx;
+                    x -= cur_obj->offset_bx;
                     x += cur_obj->flags.flip_x ? 64 : -64;
                     cur_obj->x = x;
                     cur_obj->y = obj->y;
@@ -703,11 +705,13 @@ void DO_TIR(obj_t* obj) {
                     }
 
                     if (obj->type == TYPE_14_CHASSEUR2) {
-                        distance = ((obj->x - ray.x) >= 0 ? (obj->x - ray.x) : -(obj->x - ray.x)) >> 5;
+                        distance = ((obj->x - ray.x) < 0 ? -(obj->x - ray.x) : (obj->x - ray.x)) >> 5;
                         cur_obj->type = TYPE_15_BALLE2;
-                        numerator = (ray.y - obj->y) * 2;
+                        numerator = ray.y;
+                        numerator -= obj->y;
+                        numerator *= 2;
 
-                        speed_y = numerator / ((obj->x - ray.x) >= 0 ? (obj->x - ray.x) : -(obj->x - ray.x)) - (s16)distance;
+                        speed_y = numerator / ((obj->x - ray.x) < 0 ? -(obj->x - ray.x) : (obj->x - ray.x)) - (s16)distance;
                         cur_obj->speed_y = speed_y;
                         cur_obj->gravity_value_2 = 10;
                     } else {
@@ -1438,7 +1442,8 @@ s32 GetY(s16 x) {
     unk_1 = (x + 50) / 101;
     unk_obj_id = eau_obj_id + unk_1 % 5;
     unk_2 = unk_1 * 101;
-    distance = x - unk_2;
+    distance = x;
+    distance -= unk_2;
     if (distance < 0) distance = -distance;
     unk_3 = 51 - distance;
     unk_obj = &level.objects[unk_obj_id];

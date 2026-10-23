@@ -948,8 +948,12 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
 
     s16 i;
     s16 new_dist;
-    s16 spr_y; s16 unk_1;
-    s16 sprite; s16 spr_w; s16 spr_x; s16 spr_h;
+    s16 spr_y;
+    s16 unk_1;
+    s16 spr_w;
+    s16 sprite;
+    s16 spr_x;
+    s16 spr_h;
     s16 diff_x;
     s16 ray_y;
 
@@ -993,7 +997,7 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
                 spr_x += 5;
             }
 
-            if ((ray_x <= spr_x + spr_w + unk_1) && (ray_x >= spr_x - unk_1))
+            if ((ray_x <= spr_w + spr_x + unk_1) && (ray_x >= spr_x - unk_1))
             {
                 new_dist = ray_y - spr_y;
                 if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist < 11))
