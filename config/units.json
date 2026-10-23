@@ -5791,7 +5791,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "RESET_TOUCHE": {
      "status": "STRICT",
@@ -8675,16 +8676,18 @@
      ]
     },
     "sub_3609C": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "InitPcSoundCard": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "FIRST_INIT": {
      "status": "NEAR_MATCH",
@@ -8692,7 +8695,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "init_divers_level_PC": {
      "status": "NEAR_MATCH",

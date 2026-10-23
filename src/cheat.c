@@ -276,7 +276,7 @@ void sub_35F70(void) {
 void sub_3609C(void) {
     s16 i;
     u32 start_ticks;
-    u32 product;
+    u16 product; /* Only the low half reaches the final 16-bit timing sum. */
 
     if (need_timer == 0) {
         return;
@@ -293,16 +293,16 @@ void sub_3609C(void) {
     }
     word_CF7F0 = (u16)((clock_ticks() - start_ticks) / i);
     word_CF7EE = (word_CF7F0 * 31U) / 32;
-    product = display_mode * (u32)word_CF7F0;
+    product = (u32)word_CF7F0 * display_mode;
     word_CF7E6 = word_CF7EE + product;
 }
 
 void InitPcSoundCard(void) {
     u32 start_ticks;
     u32 end_ticks;
-    s32 limit;
-    u8 failed = 0;
     u8 attempts = 0;
+    u8 failed = 0;
+    s32 limit;
 
     inhibit_interrupts();
     display_mode = 0;
@@ -348,10 +348,13 @@ void FIRST_INIT(void) {
         FatalError("Memory error in draw_buffer.\n");
     }
     InitMatriceJumelle();
-    if (Frequence != 70) {
-        VGA_FREQ = 60;
-    } else {
-        VGA_FREQ = Frequence;
+    {
+        u8 frequency = Frequence;
+        if (frequency != 70) {
+            VGA_FREQ = 60;
+        } else {
+            VGA_FREQ = frequency;
+        }
     }
     InitModeNormalWithFrequency(VGA_FREQ);
     use_sync = 1;

@@ -1548,7 +1548,7 @@ void INIT_AFFICHE_BUTTON_SCREEN(void) {
     repetition = 6;
     nbre_options = 4;
     option_exit = 4;
-    for (i = 0; i <= 4; ++i) {
+    for (i = 0; 4 >= i; ++i) {
         but_options[i] = 0;
         menu_to_display[i].font_size = 2;
         menu_to_display[i].is_fond = 1;

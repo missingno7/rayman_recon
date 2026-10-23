@@ -573,7 +573,10 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
     _disable();
     value = read_pic_mask();
     write_pic_mask(value | 2);
-    scancode = (u8)inp(0x60);
+    {
+        u32 code = inp(0x60);
+        scancode = (u8)code;
+    }
 
     if (ModeDemo == 1 && (fade & 0x40) != 0) {
         if (scancode == SC_ESCAPE)
@@ -582,7 +585,7 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
             ModeDemo = 3;
     }
 
-    if (!(scancode & 0x80) && text_input_buffer[0] != (scancode ^ 0x96)) {
+    if (!(scancode & 0x80) && (scancode ^ 0x96) != text_input_buffer[0]) {
         need_check_cheats = 1;
         for (i = 8; i > 0; --i)
             text_input_buffer[i] = text_input_buffer[i - 1];
