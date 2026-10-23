@@ -389,6 +389,7 @@ void IS_RAY_ON_LIANE(void) {
 }
 
 void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
+    /* COMPILER_STEERED: split narrowing/addition preserves the same low 16 bits; output declaration order steers stack homes. */
     s16 var_a1_1;
     u16 cur_type;
     s16 unk_y;
@@ -414,7 +415,8 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
             else
                 unk_y = cur_obj->speed_y;
 
-            unk_y = Abs((s16) (unk_y + (cur_obj->follow_y - ray.speed_y))) + 2;
+            unk_y = Abs((s16) (unk_y + (cur_obj->follow_y - ray.speed_y)));
+            unk_y += 2;
             unk_y = max32(unk_y, unk_1);
 
             cur_type = cur_obj->type;
@@ -423,7 +425,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
             }
 
             if (Abs(cur_obj->ray_dist) < unk_y && !(block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)) {
-    s16 foll_x, foll_y, foll_w, foll_h;
+    s16 foll_w, foll_h, foll_y, foll_x;
 
                 ray.follow_id = actobj.objects[i];
                 if (left_time == -2 && (map_time % 2 != 0)) {
@@ -619,24 +621,30 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
 }
 
 void set_air_speed(u8 main_etat, u8 sub_etat, s16 param_3, u8 param_4) {
+    /* COMPILER_STEERED: sub is an exact u8 promotion; left always points to the selected eta member. */
     /* 5DE3C 8018263C -O2 -msoft-float */
     eta_t *eta;
+    s32 sub;
+    s8 *left;
     s8 unk_1;
     s8 unk_2;
 
-    eta = &ray.eta[main_etat][sub_etat];
+    sub = sub_etat;
+    eta = &ray.eta[main_etat][sub];
+    
     unk_1 = Abs(param_3) >> 4;
+    left = &eta->speed_x_left;
     unk_1 = min32(unk_1, 112);
     unk_2 = -unk_1; /* TODO: ??? */
 
     if (ray.speed_x > 0) {
-        eta->speed_x_left = -16;
+        (*left) = -16;
         eta->speed_x_right = max32(param_4, unk_1);
     } else if (ray.speed_x < 0) {
-        eta->speed_x_left = min32(-param_4, unk_2);
+        (*left) = min32(-param_4, unk_2);
         eta->speed_x_right = 16;
     } else {
-        eta->speed_x_left = -param_4;
+        (*left) = -param_4;
         eta->speed_x_right = param_4;
     }
 }
@@ -669,31 +677,20 @@ void Reset_air_speed(u8 is_rolling_speed)
 }
 
 void determineRayAirInertia(void) {
-    /* 5E0CC 801828CC -O2 -msoft-float */
-    if (ray_wind_force != 0) {
-        ray.nb_cmd = 1;
-        return;
-    }
-    if (ray.follow_id != -1) {
-        ray.nb_cmd = 0;
-        return;
-    }
-    switch (ray_last_ground_btyp) {
-        case 0:
-            if (Abs(decalage_en_cours) <= 256)
-                ray.nb_cmd = 0;
-            else
-                ray.nb_cmd = 1;
-            break;
-        case 1:
-            ray.nb_cmd = 0;
-            break;
+    /* COMPILER_STEERED: the joined zero path is reached only when wind == 0. wind is an INVENTED local name. */
+    s16 wind = ray_wind_force;
+    if (wind != 0) { ray.nb_cmd=1; return; }
+    if (ray.follow_id != -1) goto zero;
+    switch(ray_last_ground_btyp) {
+      case 0: if (Abs(decalage_en_cours) > 256) { ray.nb_cmd=1; return; }
+      case 1: zero: ray.nb_cmd=wind; break;
     }
 }
 
 void ray_jump(void) {
+    /* COMPILER_STEERED: follow_y is assigned only a signed-short field; the wider local preserves its value. */
     s16 speed_y;
-    s16 follow_y;
+    s32 follow_y;
     s32 unk_2;
     u8 is_rolling_speed;
 
@@ -784,8 +781,9 @@ void ray_jump(void) {
 }
 
 void ray_inertia_speed(u8 a1, s16 a2, s16 prev_speed_x, s16 a4) {
+    /* COMPILER_STEERED: unk_1 is the normalized decay step, always 1..31. */
     /* 5E4BC 80182CBC -O2 -msoft-float */
-    s16 unk_1;
+    s32 unk_1;
     s16 unk_2;
     s16 unk_3;
     s16 unk_4;
@@ -886,6 +884,7 @@ void ray_inertia_speed(u8 a1, s16 a2, s16 prev_speed_x, s16 a4) {
 }
 
 void RAY_SWIP(void) {
+    /* COMPILER_STEERED: x_accel holds small constants or a negated signed-byte half-shift; every value fits s16. */
     s16 temp_a2;
     s16 temp_v0;
     s32 var_v0_2;
@@ -893,7 +892,7 @@ void RAY_SWIP(void) {
     s32 var_a1;
     s32 var_v1;
     u8 temp_v1_2;
-    s16 x_accel;
+    s32 x_accel;
     u8 var_s4;
     u8 var_s0;
 
@@ -1155,6 +1154,7 @@ void RAY_STOP(void)
 }
 
 void RAY_HELICO(void) {
+    /* COMPILER_STEERED: the raw mask/OR assignments preserve the low nibble and set the high nibble to 10. */
     /* 5F054 80183854 -O2 -msoft-float */
     eta_t *sel_eta;
 
@@ -1183,7 +1183,7 @@ void RAY_HELICO(void) {
     if (ray.sub_etat == 15) {
         sel_eta = &eta[ray.main_etat][ray.sub_etat];
         if ((sel_eta->anim_speed & 0xF0) == 0x20) {
-            sel_eta->anim_speed_bits.high = 0xA;
+            sel_eta->anim_speed = (sel_eta->anim_speed & 15) | ((0xA) << 4);
             ray.gravity_value_1 = 0;
             ray.gravity_value_2 = 20;
         }
@@ -1195,7 +1195,7 @@ void RAY_HELICO(void) {
                 ray_Suphelico_bis = 1;
                 ray.gravity_value_1 = 0;
                 sel_eta = &eta[ray.main_etat][ray.sub_etat];
-                sel_eta->anim_speed_bits.high = 0xA;
+                sel_eta->anim_speed = (sel_eta->anim_speed & 15) | ((0xA) << 4);
                 ray_inertie++;
                 ray.gravity_value_2 = 20;
                 ray.speed_y = -1;
@@ -1231,6 +1231,7 @@ void RAY_HELICO(void) {
 }
 
 void Make_Ray_Hang(s16 a1, s16 a2) {
+    /* COMPILER_STEERED: the promoted x-coordinate sum is reordered; its bounded operands fit s32. */
     s32 unk_4;
     s16 unk_1;
     u8 unk_2;
@@ -1261,7 +1262,7 @@ void Make_Ray_Hang(s16 a1, s16 a2) {
     ray.gravity_value_2 = 0;
     jump_time = 0;
     unk_4 = 1;
-    ray.x = (a1 >> 4 << 4) - ray.offset_bx + (unk_3 - unk_4);
+    ray.x = (a1 >> 4 << 4) + unk_3 - unk_4 - ray.offset_bx;
 }
 
 s16 AIR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return !block_flags[btyp].bits.solid; }
@@ -1269,6 +1270,7 @@ s16 AIR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return !block_flags[btyp].bits
 s16 MUR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return block_flags[btyp].bits.solid; }
 
 void CAN_RAY_HANG_BLOC(void) {
+    /* COMPILER_STEERED, STRICT: ray_y_2 is a signed-short value >> 4 (-2048..2047); widen it and reorder the three s32 declarations together. */
     /* 5F6FC 80183EFC -O2 -msoft-float */
     if (RayEvts.hang && RayEvts.force_run == 0) {
     s16 ray_x_1;
@@ -1279,9 +1281,9 @@ void CAN_RAY_HANG_BLOC(void) {
         if (inrange(ray_x_2, 1, mp.width - 2)) {
     s16 ray_y_1;
     s16 dir_x;
-    s16 ray_y_2;
-    s32 unk_1;
     s32 unk_2;
+    s32 unk_1;
+    s32 ray_y_2;
 
             ray_y_1 = ray.y + ray.offset_hy + 32;
             if (ray.scale != 0) {
@@ -1505,12 +1507,13 @@ void RAY_RESPOND_TO_UP(void) {
 }
 
 void RAY_RESPOND_TO_DIR(s16 flip_x) {
+    /* COMPILER_STEERED: new_main_etat/new_sub_etat hold only the listed small state constants. */
     /* 602E8 80184AE8 -O2 -msoft-float */
     anim_t *sel_anim;
     s32 unk_1;
     s32 to_speed;
-    s16 new_main_etat;
-    s16 new_sub_etat;
+    s32 new_main_etat;
+    s32 new_sub_etat;
 
     switch (ray.main_etat) {
         case 1: // moving
@@ -1661,6 +1664,7 @@ void RAY_RESPOND_TO_DIR(s16 flip_x) {
 }
 
 void RAY_RESPOND_TO_NOTHING(void) {
+    /* COMPILER_STEERED: De Morgan spelling retains the same short-circuit predicate. */
     s32 unk_1;
 
     /* 60A58 80185258 -O2 -msoft-float */
@@ -1673,7 +1677,7 @@ void RAY_RESPOND_TO_NOTHING(void) {
         case 1:
             // NOTE: this additional check in the PS1 version is removed in the PC version:
             // !(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) &&
-            if (!(ray.sub_etat == 4 || ray.sub_etat == 5) && RayEvts.force_run == 0) {
+            if (ray.sub_etat != 4 && ray.sub_etat != 5 && RayEvts.force_run == 0) {
                 set_main_etat(&ray, 0);
                 if (ray.sub_etat == 8 || ray.sub_etat == 10)
                     set_sub_etat(&ray, 47);
@@ -1798,13 +1802,12 @@ void RAY_RESPOND_TO_NOTHING(void) {
 void RAY_RESPOND_TO_BUTTON4(void) {}
 
 void RAY_RESPOND_TO_BUTTON3(void) {
+    /* COMPILER_STEERED: unsigned substates 0,1,2,3 are exactly the range <= 3. */
     /* 61568 80185D68 -O2 -msoft-float */
     if (ray.main_etat != 2 && ray.main_etat != 1) {
         RAY_STOP();
         if (ray.main_etat == 0 &&
-                (ray.sub_etat == 0 || ray.sub_etat == 1 || ray.sub_etat == 2 ||
-                 ray.sub_etat == 63 || ray.sub_etat == 62 || ray.sub_etat == 59 ||
-                 ray.sub_etat == 3 || ray.sub_etat == 8)
+                (ray.sub_etat <= 3 || ray.sub_etat == 63 || ray.sub_etat == 62 || ray.sub_etat == 59 || ray.sub_etat == 8)
          ) {
             if (RayEvts.magicseed) {
                 if (ray.follow_id == -1) {
@@ -1962,9 +1965,10 @@ void RAY_GOING_BALANCE(obj_t* obj) {
 }
 
 void RAY_BALANCE(void) {
+    /* COMPILER_STEERED: 128/384 are nonescaping constant bounds; earlier initialization and widening the lower bound preserve the comparisons. */
     s16 cosine_grp_angle;
     s16 sine_grp_angle;
-    s16 unk_1;
+    s32 unk_1;
     s16 unk_2;
     s32 unk_3;
     s16 unk_4;
@@ -1980,6 +1984,8 @@ void RAY_BALANCE(void) {
     eta_t **ray_eta = ray.eta;
     obj_t *obj_grp = &level.objects[id_obj_grapped];
     grp_angle = obj_grp->follow_x;
+    unk_1 = 128;
+    unk_2 = 384;
 
     if (ray.sub_etat == 0) {
         RAY_GOING_BALANCE(obj_grp);
@@ -1996,8 +2002,8 @@ void RAY_BALANCE(void) {
             sinus_cosinus(grp_angle + 128, &cosine_grp_angle, &sine_grp_angle); // this is changed in the PC/Android versions
 
             /* not in bottom half of circle? */
-            unk_1 = 128;
-            unk_2 = 384;
+            
+            
             if (grp_angle >= unk_2) {
                 if (obj_grp->link > 0)
                     obj_grp->timer = 5;
@@ -2070,10 +2076,11 @@ void RAY_FIN_BALANCE(void) {
 
 void RayTestBlocSH(void)
 {
-    s16 x_1;
+    /* COMPILER_STEERED: widened x intermediates retain their low 16 bits at every unchanged MURDUR argument or temp_v1_2 assignment. */
+    s32 x_1;
     s16 y_1;
     s16 temp_v1_2;
-    s16 var_a1;
+    s32 var_a1;
     s32 var_v0;
     s32 temp_v1;
     s32 var_a0;
@@ -2147,6 +2154,7 @@ void STOPPE_RAY_CONTRE_PAROIS(u8 block) {
 }
 
 void RAY_IN_THE_AIR(void) {
+    /* COMPILER_STEERED: reachable states have valid eta rows (already read above); only the pointer calculation moves before the guard. */
     u8 may_land_obj;
     s16 anim_speed;
     eta_t **eta = ray.eta;
@@ -2211,13 +2219,13 @@ void RAY_IN_THE_AIR(void) {
         }
     }
     STOPPE_RAY_CONTRE_PAROIS(block);
+    {
+    eta_t* ray_eta = &eta[ray.main_etat][ray.sub_etat];
     if (ray.speed_y < -3 && ray.sub_etat == 15 && anim_speed == 11) {
-    eta_t* ray_eta;
-
-        ray_eta = &eta[ray.main_etat][ray.sub_etat];
         ray_eta->anim_speed_bits.high = 1;
         ray.gravity_value_1 = 0;
         ray.gravity_value_2 = 0;
+    }
     }
     if (ray.speed_y >= 0) {
         if (ray.sub_etat == 0) {
@@ -2479,6 +2487,7 @@ void RepousseRay(void)
 }
 
 s16 RayEstIlBloque(void) {
+    /* COMPILER_STEERED: res contains only 0 or 1; the public return type is unchanged. */
     s16 unk_x;
     s32 unk_h;
     s16 i;
@@ -2493,7 +2502,7 @@ s16 RayEstIlBloque(void) {
     s16 ani_xw;
     s16 ani_yh;
     s16 unk_y;
-    s32 res;
+    s16 res;
 
     /* 636B4 80187EB4 -O2 -msoft-float */
     
@@ -2598,18 +2607,23 @@ void stackRay(void) {
 }
 
 void RAY_SURF(void) {
+    /* COMPILER_STEERED: speed snapshots the magnitude used by the second branch; no intervening call can reach that branch. speed is INVENTED. */
     if (ray.follow_id != -1) {
         obj_t *obj = &level.objects[ray.follow_id];
         if (obj->type == TYPE_160_TIBETAIN_2 || obj->type == TYPE_159_TIBETAIN_6) return;
     }
+    {
+    s32 speed = Abs(ray.speed_x);
     if (ray.main_etat == 0 && ray.sub_etat != 13 && ray.sub_etat != 11 && ray.sub_etat != 12 && ray.sub_etat != 18) {
         if (Abs(ray.speed_x) > 3 && !(ray.sub_etat == 40)) {
             if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) && ray.sub_etat != 8 && ray.sub_etat != 52 && ray.sub_etat != 53) {
                 set_main_and_sub_etat(&ray,0,41);
             }
-        } else if (Abs(ray.speed_x) < 3 && ray.sub_etat == 40) {
+        } else if (speed < 3 && ray.sub_etat == 40) {
             if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) set_main_and_sub_etat(&ray,0,42);
         }
+    }
+
     }
 }
 
@@ -2849,6 +2863,7 @@ void DO_RAY_ON_MS(void) {
 }
 
 void DO_RAYMAN(void) {
+    /* COMPILER_STEERED: equivalent exclusion predicate and uninitialized sprite-output declaration order. */
     s16 ray_x, ray_y;
     v_scroll_speed = 0;
     h_scroll_speed = 0;
@@ -2880,8 +2895,7 @@ void DO_RAYMAN(void) {
         }
 
         if (!(remoteRayXToReach == -32000 || get_eta(&ray)->flags & 0x40)) {
-            if ((ray.main_etat == 0 && !(ray.sub_etat == 4 || ray.sub_etat == 5 || ray.sub_etat == 6 ||
-                                         ray.sub_etat == 7 || ray.sub_etat == 9 || ray.sub_etat == 10)) ||
+            if ((ray.main_etat == 0 && (ray.sub_etat != 4 && ray.sub_etat != 5 && ray.sub_etat != 6 && ray.sub_etat != 7 && ray.sub_etat != 9 && ray.sub_etat != 10)) ||
                 (ray.main_etat == 1 && !(ray.sub_etat == 1)) ||
                 (ray.main_etat == 3 &&
                  !(ray.sub_etat == 1 || (ray.sub_etat == 2 || ray.sub_etat == 3) || ray.sub_etat == 4))
@@ -2945,7 +2959,7 @@ void DO_RAYMAN(void) {
         }
 
         if (RayEvts.reverse != 0) {
-            s16 ray_x, ray_y, ray_w, ray_h;
+            s16 ray_x, ray_y, ray_h, ray_w;
             GET_SPRITE_POS(&ray, 5, &ray_x, &ray_y, &ray_w, &ray_h);
             star_ray_der->x = star_ray_dev->x = ray_x + (ray_w >> 1) - star_ray_dev->offset_bx;
             star_ray_der->y = star_ray_dev->y = ray_y - star_ray_dev->offset_hy;
