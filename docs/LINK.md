@@ -147,4 +147,7 @@ time-limited, AUTOTYPE input, window captures (scratch/runtime_run.py).
   unresolved) + pack_natural (sha256 a6c17337...); bounded DOSBox-X run with the read-only CD image: no MSCDEX errors,
   title, menu, save-slot screen, first level (The Dream Forest), Rayman scrolls right under keyboard input
   (build/runtime/main1/shots). Runtime observation only; no STRICT/EQUIVALENT claim.
+- Re-confirmed after wave 3 (main f92efed, 1,572 STRICT, 0 regressions): manifest + natural link rc 0, no unresolved,
+  pack_natural round trip exact (sha256 58085a05...); same bounded run reaches The Dream Forest and Rayman scrolls
+  right under input; no DOSBox-X errors (build/runtime/main2). Runtime observation only.
 

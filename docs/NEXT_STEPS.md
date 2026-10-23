@@ -1,10 +1,15 @@
-# Next steps (current priorities; updated 2026-10-23)
+# Next steps (current priorities; updated 2026-10-24)
 
 Goal: a faithful, source-complete DOS Rayman that the historical toolchain builds, as the base for a native SDL3 port.
 Acceptance (docs/MATCHING.md "Acceptance policy and roadmap"): any valid, semantics-preserving C that the unchanged
 verifier reports STRICT; mark compiler-steered or synthetic source with `quality`. Never patch compiled output.
 
 ## Priorities (by recovered bytes, functions unlocked and measured effort)
+Latest wave (wave 3, 2026-10-24): 8 parallel Sol workers on the 181 NEAR functions whose computational core is within
+4 ops of DOS (scratch/core_ops.py): +25 STRICT (1,547 -> 1,572), several banked reductions, 0 losses; worker
+FINDINGS.md under build/workers/w3_*/ keep the negatives. Yield per wave is falling (~14% of targets closed); the
+remaining NEAR set is ~260 functions. Idiom census (build/workers/idiom_mine) is exhausted: fill_cld was the only new
+helper (docs/COMPILER.md).
 1. **Behaviour first: DIFF-class functions.** tools/census.py tags ~30 NEAR functions DIFF_* (a call, global or
    constant differs from DOS). Real behaviour errors matter for the port and are fixed before any matching work;
    equivalent lowerings (memset vs inline REP STOSD fill, mask spellings) become ordinary matching work.
@@ -22,7 +27,7 @@ verifier reports STRICT; mark compiler-steered or synthetic source with `quality
 4. **Whole objects.** Units with one or two NEAR functions left (dosmem, action, blood, bat, map, neige, map_ngawe,
    objupdate4, objinit, ...) close their object and stop layout drift for REFS_LAYOUT neighbours.
 5. **Ordinary source build.** The natural link now resolves every symbol (docs/LINK.md); keep it linking, keep data
-   correct and never add placeholder data. Next: run-time sanity of the linked image only when the user asks.
+   correct and never add placeholder data. Runtime: the rebuilt game reaches the first level from main (docs/LINK.md); re-check after large integrations.
 
 ## Deliberately postponed (do not start without a concrete reason)
 - Byte-identical whole-image work: original linker placement, relocation ordering, packed-EXE identity (PMWLITE /C4

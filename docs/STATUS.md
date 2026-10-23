@@ -6,7 +6,7 @@ Priorities: docs/NEXT_STEPS.md. Blockers: docs/BLOCKERS.md. Causes: docs/CAUSES.
 ## Coverage (kept separate)
 | level | state |
 |---|---|
-| game code 1:00000-1:6fbe6 | **273,923 of ~457,702 bytes STRICT (59.8%)**: 1,547 STRICT functions (game C + all 106 original hand-written asm entries); every range has a unit |
+| game code 1:00000-1:6fbe6 | **285,949 of ~457,702 bytes STRICT (62.5%)**: 1,572 STRICT functions (game C + all 106 original hand-written asm entries); every range has a unit |
 | remaining game NEAR | ~292 functions, ~182 KB: ~225 SHAPE (calls/globals/fields/constants equal DOS - strong evidence, not a certified behavioural equivalence), ~30 DIFF_* (18 triaged: all equivalent lowerings, 0 behaviour errors; ~12 in pilot units pending), ~20 layout-only (close with their neighbours), ~18 not traced by explain.py |
 | HMI SOS vendor library | original library pinned and linked; src/hmi is a separate reconstruction (not game code) |
 | Watcom runtime | pinned CLIB3R/MATH3R/MATH387R, linked as-is |

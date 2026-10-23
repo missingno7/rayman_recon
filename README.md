@@ -6,7 +6,7 @@ optional modernisation. The original executable is the authority; matching comes
 Primary oracle: GOG `RAYMAN.EXE` **v1.21** (SHA-256 `599b1df2…09eb6`); secondary: CD/installed **v1.12**; PS1
 `SLUS-000.05` as a semantic reference. See `docs/ORIGINALS.md`, `docs/VERSIONS.md`.
 
-Status: 1,547 STRICT functions (59.8% of game code bytes), all original hand-written assembly STRICT, the complete
+Status: 1,572 STRICT functions (62.5% of game code bytes), all original hand-written assembly STRICT, the complete
 program links from source (not yet byte-identical). Numbers: `python tools/status.py`; details: `docs/STATUS.md`;
 priorities: `docs/NEXT_STEPS.md`.
 
