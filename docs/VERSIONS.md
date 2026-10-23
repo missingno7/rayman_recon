@@ -96,4 +96,14 @@ Further executables obtained (ev_releases, VERIFIED, build/workers/ev_releases/d
 Interactive Preview 423,319 B; Designer RAYKIT v1.01 (2 pressings), RAYFAN v1.01, RAYPLUS v1.01, Edutainment demo v1.01,
 regional MAPPER.EXE. LEADS: retail v1.00 EU (Redump 58262), v1.10 EU DVD (Redump 57543), 1.20 JP/UK/DE/IT-SP-DU, 1.21 CH.
 No original source, map or symbol package was found.
+Regional / preview comparison (ev_regional, build/workers/ev_regional/REPORT.md):
+- PROVEN: FR v1.21 differs from GOG v1.21 in two code bodies only (movieprefix sub_3A55C far-buffer read, menu LOAD_CONFIG
+  default language 1); obj2 data and all 760 named BSS objects are at identical addresses (only the banner letters
+  US->FR differ). Delta changes occur inside units (function size changes), so they are not TU cuts by themselves.
+- PROVEN: US v1.12 Interactive Preview adds protection (8 descriptors 2:07314..07374, expanded cdsave envelope +0x910
+  code with a new 0x610 BSS interval before RandomIndex), redirects save/load to a shared `xor al,al; ret` stub, and
+  shows 23 named-BSS order inversions vs v1.12 retail. The language envelope stays 0x410 in both pairs.
+NEAR re-check against older builds (ev_nearcheck): 24 current NEAR units compiled unchanged vs 46 December-demo
+mappings: 0 reproduce the demo body (38 differ from both, 6 weakly mapped, 2 = GOG body) - our NEAR sources are not
+simply the older source; no version-change localisation follows.
 

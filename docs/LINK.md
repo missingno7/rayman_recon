@@ -99,3 +99,12 @@ generate it (duplicate removed; map anchor errors 1 -> 0). With that, the first 
 bss_32f58 (the 1,040-byte language_txt region) - the next open data question; the movie zero cells 2:06540..4c remain.
 Relocations: obj1 first divergence index 526 (1:05ee9), obj2 index 0 (2:03fa4). NEAR drift (e.g. affiche..araignee
 -96 B, pcmain InitData +0x51) and runtime extraction (set386 first; pcmain memset) are unchanged.
+
+## Movie translation unit (2026-10-23, ev_regional)
+The former units movieprefix (1:2a1c0..) and movie (1:2b288..) are one object: game `_TEXT` contributions are
+paragraph-aligned (PROVEN, docs/COMPILER.md object layout) and 1:2b288 is not, in GOG and FR v1.21 alike (FR keeps
+the code continuous across the cut at delta +0x10). Merged into src/movie.c: 32/45 STRICT before and after, movie
+CONST VERIFIED, verifier 0 regressions; the natural link now places the whole object at one delta (-352) instead of
+-352/-456. The other game units whose first named function is unaligned (affiche, basic, display, hifi, menu,
+effect50350) start at aligned object boundaries per tools/tumap.py (leading bytes before the first public).
+
