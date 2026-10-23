@@ -629,12 +629,13 @@
      ]
     },
     "RAY_THROW_FIST": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "RAY_PREPARE_FIST": {
      "status": "STRICT",
@@ -669,12 +670,13 @@
      ]
     },
     "alter_fist_speed": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "switch_off_fist": {
      "status": "STRICT",
@@ -2935,7 +2937,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "lance_couteau_lineaire": {
      "status": "NEAR_MATCH",
@@ -6514,7 +6517,7 @@
      "quality": "COMPILER_STEERED"
     },
     "set_air_speed": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6651,7 +6654,7 @@
      "quality": "COMPILER_STEERED"
     },
     "RAY_RESPOND_TO_NOTHING": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6685,12 +6688,13 @@
      ]
     },
     "RAY_BALANCE_ANIM": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "SET_RAY_BALANCE": {
      "status": "STRICT",
@@ -7327,7 +7331,7 @@
      ]
     },
     "instantSpeed": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

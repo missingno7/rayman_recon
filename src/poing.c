@@ -149,7 +149,7 @@ void RAY_THROW_FIST(void)
     if ((ray.flags.flip_x && decalage_en_cours > 0) ||
         (!ray.flags.flip_x && decalage_en_cours < 0))
     {
-        poing.speed_x += max32(Abs((s32)ray.speed_x) - 5, 0);
+        poing.speed_x += max32(abs32_inline(ray.speed_x) - 5, 0);
     }
 
     poing.speed_x = min32(poing.speed_x, 16);
@@ -166,7 +166,7 @@ void RAY_THROW_FIST(void)
     poing.field_4 = unk_2;
     poing.charge = unk_2;
     poing.field_A = unk_2 * poing.speed_x / poing.field_A;
-    poing_obj->y = (ray_zdc_y >> 1) + ray_zdc_h - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
+    poing_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
     poing.y_16 = ashl16(poing_obj->y, 4);
     CALC_FIST_POS();
 }
@@ -235,18 +235,17 @@ void POING_FOLLOW(obj_t *obj)
 
 void alter_fist_speed(obj_t *obj)
 {
-    u8 accel_x = 0;
+    u8 accel_x;
     s32 abs_spd_x;
 
-    abs_spd_x = obj->speed_x;
-    if (abs_spd_x < 0)
-        abs_spd_x = -abs_spd_x;
+    abs_spd_x = abs32_inline(obj->speed_x);
     if (abs_spd_x >= 11)
         accel_x = 2;
-    else if (Abs((s32)obj->speed_x) >= 8)
+    else if (abs32_inline(obj->speed_x) >= 8)
         accel_x = 1;
     else if (horloge[2] != 0)
         accel_x = 1;
+    else accel_x = 0;
     if (obj->flags.flip_x)
         obj->speed_x -= accel_x;
     else

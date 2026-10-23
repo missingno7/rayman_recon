@@ -269,9 +269,9 @@ void init_lance_couteau(u8 index) {
             obj->display_prio = 0;
             obj->flags.alive = 1;
             obj->is_active = 1;
-#ifdef PC
+
             add_alwobj(obj);
-#endif
+
             CouteauxInfos[index].active = false;
             if (pma_type_attaque == 0 || pma_type_attaque == 3 || pma_type_attaque == 4) {
                 set_main_and_sub_etat(obj, 2, 10);
@@ -602,7 +602,7 @@ void retour_couteau(obj_t* obj) {
             diff_y = 0;
             if (CouteauxInfos[cout_ind].field9_0x12 != 2) {
                 diff_x = (xmap + CouteauxInfos[cout_ind].x_pos) - (obj->offset_bx + obj->x);
-                diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->offset_by + obj->y);
+                diff_y = (CouteauxInfos[cout_ind].y_pos + ymap) - (obj->offset_by + obj->y);
             }
 
             if (Abs(diff_x) >= 2 || Abs(diff_y) >= 2) {
@@ -618,7 +618,7 @@ void retour_couteau(obj_t* obj) {
                 obj->speed_y = convertspeed(0);
                 if (CouteauxInfos[cout_ind].field9_0x12 != 2) {
                     obj->x = (xmap + CouteauxInfos[cout_ind].x_pos) - obj->offset_bx;
-                    obj->y = (ymap + CouteauxInfos[cout_ind].y_pos) - obj->offset_by;
+                    obj->y = (CouteauxInfos[cout_ind].y_pos + ymap) - obj->offset_by;
                 }
                 if (check_couteaux()) {
                     pma_phase = 3;

@@ -1098,6 +1098,8 @@ void allocateLandingSmoke(obj_t* in_obj) {
 }
 
 s32 instantSpeed(s16 speed) {
+    /* COMPILER_STEERED: preserve the parameter promotion after ashr16.
+     * Original inline sites: Abs 1:45e85; shifts 1:45e9f and 1:45eb5. */
     s32 speed_wide;
     s32 spd_shr;
     s32 spd_abs_max;
@@ -1105,23 +1107,14 @@ s32 instantSpeed(s16 speed) {
     s32 remainder;
     s32 shifted_product;
     s32 shifted_remainder;
-    s32 shift_amount;
-
-    speed_wide = speed;
     spd_shr = ashr16(speed, 4);
-    spd_abs_max = (speed_wide < 0 ? -speed_wide : speed_wide) & 0xF;
+    speed_wide = speed;
+    spd_abs_max = abs32_inline(speed_wide) & 0xF;
     if (spd_abs_max != 0) {
-        shift_amount = 4;
         product = map_time * spd_abs_max;
-        if (product != 0)
-            shifted_product = product >> shift_amount;
-        else
-            shifted_product = -((-product) >> shift_amount);
+        shifted_product = ashr32_inline(product, 4);
         remainder = product - spd_abs_max;
-        if (remainder != 0)
-            shifted_remainder = remainder >> shift_amount;
-        else
-            shifted_remainder = -((-remainder) >> shift_amount);
+        shifted_remainder = ashr32_inline(remainder, 4);
         spd_shr += sgn(speed_wide) * (shifted_product - shifted_remainder);
     }
     return spd_shr;
@@ -3431,7 +3424,7 @@ void DO_AUTO_SCROLL(void) {
                 if (eau_obj_id == -1 || (level.objects[eau_obj_id].hit_points == 0 && level.objects[eau_obj_id].param == 0)) {
                     if (scr_obj->y <= ray_y)
                     {
-                        if (Abs(scroll_y) == 1)
+                        if (abs32_inline(scroll_y) == 1)
                             scroll_y = 2;
                         else
                             scroll_y = -scroll_y;

@@ -415,7 +415,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
             else
                 unk_y = cur_obj->speed_y;
 
-            unk_y = Abs((s16) (unk_y + (cur_obj->follow_y - ray.speed_y)));
+            unk_y = abs32_inline((s16) (unk_y + (cur_obj->follow_y - ray.speed_y)));
             unk_y += 2;
             unk_y = max32(unk_y, unk_1);
 
@@ -424,7 +424,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                 unk_y += 8;
             }
 
-            if (Abs(cur_obj->ray_dist) < unk_y && !(block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)) {
+            if (abs32_inline(cur_obj->ray_dist) < unk_y && !(block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)) {
     s16 foll_w, foll_h, foll_y, foll_x;
 
                 ray.follow_id = actobj.objects[i];
@@ -584,7 +584,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                 }
 
                 if (ray.main_etat == 2) {
-                    if (Abs(ray.speed_x) >= ashr16(ray.eta[1][3].speed_x_right, 4) && RayEvts.run) {
+                    if (abs32_inline(ray.speed_x) >= ashr16(ray.eta[1][3].speed_x_right, 4) && RayEvts.run) {
                         set_main_and_sub_etat(&ray, 1, 3);
                     } else {
                         set_main_etat(&ray, 0);
@@ -621,18 +621,16 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
 }
 
 void set_air_speed(u8 main_etat, u8 sub_etat, s16 param_3, u8 param_4) {
-    /* COMPILER_STEERED: sub is an exact u8 promotion; left always points to the selected eta member. */
+    /* COMPILER_STEERED: the direct u8 eta index is coupled with the original fixed-EAX absolute helper (DOS 1:5ca93); left selects speed_x_left. */
     /* 5DE3C 8018263C -O2 -msoft-float */
     eta_t *eta;
-    s32 sub;
     s8 *left;
     s8 unk_1;
     s8 unk_2;
 
-    sub = sub_etat;
-    eta = &ray.eta[main_etat][sub];
+    eta = &ray.eta[main_etat][sub_etat];
     
-    unk_1 = Abs(param_3) >> 4;
+    unk_1 = abs32_inline(param_3) >> 4;
     left = &eta->speed_x_left;
     unk_1 = min32(unk_1, 112);
     unk_2 = -unk_1; /* TODO: ??? */
@@ -1235,7 +1233,7 @@ void Make_Ray_Hang(s16 a1, s16 a2) {
     s32 unk_4;
     s16 unk_1;
     u8 unk_2;
-    s32 unk_3;
+    s16 unk_3;
 
     /* 5F52C 80183D2C -O2 -msoft-float */
     
@@ -1256,13 +1254,13 @@ void Make_Ray_Hang(s16 a1, s16 a2) {
     ray.follow_id = -1;
     decalage_en_cours = 0;
     ray.speed_y = 0;
+    ray.x = (a1 >> 4 << 4) - ray.offset_bx - 1 + unk_3;
     ray.speed_x = 0;
     ray.link = 0;
     ray.gravity_value_1 = 0;
     ray.gravity_value_2 = 0;
     jump_time = 0;
-    unk_4 = 1;
-    ray.x = (a1 >> 4 << 4) + unk_3 - unk_4 - ray.offset_bx;
+
 }
 
 s16 AIR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return !block_flags[btyp].bits.solid; }
@@ -1715,7 +1713,7 @@ void RAY_RESPOND_TO_NOTHING(void) {
             }
             else
             {
-                if (ray.sub_etat == 37 && Abs(decalage_en_cours) <= 128)
+                if (ray.sub_etat == 37 && abs32_inline(decalage_en_cours) <= 128)
                     set_sub_etat(&ray, 38);
                 else if (ray.sub_etat == 20 && EOA(&ray))
                 {
@@ -1769,10 +1767,10 @@ void RAY_RESPOND_TO_NOTHING(void) {
             animation_attente = 0;
             if (ray.sub_etat != 8)
                 ray.speed_x = 0;
-            if (ray.sub_etat != 15 && ray.nb_cmd == 0)
-                ray_inertia_speed(0, 0, 0, ray_wind_force);
-            else
+            if (ray.sub_etat == 15 || ray.nb_cmd != 0)
                 ray_inertia_speed(8, 0, 0, ray_wind_force);
+            else
+                ray_inertia_speed(0, 0, 0, ray_wind_force);
             break;
         case 6:
             decalage_en_cours = 0;
@@ -1863,7 +1861,7 @@ s16 RAY_BALANCE_ANIM(s16 grp_angle)
     grp_angle = (grp_angle - 1) >> 3;
     /* 617C0 80185FC0 -O2 -msoft-float */
     /* thanks :) https://decomp.me/scratch/IFC9r */
-    { s32 base, result;
+    { s32 base;
     if (grp_angle <= 31) {
         if (!ray.flags.flip_x) return grp_angle + 31;
         base = 32;
@@ -1871,9 +1869,7 @@ s16 RAY_BALANCE_ANIM(s16 grp_angle)
         if (!ray.flags.flip_x) return grp_angle - 31;
         base = 95;
     }
-    result = base - grp_angle;
-    if (result < 0) result = -result;
-    return result;
+    return abs32_inline(base - grp_angle);
     }
 }
 
@@ -2613,9 +2609,9 @@ void RAY_SURF(void) {
         if (obj->type == TYPE_160_TIBETAIN_2 || obj->type == TYPE_159_TIBETAIN_6) return;
     }
     {
-    s32 speed = Abs(ray.speed_x);
+    s32 speed = abs32_inline(ray.speed_x);
     if (ray.main_etat == 0 && ray.sub_etat != 13 && ray.sub_etat != 11 && ray.sub_etat != 12 && ray.sub_etat != 18) {
-        if (Abs(ray.speed_x) > 3 && !(ray.sub_etat == 40)) {
+        if (abs32_inline(ray.speed_x) > 3 && !(ray.sub_etat == 40)) {
             if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) && ray.sub_etat != 8 && ray.sub_etat != 52 && ray.sub_etat != 53) {
                 set_main_and_sub_etat(&ray,0,41);
             }
