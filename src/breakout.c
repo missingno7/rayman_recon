@@ -303,13 +303,11 @@ s16 angle_direction(s16 x, s16 y)
 
 void move_ball(obj_t *obj)
 {
-    u8 old_undestroy;
     s16 dx;
     s16 dy;
-    old_undestroy = undestroy;
     dx = 0;
     dy = 0;
-    if ((old_undestroy > 5) || (upscreen != 0))
+    if ((undestroy > 5) || (upscreen != 0))
     {
         if (undestroy > 5)
         {
@@ -324,10 +322,12 @@ void move_ball(obj_t *obj)
         dy = myRand(257) - 128;
         upscreen = 0;
     }
-    ball_x += dx + speed_ball_x;
+    /* COMPILER_STEERED: operand order retains the DOS X accumulator.
+     * ORIGINAL_INLINE shifts: DOS 1:16e1b..1:16e29, 1:16e34..1:16e42. */
+    ball_x += speed_ball_x + dx;
     ball_y += dy + speed_ball_y;
-    obj->x = (s16) ((!ball_x) ? (-((-ball_x) >> 8)) : (ball_x >> 8));
-    obj->y = (s16) ((!ball_y) ? (-((-ball_y) >> 8)) : (ball_y >> 8));
+    obj->x = (s16) ashr32_inline(ball_x, 8);
+    obj->y = (s16) ashr32_inline(ball_y, 8);
 }
 
 void get_brik_bonus(void)
@@ -379,7 +379,10 @@ u16 get_brik_info(obj_t *obj, s16 entry_index, s16 *x, s16 *y, u8 *kind)
 
     anim_index = obj->animations[2].layers_per_frame & 0x3fff;
     layers = &obj->animations[2].layers;
-    entry = (u8 *)*layers + anim_index * NoCB * 4 + entry_index * 4;
+    /* COMPILER_STEERED: separate pointer load and full assignment are coupled;
+     * a compound += keeps the computation but changes its allocation/order. */
+    entry = (u8 *)*layers;
+    entry = entry + anim_index * NoCB * 4 + entry_index * 4;
     sprite_index = entry[3];
     sprite = obj->sprites + sprite_index;
     if (sprite_index != 0 && sprite->id != 0) {
@@ -500,12 +503,12 @@ void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)
             bonus->y = obj->y + obj->offset_by - bonus->offset_by;
             set_main_and_sub_etat(bonus, sub_etat, main_etat);
             bonus->flags.alive = 1;
-            bonus->active_flag = 0;
-            bonus->active_timer = 0;
-            fall_speed = (bonus->y + bonus->offset_bx - ymap < 100) + 1;
-            bonus->display_prio = 1;
             bonus->is_active = 1;
             bonus->speed_x = 0;
+            fall_speed = (u8)(bonus->y + bonus->offset_bx - ymap < 100) + 1;
+            bonus->active_flag = 0;
+            bonus->display_prio = 1;
+            bonus->active_timer = 0;
             bonus->speed_y = fall_speed;
             return;
         }
@@ -1053,7 +1056,7 @@ void casse_brique_done(obj_t *obj)
 void DISPLAY_FIXE_CB(obj_t *obj)
 {
     s16 y, x;
-    s32 icon_x;
+    s16 icon_x;
     s32 icon_y;
     u8 i;
     obj_t *digits;

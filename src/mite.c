@@ -220,7 +220,14 @@ void DO_MIT_ATTAK(obj_t *obj)
                 if (obj->gravity_value_1 == 1 && obj->speed_y > -2)
                     --obj->speed_y;
             } else {
-                diff_y = obj->offset_by + (s16)obj->y - (s16)ray.y - ray.offset_by;
+                {
+                    /* SYNTHETIC: this initialized address copy retains the DOS word
+                     * allocation. INVENTED local names. */
+                    s16 y_delta;
+                    s16 *delta_slot = &y_delta;
+                    *delta_slot = obj->offset_by + (s16)obj->y - (s16)ray.y - ray.offset_by;
+                    diff_y = y_delta;
+                }
                 if ((obj->speed_x <= 0 && !obj->flags.flip_x) ||
                     (obj->speed_x >= 0 && obj->flags.flip_x)) {
                     if (!obj->flags.flip_x)

@@ -223,9 +223,9 @@ u8 IS_STONEWOMAN_WAIT(obj_t* obj) {
 void DO_STONEWOMAN_COMMAND(obj_t* obj) {
     /* 4E820 80173020 -O2 -msoft-float */
     s32 prev_flip_x;
-    s16 diff_x;
-    s32 diff_value;
     s16 diff_y;
+    s32 diff_value;
+    s16 diff_x;
     s16 unk_1;
 
     if (IS_STONEWOMAN_WAIT(obj)) {
@@ -242,7 +242,15 @@ void DO_STONEWOMAN_COMMAND(obj_t* obj) {
     diff_value -= obj->offset_bx;
     if (diff_value < 0) diff_value = -diff_value;
     diff_x = diff_value;
-    diff_y = ABS(ray.offset_by + ray.y - obj->y - obj->offset_by);
+    {
+        /* SYNTHETIC: the declaration order above and this initialized address copy
+         * retain the DOS allocation. INVENTED local names delta and slot.
+         * ORIGINAL_INLINE abs site: DOS 1:6ce8d..1:6ce93; shared helper only. */
+        s32 delta;
+        s32 *slot = &delta;
+        *slot = ray.offset_by + ray.y - obj->y - obj->offset_by;
+        diff_y = abs32_inline(delta);
+    }
 
     if (obj->main_etat == 2)
     {}

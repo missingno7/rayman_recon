@@ -160,14 +160,20 @@ void DO_TOTEM_TOUCHE(obj_t* obj, s16 sprite) {
 
 void DO_TOTEM_COMMAND(obj_t* tot_obj) {
     /* 57950 8017C150 -O2 -msoft-float */
-    s16 x; s16 w; s16 y; s16 h;
+    /* COMPILER_STEERED: flag declaration first, paired with the substate
+     * snapshot below; either edit alone leaves the AL/AH colour tie. */
+    u8 unk_1;
+    s16 x;
+    s16 w;
+    s16 y;
+    s16 h;
     s16 nb_objs;
     s16 i;
     s16 j;
-    obj_t *cur_obj;
+    obj_t * cur_obj;
     s16 new_spd_x;
-    u8 unk_1;
     s16 new_x;
+    u8 state;
 
     tot_obj->param--;
     if (tot_obj->param < 0)
@@ -266,7 +272,9 @@ void DO_TOTEM_COMMAND(obj_t* tot_obj) {
         else
             unk_1 = 0;
 
-        switch (tot_obj->sub_etat) {
+        /* INVENTED local state retains the DOS substate allocation. */
+        state = tot_obj->sub_etat;
+        switch (state) {
             case 4:
                 if (unk_1) {
                     if (++tot_obj->iframes_timer < 4) {

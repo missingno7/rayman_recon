@@ -1287,12 +1287,12 @@
      ]
     },
     "DO_MIT_ATTAK": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "IS_MIT_PAF": {
      "status": "NEAR_MATCH",
@@ -1795,11 +1795,12 @@
      ]
     },
     "DO_STONEWOMAN_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "DO_NOMOVE_STONEWOMAN_COMMAND": {
      "status": "STRICT",
@@ -4134,12 +4135,13 @@
      ]
     },
     "DO_TOTEM_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_TOTBT_REBOND": {
      "status": "STRICT",
@@ -5326,7 +5328,7 @@
      ]
     },
     "move_ball": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
@@ -5345,10 +5347,11 @@
      ]
     },
     "get_brik_info": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "frame_briques": {
      "status": "STRICT",
@@ -5364,7 +5367,7 @@
      "quality": "SYNTHETIC"
     },
     "AllocateBonus": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
@@ -5447,10 +5450,11 @@
      ]
     },
     "DISPLAY_FIXE_CB": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_CB_BALL_COMMAND": {
      "status": "STRICT",
