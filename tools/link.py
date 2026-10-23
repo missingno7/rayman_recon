@@ -670,32 +670,39 @@ def gap_reports(rows,c):
                    candidate_span=segs['_BSS']['size'],candidate_alignment_bytes=accounting['_BSS']['natural_alignment_bytes']),
           warning='Natural alignment is linker-generated and measured; it is never inserted to hide gaps.'))
 
-def pack_all():
-    assert (H/'diagnostic.exe').exists()
+def pack_all(source='diagnostic.exe',target='packed.exe',scope='diagnostic UNDEFSOK image only; never executed'):
+    assert (H/source).exists()
     tc=read(ROOT/'config/toolchain.json')['installs']['pmodew122']
     for name in ('PMODEW.EXE','PMWLITE.EXE'):
         assert sha((H/name).read_bytes())==tc['key_files'][name]
         assert sha((wcc.TOOLS_DIR/tc['dir']/name).read_bytes())==tc['key_files'][name]
-    (H/'packed.exe').unlink(missing_ok=True)
+    (H/target).unlink(missing_ok=True)
     r=run([wcc.TOOLS_DIR/'nmlgcdos/msdos.exe',H/'PMWLITE.EXE','/C4',
-           '/S'+str(H/'PMODEW.EXE'),'/Dpacked.exe','diagnostic.exe'],timeout=60)
-    save('pack_result.json',r)
-    assert r['rc']==0 and (H/'packed.exe').exists(),r
-    b=(H/'packed.exe').read_bytes();p=pmw1.PMW1(b);fx,_=p.fixups();c=le_model((H/'diagnostic.exe').read_bytes())
+           '/S'+str(H/'PMODEW.EXE'),'/D'+target,source],timeout=60)
+    save('pack_result.json' if target=='packed.exe' else 'pack_result_'+Path(target).stem+'.json',r)
+    assert r['rc']==0 and (H/target).exists(),r
+    b=(H/target).read_bytes();p=pmw1.PMW1(b);fx,_=p.fixups();c=le_model((H/source).read_bytes())
     data=[d for _,d,_ in p.object_data()]
     checks=dict(entry=[p.cs_obj,p.eip,p.ss_obj,p.esp]==c['entry'],
         data=data==c['data'],fixups=fx==c['fixups'],
         virtual_sizes=[x['virtual_size'] for x in p.objects]==[x['virtual_size'] for x in c['objects']],
         flags=[x['flags'] for x in p.objects]==[x['flags'] for x in c['objects']])
-    save('pack_roundtrip.json',dict(scope='diagnostic UNDEFSOK image only; never executed',checks=checks,
+    save('pack_roundtrip.json' if target=='packed.exe' else 'pack_roundtrip_'+Path(target).stem+'.json',dict(scope=scope,source=source,checks=checks,
           packed_size=len(b),packed_sha256=sha(b),oracle_equal=sha(b)==read(ROOT/'config/oracles.json')['oracles']['gog_v121_us']['sha256']))
     assert all(checks.values()),checks
-    print('PMWLITE /C4 packed diagnostic image:',len(b),'bytes; decode round trip passed',flush=True)
+    print('PMWLITE /C4 packed',source,'->',target+':',len(b),'bytes; decode round trip passed',flush=True)
+
+def pack_natural():
+    """Pack the NATURAL image (never the UNDEFSOK diagnostic one), only after a fully resolved natural link."""
+    res=read(H/'link_results.json')['natural']
+    if res['rc'] or 'undefined' in res.get('stdout','').lower():
+        print('natural link not fully resolved: no natural_packed.exe',flush=True);return
+    pack_all('natural.exe','natural_packed.exe','natural link, all references resolved (no UNDEFSOK); executable candidate')
 
 def main():
     global H,MANIFEST
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('stage',nargs='?',default='all',choices=['compile','audit','link','report','pack','all'])
+    ap.add_argument('stage',nargs='?',default='all',choices=['compile','audit','link','report','pack','pack_natural','all'])
     ap.add_argument('--out',type=Path,default=H,help='generated output directory (defaults to build/link)')
     ap.add_argument('--manifest',type=Path,default=None,help='manifest path (defaults to <out>/manifest.json)')
     args=ap.parse_args()
@@ -710,7 +717,7 @@ def main():
         assert p.is_file(),('manifest input is missing',path)
         got=sha(p.read_bytes())
         assert got==want,('stale manifest input',path,want,got)
-    stages=dict(compile=compile_all,audit=audit_symbols,link=link_all,report=report_all,pack=pack_all)
+    stages=dict(compile=compile_all,audit=audit_symbols,link=link_all,report=report_all,pack=pack_all,pack_natural=pack_natural)
     if args.stage=='all':
         for name,fn in stages.items():
             if name!='assets':fn()
