@@ -135,6 +135,16 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
 - FALSIFIED: switch-dispatch idiom (31/34 dispatches already match; 2 functions differ); C-level fill idiom (memset is
   inlined as stosw/stosb; parameterised pragmas load ECX first and XOR EAX - DOS's mov eax,0; mov ecx,N; rep stosd keeps
   both constants inside hand-written inline code: counts 16000 x11 sites (existing fill helper), 4000 x1, 16008 x1).
+- Islands (2026-10-23): Watcom compiles each function in isolation - a callee's body, storage class or definition
+  order never changes a caller (probe: identical caller code for 4 variants). Cross-function code channels are only
+  shared declarations (types, struct fields, prototypes, pragma contracts) and source idioms; layout couples bytes
+  only within one object. Measured: all 289 NEAR functions access exactly DOS's struct-field offsets, and with
+  relocated operands excluded the field access widths/signedness match DOS (scratch/field_widths.py); 206/289 use only
+  STRICT-validated globals/callees; decl_audit checked the other 139 symbols: 121 consistent, 13 undetermined,
+  5 mismatches (word_CF7E6 u16, new_sprite_deform/PLAN1_BUFFER_START_POINTER u8*, init_data_state pointer members,
+  droppedBombIds s16[8][8]) - correcting them changes no compiled code. False leads retained: first-divergence
+  clustering on `ray` (branch-target shifts) and the menu display_item_t cluster (unlinked vs linked displacements).
+  OPEN: 62 globals carry CONFLICTING extern types across units (decl_unify) - a real one-object-one-type defect.
 - Conclusion: structural debt is real but narrow (one demonstrated idiom, ~14 functions directly, ~9 units of core
   improvement); most remaining NEAR are category 4. A correct idiom does not by itself yield STRICT - it resets the
   allocation work for the affected functions.
