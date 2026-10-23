@@ -665,13 +665,15 @@ void Reset_Clavier(void)
 
 u8 JoystickPresent(void)
 {
+    /* COMPILER_STEERED: clear order and the proven zero couple byte-cache allocation. */
     if (need_timer == 0 || WindowsLance != 0) {
+        is_joypad_mode = 0;
         something_with_cfg_25_default_00_joy = 0;
         Read_Input_Func = get_joy_input2_windows1;
-        is_joypad_mode = 0;
     } else {
         is_joypad_mode = 1;
-        something_with_cfg_25_default_00_joy = WindowsLance;
+        /* The false entry condition proves WindowsLance == 0 here. */
+        something_with_cfg_25_default_00_joy = 0;
         Read_Input_Func = get_joy_input2_dos1;
         Swap_And_Test_Joystick = get_joy_input1_dos1;
     }

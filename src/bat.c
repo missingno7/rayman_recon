@@ -1,8 +1,7 @@
 /*
  * Bat enemy (GOG v1.21 object 1:0fa40-1:100b0). File name invented (Rayverse bat.c). Names: Rayverse/Android.
  * Uses the shared src/include/obj.h layout.
- * Worker candidate: eight STRICT functions and contiguous _TEXT layout.
- * DO_BAT_COMMAND remains NEAR; see NOTES.md and final_match.txt.
+ * Wave 3: all nine functions STRICT; offset-local declaration order closes DO_BAT_COMMAND.
  */
 #include "obj.h"
 
@@ -134,8 +133,9 @@ void DO_BAT_COMMAND(obj_t *obj)
     s16 obj_sub_etat;
     s32 speed;
     u8 horl_0;
-    s16 offs_by;
+    /* COMPILER_STEERED: declaration order selects the original offset homes. */
     s16 offs_bx;
+    s16 offs_by;
 
     {
         s16 state_snapshot;

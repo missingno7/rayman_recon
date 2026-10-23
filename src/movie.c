@@ -217,9 +217,17 @@ void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color)
 
 void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
+    /* COMPILER_STEERED: retain the two-stage row product and accumulation. */
     u8 *dst;
-    dst = x + y * 320 + surface->pixels;
-    copy(src, dst, width);
+    s32 offset;
+    offset = y * 64;
+    x += offset;
+    offset *= 4;
+    x += offset;
+    offset = x;
+    dst = offset + surface->pixels;
+    /* DOS 1:2a2f2..2a304: the existing shared guarded-copy sequence. */
+    copy_guarded(src, dst, width);
 }
 
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)

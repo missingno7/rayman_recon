@@ -350,6 +350,7 @@ void LoadTchatchPerdu(void)
 {
     FILE *file;
     u32 size;
+    u32 saved_size; /* COMPILER_STEERED: retain allocation size for the final result. */
     u32 i;
     u8 check;
     s32 bank = 6;
@@ -359,6 +360,7 @@ void LoadTchatchPerdu(void)
     if (file == 0)
         rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
     size = sndvig_infos[bank].size;
+    saved_size = size;
     ptrTchatch = sub_6FBB4(size);
     if (ptrTchatch == 0) {
         fclose(file);
@@ -375,7 +377,7 @@ void LoadTchatchPerdu(void)
     if (check != 0)
         rayman_sound_fatal_error("Load error in sndvig.dat.\n");
     TchachPerduPtr = ptrTchatch;
-    TchachPerduSize = size;
+    TchachPerduSize = saved_size;
     ptrTchatch = 0;
 }
 
@@ -386,6 +388,7 @@ void PlayTchatch(s32 sound, s32 volume)
     s32 bank;
     FILE *file;
     u32 size;
+    u32 saved_size; /* COMPILER_STEERED: retain allocation size for the final result. */
     u32 i;
     u8 check;
     s16 voice;
@@ -409,6 +412,7 @@ void PlayTchatch(s32 sound, s32 volume)
         if (file == 0)
             rayman_sound_fatal_error("Fichier Tchach introuvable.\n");
         size = sndvig_infos[bank].size;
+        saved_size = size;
         if (ptrTchatch != 0)
             JumelleFreeArray((s32 **)&ptrTchatch);
         ptrTchatch = sub_6FBB4(size);
@@ -426,13 +430,13 @@ void PlayTchatch(s32 sound, s32 volume)
         }
         if (check != 0)
             rayman_sound_fatal_error("Load error in sndvig.dat.\n");
-        request.data = (u8 __far *)ptrTchatch;
-        request.size = size;
         request.flags |= 0x80;
+        request.data = (u8 __far *)ptrTchatch;
+        request.size = saved_size;
     } else {
+        request.flags |= 0x80;
         request.data = (u8 __far *)TchachPerduPtr;
         request.size = TchachPerduSize;
-        request.flags |= 0x80;
     }
     voice = sosDIGIStartSample(sound_driver_handle,
         (dos_sound_request_t __far *)&request);
