@@ -108,3 +108,10 @@ CONST VERIFIED, verifier 0 regressions; the natural link now places the whole ob
 -352/-456. The other game units whose first named function is unaligned (affiche, basic, display, hifi, menu,
 effect50350) start at aligned object boundaries per tools/tumap.py (leading bytes before the first public).
 
+## First complete natural link (2026-10-23)
+`_language_txt` is now defined (src/bss/bss_language_txt.c: `char *language_txt[237]`, the PROVEN minimum extent;
+original capacity 237..260 OPEN, the 116-byte remainder of the +0x410 envelope stays an unattributed hole). With it
+WLINK resolves every symbol: `python -B tools/link.py all` gives natural rc 0, gaps 0, an image (build/link/natural.exe)
+and a /C4-packed image. Not byte-identical (NEAR drift, layout) and never executed by the tools. Remaining differences
+are now matching/layout differences, not missing definitions.
+

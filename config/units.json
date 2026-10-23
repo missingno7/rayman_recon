@@ -16611,6 +16611,15 @@
     "_BSS": "VERIFIED"
    },
    "note": "Layout fragment; original central BSS TU ownership OPEN"
+  },
+  "bss_language_txt": {
+   "source": "src/bss/bss_language_txt.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
   }
  }
 }
