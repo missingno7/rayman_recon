@@ -78,17 +78,41 @@ void getIdealStingCoords(obj_t* obj, s16* out_x, s16* out_y) {
 }
 
 //53C2C
-u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
-    s16 sting_x; s16 sting_y;
-
-    getIdealStingCoords(obj, &sting_x, &sting_y);
-    sting_x = Abs((s16)(sting_x - obj->x));
-    sting_y = Abs((s16)(sting_y - obj->y));
-    if (sting_x < min_x && sting_y < min_y)
-        return true;
-    else
-        return false;
+u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) { /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */
+    u16 limit_y;
+    u16 limit_x;
+    u16 *address_x = &limit_x;
+    u8 result;
+    s16 sting_x;
+    s16 sting_y;
+    *address_x = min_x;
+    limit_y = min_y;
+    getIdealStingCoords(obj,&sting_x,&sting_y);
+    sting_x -= obj->x;
+    {
+        s16 perm_value_0;
+        perm_value_0 = ((s32)sting_x>=0 ? (s32)sting_x : -(s32)sting_x);
+        sting_x=perm_value_0;
+    }
+    sting_y -= obj->y;
+    {
+        s16 perm_value_1;
+        perm_value_1=((s32)sting_y>=0 ? (s32)sting_y : -(s32)sting_y);
+        sting_y=perm_value_1;
+    }
+    result=(limit_x > sting_x) && (sting_y < limit_y);
+    return result;
 }
+
+
+
+
+
+
+
+
+
+
 
 //53CAC
 u8 moskitoCanAttak(obj_t* obj) {

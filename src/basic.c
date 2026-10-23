@@ -1303,18 +1303,18 @@ done:
 }
 
 //1F21C
-void INIT_TXT_BOX(display_item_t* box) {
+void INIT_TXT_BOX(display_item_t* box) { /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */
     s16 i;
     char text[200];
     s16 max_width = 0;
-    s16 line_height = 0;
+    u32 num_let = 0;
     s16 num_lines = 0;
     s16 max_chars = 0;
     s16 total_chars = 0;
     s16 is_slash = 0;
     s16 char_spacing = 0;
     s16 space_width = 0;
-    u32 num_let = 0;
+    s16 line_height = 0;
     s16 total_width = 0;
     u8 font_size = box->font_size;
 
@@ -1377,6 +1377,79 @@ void INIT_TXT_BOX(display_item_t* box) {
         box->height = num_lines * line_height - 2;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //1F4A0
 void Deter_Option_Caract(char* text, s16 key, s16 offset) {

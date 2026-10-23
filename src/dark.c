@@ -139,14 +139,14 @@ void init_vitraux(void)
 }
 
 u8 poing_face_obj(obj_t *obj)
-{
-    s32 diff_x = (obj->x + obj->offset_bx) - (poing_obj->x + poing_obj->offset_bx);
-    u8 ahead = diff_x > 0;
-    u8 facing = 0;
-    if (ahead == poing_obj->flags.flip_x)
-        facing = 1;
-    return facing;
-}
+{ /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */u8 facing = 0; u8 ahead; u8 flip;      s32 diff_x = obj->x; diff_x += obj->offset_bx; diff_x -= poing_obj->x + poing_obj->offset_bx;               ahead = diff_x > 0; flip = poing_obj->flags.flip_x; { u8 *p = &flip; flip = *p; } if (ahead == flip)         facing = 1;     return facing; }
+
+
+
+
+
+
+
 
 void DARK_phase1(obj_t *mr_drk_obj)
 {
@@ -517,19 +517,18 @@ void DO_DARK_SORT_COLLISION(obj_t *obj)
 }
 
 void allocate_DARK_SORT(s16 x, s16 y, s16 sub_etat, s16 iframes)
-{
-    s16 oldest_frame;
-    obj_t *cur_obj = &level.objects[0];
+{ /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */
     s16 scan_or_found = 0;
+    obj_t *cur_obj = &level.objects[0];
     s16 selected_or_index = 0;
+    s16 oldest_frame = 0;
     s16 nb_objs = level.nb_objects;
-
     do {
-        if (cur_obj->type == TYPE_DARK_SORT && !cur_obj->is_active)
-            scan_or_found = 1;
+        if (cur_obj->type == TYPE_DARK_SORT && !cur_obj->is_active)             scan_or_found = 1;
         cur_obj++;
         selected_or_index++;
-    } while (scan_or_found == 0 && selected_or_index < nb_objs);
+    }
+    while (scan_or_found == 0 && selected_or_index < nb_objs);
     cur_obj--;
     if (scan_or_found != 0) {
         cur_obj->flags.alive = 1;
@@ -542,7 +541,8 @@ void allocate_DARK_SORT(s16 x, s16 y, s16 sub_etat, s16 iframes)
         cur_obj->param = 0;
         set_main_and_sub_etat(cur_obj, 0, sub_etat);
         cur_obj->anim_frame = 0;
-    } else {
+    }
+    else {
         oldest_frame = 0;
         cur_obj = &level.objects[0];
         scan_or_found = selected_or_index = 0;
@@ -553,7 +553,8 @@ void allocate_DARK_SORT(s16 x, s16 y, s16 sub_etat, s16 iframes)
             }
             cur_obj++;
             scan_or_found++;
-        } while (scan_or_found < nb_objs);
+        }
+        while (scan_or_found < nb_objs);
         cur_obj = &level.objects[selected_or_index];
         cur_obj->flags.alive = 1;
         cur_obj->is_active = 1;
@@ -567,6 +568,55 @@ void allocate_DARK_SORT(s16 x, s16 y, s16 sub_etat, s16 iframes)
         cur_obj->anim_frame = 0;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void DoAnnuleDarkSortRaymanCollision(obj_t *obj)
 {
