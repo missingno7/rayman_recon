@@ -136,4 +136,11 @@ time-limited, AUTOTYPE input, window captures (scratch/runtime_run.py).
 - Not yet on main: the struct changes cdaudio sub_1a280's allocation (STRICT -> NEAR, 68 bytes; DOS keeps track in
   BL and builds AX = 0x1500|command); natural spellings tried (4) did not recover it. Open task: recover sub_1a280 with
   the correct struct, then integrate the struct (blocker B18).
+- Static audit for further split objects (same day): (1) every address-of-global cast in src (`(s32)&x`, `(u8*)&x`,
+  ...) was checked against the receiver's extent - only cd_packet_command_word (B18) is undersized
+  (cd_disc_info 0x51f = sizeof, options_t 10 shorts, palettes 768). (2) every off32 reference of the build was compared
+  with its symbol's extent in the natural map: 52 out-of-extent offsets, all negative Watcom idioms (dword/word loads
+  ending at the object, shifted array bases, original asm base arithmetic) or src/hmi reconstruction units that the
+  natural link does not use; no game reference runs forward into the next object. B18 is the only known split object
+  that breaks the natural build.
 
