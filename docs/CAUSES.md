@@ -158,6 +158,8 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   by the original publics (hm_names2) - ownership must follow the original definitions in both directions.
 - CONFIRMED (H2-type, undersized object): 2:32190 is the 48-byte DPMI 0500h memory-info record (implicit API writes hid its
   size; Android DPMIMemoryInfo 0x30) - our 4-byte pointer binding left a 44-byte gap (dt_cells).
+- CONFIRMED (instance of H2, found at RUNTIME 2026-10-23): the four cd_packet_* globals are the ax/bx/cx/es fields of one
+  dos_regs_t at 2:4e8a2 - natural-link adjacency broke the MSCDEX request (docs/LINK.md, B18).
 - CONFIRMED (instances of H2): game_title = language_txt[231]; menu row 9 = text_to_display[0]; init_data_state/record fields.
 - REFUTED: another third-party library beyond Watcom runtime and HMI SOS (lib_audit coverage map).
 - REFUTED: pure register renaming class (0 functions); case-order hypothesis; v1.12 source changes as NEAR cause;

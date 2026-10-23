@@ -115,3 +115,25 @@ WLINK resolves every symbol: `python -B tools/link.py all` gives natural rc 0, g
 and a /C4-packed image. Not byte-identical (NEAR drift, layout) and never executed by the tools. Remaining differences
 are now matching/layout differences, not missing definitions.
 
+## First runtime investigation (2026-10-23)
+Baseline: main 2fb042c (sources identical to 46fb266: 1,544 STRICT, 0 regressions). `python -B tools/link.py all`
+(manifest regenerated): natural rc 0, 0 unresolved; `pack_natural` packs natural.exe (never the UNDEFSOK diagnostic
+image) with PMWLITE 1.22 /C4, decode round trip exact (sha256 dd8eb1eb..., not the original). Run: DOSBox-X 2022.09
+(pinned), isolated copy of assets/GOG data with only RAYMAN.EXE replaced, read-only CD image assets/DOS_CD/RAYMAN.cue,
+time-limited, AUTOTYPE input, window captures (scratch/runtime_run.py).
+- Without a CD driver the rebuilt game prints the original "CD ROM's Initialization / Please install MSCDEX"
+  message (strings at 2:30914/2:30b51 in GOG v1.21) and exits - original behaviour, environment condition.
+- FIRST BLOCKER (reconstruction defect, PROVEN): with MSCDEX present the game stops in text mode after two INT 2Fh
+  AX=1510h requests that DOSBox-X rejects ("MSCDEX: invalid call to interrupt handler" = no request header).
+  sub_564f8 takes a dos_regs_t* (ax +0, bx +2, cx +4, ... es +18, ss +20); DOS passes 2:4e8a2 at every call.
+  Our bindings split that one object into four phantom globals (cd_packet_command_word 4e8a2, argument_low 4e8a4,
+  argument_high 4e8a6, segment 4e8b4); they only line up at the oracle addresses. The natural link placed them at
+  4e8ec/4e8ee/4e8f0/4e8f4, so ES:BX (es read from +18) was lost. Same class as H2 (phantom globals).
+- Experiment branch exp/cd-regs (one `dos_regs_t cd_request_regs` at 2:4e8a2, 22 bytes VERIFIED; worktree build,
+  same pipeline): the rebuilt game passes CD init, plays CD audio, shows the title, the main menu, the save-slot
+  screen ("Choose a game", name entry), loads the first level (The Dream Forest) and Rayman moves/scrolls under
+  keyboard input. Runtime observation only - not a STRICT or EQUIVALENT claim.
+- Not yet on main: the struct changes cdaudio sub_1a280's allocation (STRICT -> NEAR, 68 bytes; DOS keeps track in
+  BL and builds AX = 0x1500|command); natural spellings tried (4) did not recover it. Open task: recover sub_1a280 with
+  the correct struct, then integrate the struct (blocker B18).
+
