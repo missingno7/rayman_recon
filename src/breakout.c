@@ -192,7 +192,11 @@ void exit_casse_brique2(void)
 
 void get_speed_ball(void)
 {
+    /* COMPILER_STEERED: exact-type snapshot; this function never changes the level. */
+    u8 speed_level;
+
     s16 index;
+    speed_level = speed_ball_level;
 
     if (speed_ball_angle < 0)
         speed_ball_angle += 72;
@@ -200,18 +204,18 @@ void get_speed_ball(void)
         speed_ball_angle -= 72;
 
     if (18 - speed_ball_angle >= 0) {
-        speed_ball_x = CBdata[speed_ball_angle][speed_ball_level * 2 + 1];
-        speed_ball_y = CBdata[speed_ball_angle][speed_ball_level * 2 + 2];
+        speed_ball_x = CBdata[speed_ball_angle][speed_level * 2 + 1];
+        speed_ball_y = CBdata[speed_ball_angle][speed_level * 2 + 2];
     /* DOS 1:16b3b and 1:16ba9 test the reflected index as a signed word. */
     } else if ((index = 36 - speed_ball_angle) >= 0) {
-        speed_ball_x = -CBdata[index][speed_ball_level * 2 + 1];
-        speed_ball_y = CBdata[index][speed_ball_level * 2 + 2];
+        speed_ball_x = -CBdata[index][speed_level * 2 + 1];
+        speed_ball_y = CBdata[index][speed_level * 2 + 2];
     } else if (54 - speed_ball_angle >= 0) {
-        speed_ball_x = -CBdata[(s16)(speed_ball_angle - 36)][speed_ball_level * 2 + 1];
-        speed_ball_y = -CBdata[(s16)(speed_ball_angle - 36)][speed_ball_level * 2 + 2];
+        speed_ball_x = -CBdata[(s16)(speed_ball_angle - 36)][speed_level * 2 + 1];
+        speed_ball_y = -CBdata[(s16)(speed_ball_angle - 36)][speed_level * 2 + 2];
     } else if ((index = 72 - speed_ball_angle) >= 0) {
-        speed_ball_x = CBdata[index][speed_ball_level * 2 + 1];
-        speed_ball_y = -CBdata[index][speed_ball_level * 2 + 2];
+        speed_ball_x = CBdata[index][speed_level * 2 + 1];
+        speed_ball_y = -CBdata[index][speed_level * 2 + 2];
     }
 }
 
@@ -466,6 +470,7 @@ void AllocateCasseBriqueBoum(obj_t *obj)
 
 void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)
 {
+    /* COMPILER_STEERED: independent post-call stores; fall_speed assigned before use. */
     s16 i;
     s16 count;
     obj_t *bonus;
@@ -480,12 +485,12 @@ void AllocateBonus(obj_t *obj, u16 type, u8 sub_etat, u8 main_etat)
             bonus->y = obj->y + obj->offset_by - bonus->offset_by;
             set_main_and_sub_etat(bonus, sub_etat, main_etat);
             bonus->flags.alive = 1;
+            bonus->active_flag = 0;
+            bonus->active_timer = 0;
             fall_speed = (bonus->y + bonus->offset_bx - ymap < 100) + 1;
+            bonus->display_prio = 1;
             bonus->is_active = 1;
             bonus->speed_x = 0;
-            bonus->display_prio = 1;
-            bonus->active_timer = 0;
-            bonus->active_flag = 0;
             bonus->speed_y = fall_speed;
             return;
         }
@@ -524,6 +529,7 @@ void bonus_fall(obj_t *obj)
 
 u8 collision_briques(obj_t *obj)
 {
+    /* COMPILER_STEERED: reorder terminated case groups; case bodies unchanged. */
     u8 i;
     s16 x;
     s16 y;
@@ -553,28 +559,12 @@ u8 collision_briques(obj_t *obj)
                 if (abs_x <= 21 && dy * dy + dx * dx <= dist2) {
                     LastTouched = (u8)i;
                     switch (brick->param) {
-                    case 1:
-                        brick->param = 2;
-                        undestroy = 0;
-                        no_sound = 193;
-                        NbBrikTouched++;
+                    case 5:
+                        speed_up_ball(obj);
+                        no_sound = 54;
+                        undestroy++;
                         break;
-                    case 2:
-                        undestroy = 0;
-                        brick->param = 3;
-                        no_sound = 193;
-                        NbBrikTouched++;
-                        break;
-                    case 3:
-                    case 6:
-                        DO_NOVA(brick);
-                        NbBrikTouched++;
-                        NbClassicBrik--;
-                        if (brick->param == 6) bonus_fall(brick);
-                        brick->param = 0;
-                        undestroy = 0;
-                        no_sound = 14;
-                        break;
+
                     case 4:
                         no_sound = 214;
                         undestroy++;
@@ -586,11 +576,32 @@ u8 collision_briques(obj_t *obj)
                             no_sound = 14;
                         }
                         break;
-                    case 5:
-                        speed_up_ball(obj);
-                        no_sound = 54;
-                        undestroy++;
+
+                    case 1:
+                        brick->param = 2;
+                        undestroy = 0;
+                        no_sound = 193;
+                        NbBrikTouched++;
                         break;
+
+                    case 2:
+                        undestroy = 0;
+                        brick->param = 3;
+                        no_sound = 193;
+                        NbBrikTouched++;
+                        break;
+
+                    case 3:
+                    case 6:
+                        DO_NOVA(brick);
+                        NbBrikTouched++;
+                        NbClassicBrik--;
+                        if (brick->param == 6) bonus_fall(brick);
+                        brick->param = 0;
+                        undestroy = 0;
+                        no_sound = 14;
+                        break;
+
                     case 7:
                         tempo = 1;
                         no_sound = 54;
@@ -640,8 +651,14 @@ u8 collision_briques(obj_t *obj)
 
 void collision_rayman(obj_t *obj)
 {
-    s16 ball_x, ball_y, ray_x, ray_y, ray_w, ray_h;
+    /* COMPILER_STEERED: uninitialized declaration order selects the DOS allocation. */
+    s16 ball_x;
+    s16 ball_y;
+    s16 ray_x;
+    s16 ray_h;
+    s16 ray_y;
     u8 state;
+    s16 ray_w;
     state = 0;
     calc_obj_pos(obj);
     ball_x = obj->screen_x + obj->offset_bx - 8;
@@ -705,20 +722,19 @@ void move_briques(obj_t *obj)
 
 void init_briques(obj_t *obj)
 {
-    /* COMPILER_STEERED: scoped pointer copy and coordinate sum order. */
-    u8 i;
-    s16 level_index;
+    /* COMPILER_STEERED: declaration order; inherited scoped pointer copy retained. */
     s16 x;
+    s16 level_index;
+    u8 brick_index;
     s16 y;
     u8 kind;
+    u8 i;
     s16 min_x;
-    s16 max_x;
     s16 min_y;
+    obj_t *brick;
+    s16 max_x;
     s16 max_y;
     s16 count;
-    obj_t *brick;
-    u8 brick_index;
-
     max_x = -320;
     max_y = -200;
     min_x = 320;
@@ -813,23 +829,24 @@ void reset_briques(void)
 
 void casse_brique_init(obj_t *obj)
 {
+    /* COMPILER_STEERED: independent setup stores, with all calls/branches retained. */
     ray_mode = 5;
     exit_casse_brique();
     enter_casse_brique2();
     if (GameModeVideo == 0) xmap = 0;
     else xmap = -5;
     scroll_end_x = xmap;
-    scroll_start_x = xmap;
-    CBoffsetY = 0;
-    CBoffsetX = CasseBriqueOffsetX[NoCB];
-    YOFFSETCB = 0;
-    XOFFSETRAY = 56;
-    LIMITE_GAUCHE = 56 - ray.offset_bx - 8;
-    ymap = 24;
-    scroll_end_y = 24;
-    scroll_start_y = 24;
-    LIMITE_DROITE = 264 - ray.offset_bx - 8;
     XOFFSETCBLEFT = 32;
+    YOFFSETCB = 0;
+    LIMITE_DROITE = 264 - ray.offset_bx - 8;
+    CBoffsetX = CasseBriqueOffsetX[NoCB];
+    scroll_start_x = xmap;
+    scroll_end_y = 24;
+    XOFFSETRAY = 56;
+    ymap = 24;
+    scroll_start_y = 24;
+    LIMITE_GAUCHE = 56 - ray.offset_bx - 8;
+    CBoffsetY = 0;
     XOFFSETCBRIGHT = 32;
     if (GameModeVideo == 0) xmap += 8;
     else {

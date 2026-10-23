@@ -197,20 +197,29 @@ void Init_Bande(u8 fnd, u16 width, u16 height, u8* source_buf, u8* dest_buf) {
 }
 
 void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2) {
-    s16 v68;
-    u16 i;
-    u16 sprite_index;
-    u16 size;
-    u8 type_scroll;
-    s16 draw_width;
+    /* COMPILER_STEERED: shared locals have disjoint branch/iteration lifetimes. */
+    sprite_t* scroll_diff_sprite;
     s16 excess_height;
-
+    s16 v68;
+    s16 source_x;
+    u8 type_scroll;
+    s16 v36;
+    obj_t* rideau;
+    u8* dest_buffer_pos;
+    s16 v34;
+    s16 draw_width;
+    u16 sprite_index;
+    u8* source_buffer_pos;
+    u16 i;
+    u16 size;
+    s16 draw_height;
     type_scroll = Type_Scroll[Num_Fond + 10 * (num_world - 1)];
     if (type_scroll == 0 || type_scroll == 2) {
         draw_width = w2 - w1;
         excess_height = plan_height - SCREEN_HEIGHT;
         if (num_world == world_4_image && (num_level == 4 || num_level == 11)) {
-            obj_t* rideau = level.objects + rideau_obj_id;
+
+            rideau = level.objects + rideau_obj_id;
             if (rideau->is_active) {
                 if (h1 < rideau->y - 110 - (SCREEN_HEIGHT - h2)) {
                     h1 = rideau->y - 110 - (SCREEN_HEIGHT - h2);
@@ -234,11 +243,16 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
             v68 = excess_height + (SCREEN_HEIGHT - h2);
         }
         for (i = 0; i < NbBande; ++i) {
-            u8* source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 + w1;
-            u8* dest_buffer_pos = Bande[i].draw_buffer_pos - SCREEN_WIDTH * v68 + w1;
-            s16 draw_height = Bande[i].length;
-            s16 v34 = Bande[i].offset - v68;
-            s16 v36 = Bande[i].length + v34;
+
+            source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 + w1;
+
+            dest_buffer_pos = Bande[i].draw_buffer_pos - SCREEN_WIDTH * v68 + w1;
+
+            draw_height = Bande[i].length;
+
+            v34 = Bande[i].offset - v68;
+
+            v36 = Bande[i].length + v34;
             if (v34 < 0 && v36 > 0 && Bande[i].length != 0) {
                 draw_height = v36;
                 dest_buffer_pos += SCREEN_WIDTH * -(s32)v34;
@@ -264,8 +278,6 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
         plan_width /= 2;
         for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
             if (Bande[Sprite[i].bande_index].length != 0) {
-                s16 source_x;
-                sprite_t* scroll_diff_sprite;
 
                 source_x = Sprite[i].x - Bande[Sprite[i].bande_index].field_6;
                 if (source_x > SCREEN_WIDTH) {
@@ -291,24 +303,30 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
     } else {
         /* Vertical bands: DOS 1:680ba..1:68324. */
         for (i = 0; i < NbBande; ++i) {
-            u8 *source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 * plan_width + h1 * plan_width;
-            u8 *dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
-            s16 draw_width = Bande[i].length;
-            s16 draw_height = plan_height - Bande[i].field_6 - h1;
-            s16 band_start = Bande[i].offset;
-            s16 band_end = band_start + draw_width;
 
-            if (band_end > w1 && band_start < w2 && draw_width != 0) {
-                if (band_start < w1 && band_end > w2) {
+            source_buffer_pos = Bande[i].source_buffer_pos + Bande[i].field_6 * plan_width + h1 * plan_width;
+
+            dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
+
+    draw_width = Bande[i].length;
+
+            draw_height = plan_height - Bande[i].field_6 - h1;
+
+            v34 = Bande[i].offset;
+
+            v36 = v34 + draw_width;
+
+            if (v36 > w1 && v34 < w2 && draw_width != 0) {
+                if (v34 < w1 && v36 > w2) {
                     draw_width = w2 - w1;
-                    source_buffer_pos += w1 - band_start;
-                    dest_buffer_pos += w1 - band_start;
-                } else if (band_start < w1) {
-                    source_buffer_pos += w1 - band_start;
-                    dest_buffer_pos += w1 - band_start;
-                    draw_width -= w1 - band_start;
-                } else if (band_end > w2) {
-                    draw_width -= band_end - w2;
+                    source_buffer_pos += w1 - v34;
+                    dest_buffer_pos += w1 - v34;
+                } else if (v34 < w1) {
+                    source_buffer_pos += w1 - v34;
+                    dest_buffer_pos += w1 - v34;
+                    draw_width -= w1 - v34;
+                } else if (v36 > w2) {
+                    draw_width -= v36 - w2;
                 }
                 if (draw_height > h2 - h1)
                     draw_height = h2 - h1;
@@ -323,9 +341,9 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
                     dest_buffer_pos = Bande[i].draw_buffer_pos + SCREEN_WIDTH * h1;
                     draw_height = h2 - h1;
                 }
-                if (band_start < w1) {
-                    source_buffer_pos += w1 - band_start;
-                    dest_buffer_pos += w1 - band_start;
+                if (v34 < w1) {
+                    source_buffer_pos += w1 - v34;
+                    dest_buffer_pos += w1 - v34;
                 }
                 if (draw_height > h2 - h1)
                     draw_height = h2 - h1;
@@ -335,22 +353,23 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
         }
         for (i = 0, sprite_index = 1; i < NbSprite; ++i, ++sprite_index) {
             if (Bande[Sprite[i].bande_index].length != 0) {
-                s16 source_y = Sprite[i].y - Bande[Sprite[i].bande_index].field_6;
-                sprite_t* scroll_diff_sprite;
-                if (source_y > SCREEN_HEIGHT) {
-                    source_y -= plan_height;
+
+                source_x = Sprite[i].y - Bande[Sprite[i].bande_index].field_6;
+
+                if (source_x > SCREEN_HEIGHT) {
+                    source_x -= plan_height;
                 }
                 scroll_diff_sprite = ScrollDiffSprites->sprites + sprite_index;
-                if (source_y + scroll_diff_sprite->outer_height > h1) {
+                if (source_x + scroll_diff_sprite->outer_height > h1) {
                     size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
-                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,
+                    DrawSpriteDiffNormal(Sprite[i].x, source_x, size, Scroll_Masque[i + 1], draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
                 // Draw a second sprite further to the right if >1 fit on screen
-                source_y += plan_height;
-                if (source_y < h2) {
+                source_x += plan_height;
+                if (source_x < h2) {
                     size = (u16)(scroll_diff_sprite->outer_width + (scroll_diff_sprite->outer_height << 8));
-                    DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1],
+                    DrawSpriteDiffNormal(Sprite[i].x, source_x, size, Scroll_Masque[i + 1],
                                          draw_buffer,
                                          ScrollDiffSprites->img_buffer + scroll_diff_sprite->offset_in_atlas);
                 }
@@ -360,8 +379,9 @@ void Display_Back_Screen(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2
 }
 
 void Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16 h1, u16 w2, u16 h2) {
+    /* COMPILER_STEERED: wider size storage retains the explicit u16 assignments. */
     u16 i;
-    u16 size;
+    u32 size;
     u16 sprite_index;
     s16 y_scroll;
     u8 type_scroll;
@@ -547,6 +567,8 @@ void swap(s32 ind_1, s32 ind_2)
 
 void set_rubis_list(void)
 {
+    /* COMPILER_STEERED: exact-type object-kind snapshot (local name INVENTED). */
+    u16 object_type;
     s32 rubis_ind;
     s32 i;
     obj_t *cur_obj;
@@ -561,12 +583,13 @@ void set_rubis_list(void)
     cur_obj = &level.objects[i];
     nb_objs = level.nb_objects;
     while (i < nb_objs) {
-        if (cur_obj->type == TYPE_RUBIS) {
+        object_type = cur_obj->type;
+        if (object_type == TYPE_RUBIS) {
             ecroule_rubis_list[rubis_ind] = cur_obj->id;
             rubis_ind++;
-        } else if (cur_obj->type == TYPE_SKO_PINCE) {
+        } else if (object_type == TYPE_SKO_PINCE) {
             sko_pince_obj_id = i;
-        } else if (cur_obj->type == TYPE_LAVE) {
+        } else if (object_type == TYPE_LAVE) {
             sko_lave_obj[sko_nb_lave] = i;
             sko_nb_lave++;
         }
@@ -674,6 +697,7 @@ void allocate_8_petits_rayons(s16 x, s16 y)
 
 void do_sko_rayon(void)
 {
+    /* COMPILER_STEERED: independent Y/X difference assignment order (also PS1). */
     obj_t *ecroule_obj;
     s16 diff_x;
     s16 diff_y;
@@ -684,8 +708,8 @@ void do_sko_rayon(void)
         D_801E4E10 = 3;
         sko_rayon_on--;
         ecroule_obj = &level.objects[sko_ecroule_plat];
-        diff_x = sko_final_x - sko_rayon_x;
         diff_y = sko_final_y - sko_rayon_y;
+        diff_x = sko_final_x - sko_rayon_x;
         dist = ABS(diff_x) + ABS(diff_y);
         if (dist < 8) {
             set_main_etat(ecroule_obj, 2);
@@ -709,6 +733,7 @@ void do_sko_rayon(void)
 
 void do_sko_rayon2(void)
 {
+    /* COMPILER_STEERED: conditional absolute value preserves signed-word promotion. */
     s16 horl_zero;
     s16 diff_x;
     s16 diff_y;
@@ -729,7 +754,7 @@ void do_sko_rayon2(void)
         }
         diff_y = sko_final_y - sko_rayon_y;
         diff_x = sko_final_x - sko_rayon_x;
-        dist = ABS(diff_x) + ABS(diff_y);
+        dist = ABS(diff_x) + (diff_y >= 0 ? diff_y : -diff_y);
         if (dist > 0) {
             diff_x = ashl16(diff_x, D_801E4E10) / dist;
             diff_y = ashl16(diff_y, D_801E4E10) / dist;

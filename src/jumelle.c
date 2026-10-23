@@ -88,10 +88,15 @@ void CalcObjPosInWorldMap(obj_t* obj);
 void MoveRayInWorldMap(void);
 
 void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 circle2_offset, u8* effet_buf, u8* draw_buf) {
-    s32 v53 = jumelle_y - 64;
-    s32 v55 = SCREEN_WIDTH * JumelleYMin + JumelleXMin;
-    s32 v56 = jumelle_x - 112;
-    s32 v7 = jumelle_x - plot_x - circle2_offset;
+    /* COMPILER_STEERED: local ownership and pointer increment sequencing. */
+    s32 v53;
+    s32 v55;
+    s32 v56;
+    s32 v7;
+v53 = jumelle_y - 64;
+    v7 = jumelle_x - plot_x - circle2_offset;
+    v55 = SCREEN_WIDTH * JumelleYMin + JumelleXMin;
+    v56 = jumelle_x - 112;
     if (plot_x > circle2_offset) {
         // Draw middle part of both circles
         s32 v58 = 2 * (plot_x + circle2_offset);
@@ -113,8 +118,10 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                     s32 *zoom = JumelleZoomDef + ((448 * (v9 - v53)) / 2 + (v7 - v56));
                     s32 count = v58;
                     do {
-                        *v10++ = v11[*zoom++];
+                        *v10 = v11[*zoom];
                         ++v11;
+                        ++zoom;
+                        ++v10;
                     } while (--count);
                 } else {
                     copy(v11, v10, v58);
@@ -130,8 +137,10 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                     s32 *zoom = JumelleZoomDef + ((448 * (v16 - v53)) / 2 + (v7 - v56));
                     s32 count = v58;
                     do {
-                        *v10++ = v11[*zoom++];
+                        *v10 = v11[*zoom];
                         ++v11;
+                        ++zoom;
+                        ++v10;
                     } while (--count);
                 } else {
                     copy(v11, v10, v58);
@@ -180,8 +189,10 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                     s32 *zoom = JumelleZoomDef + ((448 * (v26 - v53)) / 2 + (v7 - v56));
                     s32 count = v60;
                     do {
-                        *v29++ = v30[*zoom++];
+                        *v29 = v30[*zoom];
                         ++v30;
+                        ++zoom;
+                        ++v29;
                     } while (--count);
                 } else {
                     copy(v30, v29, v60);
@@ -235,8 +246,10 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
                     s32 *zoom = JumelleZoomDef + ((448 * (v52 - v53)) / 2 + (v57 - v56));
                     s32 count = v59;
                     do {
-                        *v18++ = v24[*zoom++];
+                        *v18 = v24[*zoom];
                         ++v24;
+                        ++zoom;
+                        ++v18;
                     } while (--count);
                 } else {
                     copy(v24, v18, v59);
@@ -244,7 +257,6 @@ void plot2linejumelle(s32 jumelle_x, s32 jumelle_y, s32 plot_x, s32 plot_y, s32 
             }
         }
         }
-
 }
 
 
@@ -406,6 +418,7 @@ void ChangeDeltaPosYJumelleWithoutLimit(s32 delta_pos_y) {
  * Initializing the result before the entry clamp reproduces ESI at entry.
  * Still NEAR: the inner clamp and final update allocation differ. */
 s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
+    /* SYNTHETIC: two initialized, non-escaping local address copies of the true result. */
     bool changed = 0;
     delta_pos_x = max32(-16, min32(16, delta_pos_x));
 
@@ -426,7 +439,19 @@ s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
             }
             PositionJumelleX16 += delta_pos_x;
             JumellePosX = PositionJumelleX16 >> 4;
-            changed = 1;
+            {
+                bool result_value;
+                bool *result_address;
+                result_address = &result_value;
+                *result_address = 1;
+                {
+                    bool second_value;
+                    bool *second_address;
+                    second_address = &second_value;
+                    *second_address = result_value;
+                    changed = second_value;
+                }
+            }
         }
     }
     ChangeJumelleVariable();
@@ -437,6 +462,7 @@ s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
  * Initializing the result before the entry clamp reproduces ESI at entry.
  * Still NEAR: the inner clamp and final update allocation differ. */
 s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
+    /* SYNTHETIC: two initialized, non-escaping local address copies of the true result. */
     bool changed = 0;
     delta_pos_y = max32(-16, min32(16, delta_pos_y));
 
@@ -457,7 +483,19 @@ s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
             }
             PositionJumelleY16 += delta_pos_y;
             JumellePosY = PositionJumelleY16 >> 4;
-            changed = 1;
+            {
+                bool result_value;
+                bool *result_address;
+                result_address = &result_value;
+                *result_address = 1;
+                {
+                    bool second_value;
+                    bool *second_address;
+                    second_address = &second_value;
+                    *second_address = result_value;
+                    changed = second_value;
+                }
+            }
         }
     }
     ChangeJumelleVariable();
@@ -507,12 +545,21 @@ void ChangeDeltaZoomAmpJumelle(s32 a1) {
 }
 
 void PrepareJumelleZoom(void) {
-    s32 scale = 0x200000 / (RayonJumelle * RayonJumelle);
-    s32 margin = (3 * (64 - RayonJumelle)) >> 2;
-    s32 *left = JumelleZoomDef + 14400 + margin;
-    s32 *right = JumelleZoomDef + 14272 + 223 - margin;
-    u32 x, y;
-    u32 distance, factor, dx, dy;
+    /* COMPILER_STEERED: declaration order; initializer expressions/order retained. */
+    s32 *right;
+    u32 x;
+    s32 *left;
+    u32 y;
+    u32 distance;
+    u32 factor;
+    u32 dx;
+    u32 dy;
+    s32 margin;
+    s32 scale;
+scale = 0x200000 / (RayonJumelle * RayonJumelle);
+    margin = (3 * (64 - RayonJumelle)) >> 2;
+    left = JumelleZoomDef + 14400 + margin;
+    right = JumelleZoomDef + 14272 + 223 - margin;
     if (JumelleEffetAutorise) {
         ParamZoomChange = 0;
         memset(JumelleZoomDef, 0, 29025 * sizeof(s32));
@@ -549,13 +596,14 @@ void PrepareJumelleZoom(void) {
 
 
 void RecaleRayPosInJumelle(void) {
+    /* COMPILER_STEERED: exact s32 promotions of signed-word absolute-value inputs. */
     if (scroll_y == -1) {
         s32 v13 = ((3 * HauteurJumelle) >> 2) - ray.offset_by;
         if (v_scroll_speed != 255 || decalage_en_cours != 0) {
             s32 v14 = ray.screen_y - v13;
             v_scroll_speed = ashr16(v14, 2);
-            if (Abs(ray.speed_y) <= Abs(v_scroll_speed)) {
-                s32 v16 = max32(3, Abs(ray.speed_y));
+            if (Abs((s32)ray.speed_y) <= Abs((s32)v_scroll_speed)) {
+                s32 v16 = max32(3, Abs((s32)ray.speed_y));
                 if (v_scroll_speed <= 0) {
                     if (v_scroll_speed != 0) {
                         v_scroll_speed = max32(v_scroll_speed, -v16);
@@ -623,7 +671,7 @@ void RecaleRayPosInJumelle(void) {
             }
         }
 
-        if (Abs(dhspeed) > 4) {
+        if (Abs((s32)dhspeed) > 4) {
             dhspeed = (dhspeed > 0) ? 4 : -4;
         }
         h_scroll_speed += ashr16(dhspeed, 2);
@@ -647,10 +695,15 @@ void DisplayJumellesFondNormal(void) {
 
 
 void DoScrollInWorldMap(s16 h_speed, s16 v_speed) {
-    u8 need_scroll_xmap = 1;
-    u8 need_scroll_ymap = 1;
-    s32 delta_pos_x = 0;
-    s32 delta_pos_y = 0;
+    /* COMPILER_STEERED: declaration order; identical constant initializations. */
+    u8 need_scroll_xmap;
+    s32 delta_pos_x;
+    u8 need_scroll_ymap;
+    s32 delta_pos_y;
+    need_scroll_xmap = 1;
+    need_scroll_ymap = 1;
+    delta_pos_x = 0;
+    delta_pos_y = 0;
     if (ChangeJumelleSizeOK != 4) {
         s16 scroll_limit_x;
         s16 scroll_limit_y;
