@@ -425,6 +425,9 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   11.0 matches 0/14 functions (10.6: 9/14), so the object's code generator is 10.x. OPEN: the original front end
   (a patched 10.x with exact conversion?) or a non-literal origin. CalcTab stays NEAR (1 byte); never patch the
   constant by other means.
+- Also on the grid (2026-10-23): Watcom C 9.5a and 9.5b (ev_toolchain vendor-patch reconstruction, DOS host under
+  DOSBox-X). No patched 10.x C compiler binary was found (ev_toolchain: 10.0b = FDIV update, 10.5a C used by POV-Ray
+  but not obtained, "10.6a" = linker update, QNX 10.6 A/B = separate product stream).
 
 ## Watcom 10.6 instruction scheduler (PROVEN from the binary, build/workers/sched, 2026-10-23)
 - Runs in PostOptimize after register allocation, **inside each basic block** (blocks of <=2 IR instructions are

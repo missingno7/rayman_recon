@@ -69,3 +69,31 @@ Rayman Anniversary 1.0.1 APK (a later Android build than the text dumps; address
   also give the original definition order of initialised globals.
 - x86 code per exported function: `python tools/android.py --dis NAME` (semantic reference for Rayverse stubs and
   unnamed functions; e.g. DoEffectBloodOut starts with MakeMyRand(1); start_cd_* call playSound on Android).
+
+## Demo builds and further releases (ev_demos / ev_releases / ev_toolchain, 2026-10-23)
+Demo LE images in external/rayman_disasm/demos (VERIFIED, not executed; reports build/workers/ev_demos/REPORT.md):
+
+| build | banner | PMODE/W | runtime (libscan) | compiler evidence |
+|---|---|---|---|---|
+| rolling 1995-10-31 | RAYMAN v1.00 | 1.16 (LE) | 10.0 | mathutil set2bits (52 B, unchanged STRICT source) matches only wc100 |
+| gen4 1995-11-03 | RAYMAN v1.00 | 1.16 (LE) | 10.0 | same |
+| fanpage 1995-12-04 | RAYMAN (EU) v1.00 | 1.21 | 10.5 | wc105 == wc106 |
+| rayman 1995-12-07 | RAYMAN (EU) v1.10 | 1.21 | 10.5 | wc105 == wc106 |
+| rayman_gold 1997-09-30 | RAYMAN DESIGNER v1.01 (RAYKIT) | 1.22 | 10.6 | wc105 == wc106 |
+
+- PROVEN: the early demos were compiled by stock Watcom 10.0 (wc100 omits the intermediate `mov [eax],ecx` in set2bits).
+- PROVEN: no debug info, map, source paths or __FILE__ strings in any demo. RAYKIT keeps 17 diagnostics naming source
+  files and rayconst.h macros (MAX_ACTOBJ; NB_WORLD_MAX, NOMBRE_MAX_LANGUE, NB_MAX_CREDITS_VIGNET, TAILLE_MAX_DEMO,
+  NB_VERSIONS_MAX, ...): add_alwobj (BASIC.C), build_active_table (MOTEUR.C), init_struct_level (OBJINIT.C) - all
+  three agree with our units basic/moteur/objinit.
+- STRONG: older TU cuts (zero padding to paragraph after RET) inside current map_ngawe/skops (rolling/gen4) and frame
+  (gen4, before swapGuetteurCollZones); bonus functions regroup between rolling and gen4.
+- PROVEN: the language table's successor differs by build (December: y_ray; GOG: options_jeu_save) while the spacing
+  stays +0x410 in both; early demos +0x398. Supports a reserved-table envelope; no exact capacity follows.
+- PROVEN negative: movie cells 2:06540/06548 are zero and unreferenced in December builds too.
+- CalcTab's constant 3fbaf286bca1af28 is present in fanpage, rayman and RAYKIT (absent in rolling/gen4).
+Further executables obtained (ev_releases, VERIFIED, build/workers/ev_releases/dl): RAYMAN (FR) v1.21 428,669 B; US v1.12
+Interactive Preview 423,319 B; Designer RAYKIT v1.01 (2 pressings), RAYFAN v1.01, RAYPLUS v1.01, Edutainment demo v1.01,
+regional MAPPER.EXE. LEADS: retail v1.00 EU (Redump 58262), v1.10 EU DVD (Redump 57543), 1.20 JP/UK/DE/IT-SP-DU, 1.21 CH.
+No original source, map or symbol package was found.
+
