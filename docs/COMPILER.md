@@ -470,4 +470,8 @@ instructions, Score substitutions). Validated on the fee, effect_helper_168c8 an
   declaration-order families lower scores on 4..6 functions each, but through function-specific combinations.
 - Tool defect fixed (4bad18c): pycparser's printer could let a reversed branch's nested if capture the outer else;
   emission now braces every if/else branch and refuses bodies that do not re-read as the intended tree.
+- Broad sweep (2026-10-23): 62 NEAR functions with <= 100 differing bytes, aggressive, 400 compiles / 3 min each
+  (14,117 compiles, 2.7 h): 1 STRICT (effect_helper_63614, found independently by an agent in the same round) and 11
+  reductions. Standalone permuter yield on small residues is ~1/60 per pass; use it as a finishing aid after agent
+  work, not as a primary method.
 
