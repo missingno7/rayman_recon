@@ -256,4 +256,28 @@ s32 abs32_inline(s32 value);
 /* Additional retained original Abs sites: RAY_RESPOND_TO_NOTHING 1:5ed49 */
 /* Additional retained original Abs sites: RAY_SURF 1:609de,1:60a3d */
 /* Additional retained original Abs sites: DO_AUTO_SCROLL 1:4a0ec */
+/* ORIGINAL_INLINE, INVENTED copy_guarded (Android lookup absent).
+ * Complete identical guarded copy: effect_helper_6c7cc 1:6c853..6c866,
+ * effect_helper_6c9bc 1:6c9db..6c9ee. Neither caller was STRICT with plain C.
+ * ESI source, EDI destination, ECX byte count; EAX retains the byte count,
+ * ECX becomes zero and ESI/EDI advance. Clears DF, writes destination.
+ * EDX state/map pointers survive both sites; EBP state and EBX zero survive
+ * the second. Same physical/compiler contract as copy, plus its DOS guard.
+ * Worker proof and full-unit receipts: build/workers/co_fx/GUARDED_COPY.txt.
+ * Accepted 2026-10-23 under the AGENTS two-function gate (resolves B7's missing second proof).
+ */
+void copy_guarded(const void *source, void *destination, u32 count);
+#pragma aux copy_guarded = \
+  "cld" \
+  "mov eax,ecx" \
+  "and ecx,3" \
+  "je short guarded_copy_dwords" \
+  "rep movsb" \
+  "guarded_copy_dwords:" \
+  "mov ecx,eax" \
+  "shr ecx,2" \
+  "je short guarded_copy_end" \
+  "rep movsd" \
+  "guarded_copy_end:" \
+  parm [esi] [edi] [ecx] modify exact [eax ecx esi edi]
 #endif

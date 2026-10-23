@@ -54,7 +54,7 @@ Hard rules
   register/clobber contract (`parm/value/modify exact`) is read off at least 2 sites, and the helper is declared once
   in the shared header src/include/inline_helpers.h (never redefined per unit, no new helper pragmas in units).
   Current helpers: ashr16, ashl16, ashl32, inrange, sgn, min32, max32, fill, copy, palette_output,
-  write_movie_palette, abs32_inline, ashr32_inline (user decision 2026-10-23) (evidence: docs/COMPILER.md "Original inline helpers").
+  write_movie_palette, abs32_inline, ashr32_inline (user decision 2026-10-23), copy_guarded (evidence: docs/COMPILER.md "Original inline helpers").
 - Bind every global at its true start with its true type (one address = one symbol). wcc386 -5 loads a `short`
   as `mov r,[x-2]; sar r,16` (fixup field -2) by itself; never declare a wider type or a shifted alias to get bytes.
 - Zero regression: `python tools/verify.py` must stay at 0 regressions; `python -m unittest discover -s tests` must
