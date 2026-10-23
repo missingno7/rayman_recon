@@ -2064,7 +2064,7 @@
      "quality": "COMPILER_STEERED"
     },
     "DO_INTERACT_PLAT": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2160,7 +2160,7 @@
      ]
     },
     "calc_esquive_poing": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -2506,7 +2506,7 @@
      ]
     },
     "DO_DARK_SORT_COMMAND": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -5516,7 +5516,7 @@
      ]
     },
     "CalculVitesseJumelle": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

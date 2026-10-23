@@ -17,7 +17,7 @@
 typedef int bool;
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
-#define Abs(x) ((x) >= 0 ? (x) : -(x))
+#define Abs(x) abs32_inline(x)
 
 extern u8 ChangeJumelleSizeOK;
 extern s32 HauteurJumelle;

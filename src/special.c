@@ -1,3 +1,4 @@
+#include "inline_helpers.h"
 #include "type_island_abi.h"
 #include "map.h"
 /*
@@ -17,7 +18,7 @@ typedef s32 bool;
 #define true 1
 #define false 0
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
-#define Abs(value) abs(value)
+#define Abs(value) abs32_inline(value)
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 
 #define TYPE_WIZARD1 5

@@ -79,7 +79,7 @@ typedef struct flocon_t {
     u8 field_7;
 
 } flocon_t;
-#define Abs(x) abs(x)
+#define Abs(x) abs32_inline(x)
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define COUNT(x) (sizeof(x)/sizeof((x)[0]))

@@ -25,7 +25,7 @@ s16 on_block_chdir(obj_t *obj, s16 center_x, s16 center_y);
 s16 myRand(s16 max);
 
 #define GO_SPEED 20
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) abs32_inline(value)
 #include "inline_helpers.h"
 
 void DO_BAT_FLASH(s16 in_x, s16 in_y)

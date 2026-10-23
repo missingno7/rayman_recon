@@ -91,14 +91,14 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
   obj_2->anim_index = prev_index;
   obj_2->anim_frame = prev_frame;
   new_spd_x = (x_offs + obj_2_x) - obj_1->x;
-  while (abs(new_spd_x) >= 16)
+  while (abs32_inline(new_spd_x) >= 16)
   {
     obj_1->x += sgn(new_spd_x) * 16;
     new_spd_x += sgn(new_spd_x) * (-16);
   }
 
   new_spd_y = (y_offs + obj_2_y) - obj_1->y;
-  while (abs(new_spd_y) >= 16)
+  while (abs32_inline(new_spd_y) >= 16)
   {
     obj_1->y += sgn(new_spd_y) * 16;
     new_spd_y += sgn(new_spd_y) * (-16);
