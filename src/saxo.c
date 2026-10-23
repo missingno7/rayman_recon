@@ -11,7 +11,7 @@
 typedef u8 bool;
 #define true 1
 #define false 0
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 
 typedef struct sax_attack_entry_t {
     u8 next_note;

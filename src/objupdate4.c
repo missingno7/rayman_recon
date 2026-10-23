@@ -6,7 +6,7 @@
 #define PC
 typedef s32 ObjType;
 typedef unsigned char bool;
-#define Abs(x) (((s32)(x)) < 0 ? -((s32)(x)) : ((s32)(x)))
+#define Abs(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #define TYPE_INST_PLAT 25
 #define TYPE_CRUMBLE_PLAT 26
 #define TYPE_BOING_PLAT 27

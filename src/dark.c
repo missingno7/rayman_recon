@@ -8,6 +8,7 @@
 #include "inline_helpers.h"
 extern obj_type_flags_t flags[262];
 #include <stdlib.h>
+#define ABS_B(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 
 #define TYPE_DARK_SORT 215
 #define TYPE_VITRAIL 247
@@ -205,12 +206,12 @@ void DARK_phase1(obj_t *mr_drk_obj)
             diff_x = ((s16)ray.x + ray.offset_bx) - (corde_x + crd_drk_obj->offset_bx);
             diff_y = ((s16)ray.y + ray.offset_by) - (corde_y_bas + crd_drk_obj->offset_by);
             dist = diff_x * diff_x + diff_y * diff_y;
-            unk_1 = abs(diff_x) < 40 || dist < 3000;
+            unk_1 = ABS_B(diff_x) < 40 || dist < 3000;
             switch (mr_drk_obj->sub_etat) {
             case 26:
                 if (unk_1 || (ray.main_etat == 2 && ray.sub_etat == 0) ||
                     ((ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) &&
-                    abs(diff_y) < 30 && dist < 3000))
+                    ABS_B(diff_y) < 30 && dist < 3000))
                     set_main_and_sub_etat(mr_drk_obj, 0, 27);
                 else if (crd_drk_obj->iframes_timer < 30 - 1) {
                     crd_drk_obj->y = corde_y_bas - oscille[crd_drk_obj->iframes_timer];
@@ -476,7 +477,7 @@ void DO_DARK_SORT_COMMAND(obj_t *ds_obj)
                 (ds_obj->y + ds_obj->offset_by);
         }
 
-        dist = abs(diff_x) + abs(diff_y);
+        dist = ABS_B(diff_x) + ABS_B(diff_y);
         if (dist > 0) {
             diff_x = ashl16(diff_x, 4) / dist;
             diff_y = ashl16(diff_y, 4) / dist;

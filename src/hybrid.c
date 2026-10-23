@@ -5,11 +5,12 @@
 #include "inline_helpers.h"
 #include <string.h>
 #include <stdlib.h>
+#define ABS_B(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #ifndef FLG
 #define FLG(x) (1 << x)
 #endif
 #ifndef ABS
-#define ABS(x) (x >= 0 ? (x) : -(x))
+#define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #endif
 #define GO_LEFT 0
 #define GO_NOP 30
@@ -246,7 +247,7 @@ void doMOSAMScommand(obj_t *obj)
         bossSpeedFactor =
             (((bossXToReach - obj->x) << 18) / 55) / obj->eta[obj->main_etat][obj->sub_etat].speed_x_right
         ;
-        bossSpeedFactor = labs(bossSpeedFactor);
+        bossSpeedFactor = ABS_B(bossSpeedFactor);
         bossReachingAccuracyX = -1; /* not sure if best represented as -1 or 0xff */
         bossReachingTimer = 1;
         obj->gravity_value_1 = 0;

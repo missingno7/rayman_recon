@@ -40,7 +40,7 @@ extern finbosslevel_t finBosslevel;
 #define TYPE_ECLAIR 121
 #define TYPE_ETINC 135
 #define TYPE_STONEDOG2 122
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 extern u8 FinAnim;
 extern u8 Phase;

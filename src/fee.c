@@ -10,7 +10,7 @@
 
 #define TYPE_238_POING_FEE 238
 #define SCREEN_HEIGHT 200
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define true 1
 #define false 0
 

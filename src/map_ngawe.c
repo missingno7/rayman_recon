@@ -4,7 +4,7 @@
 #include "map.h"
 #include "lowlevel.h"
 #include "inline_helpers.h"
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 
 typedef struct vec2b_t {
     u8 x;

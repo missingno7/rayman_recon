@@ -11,7 +11,7 @@
 #define SCREEN_HEIGHT 200
 #define true 1
 #define false 0
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define MIN_2(x, y) if (x > y) x = y;
 #define MAX_2(x, y) if (x < y) x = y;
 

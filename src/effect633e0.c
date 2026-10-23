@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #include "rtypes.h"
 
 typedef struct effect_state {

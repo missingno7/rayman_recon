@@ -8,6 +8,7 @@
 #include "inline_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
+#define ABS_B(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 extern s32 map_time;
 extern s16 scroll_start_y, scroll_end_y, num_level, sbar_obj_id;
 extern u8 nb_max_collis;
@@ -18,7 +19,7 @@ typedef struct cb_collision_t {
 extern cb_collision_t CBCollis[1];
 extern char *language_txt[];
 #ifndef ABS
-#define ABS(x) (x >= 0 ? (x) : -(x))
+#define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #endif
 
 extern u8 CasseBriqueON;
@@ -552,10 +553,10 @@ u8 collision_briques(obj_t *obj)
         brick = level.objects + CasseBrique[i].object_index;
         if (brick->param != 0 && i != LastTouched) {
             dx = x - (s16)((s16)brick->x - xmap + brick->offset_bx + 8);
-            abs_x = (s16)abs(dx);
+            abs_x = (s16)ABS_B(dx);
             if (abs_x <= 21) {
                 dy = y - (s16)((s16)brick->y - ymap + brick->offset_by);
-                abs_y = (s16)abs(dy);
+                abs_y = (s16)ABS_B(dy);
                 if (abs_x <= 21 && dy * dy + dx * dx <= dist2) {
                     LastTouched = (u8)i;
                     switch (brick->param) {

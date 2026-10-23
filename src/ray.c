@@ -22,7 +22,7 @@
 #define MIN_3(x, y) if (y < x) x = y;
 #endif
 #ifndef ABS
-#define ABS(x) (x >= 0 ? (x) : -(x))
+#define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #endif
 
 #define BLOCK_FLAG_4 4
@@ -279,7 +279,7 @@ void skipToLabel(obj_t* obj, u8 label, u8 skip_label_cmd);
 #define get_eta(o) (&((o)->eta[(o)->main_etat][(o)->sub_etat]))
 #define flags1_0x10_move_x 0x1000
 #define flags1_0x20_move_y 0x2000
-#define Abs(x) ((s32)(x)>=0?(s32)(x):-(s32)(x))
+#define Abs(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 
 void calc_bhand_typ(void);
 void rayMayLandOnAnObject(u8* param_1, s16 obj_id);

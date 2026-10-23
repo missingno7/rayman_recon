@@ -20,7 +20,7 @@
 #define TYPE_STONECHIP 79
 #define TYPE_PI_BOUM 110
 #define ANIMMODE_RESET 2
-#define ABS(v) ((v) >= 0 ? (v) : -(v))
+#define ABS(v) ((s32)(v) >= 0 ? (s32)(v) : -(s32)(v))
 
 extern obj_t ray;
 extern level_t level;

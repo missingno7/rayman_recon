@@ -16,7 +16,7 @@
 #define false 0
 #endif
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
-#define Abs(value) ((s32)(value) < 0 ? -(s32)(value) : (s32)(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200

@@ -30,7 +30,7 @@
 #define MIN_3(x, y) if (y < x) x = y;
 #endif
 #ifndef ABS
-#define ABS(x) (x >= 0 ? (x) : -(x))
+#define ABS(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 #endif
 #ifndef SGN
 #define SGN(x) (x >= 0 ? (x > 0 ? 1 : 0) : -1)

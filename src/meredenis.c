@@ -25,7 +25,7 @@
 #define GO_LEFT 0
 #define GO_RIGHT 1
 #define GO_WAIT 2
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 
 /* DOS stores the TYPE_203 weapon index at 2:54d90 (mereDenis_weapon_id) and the TYPE_112 washing-machine index
  * at 2:54d8c (machine_obj_id); Rayverse had these two names swapped. */

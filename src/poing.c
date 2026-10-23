@@ -46,7 +46,7 @@ void switch_off_fist(void);
 void DO_POING(obj_t *obj);
 void allocatePoingBoum(void);
 
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define get_eta(obj) (&(obj)->eta[(obj)->main_etat][(obj)->sub_etat])
 #define false 0
 #define true 1

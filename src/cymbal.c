@@ -8,8 +8,8 @@
 #define TYPE_RAYMAN 23
 #define TYPE_CYMBAL1 168
 #define TYPE_CYMBAL2 169
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
-#define ABS(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
+#define ABS(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 #define true 1
 
 extern obj_t ray;

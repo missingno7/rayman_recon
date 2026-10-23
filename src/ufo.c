@@ -18,7 +18,7 @@ void PlaySnd(s16 sound, s16 obj_id);
 s16 test_block_chdir(obj_t *obj, s16 *out_index, s16 off_x, s16 off_y);
 
 #define TYPE_INDICATOR 0xA3
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
 
 s16 test_block_chdir(obj_t *obj, s16 *out_unk, s16 off_x, s16 off_y)
 {
