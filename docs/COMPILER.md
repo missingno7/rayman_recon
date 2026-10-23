@@ -458,3 +458,16 @@ harness; refuses when the observed object differs from a normal build) and print
 mechanism with the IR instruction involved. `python tools/cgtrace.py SRC.c [--profile P] [--func F] --out DIR` writes
 the raw per-function trace (IR per phase, home and conflict sorts, colour decisions, rover requests with served
 instructions, Score substitutions). Validated on the fee, effect_helper_168c8 and INIT_OPTIONS_CHOICE histories.
+
+## Source permutation (pilot 2026-10-23, build/pilot, build/workers/pilot_mine)
+- Three arms on 26 NEAR functions: PS1 seeding 0/16 STRICT; conservative permuter 0/26; aggressive permuter 1/26
+  (ufo DO_MOVING_WITH_INDICATOR_COMMAND). The hit is repeatable: 4/4 seeds, 138..338 compiles, <= 90 s. Solvable
+  functions fall fast, so short broad runs (a few minutes per function) beat long ones; conservative mode is retired.
+- Coupled changes are real: 2 of 6 classified winning cores need mutations that are each harmful alone (ufo:
+  declaration swap + negation temporary, 2 -> 363 -> 0; inter_box: assignment order + same-width snapshot). When
+  testing source changes by hand, try promising pairs, not only single edits.
+- No transferable lever is PROVEN yet (>= 3 independent functions): predicate/branch, temporary, address-copy and
+  declaration-order families lower scores on 4..6 functions each, but through function-specific combinations.
+- Tool defect fixed (4bad18c): pycparser's printer could let a reversed branch's nested if capture the outer else;
+  emission now braces every if/else branch and refuses bodies that do not re-read as the intended tree.
+

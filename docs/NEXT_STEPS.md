@@ -15,7 +15,8 @@ verifier reports STRICT; mark compiler-steered or synthetic source with `quality
    and differ mainly in Watcom code shape (strong evidence, not a certified equivalence). An agent restructures one coherent region (a unit or a jump-table owner and
    its neighbour) until it is close or STRICT; a bounded permuter run (tools/permute.py) finishes the last bytes.
    Jump-table owners (docs/BLOCKERS.md B1) come first because each also unlocks its preceding function.
-3. **Small residues with the permuter** (<= ~20 differing bytes, ~80 functions, ~30 KB): bounded aggressive runs;
+3. **Small residues with the permuter** (aggressive mode only, ~3 minutes/400 compiles per function - solvable
+   functions fall within ~90 s; docs/COMPILER.md "Source permutation") for <= ~20 differing bytes (~80 functions, ~30 KB);
    minimise every hit by ablation (keep only the necessary mutations) before integration. Use explain.py on hits and
    large score drops only.
 4. **Whole objects.** Units with one or two NEAR functions left (dosmem, action, blood, bat, map, neige, map_ngawe,
