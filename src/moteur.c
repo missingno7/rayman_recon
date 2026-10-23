@@ -13,7 +13,10 @@ typedef struct pix_gerbe_item_t {
     u8 unk_1;
 } pix_gerbe_item_t;
 typedef struct pix_gerbe_t {
-    pix_gerbe_item_t items[64];
+    union {
+        pix_gerbe_item_t items[64];
+        s16 words[320]; /* DOS word-clear view of the same storage. */
+    };
     s16 is_active;
 } pix_gerbe_t;
 typedef struct obj_procs_t {
@@ -1095,6 +1098,7 @@ void allocateLandingSmoke(obj_t* in_obj) {
 }
 
 s32 instantSpeed(s16 speed) {
+    s32 speed_wide;
     s32 spd_shr;
     s32 spd_abs_max;
     s32 product;
@@ -1103,21 +1107,22 @@ s32 instantSpeed(s16 speed) {
     s32 shifted_remainder;
     s32 shift_amount;
 
+    speed_wide = speed;
     spd_shr = ashr16(speed, 4);
-    spd_abs_max = Abs(speed) & 0xF;
+    spd_abs_max = (speed_wide < 0 ? -speed_wide : speed_wide) & 0xF;
     if (spd_abs_max != 0) {
         shift_amount = 4;
         product = map_time * spd_abs_max;
-        remainder = product - spd_abs_max;
         if (product != 0)
             shifted_product = product >> shift_amount;
         else
             shifted_product = -((-product) >> shift_amount);
+        remainder = product - spd_abs_max;
         if (remainder != 0)
             shifted_remainder = remainder >> shift_amount;
         else
             shifted_remainder = -((-remainder) >> shift_amount);
-        spd_shr += sgn(speed) * (shifted_product - shifted_remainder);
+        spd_shr += sgn(speed_wide) * (shifted_product - shifted_remainder);
     }
     return spd_shr;
 }
@@ -1323,10 +1328,8 @@ void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
                         dont_reinit_linked_objects = 0;
                         {
                             s16 id;
-                            u16 type;
-                            type = ot;
                             id = obj->id;
-                            if (type != TYPE_10_FISH) {
+                            if (ot != TYPE_10_FISH) {
                                 do {
                                     obj_t *cur_obj;
                                     cur_obj = level.objects + id;
@@ -1674,29 +1677,23 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
     u8 anim_speed;
     s32 mul_45;
     s32 mul_30;
-    u8 div_45;
-    u8 div_30;
     u16 old_type;
 
     /* 2CBC4 801513C4 -O2 -msoft-float */
 
     mul_45 = 5;
     mul_30 = 3;
-    div_45 = 1;
-    div_30 = 1;
 
-    if (obj->main_etat == 2) {
-        if (obj->sub_etat == 1) {
-            DO_STONE_EXPLOSION(obj, -1);
-            return;
-        }
-        if (obj->sub_etat == 0) {
-            old_type = (u16)obj->type;
-            obj->type = TYPE_STONEBOMB2;
-            DO_STONEBOMB_REBOND(obj);
-            obj->type = old_type;
-            return;
-        }
+    if (obj->main_etat == 2 && obj->sub_etat == 1) {
+        DO_STONE_EXPLOSION(obj, -1);
+        return;
+    }
+    if (obj->main_etat == 2 && obj->sub_etat == 0) {
+        old_type = (u16)obj->type;
+        obj->type = TYPE_STONEBOMB2;
+        DO_STONEBOMB_REBOND(obj);
+        obj->type = old_type;
+        return;
     }
 
     if (obj->speed_y >= 0) {
@@ -1707,20 +1704,25 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             btyp = obj->btypes[0];
 
         switch (btyp) {
-            case BTYP_NONE:
+            case BTYP_SOLID_PASSTHROUGH:
+            case BTYP_SOLID:
             case BTYP_SLIPPERY:
+            case 8:
+            case 12:
+            case 24:
+            case 25:
                 break;
             case BTYP_SOLID_RIGHT_45:
             case BTYP_SLIPPERY_RIGHT_45:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x -= mul_45 * obj->speed_y / div_45;
+                obj->speed_x -= mul_45 * obj->speed_y;
                 break;
             case BTYP_SOLID_LEFT_45:
             case BTYP_SLIPPERY_LEFT_45:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x += mul_45 * obj->speed_y / div_45;
+                obj->speed_x += mul_45 * obj->speed_y;
                 break;
             case BTYP_SOLID_RIGHT1_30:
             case BTYP_SOLID_RIGHT2_30:
@@ -1728,7 +1730,7 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             case BTYP_SLIPPERY_RIGHT2_30:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x -= mul_30 * obj->speed_y / div_30;
+                obj->speed_x -= mul_30 * obj->speed_y;
                 break;
             case BTYP_SOLID_LEFT1_30:
             case BTYP_SOLID_LEFT2_30:
@@ -1736,7 +1738,7 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             case BTYP_SLIPPERY_LEFT2_30:
                 if (obj->speed_y == 0)
                     obj->speed_y++;
-                obj->speed_x += mul_30 * obj->speed_y / div_30;
+                obj->speed_x += mul_30 * obj->speed_y;
                 break;
             case BTYP_RESSORT:
                 if (obj->speed_y == 0)
@@ -1744,7 +1746,7 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
                 break;
         }
         if (a3 > 0) {
-            if (obj->speed_y >= 2) {
+            if (obj->speed_y > 1) {
                 obj->speed_y = a3 - obj->speed_y;
                 if (pesanteur)
                     obj->speed_y++;
@@ -1762,7 +1764,7 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
 
             recale_position(obj);
             calc_btyp(obj);
-        } else if ((block_flags[obj->btypes[0]].raw & 1) && prof_in_bloc(obj) >= 4 && obj->speed_y < 3) {
+        } else if ((block_flags[obj->btypes[0]].raw & 1) && prof_in_bloc(obj) >= 4 && obj->speed_y <= 2) {
             if (obj->speed_y == 0)
                 obj->speed_y = 1;
         }
@@ -1770,8 +1772,8 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             recale_position(obj);
     }
     obj->gravity_value_1 = 0;
-    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed >> 4;
-    if (!(anim_speed == 10 || anim_speed == 11))
+    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
+    if (!((anim_speed & 0xf0) == 0xa0 || (anim_speed & 0xf0) == 0xb0))
         obj->gravity_value_2 = 0;
 }
 
@@ -1781,10 +1783,10 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
     u8 under;
     u8 btyp;
     u8 anim_speed;
-    s16 accel_x;
-    s16 speed_x_bnd;
+    s32 accel_x;
+    s32 speed_x_bnd;
     s16 mul_45;
-    s16 mul_30;
+    s32 mul_30;
     s16 div_30;
     u16 obj_type;
 
@@ -1976,8 +1978,8 @@ void stoneDogAtter(obj_t *obj)
 void stoneDogBounces(obj_t* obj) {
     s32 x;
     s32 y;
-    s32 block_l;
-    s32 block_r;
+    s16 block_l;
+    s16 block_r;
 
     /* 2D7D0 80151FD0 -O2 -msoft-float */
     x = obj->x + obj->offset_bx;
@@ -2385,17 +2387,19 @@ void test_fall_in_water(obj_t* obj) {
 }
 
 void MOVE_OBJECT(obj_t* obj) {
+    s32 type;
+    type = obj->type;
     if (obj->speed_x != 0 || obj->speed_y != 0) {
     s32 need_set_flag_0x100;
 
-        if ((flags[obj->type].raw & flags2_0x80_increase_speed_x) && obj->config == 1 && horloge[20] == 0) {
+        if ((flags[type].raw & flags2_0x80_increase_speed_x) && obj->config == 1 && horloge[20] == 0) {
             obj->speed_x = obj->speed_x <= 0 ? obj->speed_x + 1 : obj->speed_x - 1;
             if (obj->speed_x == 0) {
                 obj->config = 0;
             }
         }
 
-        if (obj->type == TYPE_94_POING) {
+        if (type == TYPE_94_POING) {
             poing.y_16 += ashl16(obj->speed_y, 4);
             obj->y = poing.y_16 >> 4;
             obj->x += obj->speed_x;
@@ -2407,19 +2411,19 @@ void MOVE_OBJECT(obj_t* obj) {
             dx = 0;
             dy = 0;
 
-            if (flags[obj->type].raw & flags1_0x20_move_y) {
+            if (flags[type].raw & flags1_0x20_move_y) {
                 dy = instantSpeed(obj->speed_y);
             } else {
                 dy = obj->speed_y;
             }
 
-            if (flags[obj->type].raw & flags1_0x10_move_x) {
+            if (flags[type].raw & flags1_0x10_move_x) {
                 dx = instantSpeed(obj->speed_x);
             } else {
                 dx = obj->speed_x;
             }
 
-            if (flags[obj->type].raw & flags2_0x40_uturn_on_block) {
+            if (flags[type].raw & flags2_0x40_uturn_on_block) {
     s32 x1;
     s32 x2;
     s32 y;
@@ -2501,8 +2505,8 @@ void build_active_table(void)
     s16 *out_start;
     obj_t *obj;
 
-    actobj.objects[0] = -1;
     actobj.num_active_objects = 0;
+    actobj.objects[0] = -1;
     min_x = xmap;
     min_y = ymap;
     max_x = min_x + 1320;
@@ -2836,16 +2840,7 @@ void recale_ray_pos(void) {
     s16 unk_y_1;
 
         unk_y_1 = ((ray_zdc_y >> 1) - ray.offset_by) + 114; // 136 in the PS1 version
-        if ((ray.main_etat == 2 && !(ray.sub_etat == 15 && ray_Suphelico_bis)) || screen_trembling) {
-            if ((ymap != scroll_end_y && (unk_y_1 < ray.screen_y - ray.speed_y) && ray.speed_y > 0) ||
-                (ymap != scroll_start_y && (-ray.offset_hy - 16 >= ray.screen_y) && ray.speed_y < 0))
-            {
-                if (ray.speed_y <= 16)
-                    v_scroll_speed = ray.speed_y;
-                else
-                    v_scroll_speed = 0;
-            }
-        } else {
+        if (!((ray.main_etat == 2 && !(ray.sub_etat == 15 && ray_Suphelico_bis)) || screen_trembling)) {
             if (v_scroll_speed != 255 || decalage_en_cours != 0)
             {
     s16 unk_y_2;
@@ -2858,7 +2853,7 @@ void recale_ray_pos(void) {
                 if (Abs(v_scr_temp) >= spd_y_abs_1) {
     s16 spd_y_abs_2;
 
-                    spd_y_abs_1 = max32(spd_y_abs_1, 3);
+                    spd_y_abs_1 = max32(3, spd_y_abs_1);
                     spd_y_abs_2 = spd_y_abs_1;
                     if (v_scr_temp > 0) {
                         v_scroll_speed = min32(v_scroll_speed, (s16) spd_y_abs_1);
@@ -2880,6 +2875,15 @@ void recale_ray_pos(void) {
                 }
 
             }
+        } else {
+            if ((ymap != scroll_end_y && (unk_y_1 < ray.screen_y - ray.speed_y) && ray.speed_y > 0) ||
+                (ymap != scroll_start_y && (-ray.offset_hy - 16 >= ray.screen_y) && ray.speed_y < 0))
+            {
+                if (ray.speed_y <= 16)
+                    v_scroll_speed = ray.speed_y;
+                else
+                    v_scroll_speed = 0;
+            }
         }
     }
 
@@ -2890,7 +2894,7 @@ void recale_ray_pos(void) {
         unk_x_1 = (112 - ray.offset_bx) - special_ray_mov_win_x_left;
         unk_x_2 = special_ray_mov_win_x_right - (ray.offset_bx - 208);
         if (decalage_en_cours > 0 || ray.speed_x > 0) {
-    s16 unk_x_3;
+    s32 unk_x_3;
 
             unk_x_3 = ashr16(ray.screen_x - unk_x_1, 2);
             if (unk_x_3 >= dhspeed) {
@@ -2901,7 +2905,7 @@ void recale_ray_pos(void) {
                 dhspeed--;
             }
         } else if (decalage_en_cours < 0 || ray.speed_x < 0) {
-    s16 unk_x_3;
+    s32 unk_x_3;
 
             unk_x_3 = ashr16(ray.screen_x - unk_x_2, 2);
             if (unk_x_3 > dhspeed) {
@@ -2911,7 +2915,7 @@ void recale_ray_pos(void) {
             }
         } else {
             if (ray.flags.flip_x) {
-    s16 unk_x_3;
+    s32 unk_x_3;
 
                 unk_x_3 = ashr16(ray.screen_x - unk_x_1, 2);
                 if (unk_x_3 >= dhspeed) {
@@ -2922,7 +2926,7 @@ void recale_ray_pos(void) {
                     dhspeed--;
                 }
             } else {
-    s16 unk_x_3;
+    s32 unk_x_3;
 
                 unk_x_3 = ashr16(ray.screen_x - unk_x_2, 2);
                 if (unk_x_3 > dhspeed) {
@@ -3063,10 +3067,11 @@ s16 linkListHoldsAGendoor(obj_t *obj)
 void correct_gendoor_link(u8 a1) {
     s16 i;
 
- for (i = 0; i < level.nb_objects; ++i) {
-    obj_t * obj;
-
-        obj = level.objects + i;
+    obj_t *obj;
+    s16 count;
+    obj = level.objects;
+    count = level.nb_objects;
+    for (i = 0; i < count; ++i, ++obj) {
         if (obj->type == TYPE_164_GENERATING_DOOR) {
     s16 link;
     s16 last_link;
@@ -3131,21 +3136,20 @@ void suppressFromLinkList(obj_t* obj) {
 }
 
 void correct_link(void) {
-    s32 i;
+    s16 i;
 
- for (i = 0; i < level.nb_objects; ++i) {
-    obj_t * obj;
-
-        obj = level.objects + i;
-        if (link_init[i] == i) {
-            obj->link_has_gendoor = 0;
-        } else {
+    obj_t *obj;
+    obj = level.objects;
+    for (i = 0; i < level.nb_objects; ++i, ++obj) {
+        if (link_init[i] != i) {
             if ((flags[obj->type].raw & flags3_0x40_no_link) ||
                     ((flags[obj->type].raw & flags3_0x20_link_requires_gendoor) && !linkListHoldsAGendoor(obj))) {
                 suppressFromLinkList(obj);
             } else {
                 obj->link_has_gendoor = 1;
             }
+        } else {
+            obj->link_has_gendoor = 0;
         }
     }
 }
@@ -3172,8 +3176,8 @@ void INIT_RAY(u8 new_lvl) {
     s32 i;
 
     gele = 0;
-    compteur_attente = 0;
     ray_mode = (ray.main_etat == 6) ? MODE_2_RAY_ON_MS : MODE_1_RAYMAN;
+    compteur_attente = 0;
     if (RayEvts.tiny) {
         rms.hit_points = ray.hit_points;
         ray = rms;
@@ -3469,19 +3473,25 @@ void DO_AUTO_SCROLL(void) {
 
 void INIT_MOTEUR(u8 new_lvl) {
     s16 i;
+    s16 j;
+    s16 *cur_data;
+    s16 count;
     obj_t *obj;
 
     i = 0;
     obj = level.objects;
-    if (i < level.nb_objects) {
-        do {
-            ++obj;
-            ++i;
-            obj[-1].field_1C = 0;
-        } while (i < level.nb_objects);
+    count = level.nb_objects;
+    for (; i < count; i++) {
+        obj->field_1C = 0;
+        obj++;
     }
 
-    memset(pix_gerbe, 0, sizeof(pix_gerbe));
+    /* DOS 1:4a20e..4a23d: 320 words per item array. */
+    for (i = 0; i < 8; i++) {
+        pix_gerbe[i].is_active = 0;
+        cur_data = pix_gerbe[i].words;
+        for (j = 0; j < 320; j++) *cur_data++ = 0;
+    }
 
     if (!fin_continue) {
         init_flocons();
@@ -3509,12 +3519,14 @@ void INIT_MOTEUR(u8 new_lvl) {
     left_time = -2;
     INIT_HORLOGES();
     ray.id = -1;
-    actobj.objects[0] = -1;
     actobj.num_active_objects = 0;
+    actobj.objects[0] = -1;
     xmap = 0;
     ymap = 0;
 
-    if (GameModeVideo != MODE_NORMAL) {
+    if (GameModeVideo == MODE_NORMAL) {
+        set_xymapini();
+    } else {
         ymapmax = 16 * mp.height - 200;
         xmapmax = 16 * mp.width - 305;
         if (xmapmax < 0) {
@@ -3527,8 +3539,6 @@ void INIT_MOTEUR(u8 new_lvl) {
         scroll_end_x = xmapmax;
         scroll_start_y = 0;
         scroll_end_y = ymapmax;
-    } else {
-        set_xymapini();
     }
     v_scroll_speed = 0;
     h_scroll_speed = 0;
@@ -3667,60 +3677,35 @@ void INIT_MOTEUR_LEVEL(s32 a1) {
 }
 
 void restore_gendoor_link(void) {
-    obj_t * temp_v1;
-    obj_t * var_v0_2;
-    s16 var_v0_1;
-    s32 temp_a0_3;
-    s32 var_a0;
-    s16 temp_a0_1;
-    u16 temp_a0_2;
-    s16 var_a1;
-    u32 var_v1;
-    u8 temp_a1;
-    s16 test_1;
-    s32 i;
-
-    /* 34E30 80159630 -O2 -msoft-float */ //NB: nonmatching
-
-    test_1 = level.nb_objects;
- for (i = 0; i < level.nb_objects; ++i) {
-    obj_t * obj;
-
-        obj = level.objects + i;
-        if (obj->type == TYPE_164_GENERATING_DOOR)
-        {
+    obj_t *obj;
+    s16 i, count, link, prev;
+    u8 next; /* Preserve the baseline saved-link truncation. */
+    obj = level.objects;
+    i = 0;
+    count = level.nb_objects;
+    for (; i < count; i++, obj++) {
+        if (obj->type == TYPE_164_GENERATING_DOOR) {
             if (obj->flags.alive) {
-                var_a1 = obj->link;
-                do
-                {
-                    temp_a0_1 = var_a1;
-                    var_a1 = link_init[var_a1];
-                } while (var_a1 != obj->link);
-                link_init[obj->id] = var_a1;
-                link_init[temp_a0_1] = obj->id;
+                link = obj->link;
+                do {
+                    prev = link;
+                    link = link_init[link];
+                } while (link != obj->link);
+                link_init[obj->id] = link;
+                link_init[prev] = obj->id;
                 obj->link_has_gendoor = 1;
-                level.objects[temp_a0_1].link_has_gendoor = 1;
-                continue;
-            }
-            temp_a0_2 = (u16) obj->id;
-            var_a0 = temp_a0_2 << 0x10;
-            if ((s16) temp_a0_2 != save1.link_init[temp_a0_2])
-            {
-                do
-                {
-                    temp_a0_3 = var_a0 >> 0x10;
-                    temp_a1 = save1.link_init[temp_a0_3];
-                    link_init[temp_a0_3] = temp_a1;
-                    if (temp_a0_3 != temp_a1)
-                    {
-                        level.objects[temp_a0_3].link_has_gendoor = 1;
-                    }
-                    else
-                    {
-                        level.objects[temp_a0_3].link_has_gendoor = 0;
-                    }
-                    var_a0 = temp_a1 << 0x10;
-                } while (obj->id != (s16) temp_a1);
+                level.objects[prev].link_has_gendoor = 1;
+            } else {
+                link = obj->id;
+                if (link != (s16)save1.link_init[link]) {
+                    do {
+                        next = save1.link_init[link];
+                        link_init[link] = next;
+                        if (link != next) level.objects[link].link_has_gendoor = 1;
+                        else level.objects[link].link_has_gendoor = 0;
+                        link = next;
+                    } while (obj->id != next);
+                }
             }
         }
     }
@@ -3860,11 +3845,11 @@ void DO_MOTEUR2(void) {
                 DO_PLACE_RAY();
             } break;
         }
-        if (NumScrollObj <= 0 || ray_mode <= MODE_0_NONE) {
+        if (NumScrollObj > 0 && ray_mode > MODE_0_NONE) {
+            DO_AUTO_SCROLL();
+        } else {
             scroll_x = -1;
             scroll_y = -1;
-        } else {
-            DO_AUTO_SCROLL();
         }
         MOVE_OBJECTS();
         calc_obj_pos(&ray);
@@ -3890,15 +3875,15 @@ void DO_MOTEUR2(void) {
                 switch (ray.sub_etat)
                 {
                     case 0:
-                        if (Abs(ray.speed_x) >= 2 || Abs(h_scroll_speed) >= 2)
+                        if (((s32)ray.speed_x < 0 ? -(s32)ray.speed_x : (s32)ray.speed_x) > 1 || ((s32)h_scroll_speed < 0 ? -(s32)h_scroll_speed : (s32)h_scroll_speed) > 1)
                             set_sub_etat(&ray, 6);
                         break;
                     case 1:
-                        if (Abs(ray.speed_x) < 2 && Abs(h_scroll_speed) < 2)
+                        if (((s32)ray.speed_x < 0 ? -(s32)ray.speed_x : (s32)ray.speed_x) <= 1 && ((s32)h_scroll_speed < 0 ? -(s32)h_scroll_speed : (s32)h_scroll_speed) <= 1)
                             set_sub_etat(&ray, 7);
                         else
                         {
-                            if (Abs(h_scroll_speed) >= 5 && (xmap < xmapmax - 100))
+                            if (((s32)h_scroll_speed < 0 ? -(s32)h_scroll_speed : (s32)h_scroll_speed) > 4 && (xmap < xmapmax - 100))
                             {
                                 set_sub_etat(&ray, 2);
                                 start_cd_gros_rayman(); // change_audio_track_moskito_acc();
@@ -3906,7 +3891,7 @@ void DO_MOTEUR2(void) {
                         }
                         break;
                     case 5:
-                        if (Abs(h_scroll_speed) < 5)
+                        if (((s32)h_scroll_speed < 0 ? -(s32)h_scroll_speed : (s32)h_scroll_speed) <= 4)
                         {
                             set_sub_etat(&ray, 3);
                             start_cd_gros_rayman(); // change_audio_track_moskito_dec();

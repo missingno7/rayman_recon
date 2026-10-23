@@ -646,21 +646,24 @@ void lance_couteau_lineaire(obj_t* in_obj) {
     eta_t *unk_state_1;
     eta_t *unk_state_2;
     eta_t *unk_state_3;
-    u8 cout_ind = find_couteau(in_obj);
+    u8 cout_ind;
+    s32 table_index;
+    cout_ind = find_couteau(in_obj);
+    table_index = cout_ind;
 
-    if (cout_ind != 0xFF && (cout_ind == 0 || (cout_ind != 0 && CouteauxInfos[cout_ind - 1].field2_0x4 == 0))) {
-        s16 unk_1 = CouteauxInfos[cout_ind].field2_0x4;
+    if (cout_ind != 0xFF && (table_index == 0 || (table_index != 0 && (CouteauxInfos + table_index - 1)[0].field2_0x4 == 0))) {
+        s16 unk_1 = CouteauxInfos[table_index].field2_0x4;
         if (unk_1 == 0) {
-            if (!CouteauxInfos[cout_ind].active) {
-                cout_obj = &level.objects[CouteauxInfos[cout_ind].field7_0xe];
+            if (!CouteauxInfos[table_index].active) {
+                cout_obj = &level.objects[CouteauxInfos[table_index].field7_0xe];
                 cout_x = cout_obj->x + cout_obj->offset_bx;
                 cout_y = cout_obj->y + cout_obj->offset_by;
                 if (cout_x < -20 || (cout_x > xmapmax + (SCREEN_WIDTH + 20)) ||
                     cout_y < -20 || (cout_y > ymapmax + (SCREEN_HEIGHT + 20))
                 ) {
-                    CouteauxInfos[cout_ind].active = true;
-                    level.objects[CouteauxInfos[cout_ind].field7_0xe].is_active = 0;
-                    level.objects[CouteauxInfos[cout_ind].field7_0xe].flags.alive = 0;
+                    CouteauxInfos[table_index].active = true;
+                    level.objects[CouteauxInfos[table_index].field7_0xe].is_active = 0;
+                    level.objects[CouteauxInfos[table_index].field7_0xe].flags.alive = 0;
                     if (check_couteaux()) {
                         pma_phase = 4;
                         if (level.objects[mama_pirate_obj_id].hit_points == 0) {
@@ -674,13 +677,13 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 }
             }
         } else if (unk_1 == 1) {
-            s16 unk_2 = CouteauxInfos[cout_ind].field4_0x8;
+            s16 unk_2 = CouteauxInfos[table_index].field4_0x8;
             if (unk_2 == 15) {
-                CouteauxInfos[cout_ind].x_pos = ray.x + ray.offset_bx;
-                CouteauxInfos[cout_ind].y_pos = ray.y + ray.offset_by;
-                diff_x = CouteauxInfos[cout_ind].x_pos - (in_obj->x + in_obj->offset_bx);
-                diff_y = CouteauxInfos[cout_ind].y_pos - (in_obj->y + in_obj->offset_by);
-                switch (CouteauxInfos[cout_ind].field9_0x12) {
+                CouteauxInfos[table_index].x_pos = ray.x + ray.offset_bx;
+                CouteauxInfos[table_index].y_pos = ray.y + ray.offset_by;
+                diff_x = CouteauxInfos[table_index].x_pos - (in_obj->x + in_obj->offset_bx);
+                diff_y = CouteauxInfos[table_index].y_pos - (in_obj->y + in_obj->offset_by);
+                switch (CouteauxInfos[table_index].field9_0x12) {
                     case 1:
                         unk_sub_etat = 11;
                         /* DOS 1:55733..55762: Y magnitude precedes the max/shift expression. */
@@ -711,21 +714,21 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 }
 
                 /* duplication? */
-                unk_5 = CouteauxInfos[cout_ind].field9_0x12;
+                unk_5 = CouteauxInfos[table_index].field9_0x12;
                 if (unk_5 == 2) {
                     in_obj->sub_etat = unk_sub_etat;
                     in_obj->anim_frame = unk_anim_frame;
                     unk_state_1 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
                     unk_state_1->anim_speed &= 0xF0;
-                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
-                    CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
-                    CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
-                    CouteauxInfos[cout_ind].field4_0x8--;
-                    in_obj->speed_x = CouteauxInfos[cout_ind].field5_0xa;
-                    in_obj->speed_y = CouteauxInfos[cout_ind].field6_0xc;
-                    CouteauxInfos[cout_ind].field4_0x8 = 15;
-                    CouteauxInfos[cout_ind].field2_0x4 = 0;
-                    CouteauxInfos[cout_ind].active = false;
+                    CouteauxInfos[table_index].record_flag = unk_anim_frame;
+                    CouteauxInfos[table_index].field5_0xa = unk_x_1;
+                    CouteauxInfos[table_index].field6_0xc = unk_y_1;
+                    CouteauxInfos[table_index].field4_0x8--;
+                    in_obj->speed_x = CouteauxInfos[table_index].field5_0xa;
+                    in_obj->speed_y = CouteauxInfos[table_index].field6_0xc;
+                    CouteauxInfos[table_index].field4_0x8 = 15;
+                    CouteauxInfos[table_index].field2_0x4 = 0;
+                    CouteauxInfos[table_index].active = false;
                     unk_state_2 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
                     unk_state_2->anim_speed &= 0xF0;
                     unk_state_2->anim_speed |= 2;
@@ -734,56 +737,56 @@ void lance_couteau_lineaire(obj_t* in_obj) {
                 } else if (unk_5 == 3) {
                     in_obj->sub_etat = unk_sub_etat;
                     in_obj->anim_frame = unk_anim_frame;
-                    CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
-                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
-                    CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
-                    CouteauxInfos[cout_ind].field4_0x8--;
-                    in_obj->speed_x = CouteauxInfos[cout_ind].field5_0xa;
-                    in_obj->speed_y = CouteauxInfos[cout_ind].field6_0xc;
-                    CouteauxInfos[cout_ind].field4_0x8 = 15;
-                    CouteauxInfos[cout_ind].field2_0x4 = 0;
-                    CouteauxInfos[cout_ind].active = false;
+                    CouteauxInfos[table_index].field5_0xa = unk_x_1;
+                    CouteauxInfos[table_index].record_flag = unk_anim_frame;
+                    CouteauxInfos[table_index].field6_0xc = unk_y_1;
+                    CouteauxInfos[table_index].field4_0x8--;
+                    in_obj->speed_x = CouteauxInfos[table_index].field5_0xa;
+                    in_obj->speed_y = CouteauxInfos[table_index].field6_0xc;
+                    CouteauxInfos[table_index].field4_0x8 = 15;
+                    CouteauxInfos[table_index].field2_0x4 = 0;
+                    CouteauxInfos[table_index].active = false;
                 } else if (in_obj->anim_frame == unk_anim_frame) {
                     in_obj->sub_etat = unk_sub_etat;
                     in_obj->anim_frame = unk_anim_frame;
-                    CouteauxInfos[cout_ind].record_flag = unk_anim_frame;
-                    CouteauxInfos[cout_ind].field5_0xa = unk_x_1;
-                    CouteauxInfos[cout_ind].field6_0xc = unk_y_1;
-                    CouteauxInfos[cout_ind].field4_0x8--;
+                    CouteauxInfos[table_index].record_flag = unk_anim_frame;
+                    CouteauxInfos[table_index].field5_0xa = unk_x_1;
+                    CouteauxInfos[table_index].field6_0xc = unk_y_1;
+                    CouteauxInfos[table_index].field4_0x8--;
                 }
             } else if (unk_2 == 0) {
-                in_obj->speed_x = (s16) CouteauxInfos[cout_ind].field5_0xa;
-                in_obj->speed_y = (s16) CouteauxInfos[cout_ind].field6_0xc;
-                if (CouteauxInfos[cout_ind].field9_0x12 == 2) {
+                in_obj->speed_x = (s16) CouteauxInfos[table_index].field5_0xa;
+                in_obj->speed_y = (s16) CouteauxInfos[table_index].field6_0xc;
+                if (CouteauxInfos[table_index].field9_0x12 == 2) {
                     unk_state_3 = &in_obj->eta[in_obj->main_etat][in_obj->sub_etat];
                     unk_state_3->anim_speed &= 0xF0;
                     unk_state_3->anim_speed |= 2;
                     in_obj->gravity_value_1 = 0;
                     in_obj->gravity_value_2 = 8;
                 }
-                CouteauxInfos[cout_ind].field4_0x8 = 15;
-                CouteauxInfos[cout_ind].field2_0x4 = 0;
-                CouteauxInfos[cout_ind].active = 0;
+                CouteauxInfos[table_index].field4_0x8 = 15;
+                CouteauxInfos[table_index].field2_0x4 = 0;
+                CouteauxInfos[table_index].active = 0;
             } else {
                 in_obj->speed_x = 0;
                 in_obj->speed_y = 0;
-                in_obj->anim_frame = CouteauxInfos[cout_ind].record_flag;
+                in_obj->anim_frame = CouteauxInfos[table_index].record_flag;
                 /* duplication */
-                if (CouteauxInfos[cout_ind].field4_0x8 & 1)
+                if (CouteauxInfos[table_index].field4_0x8 & 1)
                     in_obj->y += 2;
                 else
                     in_obj->y -= 2;
 
-                if (CouteauxInfos[cout_ind].field4_0x8 > 0)
-                    CouteauxInfos[cout_ind].field4_0x8--;
+                if (CouteauxInfos[table_index].field4_0x8 > 0)
+                    CouteauxInfos[table_index].field4_0x8--;
             }
         } else {
             /* unk_1 is field2_0x4*/
             if (unk_1 > 1)
-                CouteauxInfos[cout_ind].field2_0x4--;
+                CouteauxInfos[table_index].field2_0x4--;
 
-            if (CouteauxInfos[cout_ind].field2_0x4 == 1)
-                CouteauxInfos[cout_ind].field4_0x8 = 15;
+            if (CouteauxInfos[table_index].field2_0x4 == 1)
+                CouteauxInfos[table_index].field4_0x8 = 15;
         }
     }
 }
