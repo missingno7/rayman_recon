@@ -5904,7 +5904,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "INIT_WORLD_INFO": {
      "status": "STRICT",
@@ -5976,7 +5977,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "DO_CHEMIN": {
      "status": "STRICT",
@@ -10138,21 +10140,24 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "load_level": {
      "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "load_big_ray": {
      "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "LOAD_ALL_FIX": {
      "status": "NEAR_MATCH",
@@ -10166,7 +10171,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "LoadPcxPaletteInVignet": {
      "status": "STRICT",
@@ -10180,7 +10186,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "allocate_PLAN0": {
      "status": "STRICT",
@@ -10193,7 +10200,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "LoadPlan2InVignet": {
      "status": "STRICT",
@@ -10221,7 +10229,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     }
    },
    "segments": {

@@ -129,228 +129,253 @@ void load_break_fix_eta(void);
 /* ORIGINAL_INLINE 1:3664a: INT3 (cc); no GPR changes. */
 #pragma aux load_break_fix_eta = "int 3" modify exact [];
 
+extern u16 path_has_changed;
+extern void sub_5BB78(void);
+extern void sub_5BB94(void);
+extern void sub_5BAE0(void);
 void load_world(mem_t* mem_world, mem_t* mem_sprite, const char* filename) {
-    s32 i;
-    /* Both branches use the same file fields: DOS esp+0x30 and esp+0x44. */
-    u16 layer_table_size;
-    u8 img_buffer_checksum;
-    char *full_filename;
-    FILE *fp;
-    extern u16 path_has_changed;
-    extern void sub_5BB78(void);
-    extern void sub_5BB94(void);
-    extern void sub_5BAE0(void);
-
-    full_filename = (char *)temp_malloc(100);
-    stop_cd();
-    sub_5BB78();
-    sub_5BB94();
-    load_watch_address(0x46c);
-    load_set_watch_control(load_watch_control() | 0x30003);
-    /* BIOS data-area timer byte, updated asynchronously by IRQ0.
-       Volatile describes hardware access, rather than a register-allocation aid. */
+  s32 i;
+  u16 layer_table_size;
+  u8 img_buffer_checksum;
+  char *full_filename;
+  FILE *fp;
+  full_filename = (char *) temp_malloc(100);
+  stop_cd();
+  sub_5BB78();
+  sub_5BB94();
+  load_watch_address(0x46c);
+  load_set_watch_control(load_watch_control() | 0x30003);
+  {
+    u8 tick;
+    load_enable_interrupts();
     {
-        u8 tick;
-        load_enable_interrupts();
-        tick = *(volatile u8 *)0x46c;
-        while (tick == *(volatile u8 *)0x46c) { }
-        load_enable_interrupts();
-        tick = *(volatile u8 *)0x46c;
-        while (tick == *(volatile u8 *)0x46c) { }
+      u8 perm_value_3;
+      u8 *perm_address_2;
+      perm_address_2 = &perm_value_3;
+      *perm_address_2 = *((volatile u8 *) 0x46c);
+      tick = perm_value_3;
     }
-    load_watch_address(0);
-    load_set_watch_control(load_watch_control() & 0xde00);
-    if (GameModeVideo == MODE_X) {
-        PLAN1_BUFFER = block_malloc(mem_world, 71680);
-    } else {
-        PLAN1_BUFFER = 0;
+    while (tick == (*((volatile u8 *) 0x46c)))
+    {
     }
-    i = 0;
-    do {
-        Plan0NumPcx[i++] = -1;
-    } while (i < 10);
 
-    if (path_has_changed != 0) {
-        strcpy(full_filename, "..\\");
-    } else {
-        full_filename[0] = '\0';
+    load_enable_interrupts();
+    tick = *((volatile u8 *) 0x46c);
+    while (tick == (*((volatile u8 *) 0x46c)))
+    {
     }
-    strcat(full_filename, "PCMAP");
-    strcat(full_filename, "\\");
-    strcat(full_filename, filename);
 
-    fp = fopen(full_filename, "rb");
-    if (fp == NULL) {
+  }
+  load_watch_address(0);
+  load_set_watch_control(load_watch_control() & 0xde00);
+  if (GameModeVideo == MODE_X)
+  {
+    PLAN1_BUFFER = block_malloc(mem_world, 71680);
+  }
+  else
+  {
+    PLAN1_BUFFER = 0;
+  }
+  i = 0;
+  do
+    Plan0NumPcx[i++] = -1;
+  while (i < 10);
+  if (path_has_changed != 0)
+  {
+    strcpy(full_filename, "..\\");
+  }
+  else
+  {
+    full_filename[0] = '\0';
+  }
+  strcat(full_filename, "PCMAP");
+  strcat(full_filename, "\\");
+  strcat(full_filename, filename);
+  fp = fopen(full_filename, "rb");
+  if (fp == 0)
+  {
+    char *error_buffer;
+    error_buffer = (char *) temp_malloc(200);
+    sprintf(error_buffer, "Can not open file %s (load_world).\n", full_filename);
+    FatalError(error_buffer);
+    temp_free(error_buffer);
+  }
+  else
+  {
+    u16 background_width;
+    s32 des_index;
+    u8 plan0_num_pcx_count;
+    u16 background_height;
+    load_break_world_open();
+    fread(&background_width, 2, 1, fp);
+    fread(&background_height, 2, 1, fp);
+    if (GameModeVideo == MODE_NORMAL)
+    {
+      PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);
+    }
+    else
+      if (FondAutorise != 0)
+    {
+      PLAN0 = allocate_PLAN0(mem_world, background_width, background_height);
+    }
+    fread(&plan0_num_pcx_count, 1, 1, fp);
+    fread(&BiosCheckSum, 1, 1, fp);
+    fread(&VideoBiosCheckSum, 1, 1, fp);
+    load_break_world_backgrounds();
+    for (i = 0; i < plan0_num_pcx_count; ++i)
+    {
+      s8 pcx_number;
+      fread(&pcx_number, 1, 1, fp);
+      pcx_number ^= 0x15;
+      Plan0NumPcx[i] = pcx_number;
+    }
+
+    fread(&nb_des, 2, 1, fp);
+    for (des_index = nb_fix_des; des_index < (nb_des + nb_fix_des); ++des_index)
+    {
+      u8 sprite_is_always_used;
+      fread(&sprite_is_always_used, 1, 1, fp);
+      fread(&wldobj[des_index].x, 4, 1, fp);
+      if (sprite_is_always_used || ToutSpriteAutorise)
+      {
+        s32 image_offset;
+        u32 retry_index;
         char *error_buffer;
-
-        error_buffer = (char *)temp_malloc(200);
-        sprintf(error_buffer, "Can not open file %s (load_world).\n", full_filename);
-        FatalError(error_buffer);
-        temp_free(error_buffer);
-    } else {
-        u16 background_width;
-        u16 background_height;
-        u8 plan0_num_pcx_count;
-        s32 des_index;
-
-        load_break_world_open();
-        // Header block
-        fread(&background_width, 2, 1, fp);
-        fread(&background_height, 2, 1, fp);
-        if (GameModeVideo == MODE_NORMAL) {
-            PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);
-        } else if (FondAutorise != 0) {
-            PLAN0 = allocate_PLAN0(mem_world, background_width, background_height);
-        }
-        fread(&plan0_num_pcx_count, 1, 1, fp);
-        fread(&BiosCheckSum, 1, 1, fp);
-        fread(&VideoBiosCheckSum, 1, 1, fp);
-        load_break_world_backgrounds();
-
-        for (i = 0; i < plan0_num_pcx_count; ++i) {
-            s8 pcx_number;
-            fread(&pcx_number, 1, 1, fp);
-            pcx_number ^= 0x15;
-            Plan0NumPcx[i] = pcx_number;
+        wldobj[des_index].img_buffer = (u8 *) block_malloc(mem_sprite, wldobj[des_index].x);
+        image_offset = ftell(fp);
+        fread(wldobj[des_index].img_buffer, 1, wldobj[des_index].x, fp);
+        fread(&img_buffer_checksum, 1, 1, fp);
+        for (i = 0; i < wldobj[des_index].x; ++i)
+        {
+          img_buffer_checksum -= wldobj[des_index].img_buffer[i];
+          wldobj[des_index].img_buffer[i] ^= 0x8F;
         }
 
-        // Sprites block
-        fread(&nb_des, 2, 1, fp);
-        for (des_index = nb_fix_des; des_index < nb_des + nb_fix_des; ++des_index) {
-            u8 sprite_is_always_used;
+        if (img_buffer_checksum != 0)
+        {
+          fseek(fp, image_offset, 0);
+          for (retry_index = 0; retry_index < ((u32) wldobj[des_index].x); retry_index++)
+            fread(wldobj[des_index].img_buffer + retry_index, 1, 1, fp);
 
-            fread(&sprite_is_always_used, 1, 1, fp);
-            fread(&wldobj[des_index].x, 4, 1, fp);
+          fread(&img_buffer_checksum, 1, 1, fp);
+          for (i = 0; i < wldobj[des_index].x; i++)
+          {
+            img_buffer_checksum -= wldobj[des_index].img_buffer[i];
+            wldobj[des_index].img_buffer[i] ^= 0x8f;
+          }
 
-            if (sprite_is_always_used || ToutSpriteAutorise) {
-
-                s32 image_offset;
-                u32 retry_index;
-                char *error_buffer;
-                wldobj[des_index].img_buffer = (u8*) block_malloc(mem_sprite, wldobj[des_index].x);
-                image_offset = ftell(fp);
-                fread(wldobj[des_index].img_buffer, 1, wldobj[des_index].x, fp);
-
-                fread(&img_buffer_checksum, 1, 1, fp);
-
-                for (i = 0; i < wldobj[des_index].x; ++i) {
-                    img_buffer_checksum -= wldobj[des_index].img_buffer[i];
-                    wldobj[des_index].img_buffer[i] ^= 0x8F;
-                }
-
-                if (img_buffer_checksum != 0) {
-                    fseek(fp, image_offset, 0);
-                    for (retry_index = 0; retry_index < (u32)wldobj[des_index].x; retry_index++) {
-                        fread(wldobj[des_index].img_buffer + retry_index, 1, 1, fp);
-                    }
-                    fread(&img_buffer_checksum, 1, 1, fp);
-                    for (i = 0; i < wldobj[des_index].x; i++) {
-                        img_buffer_checksum -= wldobj[des_index].img_buffer[i];
-                        wldobj[des_index].img_buffer[i] ^= 0x8f;
-                    }
-                    if (img_buffer_checksum != 0) {
-                        error_buffer = (char *)temp_malloc(200);
-                        sprintf(error_buffer, "%s : File integrity fault.\n", full_filename);
-                        FatalError(error_buffer);
-                        temp_free(error_buffer);
-                    }
-                }
-
-                fread(&wldobj[des_index].nb_sprites, 2, 1, fp);
-                wldobj[des_index].sprites = (sprite_t*)block_malloc(mem_world, wldobj[des_index].nb_sprites * sizeof(sprite_t));
-                fread(wldobj[des_index].sprites, sizeof(sprite_t), wldobj[des_index].nb_sprites, fp);
-
-                fread(&wldobj[des_index].anim_count, 1, 1, fp);
-                if (wldobj[des_index].anim_count != 0) {
-
-                    wldobj[des_index].animations = (anim_t*)block_malloc(mem_world, wldobj[des_index].anim_count * sizeof(anim_t));
-                    for (i = 0; i < wldobj[des_index].anim_count; ++i) {
-
-                        fread(&wldobj[des_index].animations[i].layers_per_frame, 2, 1, fp);
-                        fread(&wldobj[des_index].animations[i].frames_count, 2, 1, fp);
-                        fread(&wldobj[des_index].animations[i].frames, 4, 1, fp);
-
-                        fread(&layer_table_size, 2, 1, fp);
-                        wldobj[des_index].animations[i].layers = (anim_layer_t*) block_malloc(mem_world, layer_table_size);
-                        /* DOS 1:35324..35339: byte elements, layer_table_size items. */
-                        fread(wldobj[des_index].animations[i].layers, 1, layer_table_size, fp);
-                        if (wldobj[des_index].animations[i].frames != (anim_frame_t *)-1) {
-                            wldobj[des_index].animations[i].frames = (anim_frame_t*) block_malloc(mem_world, wldobj[des_index].animations[i].frames_count * sizeof(anim_frame_t));
-                            fread(wldobj[des_index].animations[i].frames, sizeof(anim_frame_t), wldobj[des_index].animations[i].frames_count, fp);
-                        }
-                        load_break_world_animation();
-                    }
-                } else {
-                    wldobj[des_index].animations = wldobj[0].animations;
-                    wldobj[des_index].anim_count = wldobj[0].anim_count;
-                }
-            } else {
-                /* DOS 1:353b0..353b8 clears the skipped image pointer. */
-                wldobj[des_index].img_buffer = NULL;
-                fseek(fp, wldobj[des_index].x, 1); // skip
-
-                fread(&img_buffer_checksum, 1, 1, fp);
-                fread(&wldobj[des_index].nb_sprites, 2, 1, fp);
-                /* DOS 1:353eb..353ed also clears its sprite table. */
-                wldobj[des_index].sprites = NULL;
-                fseek(fp, wldobj[des_index].nb_sprites * sizeof(sprite_t), 1);
-                fread(&wldobj[des_index].anim_count, 1, 1, fp);
-                if (wldobj[des_index].anim_count != 0) {
-
-                    wldobj[des_index].animations = NULL;
-                    for (i = 0; i < wldobj[des_index].anim_count; ++i) {
-                        u16 layers_per_frame;
-                        u16 frame_count;
-                        s32 frames_ptr;
-
-                        fread(&layers_per_frame, 2, 1, fp);
-                        fread(&frame_count, 2, 1, fp);
-                        fread(&frames_ptr, 4, 1, fp); // ptr field, but might be -1
-
-                        fread(&layer_table_size, 2, 1, fp);
-                        fseek(fp, layer_table_size, 1);
-                        if (frames_ptr != -1) {
-                            fseek(fp, frame_count * sizeof(anim_frame_t), 1);
-                        }
-                    }
-                } else {
-                    wldobj[des_index].animations = wldobj[0].animations;
-                    wldobj[des_index].anim_count = wldobj[0].anim_count;
-                }
+          if (img_buffer_checksum != 0)
+          {
+            error_buffer = (char *) temp_malloc(200);
+            sprintf(error_buffer, "%s : File integrity fault.\n", full_filename);
+            FatalError(error_buffer);
+            temp_free(error_buffer);
+          }
+        }
+        fread(&wldobj[des_index].nb_sprites, 2, 1, fp);
+        wldobj[des_index].sprites = (sprite_t *) block_malloc(mem_world, wldobj[des_index].nb_sprites * (sizeof(sprite_t)));
+        fread(wldobj[des_index].sprites, sizeof(sprite_t), wldobj[des_index].nb_sprites, fp);
+        fread(&wldobj[des_index].anim_count, 1, 1, fp);
+        if (wldobj[des_index].anim_count != 0)
+        {
+          wldobj[des_index].animations = (anim_t *) block_malloc(mem_world, wldobj[des_index].anim_count * (sizeof(anim_t)));
+          for (i = 0; i < wldobj[des_index].anim_count; ++i)
+          {
+            fread(&wldobj[des_index].animations[i].layers_per_frame, 2, 1, fp);
+            fread(&wldobj[des_index].animations[i].frames_count, 2, 1, fp);
+            fread(&wldobj[des_index].animations[i].frames, 4, 1, fp);
+            fread(&layer_table_size, 2, 1, fp);
+            wldobj[des_index].animations[i].layers = (anim_layer_t *) block_malloc(mem_world, layer_table_size);
+            fread(wldobj[des_index].animations[i].layers, 1, layer_table_size, fp);
+            if (wldobj[des_index].animations[i].frames != ((anim_frame_t *) (-1)))
+            {
+              wldobj[des_index].animations[i].frames = (anim_frame_t *) block_malloc(mem_world, wldobj[des_index].animations[i].frames_count * (sizeof(anim_frame_t)));
+              fread(wldobj[des_index].animations[i].frames, sizeof(anim_frame_t), wldobj[des_index].animations[i].frames_count, fp);
             }
+            load_break_world_animation();
+          }
+
         }
-        nb_des += nb_fix_des;
-
-        // ETA block
-        fread(&nb_loaded_eta, 1, 1, fp);
-        for (i = nb_fix_eta; i < nb_loaded_eta + nb_fix_eta; ++i) {
-            u8 num_eta_groups;
-            s32 j;
-
-            fread(&num_eta_groups, 1, 1, fp);
-            loaded_eta[i] = (eta_t**)block_malloc(mem_world, num_eta_groups * sizeof(eta_t*));
-            for (j = 0; j < num_eta_groups; ++j) {
-                u8 num_eta_entries;
-
-                fread(&num_eta_entries, 1, 1, fp);
-                loaded_eta[i][j] = (eta_t*)block_malloc(mem_world, num_eta_entries * sizeof(eta_t));
-                fread(loaded_eta[i][j], sizeof(eta_t), num_eta_entries, fp);
-                load_break_world_eta();
+        else
+        {
+          wldobj[des_index].animations = wldobj[0].animations;
+          wldobj[des_index].anim_count = wldobj[0].anim_count;
+        }
+      }
+      else
+      {
+        wldobj[des_index].img_buffer = 0;
+        fseek(fp, wldobj[des_index].x, 1);
+        fread(&img_buffer_checksum, 1, 1, fp);
+        fread(&wldobj[des_index].nb_sprites, 2, 1, fp);
+        wldobj[des_index].sprites = 0;
+        fseek(fp, wldobj[des_index].nb_sprites * (sizeof(sprite_t)), 1);
+        fread(&wldobj[des_index].anim_count, 1, 1, fp);
+        if (wldobj[des_index].anim_count != 0)
+        {
+          wldobj[des_index].animations = 0;
+          for (i = 0; i < wldobj[des_index].anim_count; ++i)
+          {
+            u16 layers_per_frame;
+            u16 frame_count;
+            s32 frames_ptr;
+            fread(&layers_per_frame, 2, 1, fp);
+            fread(&frame_count, 2, 1, fp);
+            fread(&frames_ptr, 4, 1, fp);
+            fread(&layer_table_size, 2, 1, fp);
+            fseek(fp, layer_table_size, 1);
+            if (frames_ptr != (-1))
+            {
+              fseek(fp, frame_count * (sizeof(anim_frame_t)), 1);
             }
-        }
-        nb_loaded_eta += nb_fix_eta;
+          }
 
-        if (FondAutorise != 2) {
-            LoadPlan0InVignet(Plan0NumPcx[0]);
         }
-
-        fclose(fp);
+        else
+        {
+          wldobj[des_index].animations = wldobj[0].animations;
+          wldobj[des_index].anim_count = wldobj[0].anim_count;
+        }
+      }
     }
-    check_cd_for_save();
-    sub_5BAE0();
-    temp_free(full_filename);
+
+    nb_des += nb_fix_des;
+    fread(&nb_loaded_eta, 1, 1, fp);
+    for (i = nb_fix_eta; i < (nb_loaded_eta + nb_fix_eta); ++i)
+    {
+      u8 num_eta_groups;
+      s32 j;
+      fread(&num_eta_groups, 1, 1, fp);
+      loaded_eta[i] = (eta_t **) block_malloc(mem_world, num_eta_groups * (sizeof(eta_t *)));
+      for (j = 0; j < num_eta_groups; ++j)
+      {
+        u8 num_eta_entries;
+        fread(&num_eta_entries, 1, 1, fp);
+        loaded_eta[i][j] = (eta_t *) block_malloc(mem_world, num_eta_entries * (sizeof(eta_t)));
+        fread(loaded_eta[i][j], sizeof(eta_t), num_eta_entries, fp);
+        load_break_world_eta();
+      }
+
+    }
+
+    nb_loaded_eta += nb_fix_eta;
+    if (FondAutorise != 2)
+    {
+      LoadPlan0InVignet(Plan0NumPcx[0]);
+    }
+    fclose(fp);
+  }
+  check_cd_for_save();
+  sub_5BAE0();
+  temp_free(full_filename);
+
 }
 
+extern u16 path_has_changed;
+extern s16 num_world;
+extern u8 current_pal_id;
+extern void sub_5BB78(void);
+extern void sub_5BAE0(void);
 void load_level(mem_t *mem_level, s32 world_id, const char *filename)
 {
     char world_names[6][13] = {
@@ -370,11 +395,11 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
     u32 retry_index;
     u8 background_static, checksum, background_scroll;
     u16 cmd_count, label_count;
-    extern u16 path_has_changed;
-    extern s16 num_world;
-    extern u8 current_pal_id;
-    extern void sub_5BB78(void);
-    extern void sub_5BAE0(void);
+
+
+
+
+
 
     full_filename = (char *)temp_malloc(100);
     stop_cd();
@@ -469,7 +494,7 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
                 }
             }
             fread(block_add, 4, 1200, fp);
-            for (i = 0; i < 1200; i++) {
+            for (i = 0; 1200 > i; i++) {
                 if (block_add[i] != -1) block_add[i] = (s32)blocks_code + block_add[i];
                 else block_add[i] = 0;
             }
@@ -538,75 +563,97 @@ void load_level(mem_t *mem_level, s32 world_id, const char *filename)
     sub_5BAE0();
 }
 
+extern void sub_5BB78(void);
+extern void sub_5BAE0(void);
 void load_big_ray(mem_t *buffer)
 {
-    FILE *fp;
-    char *filename, *error_buffer;
-    s32 index, i, j, anim_index;
-    u8 groups, entries;
-    u16 layer_table_size;
-    extern void sub_5BB78(void);
-    extern void sub_5BAE0(void);
-
-    filename = (char *)temp_malloc(100);
-    filename[0] = '\0';
-    stop_cd();
-    sub_5BB78();
-    strcpy(filename, "PCMAP");
-    strcat(filename, "\\");
-    strcat(filename, "bray.dat");
-    fp = fopen(filename, "rb");
-    if (fp == NULL) {
-        error_buffer = (char *)temp_malloc(200);
-        sprintf(error_buffer, "Can not open file %s (load_big_ray).\n", filename);
-        FatalError(error_buffer);
-        temp_free(error_buffer);
-    } else {
-        index = nb_des;
-        fread(&wldobj[index].x, 4, 1, fp);
-        wldobj[index].img_buffer = (u8 *)block_malloc(buffer, wldobj[index].x);
-        fread(wldobj[index].img_buffer, 1, wldobj[index].x, fp);
-        for (i = 0; i < wldobj[index].x; i++) {
-            wldobj[index].img_buffer[i] ^= 0x8f;
-        }
-        fread(&wldobj[index].nb_sprites, 2, 1, fp);
-        wldobj[index].sprites = (sprite_t *)block_malloc(buffer, wldobj[index].nb_sprites * sizeof(sprite_t));
-        fread(wldobj[index].sprites, sizeof(sprite_t), wldobj[index].nb_sprites, fp);
-        fread(&wldobj[index].anim_count, 1, 1, fp);
-        wldobj[index].animations = (anim_t *)block_malloc(buffer, wldobj[index].anim_count * sizeof(anim_t));
-        for (anim_index = 0; anim_index < wldobj[index].anim_count; anim_index++) {
-            load_break_big_ray_animation();
-            fread(&wldobj[index].animations[anim_index].layers_per_frame, 2, 1, fp);
-            fread(&wldobj[index].animations[anim_index].frames_count, 2, 1, fp);
-            fread(&wldobj[index].animations[anim_index].frames, 4, 1, fp);
-            fread(&layer_table_size, 2, 1, fp);
-            wldobj[index].animations[anim_index].layers = (anim_layer_t *)block_malloc(buffer, layer_table_size);
-            fread(wldobj[index].animations[anim_index].layers, 1, layer_table_size, fp);
-            if (wldobj[index].animations[anim_index].frames != (anim_frame_t *)-1) {
-                wldobj[index].animations[anim_index].frames = (anim_frame_t *)block_malloc(buffer, wldobj[index].animations[anim_index].frames_count * sizeof(anim_frame_t));
-                fread(wldobj[index].animations[anim_index].frames, sizeof(anim_frame_t), wldobj[index].animations[anim_index].frames_count, fp);
-            }
-        }
-        fread(&nb_loaded_eta, 1, 1, fp);
-        for (i = 0; i < nb_loaded_eta; i++) {
-            fread(&groups, 1, 1, fp);
-            loaded_eta[i] = (eta_t **)block_malloc(buffer, groups * sizeof(eta_t *));
-            for (j = 0; j < groups; j++) {
-                load_break_big_ray_eta();
-                fread(&entries, 1, 1, fp);
-                loaded_eta[i][j] = (eta_t *)block_malloc(buffer, entries * sizeof(eta_t));
-                fread(loaded_eta[i][j], sizeof(eta_t), entries, fp);
-            }
-        }
-        wldobj[nb_des].eta = loaded_eta[0];
-        memcpy(&bigray, &wldobj[nb_des], sizeof(obj_t));
-        nb_des++;
-        fclose(fp);
+  FILE *fp;
+  char *filename;
+  char *error_buffer;
+  s32 index;
+  s32 i;
+  s32 j;
+  s32 anim_index;
+  u8 groups;
+  u8 entries;
+  u16 layer_table_size;
+  filename = (char *) temp_malloc(100);
+  filename[0] = '\0';
+  stop_cd();
+  sub_5BB78();
+  strcpy(filename, "PCMAP");
+  strcat(filename, "\\");
+  strcat(filename, "bray.dat");
+  fp = fopen(filename, "rb");
+  if (fp == 0)
+  {
+    error_buffer = (char *) temp_malloc(200);
+    sprintf(error_buffer, "Can not open file %s (load_big_ray).\n", filename);
+    FatalError(error_buffer);
+    temp_free(error_buffer);
+  }
+  else
+  {
+    {
+      s32 perm_value_6;
+      perm_value_6 = nb_des;
+      index = perm_value_6;
     }
-    temp_free(filename);
-    sub_5BAE0();
+    fread(&wldobj[index].x, 4, 1, fp);
+    wldobj[index].img_buffer = (u8 *) block_malloc(buffer, wldobj[index].x);
+    fread(wldobj[index].img_buffer, 1, wldobj[index].x, fp);
+    for (i = 0; (i < wldobj[index].x) != 0; i++)
+      wldobj[index].img_buffer[i] ^= 0x8f;
+
+    fread(&wldobj[index].nb_sprites, 2, 1, fp);
+    wldobj[index].sprites = (sprite_t *) block_malloc(buffer, wldobj[index].nb_sprites * (sizeof(sprite_t)));
+    fread(wldobj[index].sprites, sizeof(sprite_t), wldobj[index].nb_sprites, fp);
+    fread(&wldobj[index].anim_count, 1, 1, fp);
+    wldobj[index].animations = (anim_t *) block_malloc(buffer, wldobj[index].anim_count * (sizeof(anim_t)));
+    for (anim_index = 0; anim_index < wldobj[index].anim_count; anim_index++)
+    {
+      load_break_big_ray_animation();
+      fread(&wldobj[index].animations[anim_index].layers_per_frame, 2, 1, fp);
+      fread(&wldobj[index].animations[anim_index].frames_count, 2, 1, fp);
+      fread(&wldobj[index].animations[anim_index].frames, 4, 1, fp);
+      fread(&layer_table_size, 2, 1, fp);
+      wldobj[index].animations[anim_index].layers = (anim_layer_t *) block_malloc(buffer, layer_table_size);
+      fread(wldobj[index].animations[anim_index].layers, 1, layer_table_size, fp);
+      if (wldobj[index].animations[anim_index].frames != ((anim_frame_t *) (-1)))
+      {
+        wldobj[index].animations[anim_index].frames = (anim_frame_t *) block_malloc(buffer, wldobj[index].animations[anim_index].frames_count * (sizeof(anim_frame_t)));
+        fread(wldobj[index].animations[anim_index].frames, sizeof(anim_frame_t), wldobj[index].animations[anim_index].frames_count, fp);
+      }
+    }
+
+    fread(&nb_loaded_eta, 1, 1, fp);
+    for (i = 0; i < nb_loaded_eta; i++)
+    {
+      fread(&groups, 1, 1, fp);
+      loaded_eta[i] = (eta_t **) block_malloc(buffer, groups * (sizeof(eta_t *)));
+      for (j = 0; j < groups; j++)
+      {
+        load_break_big_ray_eta();
+        fread(&entries, 1, 1, fp);
+        loaded_eta[i][j] = (eta_t *) block_malloc(buffer, entries * (sizeof(eta_t)));
+        fread(loaded_eta[i][j], sizeof(eta_t), entries, fp);
+      }
+
+    }
+
+    wldobj[nb_des].eta = loaded_eta[0];
+    memcpy(&bigray, &wldobj[nb_des], sizeof(obj_t));
+    nb_des++;
+    fclose(fp);
+  }
+  temp_free(filename);
+  sub_5BAE0();
+
 }
 
+extern u16 path_has_changed;
+extern void sub_5BB78(void);
+extern void sub_5BAE0(void);
 void LOAD_ALL_FIX(void)
 {
     char *filename, *error_buffer;
@@ -614,9 +661,9 @@ void LOAD_ALL_FIX(void)
     s32 index, i;
     s32 image_offset;
     u32 retry_index;
-    extern u16 path_has_changed;
-    extern void sub_5BB78(void);
-    extern void sub_5BAE0(void);
+
+
+
 
     stop_cd();
     filename = (char *)temp_malloc(100);
@@ -749,114 +796,162 @@ void LOAD_ALL_FIX(void)
     sub_5BAE0();
 }
 
+extern u16 path_has_changed;
+extern void sleep(u32 seconds);
 u8 *LoadPcxInVignet(mem_t *buffer, s32 resource_id, u16 *width, u16 *height)
 {
-    pcx_header_t header;
-    FILE *fp;
-    char *path, *error_buffer;
-    u8 *pcx_buf, *pos, *end;
-    u32 i, pcx_data_size, source_pos, x, y;
-    s32 run_length;
-    u16 line_bytes;
-    u8 value, retry_checksum, checksum;
-    u8 *pixels;
-    extern u16 path_has_changed;
-    extern void sleep(u32 seconds);
-
-    stop_cd();
-    path = (char *)temp_malloc(100);
-    if (path_has_changed != 0) strcpy(path, "..\\");
-    else path[0] = '\0';
-    strcat(path, "VIGNET.DAT");
-    i = 0;
+  u8 *pcx_buf;
+  char *path;
+  pcx_header_local_t header;
+  FILE *fp;
+  u32 y;
+  u32 source_pos;
+  u32 i;
+  u8 retry_checksum;
+  u8 *pos;
+  u32 pcx_data_size;
+  u16 line_bytes;
+  u8 checksum;
+  u8 *end;
+  u32 x;
+  char *error_buffer;
+  s32 run_length;
+  u8 value;
+  u8 *pixels;
+  stop_cd();
+  path = (char *) temp_malloc(100);
+  if (path_has_changed != 0)
+  {
+    strcpy(path, "..\\");
+  }
+  else
+  {
+    path[0] = '\0';
+  }
+  strcat(path, "VIGNET.DAT");
+  i = 0;
+  fp = fopen(path, "rb");
+  for (; (fp == 0) && (i < 10);)
+  {
     fp = fopen(path, "rb");
-    for (; fp == NULL && i < 10; ) {
-        fp = fopen(path, "rb");
-        i++;
-        sleep(1);
-    }
-    if (fp == NULL) {
-        error_buffer = (char *)temp_malloc(200);
-        sprintf(error_buffer, "%s : Can not open (pcx).\n", path);
-        FatalError(error_buffer);
-        temp_free(error_buffer);
-    }
-    checksum = HeaderFilevignet[resource_id].checksum_byte;
-    pcx_data_size = HeaderFilevignet[resource_id].size - 128;
+    i++;
+    sleep(1);
+  }
+
+  if (fp == 0)
+  {
+    error_buffer = (char *) temp_malloc(200);
+    sprintf(error_buffer, "%s : Can not open (pcx).\n", path);
+    FatalError(error_buffer);
+    temp_free(error_buffer);
+  }
+  checksum = HeaderFilevignet[resource_id].checksum_byte;
+  pcx_data_size = HeaderFilevignet[resource_id].size - 128;
+  fseek(fp, HeaderFilevignet[resource_id].offset, 0);
+  fread(&header, 128, 1, fp);
+  for (i = 0; i < 128; i++)
+  {
+    checksum -= ((u8 *) (&header))[i];
+    ((u8 *) (&header))[i] ^= HeaderFilevignet[resource_id].xor_byte;
+  }
+
+  *width = (header.max_x - header.min_x) + 1;
+  *height = (header.max_y - header.min_y) + 1;
+  line_bytes = header.bytes_per_line;
+  pixels = (u8 *) block_malloc(buffer, (*width) * (*height));
+  pcx_buf = (u8 *) temp_malloc(pcx_data_size);
+  fread(pcx_buf, 1, pcx_data_size, fp);
+  end = pcx_buf + pcx_data_size;
+  for (pos = pcx_buf; pos < end; pos++)
+  {
+    checksum -= *pos;
+    *pos ^= HeaderFilevignet[resource_id].xor_byte;
+  }
+
+  if (checksum != 0)
+  {
+    retry_checksum = HeaderFilevignet[resource_id].checksum_byte;
     fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-    fread(&header, 128, 1, fp);
-    for (i = 0; i < 128; i++) {
-        checksum -= ((u8 *)&header)[i];
-        ((u8 *)&header)[i] ^= HeaderFilevignet[resource_id].xor_byte;
+    pos = (u8 *) (&header);
+    end = pos + 16384;
+    do
+    {
+      fread(pos, 1, 1, fp);
+      pos += 128;
     }
-    *width = header.max_x - header.min_x + 1;
-    *height = header.max_y - header.min_y + 1;
+    while (pos != end);
+    for (i = 0; i <= 127; i++)
+    {
+      retry_checksum -= ((u8 *) (&header))[i];
+      ((u8 *) (&header))[i] ^= HeaderFilevignet[resource_id].xor_byte;
+    }
+
+    *width = (header.max_x - header.min_x) + 1;
+    *height = (header.max_y - header.min_y) + 1;
     line_bytes = header.bytes_per_line;
-    pixels = (u8 *)block_malloc(buffer, *width * *height);
-    pcx_buf = (u8 *)temp_malloc(pcx_data_size);
-    fread(pcx_buf, 1, pcx_data_size, fp);
+    pixels = (u8 *) block_malloc(buffer, (*width) * (*height));
+    pcx_buf = (u8 *) temp_malloc(pcx_data_size);
+    for (i = 0, pos = pcx_buf; i < pcx_data_size; i++, pos++)
+      fread(pos, 1, 1, fp);
+
     end = pcx_buf + pcx_data_size;
-    for (pos = pcx_buf; pos < end; pos++) {
-        checksum -= *pos;
-        *pos ^= HeaderFilevignet[resource_id].xor_byte;
+    for (pos = pcx_buf; pos < end; pos++)
+    {
+      retry_checksum -= *pos;
+      *pos ^= HeaderFilevignet[resource_id].xor_byte;
     }
-    if (checksum != 0) {
-        retry_checksum = HeaderFilevignet[resource_id].checksum_byte;
-        fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-        pos = (u8 *)&header;
-        end = pos + 16384;
-        do {
-            fread(pos, 1, 1, fp);
-            pos += 128;
-        } while (pos != end);
-        for (i = 0; i < 128; i++) {
-            retry_checksum -= ((u8 *)&header)[i];
-            ((u8 *)&header)[i] ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        *width = header.max_x - header.min_x + 1;
-        *height = header.max_y - header.min_y + 1;
-        line_bytes = header.bytes_per_line;
-        pixels = (u8 *)block_malloc(buffer, *width * *height);
-        pcx_buf = (u8 *)temp_malloc(pcx_data_size);
-        for (i = 0, pos = pcx_buf; i < pcx_data_size; i++, pos++) {
-            fread(pos, 1, 1, fp);
-        }
-        end = pcx_buf + pcx_data_size;
-        for (pos = pcx_buf; pos < end; pos++) {
-            retry_checksum -= *pos;
-            *pos ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        if (retry_checksum != 0) {
-            error_buffer = (char *)temp_malloc(200);
-            sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
-            FatalError(error_buffer);
-            temp_free(error_buffer);
-        }
+
+    if ((retry_checksum != 0) != 0)
+    {
+      error_buffer = (char *) temp_malloc(200);
+      sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
+      FatalError(error_buffer);
+      temp_free(error_buffer);
     }
-    fclose(fp);
-    if (pixels != NULL && pcx_buf != NULL) {
-        source_pos = 0;
-        for (y = 0; y < *height; y++) {
-            x = 0;
-            do {
-                value = pcx_buf[source_pos++];
-                if ((value & 0xc0) == 0xc0) {
-                    run_length = value & 0x3f;
-                    value = pcx_buf[source_pos++];
-                    while (--run_length != -1) {
-                        pixels[y * *width + x++] = value;
-                    }
-                } else {
-                    pixels[x++ + y * *width] = value;
-                }
-            } while (x < line_bytes);
+  }
+  fclose(fp);
+  if ((pixels != 0) && (pcx_buf != 0))
+  {
+    source_pos = 0;
+    for (y = 0; y < (*height); y++)
+    {
+      x = 0;
+      do
+      {
+        {
+          u8 perm_value_11;
+          perm_value_11 = pcx_buf[source_pos++];
+          value = perm_value_11;
         }
-        temp_free(pcx_buf);
-    } else {
-        FatalError("No memory allocated for it (load_pcx) !!");
+        if (0xc0 == (value & 0xc0))
+        {
+          run_length = value & 0x3f;
+          {
+            u8 perm_value_26;
+            perm_value_26 = pcx_buf[source_pos++];
+            value = perm_value_26;
+          }
+          while ((--run_length) != (-1))
+            pixels[(y * (*width)) + (x++)] = value;
+
+        }
+        else
+        {
+          pixels[(x++) + (y * (*width))] = value;
+        }
+      }
+      while (x < line_bytes);
     }
-    temp_free(path);
-    return pixels;
+
+    temp_free(pcx_buf);
+  }
+  else
+  {
+    FatalError("No memory allocated for it (load_pcx) !!");
+  }
+  temp_free(path);
+  return pixels;
+
 }
 
 void LoadPcxPaletteInVignet(s32 resource_id, rgb_palette_t *palette)
@@ -902,184 +997,293 @@ void LoadPcxPaletteInVignet(s32 resource_id, rgb_palette_t *palette)
     temp_free(path);
 }
 
+extern u8 P486;
+extern u16 path_has_changed;
+extern void sleep(u32 seconds);
 void LoadPlan0InVignet(s32 resource_id)
 {
-    pcx_header_t header;
-    FILE *fp;
-    char *path, *error_buffer;
-    u8 *compressed, *destination, *pos, *end;
-    s32 data_size, tries, i, x, y, output_y, run, crop;
-    u32 source_pos, header_index;
-    u16 width, height, line_bytes;
-    u8 truncated, value, checksum;
-    extern u8 P486;
-    extern u16 path_has_changed;
-    extern void sleep(u32 seconds);
-
-    if (FondAutorise != 0) {
-        stop_cd();
-        path = (char *)temp_malloc(100);
-        truncated = 0;
-        if (path_has_changed != 0) strcpy(path, "..\\");
-        else path[0] = '\0';
-        strcat(path, "VIGNET.DAT");
-        tries = 0;
-        fp = fopen(path, "rb");
-        for (; fp == NULL && tries < 10; ) {
-            fp = fopen(path, "rb");
-            tries++;
-            sleep(1);
-        }
-        if (fp == NULL) {
-            error_buffer = (char *)temp_malloc(200);
-            sprintf(error_buffer, "%s : Can not open (background).\n", path);
-            FatalError(error_buffer);
-            temp_free(error_buffer);
-        }
-        checksum = HeaderFilevignet[resource_id].checksum_byte;
-        data_size = HeaderFilevignet[resource_id].size - 128;
-        fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-        fread(&header, 128, 1, fp);
-        for (header_index = 0; header_index < 128; header_index++) {
-            checksum -= ((u8 *)&header)[header_index];
-            ((u8 *)&header)[header_index] ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        width = header.max_x - header.min_x + 1;
-        height = header.max_y - header.min_y + 1;
-        line_bytes = header.bytes_per_line;
-        if (FondAutorise == 2) {
-            /* DOS 1:37585..375e2: read compressed data into EffetBufferNormal;
-               DrawBufferNormal is the decoded output. */
-            compressed = EffetBufferNormal;
-            destination = DrawBufferNormal;
-            if (data_size > 128000) {
-                data_size = 128000;
-                truncated = 1;
-            }
-        } else {
-            compressed = (u8 *)temp_malloc(data_size);
-            destination = PLAN0;
-        }
-        fread(compressed, 1, data_size, fp);
-        for (i = 0, pos = compressed; i < data_size; i++, pos++) {
-            checksum -= *pos;
-            *pos ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        if (truncated == 0 && checksum != 0) {
-            fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-            pos = (u8 *)&header;
-            end = pos + 16384;
-            do {
-                fread(pos, 1, 1, fp);
-                pos += 128;
-            } while (pos != end);
-            for (header_index = 0; header_index < 128; header_index++) {
-                checksum -= ((u8 *)&header)[header_index];
-                ((u8 *)&header)[header_index] ^= HeaderFilevignet[resource_id].xor_byte;
-            }
-            width = header.max_x - header.min_x + 1;
-            height = header.max_y - header.min_y + 1;
-            line_bytes = header.bytes_per_line;
-            if (FondAutorise == 2) {
-                compressed = EffetBufferNormal;
-                destination = DrawBufferNormal;
-                if (data_size > 128000) {
-                    data_size = 128000;
-                    truncated = 1;
-                }
-            } else {
-                compressed = (u8 *)temp_malloc(data_size);
-                destination = PLAN0;
-            }
-            for (i = 0, pos = compressed; i < data_size; i++, pos++) {
-                fread(pos, 1, 1, fp);
-            }
-            for (i = 0, pos = compressed; i < data_size; i++, pos++) {
-                checksum -= *pos;
-                *pos ^= HeaderFilevignet[resource_id].xor_byte;
-            }
-            if (truncated == 0 && checksum != 0) {
-                error_buffer = (char *)temp_malloc(200);
-                sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
-                FatalError(error_buffer);
-                temp_free(error_buffer);
-            }
-        }
-        fclose(fp);
-        temp_free(path);
-        if (destination != NULL && compressed != NULL) {
-            if (FondAutorise == 2 || P486 == 1) {
-                source_pos = 0;
-                crop = 0;
-                if (height > 200) {
-                    crop = height - 200;
-                    height = 200;
-                    if (truncated) crop = 0;
-                }
-                if (width > 320) width = 320;
-                for (y = 0; y < height + crop; y++) {
-                    output_y = y - crop;
-                    x = 0;
-                    do {
-                        value = compressed[source_pos++];
-                        if ((value & 0xc0) == 0xc0) {
-                            run = value & 0x3f;
-                            value = compressed[source_pos++];
-                            while (--run != -1) {
-                                if (x < width && output_y >= 0 && output_y < 200)
-                                    destination[width * output_y + x] = value;
-                                x++;
-                            }
-                        } else {
-                            if (x < width && output_y >= 0 && output_y < 200)
-                                destination[width * output_y + x] = value;
-                            x++;
-                        }
-                    } while (x < line_bytes);
-                }
-                if (FondAutorise != 2) temp_free(compressed);
-            } else {
-                source_pos = 0;
-                for (y = 0; y < height; y++) {
-                    x = 0;
-                    do {
-                        value = compressed[source_pos++];
-                        if ((value & 0xc0) == 0xc0) {
-                            run = value & 0x3f;
-                            value = compressed[source_pos++];
-                            while (--run != -1) {
-                                if (GameModeVideo == MODE_NORMAL) {
-                                    destination[width * 2 * y + x] = value;
-                                    destination[width * 2 * y + width + x] = value;
-                                } else {
-                                    destination[width * y + x] = value;
-                                }
-                                x++;
-                            }
-                        } else {
-                            if (GameModeVideo == MODE_NORMAL) {
-                                destination[width * 2 * y + x] = value;
-                                destination[width * 2 * y + width + x] = value;
-                            } else {
-                                destination[width * y + x] = value;
-                            }
-                            x++;
-                        }
-                    } while (x < line_bytes);
-                }
-                temp_free(compressed);
-            }
-        } else {
-            FatalError("No memory allocated (load_plan0).");
-        }
-        if (GameModeVideo == MODE_NORMAL) {
-            PLAN0 = PLAN0BIT;
-            plan0_width = width * 2;
-            plan0_height = height;
-        } else {
-            PLAN0FND_to_bits_planes(PLAN0, width, height);
-        }
+  u32 header_index;
+  u8 *destination;
+  s32 run;
+  u8 *end;
+  u16 line_bytes;
+  s32 x;
+  u8 truncated;
+  u8 *pos;
+  u8 checksum;
+  u8 *compressed;
+  s32 tries;
+  pcx_header_local_t header;
+  u16 width;
+  char *error_buffer;
+  s32 data_size;
+  s32 i;
+  u32 source_pos;
+  u8 value;
+  FILE *fp;
+  char *path;
+  u16 height;
+  s32 y;
+  s32 crop;
+  s32 output_y;
+  if (FondAutorise != 0)
+  {
+    stop_cd();
+    path = (char *) temp_malloc(100);
+    truncated = 0;
+    if (path_has_changed != 0)
+    {
+      strcpy(path, "..\\");
     }
+    else
+    {
+      path[0] = '\0';
+    }
+    strcat(path, "VIGNET.DAT");
+    tries = 0;
+    fp = fopen(path, "rb");
+    for (; (fp == 0) && (tries < 10);)
+    {
+      fp = fopen(path, "rb");
+      tries++;
+      sleep(1);
+    }
+
+    if (fp == 0)
+    {
+      error_buffer = (char *) temp_malloc(200);
+      sprintf(error_buffer, "%s : Can not open (background).\n", path);
+      FatalError(error_buffer);
+      temp_free(error_buffer);
+    }
+    {
+      u8 perm_value_4;
+      perm_value_4 = HeaderFilevignet[resource_id].checksum_byte;
+      checksum = perm_value_4;
+    }
+    data_size = HeaderFilevignet[resource_id].size - 128;
+    fseek(fp, HeaderFilevignet[resource_id].offset, 0);
+    fread(&header, 128, 1, fp);
+    for (header_index = 0; header_index < 128; header_index++)
+    {
+      checksum -= ((u8 *) (&header))[header_index];
+      ((u8 *) (&header))[header_index] ^= HeaderFilevignet[resource_id].xor_byte;
+    }
+
+    width = (header.max_x - header.min_x) + 1;
+    height = (header.max_y - header.min_y) + 1;
+    line_bytes = header.bytes_per_line;
+    if (FondAutorise == 2)
+    {
+      compressed = EffetBufferNormal;
+      destination = DrawBufferNormal;
+      if (data_size > 128000)
+      {
+        data_size = 128000;
+        truncated = 1;
+      }
+    }
+    else
+    {
+      compressed = (u8 *) temp_malloc(data_size);
+      destination = PLAN0;
+    }
+    fread(compressed, 1, data_size, fp);
+    for (i = 0, pos = compressed; i < data_size; i++, pos++)
+    {
+      checksum -= *pos;
+      *pos ^= HeaderFilevignet[resource_id].xor_byte;
+    }
+
+    if ((truncated == 0) && (checksum != 0))
+    {
+      fseek(fp, HeaderFilevignet[resource_id].offset, 0);
+      pos = (u8 *) (&header);
+      end = pos + 16384;
+      do
+      {
+        fread(pos, 1, 1, fp);
+        pos += 128;
+      }
+      while (pos != end);
+      for (header_index = 0; header_index < 128; header_index++)
+      {
+        checksum -= ((u8 *) (&header))[header_index];
+        ((u8 *) (&header))[header_index] ^= HeaderFilevignet[resource_id].xor_byte;
+      }
+
+      width = (header.max_x - header.min_x) + 1;
+      height = (header.max_y - header.min_y) + 1;
+      line_bytes = header.bytes_per_line;
+      if (FondAutorise == 2)
+      {
+        compressed = EffetBufferNormal;
+        destination = DrawBufferNormal;
+        if (data_size > 128000)
+        {
+          data_size = 128000;
+          truncated = 1;
+        }
+      }
+      else
+      {
+        compressed = (u8 *) temp_malloc(data_size);
+        destination = PLAN0;
+      }
+      for (i = 0, pos = compressed; i < data_size; i++, pos++)
+        fread(pos, 1, 1, fp);
+
+      for (i = 0, pos = compressed; i < data_size; i++, pos++)
+      {
+        checksum -= *pos;
+        *pos ^= HeaderFilevignet[resource_id].xor_byte;
+      }
+
+      if ((truncated == 0) && (checksum != 0))
+      {
+        error_buffer = (char *) temp_malloc(200);
+        sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
+        FatalError(error_buffer);
+        temp_free(error_buffer);
+      }
+    }
+    fclose(fp);
+    temp_free(path);
+    if ((destination != 0) && (compressed != 0))
+    {
+      if ((FondAutorise == 2) || (P486 == 1))
+      {
+        crop = 0;
+        source_pos = 0;
+        if (height > 200)
+        {
+          crop = height - 200;
+          height = 200;
+          if (truncated)
+          {
+            crop = 0;
+          }
+        }
+        if (width > 320)
+        {
+          width = 320;
+        }
+        for (y = 0; y < (height + crop); y++)
+        {
+          output_y = y - crop;
+          x = 0;
+          do
+          {
+            value = compressed[source_pos++];
+            if ((value & 0xc0) == 0xc0)
+            {
+              {
+                s32 perm_value_28;
+                s32 *perm_address_25;
+                perm_address_25 = &perm_value_28;
+                *perm_address_25 = value & 0x3f;
+                run = perm_value_28;
+              }
+              value = compressed[source_pos++];
+              while ((--run) != (-1))
+              {
+                if (((x < width) && (output_y >= 0)) && (output_y < 200))
+                {
+                  destination[(width * output_y) + x] = value;
+                }
+                x++;
+              }
+
+            }
+            else
+            {
+              if (((x < width) && (output_y >= 0)) && (output_y < 200))
+              {
+                destination[(width * output_y) + x] = value;
+              }
+              x++;
+            }
+          }
+          while (x < line_bytes);
+        }
+
+        if (FondAutorise != 2)
+        {
+          temp_free(compressed);
+        }
+      }
+      else
+      {
+        source_pos = 0;
+        for (y = 0; y < height; y++)
+        {
+          x = 0;
+          do
+          {
+            {
+              u8 perm_value_37;
+              perm_value_37 = compressed[source_pos++];
+              value = perm_value_37;
+            }
+            if ((value & 0xc0) == 0xc0)
+            {
+              run = value & 0x3f;
+              {
+                u8 perm_value_39;
+                perm_value_39 = compressed[source_pos++];
+                value = perm_value_39;
+              }
+              while ((--run) != (-1))
+              {
+                if (GameModeVideo == MODE_NORMAL)
+                {
+                  destination[((width * 2) * y) + x] = value;
+                  destination[(((width * 2) * y) + width) + x] = value;
+                }
+                else
+                {
+                  destination[(width * y) + x] = value;
+                }
+                x++;
+              }
+
+            }
+            else
+            {
+              if (GameModeVideo == MODE_NORMAL)
+              {
+                destination[((width * 2) * y) + x] = value;
+                destination[(((width * 2) * y) + width) + x] = value;
+              }
+              else
+              {
+                destination[(width * y) + x] = value;
+              }
+              x++;
+            }
+          }
+          while (x < line_bytes);
+        }
+
+        temp_free(compressed);
+      }
+    }
+    else
+    {
+      FatalError("No memory allocated (load_plan0).");
+    }
+    if (GameModeVideo == MODE_NORMAL)
+    {
+      PLAN0 = PLAN0BIT;
+      plan0_width = width * 2;
+      plan0_height = height;
+    }
+    else
+    {
+      PLAN0FND_to_bits_planes(PLAN0, width, height);
+    }
+  }
+
 }
 
 extern u8 FondAutorise;
@@ -1111,33 +1315,51 @@ u8* allocate_PLAN0(mem_t* mem_world, u16 width, u16 height)
 
 void PLAN0FND_to_bits_planes(u8 *buffer, u16 width, u16 height)
 {
-    u32 x, y;
-    u8 *source;
-    u32 offset;
-    plan0_width = width;
-    plan0bit_nb_bytes = plan0_width;
-    plan0bit_length = plan0bit_nb_bytes * height;
-    plan0_height = height;
-    source = buffer;
-    buffer = PLAN0BIT;
-    if (buffer == NULL) {
-        FatalError("No memory allocated (PLAN0FND_to_bits_planes).");
+  u32 x;
+  u32 y;
+  u8 *source;
+  u32 offset;
+  plan0_width = width;
+  plan0bit_nb_bytes = plan0_width;
+  plan0bit_length = plan0bit_nb_bytes * height;
+  plan0_height = height;
+  source = buffer;
+  buffer = PLAN0BIT;
+  if (buffer == 0)
+  {
+    FatalError("No memory allocated (PLAN0FND_to_bits_planes).");
+  }
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < plan0bit_nb_bytes; ++x)
+  {
+    offset = ((x & 3) * (plan0bit_length >> 1)) + (x >> 2);
+    offset += y * (plan0bit_nb_bytes >> 1);
+    {
+      u8 pixel;
+      pixel = source[(y * width) + x];
+      buffer[offset] = pixel;
     }
-    for (y = 0; y < height; ++y) {
-        for (x = 0; x < plan0bit_nb_bytes; ++x) {
-            offset = (x & 3) * (plan0bit_length >> 1) + (x >> 2);
-            offset += y * (plan0bit_nb_bytes >> 1);
-            buffer[offset] = source[y * width + x];
-            buffer[offset + (plan0bit_nb_bytes >> 2)] = source[y * width + x];
-            if (y < 16) {
-                offset = ((plan0bit_length >> 1) << 2) + (x >> 2) + y * (plan0bit_nb_bytes >> 1);
-                buffer[offset] = source[y * width + x];
-                buffer[offset + (plan0bit_nb_bytes >> 2)] = source[y * width + x];
-            }
-        }
+    buffer[offset + (plan0bit_nb_bytes >> 2)] = source[(y * width) + x];
+    if (y < 16)
+    {
+      {
+        u32 perm_value_2;
+        perm_value_2 = (((plan0bit_length >> 1) << 2) + (x >> 2)) + (y * (plan0bit_nb_bytes >> 1));
+        offset = perm_value_2;
+      }
+      {
+        u8 pixel;
+        pixel = source[(y * width) + x];
+        buffer[offset] = pixel;
+      }
+      buffer[offset + (plan0bit_nb_bytes >> 2)] = source[(y * width) + x];
     }
-    plan0bit_nb_bytes >>= 1;
-    plan0bit_length *= 2;
+  }
+
+
+  plan0bit_nb_bytes >>= 1;
+  plan0bit_length *= 2;
+
 }
 
 extern void stop_cd(void);
@@ -1263,108 +1485,163 @@ void LoadLanguageTxt(mem_t *mem, s32 language_index)
     temp_free(path);
 }
 
+extern u16 path_has_changed;
+extern void sleep(u32 seconds);
 u8 *LoadPcxOptions(u8 *buffer, s32 resource_id, u16 *width, u16 *height)
 {
-    pcx_header_t header;
-    FILE *fp;
-    char *path, *error_buffer;
-    u8 *pcx_buf, *pos, *end;
-    u32 i, pcx_data_size, source_pos, x, y;
-    s32 run_length;
-    u16 line_bytes;
-    u8 value, retry_checksum, checksum;
-    
-    extern u16 path_has_changed;
-    extern void sleep(u32 seconds);
+  u32 y;
+  u8 checksum;
+  s32 run_length;
+  u8 *pcx_buf;
+  u32 source_pos;
+  char *path;
+  u8 value;
+  u8 *pos;
+  u32 x;
+  u8 *end;
+  FILE *fp;
+  char *error_buffer;
+  pcx_header_local_t header;
+  u16 line_bytes;
+  u32 pcx_data_size;
+  u32 i;
+  u8 retry_checksum;
+  stop_cd();
+  path = (char *) temp_malloc(100);
+  if (path_has_changed != 0)
+  {
+    strcpy(path, "..\\");
+  }
+  else
+  {
+    path[0] = '\0';
+  }
+  strcat(path, "VIGNET.DAT");
+  fp = fopen(path, "rb");
+  if (fp == 0)
+  {
+    error_buffer = (char *) temp_malloc(200);
+    sprintf(error_buffer, "%s : Can not open.\n", path);
+    FatalError(error_buffer);
+    temp_free(error_buffer);
+  }
+  {
+    u8 perm_value_0;
+    perm_value_0 = HeaderFilevignet[resource_id].checksum_byte;
+    checksum = perm_value_0;
+  }
+  pcx_data_size = HeaderFilevignet[resource_id].size - 128;
+  fseek(fp, HeaderFilevignet[resource_id].offset, 0);
+  fread(&header, 128, 1, fp);
+  for (i = 0; i < 128; i++)
+  {
+    checksum -= ((u8 *) (&header))[i];
+    ((u8 *) (&header))[i] ^= HeaderFilevignet[resource_id].xor_byte;
+  }
 
-    stop_cd();
-    path = (char *)temp_malloc(100);
-    if (path_has_changed != 0) strcpy(path, "..\\");
-    else path[0] = '\0';
-    strcat(path, "VIGNET.DAT");
-    
-    fp = fopen(path, "rb");
-    
-    if (fp == NULL) {
-        error_buffer = (char *)temp_malloc(200);
-        sprintf(error_buffer, "%s : Can not open.\n", path);
-        FatalError(error_buffer);
-        temp_free(error_buffer);
+  *width = (header.max_x - header.min_x) + 1;
+  *height = (header.max_y - header.min_y) + 1;
+  line_bytes = header.bytes_per_line;
+  pcx_buf = (u8 *) temp_malloc(pcx_data_size);
+  fread(pcx_buf, 1, pcx_data_size, fp);
+  end = pcx_buf + pcx_data_size;
+  for (pos = pcx_buf; pos < end; pos++)
+  {
+    checksum -= *pos;
+    *pos ^= HeaderFilevignet[resource_id].xor_byte;
+  }
+
+  if (checksum != 0)
+  {
+    {
+      u8 perm_value_10;
+      {
+        u8 perm_value_20;
+        u8 *perm_address_5;
+        perm_address_5 = &perm_value_20;
+        *perm_address_5 = HeaderFilevignet[resource_id].checksum_byte;
+        perm_value_10 = perm_value_20;
+      }
+      retry_checksum = perm_value_10;
     }
-    checksum = HeaderFilevignet[resource_id].checksum_byte;
-    pcx_data_size = HeaderFilevignet[resource_id].size - 128;
     fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-    fread(&header, 128, 1, fp);
-    for (i = 0; i < 128; i++) {
-        checksum -= ((u8 *)&header)[i];
-        ((u8 *)&header)[i] ^= HeaderFilevignet[resource_id].xor_byte;
+    pos = (u8 *) (&header);
+    end = pos + 16384;
+    do
+    {
+      fread(pos, 1, 1, fp);
+      pos += 128;
     }
-    *width = header.max_x - header.min_x + 1;
-    *height = header.max_y - header.min_y + 1;
+    while (pos != end);
+    for (i = 0; i < 128; i++)
+    {
+      retry_checksum -= ((u8 *) (&header))[i];
+      ((u8 *) (&header))[i] ^= HeaderFilevignet[resource_id].xor_byte;
+    }
+
+    *width = (header.max_x - header.min_x) + 1;
+    *height = (header.max_y - header.min_y) + 1;
     line_bytes = header.bytes_per_line;
-    
-    pcx_buf = (u8 *)temp_malloc(pcx_data_size);
-    fread(pcx_buf, 1, pcx_data_size, fp);
+    pcx_buf = (u8 *) temp_malloc(pcx_data_size);
+    for (i = 0, pos = pcx_buf; (i < pcx_data_size) != 0; i++, pos++)
+      fread(pos, 1, 1, fp);
+
     end = pcx_buf + pcx_data_size;
-    for (pos = pcx_buf; pos < end; pos++) {
-        checksum -= *pos;
-        *pos ^= HeaderFilevignet[resource_id].xor_byte;
+    for (pos = pcx_buf; pos < end; pos++)
+    {
+      retry_checksum -= *pos;
+      *pos ^= HeaderFilevignet[resource_id].xor_byte;
     }
-    if (checksum != 0) {
-        retry_checksum = HeaderFilevignet[resource_id].checksum_byte;
-        fseek(fp, HeaderFilevignet[resource_id].offset, 0);
-        pos = (u8 *)&header;
-        end = pos + 16384;
-        do {
-            fread(pos, 1, 1, fp);
-            pos += 128;
-        } while (pos != end);
-        for (i = 0; i < 128; i++) {
-            retry_checksum -= ((u8 *)&header)[i];
-            ((u8 *)&header)[i] ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        *width = header.max_x - header.min_x + 1;
-        *height = header.max_y - header.min_y + 1;
-        line_bytes = header.bytes_per_line;
-        
-        pcx_buf = (u8 *)temp_malloc(pcx_data_size);
-        for (i = 0, pos = pcx_buf; i < pcx_data_size; i++, pos++) {
-            fread(pos, 1, 1, fp);
-        }
-        end = pcx_buf + pcx_data_size;
-        for (pos = pcx_buf; pos < end; pos++) {
-            retry_checksum -= *pos;
-            *pos ^= HeaderFilevignet[resource_id].xor_byte;
-        }
-        if (retry_checksum != 0) {
-            error_buffer = (char *)temp_malloc(200);
-            sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
-            FatalError(error_buffer);
-            temp_free(error_buffer);
-        }
+
+    if (0 != retry_checksum)
+    {
+      error_buffer = (char *) temp_malloc(200);
+      sprintf(error_buffer, "%s : File integrity fault (%d).\n", path, resource_id);
+      FatalError(error_buffer);
+      temp_free(error_buffer);
     }
-    fclose(fp);
-    if (buffer != NULL && pcx_buf != NULL) {
-        source_pos = 0;
-        for (y = 0; y < *height; y++) {
-            x = 0;
-            do {
-                value = pcx_buf[source_pos++];
-                if ((value & 0xc0) == 0xc0) {
-                    run_length = value & 0x3f;
-                    value = pcx_buf[source_pos++];
-                    while (--run_length != -1) {
-                        buffer[y * *width + x++] = value;
-                    }
-                } else {
-                    buffer[x++ + y * *width] = value;
-                }
-            } while (x < line_bytes);
+  }
+  fclose(fp);
+  if (!((buffer != 0) && (pcx_buf != 0)))
+  {
+    FatalError("No memory allocated for it (load_pcx) !!");
+  }
+  else
+  {
+    source_pos = 0;
+    for (y = 0; y < (*height); y++)
+    {
+      x = 0;
+      do
+      {
+        {
+          u8 perm_value_15;
+          perm_value_15 = pcx_buf[source_pos++];
+          value = perm_value_15;
         }
-        temp_free(pcx_buf);
-    } else {
-        FatalError("No memory allocated for it (load_pcx) !!");
+        if ((value & 0xc0) == 0xc0)
+        {
+          run_length = 0x3f & value;
+          {
+            u8 perm_value_29;
+            perm_value_29 = pcx_buf[source_pos++];
+            value = perm_value_29;
+          }
+          while ((--run_length) != (-1))
+            buffer[(y * (*width)) + (x++)] = value;
+
+        }
+        else
+        {
+          buffer[(x++) + (y * (*width))] = value;
+        }
+      }
+      while (x < line_bytes);
     }
-    temp_free(path);
-    return buffer;
+
+    temp_free(pcx_buf);
+  }
+  temp_free(path);
+  return buffer;
+
 }

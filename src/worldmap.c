@@ -409,184 +409,311 @@ void CHANGE_STAGE_NAMES(void) {
 #define ABS_STAGE(x) ((x) >= 0 ? (x) : -(x))
 
 void DO_STAGE_NAMES(void) {
-    s32 i, letter, x, speed, distance, rand_speed;
-    s32 spacing, space_width;
-    u8 finished;
-    display_item_t *item_level, *item_world;
-    sprite_t *sprite_level, *sprite_world;
-    s32 start_level_x, start_world_x;
-    if (!ModeAutoJumelle) {
-        if (text_to_display[1].xpos > 160) {
-            text_to_display[1].xpos -= 6;
-            text_to_display[1].centered_x_pos -= 6;
-        }
-        if (text_to_display[3].xpos > 160) {
-            text_to_display[3].xpos -= 6;
-            text_to_display[3].centered_x_pos -= 6;
-        }
-        if (text_to_display[2].ypos < 293) {
-            text_to_display[2].ypos += 2;
-            text_to_display[2].centered_y_pos += 2;
-        }
-        if (text_to_display[4].ypos > -70) {
-            text_to_display[4].ypos -= 2;
-            text_to_display[4].centered_y_pos -= 2;
-        }
-    } else if (!PositionStageNameCalcule) {
-        item_level = &text_to_display[1];
-        strcpy(TexteStageNameLevel, item_level->text);
-        CouleurStageNameLevel = (u8)item_level->color;
-        TailleStageNameLevel = item_level->font_size;
-        spacing = 1;
-        space_width = 8;
-        LongueurStageNameLevel = strlen(item_level->text);
-        start_level_x = item_level->xpos;
-        for (i = 0; i < LongueurStageNameLevel; ++i) {
-            letter = deter_num_let(item_level->text[i], &item_level->text[i+1]);
-            if (item_level->text[i] == '/') {
-                x = start_level_x - (calc_largmax_text(item_level->text, i, space_width, spacing, item_level->font_size) >> 1);
-                letter = 0;
-            } else if (item_level->text[i] == ' ') {
-                x += space_width;
-                letter = 0;
-            }
-            if (letter) {
-                sprite_level = &alpha[letter];
-                PositionXStageNameLevel[i] = x << 4;
-                PositionYStageNameLevel[i] = item_level->ypos << 4;
-                VitesseXStageNameLevel[i] = 0;
-                while (!VitesseXStageNameLevel[i]) {
-                    VitesseXStageNameLevel[i] = (i - LongueurStageNameLevel / 2) * 32 / (LongueurStageNameLevel / 2) + (myRand(32) - 16);
-                }
-                VitesseYStageNameLevel[i] = -16 - myRand(32);
-                x += (sprite_level->sprite_pos.raw & 15) + sprite_level->inner_width - spacing;
-            }
-        }
-        item_world = &text_to_display[3];
-        strcpy(TexteStageNameWorld, item_world->text);
-        CouleurStageNameWorld = (u8)item_world->color;
-        TailleStageNameWorld = item_world->font_size;
-        spacing = 3;
-        space_width = 10;
-        LongueurStageNameWorld = strlen(item_world->text);
-        start_world_x = item_world->xpos;
-        for (i = 0; i < LongueurStageNameWorld; ++i) {
-            letter = deter_num_let(item_world->text[i], &item_world->text[i+1]);
-            if (item_world->text[i] == '/') {
-                x = start_world_x - (calc_largmax_text(item_world->text, i, space_width, spacing, item_world->font_size) >> 1);
-                letter = 0;
-            } else if (item_world->text[i] == ' ') {
-                x += space_width;
-                letter = 0;
-            }
-            if (letter) {
-                letter += 41;
-                sprite_world = &alpha2[letter];
-                PositionXStageNameWorld[i] = x << 4;
-                PositionYStageNameWorld[i] = item_world->ypos << 4;
-                VitesseXStageNameWorld[i] = 0;
-                while (!VitesseXStageNameWorld[i]) {
-                    VitesseXStageNameWorld[i] = (i - LongueurStageNameWorld / 2) * 32 / (LongueurStageNameWorld / 2) + (myRand(32) - 16);
-                }
-                VitesseYStageNameWorld[i] = -16 - myRand(32);
-                x += (sprite_world->sprite_pos.raw & 15) + sprite_world->inner_width - spacing;
-            }
-        }
-        PositionStageNameCalcule = 1;
-        strcpy(text_to_display[4].text, text_to_display[3].text);
-        text_to_display[4].color = text_to_display[3].color;
-        text_to_display[3].ypos = 30;
-        text_to_display[3].xpos = 450;
-        strcpy(text_to_display[2].text, text_to_display[1].text);
-        text_to_display[1].xpos = 450;
-        text_to_display[1].ypos = 193;
-        text_to_display[2].color = text_to_display[1].color;
+  s32 rand_speed;
+  s32 distance;
+  s32 x;
+  s32 letter;
+  sprite_t *sprite_world;
+  s32 spacing;
+  u8 finished;
+  s32 space_width;
+  s32 start_level_x;
+  s32 speed;
+  display_item_t *item_level;
+  s32 i;
+  display_item_t *item_world;
+  s32 start_world_x;
+  sprite_t *sprite_level;
+  if (!ModeAutoJumelle)
+  {
+    if (text_to_display[1].xpos > 160)
+    {
+      text_to_display[1].xpos -= 6;
+      text_to_display[1].centered_x_pos -= 6;
     }
-    if (PositionStageNameCalcule == 1) {
-        finished = 1;
-        for (i = 0; i < LongueurStageNameWorld; ++i) {
-            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
-                PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
-                if (PositionYStageNameWorld[i] >= 3200) {
-                    PositionYStageNameWorld[i] = 3200;
-                    if (ABS_STAGE(VitesseYStageNameWorld[i]) < 8) VitesseYStageNameWorld[i] = -64 - myRand(32);
-                    else VitesseYStageNameWorld[i] = -VitesseYStageNameWorld[i];
-                }
-                VitesseYStageNameWorld[i]++;
-                PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
-                if (PositionStageNameCalcule == 1 && (PositionXStageNameWorld[i] <= 0 || PositionXStageNameWorld[i] >= 4880))
-                    VitesseXStageNameWorld[i] = -VitesseXStageNameWorld[i];
-                else if (PositionXStageNameWorld[i] > -320 && PositionXStageNameWorld[i] < 5120) finished = 0;
-            }
-        }
-        for (i = 0; i < LongueurStageNameLevel; ++i) {
-            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
-                PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
-                if (PositionYStageNameLevel[i] >= 3200) {
-                    PositionYStageNameLevel[i] = 3200;
-                    if (ABS_STAGE(VitesseYStageNameLevel[i]) < 8) VitesseYStageNameLevel[i] = -64 - myRand(32);
-                    else VitesseYStageNameLevel[i] = -VitesseYStageNameLevel[i];
-                }
-                VitesseYStageNameLevel[i]++;
-                PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
-                if (PositionStageNameCalcule == 1 && (PositionXStageNameLevel[i] <= 0 || PositionXStageNameLevel[i] >= 4960))
-                    VitesseXStageNameLevel[i] = -VitesseXStageNameLevel[i];
-                else if (PositionXStageNameLevel[i] > -320 && PositionXStageNameLevel[i] < 5120) finished = 0;
-            }
-        }
-        if (finished) PositionStageNameCalcule = 0;
-    } else if (PositionStageNameCalcule == 2) {
-        for (i = 0; i < LongueurStageNameWorld; ++i) {
-            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
-                distance = PositionYStageNameWorld[i] - 1600;
-                if (distance < 0) distance = -distance;
-                speed = PositionXStageNameWorld[i] - 2560;
-                if (speed < 0) speed = -speed;
-                if (distance > speed) speed = PositionYStageNameWorld[i] - 1600;
-                else speed = PositionXStageNameWorld[i] - 2560;
-                if (speed < 0) speed = -speed;
-                distance = speed;
-                rand_speed = myRand(64) + 32;
-                VitesseXStageNameWorld[i] = (PositionXStageNameWorld[i] - 2560) * rand_speed / distance;
-                VitesseYStageNameWorld[i] = (PositionYStageNameWorld[i] - 1600) * rand_speed / distance;
-            }
-        }
-        for (i = 0; i < LongueurStageNameLevel; ++i) {
-            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
-                distance = PositionYStageNameLevel[i] - 1600;
-                if (distance < 0) distance = -distance;
-                speed = PositionXStageNameLevel[i] - 2560;
-                if (speed < 0) speed = -speed;
-                if (distance > speed) speed = PositionYStageNameLevel[i] - 1600;
-                else speed = PositionXStageNameLevel[i] - 2560;
-                if (speed < 0) speed = -speed;
-                distance = speed;
-                rand_speed = myRand(64) + 32;
-                VitesseXStageNameLevel[i] = (PositionXStageNameLevel[i] - 2560) * rand_speed / distance;
-                VitesseYStageNameLevel[i] = (PositionYStageNameLevel[i] - 1600) * rand_speed / distance;
-            }
-        }
-        PositionStageNameCalcule = 3;
-    } else if (PositionStageNameCalcule == 3) {
-        finished = 1;
-        for (i = 0; i < LongueurStageNameWorld; ++i) {
-            if (TexteStageNameWorld[i] != '/' && TexteStageNameWorld[i] != ' ') {
-                PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
-                PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
-                if (PositionXStageNameWorld[i] > -320 && PositionXStageNameWorld[i] < 5120 &&
-                    PositionYStageNameWorld[i] > -320 && PositionYStageNameWorld[i] < 3200) finished = 0;
-            }
-        }
-        for (i = 0; i < LongueurStageNameLevel; ++i) {
-            if (TexteStageNameLevel[i] != '/' && TexteStageNameLevel[i] != ' ') {
-                PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
-                PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
-                if (PositionXStageNameLevel[i] > -320 && PositionXStageNameLevel[i] < 5120 &&
-                    PositionYStageNameLevel[i] > -320 && PositionYStageNameLevel[i] < 3200) finished = 0;
-            }
-        }
-        if (finished) PositionStageNameCalcule = 0;
+    if (text_to_display[3].xpos > 160)
+    {
+      text_to_display[3].xpos -= 6;
+      text_to_display[3].centered_x_pos -= 6;
     }
+    if (text_to_display[2].ypos < 293)
+    {
+      text_to_display[2].ypos += 2;
+      text_to_display[2].centered_y_pos += 2;
+    }
+    if (text_to_display[4].ypos > (-70))
+    {
+      text_to_display[4].ypos -= 2;
+      text_to_display[4].centered_y_pos -= 2;
+    }
+  }
+  else
+    if (!PositionStageNameCalcule)
+  {
+    item_level = &text_to_display[1];
+    strcpy(TexteStageNameLevel, item_level->text);
+    CouleurStageNameLevel = (u8) item_level->color;
+    TailleStageNameLevel = item_level->font_size;
+    spacing = 1;
+    space_width = 8;
+    LongueurStageNameLevel = strlen(item_level->text);
+    start_level_x = item_level->xpos;
+    for (i = 0; i < LongueurStageNameLevel; ++i)
+    {
+      letter = deter_num_let(item_level->text[i], &item_level->text[i + 1]);
+      if (item_level->text[i] == '/')
+      {
+        x = start_level_x - (calc_largmax_text(item_level->text, i, space_width, spacing, item_level->font_size) >> 1);
+        letter = 0;
+      }
+      else
+        if (item_level->text[i] == ' ')
+      {
+        x += space_width;
+        letter = 0;
+      }
+      if (letter)
+      {
+        sprite_level = &alpha[letter];
+        PositionXStageNameLevel[i] = x << 4;
+        PositionYStageNameLevel[i] = item_level->ypos << 4;
+        VitesseXStageNameLevel[i] = 0;
+        while (!VitesseXStageNameLevel[i])
+          VitesseXStageNameLevel[i] = (((i - (LongueurStageNameLevel / 2)) * 32) / (LongueurStageNameLevel / 2)) + (myRand(32) - 16);
+
+        {
+          s32 random_y;
+          random_y = myRand(32);
+          VitesseYStageNameLevel[i] = (-16) - random_y;
+        }
+        x += (sprite_level->inner_width + (sprite_level->sprite_pos.raw & 15)) - spacing;
+      }
+    }
+
+    item_world = &text_to_display[3];
+    strcpy(TexteStageNameWorld, item_world->text);
+    CouleurStageNameWorld = (u8) item_world->color;
+    TailleStageNameWorld = item_world->font_size;
+    space_width = 10;
+    spacing = 3;
+    LongueurStageNameWorld = strlen(item_world->text);
+    start_world_x = item_world->xpos;
+    for (i = 0; i < LongueurStageNameWorld; ++i)
+    {
+      letter = deter_num_let(item_world->text[i], &item_world->text[i + 1]);
+      if (item_world->text[i] == '/')
+      {
+        x = start_world_x - (calc_largmax_text(item_world->text, i, space_width, spacing, item_world->font_size) >> 1);
+        letter = 0;
+      }
+      else
+        if (item_world->text[i] == ' ')
+      {
+        x += space_width;
+        letter = 0;
+      }
+      if (letter)
+      {
+        letter += 41;
+        sprite_world = &alpha2[letter];
+        PositionXStageNameWorld[i] = x << 4;
+        PositionYStageNameWorld[i] = item_world->ypos << 4;
+        VitesseXStageNameWorld[i] = 0;
+        while (!VitesseXStageNameWorld[i])
+          VitesseXStageNameWorld[i] = (((i - (LongueurStageNameWorld / 2)) * 32) / (LongueurStageNameWorld / 2)) + (myRand(32) - 16);
+
+        {
+          s32 random_y;
+          random_y = myRand(32);
+          VitesseYStageNameWorld[i] = (-16) - random_y;
+        }
+        x += (sprite_world->inner_width + (sprite_world->sprite_pos.raw & 15)) - spacing;
+      }
+    }
+
+    PositionStageNameCalcule = 1;
+    strcpy(text_to_display[4].text, text_to_display[3].text);
+    text_to_display[4].color = text_to_display[3].color;
+    text_to_display[3].ypos = 30;
+    text_to_display[3].xpos = 450;
+    strcpy(text_to_display[2].text, text_to_display[1].text);
+    text_to_display[1].xpos = 450;
+    text_to_display[1].ypos = 193;
+    text_to_display[2].color = text_to_display[1].color;
+  }
+  if (PositionStageNameCalcule == 1)
+  {
+    finished = 1;
+    for (i = 0; i < LongueurStageNameWorld; ++i)
+      if ((TexteStageNameWorld[i] != '/') && (TexteStageNameWorld[i] != ' '))
+    {
+      PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
+      if (PositionYStageNameWorld[i] >= 3200)
+      {
+        PositionYStageNameWorld[i] = 3200;
+        if (((VitesseYStageNameWorld[i] >= 0) ? (VitesseYStageNameWorld[i]) : (-VitesseYStageNameWorld[i])) < 8)
+        {
+          VitesseYStageNameWorld[i] = (-64) - myRand(32);
+        }
+        else
+        {
+          VitesseYStageNameWorld[i] = -VitesseYStageNameWorld[i];
+        }
+      }
+      VitesseYStageNameWorld[i]++;
+      PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
+      if ((PositionStageNameCalcule == 1) && ((PositionXStageNameWorld[i] <= 0) || (PositionXStageNameWorld[i] >= 4880)))
+      {
+        VitesseXStageNameWorld[i] = -VitesseXStageNameWorld[i];
+      }
+      else
+        if ((PositionXStageNameWorld[i] > (-320)) && (PositionXStageNameWorld[i] < 5120))
+      {
+        finished = 0;
+      }
+    }
+
+    for (i = 0; i < LongueurStageNameLevel; ++i)
+      if ((TexteStageNameLevel[i] != '/') && (TexteStageNameLevel[i] != ' '))
+    {
+      PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
+      if (PositionYStageNameLevel[i] >= 3200)
+      {
+        PositionYStageNameLevel[i] = 3200;
+        if (((VitesseYStageNameLevel[i] >= 0) ? (VitesseYStageNameLevel[i]) : (-VitesseYStageNameLevel[i])) < 8)
+        {
+          VitesseYStageNameLevel[i] = (-64) - myRand(32);
+        }
+        else
+        {
+          VitesseYStageNameLevel[i] = -VitesseYStageNameLevel[i];
+        }
+      }
+      VitesseYStageNameLevel[i]++;
+      PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
+      if ((PositionStageNameCalcule == 1) && ((PositionXStageNameLevel[i] <= 0) || (PositionXStageNameLevel[i] >= 4960)))
+      {
+        VitesseXStageNameLevel[i] = -VitesseXStageNameLevel[i];
+      }
+      else
+        if ((PositionXStageNameLevel[i] > (-320)) && (PositionXStageNameLevel[i] < 5120))
+      {
+        finished = 0;
+      }
+    }
+
+    if (finished)
+    {
+      PositionStageNameCalcule = 0;
+    }
+  }
+  else
+    if (PositionStageNameCalcule == 2)
+  {
+    for (i = 0; i < LongueurStageNameWorld; ++i)
+      if ((TexteStageNameWorld[i] != '/') && (TexteStageNameWorld[i] != ' '))
+    {
+      distance = PositionYStageNameWorld[i] - 1600;
+      if (distance < 0)
+      {
+        distance = -distance;
+      }
+      {
+        s32 perm_value_18;
+        perm_value_18 = PositionXStageNameWorld[i] - 2560;
+        speed = perm_value_18;
+      }
+      if (speed < 0)
+      {
+        speed = -speed;
+      }
+      if (distance > speed)
+      {
+        speed = PositionYStageNameWorld[i] - 1600;
+      }
+      else
+      {
+        speed = PositionXStageNameWorld[i] - 2560;
+      }
+      if (speed < 0)
+      {
+        speed = -speed;
+      }
+      distance = speed;
+      {
+        s32 perm_value_22;
+        perm_value_22 = myRand(64) + 32;
+        rand_speed = perm_value_22;
+      }
+      VitesseXStageNameWorld[i] = ((PositionXStageNameWorld[i] - 2560) * rand_speed) / distance;
+      VitesseYStageNameWorld[i] = ((PositionYStageNameWorld[i] - 1600) * rand_speed) / distance;
+    }
+
+    for (i = 0; i < LongueurStageNameLevel; ++i)
+      if ((TexteStageNameLevel[i] != '/') && (TexteStageNameLevel[i] != ' '))
+    {
+      distance = PositionYStageNameLevel[i] - 1600;
+      if (distance < 0)
+      {
+        distance = -distance;
+      }
+      speed = PositionXStageNameLevel[i] - 2560;
+      if (speed < 0)
+      {
+        speed = -speed;
+      }
+      if (distance > speed)
+      {
+        speed = PositionYStageNameLevel[i] - 1600;
+      }
+      else
+      {
+        speed = PositionXStageNameLevel[i] - 2560;
+      }
+      if (speed < 0)
+      {
+        speed = -speed;
+      }
+      distance = speed;
+      rand_speed = myRand(64) + 32;
+      VitesseXStageNameLevel[i] = ((PositionXStageNameLevel[i] - 2560) * rand_speed) / distance;
+      VitesseYStageNameLevel[i] = ((PositionYStageNameLevel[i] - 1600) * rand_speed) / distance;
+    }
+
+    PositionStageNameCalcule = 3;
+  }
+  else
+    if (PositionStageNameCalcule == 3)
+  {
+    finished = 1;
+    for (i = 0; i < LongueurStageNameWorld; ++i)
+      if ((TexteStageNameWorld[i] != '/') && (TexteStageNameWorld[i] != ' '))
+    {
+      PositionYStageNameWorld[i] += VitesseYStageNameWorld[i];
+      PositionXStageNameWorld[i] += VitesseXStageNameWorld[i];
+      if ((((PositionXStageNameWorld[i] > (-320)) && (PositionXStageNameWorld[i] < 5120)) && (PositionYStageNameWorld[i] > (-320))) && (PositionYStageNameWorld[i] < 3200))
+      {
+        finished = 0;
+      }
+    }
+
+    for (i = 0; i < LongueurStageNameLevel; ++i)
+      if ((TexteStageNameLevel[i] != '/') && (TexteStageNameLevel[i] != ' '))
+    {
+      PositionYStageNameLevel[i] += VitesseYStageNameLevel[i];
+      PositionXStageNameLevel[i] += VitesseXStageNameLevel[i];
+      if ((((PositionXStageNameLevel[i] > (-320)) && (PositionXStageNameLevel[i] < 5120)) && (PositionYStageNameLevel[i] > (-320))) && (PositionYStageNameLevel[i] < 3200))
+      {
+        finished = 0;
+      }
+    }
+
+    if (finished)
+    {
+      PositionStageNameCalcule = 0;
+    }
+  }
+
 }
 
 void INIT_WORLD_INFO(void) {
@@ -753,88 +880,124 @@ void RESPOND_TO_LEFT(void)
 #define ABS_PROMOTED(x) ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x))
 
 void DO_RAYMAN_IN_WLD_MAP(void) {
-    s16 diff_x, diff_y, xspeed, yspeed, move_x, move_y;
-    if (old_num_world == num_world_choice) {
-        if (ValidButPressed()) {
-            PositionStageNameCalcule = 0;
-            ModeAutoJumelle = 0;
-            if (num_world_choice == 18 || num_world_choice == 19 || num_world_choice == 20 || num_world_choice == 21 ||
-                num_world_choice == 22 || num_world_choice == 23
-            ) {
-                if (language_txt[150] == t_world_info[num_world_choice].text /* /save game/ */ &&
-                    NBRE_SAVE != 0 &&
-                    strcmp(text_to_display[3].text, language_txt[161] /* /password/ */) != 0
-                ) {
-                    // Erase previously saved game?
-                    if (confirmation_msg(3)) {
-                        SaveGameOnDisk(fichier_selectionne);
-                        PASTILLES_SAUVE_SAVED(num_world_choice);
-                        CHANGE_STAGE_NAMES();
-                    }
-                }
-            } else {
-                new_world = 1;
-            }
-            ChangeJumelleSizeOK &= ~4;
-        } else if (rightjoy()) {
-            RESPOND_TO_RIGHT();
-        } else if (leftjoy()) {
-            RESPOND_TO_LEFT();
-        } else if (downjoy()) {
-            RESPOND_TO_DOWN();
-        } else if (upjoy()) {
-            RESPOND_TO_UP();
+  s16 diff_x;
+  s16 diff_y;
+  s16 xspeed;
+  s16 yspeed;
+  s16 move_x;
+  s16 move_y;
+  if (old_num_world == num_world_choice)
+  {
+    if (ValidButPressed())
+    {
+      PositionStageNameCalcule = 0;
+      ModeAutoJumelle = 0;
+      if ((((((num_world_choice == 18) || (num_world_choice == 19)) || (num_world_choice == 20)) || (num_world_choice == 21)) || (num_world_choice == 22)) || (num_world_choice == 23))
+      {
+        if (((language_txt[150] == t_world_info[num_world_choice].text) && (NBRE_SAVE != 0)) && (strcmp(text_to_display[3].text, language_txt[161]) != 0))
+        {
+          if (confirmation_msg(3))
+          {
+            SaveGameOnDisk(fichier_selectionne);
+            PASTILLES_SAUVE_SAVED(num_world_choice);
+            CHANGE_STAGE_NAMES();
+          }
         }
-
-        if (num_world_choice != old_num_world) {
-            if (t_world_info[num_world_choice].state & 1) {
-                ray.timer = 0;
-                set_main_and_sub_etat(&ray, 1, 0);
-                CHANGE_STAGE_NAMES();
-            } else {
-                num_world_choice = old_num_world;
-            }
-        }
-    } else {
-        diff_x = t_world_info[num_world_choice].xpos - t_world_info[old_num_world].xpos;
-        diff_y = t_world_info[num_world_choice].ypos - t_world_info[old_num_world].ypos;
-        if (diff_x < 0) {
-            ray.flags.flip_x = 0;
-        } else {
-            ray.flags.flip_x = 1;
-        }
-        if (diff_x != 0 && diff_y != 0) {
-            if (ABS_PROMOTED(diff_y) > ABS_PROMOTED(diff_x)) {
-                xspeed = ABS_PROMOTED(ray.timer * diff_x / diff_y);
-                yspeed = ray.timer;
-            } else {
-                xspeed = ray.timer;
-                yspeed = ABS_PROMOTED(ray.timer * diff_y / diff_x);
-            }
-        } else if (diff_x == 0) {
-            yspeed = ray.timer;
-        } else if (diff_y == 0) {
-            xspeed = ray.timer;
-        }
-        ++ray.timer;
-
-        move_x = xspeed * sgn(diff_x);
-        move_y = yspeed * sgn(diff_y);
-        ray.speed_x = t_world_info[old_num_world].xpos + move_x - ray.offset_bx - (s16)ray.x;
-        ray.speed_y = t_world_info[old_num_world].ypos + move_y - ray.offset_by - (s16)ray.y + 8;
-
-        if (ABS_PROMOTED(xspeed) >= ABS_PROMOTED(diff_x) && ABS_PROMOTED(yspeed) >= ABS_PROMOTED(diff_y)) {
-            // arrived at new location
-            old_num_world = num_world_choice;
-            if (ray.main_etat != 0) {
-                set_main_and_sub_etat(&ray, 0, 0);
-                ray.speed_x = 0;
-                ray.speed_y = 0;
-                ray.x = t_world_info[num_world_choice].xpos - ray.offset_bx;
-                ray.y = t_world_info[num_world_choice].ypos - ray.offset_by + 8;
-            }
-        }
+      }
+      else
+      {
+        new_world = 1;
+      }
+      ChangeJumelleSizeOK &= ~4;
     }
+    else
+      if (rightjoy())
+    {
+      RESPOND_TO_RIGHT();
+    }
+    else
+      if (leftjoy())
+    {
+      RESPOND_TO_LEFT();
+    }
+    else
+      if (downjoy())
+    {
+      RESPOND_TO_DOWN();
+    }
+    else
+      if (upjoy())
+    {
+      RESPOND_TO_UP();
+    }
+    if (num_world_choice != old_num_world)
+    {
+      if (t_world_info[num_world_choice].state & 1)
+      {
+        ray.timer = 0;
+        set_main_and_sub_etat(&ray, 1, 0);
+        CHANGE_STAGE_NAMES();
+      }
+      else
+      {
+        num_world_choice = old_num_world;
+      }
+    }
+  }
+  else
+  {
+{s16 perm_value_0;perm_value_0 = t_world_info[num_world_choice].xpos - t_world_info[old_num_world].xpos;diff_x = perm_value_0;}
+    diff_y = t_world_info[num_world_choice].ypos - t_world_info[old_num_world].ypos;
+    if (diff_x < 0)
+    {
+      ray.flags.flip_x = 0;
+    }
+    else
+    {
+      ray.flags.flip_x = 1;
+    }
+    if ((diff_x != 0) && (diff_y != 0))
+    {
+      if (!(((((s32) diff_y) >= 0) ? ((s32) diff_y) : (-((s32) diff_y))) > ((((s32) diff_x) >= 0) ? ((s32) diff_x) : (-((s32) diff_x)))))
+      {
+        xspeed = ray.timer;
+        yspeed = (((s32) ((ray.timer * diff_y) / diff_x)) >= 0) ? ((s32) ((ray.timer * diff_y) / diff_x)) : (-((s32) ((ray.timer * diff_y) / diff_x)));
+      }
+      else
+      {
+        xspeed = (((s32) ((ray.timer * diff_x) / diff_y)) >= 0) ? ((s32) ((ray.timer * diff_x) / diff_y)) : (-((s32) ((ray.timer * diff_x) / diff_y)));
+        yspeed = ray.timer;
+      }
+    }
+    else
+      if (diff_x == 0)
+    {
+      yspeed = ray.timer;
+    }
+    else
+      if (diff_y == 0)
+    {
+      xspeed = ray.timer;
+    }
+    ++ray.timer;
+    move_x = xspeed * sgn(diff_x);
+    move_y = yspeed * sgn(diff_y);
+    ray.speed_x = ((t_world_info[old_num_world].xpos + move_x) - ray.offset_bx) - ((s16) ray.x);
+    ray.speed_y = (((t_world_info[old_num_world].ypos + move_y) - ray.offset_by) - ((s16) ray.y)) + 8;
+    if ((((((s32) xspeed) >= 0) ? ((s32) xspeed) : (-((s32) xspeed))) >= ((((s32) diff_x) >= 0) ? ((s32) diff_x) : (-((s32) diff_x)))) && (((((s32) yspeed) >= 0) ? ((s32) yspeed) : (-((s32) yspeed))) >= ((((s32) diff_y) >= 0) ? ((s32) diff_y) : (-((s32) diff_y)))))
+    {
+      old_num_world = num_world_choice;
+      if (ray.main_etat != 0)
+      {
+        set_main_and_sub_etat(&ray, 0, 0);
+        ray.speed_x = 0;
+        ray.speed_y = 0;
+        ray.x = t_world_info[num_world_choice].xpos - ray.offset_bx;
+        ray.y = (t_world_info[num_world_choice].ypos - ray.offset_by) + 8;
+      }
+    }
+  }
+
 }
 
 void DO_CHEMIN(void) {
