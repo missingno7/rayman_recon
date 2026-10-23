@@ -88,7 +88,7 @@ void asm_037e4(const void *records, u8 *dest);
 #define TYPE_PIRATE_GUETTEUR 77
 #define TYPE_PIRATE_GUETTEUR2 239
 #define TYPE_158_PALETTE_SWAPPER 158
-#define Abs(value) ((value) >= 0 ? (value) : -(value))
+#define Abs(value) abs32_inline(value)
 extern u8 *DisplayBufferNormal;
 extern u8 *DrawBufferNormal;
 extern u8 ModeVideoActuel;

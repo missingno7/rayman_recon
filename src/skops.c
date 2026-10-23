@@ -10,7 +10,7 @@
 #define MAX_2(x, y) if (x < y) x = y;
 #endif
 #ifndef ABS
-#define ABS(x) abs(x)
+#define ABS(x) abs32_inline(x)
 #endif
 #define ANIMMODE_NONE 0
 #define TYPE_SCORPION 150
