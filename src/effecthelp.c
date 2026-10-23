@@ -66,22 +66,22 @@ extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
 
 void effect_helper_15e60(u16 radius, s16 speed, u16 frame_limit)
 {
-    effect5_state_t *state;
-    effect5_point_t *point;
-    effect5_item_t *item;
-    double latitude_step;
     double longitude_step;
-    double latitude;
-    double longitude;
-    double scaled_sin;
     double scaled_cos;
-    u8 row;
-    u8 column;
-    u16 cell;
+    double longitude;
+    u16 y;
+    double latitude_step;
+    effect5_state_t *state;
     u8 height_step;
     u8 width_step;
+    double scaled_sin;
+    effect5_item_t *item;
+    double latitude;
+    u8 column;
+    u8 row;
+    effect5_point_t *point;
     u16 x;
-    u16 y;
+    u16 cell;
 
     state = effect5_state;
     effect_reset_geometry();
@@ -220,19 +220,19 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
 
 s16 effect_helper_16404(void)
 {
-    effect5_state_t *state;
-    effect5_point_t *point;
-    s32 frame;
-    s32 magnitude;
-    s32 step;
-    s32 target_x, target_y;
     s32 projected_x, projected_y;
-    s32 denominator;
-    s32 x, y, z;
+    s32 target_x, target_y;
+    effect5_point_t *point;
     s32 sine_x, cosine_x, sine_y, cosine_y;
     s16 sine, cosine;
-    u8 width_step, height_step;
+    s32 frame;
+    s32 step;
     u8 row, column;
+    u8 width_step, height_step;
+    effect5_state_t *state;
+    s32 denominator;
+    s32 magnitude;
+    s32 x, y, z;
 
     state = effect5_state;
     point = state->points;

@@ -194,18 +194,21 @@ speed_negative_done:
 
 //32280
 void DO_2_PARTS_CYMBAL(obj_t* cym_obj) {
-    /* 4A078 8016E878 -O2 -msoft-float */
-    s16 cym_x; s16 cym_y; s16 cym_w; s16 cym_h;
-    s16 cym_sub_etat;
-    obj_t *link_obj;
-    s16 link_id;
-    s16 cym_offs_bx;
-    s16 link_offs_bx; s16 link_offs_by;
     s16 cym_offs_by;
-    s16 link_sub_etat;
+    obj_t *link_obj;
+    s16 cym_sub_etat;
+    s16 cym_offs_bx;
     s16 diff_x_1;
     s16 diff_x_2;
+    s16 link_id;
     s16 diff_y;
+    s16 link_offs_bx;
+    s16 link_offs_by;
+    s16 cym_x;
+    s16 cym_y;
+    s16 cym_w;
+    s16 link_sub_etat;
+    s16 cym_h;
 
     cym_offs_bx = cym_obj->offset_bx;
     cym_offs_by = cym_obj->offset_by;
@@ -368,7 +371,7 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
 
     if (cym_obj->type == TYPE_CYMBAL2)
     {
-        s16 cym_link_id;
+        s32 cym_link_id;
         cym_sub_etat = 10;
         cym_link_id = link_init[cym_obj->id];
         if (cym_link_id != cym_obj->id)

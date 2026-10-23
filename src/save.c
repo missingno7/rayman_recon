@@ -95,12 +95,12 @@ void doneGameSave(void) {
 
 void saveGameState(obj_t *save_obj, save_state_t *save_state)
 {
-    u8 i;
     s16 j;
     obj_t *cur_obj;
+    u8 i;
     s16 nb_objs;
-    s16 unk_1;
     s32 unk_2;
+    s16 unk_1;
 
     save_state->status_bar_tings = status_bar.num_wiz;
     save_state->x_map = xmap;
@@ -163,14 +163,14 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
 
 void restoreGameState(save_state_t *save_state)
 {
-    s16 i;
     s16 obj_id;
-    s32 bit;
     obj_t *obj;
-    s16 nb_objs;
+    s16 i;
+    s32 bit;
     s16 index;
+    s16 nb_objs;
     obj_t *save_obj;
-    s32 saved_id;  /* DOS 1:63eec promotes the signed save-object id before indexing. */
+    s16 saved_id;
 
     if (save_state->is_just_saved) {
         if (RayEvts.tiny) {
