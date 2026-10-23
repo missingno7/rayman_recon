@@ -184,7 +184,7 @@ void allocateMOSKITOMAMA(void)
 
     YPosBBF2G =
         NiveauSol - (ray.offset_by - ray.offset_hy) - 70 +
-        ((ray.x + 8 + ray.offset_bx - xmap) >> 1);
+        ((ray.x + (8 + ray.offset_bx) - xmap) >> 1);
     boss_obj = &level.objects[moskitomama_gauche_obj_id];
     boss_obj->speed_x = 0;
     boss_obj->speed_y = 0;
@@ -538,7 +538,7 @@ void doBBF2command(obj_t *bbf2_obj)
         {
             s32 speed_step = sgn(((s16)unk_2) - bbf2_obj->speed_y) +
                 bbf2_obj->speed_y;
-            bbf2_obj->speed_y = max32(-48, min32(48, speed_step));
+            bbf2_obj->speed_y = max32(min32(speed_step, 48), -48);
         }
     }
 
@@ -835,14 +835,14 @@ void DO_DARK_PHASE2_COMMAND(obj_t *dp2_obj)
 
     if (dp2_obj->main_etat == 0 && dp2_obj->sub_etat == 38)
     {
-        RayEvts.poing = 0;
         sinus_actif = 0;
         flammes_actives = 0;
         phase_dark2 = 0;
         TextDark2_Affiche = 0;
-        scroll_end_x = 0;
         scroll_start_x = 0;
         ToonJustGivePoing = 0;
+        RayEvts.poing = 0;
+        scroll_end_x = 0;
         dark_obj->flags.alive = 0;
         dark_obj->is_active = 0;
     }
@@ -1410,23 +1410,24 @@ void AllocateToons(void)
 
 void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
 {
-    s16 diff_x; s16 diff_y;
-    s32 ray_x; s16 ray_y;
-    obj_t *poing_obj_2;
-    s16 dist;
+    s16 diff_x;
+    s16 ray_y;
     obj_t *unk_obj;
     s32 speed_y_step;
     s32 speed_x_step;
-
+    s32 diff_y;
+    s32 ray_x;
+    obj_t *poing_obj_2;
+    s16 dist;
     if (d2fly_obj->hit_points == 0)
     {
         diff_x = PosArXToon1 - (d2fly_obj->x + d2fly_obj->offset_bx);
-        diff_y = PosArYToon1 - (d2fly_obj->y + d2fly_obj->offset_by);
+        diff_y = (s16)(PosArYToon1 - (d2fly_obj->y + d2fly_obj->offset_by));
     }
     else
     {
         diff_x = PosArXToon2 - (d2fly_obj->x + d2fly_obj->offset_bx);
-        diff_y = PosArYToon2 - (d2fly_obj->y + d2fly_obj->offset_by);
+        diff_y = (s16)(PosArYToon2 - (d2fly_obj->y + d2fly_obj->offset_by));
     }
 
     /* DOS re-forms the linked address after updating the fist position. */
@@ -1494,7 +1495,7 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
     if (dist > 0)
     {
         diff_x = ashl16(diff_x, 5) / dist;
-        diff_y = ashl16(diff_y, 5) / dist;
+        diff_y = (s16)(ashl16(diff_y, 5) / dist);
     }
 
     speed_y_step = sgn(diff_y - d2fly_obj->speed_y) + d2fly_obj->speed_y;

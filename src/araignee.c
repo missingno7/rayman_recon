@@ -388,16 +388,21 @@ void get_spi_zdc(obj_t *param_1, s16 *param_2, s16 *param_3, s16 *param_4, s16 *
 }
 
 void DO_SPIDER_PLAFOND(obj_t* spipl_obj) {
-    // NOTE(Falcury): the PS1 and PC versions seem functionally identical.
-    s16 poing_x; s16 poing_y_2; s16 poing_y_1;
-    s16 spipl_x; s16 spipl_y_1; s16 spipl_y_2;
+    s16 spipl_spr_y;
+    s16 spipl_spr_x;
     s16 i;
+    s16 cen_y;
+    s16 spipl_y_2;
+    s16 spipl_x;
     obj_t *cur_obj;
     s16 nb_objs;
-    s16 spipl_spr_h; s16 spipl_spr_y; s16 spipl_spr_w; s16 spipl_spr_x;
+    s16 poing_y_1;
+    s16 poing_x;
+    s16 spipl_y_1;
+    s16 spipl_spr_w;
+    s16 spipl_spr_h;
     s16 cen_x;
-    s16 cen_y;
-
+    s16 poing_y_2;
     cen_x = get_center_x(spipl_obj);
     cen_y = get_center_y(spipl_obj);
 
@@ -584,14 +589,15 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
  * 1:0c91a..0c94c and 1:0c955..0c987. Extent is 872 bytes; body remains NEAR. */
 #define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
-    s16 dx, dy, distance;
+    s16 dx;
+    s16 distance;
+    s16 dy;
     s16 abs_speed_x;
     if (obj->cmd != 1) {
         dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
         if (position_ray) {
             /* DOS 1:0c79a..0c7b8: retain the narrow trajectory subtraction. */
-            dy = (s16)ray.y + ray.offset_by;
-            dy -= (s16)obj->y + obj->offset_by;
+            dy = ((s16)ray.y + ray.offset_by) - ((s16)obj->y + obj->offset_by);
         }
         else
             dy = ray.y + (ray.offset_by >> 1) - (obj->y + obj->offset_by);

@@ -141,20 +141,20 @@ void init_vitraux(void)
 u8 poing_face_obj(obj_t *obj)
 {
     s32 diff_x = (obj->x + obj->offset_bx) - (poing_obj->x + poing_obj->offset_bx);
+    u8 ahead = diff_x > 0;
     u8 facing = 0;
-    if ((diff_x > 0) == poing_obj->flags.flip_x)
+    if (ahead == poing_obj->flags.flip_x)
         facing = 1;
     return facing;
 }
 
 void DARK_phase1(obj_t *mr_drk_obj)
 {
-    obj_t *crd_drk_obj;
     s16 diff_x;
-    s16 diff_y;
     u32 dist;
+    obj_t *crd_drk_obj;
+    s16 diff_y;
     u8 unk_1;
-
     if (corde_dark_obj_id != -1 && mr_drk_obj->main_etat == 0) {
         crd_drk_obj = &level.objects[corde_dark_obj_id];
         if (poing_obj_id != -1) {

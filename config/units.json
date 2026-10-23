@@ -2451,7 +2451,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DARK_phase1": {
      "status": "NEAR_MATCH",
@@ -2459,7 +2460,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DARK_phase3": {
      "status": "STRICT",
@@ -9849,7 +9851,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "allocateMOSKITOSAXO": {
      "status": "STRICT",
@@ -9896,7 +9899,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_HYB_BBF2_POING_COLLISION": {
      "status": "STRICT",
@@ -9951,7 +9955,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_DARK2_SORT_COMMAND": {
      "status": "NEAR_MATCH",
@@ -9999,7 +10004,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "ToonDonnePoing": {
      "status": "STRICT",
@@ -10210,7 +10216,8 @@
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "display_sprite": {
      "status": "NEAR_MATCH",
@@ -10218,14 +10225,16 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "display_sprite_NoClip": {
      "status": "NEAR_MATCH",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DISPLAY_POING": {
      "status": "STRICT",
@@ -10301,7 +10310,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DISPLAY_ALL_OBJECTS": {
      "status": "NEAR_MATCH",
@@ -10359,7 +10369,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "display_box_text": {
      "status": "STRICT",
@@ -10383,7 +10394,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "display_grp_stars": {
      "status": "NEAR_MATCH",
@@ -10391,7 +10403,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DISPLAY_TEXT_FEE": {
      "status": "STRICT",
@@ -10455,7 +10468,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DISPLAY_DEFORM_SPRITE": {
      "status": "STRICT",
@@ -10493,7 +10507,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_SPIDER_PLAFOND_POING_COLLISION": {
      "status": "STRICT",
@@ -10516,7 +10531,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_SPIDER_COMMAND": {
      "status": "STRICT",

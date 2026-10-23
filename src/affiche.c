@@ -388,14 +388,14 @@ void display2(obj_t* obj) {
     anim_t* anim;
     s16 layers_per_frame;
     draw_func_t* draw_func;
-    u16 layer_index;
-    s16 proj_y;
+    s32 layer_index;
+    s32 proj_y;
     sprite_t* sprite;
     s16 x;
     s32 proj_x;
     s32 proj_height;
     s32 proj_width;
-    u32 packed_size;
+    u16 packed_size;
     u16 sprite_index;
     u8 *target;
     u8 sprite_field_A;
@@ -442,17 +442,16 @@ void display2(obj_t* obj) {
 
 void display_sprite(obj_t *obj, u8 index, s16 x, s16 y, u8 flip)
 {
-    sprite_t *sprite;
+    s32 proj_height;
     draw_func_t *draw_func;
     u8 *target;
     u8 *image;
     s16 proj_y;
     s16 proj_x;
-    s32 proj_height;
+    u8 color;
+    sprite_t *sprite;
     u32 packed_size;
-    s32 color;
     u32 sprite_flip;
-
     sprite = obj->sprites + index;
     sprite_flip = sprite->flags_bits.flip_x;
     if (sprite_flip ^ flip)
@@ -479,7 +478,7 @@ void display_sprite_NoClip(obj_t *obj, u8 index, s16 x, s16 y, u8 flip)
     s16 proj_x;
     s32 proj_height;
     u32 packed_size;
-    s32 color;
+    u8 color;
     u32 sprite_flip;
 
     sprite = obj->sprites + index;
@@ -703,7 +702,7 @@ void DISPLAY_PTS_TO_PLAN2(s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s1
 void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     /* NEAR: explicit palette snapshot recovers the 312-byte DOS extent.
        Projection lifetimes and stack placement remain unresolved. */
-    u16 begin;
+    s32 begin;
     u16 end;
     u16 i;
     sprite_t* sprite;
@@ -712,7 +711,7 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     s16 proj_x;
     s16 proj_y;
     s32 proj_height;
-    u32 packed_size;
+    u16 packed_size;
     s32 color;
     anim_layer_t *current;
     u8* image_data;
@@ -1102,14 +1101,14 @@ void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color,
 }
 
 void display_text_sin(const char* text, s16 x, s16 y, s16 phase, u8 font_size, u8 color) {
-    s32 line_height;
-    s16 char_spacing;
-    s16 space_width;
     u32 number;
-    s16 current_x;
-    sprite_t *sprite;
+    s16 line_height;
     s16 index;
-    s32 current_y;
+    s16 char_spacing;
+    s16 current_x;
+    s16 current_y;
+    s16 space_width;
+    sprite_t *sprite;
     s32 let_width;
     s16 vertical_offset;
     number = 0;
@@ -1199,11 +1198,11 @@ void CLRSCR(void) {
 void display_etoile(s16 in_x, s16 in_y) {
     u8 loc_star_spr[8] = {21, 22, 23, 24, 21, 25, 22, 21};
     grp_star_t* star;
-    u8 rand_res;
-    s16 draw_x;
+    s32 rand_res;
+    s32 draw_x;
     s16 draw_y;
     sprite_t* sprite;
-    u16 packed_size;
+    u32 packed_size;
 
     star = &grp_stars[current_star];
     star->timer++;
@@ -1214,7 +1213,7 @@ void display_etoile(s16 in_x, s16 in_y) {
         star->dist = rand_res;
         star->sprite_table_index = rand_res;
     }
-    draw_x = star->dist + (in_x - xmap);
+    draw_x = (s16)(star->dist + (in_x - xmap));
     draw_y = star->dist + (in_y - ymap);
     if (draw_x > 0 && SCREEN_WIDTH - draw_x > 0 && draw_y > 0 && SCREEN_HEIGHT - draw_y > 0) {
         sprite = poing_obj->sprites + loc_star_spr[star->sprite_table_index];
@@ -1228,11 +1227,13 @@ void display_etoile(s16 in_x, s16 in_y) {
 
 void display_grp_stars(void)
 {
+    s16 y;
+    s16 w;
     obj_t *grapped;
-    s16 x; s16 y; s16 w; s16 h;
+    s16 x;
+    s16 h;
     s16 cen_x;
     s16 grapped_x;
-
     if (ray.main_etat == 7 && (ray.flags.alive))
     {
         grapped = &level.objects[id_obj_grapped];
@@ -1483,17 +1484,29 @@ void AFFICHE_SPRITE_DEFORME(sprite_t* sprite, u8* image, s16 x0, s16 y0,
 
 void DISPLAY_DEFORMATION(obj_t* obj, s16 angle, s16 scale_x, s16 scale_y) {
     anim_t *anim;
-    anim_layer_t *layers;
-    anim_layer_t *layer;
     sprite_t *sprite;
+    s16 y1;
     s16 index;
-    s16 sprite_index;
-    s16 center_x;
+    s16 follow_y;
+    s16 anim_x;
+    s16 anim_w;
+    s16 x0;
+    s16 sprite_x;
+    s16 sprite_y;
+    s16 anim_h;
+    s16 y0;
+    s16 follow_h;
+    s16 x2;
     s16 center_y;
-    s16 follow_x, follow_y, follow_w, follow_h;
-    s16 anim_x, anim_y, anim_w, anim_h;
-    s16 sprite_x, sprite_y;
-    s16 x0, y0, x1, y1, x2, y2;
+    s16 y2;
+    anim_layer_t *layer;
+    s16 follow_w;
+    s16 sprite_index;
+    s16 follow_x;
+    s16 center_x;
+    anim_layer_t *layers;
+    s16 anim_y;
+    s16 x1;
     anim = obj->animations + obj->anim_index;
     /* DOS 1:0bc02..0bc10: extend the layer count before loading the frame. */
     layers = anim->layers + (anim->layers_per_frame & 0x3fff) * obj->anim_frame;
