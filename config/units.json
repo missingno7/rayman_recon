@@ -6973,7 +6973,7 @@
      ]
     },
     "Do_Effet_Chaleur": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
@@ -8543,12 +8543,13 @@
      ]
     },
     "PAR_REACT_TO_RAY_IN_ZONE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_PAR_BOMB_COMMAND": {
      "status": "STRICT",
@@ -8565,10 +8566,11 @@
      ]
     },
     "sub_3B5E8": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "calc_gros_type": {
      "status": "NEAR_MATCH",
@@ -8651,11 +8653,12 @@
      ]
     },
     "DoFadePaletteSpecialPC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DoPaletteSpecialPC": {
      "status": "NEAR_MATCH",

@@ -298,8 +298,13 @@ void sub_3B580(void) {
 }
 
 s32 sub_3B5E8(void) {
-    u32 *dest = (u32*)0xa0000;
+    /* SYNTHETIC: initialized local aliases retain the DOS destination home.
+       dest_home and dest_home_2 are INVENTED compiler-steering names. */
+    u32 *dest;
+    u32 **dest_home = &dest;
+    u32 ***dest_home_2 = &dest_home;
     s32 iterations = 0;
+    **dest_home_2 = (u32*)0xa0000;
     *unk_ptr_3d840 = 0;
     bios_wait_timer(7, 0xa120, unk_ptr_3d840);
     do {
@@ -1180,16 +1185,17 @@ void InitPaletteSpecialPC(void) {
 }
 
 void DoFadePaletteSpecialPC(s16 start, s16 end) {
+    /* COMPILER_STEERED: start-R/end-R/start-G product order selects the DOS allocation. */
     /* DOS 1:2d55f/2d6d6: short indices; 2d5fe, 2d660, 2d6b6:
        truncate each interpolated channel before the constant-first clamp. */
     s16 p, i;
     for (p = start + 1; p < end; ++p) {
         for (i = 0; i < 256; ++i) {
             rvb_special[p].colors[i].r = min32(63, (u8)(
-                (rvb_special[start].colors[i].r * (end - p) +
-                 rvb_special[end].colors[i].r * (p - start)) / (end - start)));
+                ((end - p) * rvb_special[start].colors[i].r +
+                 (p - start) * rvb_special[end].colors[i].r) / (end - start)));
             rvb_special[p].colors[i].g = min32(63, (u8)(
-                (rvb_special[start].colors[i].g * (end - p) +
+                ((end - p) * rvb_special[start].colors[i].g +
                  rvb_special[end].colors[i].g * (p - start)) / (end - start)));
             rvb_special[p].colors[i].b = min32(63, (u8)(
                 (rvb_special[start].colors[i].b * (end - p) +
@@ -1632,21 +1638,22 @@ void DO_PAR_POING_COLLISION(obj_t *obj, s16 param_2)
 }
 
 void PAR_REACT_TO_RAY_IN_ZONE(obj_t* obj) {
+    /* COMPILER_STEERED: direct field tests; failed tests contain no call or write. */
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    u8 sub_etat;
+
 
     if (!obj->timer && obj->main_etat == 0) {
-        sub_etat = obj->sub_etat;
-        if (sub_etat == 11)
+
+        if (obj->sub_etat == 11)
             set_sub_etat(obj, 2);
-        else if (sub_etat == 0) {
+        else if (obj->sub_etat == 0) {
             obj->sub_speed = (obj->offset_bx + obj->x) - (ray.x + ray.offset_bx);
             if (Abs(obj->sub_speed) > obj->detect_zone + 16)
                 set_sub_etat(obj, 8);
             else
                 set_sub_etat(obj, 9);
         }
-        else if (sub_etat == 4)
+        else if (obj->sub_etat == 4)
             set_sub_etat(obj, 5);
     }
 }

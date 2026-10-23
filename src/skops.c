@@ -588,8 +588,8 @@ void swap(s32 ind_1, s32 ind_2)
 
 void set_rubis_list(void)
 {
-    /* COMPILER_STEERED: exact-type object-kind snapshot (local name INVENTED). */
-    u16 object_type;
+    /* COMPILER_STEERED: direct type tests restore the 452-byte extent and the
+       heat caller displacement. Failed tests contain no call or write. */
     s32 rubis_ind;
     s32 i;
     obj_t *cur_obj;
@@ -604,13 +604,12 @@ void set_rubis_list(void)
     cur_obj = &level.objects[i];
     nb_objs = level.nb_objects;
     while (i < nb_objs) {
-        object_type = cur_obj->type;
-        if (object_type == TYPE_RUBIS) {
+        if (cur_obj->type == TYPE_RUBIS) {
             ecroule_rubis_list[rubis_ind] = cur_obj->id;
             rubis_ind++;
-        } else if (object_type == TYPE_SKO_PINCE) {
+        } else if (cur_obj->type == TYPE_SKO_PINCE) {
             sko_pince_obj_id = i;
-        } else if (object_type == TYPE_LAVE) {
+        } else if (cur_obj->type == TYPE_LAVE) {
             sko_lave_obj[sko_nb_lave] = i;
             sko_nb_lave++;
         }
