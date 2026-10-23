@@ -74,6 +74,8 @@ Commands (all run from the repo root with `python`, stdlib + capstone):
 `tools/explain.py UNIT FUNC` (traces the pinned 10.6 compiler and explains each NEAR difference by allocator
 mechanism: rover offset, home sort, colour tie, Score substitution, selection, schedule - start NEAR work here),
 `tools/cgtrace.py SRC.c --func NAME --out build/cgtrace/<new dir>` (raw allocator trace),
+`tools/permute.py SRC.c FUNC --conservative|--aggressive --seed N --max-compiles N --out build/<new dir>` (guided source
+permuter, needs pycparser; tools/permute.md),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`,
 `tools/integrate.py WORKER_DIR UNIT=FILE.c ... -m MSG` (integrator: copy, merge, register, gate, commit only if green).
 
