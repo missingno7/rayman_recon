@@ -11021,7 +11021,8 @@
      "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "sub_1a2c8": {
      "status": "STRICT",
@@ -14650,24 +14651,6 @@
     "_BSS": "VERIFIED"
    }
   },
-  "bss_4e8a6": {
-   "source": "src/bss/bss_4e8a6.c",
-   "oracle": "gog_v121_us",
-   "profile": "game",
-   "functions": {},
-   "segments": {
-    "_BSS": "VERIFIED"
-   }
-  },
-  "bss_4e8b4": {
-   "source": "src/bss/bss_4e8b4.c",
-   "oracle": "gog_v121_us",
-   "profile": "game",
-   "functions": {},
-   "segments": {
-    "_BSS": "VERIFIED"
-   }
-  },
   "bss_4e8b8": {
    "source": "src/bss/bss_4e8b8.c",
    "oracle": "gog_v121_us",
@@ -16774,6 +16757,15 @@
   },
   "bss_language_txt": {
    "source": "src/bss/bss_language_txt.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_BSS": "VERIFIED"
+   }
+  },
+  "bss_4e8a2": {
+   "source": "src/bss/bss_4e8a2.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {},

@@ -16370,30 +16370,6 @@
     "name": "INVENTED",
     "evidence": "DOS code loads/stores a far pointer (offset plus selector) beginning at 2:0089c."
    },
-   "cd_packet_command_word": {
-    "addr": "2:4e8a2",
-    "type": "u16",
-    "name": "INVENTED",
-    "evidence": "DOS fixups address the MSCDEX command word at its true start, 2:4e8a2."
-   },
-   "cd_packet_argument_low": {
-    "addr": "2:4e8a4",
-    "type": "u16",
-    "name": "INVENTED",
-    "evidence": "DOS fixups address the MSCDEX packet argument low word at 2:4e8a4."
-   },
-   "cd_packet_argument_high": {
-    "addr": "2:4e8a6",
-    "type": "u16",
-    "name": "INVENTED",
-    "evidence": "DOS fixups address the MSCDEX packet argument high word at 2:4e8a6."
-   },
-   "cd_packet_segment": {
-    "addr": "2:4e8b4",
-    "type": "u16",
-    "name": "INVENTED",
-    "evidence": "DOS fixups address the MSCDEX packet selector word at 2:4e8b4."
-   },
    "cd_drive_handle": {
     "addr": "2:4e8b8",
     "type": "u16",
@@ -18217,6 +18193,13 @@
     "sdk_declaration": "extern WORD _sosDIGIData2_End;",
     "size": 4,
     "type": "u32"
+   },
+   "cd_request_regs": {
+    "addr": "2:4e8a2",
+    "type": "dos_regs_t",
+    "name": "INVENTED",
+    "evidence": "DOS cdaudio passes 2:4e8a2 to sub_564f8 (dos_regs_t* parameter: ax +0, bx +2, cx +4, ..., es +18, ss +20) at every INT 2Fh call; the former bindings cd_packet_command_word/argument_low/argument_high/segment were its ax/bx/cx/es fields. Natural-link runtime 2026-10-23 proved the split broke ES:BX.",
+    "size": 22
    }
   }
  },
