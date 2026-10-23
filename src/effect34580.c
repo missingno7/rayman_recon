@@ -87,40 +87,51 @@ u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)
 
 void effect_helper_34760(void)
 {
-    effect_span_t *span;
-    effect_rows_t *state;
-    s32 index;
-
-    state = current_rows();
-    index = 0;
-    span = state->entries;
-    for (; index < state->count; ++index, ++span) {
-        s32 width = span->width;
-        s32 destination_y = span->destination_y;
-        s32 source_y = span->source_y;
-        if (width > 0 && source_y >= 0 && source_y < 200 &&
-                destination_y >= 0 && destination_y < 200) {
-            s32 source_x = span->source_x;
-            if (source_x < 0) {
-                width += source_x;
-                source_x = 0;
-            }
-            if (source_x + width > 320) width = 320 - source_x;
-            if (width > 0) {
-                s32 destination_x = span->destination_x;
-                if (destination_x < 0) {
-                    width += destination_x;
-                    destination_x = 0;
-                }
-                if (destination_x + width > 320) width = 320 - destination_x;
-                if (width > 0) {
-                    u8 *source = state->screen + source_y * 320 + source_x;
-                    u8 *destination = state->destination + destination_y * 320 + destination_x;
-                    copy(source, destination, width);
-                }
-            }
+  effect_span_t *span;
+  effect_rows_t *state;
+  s32 index;
+  state = dword_E0D14;
+  index = 0;
+  span = state->entries;
+  for (; index < state->count; ++index, ++span)
+  {
+    s32 width = span->width;
+    s32 destination_y = span->destination_y;
+    s32 source_y = span->source_y;
+    if (((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200))
+    {
+      s32 source_x = span->source_x;
+      if (source_x < 0)
+      {
+        width += source_x;
+        source_x = 0;
+      }
+      if ((source_x + width) > 320)
+      {
+        width = 320 - source_x;
+      }
+      if ((width > 0) != 0)
+      {
+        s32 destination_x = span->destination_x;
+        if (destination_x < 0)
+        {
+          width = ((s32) ((s32) ((s32) width))) + destination_x;
+          destination_x = 0;
         }
+        if ((destination_x + width) > 320)
+        {
+          width = 320 - destination_x;
+        }
+        if (width > 0)
+        {
+          u8 *source = (state->screen + (source_y * 320)) + source_x;
+          u8 *destination = (state->destination + (destination_y * 320)) + destination_x;
+          copy(source, destination, width);
+        }
+      }
     }
+  }
+
 }
 
 u16 effect_helper_348a4(void)
@@ -128,8 +139,8 @@ u16 effect_helper_348a4(void)
     effect_rows_t *state = current_rows();
     effect_span_t *span = state->entries;
     s16 distance;
-    s16 i;
-    s16 j;
+    s32 i;
+    s32 j;
 
     if (state->direction >= 0) distance = state->position_limit - state->position;
     else distance = state->position;
@@ -175,7 +186,10 @@ u16 effect_helper_348a4(void)
                 span[i].source_y = even_y;
                 span[j].source_y = odd_y;
                 span[i].width = span[j].width = 320;
-                even_y += 2;
+                {
+                    s16 next_even_y = even_y + 2;
+                    even_y = next_even_y;
+                }
                 odd_y += 2;
             }
         }

@@ -135,94 +135,130 @@ void init_aff_luciole(s32 a1, s32 a2)
 
 void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
 {
-    s32 x_outer_left;
-    s32 left_width;
-    s32 right_width;
-    register s32 radius;
-    register s32 x_outer_right;
-    register s32 x_inner_left;
-    register s32 x_inner_right;
-    register s32 y_top;
-    register s32 y_bottom;
-    register s32 i;
-    register u8 *p;
-
-    radius = rayon_luciole + ADDLUCLIP;
-    x_outer_left = a1 - radius;
-    x_outer_right = a1 + radius;
-    x_inner_left = a1 - a3;
-    if (x_outer_left < Bloc_lim_W1_Glob)
-        x_outer_left = Bloc_lim_W1_Glob;
-    if (x_inner_left > Bloc_lim_W2_Glob)
-        x_inner_left = Bloc_lim_W2_Glob;
-    left_width = x_inner_left - x_outer_left;
-
-    x_inner_right = a1 + a3;
-    if (x_outer_right > Bloc_lim_W2_Glob)
-        x_outer_right = Bloc_lim_W2_Glob;
-    if (x_inner_right < Bloc_lim_W1_Glob)
-        x_inner_right = Bloc_lim_W1_Glob;
-    right_width = x_outer_right - x_inner_right;
-
-    y_top = a2 - a4;
-    if (left_width > 0) {
-        if (y_top >= Bloc_lim_H1_Glob && y_top < Bloc_lim_H2_Glob) {
-            p = draw_buf + y_top * 320 + x_outer_left;
-            for (i = 0; i < left_width; ++i)
-                p[i] = 0;
-        }
-        y_bottom = a2 + a4;
-        if (y_bottom >= Bloc_lim_H1_Glob && y_bottom < Bloc_lim_H2_Glob) {
-            p = draw_buf + y_bottom * 320 + x_outer_left;
-            for (i = 0; i < left_width; ++i)
-                p[i] = 0;
-        }
+  s32 x_outer_left;
+  s32 left_width;
+  s32 right_width;
+  s32 radius;
+  s32 x_outer_right;
+  s32 x_inner_left;
+  s32 x_inner_right;
+  s32 y_top;
+  s32 y_bottom;
+  s32 i;
+  u8 *p;
+  radius = rayon_luciole + ADDLUCLIP;
+  x_outer_left = a1 - radius;
+  x_outer_right = a1 + radius;
+  x_inner_left = a1 - a3;
+  if (x_outer_left < Bloc_lim_W1_Glob)
+  {
+    x_outer_left = Bloc_lim_W1_Glob;
+  }
+  if (x_inner_left > Bloc_lim_W2_Glob)
+  {
+    x_inner_left = Bloc_lim_W2_Glob;
+  }
+  left_width = x_inner_left - x_outer_left;
+  x_inner_right = a1 + a3;
+  if (x_outer_right > Bloc_lim_W2_Glob)
+  {
+    x_outer_right = Bloc_lim_W2_Glob;
+  }
+  if (x_inner_right < Bloc_lim_W1_Glob)
+  {
+    x_inner_right = Bloc_lim_W1_Glob;
+  }
+  {
+    s32 perm_value_8;
+    perm_value_8 = x_outer_right - x_inner_right;
+    right_width = perm_value_8;
+  }
+  {
+    s32 perm_value_9;
+    perm_value_9 = a2 - a4;
+    {
+      y_top = perm_value_9;
     }
+  }
+  {
+    if (left_width > 0)
+    {
+      if ((y_top >= Bloc_lim_H1_Glob) && (y_top < Bloc_lim_H2_Glob))
+      {
+        p = (draw_buf + (y_top * 320)) + x_outer_left;
+        for (i = 0; i < left_width; ++i)
+          p[i] = 0;
 
-    if (right_width > 0) {
-        if (y_top >= Bloc_lim_H1_Glob && y_top < Bloc_lim_H2_Glob) {
-            p = draw_buf + y_top * 320 + x_inner_right;
-            for (i = 0; i < right_width; ++i)
-                p[i] = 0;
-        }
-        y_bottom = a2 + a4;
-        if (y_bottom >= Bloc_lim_H1_Glob && y_bottom < Bloc_lim_H2_Glob) {
-            p = draw_buf + y_bottom * 320 + x_inner_right;
-            for (i = 0; i < right_width; ++i)
-                p[i] = 0;
-        }
+      }
+      y_bottom = a2 + a4;
+      if ((y_bottom >= Bloc_lim_H1_Glob) && (y_bottom < Bloc_lim_H2_Glob))
+      {
+        p = draw_buf + ((x_outer_left + (y_bottom * 64)) + (y_bottom * 256));
+        for (i = 0; i < left_width; ++i)
+          p[i] = 0;
+
+      }
     }
+  }
+  if (right_width > 0)
+  {
+    if ((y_top >= Bloc_lim_H1_Glob) && (y_top < Bloc_lim_H2_Glob))
+    {
+      p = (draw_buf + (y_top * 320)) + x_inner_right;
+      for (i = 0; i < right_width; ++i)
+        p[i] = 0;
+
+    }
+    y_bottom = a2 + a4;
+    if ((y_bottom >= Bloc_lim_H1_Glob) && (y_bottom < Bloc_lim_H2_Glob))
+    {
+      p = draw_buf + ((x_inner_right + (y_bottom * 64)) + (y_bottom * 256));
+      for (i = 0; i < right_width; ++i)
+        p[i] = 0;
+
+    }
+  }
 }
 
 void aff_luciole(s32 a1, s32 a2, s32 a3, u8 *draw_buf)
 {
-    s32 x;
-    s32 i;
-    s32 y;
+  s32 x;
+  s32 i;
+  s32 y;
+  for (i = 0, y = a3; i <= ADDLUCLIP; ++i, ++y)
+  {
+    plot2line(a1, a2, 0, y, draw_buf);
+  }
 
-    for (i = 0, y = a3; i <= ADDLUCLIP; ++i, ++y) {
-        plot2line(a1, a2, 0, y, draw_buf);
+  x = (s32) a3;
+  i = 0;
+  y = 0;
+  if (x >= 0)
+  {
+    s32 d = 1;
+    s32 err = (2 * x) - 1;
+    do
+    {
+      plot2line(a1, a2, i, x, draw_buf);
+      plot2line(a1, a2, x, i, draw_buf);
+      ++i;
+      {
+        s32 perm_value_5;
+        s32 *perm_address_4;
+        perm_address_4 = &perm_value_5;
+        *perm_address_4 = y + d;
+        y = perm_value_5;
+      }
+      d += 2;
+      if (x <= y)
+      {
+        --x;
+        y -= err;
+        err -= 2;
+      }
     }
-
-    x = a3;
-    i = 0;
-    y = 0;
-    if (x >= 0) {
-        s32 d = 1;
-        s32 err = 2 * x - 1;
-        do {
-            plot2line(a1, a2, i, x, draw_buf);
-            plot2line(a1, a2, x, i, draw_buf);
-            ++i;
-            y += d;
-            d += 2;
-            if (x <= y) {
-                --x;
-                y -= err;
-                err -= 2;
-            }
-        } while (i <= x);
-    }
+    while (i <= x);
+  }
 }
 
 void Display_and_free_luciole(u8 *draw_buf)

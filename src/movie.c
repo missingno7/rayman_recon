@@ -226,7 +226,7 @@ void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)
 {
     u8 *dst;
     u32 i;
-    dst = surface->pixels + y * 320 + x;
+    dst = surface->pixels + (x + y * 64 + y * 256);
     i = 0;
     while (i < width) {
         dst[i] = color;
@@ -238,7 +238,7 @@ void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width)
 {
     u16 *dst;
     u32 i;
-    dst = (u16 *)(surface->pixels + y * 320 + x);
+    dst = (u16 *)(surface->pixels + (x + y * 64 + y * 256));
     i = 0;
     while (i < width) {
         dst[i] = color;
@@ -305,21 +305,29 @@ void sub_3A4A4(s32 *timer)
 
 s32 sub_3A4B8(s32 *timer)
 {
-    union REGS regs;
-    u8 pit_count;
-    s32 low;
-    s32 high;
-    s32 upper;
-    (void)timer;
-    regs.h.ah = 0;
-    int386(0x1a, &regs, &regs);
-    outp(0x43, 0);
+  union REGS regs;
+  u8 pit_count;
+  s32 low;
+  s32 high;
+  s32 upper;
+  (void) timer;
+  regs.h.ah = 0;
+  int386(0x1a, &regs, &regs);
+  outp(0x43, 0);
+  {
     inp(0x40);
-    pit_count = -(u8)inp(0x40);
-    low = regs.h.dl;
-    high = regs.h.dh;
-    upper = regs.h.cl;
-    return pit_count + ((upper << 24) + (((high << 8) + low) << 8));
+  }
+  pit_count = -((u8) inp(0x40));
+  {
+    s32 perm_value_3;
+    s32 *perm_address_2;
+    perm_address_2 = &perm_value_3;
+    *perm_address_2 = regs.h.dl;
+    low = perm_value_3;
+  }
+  high = (s32) regs.h.dh;
+  upper = regs.h.cl;
+  return pit_count + ((upper << 24) + (((high << 8) + low) << 8));
 }
 
 s32 sub_3A518(s32 value, s32 *scale)
@@ -481,97 +489,138 @@ void sub_3A6F0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 
 void sub_3A7B4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    s32 run;
-    const u8 *src;
-    s16 lines;
-    u8 packets;
-    s32 x_base;
-    s32 x;
-    s32 y;
-    s8 count;
-
-    src = data + 4;
-    x_base = work->x_offset;
-    y = *(const s16 *)data + work->y_offset;
+  s32 run;
+  const u8 *src;
+  s16 lines;
+  u8 packets;
+  s32 x_base;
+  s32 x;
+  s32 y;
+  s8 count;
+  src = data + 4;
+  {
+    s32 perm_value_0;
+    s32 *perm_address_0;
+    perm_address_0 = &perm_value_0;
+    *perm_address_0 = work->x_offset;
+    x_base = perm_value_0;
+  }
+  y = (*((const s16 *) data)) + work->y_offset;
+  {
     data += 2;
-    lines = *(const s16 *)data;
-    while (--lines >= 0) {
-        x = x_base;
-        packets = *src++;
-        while (packets > 0) {
-            x += *src++;
-            count = (s8)*src++;
-            if (count < 0) {
-                count = -count;
-                run = count;
-                sub_3A30C(surface, x, y, *src++, run);
-                --packets;
-                x += run;
-            } else {
-                run = count;
-                sub_3A2D8(surface, x, y, src, run);
-                x += run;
-                --packets;
-                src += count;
-            }
+  }
+  lines = *((const s16 *) data);
+  while ((--lines) >= 0)
+  {
+    x = x_base;
+    packets = *(src++);
+    while (0 < packets)
+    {
+      x += *(src++);
+      count = (s8) (*(src++));
+      if (count < 0)
+      {
+        {
+          s8 perm_value_7;
+          perm_value_7 = -count;
+          count = perm_value_7;
         }
-        ++y;
+        run = count;
+        sub_3A30C(surface, x, y, *(src++), run);
+        --packets;
+        x += run;
+      }
+      else
+      {
+        run = count;
+        sub_3A2D8(surface, x, y, src, run);
+        x = x + run;
+        --packets;
+        src += count;
+      }
     }
+
+    ++y;
+  }
+
 }
 
 void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    const u8 *src;
-    s32 x_base;
-    s32 right;
-    s32 x;
-    s32 y;
-    s16 lines;
-    s16 packets;
-    s32 run;
+  const u8 *src;
+  s32 x_base;
+  s32 right;
+  s32 x;
+  s32 y;
+  s16 lines;
+  s16 packets;
+  s32 run;
+  x_base = work->x_offset;
+  {
+    s32 perm_value_2;
+    perm_value_2 = work->y_offset;
+    y = perm_value_2;
+  }
+  right = (x_base + work->width) - 1;
+  {
+    s16 perm_value_4;
+    perm_value_4 = *((const s16 *) data);
+    lines = perm_value_4;
+  }
+  src = data + 2;
+  do
+  {
+    read_packets:
+    packets = *((const s16 *) src);
 
-    x_base = work->x_offset;
-    y = work->y_offset;
-    right = x_base + work->width - 1;
-    lines = *(const s16 *)data;
-    src = data + 2;
-    do {
-read_packets:
-        packets = *(const s16 *)src;
-        src += 2;
-        if (packets < 0) {
-            if (packets & 0x4000) {
-                y -= packets;
-                goto read_packets;
-            }
-            /* DOS 1:2a907..2a91a passes opcode low byte, right, y low byte. */
-            sub_3A2CC(surface, (u8)packets, right, (u8)y);
-            packets = *(const s16 *)src;
-            src += 2;
-            if (packets == 0) {
-                ++y;
-                --lines;
-                continue;
-            }
-        }
-        x = x_base;
-        do {
-            x += *src++;
-            run = (s8)*src++ * 2;
-            if (run >= 0) {
-                sub_3A2D8(surface, x, y, src, run);
-                x += run;
-                src += run;
-            } else {
-                run = -run;
-                sub_3A34C(surface, x, y, *(const u16 *)src, run >> 1);
-                src += 2;
-                x += run;
-            }
-        } while (--packets != 0);
+    src += 2;
+    if (packets < 0)
+    {
+      if (packets & 0x4000)
+      {
+        y -= packets;
+        goto read_packets;
+      }
+      sub_3A2CC(surface, (u8) packets, right, (u8) y);
+      packets = *((const s16 *) src);
+      src += 2;
+      if (packets == 0)
+      {
         ++y;
         --lines;
-    } while (lines > 0);
+        continue;
+      }
+    }
+    x = x_base;
+    do
+    {
+      x += *(src++);
+      run = ((s8) (*(src++))) * 2;
+      if (!(run >= 0))
+      {
+        run = -run;
+        sub_3A34C(surface, x, y, *((const u16 *) src), run >> 1);
+        src += 2;
+        x += run;
+      }
+      else
+      {
+        sub_3A2D8(surface, x, y, src, run);
+        {
+          s32 perm_value_10;
+          s32 *perm_address_9;
+          perm_address_9 = &perm_value_10;
+          *perm_address_9 = x + run;
+          x = perm_value_10;
+        }
+        src += run;
+      }
+    }
+    while ((--packets) != 0);
+    ++y;
+    --lines;
+  }
+  while (lines >= 1);
 }
 
 void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
@@ -662,15 +711,15 @@ s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
               const u8 *chunks, movie_surface_t *surface, s32 *timer)
 {
     const u8 *chunk;
-    const movie_chunk_t *record;
-    s32 i;
-    s32 start;
-    u8 audio_device;
     u16 query_status;
-    u8 cd_frame;
     u8 second;
-    u8 minute;
+    u8 cd_frame;
+    s32 i;
+    const movie_chunk_t *record;
+    u8 audio_device;
     u8 track;
+    u8 minute;
+    s32 start;
 
     chunk = chunks;
     i = 0;

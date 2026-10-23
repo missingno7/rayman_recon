@@ -545,7 +545,7 @@ s16 Do_Effect_Pause_unknown(u32 par_0)
     PC_do_cheats();
     /* Keep the cadence calculation for both initial-phase comparisons. */
     duration = VGA_FREQ * 7;
-    if (duration > effect_pause_count) {
+    if (effect_pause_count < duration) {
         ++effect_pause_count;
         effect_copy_pause_band(EffetBufferNormal, DrawBufferNormal, 0xa0);
         effect_copy_pause_band(EffetBufferNormal + 0xc800,

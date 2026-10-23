@@ -386,183 +386,238 @@ s32 vol_l(s16 a1, s16 a2) {
 }
 
 void PlaySnd(s16 snd, s16 obj_id) {
-    s16 sound_to_interrupt;
-    u8 pan_snd, vol_snd;
-    s16 prog;
-    s16 tone, note;
-    s32 voll, volr;
-    s16 i;
-    if (CarteSonAutorisee) {
-        if ((ray.scale != 0 && obj_id == reduced_rayman_id) || obj_id == rayman_obj_id) {
-            obj_id = -1;
-        }
-        if (obj_id == -1 && snd != 15) {
-            indice_ray_wait = 0;
-        }
-        sound_to_interrupt = last_snd(obj_id);
-        if (snd != sound_to_interrupt && (sound_table[sound_to_interrupt] & 8) != 0) {
-            s16 voice_id;
-            erase_pile_snd(obj_id);
-            voice_id = get_voice_obj_snd(obj_id, sound_to_interrupt);
-            if (voice_id >= 0) {
-                voice_t *voice;
-                sound_table_entry_t *sound;
-                voice = voice_table + voice_id;
-                sound = hard_sound_table + voice->snd;
-                KeyOff(voice_id, bank_to_use[voice->snd], sound->prog, sound->tone, sound->note);
-                voice->obj = -2;
-                voice->snd = -1;
-                voice_is_working[voice_id] = 0;
-            }
-        }
-
-        if (!dans_la_map_monde && snd != 0 && (snd != sound_to_interrupt || (sound_table[sound_to_interrupt] & 4) != 0)) {
-            if (obj_id == -1 || (obj_id == rayman_obj_id && rayman_obj_id != -1)) {
-                pan_snd = get_pan_snd(&ray);
-                vol_snd = 127;
-            } else {
-                pan_snd = get_pan_snd(level.objects + obj_id);
-                if (sound_table[snd] & 1) {
-                    vol_snd = get_vol_snd(level.objects + obj_id);
-                } else {
-                    vol_snd = 127;
-                }
-            }
-
-            prog = hard_sound_table[0].prog;
-            tone = hard_sound_table[0].tone;
-
-            switch(snd) {
-                case 53:
-                    if (level.objects[obj_id].type != 238) {
-                        prog = hard_sound_table[53].prog;
-                        tone = hard_sound_table[53].tone;
-                        note = hard_sound_table[53].note;
-                    } else {
-                        note = hard_sound_table[0].note;
-                    }
-                    break;
-                case 47:
-                    if (num_world != 5) {
-                        prog = hard_sound_table[47].prog;
-                        tone = hard_sound_table[47].tone;
-                        note = hard_sound_table[47].note;
-                        vol_snd = 127;
-                    } else {
-                        prog = hard_sound_table[170].prog;
-                        tone = hard_sound_table[170].tone;
-                        note = hard_sound_table[170].note;
-                        vol_snd = 127;
-                    }
-                    break;
-                case 15:
-                    if (indice_ray_wait++ > 2) {
-                        prog = hard_sound_table[15].prog;
-                        tone = hard_sound_table[15].tone;
-                        note = hard_sound_table[15].note;
-                        indice_ray_wait = 0;
-                    }
-                    erase_pile_snd(-1);
-                    break;
-                case 80:
-                    if (indice_trz_wait++ > 1) {
-                        prog = hard_sound_table[80].prog;
-                        tone = hard_sound_table[80].tone;
-                        note = hard_sound_table[80].note;
-                        indice_trz_wait = 0;
-                    }
-                    break;
-                case 14:
-                    prog = hard_sound_table[14].prog;
-                    tone = hard_sound_table[14].tone;
-                    note = hard_sound_table[14].note + not_snd_wiz[level.objects[obj_id].sub_etat - 24]; // ting note depends on the sub_etat
-                    break;
-                case 19:
-                    prog = hard_sound_table[19].prog;
-                    tone = hard_sound_table[19].tone;
-                    note = hard_sound_table[19].note;
-                    break;
-                case 245:
-                    prog = hard_sound_table[245].prog;
-                    tone = hard_sound_table[245].tone;
-                    note = hard_sound_table[245].note;
-                    break;
-                case 55:
-                case 57:
-                case 103:
-                    prog = -1;
-                    break;
-                default:
-                    prog = hard_sound_table[snd].prog;
-                    tone = hard_sound_table[snd].tone;
-                    note = hard_sound_table[snd].note;
-                    break;
-            }
-
-            if (prog != -1 && prog != 255) {
-                erase_pile_snd(obj_id);
-                voll = vol_l(Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd); // NOTE: has no effect?
-                volr = vol_r(Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd); // NOTE: has no effect?
-
-                if (frame_snd[snd] == 0) {
-                    // NOTE: the PS1 version implements left/right directional sound here, using SsUtKeyOn
-                    s16 voice_id;
-                    voice_id = KeyOn(bank_to_use[snd], prog, tone, note, Volume_Snd * vol_snd * hard_sound_table[snd].volume >> 14, pan_snd);
-                    if (voice_id != -1) {
-                        erase_voice_table(obj_id);
-                        voice_table[voice_id].vol = vol_snd;
-                        voice_table[voice_id].obj = obj_id;
-                        voice_table[voice_id].pan = pan_snd;
-                        voice_table[voice_id].snd = snd;
-                        if ((sound_table[snd] & 0x10) != 0) {
-                            voice_is_working[voice_id] = 1;
-                        }
-                    }
-                } else {
-
-                    nettoie_pile_snd();
-                    erase_pile_snd(obj_id);
-                    pile_snd[pt_pile_snd].obj = obj_id;
-                    pile_snd[pt_pile_snd].snd = snd;
-                    pile_snd[pt_pile_snd].prog = prog;
-                    pile_snd[pt_pile_snd].tone = tone;
-                    pile_snd[pt_pile_snd].note = note;
-                    pile_snd[pt_pile_snd].vol = hard_sound_table[snd].volume;
-                    pile_snd[pt_pile_snd].field_C = vol_snd;
-                    pile_snd[pt_pile_snd].pan = pan_snd;
-                    pile_snd[pt_pile_snd].end_time = frame_snd[snd] + map_time;
-                    if (snd_bis[snd] != 0) {
-                        pile_snd[pt_pile_snd].field_14 = 1;
-                    } else {
-                        pile_snd[pt_pile_snd].field_14 = 0;
-                    }
-                    if (pt_pile_snd < 9) {
-                        ++pt_pile_snd;
-                    }
-                }
-            }
-            if ((snd == 203 || snd == 237 || snd == 209 || snd == 225 || snd == 236) && (dead_time == 64 || dead_time == 128)) {
-                start_cd_bbdead();
-            }
-        }
-        i = 0;
-        do {
-            if (stk_obj[i] == obj_id || stk_obj[i] == -2)
-                break;
-            ++i;
-        } while (i != 20);
-        if (i == 20) {
-            if (snd == 0)
-                return;
-            do {
-                --i;
-            } while (i != -1 && level.objects[stk_obj[i]].is_active);
-            if (i == -1)
-                i = 0;
-        }
-        stk_obj[i] = obj_id;
-        stk_snd[i] = snd;
+  s16 i;
+  u8 pan_snd;
+  u8 vol_snd;
+  s16 prog;
+  s16 tone;
+  s16 note;
+  s32 voll;
+  s32 volr;
+  s16 sound_to_interrupt;
+  if (CarteSonAutorisee)
+  {
+    if (((ray.scale != 0) && (obj_id == reduced_rayman_id)) || (obj_id == rayman_obj_id))
+    {
+      obj_id = -1;
     }
+    if ((obj_id == (-1)) && (snd != 15))
+    {
+      indice_ray_wait = 0;
+    }
+    sound_to_interrupt = last_snd(obj_id);
+    if ((snd != sound_to_interrupt) && ((sound_table[sound_to_interrupt] & 8) != 0))
+    {
+      s16 voice_id;
+      erase_pile_snd(obj_id);
+      voice_id = get_voice_obj_snd(obj_id, sound_to_interrupt);
+      if (voice_id >= 0)
+      {
+        voice_t *voice;
+        sound_table_entry_t *sound;
+        voice = voice_table + voice_id;
+        sound = hard_sound_table + voice->snd;
+        KeyOff(voice_id, bank_to_use[voice->snd], sound->prog, sound->tone, sound->note);
+        voice->obj = -2;
+        voice->snd = -1;
+        voice_is_working[voice_id] = 0;
+      }
+    }
+    if (((!dans_la_map_monde) && (snd != 0)) && ((snd != sound_to_interrupt) || ((sound_table[sound_to_interrupt] & 4) != 0)))
+    {
+      if ((obj_id == (-1)) || ((obj_id == rayman_obj_id) && (rayman_obj_id != (-1))))
+      {
+        pan_snd = get_pan_snd(&ray);
+        vol_snd = 127;
+      }
+      else
+      {
+        pan_snd = get_pan_snd(level.objects + obj_id);
+        if (sound_table[snd] & 1)
+        {
+          vol_snd = get_vol_snd(level.objects + obj_id);
+        }
+        else
+        {
+          vol_snd = 127;
+        }
+      }
+      {
+        s16 perm_value_3;
+        perm_value_3 = hard_sound_table[0].prog;
+        prog = perm_value_3;
+      }
+      tone = hard_sound_table[0].tone;
+      switch (snd)
+      {
+        case 53:
+          if (level.objects[obj_id].type != 238)
+        {
+          prog = hard_sound_table[53].prog;
+          tone = hard_sound_table[53].tone;
+          note = hard_sound_table[53].note;
+        }
+        else
+        {
+          note = hard_sound_table[0].note;
+        }
+          break;
+
+        case 47:
+          if (num_world != 5)
+        {
+          prog = hard_sound_table[47].prog;
+          tone = hard_sound_table[47].tone;
+          note = hard_sound_table[47].note;
+          vol_snd = 127;
+        }
+        else
+        {
+          prog = hard_sound_table[170].prog;
+          tone = hard_sound_table[170].tone;
+          note = hard_sound_table[170].note;
+          vol_snd = 127;
+        }
+          break;
+
+        case 15:
+          if ((indice_ray_wait++) > 2)
+        {
+          prog = hard_sound_table[15].prog;
+          tone = hard_sound_table[15].tone;
+          note = hard_sound_table[15].note;
+          indice_ray_wait = 0;
+        }
+          erase_pile_snd(-1);
+          break;
+
+        case 80:
+          if ((indice_trz_wait++) > 1)
+        {
+          prog = hard_sound_table[80].prog;
+          tone = hard_sound_table[80].tone;
+          note = hard_sound_table[80].note;
+          indice_trz_wait = 0;
+        }
+          break;
+
+        case 14:
+          prog = hard_sound_table[14].prog;
+          tone = hard_sound_table[14].tone;
+          note = hard_sound_table[14].note + not_snd_wiz[level.objects[obj_id].sub_etat - 24];
+          break;
+
+        case 19:
+          prog = hard_sound_table[19].prog;
+          tone = hard_sound_table[19].tone;
+          note = hard_sound_table[19].note;
+          break;
+
+        case 245:
+          prog = hard_sound_table[245].prog;
+          tone = hard_sound_table[245].tone;
+          note = hard_sound_table[245].note;
+          break;
+
+        case 55:
+
+        case 57:
+
+        case 103:
+          prog = -1;
+          break;
+
+        default:
+          prog = hard_sound_table[snd].prog;
+          tone = hard_sound_table[snd].tone;
+          note = hard_sound_table[snd].note;
+          break;
+
+      }
+
+      if ((prog != (-1)) && (prog != 255))
+      {
+        erase_pile_snd(obj_id);
+        voll = vol_l(((Volume_Snd * vol_snd) * hard_sound_table[snd].volume) >> 14, pan_snd);
+        volr = vol_r(((Volume_Snd * vol_snd) * hard_sound_table[snd].volume) >> 14, pan_snd);
+        if (frame_snd[snd] == 0)
+        {
+          s16 voice_id;
+          voice_id = KeyOn(bank_to_use[snd], prog, tone, note, ((Volume_Snd * vol_snd) * hard_sound_table[snd].volume) >> 14, pan_snd);
+          if (voice_id != (-1))
+          {
+            erase_voice_table(obj_id);
+            voice_table[voice_id].vol = vol_snd;
+            voice_table[voice_id].obj = obj_id;
+            voice_table[voice_id].pan = pan_snd;
+            voice_table[voice_id].snd = snd;
+            if (sound_table[snd] & 0x10)
+            {
+              voice_is_working[voice_id] = 1;
+            }
+          }
+        }
+        else
+        {
+          nettoie_pile_snd();
+          erase_pile_snd(obj_id);
+          pile_snd[pt_pile_snd].obj = obj_id;
+          pile_snd[pt_pile_snd].snd = snd;
+          pile_snd[pt_pile_snd].prog = prog;
+          pile_snd[pt_pile_snd].tone = tone;
+          pile_snd[pt_pile_snd].note = note;
+          pile_snd[pt_pile_snd].vol = hard_sound_table[snd].volume;
+          pile_snd[pt_pile_snd].field_C = vol_snd;
+          pile_snd[pt_pile_snd].pan = pan_snd;
+          pile_snd[pt_pile_snd].end_time = frame_snd[snd] + map_time;
+          if (snd_bis[snd])
+          {
+            pile_snd[pt_pile_snd].field_14 = 1;
+          }
+          else
+          {
+            pile_snd[pt_pile_snd].field_14 = 0;
+          }
+          if (pt_pile_snd < 9)
+          {
+            ++pt_pile_snd;
+          }
+        }
+      }
+      if ((((((snd == 203) || (snd == 237)) || (snd == 209)) || (snd == 225)) || (snd == 236)) && ((dead_time == 64) || (dead_time == 128)))
+      {
+        start_cd_bbdead();
+      }
+    }
+    i = 0;
+    do
+    {
+      if ((stk_obj[i] == obj_id) || (stk_obj[i] == (-2)))
+      {
+        break;
+      }
+      ++i;
+    }
+    while (i != 20);
+    if ((i == 20) != 0)
+    {
+      if (snd == 0)
+      {
+        return;
+      }
+      do
+      {
+        --i;
+      }
+      while ((i != (-1)) && level.objects[stk_obj[i]].is_active);
+      if (i == (-1))
+      {
+        i = 0;
+      }
+    }
+    stk_obj[i] = obj_id;
+    stk_snd[i] = snd;
+  }
 }
 
 void PlaySnd_old(s16 sound_id) {

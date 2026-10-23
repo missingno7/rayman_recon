@@ -317,7 +317,7 @@ void calc_gros_type(void) {
         s32 tile_y = (texture_id / 40) * 16 * 640;
         u8 all_zero = 1;
         u8 all_nonzero = 1;
-        s32 plane;
+        s16 plane;
         for (plane = 0; plane < 4; ++plane) {
             u8 *pixels = blocks + tile_x + plane + tile_y;
             u8 *end = blocks + 0x2800 + tile_x + plane + tile_y;
@@ -374,7 +374,7 @@ void build_map(s16 x, s16 y) {
     for (plane = 0; plane < 4; ++plane) {
         map_tile_t *tile = start;
         u8 *dest = buffer + plane * 0x4600;
-        s16 row;
+        s32 row;
         for (row = 0; row < 224; row += 16) {
             s16 col;
             for (col = 0; col < 320; col += 16) {
@@ -396,7 +396,7 @@ void build_line_map(void *buffer, s16 x, s16 y, s16 row) {
     u8 *base = (u8*)buffer;
     map_tile_t *start = mp.map + ((y >> 4) * mp.width + (x >> 4));
     s32 position = ((u32)base - (u32)PLAN1_BUFFER) % 80;
-    s32 plane;
+    s16 plane;
     s32 dest_offset;
     start += (row / 13) * mp.width;
     dest_offset = 0;
@@ -557,70 +557,84 @@ void asm_04493(u32 phase, map_tile_t *tiles, const frame_context_t *context,
 #pragma aux asm_04493 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [edx esi edi]
 
 void sub_3BEE0(s16 x, s16 y) {
-    frame_context_t context;
-    u8 *origin = ((u8 *)init_data_state.draw_origin);
-    s32 scroll_x = init_data_state.scroll_x;
-    s32 scroll_y = init_data_state.scroll_y;
-    u32 tile_stride = plan0bit_nb_bytes * 16;
-    map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
-    s32 mask = planar_copy_offset;
-    s32 saved_mask = mask;
-    u32 dest = 0;
-    u8 *saved_origin = origin;
-    s16 plane;
-    map_tile_t *draw_tiles;
-    u8 *background;
-    s32 plane_step;
-    u16 phase;
-    context.plane_size = 0x4600;
-    context.source_end = (u32)PLAN1_BUFFER;
-    context.run_step = 0x4600;
-    for (plane = 0; plane < 4; ++plane) {
-        u32 offset = plane * 0x4600;
-        context.source_end += 0x4600;
-        if (P486)
-            asm_03ea1(mask, 80, offset, &context, &frame_records_38f88[1][0], dest);
-        else
-            asm_03912(mask, 80, offset, &context, &frame_records_38f88[0][0], dest);
-        mask *= 2;
-        if (mask == 16) {
-            mask = 1;
-            dest = 1;
-            ++origin;
-        }
+  frame_context_t context;
+  u8 *origin = (u8 *) init_data_state.draw_origin;
+  s32 scroll_x = init_data_state.scroll_x;
+  s32 scroll_y = init_data_state.scroll_y;
+  u32 tile_stride = plan0bit_nb_bytes * 16;
+  map_tile_t *tiles = mp.map + ((mp.width * (y >> 4)) + (x >> 4));
+  s32 mask = planar_copy_offset;
+  s32 saved_mask = mask;
+  u32 dest = 0;
+  u8 *saved_origin = origin;
+  s16 plane;
+  map_tile_t *draw_tiles;
+  u8 *background;
+  s32 plane_step;
+  u16 phase;
+  context.plane_size = 0x4600;
+  context.source_end = (u32) PLAN1_BUFFER;
+  context.run_step = 0x4600;
+  for (plane = 0; plane < 4; ++plane)
+  {
+    u32 offset = plane * 0x4600;
+    context.source_end += 0x4600;
+    if (P486)
+    {
+      asm_03ea1(mask, 80, offset, &context, &frame_records_38f88[1][0], dest);
     }
-    origin = saved_origin;
-    draw_tiles = tiles;
-    background = (scroll_x / 4 + (scroll_x % 4) * ((u32)plan0bit_length >> 2)) + PLAN0BIT
-                 + scroll_y * plan0bit_nb_bytes;
-    plane_step = (u32)plan0bit_length >> 2;
-    plane_step = -plane_step;
-    context.plane_size = tile_stride;
-    context.source_end = mp.width * 6;
-    context.source_stride = plan0bit_nb_bytes;
-    context.source_three_rows = plan0bit_nb_bytes * 3;
-    mask = saved_mask;
-    context.background_length = plan0bit_length;
-    context.run_step = 1200;
-    context.last_tile = mp.map + (mp.width * mp.height - 1);
-    context.background_end = PLAN0BIT + plan0bit_length;
-    for (phase = 0; phase < 4; ++phase) {
-        asm_0283c(mask);
-        plane_step += (u32)plan0bit_length >> 2;
-        if (background + plane_step > PLAN0BIT + plan0bit_length) {
-            plane_step -= plan0bit_length;
-            ++background;
-        }
-        if (P486)
-            asm_04493(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
-        else
-            asm_04430(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
-        mask *= 2;
-        if (mask == 16) {
-            mask = 1;
-            ++origin;
-        }
+    else
+    {
+      asm_03912(mask, 80, offset, &context, &frame_records_38f88[0][0], dest);
     }
+    mask = mask * 2;
+    if (mask == 16)
+    {
+      mask = 1;
+      dest = 1;
+      ++origin;
+    }
+  }
+
+  origin = saved_origin;
+  draw_tiles = tiles;
+  background = (((scroll_x / 4) + ((scroll_x % 4) * (((u32) plan0bit_length) >> 2))) + PLAN0BIT) + (scroll_y * plan0bit_nb_bytes);
+  plane_step = ((u32) plan0bit_length) >> 2;
+  plane_step = -plane_step;
+  context.plane_size = tile_stride;
+  context.source_end = mp.width * 6;
+  context.source_stride = plan0bit_nb_bytes;
+  context.source_three_rows = plan0bit_nb_bytes * 3;
+  mask = saved_mask;
+  context.background_length = plan0bit_length;
+  context.run_step = 1200;
+  context.last_tile = mp.map + ((mp.width * mp.height) - 1);
+  context.background_end = PLAN0BIT + plan0bit_length;
+  for (phase = 0; phase < 4; ++phase)
+  {
+    asm_0283c(mask);
+    plane_step += ((u32) plan0bit_length) >> 2;
+    if (((background + plane_step) > (PLAN0BIT + plan0bit_length)) != 0)
+    {
+      plane_step -= plan0bit_length;
+      ++background;
+    }
+    if (P486)
+    {
+      asm_04493(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
+    }
+    else
+    {
+      asm_04430(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);
+    }
+    mask = mask * 2;
+    if (mask == 16)
+    {
+      mask = 1;
+      ++origin;
+    }
+  }
+
 }
 
 void set_vga_frequency(u8 freq) {
@@ -730,28 +744,29 @@ void asm_02a73(map_tile_t *tiles, u32 *records, u8 *source, u32 stride,
 #pragma aux asm_02a73 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ebx ecx edx esi]
 
 void sub_3C3BC(s16 x, s16 y) {
-    s32 row, column;
-    u8 *buffer_start = (u8*)PLAN1_BUFFER_START_POINTER;
-    s32 row_skip = mp.width - 20;
-    u8 *dest = ((u8 *)init_data_state.draw_origin);
-    map_tile_t *tiles = mp.map + (mp.width * (y >> 4) + (x >> 4));
-    u8 *source = ((u8 *)init_data_state.source_origin);
-    if (BackgroundOn && FondAutorise) {
-        u32 stride = plan0bit_nb_bytes * 16;
-        if (P486) {
-            s32 delta = draw_buffer - dest + 4;
-            row = 16 - delta / 80;
-            column = 4 - delta % 80;
-            asm_02a73(tiles, &frame_records_38888[0][0],
-                       (u8*)0xab000 + row * 80 + column, stride,
-                       draw_buffer + row * 80 + column, row_skip * 6);
-        } else {
-            asm_029d3(tiles, &frame_records_38888[0][0], source, stride,
-                       dest, row_skip * 6);
-        }
+  s32 row;
+  s32 column;
+  u8 *buffer_start = (u8 *) PLAN1_BUFFER_START_POINTER;
+  s32 row_skip = mp.width - 20;
+  u8 *dest = (u8 *) init_data_state.draw_origin;
+  map_tile_t *tiles = mp.map + ((mp.width * (y >> 4)) + (x >> 4));
+  u8 *source = (u8 *) init_data_state.source_origin;
+  if (BackgroundOn && FondAutorise)
+  {
+    u32 stride = plan0bit_nb_bytes * 16;
+    if (P486)
+    {
+      s32 delta = (draw_buffer - dest) + 4;
+      column = 4 - (((s32) delta) % 80);
+      row = 16 - (((s32) delta) / 80);
+      asm_02a73(tiles, &frame_records_38888[0][0], (((u8 *) 0xab000) + (row * 80)) + column, stride, (draw_buffer + (row * 80)) + column, row_skip * 6);
     }
-    asm_02850(tiles, &frame_records_38f88[0][0], buffer_start,
-               PLAN1_BUFFER, dest, row_skip * 6);
+    else
+    {
+      asm_029d3(tiles, &frame_records_38888[0][0], source, stride, dest, row_skip * 6);
+    }
+  }
+  asm_02850(tiles, &frame_records_38f88[0][0], buffer_start, PLAN1_BUFFER, dest, row_skip * 6);
 }
 
 void clear_palette(rgb_palette_t* palette) {
@@ -798,7 +813,7 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
 
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
     if (nb_fade > 0) {
-        s32 i;
+        s16 i;
         --nb_fade;
         if (fade == 1) {
             for (i = 0; i < 256 * 3; ++i) {
@@ -976,35 +991,59 @@ void SYNCHRO_LOOP(scene_func_t scene_func) {
 
 void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
                              s16 x, s16 y, s16 height, s16 width) {
-    u32 source_length;
-    s32 source_stride;
-    s16 width_was_defaulted = 0;
-    s16 source_plane;
-    u8 *source;
-    u8 *dest;
-    if (image == PLAN2BIT) {
-        source_length = plan2bit_length;
-        source_stride = plan2bit_nb_bytes;
-    } else {
-        source_length = plan3bit_length;
-        source_stride = plan3bit_nb_bytes;
+  s32 source_stride;
+  u32 source_length;
+  s16 width_was_defaulted = 0;
+  s16 source_plane;
+  u8 *source;
+  u8 *dest;
+  if (image == PLAN2BIT)
+  {
+    source_length = plan2bit_length;
+    source_stride = plan2bit_nb_bytes;
+  }
+  else
+  {
+    source_length = plan3bit_length;
+    source_stride = plan3bit_nb_bytes;
+  }
+  source_length >>= 2;
+  if (width == 0)
+  {
+    width_was_defaulted = (s16) ((s16) 1);
+    width = source_stride;
+  }
+  {
+    if (!(height == 0))
+    {
+      goto perm_else_2;
     }
-    source_length >>= 2;
-    if (width == 0) {
-        width = source_stride;
-        width_was_defaulted = 1;
+    {
+      height = (source_length / width) - 4;
     }
-    if (height == 0)
-        height = source_length / width - 4;
-    if (width_was_defaulted)
-        width = (s32)width >> 2;
-    source_plane = source_x & 3;
-    source_x >>= 2;
-    source = (u8*)image + source_plane * source_length + source_width * source_stride + source_x;
-    x >>= 2;
-    dest = draw_buffer + (y << 6) + (y << 4) + x;
-    display_anypicture(source, dest, height, ((1 << source_plane) << 8) + source_stride,
-                       source_length, width);
+    goto perm_end_2;
+    perm_else_2:
+    {
+    }
+
+    perm_end_2:
+    ;
+
+  }
+  if (width_was_defaulted)
+  {
+    width = ((s32) width) >> 2;
+  }
+  {
+    s16 perm_value_2;
+    perm_value_2 = source_x & 3;
+    source_plane = perm_value_2;
+  }
+  source_x >>= 2;
+  source = ((((u8 *) image) + (source_length * source_plane)) + (source_width * source_stride)) + source_x;
+  x >>= 2;
+  dest = ((draw_buffer + (y << 6)) + (y << 4)) + x;
+  display_anypicture(source, dest, height, source_stride + ((1 << source_plane) << 8), source_length, width);
 }
 
 void SAVE_PALETTE(rgb_palette_t* palette) {
@@ -1166,35 +1205,82 @@ void DoFadePaletteSpecialPC(s16 start, s16 end) {
     } while (0)
 
 void DoPaletteSpecialPC(void) {
-    if (fade & 0x40) {
-        if (num_world == 5 && num_level == 4) {
-            if (horloge[5] == 0) {
-                WRITE_SPECIAL_PALETTE(&rvb_special[numero_palette_special]);
-                ++numero_palette_special;
-            } else if (numero_palette_special == 0)
-                numero_palette_special = 1;
-            if (numero_palette_special == 15)
-                numero_palette_special = 0;
-        } else if ((num_world == 1 && num_level == 9) ||
-                   (num_world == 2 && num_level == 4) ||
-                   (num_world == 4 && num_level == 9)) {
-            ++CompteurEclair;
-            if (CompteurEclair >= ProchainEclair || numero_palette_special != 0) {
-                WRITE_SPECIAL_PALETTE(&rvb_special[numero_palette_special]);
-                if (numero_palette_special == 0) {
-                    PlaySnd_old(195);
-                    ++numero_palette_special;
-                } else if (CompteurEclair % 2 == 0) {
-                    ++numero_palette_special;
-                }
-                if (numero_palette_special == 15) {
-                    CompteurEclair = 0;
-                    numero_palette_special = 0;
-                    ProchainEclair = (s16)(myRand(400) + 1);
-                }
-            }
+  if (fade & 0x40)
+  {
+    if ((num_world == 5) && (num_level == 4))
+    {
+      if (horloge[5] == 0)
+      {
+        do
+        {
+          u8 *palette_data = ((u8 *) (&rvb_special[numero_palette_special])) + 3;
+          frame_palette_index(0x3c8, 1);
+          {
+            frame_palette_stream(0x3c9, palette_data, 765);
+          }
         }
+        while (0);
+        ++numero_palette_special;
+      }
+      else
+        if (numero_palette_special == 0)
+      {
+        numero_palette_special = 1;
+      }
+      if (numero_palette_special == 15)
+      {
+        numero_palette_special = 0;
+      }
     }
+    else
+      if ((((num_world == 1) && (num_level == 9)) || ((num_world == 2) && (num_level == 4))) || ((num_world == 4) && (num_level == 9)))
+    {
+      ++CompteurEclair;
+      if ((CompteurEclair >= ProchainEclair) || (numero_palette_special != 0))
+      {
+        do
+        {
+          u8 *palette_data = ((u8 *) (&rvb_special[numero_palette_special])) + 3;
+          frame_palette_index(0x3c8, 1);
+          frame_palette_stream(0x3c9, palette_data, 765);
+        }
+        while (0);
+        if (numero_palette_special == 0)
+        {
+          PlaySnd_old(195);
+          {
+            ++numero_palette_special;
+          }
+        }
+        else
+          if (((CompteurEclair % 2) == 0) != 0)
+        {
+          ++numero_palette_special;
+        }
+        {
+          if (!(numero_palette_special == 15))
+          {
+            goto perm_else_7;
+          }
+          {
+            {
+              CompteurEclair = 0;
+              numero_palette_special = 0;
+              ProchainEclair = (s16) (myRand(400) + 1);
+            }
+          }
+          goto perm_end_7;
+          perm_else_7:
+          {
+          }
+
+          perm_end_7:
+          ;
+
+        }
+      }
+    }
+  }
 }
 #undef clip_palette_component
 #undef WRITE_PALETTE_BYTES
@@ -1376,16 +1462,19 @@ s16 hasGuetteurABomb(obj_t* obj) {
 }
 
 void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 param_4) {
-    // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s16 unk_1;
-    s16 i;
-    obj_t *cur_obj;
-    s16 nb_objs;
-    s16 gue_y; s16 gue_x; s16 new_spd_x; s16 gue_h; s16 gue_w;
-    u8 mul_x_pos;
-    eta_t *cur_eta_1;
+    s16 new_spd_x;
     eta_t *cur_eta_2;
+    s16 gue_h;
     eta_t *cur_eta_3;
+    eta_t *cur_eta_1;
+    obj_t *cur_obj;
+    s16 gue_w;
+    s16 i;
+    s16 nb_objs;
+    s16 gue_y;
+    s16 unk_1;
+    u8 mul_x_pos;
+    s16 gue_x;
 
     /* DOS leaves the multiplier/speed unset on unhandled substates. */
     unk_1 = hasGuetteurABomb(gue_obj);

@@ -32,20 +32,20 @@ extern void effect_cleanup_6c7a0(void);
 
 void effect_helper_6c3b0(s16 x, s16 y, s16 velocity, u16 step)
 {
-    effect_state_6c_t *state;
-    s32 radius;
     s32 random_value;
-    u8 *map;
+    double cosine;
     double coordinate_x;
+    double amplitude;
+    double sine;
+    double transformed_y;
+    double angle;
     double coordinate_y;
     double transformed_x;
-    double transformed_y;
     double distance;
-    double angle;
-    double amplitude;
+    effect_state_6c_t *state;
+    s32 radius;
     double scale;
-    double sine;
-    double cosine;
+    u8 *map;
 
     state = effect_state_6c;
     map = state->map;
@@ -188,7 +188,7 @@ void effect_helper_6c9bc(void)
     copy(state->screen, state->output, 0xfa00);
     x = state->x - state->radius;
     y = state->y - state->radius;
-    x = x + y * 320;
+    x = x + y * 64 + y * 256;
     source = state->screen + x;
     destination = state->output + x;
     stride = 320 - state->width;

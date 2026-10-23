@@ -179,34 +179,57 @@ void sub_38DA0(void)
 u8 sub_38DCC(u16 columns, u16 rows, s16 horizontal_offset, u16 vertical_speed,
              u8 *source, u8 *destination)
 {
-    effect_state_t *state;
-    u8 success = 0;
-
-    if (source != 0 && destination != 0) {
-        effect_data = (effect_state_t *)sub_6FBB4(sizeof(effect_state_t));
-        state = effect_data;
-        if (state != 0) {
-            state->columns = max32(2, columns);
-            state->rows = max32(1, rows);
-            state->count = state->columns * state->rows;
-            state->source = source;
-            state->destination = destination;
-            state->items = (effect_item_t *)sub_6FBB4(state->count * sizeof(effect_item_t));
-            if (state->items != 0) {
-                state->screen_a = EffetBufferNormal;
-                state->screen_b = EffetBufferNormal + 0xc800;
-                success = 1;
+  effect_state_t *state;
+  u8 success = 0;
+  if ((source != 0) && (destination != 0))
+  {
+    effect_data = (effect_state_t *) sub_6FBB4(sizeof(effect_state_t));
+    state = effect_data;
+    if (state)
+    {
+      state->columns = max32(2, columns);
+      state->rows = max32(1, rows);
+      state->count = state->columns * state->rows;
+      state->source = source;
+      state->destination = destination;
+      state->items = (effect_item_t *) sub_6FBB4(state->count * (sizeof(effect_item_t)));
+      if (state->items)
+      {
+        state->screen_a = EffetBufferNormal;
+        state->screen_b = EffetBufferNormal + 0xc800;
+        {
+          u8 perm_value_0;
+          u8 *perm_address_0;
+          perm_address_0 = &perm_value_0;
+          *perm_address_0 = 1;
+          {
+            u8 perm_value_1;
+            u8 *perm_address_1;
+            perm_address_1 = &perm_value_1;
+            *perm_address_1 = perm_value_0;
+            {
+              u8 perm_value_2;
+              u8 *perm_address_2;
+              perm_address_2 = &perm_value_2;
+              *perm_address_2 = perm_value_1;
+              success = (u8) perm_value_2;
             }
+          }
         }
+      }
     }
-    if (success != 0) {
-        effect_copy_band(state->source, state->screen_a, 0xa0);
-        effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0);
-        sub_38B58(horizontal_offset, vertical_speed);
-    } else {
-        sub_38DA0();
-    }
-    return success;
+  }
+  if (success)
+  {
+    effect_copy_band(state->source, state->screen_a, 0xa0);
+    effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0);
+    sub_38B58(horizontal_offset, vertical_speed);
+  }
+  else
+  {
+    sub_38DA0();
+  }
+  return success;
 }
 
 s16 sub_38ED4(void)
@@ -224,7 +247,7 @@ s16 sub_38ED4(void)
         s32 center_y = (item->y0 + item->y2) >> 1;
         s32 center_z = (item->width0 + item->width2) >> 1;
         u8 vertex = 0;
-        u8 output = 0;
+        s32 output = 0;
         do {
             u8 repeat;
             s32 x, y, z;
