@@ -1194,6 +1194,7 @@ void DO_BBMONT_TOUCHE(obj_t* obj, s16 sprite) {
 }
 
 void DO_BBMONT2_COMMAND(obj_t* obj) {
+    /* ORIGINAL_INLINE abs sites: DOS 1:12829, 1:12a27. */
     //NOTE: DO_BBMONT2_COMMAND is still non-matching in the PS1 decomp!
     s16 temp_s2;
     s16 temp_s3;
@@ -1434,7 +1435,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     set_main_and_sub_etat(obj, 0, 5);
                 }
             }
-            if (((!((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1))) >= 0)) ? -((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) : (s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 250) {
+            if (abs32_inline((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 250) {
                 obj->is_active = 0;
                 IsBossThere = 0;
                 Phase = 0;
@@ -1492,7 +1493,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                     }
                 }
             }
-            if (Abs((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 400) {
+            if (abs32_inline((s32)(temp_s2 - (ray_zdc_x + (ray_zdc_w >> 1)))) > 400) {
                 obj->is_active = 0;
                 IsBossThere = 0;
                 Phase = 0;

@@ -224,7 +224,7 @@ void effect_helper_63838(void)
                     destination_row[state->field_14 + x] = source_row[source_x];
                 }
                 if (state->delta > 0) {
-                    for (x = state->field_0c; x < ABS((s32)state->delta) + state->field_0c; ++x) {
+                    for (x = state->field_0c; x < abs32_inline((s32)state->delta) + state->field_0c; ++x) {
                         if (state->field_14 + x < 320)
                             destination_row[state->field_14 + x] = 0;
                     }
@@ -280,7 +280,7 @@ void effect_helper_63838(void)
                     destination_row[destination_x] = source_row[source_x];
                 }
                 if (state->delta > 0) {
-                    for (x = state->width; x < ABS((s32)state->delta) + state->width; ++x)
+                    for (x = state->width; x < abs32_inline((s32)state->delta) + state->width; ++x)
                         destination_row[state->field_14 + x] = 0;
                 }
                 source_row += 320;

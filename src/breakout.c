@@ -567,7 +567,7 @@ u8 collision_briques(obj_t *obj)
         brick = level.objects + CasseBrique[i].object_index;
         if (brick->param != 0 && i != LastTouched) {
             dx = x - (s16)((s16)brick->x - xmap + brick->offset_bx + 8);
-            abs_x = (s16)abs(dx);
+            abs_x = (s16)abs32_inline(dx);
             if (abs_x <= 21) {
                 dy = y - (s16)((s16)brick->y - ymap + brick->offset_by);
                 abs_y = (s16)abs(dy);

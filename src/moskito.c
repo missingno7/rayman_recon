@@ -78,7 +78,8 @@ void getIdealStingCoords(obj_t* obj, s16* out_x, s16* out_y) {
 }
 
 //53C2C
-u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) { /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */
+u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) {
+    /* ORIGINAL_INLINE abs sites: DOS 1:43c57, 1:43c79. */ /* Close-out compiler steering; introduced local names INVENTED. Quality: RESULTS.json. */
     u16 limit_y;
     u16 limit_x;
     u16 *address_x = &limit_x;
@@ -91,16 +92,16 @@ u8 closeEnoughToSting(obj_t* obj, u16 min_x, u16 min_y) { /* Close-out compiler 
     sting_x -= obj->x;
     {
         s16 perm_value_0;
-        perm_value_0 = ((s32)sting_x>=0 ? (s32)sting_x : -(s32)sting_x);
+        perm_value_0 = abs32_inline(sting_x);
         sting_x=perm_value_0;
     }
     sting_y -= obj->y;
     {
         s16 perm_value_1;
-        perm_value_1=((s32)sting_y>=0 ? (s32)sting_y : -(s32)sting_y);
+        perm_value_1=abs32_inline(sting_y);
         sting_y=perm_value_1;
     }
-    result=(limit_x > sting_x) && (sting_y < limit_y);
+    result=(sting_x < min_x) && (sting_y < limit_y);
     return result;
 }
 

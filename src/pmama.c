@@ -543,6 +543,8 @@ void lance_couteau_parabolique(obj_t* obj) {
 
 //65120
 void lance_couteau_droit(obj_t* obj) {
+    /* ORIGINAL_INLINE abs sites: DOS 1:5518b, 1:55199, 1:551c1, 1:551d2. */
+    /* ORIGINAL_INLINE abs sites: DOS 1:5518b, 1:55199, 1:551c1, 1:551d2. */
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     u8 cout_ind;
     s16 diff_x;
@@ -554,12 +556,11 @@ void lance_couteau_droit(obj_t* obj) {
     if (cout_ind != 0xFF) {
         diff_x = (xmap + CouteauxInfos[cout_ind].x_pos) - (obj->offset_bx + obj->x);
         diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->offset_by + obj->y);
-        if (Abs(diff_x) >= 4 || Abs(diff_y) >= 4) {
+        if (abs32_inline(diff_x) >= 4 || abs32_inline(diff_y) >= 4) {
             CouteauxInfos[cout_ind].active = false;
             /* DOS 1:551be..551df: Y magnitude, X magnitude, max, then fixed-point shift. */
-            abs_y = diff_y;
-            if (abs_y < 0) abs_y = -abs_y;
-            divisor = ashl16(max32(Abs(diff_x), abs_y), 4) / 4;
+            abs_y = abs32_inline(diff_y);
+            divisor = ashl16(max32(abs32_inline(diff_x), abs_y), 4) / 4;
             obj->speed_x = convertspeed(ashl16(diff_x, 4) / (s16) divisor);
             obj->speed_y = convertspeed(ashl16(diff_y, 4) / (s16) divisor);
             update_couteau(obj);
@@ -576,8 +577,8 @@ void lance_couteau_droit(obj_t* obj) {
             }
             obj->speed_x = 0;
             obj->speed_y = 0;
-            obj->x = (xmap + CouteauxInfos[cout_ind].x_pos) - obj->offset_bx;
-            obj->y = (ymap + CouteauxInfos[cout_ind].y_pos) - obj->offset_by;
+            { {obj->x = (xmap + CouteauxInfos[cout_ind].x_pos) - obj->offset_bx;} }
+            { s32 position_y; position_y=CouteauxInfos[cout_ind].y_pos; position_y+=ymap; obj->y=position_y-obj->offset_by; }
             if (check_couteaux()) {
                 pma_phase = 3;
                 reset_couteaux();

@@ -1351,7 +1351,7 @@
      ]
     },
     "closeEnoughToSting": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -2929,7 +2929,7 @@
      ]
     },
     "lance_couteau_droit": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",

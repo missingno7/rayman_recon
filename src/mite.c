@@ -182,6 +182,7 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
 //53068
 void DO_MIT_ATTAK(obj_t *obj)
 {
+    /* ORIGINAL_INLINE abs sites: DOS 1:43134, 1:43160. */
     if (obj->main_etat == 0 && obj->sub_etat == 10) {
         if (obj->follow_id > 50)
             obj->follow_id -= 50;
@@ -203,9 +204,9 @@ void DO_MIT_ATTAK(obj_t *obj)
             s16 diff_y;
             s16 distance_copy;
 
-            abs_distance = ABS(obj->x - obj->follow_x);
+            abs_distance = abs32_inline(obj->x - obj->follow_x);
             distance = abs_distance; distance_copy = distance;
-            abs_ray_distance = ABS(ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10);
+            abs_ray_distance = abs32_inline(ray.x + ray.offset_bx - obj->follow_x - obj->offset_bx - 10);
             ray_distance = abs_ray_distance;
             if (distance > obj->config || (distance > ray_distance && obj->config == 140)) {
                 if (obj->config == 140 && ray_distance < 140)
@@ -262,6 +263,8 @@ void DO_MIT_ATTAK(obj_t *obj)
 
 //53320
 u8 IS_MIT_PAF(obj_t* obj) {
+    /* ORIGINAL_INLINE abs sites: DOS 1:433d4. */
+    /* ORIGINAL_INLINE abs sites: DOS 1:433d4. */
     /* 4B154 8016F954 -O2 -msoft-float */
     s16 spd_x;
     u8 res = false;
@@ -292,8 +295,7 @@ u8 IS_MIT_PAF(obj_t* obj) {
                 if (obj->follow_id >= 500)
                 {
                     s32 unk_x_3;
-                    unk_x_3 = obj->x - obj->follow_x;
-                    unk_x_3 = ABS(unk_x_3);
+ s32 delta; delta=obj->x - obj->follow_x; unk_x_3=abs32_inline(delta);
 
                     if ((s16)unk_x_3 < 8) {
                         if (!obj->flags.flip_x)
