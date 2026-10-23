@@ -18,8 +18,17 @@ Hard rules
 - The verifier decides. STRICT = all bytes equal at the bound address, identical fixup-site sets, every reference
   target verified. Masked / approximate equality is never STRICT. Never weaken `tools/match.py` to fit a candidate;
   if a check looks wrong, prove it with independent evidence and report it.
-- No inline asm, `#pragma aux` byte tricks, `_emit`, copied bytes, artificial dead code or volatile hacks to force
-  bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first):
+- Acceptance policy (user decision 2026-10-23, docs/MATCHING.md "Acceptance policy and roadmap"): any VALID C that the
+  pinned toolchain compiles into the original bytes is acceptable - compiler-steering temporaries/locals, reordered
+  statements or declarations, goto/decompiler-style control flow, split or combined expressions, duplicated bodies,
+  permuter-found shapes. Historical plausibility of the spelling is NOT required. Mark such functions with a
+  source-quality tag (`quality`: COMPILER_STEERED or SYNTHETIC in config/units.json; absent = NATURAL). No undefined
+  behaviour, no change of program semantics, no change of public symbols/ABI, data ownership or TU boundaries without
+  separate structural evidence. Baseline of the readable reconstruction: git tag semantic-baseline-2026-10-23.
+- Matching happens ONLY through source processed by the historical toolchain: never patch objects, the linked or
+  packed executable, fixups, relocations or layouts; no `_emit`, raw opcode arrays, copied code bytes, or inline asm /
+  `#pragma aux` code to bypass code generation (beyond the evidence-gated rules below).
+- No inline asm, `#pragma aux` byte tricks, `_emit`, copied bytes or volatile hacks to force bytes. Hand-written assembly is reconstructed as assembly only where the original was assembly (evidence first):
   `.asm` units (profile `asm`, pinned WASM through tools/wcc.py `build`, checked by the same match.py/verify.py).
   Readable instructions, symbolic labels and typed DB/DW/DD data only - never copied code bytes, INCBIN or padding
   invented to hide a mismatch; every CODE segment starts with a public (whole contribution compared).

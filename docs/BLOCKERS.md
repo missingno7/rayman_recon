@@ -1,7 +1,10 @@
 # Blocker inventory (living document; choose work from here)
 
-User direction 2026-10-23: generic NEAR finishing waves and allocator/scheduler experiments are stopped unless new
-evidence changes the constraints. Work now goes to evidence acquisition (historical toolchain, other original builds
+User direction 2026-10-23 (later the same day): acceptance policy changed - compiler-steered and synthetic valid C is
+acceptable (docs/MATCHING.md "Acceptance policy and roadmap"). Blockers recorded as "no plausible source" (B1, B4, B5,
+B6, B7 and the fx_*/sched negatives) are reopened for compiler-steered search; blockers needing unavailable compilers
+or data (B17 CalcTab, language_txt capacity) are unchanged. Earlier: generic NEAR finishing waves and allocator/scheduler
+experiments were stopped unless new evidence changes the constraints. Work now goes to evidence acquisition (historical toolchain, other original builds
 and artifacts) and natural-link reconstruction where independent evidence constrains it. Unresolved functions stay
 NEAR until original material resolves them.
 
