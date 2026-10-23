@@ -187,19 +187,19 @@ s16 box_inter_h_line(s16 a1, s16 a2, s16 a3, s16 a4, s16 a5, s16 a6, s16 a7) {
 }
 
 //2B430
-s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1, s16 x_2, s16 y_2, s32 w_2, s32 h_2) {
-    s16 comp_x;
-    s16 comp_y;
-    s16 sum_w;
-    s16 sum_h;
+s16 inter_box(s32 x_1, s32 y_1, s32 w_1, s32 h_1, s16 x_2, s16 y_2, s32 w_2, s32 h_2) {   s16 comp_x;   s16 comp_y;   s16 sum_w;   s16 sum_h;
+  comp_y = y_1 - h_2;
+  comp_x = x_1 - w_2;
+  sum_w = w_1 + w_2;
+  {
+    s32 perm_value_2;
+    perm_value_2 = h_1;
+    sum_h = perm_value_2 + h_2;
+  }
+  if ((((comp_x <= x_2) && (comp_y <= y_2)) && ((comp_x + sum_w) >= x_2)) && ((comp_y + sum_h) >= y_2))
+    return 1;
+  return 0;
 
-    comp_x = x_1 - w_2;
-    comp_y = y_1 - h_2;
-    sum_w = w_1 + w_2;
-    sum_h = h_1 + h_2;
-    if (comp_x <= x_2 && comp_y <= y_2 &&
-        comp_x + sum_w >= x_2 && comp_y + sum_h >= y_2) return 1;
-    return 0;
 }
 
 //2B48C

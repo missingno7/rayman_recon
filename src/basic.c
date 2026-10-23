@@ -65,92 +65,92 @@ void restore_objects_flags(void) {
 }
 
 //1D204
-void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs) {
-    // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    u8 obj_2_frames_count;
-    eta_t *obj_2_eta_2;
-    s16 prev_frame;
-    s16 prev_index;
-    s16 obj_2_x; s16 obj_2_y; s16 obj_2_w; s16 obj_2_h;
-    s16 new_spd_x; s16 new_spd_y;
-    eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];
-    s16 obj_2_anim_index = obj_2_eta_1->anim_index;
-    s16 obj_2_anim_frame = obj_2->anim_frame;
-
-    if (horloge[obj_2_eta_1->anim_speed & 0xF] == 0)
+void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs) {   u8 obj_2_frames_count;   eta_t *obj_2_eta_2;   s16 prev_frame;   s16 prev_index;   s16 obj_2_x;   s16 obj_2_y;   s16 obj_2_w;   s16 obj_2_h;   s16 new_spd_x;   s16 new_spd_y;   eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];   s16 obj_2_anim_index = obj_2_eta_1->anim_index;
+  s16 obj_2_anim_frame = obj_2->anim_frame;
+  if (horloge[obj_2_eta_1->anim_speed & 0xF] == 0)
+  {
+    obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
+    obj_2_anim_frame += (obj_2_eta_1->flags & 0x10) ? (-1) : (1);
+    if (!inrange(obj_2_anim_frame, 0, obj_2_frames_count - 1))
     {
-        obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
-        obj_2_anim_frame += (obj_2_eta_1->flags & 0x10) ? -1 : 1; /* requires ternary to match? */
-        if (!inrange(obj_2_anim_frame, 0, obj_2_frames_count - 1))
-        {
-            obj_2_eta_2 = &obj_2->eta[obj_2_eta_1->next_main_etat][obj_2_eta_1->next_sub_etat];
-            obj_2_anim_index = obj_2_eta_2->anim_index;
-            obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
-            obj_2_anim_frame = (obj_2_eta_2->flags & 0x10) ? (obj_2_frames_count - 1) : 0;
-        }
+      obj_2_eta_2 = &obj_2->eta[obj_2_eta_1->next_main_etat][obj_2_eta_1->next_sub_etat];
+      obj_2_anim_index = obj_2_eta_2->anim_index;
+      obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
+      {
+        s16 perm_value_7;
+        perm_value_7 = (obj_2_eta_2->flags & 0x10) ? (obj_2_frames_count - 1) : (0);
+        obj_2_anim_frame = perm_value_7;
+      }
     }
-    prev_frame = obj_2->anim_frame;
-    prev_index = obj_2->anim_index;
-    obj_2->anim_frame = obj_2_anim_frame;
-    obj_2->anim_index = obj_2_anim_index;
-    GET_SPRITE_POS(obj_2, obj_2_spr, &obj_2_x, &obj_2_y, &obj_2_w, &obj_2_h);
-    obj_2->anim_index = prev_index;
-    obj_2->anim_frame = prev_frame;
+  }
+  prev_frame = obj_2->anim_frame;
+  prev_index = obj_2->anim_index;
+  obj_2->anim_frame = obj_2_anim_frame;
+  obj_2->anim_index = obj_2_anim_index;
+  GET_SPRITE_POS(obj_2, obj_2_spr, &obj_2_x, &obj_2_y, &obj_2_w, &obj_2_h);
+  obj_2->anim_index = prev_index;
+  obj_2->anim_frame = prev_frame;
+  new_spd_x = (x_offs + obj_2_x) - obj_1->x;
+  while (abs(new_spd_x) >= 16)
+  {
+    obj_1->x += sgn(new_spd_x) * 16;
+    new_spd_x += sgn(new_spd_x) * (-16);
+  }
 
-    new_spd_x = x_offs + obj_2_x - obj_1->x;
-    while (abs(new_spd_x) >= 16)
-    {
-        obj_1->x += sgn(new_spd_x) * 16;
-        new_spd_x += sgn(new_spd_x) * -16;
-    }
+  new_spd_y = (y_offs + obj_2_y) - obj_1->y;
+  while (abs(new_spd_y) >= 16)
+  {
+    obj_1->y += sgn(new_spd_y) * 16;
+    new_spd_y += sgn(new_spd_y) * (-16);
+  }
 
-    new_spd_y = y_offs + obj_2_y - obj_1->y;
-    while (abs(new_spd_y) >= 16)
+  {
+    switch (flags[obj_1->type].move_x + (flags[obj_2->type].move_x * 2))
     {
-        obj_1->y += sgn(new_spd_y) * 16;
-        new_spd_y += sgn(new_spd_y) * -16;
-    }
+      case 0:
+        new_spd_x += obj_2->speed_x;
+        break;
 
-    {
-        switch (flags[obj_1->type].move_x +
-                flags[obj_2->type].move_x * 2
-        ) {
-            case 0:
-                new_spd_x += obj_2->speed_x;
-                break;
-            case 3:
-                new_spd_x = instantSpeed(obj_2->speed_x) + new_spd_x * 16;
-                break;
-            case 1:
-                new_spd_x = (new_spd_x + obj_2->speed_x) * 16;
-                break;
-            case 2:
-                new_spd_x += instantSpeed(obj_2->speed_x);
-                break;
-        }
+      case 3:
+        new_spd_x = instantSpeed(obj_2->speed_x) + (new_spd_x * 16);
+        break;
+
+      case 2:
+        new_spd_x += instantSpeed(obj_2->speed_x);
+        break;
+
+      case 1:
+        new_spd_x = (new_spd_x + obj_2->speed_x) * 16;
+        break;
+
     }
 
+  }
+  {
+    switch (flags[obj_1->type].move_y + (flags[obj_2->type].move_y * 2))
     {
-        switch (flags[obj_1->type].move_y +
-                flags[obj_2->type].move_y * 2
-        ) {
-            case 0:
-                new_spd_y += obj_2->speed_y;
-                break;
-            case 3:
-                new_spd_y = instantSpeed(obj_2->speed_y) + new_spd_y * 16;
-                break;
-            case 1:
-                new_spd_y = (new_spd_y + obj_2->speed_y) * 16;
-                break;
-            case 2:
-                new_spd_y += instantSpeed(obj_2->speed_y);
-                break;
-        }
+      case 0:
+        new_spd_y += obj_2->speed_y;
+        break;
+
+      case 3:
+        new_spd_y = instantSpeed(obj_2->speed_y) + (new_spd_y * 16);
+        break;
+
+      case 1:
+        new_spd_y = (new_spd_y + obj_2->speed_y) * 16;
+        break;
+
+      case 2:
+        new_spd_y += instantSpeed(obj_2->speed_y);
+        break;
+
     }
 
-    obj_1->speed_x = new_spd_x;
-    obj_1->speed_y = new_spd_y;
+  }
+  obj_1->speed_x = new_spd_x;
+  obj_1->speed_y = new_spd_y;
+
 }
 
 //1D4C4
@@ -510,12 +510,12 @@ s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h) {
     if (sprite_ind != 0 && sprite->id != 0) {
         *w = sprite->inner_width;
         *h = sprite->inner_height;
-        if (obj->flags.flip_x != ((sprite->flags & 4) != 0)) {
-            *x = obj->x + (obj->offset_bx * 2 - (layer->x + (sprite->sprite_pos.raw & 0xF)) - sprite->outer_width);
+        if (obj->flags.flip_x != (sprite->flags_bits.flip_x)) {
+            *x = obj->x + (obj->offset_bx * 2 - (layer->x + sprite->sprite_pos.bits.x) - sprite->outer_width);
         } else {
-            *x = obj->x + layer->x + (sprite->sprite_pos.raw & 0xF);
+            *x = obj->x + layer->x + sprite->sprite_pos.bits.x;
         }
-        *y = layer->y + (sprite->sprite_pos.raw >> 4) + obj->y;
+        *y = layer->y + sprite->sprite_pos.bits.y + obj->y;
         res = true;
     }
     else
@@ -859,46 +859,47 @@ outside:
 
 //1E608
 void calc_btyp_square(obj_t* obj) {
-    s16 x;
-    s16 y;
-    s16 tile_x;
-    s16 tile_y;
-    s16 tile_x_left;
-    s16 tile_x_right;
+  s16 x;
+  s16 y;
+  s16 tile_x_right;
+  s16 tile_x;
+  s16 tile_x_left;
+  s16 tile_y;
+  {
+    u8 x_offset;
+    if (obj->type == 23)
     {
-        u8 x_offset;
-        if (obj->type == TYPE_23_RAYMAN) {
-            if (RayEvts.tiny) {
-                x_offset = 4;
-            } else {
-                x_offset = 8;
-            }
-        } else {
-            x_offset = 16;
-        }
-
-        x = obj->x + obj->offset_bx;
-        y = obj->y + obj->offset_by;
-        tile_y = ashr16(y, 4);
-        tile_x = ashr16(x, 4);
-        tile_x_left = ashr16(x - x_offset, 4);
-        tile_x_right = ashr16(x + x_offset, 4);
+      if (RayEvts.tiny)
+      {
+        x_offset = 4;
+      }
+      else
+      {
+        x_offset = 8;
+      }
     }
-
-    obj->btypes[3] = BTYP(tile_x, tile_y - 1); // up
-    obj->btypes[1] = BTYP(tile_x_left, tile_y); // left
-
-    // center
+    else
     {
-        /* DOS 1:0e71e: signed narrow result (CWDE); only AL is consumed. */
-        s16 center_btyp = obj->main_etat == 2
-        ? bloc_floor((u8)BTYP(tile_x, tile_y), x & 15, y & 15)
-        : (u8)BTYP(tile_x, tile_y);
-        obj->btypes[0] = center_btyp;
+      x_offset = 16;
     }
+    x = obj->x + obj->offset_bx;
+    y = obj->y + obj->offset_by;
+    tile_y = ashr16(y, 4);
+    tile_x = ashr16(x, 4);
+    tile_x_left = ashr16(x - x_offset, 4);
+    tile_x_right = ashr16(x_offset + x, 4);
+  }
+  obj->btypes[3] = BTYP(tile_x, tile_y - 1);
+  obj->btypes[1] = BTYP(tile_x_left, tile_y);
+  {
+    /* DOS 1:0e71e: signed narrow result (CWDE); only AL is consumed. */
+    s16 center_btyp = (obj->main_etat == 2) ? (bloc_floor((u8) BTYP(tile_x, tile_y), x & 15, y & 15)) : ((u8) BTYP(tile_x, tile_y));
+    obj->btypes[0] = center_btyp;
+  }
+  obj->btypes[2] = BTYP(tile_x_right, tile_y);
+  obj->btypes[4] = BTYP(tile_x, tile_y + 1);
 
-    obj->btypes[2] = BTYP(tile_x_right, tile_y); // right
-    obj->btypes[4] = BTYP(tile_x, tile_y + 1); // down
+
 }
 
 //1E76C
