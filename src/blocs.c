@@ -465,7 +465,7 @@ u8 IS_ON_RESSORT_BLOC(obj_t* obj) {
 }
 
 void CALC_MOV_ON_BLOC(obj_t *obj) {
-    /* INVENTED locals. DOS 1:15820..15b30; exact extent, still NEAR_MATCH. */
+    /* COMPILER_STEERED: shared floor delta, scoped short copy, and inlined floor X. */
     s16 speed_x, delta, full_x, full_y, x, y, height, next_y, next_x;
     s32 dist;
     u8 btyp, floor_type;
@@ -485,14 +485,14 @@ void CALC_MOV_ON_BLOC(obj_t *obj) {
             y = height;
         } else height = calcbloc1[obj->btypes[0]](x, y);
         delta = height - y;
-        x = full_x + speed_x;
+        { s16 tmp_x; tmp_x = full_x + speed_x; x = tmp_x; }
         next_y = full_y + delta;
         btyp = BTYP(x >> 4, next_y >> 4);
         x &= 15;
         y = next_y & 15;
         switch (btyp) {
         case 9: case 14: case 15: case 30:
-            height = calcbloc2[BTYP((full_x + speed_x) >> 4, (full_y + delta - 16) >> 4)](x, y) + (y - 16);
+            dist = calcbloc2[BTYP((full_x + speed_x) >> 4, (full_y + delta - 16) >> 4)](x, y); height = y - 16; goto add_floor_delta;
             break;
         case 2: case 18: height = 15 - x; break;
         case 3: case 19: height = x; break;
@@ -504,14 +504,11 @@ void CALC_MOV_ON_BLOC(obj_t *obj) {
         default:
             next_x = full_x + speed_x;
             next_y = full_y + delta + 16;
-            floor_x = next_x & 15;
+            
             floor_y = (next_y & 15) - 16;
             floor_type = BTYP(next_x >> 4, next_y >> 4);
-            dist = calcblocfloor[floor_type](floor_x, floor_y) - floor_y;
-            if ((s16)dist > 2)
-                height = y;
-            else
-                height = y + dist;
+            dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y;
+            height=y; if ((s16)dist > 2) break; add_floor_delta: height +=dist;
             break;
         case 12:
             height = y;

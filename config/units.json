@@ -4403,7 +4403,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "recale_position": {
      "status": "STRICT",
@@ -5355,7 +5356,7 @@
      ]
     },
     "move_briques": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -5364,7 +5365,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "reset_briques": {
      "status": "STRICT",

@@ -705,6 +705,7 @@ void move_briques(obj_t *obj)
 
 void init_briques(obj_t *obj)
 {
+    /* COMPILER_STEERED: scoped pointer copy and coordinate sum order. */
     u8 i;
     s16 level_index;
     s16 x;
@@ -733,7 +734,7 @@ void init_briques(obj_t *obj)
     }
     obj->iframes_timer = 100;
 
-    brick = level.objects;
+    { obj_t * tmp_brick; tmp_brick=level.objects; brick=tmp_brick; }
     count = level.nb_objects;
     brick_index = 0;
     for (level_index = 0; level_index < count; level_index++, brick++) {
@@ -779,8 +780,8 @@ void init_briques(obj_t *obj)
 
     for (i = 0; i < 20; i++) {
         brick = level.objects + CasseBrique[i].object_index;
-        brick->x = xmap + CasseBrique[i].x - brick->offset_bx + CBoffsetX;
-        brick->y = ymap + CasseBrique[i].y - brick->offset_by + CBoffsetY;
+        brick->x = CasseBrique[i].x + xmap + CBoffsetX - brick->offset_bx;
+        brick->y = ymap + CBoffsetY + CasseBrique[i].y - brick->offset_by;
         brick->is_active = 1;
         brick->param = CasseBrique[i].kind;
         brick->iframes_timer = i;
