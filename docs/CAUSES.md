@@ -116,6 +116,29 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   statement order. Natural trials (direct return in dosmem, moving the
   second-screen computation in effect_helper_50738, a typed workspace view) gained nothing.
 
+## H11 - Structural debt: local matching drifted from shared source idioms (structural experiment 2026-10-23)
+- Premise check (scratch/core_ops.py over all 291 game NEAR functions; "core" = arithmetic/compare/branch/call
+  mnemonics, moves/push/pop/lea/frame adjustments ignored): 88 functions (40 KB) already have DOS's exact core
+  (category 4: allocation/homes/scheduling only); 108 (70 KB) differ by <= 4 core ops; 95 (81 KB) by more. bbmont 6/9,
+  collision1 SET_DETECT_ZONE_FLAG, blocs IS_ON_RESSORT_BLOC are core-equal: structural rewrites cannot help them.
+- Recurring op substitutions across functions point to idioms: abs (our cdq/xor/sub vs DOS test/jge/neg), branch
+  polarity (function-specific), fill/copy (rep stos/movs).
+- PROVEN (abs): DOS game code uses ONLY the branching abs form (43 units; the branchless form occurs only twice, in
+  sound). Our sources had intrinsic abs()/labs() in 7 units, abs-wrapping macros in 3 and ~28 per-file Abs/ABS macro
+  variants in 5 shapes. Branch exp/abs-idiom (worktree): replacing intrinsic routes gives the DOS neg at 11/11 affected
+  functions; unifying every macro on the PLAIN form loses STRICT (blocs, mite, ray) - the (s32) casts are real; unifying
+  on the CAST form ((s32)(x) >= 0 ? (s32)(x) : -(s32)(x)) keeps every STRICT except one layout casualty (moteur
+  DO_PLACE_RAY, 0 code differences) and improves the core in 9 units, incl. 2 not used to derive it (frame 105->98,
+  moskito 11->5, both also fewer differing bytes); neige worsens (its variant tests < 0). Byte differences rise where
+  earlier compiler steering had been tuned around the wrong idiom (dark DARK_phase1 91 -> ~800); 3-minute permuter runs
+  on 5 corrected functions closed none (calc_esquive_poing 128->103 vs old 29 flat).
+- FALSIFIED: switch-dispatch idiom (31/34 dispatches already match; 2 functions differ); C-level fill idiom (memset is
+  inlined as stosw/stosb; parameterised pragmas load ECX first and XOR EAX - DOS's mov eax,0; mov ecx,N; rep stosd keeps
+  both constants inside hand-written inline code: counts 16000 x11 sites (existing fill helper), 4000 x1, 16008 x1).
+- Conclusion: structural debt is real but narrow (one demonstrated idiom, ~14 functions directly, ~9 units of core
+  improvement); most remaining NEAR are category 4. A correct idiom does not by itself yield STRICT - it resets the
+  allocation work for the affected functions.
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
