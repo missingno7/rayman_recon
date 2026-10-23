@@ -7154,7 +7154,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "restoreGameState": {
      "status": "NEAR_MATCH",
@@ -7162,7 +7163,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "get_offset_in_safe_zone": {
      "status": "STRICT",

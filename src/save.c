@@ -143,19 +143,26 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
 
     j = 0;
     cur_obj = &level.objects[0];
-    nb_objs = level.nb_objects;
-    while (j < nb_objs) {
-        if (cur_obj->type == 141 || cur_obj->type == 164 ||
-            cur_obj->type == 179 || cur_obj->type == 242) {
-            unk_1 = j >> 5;
-            unk_2 = 1 << (j & 0x1f);
-            if (cur_obj->flags.alive)
-                save_state->triggered_objects[unk_1] |= unk_2;
-            else
-                save_state->triggered_objects[unk_1] &= ~unk_2;
-        }
-        j++;
-        cur_obj++;
+    /* COMPILER_STEERED: the count copy and loop rotation act together. */
+    {
+        s16 object_count;
+        object_count = level.nb_objects;
+        nb_objs = object_count;
+    }
+    if (nb_objs > 0) {
+        do {
+            if (cur_obj->type == 141 || cur_obj->type == 164 ||
+                cur_obj->type == 179 || cur_obj->type == 242) {
+                unk_1 = j >> 5;
+                unk_2 = 1U << (j & 0x1f);
+                if (cur_obj->flags.alive)
+                    save_state->triggered_objects[unk_1] |= unk_2;
+                else
+                    save_state->triggered_objects[unk_1] &= ~unk_2;
+            }
+            j++;
+            cur_obj++;
+        } while (j < nb_objs);
     }
 
     save_state->is_just_saved = 1;
@@ -257,7 +264,14 @@ void restoreGameState(save_state_t *save_state)
         v_scroll_speed = 0;
         obj_id = 0;
         obj = level.objects;
-        nb_objs = level.nb_objects;
+        /* SYNTHETIC: local copies steer allocation; neither address escapes. */
+        {
+            s16 object_count;
+            s16 *count_slot;
+            count_slot = &object_count;
+            *count_slot = level.nb_objects;
+            nb_objs = object_count;
+        }
         while (obj_id < nb_objs) {
             if (obj->type == 3 || obj->type == 13 || obj->type == 15 || obj->type == 59 ||
                 obj->type == 36 || obj->type == 66 || obj->type == 62 || obj->type == 99) {
@@ -266,7 +280,13 @@ void restoreGameState(save_state_t *save_state)
                        ((obj->type == 179 || obj->type == 242) ? (obj->field_1C = 1) : 0)) {
 
                 index = obj_id >> 5;
-                bit = 1 << (obj_id & 0x1f);
+                {
+                    s32 object_bit;
+                    s32 *bit_slot;
+                    bit_slot = &object_bit;
+                    *bit_slot = 1U << (obj_id & 0x1f);
+                    bit = object_bit;
+                }
                 if ((bit & save_state->triggered_objects[index]) != 0)
                     obj->flags.alive = 1;
                 else
