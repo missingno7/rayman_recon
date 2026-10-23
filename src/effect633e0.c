@@ -127,7 +127,10 @@ s16 effect_helper_63614(void)
         break;
     case 1:
     {
-        double difference;
+        /* COMPILER_STEERED: comparison operand stays in the DOS stack slot;
+         * later arithmetic uses a separate scalar to avoid redundant stores. */
+        double difference[1];
+        double quotient;
         if (state->initialized == 0) {
             if (state->delta > 0) {
                 state->field_04 = state->field_14;
@@ -138,11 +141,11 @@ s16 effect_helper_63614(void)
             }
             state->initialized = 1;
         }
-        difference = (double)(state->field_04 - state->field_14);
-        if (difference <= (double)state->period1) {
-            difference /= (double)state->width;
-            difference = cos(difference);
-            state->field_0c = (s32)(difference * (double)state->width);
+        difference[0] = (double)(state->field_04 - state->field_14);
+        if (difference[0] <= (double)state->period1) {
+            quotient = difference[0] / (double)state->width;
+            quotient = cos(quotient);
+            state->field_0c = (s32)(quotient * (double)state->width);
         } else {
             state->field_0c = -(s32)state->width;
         }

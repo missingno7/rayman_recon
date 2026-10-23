@@ -172,7 +172,7 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
     effect5_state_t *state;
     u8 success;
 
-    success = 0;
+    { u8 value; u8 *address = &value; *address = 0; success = value; }
     effect5_width = 0x100;
     effect5_height = 0xc8;
     effect5_x_offset = 0x20;
@@ -185,7 +185,7 @@ u8 effect_helper_1623c(u16 columns, u16 rows, u16 radius, s16 speed,
             state->columns = max32(2, columns);
             state->rows = max32(1, rows);
             state->count = (u16)(rows * columns);
-            state->point_count = (u16)((rows + 1) * (columns + 1));
+            state->point_count = (u16)((columns + 1) * (rows + 1));
             state->source = source;
             state->destination = destination;
             state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);

@@ -190,6 +190,8 @@ void pack_temp_zone(void)
 {
     s16 i, j;
     u32 merged_size;
+    /* COMPILER_STEERED: name the pool end before clearing the free slot. */
+    u8 *end;
     for (i = 0; i < 30; i++) {
         if (temp_mem[i].allocated == 0 && temp_mem[i].capacity != 0) {
             do {
@@ -201,9 +203,10 @@ void pack_temp_zone(void)
                 }
                 if (j < 30) {
                     merged_size = temp_mem[j].capacity;
-                    temp_mem[i].capacity = temp_mem[i].capacity + merged_size;
+                    temp_mem[i].capacity += merged_size;
+                    end = temp_mem_buf.data + temp_mem_buf.capacity;
                     temp_mem[j].capacity = 0;
-                    temp_mem[j].data = temp_mem_buf.data + temp_mem_buf.capacity;
+                    temp_mem[j].data = end;
                 }
             } while (merged_size != 0);
         }

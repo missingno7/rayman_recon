@@ -194,21 +194,21 @@ speed_negative_done:
 
 //32280
 void DO_2_PARTS_CYMBAL(obj_t* cym_obj) {
-    s16 cym_offs_by;
-    obj_t *link_obj;
-    s16 cym_sub_etat;
-    s16 cym_offs_bx;
-    s16 diff_x_1;
-    s16 diff_x_2;
-    s16 link_id;
-    s16 diff_y;
-    s16 link_offs_bx;
-    s16 link_offs_by;
-    s16 cym_x;
-    s16 cym_y;
-    s16 cym_w;
     s16 link_sub_etat;
+    obj_t *link_obj;
+    s16 cym_w;
+    s16 cym_offs_bx;
+    s16 link_offs_by;
+    s16 diff_x_2;
+    s16 cym_y;
+    s16 diff_y;
+    s16 cym_x;
     s16 cym_h;
+    s16 cym_sub_etat;
+    s16 link_id;
+    s16 link_offs_bx;
+    s16 diff_x_1;
+    s16 cym_offs_by;
 
     cym_offs_bx = cym_obj->offset_bx;
     cym_offs_by = cym_obj->offset_by;

@@ -11273,7 +11273,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "SYNTHETIC"
     },
     "effect_helper_16404": {
      "status": "NEAR_MATCH",
@@ -11488,7 +11489,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "DO_COLL_RAY_CYMBALE": {
      "status": "NEAR_MATCH",
@@ -12876,10 +12878,11 @@
      ]
     },
     "effect_helper_63614": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "effect_helper_63838": {
      "status": "NEAR_MATCH",
@@ -15718,10 +15721,11 @@
      ]
     },
     "pack_temp_zone": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "temp_malloc": {
      "status": "NEAR_MATCH",
