@@ -7,6 +7,7 @@ phase changes are observations. Missing/ambiguous IR links are reported openly.
 No original DOS IR, costs, home order or rover stream is assumed to be known.
 """
 import argparse
+import collections
 import difflib
 import json
 from pathlib import Path
@@ -21,6 +22,7 @@ import capstone
 import census
 import match
 import omf
+import scheduler
 from image import Image
 
 REG = {0x1000003: 'eax', 0x80000c0: 'edx', 0x200000c: 'ebx', 0x4000030: 'ecx',
@@ -321,6 +323,265 @@ def describe_difference(cand, dos, trace):
     return findings
 
 
+def instruction_token(ins):
+    return ins.mnemonic + ' ' + ins.op_str
+
+
+def reorder_windows(candidate, original):
+    """Return exact equal-multiset reorder windows, as machine instruction slices."""
+    a, b = list(map(instruction_token, candidate)), list(map(instruction_token, original))
+    out, opcodes = [], difflib.SequenceMatcher(a=a, b=b, autojunk=False).get_opcodes()
+    used = -1
+    for x, (tag, ia, ib, ja, jb) in enumerate(opcodes):
+        if tag == 'equal' or x <= used:
+            continue
+        for y in range(x, len(opcodes)):
+            _, _, end_a, _, end_b = opcodes[y]
+            count_a, count_b = end_a - ia, end_b - ja
+            if max(count_a, count_b) > 32:
+                break
+            if (count_a > 1 and count_a == count_b and a[ia:end_a] != b[ja:end_b]
+                    and collections.Counter(a[ia:end_a]) == collections.Counter(b[ja:end_b])):
+                out.append(dict(candidate_start=ia, dos_start=ja,
+                                candidate=candidate[ia:end_a], dos=original[ja:end_b],
+                                candidate_tokens=a[ia:end_a], dos_tokens=b[ja:end_b]))
+                used = y
+                break
+    return out
+
+
+_INLINE_CALL_INSNS = {'cli', 'sti', 'int', 'int3', 'in', 'out', 'insb', 'insw', 'insd',
+                      'outsb', 'outsw', 'outsd', 'pushfd', 'popfd', 'iretd'}
+_SETCC = {'sete': 48, 'setz': 48, 'setne': 49, 'setnz': 49, 'setg': 50,
+          'setnle': 50, 'setle': 51, 'setng': 51, 'setl': 52, 'setnge': 52,
+          'setge': 53, 'setnl': 53}
+
+
+def _reg_family(reg):
+    for group in (('eax', 'ax', 'al', 'ah'), ('ebx', 'bx', 'bl', 'bh'),
+                  ('ecx', 'cx', 'cl', 'ch'), ('edx', 'dx', 'dl', 'dh'),
+                  ('esi', 'si'), ('edi', 'di'), ('ebp', 'bp'), ('esp', 'sp')):
+        if reg in group:
+            return group[0]
+    return reg
+
+
+def _schedule_associations(ins, nodes, trace):
+    if ins.mnemonic in _INLINE_CALL_INSNS:
+        return [n for n in nodes if n['op'] in (41, 54)]
+    if ins.mnemonic in _SETCC:
+        return [n for n in nodes if n['op'] == _SETCC[ins.mnemonic]]
+    if ins.mnemonic not in FAMILY:
+        return []
+    machine_names = set(machine_regs(ins))
+    machine_families = {_reg_family(reg) for reg in machine_names}
+    constants = {op.imm & 0xffffffff for op in ins.operands if op.type == capstone.CS_OP_IMM}
+    choices = []
+    homes = {n['id']: n['location'] for event in trace.get('events', [])
+             if event.get('event') == 'homes_return' for n in event['names']
+             if n.get('cls') == 2 and n.get('flags', 0) & 1}
+    signed = lambda value: value if value < 0x80000000 else value - 0x100000000
+    frame_size = trace.get('_frame_size', 0)
+    actual_stack = {op.mem.disp for op in ins.operands if op.type == capstone.CS_OP_MEM
+                    and ins.reg_name(op.mem.base) == 'esp'}
+    for node in nodes:
+        if node['op'] not in FAMILY[ins.mnemonic]:
+            continue
+        ir_names = ir_regs(node)
+        ir_families = {_reg_family(reg) for reg in ir_names}
+        node_constants = {part.get('value') for op in node['operands']
+                          for part in walk(op) if part.get('cls') == 0}
+        score = 4 * len(machine_families & ir_families) - 3 * len(machine_families - ir_families)
+        score += 12 * len(constants & node_constants)
+        score += 4 * len(machine_names & ir_names)
+        machine_mem = [op for op in ins.operands if op.type == capstone.CS_OP_MEM]
+        node_mem = [part for op in node['operands'] + [node.get('result')]
+                    for part in walk(op) if part.get('cls') == 4]
+        if machine_mem and node_mem:
+            if any(op.mem.disp == part['displacement'] for op in machine_mem for part in node_mem):
+                score += 6
+            else:
+                score -= 6
+        if ins.operands and ins.operands[0].type == capstone.CS_OP_REG:
+            dst = operand(node.get('result'))
+            machine_dst = ins.reg_name(ins.operands[0].reg)
+            if _reg_family(dst) == _reg_family(machine_dst):
+                score += 3
+                if dst == machine_dst:
+                    score += 4
+        widths = [op.size for op in ins.operands if op.type in (capstone.CS_OP_REG, capstone.CS_OP_MEM)]
+        node_widths = [part.get('size') for op in node['operands'] + [node.get('result')]
+                       for part in walk(op) if part.get('cls') in (1, 2, 3, 4) and part.get('size')]
+        if widths and node_widths:
+            score += 2 if widths[0] in node_widths else -2
+        if constants and constants != node_constants:
+            score -= 4
+        if machine_families and not machine_families & ir_families:
+            continue
+        if actual_stack:
+            offsets = {frame_size + signed(homes[part['id']]) + signed(part['offset'])
+                       for op in node['operands'] + [node.get('result')]
+                       for part in walk(op) if part.get('cls') == 2 and part.get('id') in homes}
+            score += 12 if offsets & actual_stack else -12
+        choices.append((score, node))
+    if not choices:
+        return []
+    best = max(score for score, _ in choices)
+    return [node for score, node in choices if score == best]
+
+
+def _window_assignments(window, block, trace, limit=256):
+    nodes = scheduler.block_nodes(block)
+    options = [_schedule_associations(ins, nodes, trace) for ins in window['candidate']]
+    for index, ins in enumerate(window['candidate']):
+        if ins.mnemonic.startswith('set') and index and window['candidate'][index - 1].mnemonic == 'cmp':
+            compare_ids = {node['addr'] for node in options[index - 1]}
+            options[index] = [node for node in options[index] if node['addr'] in compare_ids]
+    if any(not choices for choices in options):
+        return []
+    # Few repeated machine instructions are ambiguous; enumerate bounded
+    # one-to-one assignments and retain every top-scoring association.
+    order = sorted(range(len(options)), key=lambda i: len(options[i]))
+    found, chosen, used = [], {}, set()
+
+    def visit(depth):
+        if len(found) >= limit:
+            return
+        if depth == len(order):
+            found.append([chosen[i] for i in range(len(options))])
+            return
+        index = order[depth]
+        for node in options[index]:
+            addr = node['addr']
+            duplicate_pair = (index > 0 and window['candidate'][index].mnemonic.startswith('set')
+                              and chosen.get(index - 1, {}).get('addr') == addr)
+            already_used = addr in used
+            if already_used and not duplicate_pair:
+                continue
+            if not already_used:
+                used.add(addr)
+            chosen[index] = node
+            visit(depth + 1)
+            if not already_used:
+                used.remove(addr)
+            del chosen[index]
+
+    visit(0)
+    model = scheduler.Model(nodes).run()
+    forward_positions = {addr: pos for pos, addr in enumerate(model['forward'])}
+    def collapsed(rows):
+        return [node['addr'] for index, node in enumerate(rows)
+                if not index or node['addr'] != rows[index - 1]['addr']]
+    return [rows for rows in found
+            if all(forward_positions[a] < forward_positions[b]
+                   for a, b in zip(collapsed(rows), collapsed(rows)[1:]))]
+
+
+def _dos_assignments(window, candidate_ids, limit=256):
+    by_token = collections.defaultdict(list)
+    for index, token in enumerate(window['candidate_tokens']):
+        by_token[token].append(index)
+    result, used, row = [], set(), []
+
+    def visit(index):
+        if len(result) >= limit:
+            return
+        if index == len(window['dos_tokens']):
+            result.append(list(row))
+            return
+        token = window['dos_tokens'][index]
+        for source in by_token[token]:
+            if source in used:
+                continue
+            used.add(source)
+            row.append(candidate_ids[source])
+            visit(index + 1)
+            row.pop()
+            used.remove(source)
+
+    visit(0)
+    return result
+
+
+def explain_schedule(candidate, original, trace):
+    """Explain each exact reorder window using its captured candidate DAG."""
+    if not trace.get('scheduler'):
+        return []
+    findings = []
+    blocks = [block for block in trace['scheduler'] if block.get('dag')]
+    for window in reorder_windows(candidate, original):
+        options = []
+        for block_index, block in enumerate(blocks):
+            nodes = scheduler.block_nodes(block)
+            model = scheduler.Model(nodes).run()
+            captured = scheduler.captured_edges(block)
+            if captured != model['deps']:
+                continue
+            assignments = _window_assignments(window, block, trace)
+            for assignment in assignments:
+                candidate_ids = [node['addr'] for node in assignment]
+                for dos_ids in _dos_assignments(window, candidate_ids):
+                    candidate_ir = [addr for index, addr in enumerate(candidate_ids)
+                                    if not index or addr != candidate_ids[index - 1]]
+                    dos_ir = [addr for index, addr in enumerate(dos_ids)
+                              if not index or addr != dos_ids[index - 1]]
+                    result = scheduler.classify_order(block, candidate_ir, dos_ir)
+                    options.append((block_index, candidate_ids, dos_ids, result, model))
+        classifications = {row[3]['classification'] for row in options}
+        common = dict(mechanism='schedule', candidate_offset=window['candidate'][0].address,
+                      dos_offset=window['dos'][0].address,
+                      count=len(window['candidate']), candidate=window['candidate_tokens'],
+                      dos=window['dos_tokens'],
+                      confidence='Candidate scheduler evidence is observed; DOS machine-to-IR attribution is diagnostic.')
+        if not options:
+            common.update(classification='unverified', detail='no unique one-to-one candidate machine/IR mapping in one captured block')
+        elif len(classifications) != 1 and not {'legal', 'illegal'} <= classifications:
+            common.update(classification='ambiguous', detail='equally plausible instruction mappings disagree')
+        else:
+            mapping_ambiguous = len(options) > 1
+            # Exact duplicate machine instructions can denote distinct backend
+            # nodes. Preserve every assignment and report when only some make
+            # the DOS order a valid linear extension of the captured graph.
+            classification = 'legal' if mapping_ambiguous else next(iter(classifications))
+            common['classification'] = classification
+            common['block_index'] = options[0][0]
+            results = [row[3] for row in options]
+            if mapping_ambiguous:
+                common['mapping_ambiguity'] = {key: sum(r['classification'] == key for r in results)
+                                               for key in sorted(classifications)}
+            if classification == 'legal':
+                decisions = []
+                seen = set()
+                for result in results:
+                    if result['classification'] != 'legal':
+                        continue
+                    for decision in result.get('decisions', []):
+                        key = (decision['rule'], decision['detail'])
+                        if key not in seen:
+                            seen.add(key)
+                            decisions.append(decision)
+                common['decisions'] = decisions[:4]
+                common['detail'] = ('DOS order has a legal linear extension in the captured candidate DAG; the '
+                                    'reported priority rule(s) explain the observed candidate order.')
+                if mapping_ambiguous:
+                    common['detail'] += ' Identical machine instructions leave alternative IR attributions.'
+            elif classification == 'illegal':
+                violations, seen = [], set()
+                for result in results:
+                    for violation in result.get('violations', []):
+                        key = (violation['later'], violation['earlier'], violation['rule'])
+                        if key not in seen:
+                            seen.add(key)
+                            violations.append(violation)
+                common['violations'] = violations[:4]
+                common['detail'] = ('DOS order violates a captured candidate dependence edge; under the inferred '
+                                    'mapping, the relevant difference predates scheduling.')
+            else:
+                common['detail'] = results[0].get('reason', 'scheduler model could not verify the observation')
+        findings.append(common)
+    return findings
+
+
 def relocated_code(mod, row, binds):
     """Diagnostic linking from candidate bindings only, never DOS field copying."""
     seg = next(s for s in mod.segments if s and s.name == row['segment'])
@@ -386,12 +647,16 @@ def explain_object(obj, func, trace, oracle=None, symbols=None):
             offsets.append(dict(width=width, constraints=unique,
                                 fits=rover_constraints(requests, unique),
                                 confidence='HYPOTHESIS: frozen eligibility + inferred machine/IR links'))
-        return dict(function=func, verifier=row, differences=differences, rover_offsets=offsets,
+        result = dict(function=func, verifier=row, differences=differences, rover_offsets=offsets,
                     extent=dict(candidate=row['size'], dos=end-start, dos_end_known=bool(ends)),
                     limitations='Alignment and IR associations are diagnostic; ambiguous links retained. '
                     'ESP-home association assumes a fixed local frame; outgoing stack arguments and EBP frames are not modeled. '
                     'RET-frontier decoder excludes trailing tables; verifier checks full extent/references. '
                     'Final public DOS end uses candidate length if no following bound public.')
+        schedules = explain_schedule(ci, oi, trace)
+        if schedules:
+            result['schedule'] = schedules
+        return result
     finally:
         match.Bindings.extra = old_extra
 
@@ -405,6 +670,15 @@ def render(report):
         lines.append(f'rover width-class {offset["width"]}: frozen onset fits {offset["fits"]}')
     for change in report.get('rover_comparison', []):
         lines.append('captured rover stream: ' + str(change))
+    for schedule_row in report.get('schedule', []):
+        lines.append(f'schedule window +{schedule_row["candidate_offset"]:x}: {schedule_row["classification"]}; {schedule_row["detail"]}')
+        if schedule_row.get('mapping_ambiguity'):
+            lines.append('  scheduler IR attribution counts: ' + str(schedule_row['mapping_ambiguity']))
+        for decision in schedule_row.get('decisions', []):
+            lines.append(f'  schedule priority: {decision["rule"]}; {decision["detail"]}')
+        for violation in schedule_row.get('violations', []):
+            lines.append(f'  blocking edge: {violation["before"]} -> {violation["after"]}; '
+                         f'{violation["rule"]}: {violation["detail"]}')
     for d in report['differences']:
         pos = f'+{d["candidate_offset"]:x}' if d['candidate_offset'] is not None else '-'
         dos = f'1:{d["dos_address"]:05x}' if d['dos_address'] is not None else '-'
@@ -441,7 +715,7 @@ def main(argv=None):
     source = args.source or cgtrace.ROOT / unit['source']
     out = args.out or cgtrace.ROOT / 'build/cgtrace' / (args.unit + '_' + args.func)
     try:
-        cgtrace.trace(source, out, unit['profile'], args.func)
+        cgtrace.trace(source, out, unit['profile'], args.func, schedule=True)
         trace = json.loads((out / (args.func + '.json')).read_text())
         result = explain_object(out / 'observed.obj', args.func, trace, unit.get('oracle'), args.symbols)
         if args.compare_trace:

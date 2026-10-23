@@ -1,0 +1,413 @@
+{
+  "provenance": "Synthetic, hand-built integer IR/DAG and x86 reorder window. No compiler or oracle bytes.",
+  "legal": {
+    "candidate": "b801000000bb02000000",
+    "dos": "bb02000000b801000000",
+    "candidate_order": [
+      1,
+      2
+    ],
+    "dos_order": [
+      2,
+      1
+    ],
+    "block": {
+      "block": 17,
+      "dag": [
+        {
+          "addr": 200,
+          "ins": {
+            "addr": 2,
+            "op": 38,
+            "operands": [
+              {
+                "cls": 0,
+                "value": 2,
+                "size": 4
+              }
+            ],
+            "result": {
+              "cls": 3,
+              "reg": 33554444,
+              "size": 4
+            },
+            "id": 2,
+            "sequence": 0,
+            "fu": {
+              "good_fu": 3,
+              "unit": 1,
+              "operand": 2
+            },
+            "flags": 0,
+            "ins_flags": 0,
+            "zap": 0,
+            "gen_code": 1,
+            "gen_cc": 32768
+          },
+          "deps": [],
+          "stallable": 2,
+          "height": 2,
+          "anc_count": 0
+        },
+        {
+          "addr": 100,
+          "ins": {
+            "addr": 1,
+            "op": 38,
+            "operands": [
+              {
+                "cls": 0,
+                "value": 1,
+                "size": 4
+              }
+            ],
+            "result": {
+              "cls": 3,
+              "reg": 16777219,
+              "size": 4
+            },
+            "id": 1,
+            "sequence": 0,
+            "fu": {
+              "good_fu": 3,
+              "unit": 1,
+              "operand": 2
+            },
+            "flags": 0,
+            "ins_flags": 0,
+            "zap": 0,
+            "gen_code": 1,
+            "gen_cc": 32768
+          },
+          "deps": [],
+          "stallable": 2,
+          "height": 2,
+          "anc_count": 0
+        }
+      ],
+      "rounds": [
+        {
+          "ins": 2
+        },
+        {
+          "ins": 1
+        }
+      ]
+    }
+  },
+  "hidden": {
+    "nodes": [
+      {
+        "addr": 10,
+        "op": 38,
+        "operands": [
+          {
+            "cls": 3,
+            "reg": 16777219,
+            "size": 4
+          }
+        ],
+        "result": null,
+        "id": 10,
+        "sequence": 0,
+        "fu": {
+          "good_fu": 3,
+          "unit": 1,
+          "operand": 2
+        },
+        "flags": 0,
+        "ins_flags": 0,
+        "zap": 0,
+        "gen_code": 1,
+        "gen_cc": 32768
+      },
+      {
+        "addr": 20,
+        "op": 1,
+        "operands": [
+          {
+            "cls": 3,
+            "reg": 16777219,
+            "size": 4
+          },
+          {
+            "cls": 3,
+            "reg": 67108912,
+            "size": 4
+          }
+        ],
+        "result": {
+          "cls": 3,
+          "reg": 33554444,
+          "size": 4
+        },
+        "id": 20,
+        "sequence": 0,
+        "fu": {
+          "good_fu": 3,
+          "unit": 1,
+          "operand": 2
+        },
+        "flags": 0,
+        "ins_flags": 0,
+        "zap": 0,
+        "gen_code": 1,
+        "gen_cc": 32768
+      }
+    ],
+    "block": {
+      "block": 18,
+      "dag": [
+        {
+          "addr": 200,
+          "ins": {
+            "addr": 20,
+            "op": 1,
+            "operands": [
+              {
+                "cls": 3,
+                "reg": 16777219,
+                "size": 4
+              },
+              {
+                "cls": 3,
+                "reg": 67108912,
+                "size": 4
+              }
+            ],
+            "result": {
+              "cls": 3,
+              "reg": 33554444,
+              "size": 4
+            },
+            "id": 20,
+            "sequence": 0,
+            "fu": {
+              "good_fu": 3,
+              "unit": 1,
+              "operand": 2
+            },
+            "flags": 0,
+            "ins_flags": 0,
+            "zap": 0,
+            "gen_code": 1,
+            "gen_cc": 32768
+          },
+          "deps": [
+            100
+          ],
+          "stallable": 4,
+          "height": 4,
+          "anc_count": 0
+        },
+        {
+          "addr": 100,
+          "ins": {
+            "addr": 10,
+            "op": 38,
+            "operands": [
+              {
+                "cls": 3,
+                "reg": 16777219,
+                "size": 4
+              }
+            ],
+            "result": null,
+            "id": 10,
+            "sequence": 0,
+            "fu": {
+              "good_fu": 3,
+              "unit": 1,
+              "operand": 2
+            },
+            "flags": 0,
+            "ins_flags": 0,
+            "zap": 0,
+            "gen_code": 1,
+            "gen_cc": 32768
+          },
+          "deps": [],
+          "stallable": 2,
+          "height": 2,
+          "anc_count": 1
+        }
+      ],
+      "rounds": [
+        {
+          "ins": 20
+        },
+        {
+          "ins": 10
+        }
+      ]
+    },
+    "candidate_order": [
+      10,
+      20
+    ],
+    "dos_order": [
+      20,
+      10
+    ]
+  },
+  "edge_rules": [
+    {
+      "name": "alias/name",
+      "nodes": [
+        {
+          "addr": 30,
+          "op": 38,
+          "operands": [
+            {
+              "cls": 1,
+              "symbol": 7,
+              "offset": 0,
+              "size": 4,
+              "usage": 0
+            }
+          ],
+          "result": {
+            "cls": 3,
+            "reg": 16777219,
+            "size": 4
+          },
+          "id": 30,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 0,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 32768
+        },
+        {
+          "addr": 31,
+          "op": 38,
+          "operands": [],
+          "result": {
+            "cls": 1,
+            "symbol": 7,
+            "offset": 0,
+            "size": 4,
+            "usage": 0
+          },
+          "id": 31,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 0,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 32768
+        }
+      ],
+      "expected": "alias/name"
+    },
+    {
+      "name": "CC",
+      "nodes": [
+        {
+          "addr": 40,
+          "op": 38,
+          "operands": [],
+          "result": {
+            "cls": 3,
+            "reg": 33554444,
+            "size": 4
+          },
+          "id": 40,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 0,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 0
+        },
+        {
+          "addr": 41,
+          "op": 38,
+          "operands": [],
+          "result": {
+            "cls": 3,
+            "reg": 67108912,
+            "size": 4
+          },
+          "id": 41,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 32,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 32768
+        }
+      ],
+      "expected": "CC"
+    },
+    {
+      "name": "call visibility",
+      "nodes": [
+        {
+          "addr": 50,
+          "op": 38,
+          "operands": [],
+          "result": {
+            "cls": 1,
+            "symbol": 7,
+            "offset": 0,
+            "size": 4,
+            "usage": 0
+          },
+          "id": 50,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 0,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 32768
+        },
+        {
+          "addr": 51,
+          "op": 54,
+          "operands": [],
+          "result": null,
+          "id": 51,
+          "sequence": 0,
+          "fu": {
+            "good_fu": 3,
+            "unit": 1,
+            "operand": 2
+          },
+          "flags": 0,
+          "ins_flags": 0,
+          "zap": 0,
+          "gen_code": 1,
+          "gen_cc": 32768
+        }
+      ],
+      "expected": "call visibility"
+    }
+  ]
+}

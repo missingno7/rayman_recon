@@ -442,8 +442,11 @@ Counts are **R/H**, the numbers of ALL backend names entering the first rough so
   emitted bytes, decides FU class, so identical machine instructions need not mean identical scheduler input.
 - Consequence: source statement order is not a general scheduler control. Of 306 NEAR functions, 7 differ only in
   order (allocate_splash, AllocateBonus, InitPcSoundCard, AFFICHE_KEY_SCREEN, SaveScreen,
-  dos_allocate_conventional_block, effect_helper_50738); in each, DOS's order is not a legal schedule of our IR (e.g. a
-  load of an address-taken global cannot sink below a pointer store), so the original IR differs before scheduling.
+  dos_allocate_conventional_block, effect_helper_50738). 2 are ILLEGAL schedules of our DAG (dosmem: alias/name +
+  HiddenDependancy edge - an address-taken global's load cannot sink below a pointer store; effect_helper_50738:
+  HiddenDependancy), so the IR differs before scheduling. 5 are LEGAL orders our build ranks differently (stall cost /
+  DAG height decide), so the priority inputs differ (generation rows, edges, instruction IDs). `tools/explain.py` now
+  reports this per reorder window (`schedule` mechanism, tools/scheduler.py, t_sched).
   y_floor and CalculVitesseJumelle are not scheduler cases (copy missing / placed in another block). 0 closures.
 
 ## Tools for allocator analysis (adopted 2026-10-23 from build/workers/t_cgtrace)

@@ -63,7 +63,7 @@ Commands (all run from the repo root with `python`, stdlib + capstone):
 `tools/tumap.py --list`, `tools/seed.py draft START END` (seeded starting point for a new object),
 `tools/census.py [--brief UNIT]` (structural NEAR diagnosis; docs/CENSUS.md),
 `tools/explain.py UNIT FUNC` (traces the pinned 10.6 compiler and explains each NEAR difference by allocator
-mechanism: rover offset, home sort, colour tie, Score substitution, selection - start NEAR work here),
+mechanism: rover offset, home sort, colour tie, Score substitution, selection, schedule - start NEAR work here),
 `tools/cgtrace.py SRC.c --func NAME --out build/cgtrace/<new dir>` (raw allocator trace),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`,
 `tools/integrate.py WORKER_DIR UNIT=FILE.c ... -m MSG` (integrator: copy, merge, register, gate, commit only if green).

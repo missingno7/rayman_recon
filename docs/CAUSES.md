@@ -110,9 +110,10 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   source evidence; small-diff triage also found box CalcTab = compiler anomaly (B17), not a source error.
 
 ## H10 - Pure instruction-order differences come from the scheduler (REFUTED as a source-order lever; sched 2026-10-23)
-- The 10.6 scheduler is recovered (docs/COMPILER.md). In all 7 pure-reorder NEAR functions DOS's order is not a legal
-  schedule of our IR: the difference already exists in the IR (value lifetimes, address-taken status, copies), so the
-  fix is upstream in lowering/allocation, not in statement order. Natural trials (direct return in dosmem, moving the
+- The 10.6 scheduler is recovered (docs/COMPILER.md). Of the 7 pure-reorder NEAR functions, 2 have DOS orders that are
+  illegal for our DAG and 5 are legal orders that the priority rules rank differently; either way the scheduler's
+  input (IR, value lifetimes, address-taken status, generation rows) differs, so the fix is upstream, not in
+  statement order. Natural trials (direct return in dosmem, moving the
   second-screen computation in effect_helper_50738, a typed workspace view) gained nothing.
 
 ## Confirmed / refuted causes (short)

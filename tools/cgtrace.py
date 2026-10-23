@@ -55,7 +55,7 @@ class _ObserverCore:
     registered one-byte breakpoint protocol.
     """
 
-    def __init__(self, phases=False):
+    def __init__(self, phases=False, scheduler=False, scheduler_functions=None):
         self.events = []
         self.bps = {}
         self.threads = {}
@@ -66,6 +66,12 @@ class _ObserverCore:
         self.callno = 0
         self.best_stack = []
         self.phases = phases
+        self.scheduler_enabled = scheduler
+        self.scheduler_functions = scheduler_functions or []
+        self.scheduler_function_index = -1
+        self.scheduler_function = None
+        self.scheduler_current = None
+        self.scheduler_round = []
         self.rover_stack = []
 
     def read(self, a, n):
@@ -205,6 +211,11 @@ class _ObserverCore:
             if self.phases:
                 for r, n in [(0x4c3a7, 'phase_post_start'), (0x4c3d2, 'phase_after_LdStAlloc'), (0x4c3d7, 'phase_after_Score'),
                     (0x4c427, 'phase_after_LdStCompress')]:
+                    self.bp(self.base + r, n)
+            if self.scheduler_enabled:
+                for r, n in [(0x6dc89, 'scheduler_block'), (0x6dcb1, 'scheduler_dag'),
+                             (0x6dab1, 'scheduler_cost'), (0x6db00, 'scheduler_adjust'),
+                             (0x6db6c, 'scheduler_selected')]:
                     self.bp(self.base + r, n)
             return
         if label == 'temp_created':
@@ -453,15 +464,77 @@ class Observer(_ObserverCore):
                 self.change.update(success=False, width_rejected=True)
                 self.change = None
             return
+        if self.scheduler_enabled and label in ('phase_post_start', 'scheduler_block', 'scheduler_dag',
+                                                'scheduler_cost', 'scheduler_adjust', 'scheduler_selected'):
+            self._scheduler_hit(label, c)
         self._hit_core(label, c)
 
-    def __init__(self, payload_prefix):
-        super().__init__(phases=True)
+    def __init__(self, payload_prefix, scheduler=False, functions=None):
+        super().__init__(phases=True, scheduler=scheduler, scheduler_functions=functions)
         self.payload_prefix = payload_prefix
         self.blk = 0
         self.change = None
         self.move = None
         self.stage = None
+
+    def scheduler_instruction(self, a):
+        ins = self.instruction(a)
+        ins['id'] = self.u32(a + 52)
+        ins['sequence'] = struct.unpack('<H', self.read(a + 58, 2))[0]
+        gen = self.u32(a + 40)
+        index = self.read(gen + 5, 1)
+        fu = self.read(self.base + 0x782e3 + index[0] * 4, 4) if index and index[0] else b''
+        ins['fu'] = dict(good_fu=struct.unpack_from('<H', fu)[0] if len(fu) == 4 else 0,
+                         unit=fu[2] if len(fu) == 4 else 0,
+                         operand=fu[3] if len(fu) == 4 else 0)
+        return ins
+
+    def scheduler_dag(self):
+        addr = self.u32(self.base + 0x867b0)
+        out, seen = [], set()
+        while addr and addr not in seen and len(out) < 4096:
+            seen.add(addr)
+            deps, dep, dep_seen = [], self.u32(addr + 8), set()
+            while dep and dep not in dep_seen and len(deps) < 4096:
+                dep_seen.add(dep)
+                deps.append(self.u32(dep + 4))
+                dep = self.u32(dep)
+            out.append(dict(addr=addr, prev=self.u32(addr), ins=self.scheduler_instruction(self.u32(addr + 4)),
+                            deps=deps, stallable=self.u32(addr + 16) & 255,
+                            height=self.u32(addr + 20), anc_count=self.u32(addr + 24)))
+            addr = self.u32(addr)
+        return out
+
+    def _scheduler_hit(self, label, c):
+        if label == 'phase_post_start':
+            self.scheduler_function_index += 1
+            if self.scheduler_function_index >= len(self.scheduler_functions):
+                raise RuntimeError('scheduler function attribution exceeded source definitions')
+            self.scheduler_function = self.scheduler_functions[self.scheduler_function_index]
+        elif label == 'scheduler_block':
+            self.scheduler_current = dict(event='scheduler_block', function=self.scheduler_function,
+                                          block=self.u32(self.base + 0x867a4), dag=[], rounds=[])
+            self.events.append(self.scheduler_current)
+        elif label == 'scheduler_dag':
+            if self.scheduler_current is None:
+                raise RuntimeError('scheduler DAG arrived without a basic block')
+            self.scheduler_current['dag'] = self.scheduler_dag()
+        elif label == 'scheduler_cost':
+            ins_addr = self.u32(c.Edi + 4)
+            self.scheduler_round.append(dict(dag=c.Edi, ins=ins_addr,
+                cost=C.c_int32(c.Eax).value, height=self.u32(c.Edi + 20),
+                stallable=self.u32(c.Edi + 16) & 255, id=self.u32(ins_addr + 52),
+                sequence=struct.unpack('<H', self.read(ins_addr + 58, 2))[0],
+                last_seq=self.u32(c.Ebp - 4) & 65535, top=c.Esi, adjust_tie=False))
+        elif label == 'scheduler_adjust':
+            if self.scheduler_round:
+                self.scheduler_round[-1]['adjust_tie'] = bool(c.Eax & 255)
+        elif label == 'scheduler_selected':
+            if self.scheduler_current is None:
+                raise RuntimeError('scheduler selection arrived without a basic block')
+            self.scheduler_current['rounds'].append(dict(candidates=self.scheduler_round,
+                chosen=c.Ecx, ins=self.u32(c.Ecx + 4)))
+            self.scheduler_round = []
 
 def definitions(text):
     """C89 definitions in source order; unsupported preprocessing fails closed.
@@ -518,7 +591,7 @@ def group_events(names, events, publics):
 
 
 def function_trace(name, events):
-    return dict(schema=1, function=name,
+    result = dict(schema=1, function=name,
                 phases={e['stage'].removeprefix('phase_'): e['graph'] for e in events if e['event'] == 'phase'},
                 home_sorts=[e for e in events if e['event'] == 'sort' and e['comparator'] == '0x5eb49'],
                 conflict_sorts=[e for e in events if e['event'] == 'sort' and e['comparator'] == '0x61a08'],
@@ -527,7 +600,11 @@ def function_trace(name, events):
                 score=[e for e in events if e['event'] == 'change_ins' and e['pass_stage']=='phase_after_LdStAlloc'],
                 # Auxiliary lifecycle/home/ring records; phase graphs and primary
                 # decisions already appear above, so do not serialize them twice.
-                events=[e for e in events if e['event'] not in ('phase','best','rover','change_ins')])
+                events=[e for e in events if e['event'] not in ('phase','best','rover','change_ins','scheduler_block')])
+    blocks = [e for e in events if e['event'] == 'scheduler_block']
+    if blocks:
+        result['scheduler'] = [dict(block=e['block'], dag=e['dag'], rounds=e['rounds']) for e in blocks]
+    return result
 
 
 def require_identity(observed, normal):
@@ -537,7 +614,7 @@ def require_identity(observed, normal):
     return hashlib.sha256(a).hexdigest()
 
 
-def trace(source, out, profile='game', func=None):
+def trace(source, out, profile='game', func=None, schedule=False):
     """Serial, bounded compile through unchanged wcc.compile_c, with normal control.
 
     Only wcc's subprocess adapter and generated TMP root are scoped here. The
@@ -572,7 +649,7 @@ def trace(source, out, profile='game', func=None):
         with tempfile.TemporaryDirectory(prefix='compile_', dir=out) as work:
             work = Path(work)
             obj, normal = work / 'observed.obj', work / 'normal.obj'
-            obs = Observer(payload[start:start + 16])
+            obs = Observer(payload[start:start + 16], scheduler=schedule, functions=names)
             wcc.subprocess = SimpleNamespace(run=obs.run)
             rc, log = wcc.compile_c(source, obj, p['flags'], p['install'])
             (out / 'observed.log').write_text(log)
@@ -603,6 +680,8 @@ def trace(source, out, profile='game', func=None):
                             whole_omf_equal=True, omf_sha256=digest,
                             compiler_pins=ent['key_files'], functions=[func] if func else names,
                             attribution='source definition order, home-count/phase/public checked')
+            if schedule:
+                manifest['scheduler'] = True
             (out / 'manifest.json').write_text(json.dumps(manifest, indent=2))
             return manifest
     finally:
@@ -614,10 +693,11 @@ def main(argv=None):
     parser.add_argument('source', type=Path)
     parser.add_argument('--profile', default='game')
     parser.add_argument('--func')
+    parser.add_argument('--schedule', action='store_true', help='capture read-only scheduler DAGs and selections')
     parser.add_argument('--out', required=True, type=Path, help='new output directory')
     args = parser.parse_args(argv)
     try:
-        result = trace(args.source, args.out, args.profile, args.func)
+        result = trace(args.source, args.out, args.profile, args.func, args.schedule)
     except (RuntimeError, ValueError, OSError) as exc:
         parser.exit(1, f'cgtrace: {exc}\n')
     print(f'OMF identity PASS; {len(result["functions"])} function trace(s) in {args.out}')
