@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* Central BSS fragment, GOG v1.21. Names/types: RAYVERSE/Android plus
  * canonical DOS corrections. Fragment boundary and equivalent declaration
  * order are reconstructed, not a claim of original TU/source-order closure.
@@ -7,7 +8,7 @@
 
 u8 currentBossAction; /* 2:3fa6f; sizeof=1; hash=217; group=1 */
 u8 bossEncounter; /* 2:3fa6e; sizeof=1; hash=215; group=1 */
-s8 laserSourceSprNumInAnim; /* 2:3fa6d; sizeof=1; hash=197; group=1 */
+u8 laserSourceSprNumInAnim; /* 2:3fa6d; sizeof=1; hash=197; group=1 */
 u8 currentBossActionIsOver; /* 2:3fa6c; sizeof=1; hash=156; group=1 */
 u8 bossSafeTimer; /* 2:3fa6b; sizeof=1; hash=148; group=1 */
 u8 bossReachingTimer; /* 2:3fa6a; sizeof=1; hash=144; group=1 */

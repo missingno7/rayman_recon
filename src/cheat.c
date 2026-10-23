@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 #include "inline_helpers.h"
 /* cheat object, DOS v1.21, worker w4_cheatload. Names inherited RAYVERSE/ANDROID;
  * sub_* names are reference placeholders. Timer ISR reconstructed from DOS.
@@ -120,22 +121,22 @@ void ToDoAtExit(void);
 void PC_clear_text_input_buffer(void);
 
 extern s32 plan2bit_length;
-extern s32 plan2bit_nb_bytes;
+extern u32 plan2bit_nb_bytes;
 extern s32 plan3bit_length;
 extern s32 plan3bit_nb_bytes;
 extern u8 *PLAN2BIT;
 extern u8 *PLAN3BIT;
-extern u8 *PLANVIGBIT[7];
-extern s32 planVigbit_length[7];
-extern s32 planVigbit_nb_bytes[7];
-extern rgb_palette_t rvb_Vig[7];
+extern u8 *PLANVIGBIT[8];
+extern s32 planVigbit_length[8];
+extern s32 planVigbit_nb_bytes[8];
+extern rgb_palette_t rvb_Vig[8];
 extern rgb_palette_t rvb_pres;
 extern rgb_palette_t rvb_plan3;
 extern rgb_palette_t current_rvb;
 extern u16 nb_fade;
 extern void start_fade_in(s16 speed, rgb_palette_t *palette);
 extern void do_fade(rgb_palette_t *from, rgb_palette_t *to);
-extern u16 display_mode;
+extern s16 display_mode;
 extern u8 need_timer;
 extern u16 word_CF7E6;
 extern u16 word_CF7EE;
@@ -174,7 +175,7 @@ extern char level_filename[20];
 extern mem_t main_mem_fix;
 extern mem_t main_mem_sprite;
 extern u16 path_has_changed;
-extern mem_t demo_video_mem;
+extern char demo_video_mem[100];
 extern char world_filename[20];
 extern u8 FondAutorise;
 extern u8 ModeNormalAutorise;

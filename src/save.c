@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* save object (DOS v1.21, 1:63b80..1:65837; following zeros are linker padding).
  * Names RAYVERSE/ANDROID; tu_save/gfin_save/h_save reconstruction, d_save layout pass.
  * See NOTES.md for verified results and remaining differences.
@@ -64,14 +65,15 @@ extern u8 *tab_key[7];
 extern s16 notbut[4];
 extern s16 xpadmax, xpadmin, ypadmax, ypadmin, xpadcentre, ypadcentre;
 extern u8 GameModeVideo, Frequence, BackgroundOptionOn;
-extern u16 SizeScreen, fixon;
-extern u16 tRefRam2VramNormalFix[8];
-extern u16 tRefRam2VramNormal[8];
-extern u16 tRefTransFondNormal[8];
+extern u16 fixon;
+extern s16 SizeScreen;
+extern u16 tRefRam2VramNormalFix[2][4];
+extern u16 tRefRam2VramNormal[2][4];
+extern u16 tRefTransFondNormal[2][4];
 extern u16 tRefSpriteNormal[2];
 extern u16 tRefRam2VramX[2];
 extern u16 tRefVram2VramX[2];
-extern u16 tRefSpriteX[2];
+extern s16 tRefSpriteX[2];
 u8 SaveGameOnDisk(u8 which_save);
 u8 LoadGameOnDisk(u8 which_save);
 u8 LoadInfoGame(u8 which_save);

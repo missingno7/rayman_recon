@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* Initialization-only partial proposal. Full central BSS remains OPEN.
  * Whole _DATA and CONST verified; no complete original TU claim.
  * See NOTES.md before using the conditional replacement registry. */
@@ -1264,19 +1265,19 @@ u8 tab_key_sav[7] = {SC_LEFT, SC_UP, SC_RIGHT, SC_DOWN, SC_CONTROL, SC_ALT, SC_X
 u8 OptionGame = 0; //95E63
 u8 GoMenu = 0; //95E64
 u16 fixon = 1; //95E66      // scores enabled
-u16 fixontemp = 0; //95E68
-u16 SizeScreen = 0; //95E6A
+s16 fixontemp =  0; //95E68
+s16 SizeScreen =  0; //95E6A
 u8 Frequence = 0; //95E6C
 u8 BackgroundOptionOn = 1; //95E6D
 u8 BackgroundOn = 1; //95E6E
 
-u16 tRefRam2VramNormalFix[8] = {255, 255, 255, 255, 255, 255, 255, 255}; //95E70
-u16 tRefRam2VramNormal[8] = {255, 255, 255, 255, 255, 255, 255, 255}; //95E80
-u16 tRefTransFondNormal[8] = {255, 255, 255, 255, 255, 255, 255, 255}; //95E90
+u16 tRefRam2VramNormalFix[2][4] =  {255, 255, 255, 255, 255, 255, 255, 255}; //95E70
+u16 tRefRam2VramNormal[2][4] =  {255, 255, 255, 255, 255, 255, 255, 255}; //95E80
+u16 tRefTransFondNormal[2][4] =  {255, 255, 255, 255, 255, 255, 255, 255}; //95E90
 u16 tRefSpriteNormal[2] = {255, 255}; //95EA0
 u16 tRefRam2VramX[2] = {255, 255}; //95EA4
 u16 tRefVram2VramX[2] = {255, 255}; //95EA8
-u16 tRefSpriteX[2] = {255, 255}; //95EAC
+s16 tRefSpriteX[2] =  {255, 255}; //95EAC
 u8 ExitMenu = 0; //95EB0
 u8 ReInitPlasma = 0; //95EB1
 u8 Main_Control = 0; //95EB2

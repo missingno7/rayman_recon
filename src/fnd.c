@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -52,7 +53,7 @@ extern s8 no_fnd;
 extern s16 num_level;
 extern s16 num_world;
 extern u16 plan0_height;
-extern s16 plan0_width;
+extern u16 plan0_width;
 extern u8 sp_y;
 extern u8 type_fnd;
 extern u8 type_fndscrX;

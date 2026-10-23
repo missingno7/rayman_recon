@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 #ifndef COLLISION2_LOCAL_H
 #define COLLISION2_LOCAL_H
 #include "obj.h"
@@ -61,7 +62,7 @@ typedef struct ray_stack_t {
 #define TYPE_HERSE_HAUT 241
 #define TYPE_WAT_CLOWN 61
 #define SCREEN_HEIGHT 200
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern u8 N_anim[256];
 extern u8 GameModeVideo;
 extern level_t level;

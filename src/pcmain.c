@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /* Original pcmain object 1:06f80..1:08890, GOG DOS v1.21.
  * Names RAYVERSE/ANDROID except names explicitly marked INVENTED.
  * Partial matching reconstruction; see NOTES.md for remaining byte differences. */
@@ -87,7 +89,7 @@ extern u32 TailleMainMemWorld;
 extern u8 ToutSpriteAutorise;
 extern u8 WindowsLance;
 extern s32 alternateBossSpeedFactor;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern s16 bossScrollEndX;
 extern s16 bossScrollEndY;
 extern s16 bossScrollStartX;
@@ -132,7 +134,7 @@ extern s16 id_obj_grapped;
 extern char *language_txt[];
 extern level_t level;
 extern s32 map_time;
-extern s32 plan0bit_length;
+extern u32 plan0bit_length;
 extern u32 plan0bit_nb_bytes;
 extern u8 type_fndscrX;
 extern u8 DosDetect;
@@ -179,8 +181,8 @@ extern s16 PROJ_CENTER_Y;
 extern s16 num_world;
 extern u8 language;
 extern u8 BackgroundOn;
-extern s16 plan0_width;
-extern s16 plan0_height;
+extern u16 plan0_width;
+extern u16 plan0_height;
 extern s16 yp0;
 extern u8 VGA_FREQ;
 extern s16 During_The_Menu;
@@ -207,7 +209,7 @@ extern s32 left_time;
 extern u8 JeuCracker;
 extern u8 MessageProgram;
 extern u8 Vignet_To_Display;
-extern s16 nb_fade;
+extern u16 nb_fade;
 extern u8 GoMenu;
 extern u8 fade;
 extern u8 in_pause;
@@ -236,11 +238,11 @@ extern font_t alpha2;
 extern u8* new_sprite_deform;
 extern grp_star_t grp_stars[30];
 extern pix_gerbe_t pix_gerbe[8];
-extern draw_func_t *DrawSpriteNormalEtX;
-extern draw_func_t *DrawSpriteFlipNormalEtX;
+extern island_draw_t *DrawSpriteNormalEtX;
+extern island_draw_t *DrawSpriteFlipNormalEtX;
 extern draw_func_t *DrawSpriteNoClipNormalEtX;
 extern draw_func_t *DrawSpriteFlipNoClipNormalEtX;
-extern draw_func_t *DrawSpriteColorNormalEtX;
+extern island_draw_t *DrawSpriteColorNormalEtX;
 extern fplot_func_t *fplotNormalETX;
 s32 calc_let_Width(u8 font_size, s32 num_let);
 s32 deter_num_let(u8 c, const char* next_chars);
@@ -394,7 +396,7 @@ void speaker_enable(void);
 #pragma aux speaker_enable parm [] modify exact []
 void free_luciole(void);
 extern u8 is_joypad_mode;
-extern s16 word_CF7E6;
+extern u16 word_CF7E6;
 s16 rightjoy(void), leftjoy(void), downjoy(void), upjoy(void);
 s16 but0pressed(void), but1pressed(void), but2pressed(void), but3pressed(void);
 /* DOS 1:687e8 saves ECX and consumes EAX/EDX/EBX: three arguments.
@@ -413,7 +415,7 @@ void sub_3BEE0(s16 x, s16 y);
 void LoadPlan0InVignet(s32 resource_id);
 u8 *allocate_PLAN0(mem_t *mem_world, u16 width, u16 height);
 extern s8 Plan0NumPcx[10];
-extern u8 no_fnd;
+extern s8 no_fnd;
 extern u8 *PLAN0;
 extern s32 cdTime;
 /* Handwritten callees: docs/reference/lowlevel_abi.h, and DOS 1:07a54..07aba. */

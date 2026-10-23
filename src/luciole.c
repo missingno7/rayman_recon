@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /*
  * Fireflies (GOG v1.21 object 1:384c0-1:38ef0). File name invented (Rayverse luciole.c; stubs there, bodies from
  * the binary and PS1). Names: Rayverse/Android. Worker results: NOTES.md.
@@ -18,7 +19,7 @@ extern u8 horloge[25];
 extern u8 GameModeVideo;
 extern s16 ray_mode;
 extern s16 id_Cling_Old;
-extern s16 nb_fade;
+extern u16 nb_fade;
 extern s16 xmap;
 extern s16 ymap;
 

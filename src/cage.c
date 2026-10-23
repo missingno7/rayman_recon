@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /*
  * Cages and medallion toons (GOG v1.21; 10 of 10 functions STRICT, contiguous _TEXT 1:18b40-1:193a8).
  * File name invented (Rayverse cage.c). Names: Rayverse/Android. Status per function: config/units.json.
@@ -9,7 +11,7 @@ extern level_t level;
 extern active_objects_t actobj;
 extern world_info_t t_world_info[24];
 extern u8 horloge[25];
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern s16 Toon_Speeds_x[7];
 extern s16 Toon_Speeds_y[7];
 extern s16 xmap;
@@ -294,7 +296,7 @@ void DO_ONE_PINK_CMD(obj_t *obj)
         return;
     case 0x100:
         SET_X_SPEED(obj);
-        if (block_flags[calc_typ_travd(obj, 0)] & 1)
+        if (((u8 *)block_flags)[calc_typ_travd(obj, 0)] & 1)
             obj->flags.flip_x = !obj->flags.flip_x;
         CALC_MOV_ON_BLOC(obj);
         return;
@@ -308,7 +310,7 @@ void DO_ONE_PINK_CMD(obj_t *obj)
             obj->speed_y = -10;
             goto check_x_speed;
         }
-        if (obj->speed_y < 0 && (block_flags[(u8)calc_typ_trav(obj, 1)] & 0x10)) {
+        if (obj->speed_y < 0 && (((u8 *)block_flags)[(u8)calc_typ_trav(obj, 1)] & 0x10)) {
             if (!gerbe)
                 set_sub_etat(obj, 2);
             obj->speed_y = 0;
@@ -324,7 +326,7 @@ void DO_ONE_PINK_CMD(obj_t *obj)
     }
 
 check_x_speed:
-    if (obj->speed_x != 0 && (block_flags[calc_typ_travd(obj, 0)] & 1)) {
+    if (obj->speed_x != 0 && (((u8 *)block_flags)[calc_typ_travd(obj, 0)] & 1)) {
         obj->speed_x = 0;
     }
 }

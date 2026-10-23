@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /* blocs.c (1:14e90..1:15e60). Names RAYVERSE (blocs1_* helpers from Rayverse); seeded by tools/seed.py, worker tu_blocs. finish pass fin_blocs; see config/units.json. Watcom places switch jump tables in _TEXT before the function that uses them. */
 #include "obj.h"
 #include "game.h"
@@ -38,7 +40,7 @@ extern obj_type_flags_t flags[262];
 #define TYPE_STONEDOG 40
 #define TYPE_STONEDOG2 122
 #define TYPE_STONEWOMAN 172
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern u8 hand_btyp;
 extern u8 hand_btypd;
 extern u8 hand_btypg;
@@ -336,7 +338,7 @@ u8 calc_typ_travd(obj_t* obj, u8 backwards) {
 void TEST_FIN_BLOC(obj_t* obj) {
     eta_t **eta;
     /* 6EC34 80193434 -O2 -msoft-float */
-    if (!(block_flags[obj->btypes[0]] & 2))
+    if (!(((u8 *)block_flags)[obj->btypes[0]] & 2))
     {
         switch (obj->type)
         {
@@ -517,7 +519,7 @@ void CALC_MOV_ON_BLOC(obj_t *obj) {
         if (!IS_ON_RESSORT_BLOC(obj)) {
             switch (obj->type) {
             case TYPE_23_RAYMAN:
-                if ((ray.follow_id == -1 && !(ray.main_etat == 2)) && Abs(obj->speed_y) > 2 && Abs(obj->speed_y) < 16 && !(block_flags[btyp] & 2)) {
+                if ((ray.follow_id == -1 && !(ray.main_etat == 2)) && Abs(obj->speed_y) > 2 && Abs(obj->speed_y) < 16 && !(((u8 *)block_flags)[btyp] & 2)) {
                     s16 saved_speed_y = obj->speed_y;
                     set_main_and_sub_etat(&ray, 0, 0);
                     button_released = 1;

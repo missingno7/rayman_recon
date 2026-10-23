@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* moteur.c (1:45480..1:4b7a0: engine loop, timers, scroll, object update dispatch). Names RAYVERSE/ANDROID; seeded by tools/seed.py, workers tu_moteur (sol) + tu_moteur-luna. Split at 1:4b7a0 from matching end/start (STRONG). */
 #include "obj.h"
 #include "game.h"
@@ -195,7 +196,7 @@ extern s16 NumScrollObj;
 extern u8 RAY_MODE_SPEED;
 extern s16 RIGHT_MAP_BORDER;
 extern rayevts_t RayEvts;
-extern s16 RunTimeDemo;
+extern u16 RunTimeDemo;
 extern s16 SNSEQ_len[64];
 extern s16 SNSEQ_list[256];
 extern s16 SNSEQ_list_ptr;
@@ -475,7 +476,7 @@ extern s32 Bloc_lim_W1;
 extern s32 Bloc_lim_W1_Aff;
 extern s32 Bloc_lim_W2;
 extern s32 Bloc_lim_W2_Aff;
-extern u16 SizeScreen;
+extern s16 SizeScreen;
 extern s16 num_level_choice;
 extern s16 num_world_choice;
 extern u8 type_fndscrX;

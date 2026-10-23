@@ -398,22 +398,22 @@ s32 YaUnBloc(obj_t *obj, s16 dir) {
 
     switch (dir) {
         case 2:
-            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + (obj->y >> 4) * mp.width].tile_type] & 1)
+            if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + (obj->y >> 4) * mp.width].tile_type] & 1)
                 res = true;
-            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
+            if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
                 res = true;
             break;
         case 3:
-            if (block_flags[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + ((obj->y + 154) >> 4) * mp.width].tile_type] & 1)
+            if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx - 8) >> 4) + ((obj->y + 154) >> 4) * mp.width].tile_type] & 1)
                 res = true;
-            if (block_flags[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
+            if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx + 7) >> 4) + mp.width * (obj->y >> 4)].tile_type] & 1)
                 res = true;
             break;
         case 0:
             unk_y = 6;
             i = 0;
             while (i < 10) {
-                if (block_flags[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
                     res = true;
                 unk_y += 16;
                 i++;
@@ -423,7 +423,7 @@ s32 YaUnBloc(obj_t *obj, s16 dir) {
             unk_y = 6;
             i = 0;
             while (i < 10) {
-                if (block_flags[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
                     res = true;
                 unk_y += 16;
                 i++;
@@ -473,11 +473,11 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             if (pos_to_check < 3)
             {
                 map_ind = (x >> 4) + mp.width * (y >> 4);
-                if (block_flags[mp.map[map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[++map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[++map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[++map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[++map_ind].tile_type] & 2)
                     res = true;
             }
             break;
@@ -486,11 +486,11 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             if (pos_to_check > 12)
             {
                 map_ind = (x >> 4) + mp.width * ((y + 16 * 3) >> 4);
-                if (block_flags[mp.map[map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[++map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[++map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[++map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[++map_ind].tile_type] & 2)
                     res = true;
             }
             break;
@@ -499,11 +499,11 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             if (pos_to_check < 3)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) - 1;
-                if (block_flags[mp.map[map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind += mp.width].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind += mp.width].tile_type] & 2)
                     res = true;
             }
             break;
@@ -512,11 +512,11 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             if (pos_to_check > 12)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) + 3;
-                if (block_flags[mp.map[map_ind].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind += mp.width].tile_type] & 2)
                     res = true;
-                if (block_flags[mp.map[map_ind += mp.width].tile_type] & 2)
+                if (((u8 *)block_flags)[mp.map[map_ind += mp.width].tile_type] & 2)
                     res = true;
             }
             break;
@@ -1356,7 +1356,7 @@ void move_fruit_in_water(obj_t* obj) {
                 if (obj->speed_x > -1)
                     x2 += w;
                 btyp = BTYP((x + (obj->speed_x < 0 ? 0 : w)) >> 4, (y + 16) >> 4);
-                if (block_flags[btyp] & 2) {
+                if (((u8 *)block_flags)[btyp] & 2) {
                     set_main_and_sub_etat(obj, 0, 13);
                     obj->speed_x = 0;
                 }

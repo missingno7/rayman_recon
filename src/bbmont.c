@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /* bbmont.c (1:100b0..1:13030). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_bbmont. worker w2_bbskops candidate; measured results in NOTES.md. */
 #include "obj.h"
 #include "game.h"
@@ -64,7 +66,7 @@ extern s16 xmapmax;
 extern s16 ymapmax;
 extern u8 IsBossThere;
 extern s16 YaDesChiens;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern u8 horloge[25];
 extern level_t level;
 extern map_data_t mp;
@@ -602,7 +604,7 @@ void DO_BBL_COMMAND(obj_t* obj) {
     tile_y = (obj->y + 40) >> 4;
     tile_x += mp.width * tile_y;
     map = mp.map;
-    if (block_flags[map[(s16)tile_x].tile_type] & (1 << BLOCK_FLAG_4)) {
+    if (((u8 *)block_flags)[map[(s16)tile_x].tile_type] & (1 << BLOCK_FLAG_4)) {
         switch (obj->param) {
             case 1:
                 PlaySnd(200, obj->id);
@@ -930,7 +932,7 @@ void DO_BBMONT_COMMAND(obj_t* obj) {
                 if (obj->cmd == GO_RIGHT)
                     obj->flags.flip_x = 1;
                 SET_X_SPEED(obj);
-                if (block_flags[calc_typ_travd(obj, 0)] & (1 << BLOCK_FLAG_4)) {
+                if (((u8 *)block_flags)[calc_typ_travd(obj, 0)] & (1 << BLOCK_FLAG_4)) {
                     obj->flags.flip_x = !obj->flags.flip_x;
                     skipToLabel(obj, 6, 1);
                     Phase = 8;
@@ -1286,11 +1288,11 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
     {
         case 0:
             /* DOS 1:122a3..1:122b7 keeps the phase-0 distance in a byte. */
-            if (!(block_flags[obj->btypes[0]] & (1 << BLOCK_SOLID)))
+            if (!(((u8 *)block_flags)[obj->btypes[0]] & (1 << BLOCK_SOLID)))
                 temp_v1 = 60;
             else
                 temp_v1 = 40;
-            if (((block_flags[obj->btypes[0]] & (1 << BLOCK_SOLID))) == 0)
+            if (((((u8 *)block_flags)[obj->btypes[0]] & (1 << BLOCK_SOLID))) == 0)
             {
                 if ((ray_zdc_x > (temp_v1 + temp_s2)) && (obj->main_etat == 0) && (bb1.speed_x != 0))
                 {
@@ -1308,7 +1310,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
             break;
         case 1:
             if ((obj->main_etat == 1) &&
-                !(block_flags[mp.map[(s16)((((obj->x + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))
+                !(((u8 *)block_flags)[mp.map[(s16)((((obj->x + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))
             ) {
                 set_main_and_sub_etat(obj, 2U, 4U);
                 obj->gravity_value_2 = 5;
@@ -1320,7 +1322,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
         case 2:
             if (
                     (obj->main_etat == 1) &&
-                    !(block_flags [
+                    !(((u8 *)block_flags)[
                               (u16) mp.map [
                                       (s16) (((obj->x - 8 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))
                               ].tile_type
@@ -1372,7 +1374,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
                 BB2_MARCHE(obj);
             if (obj->main_etat == 1)
             {
-                if (!(block_flags[mp.map[(s16)((((obj->x - 8 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))) {
+                if (!(((u8 *)block_flags)[mp.map[(s16)((((obj->x - 8 + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))) {
                     obj->speed_y = -6;
                     obj->speed_x = 3;
                     set_main_and_sub_etat(obj, 2, 4);
@@ -1424,7 +1426,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
             }
             if (obj->main_etat == 1)
             {
-                if (!(block_flags[mp.map[(s16)(((((obj->flags.flip_x ? 16 : -16) + obj->x + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))) {
+                if (!(((u8 *)block_flags)[mp.map[(s16)(((((obj->flags.flip_x ? 16 : -16) + obj->x + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4)))].tile_type] & (1 << BLOCK_SOLID))) {
                     obj->speed_y = 0;
                     obj->speed_x = 0;
                     /* see also: makeUturn() case TYPE_SPIDER_PLAFOND */
@@ -1467,7 +1469,7 @@ void DO_BBMONT2_COMMAND(obj_t* obj) {
             }
 
             if (obj->main_etat == 1) {
-                if (!(block_flags[mp.map[(s16)(
+                if (!(((u8 *)block_flags)[mp.map[(s16)(
                         ((((obj->flags.flip_x ? 16 : -16) + obj->x + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))
                     )].tile_type] & (1 << BLOCK_SOLID))
                 ) {
@@ -1583,7 +1585,7 @@ void DO_BBMONT3_COMMAND(obj_t* obj) {
             }
             eight = 8;
             if ((obj->main_etat == 1) &&
-                ((block_flags[mp.map[(s16)
+                ((((u8 *)block_flags)[mp.map[(s16)
                         (((obj->x - eight + obj->offset_bx) >> 4) + mp.width * ((obj->y + obj->offset_by + eight) >> 4))
                 ].tile_type] & (1 << BLOCK_SOLID)) == 0)
             ) {
@@ -1596,7 +1598,7 @@ void DO_BBMONT3_COMMAND(obj_t* obj) {
             break;
         case 1:
             if ((obj->main_etat == 1) &&
-                ((block_flags[mp.map[(s16)
+                ((((u8 *)block_flags)[mp.map[(s16)
                         (((obj->x + (obj->offset_bx)) >> 4) + mp.width * ((obj->y + obj->offset_by + 8) >> 4))
                 ].tile_type] & (1 << BLOCK_SOLID)) == 0)
             ) {
@@ -1663,7 +1665,7 @@ void DO_ECLAIR_COMMAND(obj_t* ecl_obj) {
 
             SET_X_SPEED(ecl_obj);
             ecl_obj->speed_y = 0;
-            if (block_flags[mp.map[(s16)
+            if (((u8 *)block_flags)[mp.map[(s16)
                     (((ecl_obj->x + ecl_obj->offset_bx) >> 4) + ((ecl_obj->y + ecl_obj->offset_by) >> 4) * mp.width)
                 ].tile_type] & (1 << BLOCK_CH_DIR)
             ) {

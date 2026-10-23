@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* Central BSS fragment, GOG v1.21. Names/types: RAYVERSE/Android plus
  * canonical DOS corrections. Fragment boundary and equivalent declaration
  * order are reconstructed, not a claim of original TU/source-order closure.
@@ -5,4 +6,4 @@
  * No filler declarations. See NOTES.md and predictions.tsv. */
 #include "bt.h"
 
-void (*DrawSpriteNormalEtX)(void); /* 2:3d10c; sizeof=4; hash=64; group=1 */
+island_draw_t *DrawSpriteNormalEtX; /* 2:3d10c; sizeof=4; hash=64; group=1 */

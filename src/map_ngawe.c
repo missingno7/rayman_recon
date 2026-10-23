@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /* 1:4d230..1:4def0: DRAW_MAP/INIT_GAME_MODE_NORMAL/FIN_GAME_MODE_NORMAL (Rayverse map.c) + ngawe.c functions; one or two original objects (a 16-byte-aligned boundary would be invisible) - file split INVENTED. Seeded by tools/seed.py, worker tu_map. */
 #include "obj.h"
 #include "game.h"
@@ -20,7 +22,7 @@ extern s32 Bloc_lim_H1;
 extern s32 Bloc_lim_H2;
 extern s32 Bloc_lim_W1;
 extern s32 Bloc_lim_W2;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern u8 horloge[25];
 extern level_t level;
 extern poing_t poing;
@@ -33,7 +35,7 @@ extern u8 *DrawBufferNormal;
 extern u8 *DrawBufferNormalIni;
 extern u8 *draw_buffer;
 extern u8 *DisplayBufferNormal;
-extern void (*Copy_Plan0_To_Buf)(u8 *, u8 *, s32, s32, s32);
+extern island_copy_t *Copy_Plan0_To_Buf;
 extern u8 *MAP_BLOCKS;
 extern void Copy_Plan0Diff_To_Buf(u8 *, u8 *, s32, s32, s32);
 extern void clear_memory(u8 *buffer, s32 color, s32 length);
@@ -153,7 +155,7 @@ void INIT_GAME_MODE_NORMAL(void)
 {
     sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
     DrawBufferNormalIni = DrawBufferNormal;
-    Copy_Plan0_To_Buf = Copy_Plan0Diff_To_Buf;
+    Copy_Plan0_To_Buf = (island_copy_t *)(Copy_Plan0Diff_To_Buf);
     DrawBufferNormal += 4;
     init_build_map(&BIG_MAP, MAP_BLOCKS);
     clear_memory(DisplayBufferNormal, 0, 64000);
@@ -312,8 +314,8 @@ void DO_ONE_NGW_COMMAND(obj_t* obj) {
                 set_main_and_sub_etat(obj, 0, 7);
             } else {
                 if (obj->config == 1) {
-                    if ((block_flags[calc_typ_travd(obj, 1)] & 1) ||
-                        !(block_flags[
+                    if ((((u8 *)block_flags)[calc_typ_travd(obj, 1)] & 1) ||
+                        !(((u8 *)block_flags)[
                                 BTYP((obj->offset_bx + obj->x + obj->speed_x) >> 4, (obj->y + obj->offset_by) >> 4)
                         ] & 2)
                     ) {

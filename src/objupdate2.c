@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* objupdate.c, part 2 (1:512f0..1:53340). Names RAYVERSE/ANDROID.
  * Worker c2_objupdate2: 49/51 STRICT, contiguous _TEXT; see NOTES.md.
  * Shared headers are unchanged. Descriptive local names and iabs are INVENTED. */
@@ -27,7 +28,7 @@ extern u8 fin_boss;
 extern finbosslevel_t finBosslevel;
 extern s16 h_scroll_speed;
 extern u8 horloge[25];
-extern u16 fixontemp;
+extern s16 fixontemp;
 extern s16 id_Cling_1up;
 extern s16 id_Cling_Pow;
 extern s16 joe_exp_probleme;

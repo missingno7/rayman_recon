@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* display: original object 1:240f0..1:25f49. Worker c3_display; see NOTES.md for measured status.
  * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_t are INVENTED. */
 #include "obj.h"
@@ -156,7 +157,9 @@ extern void InitModeXWithFrequency(s32 frequency);
 extern rgb_palette_t rvb_Vig[8];
 extern u8 CarteSonAutorisee, ModeVideoActuel;
 extern s16 ProchainEclair, numero_palette_special;
-extern s16 WidthNworld, HeightNworld, plan2_height;
+extern u16 WidthNworld;
+extern u16 HeightNworld;
+extern s16 plan2_height;
 extern s32 plan2_width;
 extern u8 chemin_percent;
 extern s32 map_time;
@@ -170,7 +173,7 @@ extern s16 NumDemo;
 extern s16 DemoRecordSize[6], DemoRecordWorld[6], DemoRecordMap[6];
 extern u8 DemoRecord[1500];
 extern u8 GameModeVideo, Frequence;
-extern mem_t demo_video_mem;
+extern char demo_video_mem[100];
 extern u8 save_zone[2592];
 extern options_jeu_t options_jeu_save, options_jeu;
 extern record_t record;
@@ -191,7 +194,7 @@ extern void POINTEUR_BOUTONS_OPTIONS_BIS(void);
 extern void INIT_HORLOGES(void);
 extern void block_free(mem_t *mem);
 
-extern credit_t credits[1722];
+extern credit_t credits[135];
 extern u8 first_credit;
 extern u8 last_credit;
 extern void display_text(const char *text, s16 x, s16 y, u8 font, u8 color);
@@ -207,8 +210,8 @@ extern mem_t main_mem_level;
 extern rgb_palette_t rvb_plan3;
 extern rgb_palette_t rvb_pres;
 extern status_bar_t status_bar;
-extern void (*DrawSpriteNormalEtX)(void);
-extern void (*DrawSpriteFlipNormalEtX)(void);
+extern island_draw_t *DrawSpriteNormalEtX;
+extern island_draw_t *DrawSpriteFlipNormalEtX;
 extern void DrawSpriteNormal(void);
 extern void DrawSpriteFlipNormal(void);
 extern void DrawSpriteNormal256(void);
@@ -1074,11 +1077,11 @@ void START_LOADER_ANIM(void)
     start_cd_gros_rayman();
     INIT_FADE_IN();
     INIT_LOADER_ANIM();
-    DrawSpriteNormalEtX = DrawSpriteNormal256;
-    DrawSpriteFlipNormalEtX = DrawSpriteFlipNormal256;
+    DrawSpriteNormalEtX = (island_draw_t *)(DrawSpriteNormal256);
+    DrawSpriteFlipNormalEtX = (island_draw_t *)(DrawSpriteFlipNormal256);
     SYNCHRO_LOOP(loader_anim_prg);
-    DrawSpriteNormalEtX = DrawSpriteNormal;
-    DrawSpriteFlipNormalEtX = DrawSpriteFlipNormal;
+    DrawSpriteNormalEtX = (island_draw_t *)(DrawSpriteNormal);
+    DrawSpriteFlipNormalEtX = (island_draw_t *)(DrawSpriteFlipNormal);
 }
 
 void END_LOADER_ANIM(void) {

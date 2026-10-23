@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /*
  * Collision engine, first object (GOG v1.21 1:1b2d0-1:1f1e0). File name invented (Rayverse collision.c).
  * Names: Rayverse/Android. Worker status: 26/37 STRICT; see NOTES.md.
@@ -68,7 +70,7 @@ extern s16 ray_zdc_h;
 extern s16 ray_zdc_y;
 extern s16 pente[16];
 extern s16 num_world;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern zdc_t zdc_tab[200];
 extern s16 bagDy[20];
 extern s16 bagW[20];
@@ -1124,7 +1126,7 @@ void DO_POING_COLLISION(void) {
         btyp = BTYP((s16)((poing_obj->x + poing_obj->offset_bx) >> 4),
                    (s16)((poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1)) >> 4));
     }
-    if (block_flags[btyp] & 2) {
+    if (((u8 *)block_flags)[btyp] & 2) {
         do_boum();
         fin_poing_follow(1);
     } else {
@@ -1269,7 +1271,7 @@ void RAY_HIT(u8 hurt, obj_t* obj) {
         if (!(ray.main_etat == 3 && (ray.sub_etat == 22 || ray.sub_etat == 32)) &&
             !(ray.main_etat == 2 && ray.sub_etat == 31)
         ) {
-            if ((get_eta(&ray)->flags & 0x40) && (block_flags[calc_typ_trav(&ray, 2)] & 0x10)) {
+            if ((get_eta(&ray)->flags & 0x40) && (((u8 *)block_flags)[calc_typ_trav(&ray, 2)] & 0x10)) {
                 set_main_and_sub_etat(&ray, 0, 61);
             } else {
                 set_main_and_sub_etat(&ray, 2, 8);

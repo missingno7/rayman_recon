@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 #include "inline_helpers.h"
 /* 1:39290..1:40b60: menu.c + misc_source.c (options/general menus, key config, fades, message boxes). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker tu_menu. INIT_GENERAL_CHOICE's ORIGINAL_INLINE trampoline is in menu_inline.h. */
 #include "obj.h"
@@ -168,7 +169,7 @@ extern s32 Param;
 extern s32 Port;
 extern rayevts_t RayEvts;
 extern u8 ReInitPlasma;
-extern s16 RunTimeDemo;
+extern u16 RunTimeDemo;
 extern s32 TempsDemo;
 extern u8 VGA_FREQ;
 extern u8 You_Win;

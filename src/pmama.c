@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 #include "inline_helpers.h"
 /*
  * Space Mama boss and knives (GOG v1.21 object 1:543f0-1:56460). File name invented (Rayverse pmama.c).
@@ -71,7 +72,7 @@ typedef union pma_block_flags_t {
     u8 raw;
     struct { u8 unused0:1; u8 solid:1; u8 unused1:6; } bits;
 } pma_block_flags_t;
-extern pma_block_flags_t block_flags[64];
+extern block_flags_t block_flags[64];
 extern u8 fin_boss;
 extern u8 boss_mort;
 extern finbosslevel_t finBosslevel;

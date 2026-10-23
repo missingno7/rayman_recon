@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /*
  * Stone men / stone dogs (GOG v1.21 object 1:6ca90-1:6e380). File name invented (Rayverse stoneman.c).
  * Names: Rayverse/Android. Status per function: config/units.json.
@@ -24,7 +26,7 @@
 
 extern obj_t ray;
 extern level_t level;
-extern u8 block_flags[];
+extern block_flags_t block_flags[64];
 extern poing_t poing;
 extern obj_t *poing_obj;
 extern u8 horloge[25];
@@ -70,7 +72,7 @@ void DO_STONEMAN_COMMAND(obj_t* obj) {
             if (obj->main_etat == 0)
                 set_main_and_sub_etat(obj, 1, 0);
 
-            if (block_flags[calc_typ_travd(obj, false)] & 1) {
+            if (((u8 *)block_flags)[calc_typ_travd(obj, false)] & 1) {
                 if (obj->cmd == GO_LEFT)
                 {
                     obj->flags.flip_x = 1;
@@ -118,7 +120,7 @@ void DO_STONEDOG_COMMAND(obj_t* obj) {
             if (obj->main_etat == 0)
                 set_main_and_sub_etat(obj, 1, 0);
 
-            if (block_flags[calc_typ_travd(obj, false)] & 1) {
+            if (((u8 *)block_flags)[calc_typ_travd(obj, false)] & 1) {
                 if (obj->cmd == GO_LEFT)
                     obj->flags.flip_x = 1;
                 else
@@ -149,7 +151,7 @@ void DO_STONEDOG_COMMAND(obj_t* obj) {
             }
             if (
                     obj->y + obj->offset_hy < 0 ||
-                    block_flags[obj->btypes[3]] & 0x10)
+                    ((u8 *)block_flags)[obj->btypes[3]] & 0x10)
                 obj->speed_y++;
 
             SET_X_SPEED(obj);
@@ -198,7 +200,7 @@ void DO_STONEBOMB_COMMAND(obj_t* obj) {
     }
 
     if (!timer_0) {
-        if (block_flags[calc_typ_travd(obj, false)] & 1) {
+        if (((u8 *)block_flags)[calc_typ_travd(obj, false)] & 1) {
             DO_STONE_EXPLOSION(obj, -1);
         } else {
             if (obj->main_etat == 2 && obj->sub_etat == 1) {
@@ -292,7 +294,7 @@ void DO_STONEWOMAN_COMMAND(obj_t* obj) {
             skipToLabel(obj, 14, true);
         else
         {
-            if ((block_flags[calc_typ_travd(obj, 0)] & 1 ||
+            if ((((u8 *)block_flags)[calc_typ_travd(obj, 0)] & 1 ||
                  obj->x + obj->offset_bx < 32 || obj->x + obj->offset_bx > xmapmax + 268)
                  && (u8)(obj->main_etat != 2))
             {

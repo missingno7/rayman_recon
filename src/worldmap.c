@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* worldmap.c (1:57860..1:5ba70). Names RAYVERSE/ANDROID; seeded by tools/seed.py, workers tu_worldmap + gfin_worldmap (census-guided finish pass, 20 -> 46/50). text_to_display items are [1..10] here (Rayverse [0..9] is a port difference). See config/units.json for statuses. */
 #include "obj.h"
 #include "game.h"
@@ -74,7 +75,8 @@ extern u8 You_Win;
 extern s16 action;
 extern obj_t mapobj[25];
 extern display_item_t menu_to_display[9];
-extern credit_t credits[], credits_init[];
+extern credit_t credits[135];
+extern credit_t credits_init[];
 extern options_jeu_t options_jeu;
 extern u8 ALL_WORLD, new_txt_fee, MenuCredits, fade;
 extern u8 horloge[25];
@@ -89,7 +91,7 @@ extern status_bar_t status_bar;
 extern poing_t poing;
 extern u8 nb_continue, fin_continue, joy_done, Etape_History;
 extern s16 departlevel, positiony;
-extern u8 wi_save_zone[24];
+extern world_info_save_t wi_save_zone[24];
 extern u8 save_zone[2592];
 extern loadinforay_t LoadInfoRay[3];
 extern u8 bonus_perfect[24];

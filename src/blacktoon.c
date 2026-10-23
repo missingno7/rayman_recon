@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /*
  * Black toon enemy (GOG v1.21 object 1:13030-1:13800). File name invented (Rayverse blacktoon.c).
  * Names: Rayverse/Android. Status per function: config/units.json.
@@ -8,7 +10,7 @@ extern level_obj_t level_alw;
 extern level_t level;
 extern obj_t ray;
 extern obj_t *poing_obj;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern s16 ray_zdc_x;
 extern s16 ray_zdc_y;
 extern s16 ray_zdc_w;
@@ -117,7 +119,7 @@ void DO_BLK_LR_COMMAND(obj_t* obj) {
 
         if (obj->config & 2) {
             SET_X_SPEED(obj);
-            if (block_flags[calc_typ_travd(obj, false)] & 1) {
+            if (((u8 *)block_flags)[calc_typ_travd(obj, false)] & 1) {
                 if (obj->cmd == GO_LEFT)
                     skipToLabel(obj, 3, true);
                 else
@@ -189,7 +191,7 @@ void DO_BLK_NOP_COMMAND(obj_t* obj) {
         }
     }
 
-    if (obj->config & 2 && obj->speed_x != 0 && block_flags[calc_typ_travd(obj, false)] & 1) {
+    if (obj->config & 2 && obj->speed_x != 0 && ((u8 *)block_flags)[calc_typ_travd(obj, false)] & 1) {
         if (obj->cmd == GO_LEFT)
             skipToLabel(obj, 3, true);
         else

@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /*
  * Special level objects (GOG v1.21 object 1:6a340-1:6c3b0). File name invented (Rayverse special.c).
  * Worker candidate: 22/30 STRICT, contiguous _TEXT; see NOTES.md and final.json.
@@ -71,7 +73,7 @@ extern status_bar_t status_bar;
 extern rayevts_t RayEvts;
 extern finbosslevel_t finBosslevel;
 extern map_data_t mp;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern s32 dword_BD96C;
 extern s32 Bloc_lim_W1_Aff, Bloc_lim_W2_Aff, Bloc_lim_H2_Aff;
 extern u8 angletab[65];
@@ -631,7 +633,7 @@ void allocate_splash(obj_t* obj) {
                 if (obj->btypes[0] == BTYP_WATER) {
                     offset_by = cur_obj->offset_by;
                     y = obj->offset_by + obj->y;
-                } else if (!(block_flags[obj->btypes[0]] & 2)) {
+                } else if (!(((u8 *)block_flags)[obj->btypes[0]] & 2)) {
                     y = (mp.height - 1) * 16;
                     offset_by = cur_obj->offset_by;
                 } else {
