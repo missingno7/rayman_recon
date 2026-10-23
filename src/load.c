@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* load object, DOS v1.21. Names RAYVERSE/ANDROID; g_load worker candidate.
    See NOTES.md for exact inline sites, STRICT results and remaining shape differences. */
 #include "obj.h"
@@ -34,7 +35,11 @@ extern u8 GameModeVideo, FondAutorise, ToutSpriteAutorise, BiosCheckSum, VideoBi
 extern u8 *PLAN0, *PLAN0BIT, *PLAN1_BUFFER, *MAP_BLOCKS, *blocks_code;
 extern s8 Plan0NumPcx[10];
 extern s16 nb_des, nb_fix_des;
-extern u8 nb_loaded_eta, nb_fix_eta, ScrollDiffOn, no_fnd, last_plan1_palette;
+extern s8 no_fnd;
+extern u8 last_plan1_palette;
+extern u8 nb_loaded_eta;
+extern u8 nb_fix_eta;
+extern u8 ScrollDiffOn;
 extern obj_t wldobj[100], ray, div_obj, bigray, raylittle, clockobj, mapobj[25];
 extern font_t alpha, alpha2;
 extern obj_t *ScrollDiffSprites;
@@ -53,7 +58,7 @@ extern u32 gros_patai_src[1200], TailleMainMemSprite, TailleMainMemLevel, Taille
 extern u32 RaymanExeSize, RaymanExeCheckSum1, RaymanExeCheckSum2, RaymanExeCheckSum3;
 extern s32 block_add[1200];
 extern u32 nb_total_blocks, nb_blocks_plein;
-extern u32 new_sprite_deform;
+extern u8 *new_sprite_deform;
 extern mem_t main_mem_sprite, main_mem_level, main_mem_world, main_mem_fix;
 extern s16 *link_init;
 extern u8 *DrawBufferNormal, *EffetBufferNormal;
@@ -790,7 +795,7 @@ void LOAD_ALL_FIX(void)
         memcpy(&div_obj, &wldobj[index], sizeof(obj_t));
         fclose(fp);
     }
-    new_sprite_deform = (u32)block_malloc(&main_mem_fix, 0x4b0);
+    new_sprite_deform = (u8 *)block_malloc(&main_mem_fix, 0x4b0);
     SpriteFixeOffset(&main_mem_sprite);
     temp_free(filename);
     sub_5BAE0();

@@ -1,3 +1,5 @@
+#include "type_island_abi.h"
+#include "map.h"
 /* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker g_affiche: see NOTES.md. */
 #include "obj.h"
 #include "game.h"
@@ -85,7 +87,7 @@ extern u32 TailleMainMemWorld;
 extern u8 ToutSpriteAutorise;
 extern u8 WindowsLance;
 extern s32 alternateBossSpeedFactor;
-extern u8 block_flags[64];
+extern block_flags_t block_flags[64];
 extern s16 bossScrollEndX;
 extern s16 bossScrollEndY;
 extern s16 bossScrollStartX;
@@ -130,7 +132,7 @@ extern s16 id_obj_grapped;
 extern char *language_txt[];
 extern level_t level;
 extern s32 map_time;
-extern s32 plan0bit_length;
+extern u32 plan0bit_length;
 extern u32 plan0bit_nb_bytes;
 extern u8 type_fndscrX;
 extern u8 DosDetect;
@@ -177,10 +179,10 @@ extern s16 PROJ_CENTER_Y;
 extern s16 num_world;
 extern u8 language;
 extern u8 BackgroundOn;
-extern s16 plan0_width;
-extern s16 plan0_height;
+extern u16 plan0_width;
+extern u16 plan0_height;
 extern s16 yp0;
-extern s16 VGA_FREQ;
+extern u8 VGA_FREQ;
 extern s16 During_The_Menu;
 extern u8 fin_de_rayman;
 extern u8 fin_du_jeu;
@@ -205,7 +207,7 @@ extern s32 left_time;
 extern u8 JeuCracker;
 extern u8 MessageProgram;
 extern u8 Vignet_To_Display;
-extern s16 nb_fade;
+extern u16 nb_fade;
 extern u8 GoMenu;
 extern u8 fade;
 extern u8 in_pause;
@@ -234,11 +236,11 @@ extern font_t alpha2;
 extern u8* new_sprite_deform;
 extern grp_star_t grp_stars[30];
 extern pix_gerbe_t pix_gerbe[8];
-extern draw_func_t *DrawSpriteNormalEtX;
-extern draw_func_t *DrawSpriteFlipNormalEtX;
+extern island_draw_t *DrawSpriteNormalEtX;
+extern island_draw_t *DrawSpriteFlipNormalEtX;
 extern draw_func_t *DrawSpriteNoClipNormalEtX;
 extern draw_func_t *DrawSpriteFlipNoClipNormalEtX;
-extern draw_func_t *DrawSpriteColorNormalEtX;
+extern island_draw_t *DrawSpriteColorNormalEtX;
 extern fplot_func_t *fplotNormalETX;
 s32 calc_let_Width(u8 font_size, s32 num_let);
 u32 deter_num_let(u8 c, const char* next_chars);
@@ -815,17 +817,17 @@ void DISPLAY_ALL_OBJECTS(void) {
    docs/reference/lowlevel_abi.h 1:02b3d..0300f, 05640..0595c. */
 typedef void (snow_draw_t)(u8 *buffer, s32 x, s32 y);
 #pragma aux snow_draw_t parm [edi] [eax] [ebx] modify exact [eax ebx]
-extern snow_draw_t *drawflocon1NormalETX;
-extern snow_draw_t *drawflocon2NormalETX;
-extern snow_draw_t *drawflocon3NormalETX;
-extern snow_draw_t *drawflocon4NormalETX;
-extern snow_draw_t *drawflocon5NormalETX;
-extern snow_draw_t *drawflocon6NormalETX;
-extern snow_draw_t *drawflocon7NormalETX;
-extern snow_draw_t *drawpluie4NormalETX;
-extern snow_draw_t *drawpluie5NormalETX;
-extern snow_draw_t *drawpluie6NormalETX;
-extern snow_draw_t *drawpluie7NormalETX;
+extern island_snow_t *drawflocon1NormalETX;
+extern island_snow_t *drawflocon2NormalETX;
+extern island_snow_t *drawflocon3NormalETX;
+extern island_snow_t *drawflocon4NormalETX;
+extern island_snow_t *drawflocon5NormalETX;
+extern island_snow_t *drawflocon6NormalETX;
+extern island_snow_t *drawflocon7NormalETX;
+extern island_snow_t *drawpluie4NormalETX;
+extern island_snow_t *drawpluie5NormalETX;
+extern island_snow_t *drawpluie6NormalETX;
+extern island_snow_t *drawpluie7NormalETX;
 /* STRICT: DOS 1:09d2c..09f08. Counter setup and depth induction follow DOS. */
 void display_flocons_behind(void) {
     snow_draw_t *draw_func;

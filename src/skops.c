@@ -1,3 +1,4 @@
+#include "type_island_abi.h"
 /* 1:678f0..1:6a340: screen.c (background bands, heat effect) + skops.c (Mr Skops boss); one or two original objects (swap starts at aligned 1:68db0 - split OPEN). Names RAYVERSE/ANDROID/PS1; sko_* bindings partly recovered from DOS fixups (docs/CENSUS.md). Seeded by tools/seed.py, worker tu_skops. */
 #include "obj.h"
 #include "game.h"
@@ -66,7 +67,7 @@ extern s32 BufferNormalDeplt;
 typedef void copy_plan_t(u8 *, u8 *, u16, s16, s16);
 /* Copy_Plan0Diff_To_Buf assembly preserves all registers (PUSHA/POPA). */
 #pragma aux copy_plan_t parm [esi] [edi] [edx] [ebx] [ecx] modify exact []
-extern copy_plan_t *Copy_Plan0_To_Buf;
+extern island_copy_t *Copy_Plan0_To_Buf;
 extern u8 scrollLocked;
 extern map_data_t mp;
 extern s16 num_world;
