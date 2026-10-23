@@ -41,9 +41,7 @@ u8 dos_free_conventional_block(u16 handle)
     return (dpmi_workspace.regs.x.cflag & 1) != 0;
 }
 
-typedef struct dos_regs {
-    s16 ax, bx, cx, dx, si, di, flags, cs, ds, es, ss;
-} dos_regs_t;
+#include "dos_regs.h"
 
 s16 sub_564f8(u8 interrupt_number, dos_regs_t *registers)
 {

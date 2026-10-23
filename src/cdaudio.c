@@ -67,10 +67,11 @@ extern u8 __far *cd_buffer_88a;
 extern u8 __far *cd_buffer_890;
 extern u8 __far *cd_buffer_896;
 extern u8 __far *cd_buffer_89c;
-extern u16 cd_packet_command_word;
-extern u16 cd_packet_argument_low;
-extern u16 cd_packet_argument_high;
-extern u16 cd_packet_segment;
+#include "dos_regs.h"
+/* One real-mode register block at 2:4e8a2 (DOS passes its address to sub_564f8 at every INT 2Fh call;
+ * fields ax +0, bx +2, cx +4, es +18 are written here). Formerly four separate globals: their adjacency
+ * only held at the oracle addresses (natural-link runtime 2026-10-23: ES:BX lost -> MSCDEX request failed). */
+extern dos_regs_t cd_request_regs;
 extern u16 cd_drive_handle;
 extern s16 cd_computed_lba;
 extern u8 cd_drive_count;
@@ -159,12 +160,12 @@ u16 sub_19410(u8 command, u32 argument, u8 __far *request)
     u8 tries;
     tries = 0;
     do {
-        cd_packet_command_word = 0x1510;
-        cd_packet_segment = (u16)(argument >> 16);
-        cd_packet_argument_low = (u16)argument;
-        cd_packet_argument_high = command;
+        cd_request_regs.ax = 0x1510;
+        cd_request_regs.es = (u16)(argument >> 16);
+        cd_request_regs.bx = (u16)argument;
+        cd_request_regs.cx = command;
         ++tries;
-        sub_193f0((s32)&cd_packet_command_word);
+        sub_193f0((s32)&cd_request_regs);
         if (tries == 10)
             break;
     } while (request[4] & 0x80);
@@ -205,11 +206,11 @@ u32 AudioStatusCheck(u8 command)
 {
     sub_194a8(cd_buffer_878, cd_offset_858, 3, 5);
     cd_buffer_872[0] = 6;
-    cd_packet_argument_high = command;
-    cd_packet_segment = (u16)(cd_offset_850 >> 16);
-    cd_packet_argument_low = (u16)cd_offset_850;
-    cd_packet_command_word = 0x1510;
-    sub_193f0((s32)&cd_packet_command_word);
+    cd_request_regs.cx = command;
+    cd_request_regs.es = (u16)(cd_offset_850 >> 16);
+    cd_request_regs.bx = (u16)cd_offset_850;
+    cd_request_regs.ax = 0x1510;
+    sub_193f0((s32)&cd_request_regs);
     return (cd_buffer_878[4] & 2) != 0;
 }
 
@@ -217,11 +218,11 @@ void sub_195ec(u8 command)
 {
     sub_194a8(cd_buffer_878, cd_offset_844, 3, 11);
     cd_buffer_890[0] = 0x0f;
-    cd_packet_argument_high = command;
-    cd_packet_segment = (u16)(cd_offset_850 >> 16);
-    cd_packet_argument_low = (u16)cd_offset_850;
-    cd_packet_command_word = 0x1510;
-    sub_193f0((s32)&cd_packet_command_word);
+    cd_request_regs.cx = command;
+    cd_request_regs.es = (u16)(cd_offset_850 >> 16);
+    cd_request_regs.bx = (u16)cd_offset_850;
+    cd_request_regs.ax = 0x1510;
+    sub_193f0((s32)&cd_request_regs);
     cd_status_playing = (*(u16 __far *)(cd_buffer_878 + 3) & 0x200) != 0;
     cd_status_ready = (cd_buffer_890[1] & 1) ? 1 : 0;
     cd_status_error = !(cd_status_playing | cd_status_ready);
@@ -233,12 +234,12 @@ void sub_195ec(u8 command)
 
 u8 sub_196c4(void)
 {
-    cd_packet_command_word = 0x1500;
-    cd_packet_argument_low = 0;
-    cd_packet_argument_high = 0;
-    sub_193f0((s32)&cd_packet_command_word);
-    byte_DEEFB = (u8)cd_packet_argument_high;
-    return (u8)cd_packet_argument_low;
+    cd_request_regs.ax = 0x1500;
+    cd_request_regs.bx = 0;
+    cd_request_regs.cx = 0;
+    sub_193f0((s32)&cd_request_regs);
+    byte_DEEFB = (u8)cd_request_regs.cx;
+    return (u8)cd_request_regs.bx;
 }
 
 void sub_19700(void)
@@ -251,11 +252,11 @@ void sub_19700(void)
     while (drive < 26) {
         cd_drive_map[drive] = 0;
         if (remaining != 0) {
-            cd_packet_command_word = 0x150b;
-            cd_packet_argument_high = drive;
-            cd_packet_argument_low = 0;
-            sub_193f0((s32)&cd_packet_command_word);
-            if (cd_packet_command_word != 0) {
+            cd_request_regs.ax = 0x150b;
+            cd_request_regs.cx = drive;
+            cd_request_regs.bx = 0;
+            sub_193f0((s32)&cd_request_regs);
+            if (cd_request_regs.ax != 0) {
                 --remaining;
                 cd_drive_map[drive] = 1;
             }
@@ -363,21 +364,21 @@ u8 sub_19790(void)
 
 u32 sub_19a8c(void)
 {
-    cd_packet_command_word = 0x1500;
-    cd_packet_argument_low = 0;
-    cd_packet_argument_high = 0;
-    sub_193f0((s32)&cd_packet_command_word);
-    return cd_packet_argument_low != 0;
+    cd_request_regs.ax = 0x1500;
+    cd_request_regs.bx = 0;
+    cd_request_regs.cx = 0;
+    sub_193f0((s32)&cd_request_regs);
+    return cd_request_regs.bx != 0;
 }
 
 u32 sub_19ac8(void)
 {
     s32 version;
-    cd_packet_command_word = 0x150c;
-    cd_packet_argument_low = 0;
-    sub_193f0((s32)&cd_packet_command_word);
-    version = cd_packet_argument_low;
-    cd_computed_lba = (cd_packet_argument_low & 0xff) + ((version >> 8) & 0xff) * 100;
+    cd_request_regs.ax = 0x150c;
+    cd_request_regs.bx = 0;
+    sub_193f0((s32)&cd_request_regs);
+    version = cd_request_regs.bx;
+    cd_computed_lba = (cd_request_regs.bx & 0xff) + ((version >> 8) & 0xff) * 100;
     return cd_computed_lba >= 0xd2;
 }
 
@@ -577,14 +578,11 @@ u16 sub_1a1e8(u8 command, u8 a, u8 b, u8 c, u8 d)
 
 u16 sub_1a280(u8 track, u8 command)
 {
-    u16 function;
-    function = command;
-    function |= 0x1500;
-    cd_packet_command_word = function;
-    cd_packet_segment = (u16)(cd_offset_834 >> 16);
-    cd_packet_argument_low = (u16)cd_offset_834;
-    cd_packet_argument_high = track;
-    sub_193f0((s32)&cd_packet_command_word);
+    cd_request_regs.ax = command | 0x1500;
+    cd_request_regs.es = (u16)(cd_offset_834 >> 16);
+    cd_request_regs.bx = (u16)cd_offset_834;
+    cd_request_regs.cx = track;
+    sub_193f0((s32)&cd_request_regs);
     return word_DE8BC;
 }
 
