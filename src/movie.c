@@ -150,7 +150,7 @@ void sub_3B274(void);
 s32 sub_3A1C0(void)
 {
     movie_draw_buffer = DrawBufferNormal;
-    fill(DrawBufferNormal);
+    fill_cld(DrawBufferNormal);
     return 0;
 }
 
@@ -189,7 +189,7 @@ s32 sub_3A238(u8 *surface)
     VGA_FREQ = 0x3c;
     movie_saved_frequency = old_frequency;
     set_vga_frequency(0x3c);
-    fill(DisplayBufferNormal);
+    fill_cld(DisplayBufferNormal);
     memset(movie_video_buffer, 0, 0x300);
     return 0;
 }
@@ -625,7 +625,7 @@ void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 
 void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface)
 {
-    fill(surface->pixels);
+    fill_cld(surface->pixels);
     (void)data;
     (void)work;
 }

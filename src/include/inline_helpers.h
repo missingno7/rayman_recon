@@ -280,4 +280,25 @@ void copy_guarded(const void *source, void *destination, u32 count);
   "rep movsd" \
   "guarded_copy_end:" \
   parm [esi] [edi] [ecx] modify exact [eax ecx esi edi]
+
+/* ORIGINAL_INLINE, INVENTED fill_cld (Android lookup absent).
+ * Exact complete body: sub_3A1C0 1:2a1ce..2a1d8,
+ * sub_3A238 1:2a291..2a29b, sub_3A9F4 1:2a9f8..2aa02.
+ * All three were non-STRICT with plain C. Eight plain-C spellings tested
+ * in the full movie TU: memset and byte/dword for/while/do loops, no hits.
+ * EDI destination, clears 64000 bytes; clears DF. Physical writes EAX=0,
+ * ECX=0, EDI+=64000 and flags. EBX/EDX/ESI/EBP unmodified at each site.
+ * EDI is restored by the callers' epilogues at 1:2a1da and 1:2aa02;
+ * EBX (surface) survives the third site's pointer load at 1:2a9f6.
+ * This is separate from fill: CLD and XOR EAX,EAX are original bytes.
+ * Evidence and bounded negatives: build/workers/idiom_mine/FINDINGS.md.
+ */
+void fill_cld(void *destination);
+#pragma aux fill_cld = \
+ "cld" \
+ "xor eax,eax" \
+ "mov ecx,16000" \
+ "rep stosd" \
+ parm [edi] modify exact [eax ecx edi]
+
 #endif

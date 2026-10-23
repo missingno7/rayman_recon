@@ -96,6 +96,20 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   the allocator pick other registers at some of 190 sites; the zero-tested shift (TEST/JZ/SAR/JMP/NEG/SAR/NEG) occurs 4
   times, always EAX/CL. Two-site gates and contracts in inline_helpers.h. First use closed 6 functions (+2,740 bytes;
   poing 11/11). The C ternary reproduces the instructions but not the fixed register (CAUSES H11 abs experiment).
+- **fill_cld** (2026-10-23, idiom census): `CLD; XOR EAX,EAX; MOV ECX,16000; REP STOSD` is the complete body at
+  sub_3A1C0 1:2a1ce, sub_3A238 1:2a291 and sub_3A9F4 1:2a9f8 (movie), distinct from `fill` (MOV EAX,0, no CLD).
+  Ten plain-C spellings (memset decimal/hex, byte and dword for/while/do loops, `#pragma intrinsic(memset)`,
+  `_fmemset`) reproduced 0/3 bodies; the helper closes all three (+168 bytes), 0 losses in the 54 TUs that include
+  the header. The 320-dword variant at 1:045d8 is original assembly, not a helper site.
+- **Idiom census, negatives** (build/workers/idiom_mine, 1,739 recurring fixed-encoding windows over 1,650 extents):
+  string/memcpy intrinsics, signed division by 2^k (`SAR/SHL/SBB/SAR`, ordinary `x / (1<<k)`), IDIV cores, compound
+  global predicates, constant-return branches and switch lowering are ordinary C (already exact at most sites; the
+  residues are layout/lowering, OPEN, no helper). Guarded memset prefix (sub_3A30C, plot2line) ends with live flags
+  and has no second identical complete body: OPEN, no helper. VGA `MOV EDX,3C4h; MOV AL,n; OUT DX,AX` is produced by
+  a 32-bit union plus outpw in calibration, full sites OPEN. **BIOS tick wait** (`STI; MOV ESI,46Ch; MOV AH,[ESI];
+  loop MOV AL,[ESI]; CMP AH,AL; JE loop`, PcMain 1:08455/08463, load_world 1:34e1e/34e2c) passes the STI gate and
+  a helper reproduces 4/4 bodies, but both callers stay NEAR (load_world 945 -> 1450 diffs): not integrated; the
+  advertised AX/EAX width is OPEN.
 
 ## Evidence log (established facts, with their proofs)
 - **Watcom C, 32-bit flat, register calling convention** [PROVEN]: args in EAX, EDX, EBX, ECX; callee saves used

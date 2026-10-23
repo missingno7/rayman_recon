@@ -11653,7 +11653,7 @@
    "profile": "game",
    "functions": {
     "sub_3A1C0": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -11677,7 +11677,7 @@
      ]
     },
     "sub_3A238": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
@@ -11833,7 +11833,7 @@
      "quality": "SYNTHETIC"
     },
     "sub_3A9F4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
