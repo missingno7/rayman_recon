@@ -10338,7 +10338,8 @@
     "addr": "2:4d5c",
     "type": "world_info_t[24]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //94D5C; DOS stride 20 and nb_cages byte at +9"
+    "evidence": "Rayverse data.c //94D5C; DOS stride 20 and nb_cages byte at +9; DATA-GAP AUDIT: explicit DOS size 480; 24 records x 20 bytes, 24 pointer fields at +16. INIT_WORLD_INFO and INIT_NEW_GAME write fields; worldmap byte/word/dword accesses use stride20. Android size480 independently agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 480
    },
    "gele": {
     "addr": "2:3fa62",
@@ -10600,7 +10601,8 @@
     "addr": "2:6fb4",
     "type": "u8 *[10]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //96FB4; declaration type, checked against Android symbol or DOS access"
+    "evidence": "Rayverse data.c //96FB4; declaration type, checked against Android symbol or DOS access; DATA-GAP AUDIT: explicit DOS size 40; Ten pointers, 10 contiguous obj2 relocations; indexed by Moskito phase in prepareNewMoskitoAttack; Android size40 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 40
    },
    "bossEncounter": {
     "addr": "2:3fa6e",
@@ -10775,13 +10777,16 @@
     "addr": "2:215c",
     "type": "archive_header_t[75]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[75]"
+    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[75]; DATA-GAP AUDIT: explicit DOS size 900; 75 packed 12-byte archive records; LoadPcxInVignet 1:36e63..371fe, LoadPlan0InVignet 1:374dc..377ff and LoadPcxOptions 1:38107..383ff use offsets +0/+4/+8/+9. Android has only 71 records (852 B), so its size is not the DOS extent.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 900,
+    "dos_size_evidence": "DOS75 records x12=900, versus Android71 x12=852. All75 contiguous descriptors exactly partition the actual GOG VIGNET.DAT and independently pass their checksum; see archive_bounds.json."
    },
    "language_infos": {
     "addr": "2:24e0",
     "type": "archive_header_t[5]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[5]"
+    "evidence": "Rayverse data.c address comment; data declaration type archive_header_t[5]; DATA-GAP AUDIT: explicit DOS size 60; Five 12-byte records ending at nb_des 2:0251c; LoadLanguageTxt 1:37e87..37fa2 accesses +0/+4/+8/+9. Five independently valid RAY.LNG blocks corroborate the count.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 60
    },
    "nb_des": {
     "addr": "2:251c",
@@ -10901,7 +10906,8 @@
     "addr": "2:5e40",
     "type": "u8*[7]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; true C type u8*[7]"
+    "evidence": "Rayverse data.c address comment; true C type u8*[7]; DATA-GAP AUDIT: explicit DOS size 28; Seven 4-byte pointers to key_left/up/right/down/jump/fist/action; seven obj2 relocations. Menu key-selection accesses and Android size28 corroborate the extent.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 28
    },
    "tab_key_sav": {
     "addr": "2:5e5c",
@@ -11345,61 +11351,71 @@
     "addr": "2:6550",
     "type": "archive_header_t[7]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; archive_header_t[7]"
+    "evidence": "Rayverse data.c address comment; archive_header_t[7]; DATA-GAP AUDIT: explicit DOS size 84; Seven 12-byte archive records; LoadBnkFile reads +0/+8/+9 with stride12. The seven records exactly partition SNDH8B.DAT.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 84
    },
    "snd8b_data_infos": {
     "addr": "2:65a4",
     "type": "archive_header_t[7]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; archive_header_t[7]"
+    "evidence": "Rayverse data.c address comment; archive_header_t[7]; DATA-GAP AUDIT: explicit DOS size 84; Seven 12-byte archive records; LoadBnkFile uses +0/+4/+8/+9 and stride12; the seven records exactly partition SNDD8B.DAT.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 84
    },
    "sndvig_infos": {
     "addr": "2:65f8",
     "type": "archive_header_t[9]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; archive_header_t[9]"
+    "evidence": "Rayverse data.c address comment; archive_header_t[9]; DATA-GAP AUDIT: explicit DOS size 108; Nine 12-byte archive records; LoadTchatchPerdu/PlayTchatch use +0/+4/+8/+9 and stride12; the nine records exactly partition SNDVIG.DAT.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 108
    },
    "bnkDataFixe": {
     "addr": "2:66b0",
     "type": "u8*",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; u8*"
+    "evidence": "Rayverse data.c address comment; u8*; DATA-GAP AUDIT: explicit DOS size 4; Flat sound-bank pointer, 4-byte writes/loads in hifi; Android size4 agrees; source initializes NULL.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "bnkDataWorld": {
     "addr": "2:66b4",
     "type": "u8*",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; u8*"
+    "evidence": "Rayverse data.c address comment; u8*; DATA-GAP AUDIT: explicit DOS size 4; Flat world sound-bank pointer, 4-byte writes/loads in hifi; Android size4 agrees; source initializes NULL.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "ptrTchatch": {
     "addr": "2:67b8",
     "type": "u8*",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; u8*"
+    "evidence": "Rayverse data.c address comment; u8*; DATA-GAP AUDIT: explicit DOS size 4; Flat decoded speech-data pointer; LoadTchatchPerdu/PlayTchatch/FreeTchatchVignette store, dereference and free it. Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "TEST_KEY_BUTTON0": {
     "addr": "2:67bc",
     "type": "u8 (*)(void)",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void); DATA-GAP AUDIT: explicit DOS size 4; Four-byte function pointer; POINTEUR_BOUTONS_OPTIONS_BIS writes it and butNpressed makes indirect calls. Symbolic code relocation initializes it; Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "TEST_KEY_BUTTON1": {
     "addr": "2:67c0",
     "type": "u8 (*)(void)",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void); DATA-GAP AUDIT: explicit DOS size 4; Four-byte function pointer; POINTEUR_BOUTONS_OPTIONS_BIS writes it and butNpressed makes indirect calls. Symbolic code relocation initializes it; Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "TEST_KEY_BUTTON2": {
     "addr": "2:67c4",
     "type": "u8 (*)(void)",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void); DATA-GAP AUDIT: explicit DOS size 4; Four-byte function pointer; POINTEUR_BOUTONS_OPTIONS_BIS writes it and butNpressed makes indirect calls. Symbolic code relocation initializes it; Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "TEST_KEY_BUTTON3": {
     "addr": "2:67c8",
     "type": "u8 (*)(void)",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void)"
+    "evidence": "Rayverse data.c initializer; pointer type u8 (*)(void); DATA-GAP AUDIT: explicit DOS size 4; Four-byte function pointer; POINTEUR_BOUTONS_OPTIONS_BIS writes it and butNpressed makes indirect calls. Symbolic code relocation initializes it; Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "byte_967CC": {
     "addr": "2:67cc",
@@ -11519,49 +11535,57 @@
     "addr": "2:6d48",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence2": {
     "addr": "2:6d68",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence3": {
     "addr": "2:6d88",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence4": {
     "addr": "2:6da8",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence5": {
     "addr": "2:6dc8",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence6": {
     "addr": "2:6de8",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "droppedBombSequence7": {
     "addr": "2:6e08",
     "type": "s16*[8]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 32; Eight 4-byte pointers to eight-short bomb lines; eight obj2 relocations. bombSequences points at its true base; meredenis uses nested phase/row indexing. Android size32 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 32
    },
    "bombSequences": {
     "addr": "2:6e28",
     "type": "s16**[7]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; internal table pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 28; Seven 4-byte pointers to the eight-pointer bomb-sequence arrays; seven symbolic obj2 relocations; consumed by meredenis. Android size28 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 28
    },
    "mereDenisDyingSequence": {
     "addr": "2:6e44",
@@ -11615,7 +11639,8 @@
     "addr": "2:6ef8",
     "type": "u8*[11]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; u8*[11]; internal sequence pointers verified by match.py"
+    "evidence": "Rayverse data.c address comment; u8*[11]; internal sequence pointers verified by match.py; DATA-GAP AUDIT: explicit DOS size 44; Eleven pointers, 11 contiguous obj2 relocations; indexed action-sequence lookup in prepareNewMereDenisAttack; Android size44 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 44
    },
    "dyingSequence": {
     "addr": "2:6f24",
@@ -11651,7 +11676,8 @@
     "addr": "2:70e4",
     "type": "cptr_t[34]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c address comment; 34 packed 12-byte entries verified"
+    "evidence": "Rayverse data.c address comment; 34 packed 12-byte entries verified; DATA-GAP AUDIT: explicit DOS size 408; 34 records of three 4-byte command-handler pointers (read/skip/handle),102 contiguous code relocations. DOS command dispatchers index stride12, +0/+4/+8; Android size408 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 408
    },
    "pma_couteaux": {
     "addr": "2:727c",
@@ -12539,7 +12565,8 @@
     "addr": "2:35fc",
     "name": "RAYVERSE",
     "type": "obj_procs_t[262]",
-    "evidence": "Rayverse data.c //935FC; Android .bss size 5240 = 262 20-byte entries"
+    "evidence": "Rayverse data.c //935FC; Android .bss size 5240 = 262 20-byte entries; DATA-GAP AUDIT: explicit DOS size 5240; 262 records x five 4-byte code-pointer relocations (1310 consecutive sites). DO_ONE_OBJECT 1:48325 calls +0; DO_POING_COLLISION 1:1d7a0 +4; DO_COLLISIONS 1:1ec54/1:1ed1a +8; DO_RAY_IN_ZONE 1:48292 +12. +16 role u_turn is RAYVERSE semantic evidence; no direct DOS +16 consumer found.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 5240
    },
    "dead_time": {
     "addr": "2:3fa7e",
@@ -12857,7 +12884,8 @@
     "addr": "2:5e28",
     "type": "u8*",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //95E28; DOS dword pointer load in INIT_GAME_MODE_NORMAL"
+    "evidence": "Rayverse data.c //95E28; DOS dword pointer load in INIT_GAME_MODE_NORMAL; DATA-GAP AUDIT: explicit DOS size 4; 4-byte flat VGA pointer, initialized to 0xa0000; SWAP_BUFFERS 1:2b52b, EFFACE_VIDEO 1:2cb3e and mode setup read it. Android size4 agrees.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "num_world_choice": {
     "addr": "2:3f83a",
@@ -15041,13 +15069,15 @@
     "addr": "2:6888",
     "type": "const char *[128]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //96888; DOS indexes a 128-entry pointer table"
+    "evidence": "Rayverse data.c //96888; DOS indexes a 128-entry pointer table; DATA-GAP AUDIT: explicit DOS size 512; 128 flat char pointers (512 B), zero-filled unlisted suffix; RAYVERSE data.c128 and Android original symbol key2txtAz size512 independently agree. DOS INIT_KEY_SCREEN/LOAD_CONFIG select this table; set_special_key_descriptions writes indirectly via key_descriptions. Mutable pointers, const pointees. Full menu._DATA VERIFIED; cross-build pointer/string comparison in key_table_identity.json.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 512
    },
    "key_descriptions_qwerty": {
     "addr": "2:6a88",
     "type": "const char *[128]",
     "name": "RAYVERSE",
-    "evidence": "Rayverse data.c //96A88; DOS indexes a 128-entry pointer table"
+    "evidence": "Rayverse data.c //96A88; DOS indexes a 128-entry pointer table; DATA-GAP AUDIT: explicit DOS size 512; 128 flat char pointers (512 B), zero-filled unlisted suffix; RAYVERSE data.c128 and Android original key2txtQw size512 independently agree. DOS INIT_KEY_SCREEN/LOAD_CONFIG select this table; set_special_key_descriptions writes indirectly. End6c88 agrees with next bomb table; cross-build pointer/string comparison in key_table_identity.json.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 512
    },
    "hFondu": {
     "addr": "2:54ce2",
@@ -15899,7 +15929,8 @@
     "addr": "2:6664",
     "type": "dos_sound_config_t",
     "name": "INVENTED",
-    "evidence": "DOS sub_3E780 passes this base to 1:7367d; it writes +0x10 and reads +0x1c/+0x20."
+    "evidence": "DOS sub_3E780 passes this base to 1:7367d; it writes +0x10 and reads +0x1c/+0x20.; DATA-GAP AUDIT: explicit DOS size 76; 76-byte DOS driver configuration, including six-byte far pointers and explicit ABI slot gaps; passed to sosDIGIInitDriver, fields read by vendor code 1:7367d..73f33. Full definition and _DATA76 VERIFIED; hifi has a deliberately partial consumer view.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 76
    },
    "SonLimite": {
     "addr": "2:3fa13",
@@ -16530,7 +16561,8 @@
     "addr": "2:653c",
     "type": "u8*",
     "name": "INVENTED",
-    "evidence": "DOS dword pointer store from DrawBufferNormal at 1:2a1c8 and load at 1:2a258."
+    "evidence": "DOS dword pointer store from DrawBufferNormal at 1:2a1c8 and load at 1:2a258.; DATA-GAP AUDIT: explicit DOS size 4; Dword pointer stored from screen pointer at 1:2a1c8, zeroed 1:2a1e3, loaded 1:2a258. Screen fills dereference its value, not storage following the pointer.; build/workers/gap_data/FINDINGS.md. Metadata only; no ownership/ABI change.",
+    "size": 4
    },
    "movie_next_tick": {
     "addr": "2:6544",

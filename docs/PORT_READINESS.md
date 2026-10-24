@@ -27,9 +27,9 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 ## 3. Data
 | item | size | state |
 |---|---|---|
-| initialised _DATA with named, sized bindings | 175,759 of 186,776 B (94.1%) | 11,017 B unmapped: OPEN |
-| BSS layout verified | 151,803 B; holes (B9: 2:3bd08..3c4a0, language table remainder, small holes ~3.5 KB) | OPEN |
-| language_txt capacity | 237 proven, 237..260 possible | OPEN (no behavioural effect if <= 237 used) |
+| initialised _DATA with named, sized bindings | 184,623 of 186,776 B (98.8%) | gap_data 2026-10-24: 8,864 B were 31 known objects without size metadata (sizes now recorded with DOS evidence); 1,380 B proven credits_init prefix (capacity 115 used / 135 possible OPEN); 56 B alignment; 4 B runtime _NULL; **713 B OPEN** (2:01918.., 2:01970 400 B zero run, 2:05738 240 B, small ranges) - no direct relocation targets them |
+| BSS layout verified | 151,803 B; game BSS holes 42 / 493 B (gap_data: the older ~3.5 KB figure was stale): 38 B alignment, **455 B OPEN**; runtime BSS fully attributed except 5 B alignment | MOSTLY DONE |
+| language_txt capacity | 237 proven, 237..260 possible; 92-byte remainder | OPEN (gap_data: no evidence distinguishes; no behavioural effect - the game uses 237) |
 | _DATA 400-byte zero run 2:01970 (B10) | 400 B | OPEN |
 
 ## 4. Meaning (names, types) - needed for a maintainable port, not for behaviour
