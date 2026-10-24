@@ -80,6 +80,40 @@ class SemanticRegistry(unittest.TestCase):
         reg['entities'].append(copy.deepcopy(field))
         self.assertTrue(any('duplicate cross-registry entity' in s for s in semantics.check_collection(regs,SOURCE_ROOT)))
 
+    def test_repeated_history_typedef_drift_is_rejected(self):
+        regs=registries()
+        if 'ray.json' not in regs: self.skipTest('Rayman registry not selected')
+        text=semantics.source_path(SOURCE_ROOT,'ray.c').read_text(encoding='latin-1')
+        changed=text.replace('s16 x_pos,y_pos,poing_x_pos,poing_y_pos;',
+                             'u16 x_pos,y_pos,poing_x_pos,poing_y_pos;')
+        self.assertNotEqual(text,changed)
+        WORK.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=WORK) as d:
+            (Path(d)/'ray.c').write_text(changed,encoding='latin-1')
+            errors=semantics.check_collection(regs,Path(d))
+        self.assertTrue(any('ray.json: shared declaration drift: ray_stack_t.x_pos' in s for s in errors))
+
+    def test_repeated_callback_abi_drift_is_rejected(self):
+        regs=registries()
+        if 'collision1.json' not in regs: self.skipTest('Collision registry not selected')
+        text=semantics.source_path(SOURCE_ROOT,'collision1.c').read_text(encoding='latin-1')
+        changed=text.replace('void (*poing_collision)(obj_t *obj, s16 sprite);',
+                             'void (*poing_collision)(obj_t *obj, u16 sprite);')
+        self.assertNotEqual(text,changed)
+        WORK.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=WORK) as d:
+            (Path(d)/'collision1.c').write_text(changed,encoding='latin-1')
+            errors=semantics.check_collection(regs,Path(d))
+        self.assertTrue(any('collision1.json: shared declaration drift: obj_procs_t.poing_collision' in s for s in errors))
+
+    def test_unknown_rayman_state_cannot_receive_a_name(self):
+        regs=registries()
+        if 'ray.json' not in regs: self.skipTest('Rayman registry not selected')
+        reg=copy.deepcopy(regs['ray.json'])
+        state=next(s for s in reg['ray_state_machine']['substates'] if s['evidence_level']=='UNKNOWN')
+        state['name']='unsupported_action'
+        self.assertTrue(any('state name lacks PROVEN/STRONG' in s for s in semantics.validate_schema(reg)))
+
     def test_cross_registry_global_reference_is_required(self):
         regs=registries()
         regs['moteur.json']['scope']['globals'].append('global:missing_test_global')

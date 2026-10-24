@@ -69,7 +69,7 @@
 /* PROVEN: Stored screen-space origin coordinate screen_y after camera subtraction. */
 #define DOS_OBJ_T_SCREEN_Y_OFFSET 0x38
 #define DOS_OBJ_T_SCREEN_Y_SIZE 2
-/* UNKNOWN: Neutral obj_t.sub_speed storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Type-dependent signed16 scratch used for a water-motion residual and another type's horizontal distance. */
 #define DOS_OBJ_T_SUB_SPEED_OFFSET 0x3a
 #define DOS_OBJ_T_SUB_SPEED_SIZE 2
 /* STRONG: Initial position component init_x used by reset and relative-displacement logic. */
@@ -90,28 +90,28 @@
 /* STRONG: Object script stream/context member cmd_offset. */
 #define DOS_OBJ_T_CMD_OFFSET_OFFSET 0x46
 #define DOS_OBJ_T_CMD_OFFSET_SIZE 2
-/* STRONG: Object script stream/context member nb_cmd. */
+/* STRONG: Type-dependent script count or Rayman airborne-inertia selector. */
 #define DOS_OBJ_T_NB_CMD_OFFSET 0x48
 #define DOS_OBJ_T_NB_CMD_SIZE 2
-/* STRONG: Identifier of an object being followed, with type-specific reuse. */
+/* STRONG: Type-dependent support/object id or reused vertical command parameter. */
 #define DOS_OBJ_T_FOLLOW_ID_OFFSET 0x4a
 #define DOS_OBJ_T_FOLLOW_ID_SIZE 2
-/* PROVEN: Context-dependent scratch value: animation-layer displacement, projectile target coordinate, or other type-specific state. */
+/* STRONG: Type-dependent vertical follower displacement or grapple radius. */
 #define DOS_OBJ_T_FOLLOW_Y_OFFSET 0x4c
 #define DOS_OBJ_T_FOLLOW_Y_SIZE 2
-/* PROVEN: Context-dependent scratch value: animation-layer displacement, projectile target coordinate, or other type-specific state. */
+/* STRONG: Type-dependent horizontal follower displacement or grapple angle. */
 #define DOS_OBJ_T_FOLLOW_X_OFFSET 0x4e
 #define DOS_OBJ_T_FOLLOW_X_SIZE 2
 /* PROVEN: Type-specific signed scratch parameter, including Rayman edge classification in calc_btyp. */
 #define DOS_OBJ_T_PARAM_OFFSET 0x50
 #define DOS_OBJ_T_PARAM_SIZE 2
-/* UNKNOWN: Type-dependent signed16 storage: generating doors save their detached successor id here; live Rayman initialization uses-1, and template swaps copy the field. A universal meaning across object types remains unresolved. */
+/* UNKNOWN: Type-dependent signed16 scratch with proven Rayman fall, grapple-direction, door-id and initialization roles. */
 #define DOS_OBJ_T_LINK_OFFSET 0x52
 #define DOS_OBJ_T_LINK_SIZE 2
-/* PROVEN: Context-dependent Rayman tile index or signed object-to-Rayman support distance. */
+/* STRONG: Type-dependent Rayman tile index or support-distance code with several geometric conventions. */
 #define DOS_OBJ_T_RAY_DIST_OFFSET 0x54
 #define DOS_OBJ_T_RAY_DIST_SIZE 2
-/* STRONG: Signed invulnerability/response timer. */
+/* STRONG: Type-dependent signed16 response timer or reused command/state storage; Rayman uses -1 for vulnerability. */
 #define DOS_OBJ_T_IFRAMES_TIMER_OFFSET 0x56
 #define DOS_OBJ_T_IFRAMES_TIMER_SIZE 2
 /* PROVEN: Last row-major map tile index used by the changed-block test. */
@@ -120,7 +120,7 @@
 /* PROVEN: Projection-depth parameter whose denominator is signed_scale+256. */
 #define DOS_OBJ_T_SCALE_OFFSET 0x5a
 #define DOS_OBJ_T_SCALE_SIZE 2
-/* UNKNOWN: Neutral obj_t.zdc storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Packed reference to an object collision-zone run. */
 #define DOS_OBJ_T_ZDC_OFFSET 0x5c
 #define DOS_OBJ_T_ZDC_SIZE 2
 /* PROVEN: Delay inhibiting reactivation, counted down while the living object is in its action zone. */
@@ -147,10 +147,10 @@
 /* PROVEN: Current animation selector or current frame selector (anim_frame). */
 #define DOS_OBJ_T_ANIM_FRAME_OFFSET 0x6b
 #define DOS_OBJ_T_ANIM_FRAME_SIZE 1
-/* PROVEN: Byte index into the main/substate animation-state table (sub_etat). */
+/* PROVEN: Object-type- and main-state-specific substate-table index. */
 #define DOS_OBJ_T_SUB_ETAT_OFFSET 0x6c
 #define DOS_OBJ_T_SUB_ETAT_SIZE 1
-/* PROVEN: Byte index into the main/substate animation-state table (main_etat). */
+/* PROVEN: Object-type-specific main state-table index; Rayman's controller dispatches eight observed state families. */
 #define DOS_OBJ_T_MAIN_ETAT_OFFSET 0x6d
 #define DOS_OBJ_T_MAIN_ETAT_SIZE 1
 /* STRONG: Reset value for init_sub_etat. */
@@ -162,10 +162,10 @@
 /* STRONG: Current script command discriminator. */
 #define DOS_OBJ_T_CMD_OFFSET 0x70
 #define DOS_OBJ_T_CMD_SIZE 1
-/* PROVEN: First gravity counter: modulo3 in ordinary airborne updates, or the byte phase counter compared against gravity_value_2 by gravity modes10/11. */
+/* STRONG: Type-dependent gravity phase byte. */
 #define DOS_OBJ_T_GRAVITY_VALUE_1_OFFSET 0x71
 #define DOS_OBJ_T_GRAVITY_VALUE_1_SIZE 1
-/* PROVEN: Second gravity counter: modulo4 in ordinary airborne updates, or the comparison threshold retained for gravity modes10/11. */
+/* STRONG: Second type-dependent gravity phase byte or high-nibble10/11 period. */
 #define DOS_OBJ_T_GRAVITY_VALUE_2_OFFSET 0x72
 #define DOS_OBJ_T_GRAVITY_VALUE_2_SIZE 1
 /* PROVEN: Animation transition mode set to1 by the state setters. */
@@ -186,7 +186,7 @@
 /* UNKNOWN: Neutral obj_t.init_flag storage/view; its intended meaning is not established by this pilot. */
 #define DOS_OBJ_T_INIT_FLAG_OFFSET 0x78
 #define DOS_OBJ_T_INIT_FLAG_SIZE 1
-/* UNKNOWN: Neutral obj_t.hit_sprite storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Collision layer selector with three special dispatch codes. */
 #define DOS_OBJ_T_HIT_SPRITE_OFFSET 0x79
 #define DOS_OBJ_T_HIT_SPRITE_SIZE 1
 /* STRONG: Type-dependent size/range parameter used by the detection-zone computation. */
@@ -204,7 +204,7 @@
 /* STRONG: Object drawing-order bucket selector. */
 #define DOS_OBJ_T_DISPLAY_PRIO_OFFSET 0x7e
 #define DOS_OBJ_T_DISPLAY_PRIO_SIZE 1
-/* UNKNOWN: Type-dependent byte storage; the cling pickup animation path decrements it as a delay while holding frame zero. Its other object-specific roles remain unresolved. */
+/* UNKNOWN: Type-dependent byte countdown/state scratch with multiple independently established roles. */
 #define DOS_OBJ_T_TIMER_OFFSET 0x7f
 #define DOS_OBJ_T_TIMER_SIZE 1
 /* STRONG: Number of animations in the object descriptor. */
@@ -254,19 +254,19 @@
 /* PROVEN: Overlapping nibble/bit alias container for the corresponding eta byte. */
 #define DOS_ETA_T_FLAGS_BITS_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_SIZE 1
-/* UNKNOWN: Neutral eta_t.flags_bits.bit0 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: State permission bit tested by Rayman jump initiation and the stonewoman jump handler. */
 #define DOS_ETA_T_FLAGS_BITS_BIT0_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT0_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT0_MASK 0x01
-/* UNKNOWN: Neutral eta_t.flags_bits.bit1 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: State permission bit gating fist preparation in RAY_PREPARE_FIST. */
 #define DOS_ETA_T_FLAGS_BITS_BIT1_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT1_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT1_MASK 0x02
-/* UNKNOWN: Neutral eta_t.flags_bits.bit2 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: State permission bit gating helicopter activation. */
 #define DOS_ETA_T_FLAGS_BITS_BIT2_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT2_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT2_MASK 0x04
-/* UNKNOWN: Observed state flag0x08: DO_OBJECTS increments a nonboss object hit_points from0 to1 after its update when this bit is set. A broader intended state name is unresolved. */
+/* STRONG: State participation bit for damage/contact eligibility, with actor-dependent readers. */
 #define DOS_ETA_T_FLAGS_BITS_BIT3_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT3_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT3_MASK 0x08
@@ -274,15 +274,15 @@
 #define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_MASK 0x10
-/* UNKNOWN: Neutral eta_t.flags_bits.bit5 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: State gate for Rayman contact dispatch and collision-zone traversal. */
 #define DOS_ETA_T_FLAGS_BITS_BIT5_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT5_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT5_MASK 0x20
-/* PROVEN: Alias for flag0x40 selecting the small14-pixel Rayman collision rectangle in GET_RAY_ZDC. */
+/* PROVEN: Context-dependent state bit selecting Rayman's low collision shape and participating in generating-door inset encoding. */
 #define DOS_ETA_T_FLAGS_BITS_BIT6_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT6_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT6_MASK 0x40
-/* UNKNOWN: Neutral eta_t.flags_bits.bit7 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: Low-weight bit of generating-door collision inset selection, paired with bit6. */
 #define DOS_ETA_T_FLAGS_BITS_BIT7_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT7_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT7_MASK 0x80
@@ -529,7 +529,7 @@
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_MASK 0x20
-/* UNKNOWN: Two-bit view of raw bits6..7; moteur consumes bit6 in slope predicates while the role of bit7 remains unresolved. */
+/* STRONG: Two-bit slope classification/orientation view used during Rayman tile landing. */
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_MASK 0xc0
@@ -930,5 +930,104 @@
 /* UNKNOWN: Declared flocon_t.field_7 storage; moteur only clears its enclosing storage or never accesses it. */
 #define DOS_FLOCON_T_FIELD_7_OFFSET 0x7
 #define DOS_FLOCON_T_FIELD_7_SIZE 1
+#define DOS_ZDC_T_SIZE 8
+#define DOS_OPTIONS_JEU_T_SIZE 32
+#define DOS_RAY_STACK_T_SIZE 18
+/* PROVEN: Collision-zone horizontal offset in the selected coordinate frame. */
+#define DOS_ZDC_T_X_POS_OFFSET 0x0
+#define DOS_ZDC_T_X_POS_SIZE 2
+/* PROVEN: Collision-zone vertical offset in the selected coordinate frame. */
+#define DOS_ZDC_T_Y_POS_OFFSET 0x2
+#define DOS_ZDC_T_Y_POS_SIZE 2
+/* PROVEN: Unsigned horizontal span of this collision rectangle. */
+#define DOS_ZDC_T_WIDTH_OFFSET 0x4
+#define DOS_ZDC_T_WIDTH_SIZE 1
+/* PROVEN: Unsigned vertical span of this collision rectangle. */
+#define DOS_ZDC_T_HEIGHT_OFFSET 0x5
+#define DOS_ZDC_T_HEIGHT_SIZE 1
+/* PROVEN: Collision-zone mode flags. */
+#define DOS_ZDC_T_FLAGS_OFFSET 0x6
+#define DOS_ZDC_T_FLAGS_SIZE 1
+/* PROVEN: Animation-layer anchor index and collision-result code. */
+#define DOS_ZDC_T_SPRITE_OFFSET 0x7
+#define DOS_ZDC_T_SPRITE_SIZE 1
+/* STRONG: Current jump input-test callback. */
+#define DOS_OPTIONS_JEU_T_TEST_FIRE1_OFFSET 0x0
+#define DOS_OPTIONS_JEU_T_TEST_FIRE1_SIZE 4
+/* STRONG: Current fist input-test callback. */
+#define DOS_OPTIONS_JEU_T_TEST_FIRE0_OFFSET 0x4
+#define DOS_OPTIONS_JEU_T_TEST_FIRE0_SIZE 4
+/* STRONG: Current empty fourth-action input-test callback. */
+#define DOS_OPTIONS_JEU_T_TEST_BUTTON4_OFFSET 0x8
+#define DOS_OPTIONS_JEU_T_TEST_BUTTON4_SIZE 4
+/* STRONG: Current action/run/seed input-test callback. */
+#define DOS_OPTIONS_JEU_T_TEST_BUTTON3_OFFSET 0xc
+#define DOS_OPTIONS_JEU_T_TEST_BUTTON3_SIZE 4
+/* PROVEN: Physical/logical button selector for test_fire1. */
+#define DOS_OPTIONS_JEU_T_JUMP_OFFSET 0x10
+#define DOS_OPTIONS_JEU_T_JUMP_SIZE 2
+/* PROVEN: Physical/logical button selector for test_fire0. */
+#define DOS_OPTIONS_JEU_T_FIST_OFFSET 0x12
+#define DOS_OPTIONS_JEU_T_FIST_SIZE 2
+/* PROVEN: Physical/logical button selector for test_button4. */
+#define DOS_OPTIONS_JEU_T_FIELD_14_OFFSET 0x14
+#define DOS_OPTIONS_JEU_T_FIELD_14_SIZE 2
+/* PROVEN: Physical/logical button selector for test_button3. */
+#define DOS_OPTIONS_JEU_T_ACTION_OFFSET 0x16
+#define DOS_OPTIONS_JEU_T_ACTION_SIZE 2
+/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+#define DOS_OPTIONS_JEU_T_MUSIC_ENABLED_OFFSET 0x18
+#define DOS_OPTIONS_JEU_T_MUSIC_ENABLED_SIZE 2
+/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+#define DOS_OPTIONS_JEU_T_SOUND_VOLUME_OFFSET 0x1a
+#define DOS_OPTIONS_JEU_T_SOUND_VOLUME_SIZE 2
+/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+#define DOS_OPTIONS_JEU_T_IS_STEREO_OFFSET 0x1c
+#define DOS_OPTIONS_JEU_T_IS_STEREO_SIZE 2
+/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+#define DOS_OPTIONS_JEU_T_UNKNOWN_1E_OFFSET 0x1e
+#define DOS_OPTIONS_JEU_T_UNKNOWN_1E_SIZE 2
+/* PROVEN: Snapshot of Rayman x_pos. */
+#define DOS_RAY_STACK_T_X_POS_OFFSET 0x0
+#define DOS_RAY_STACK_T_X_POS_SIZE 2
+/* PROVEN: Snapshot of Rayman y_pos. */
+#define DOS_RAY_STACK_T_Y_POS_OFFSET 0x2
+#define DOS_RAY_STACK_T_Y_POS_SIZE 2
+/* PROVEN: Snapshot of fist x_pos. */
+#define DOS_RAY_STACK_T_POING_X_POS_OFFSET 0x4
+#define DOS_RAY_STACK_T_POING_X_POS_SIZE 2
+/* PROVEN: Snapshot of fist y_pos. */
+#define DOS_RAY_STACK_T_POING_Y_POS_OFFSET 0x6
+#define DOS_RAY_STACK_T_POING_Y_POS_SIZE 2
+/* PROVEN: Snapshot of Rayman main_etat. */
+#define DOS_RAY_STACK_T_MAIN_ETAT_OFFSET 0x8
+#define DOS_RAY_STACK_T_MAIN_ETAT_SIZE 1
+/* PROVEN: Snapshot of Rayman sub_etat. */
+#define DOS_RAY_STACK_T_SUB_ETAT_OFFSET 0x9
+#define DOS_RAY_STACK_T_SUB_ETAT_SIZE 1
+/* PROVEN: Snapshot of Rayman anim_index. */
+#define DOS_RAY_STACK_T_ANIM_INDEX_OFFSET 0xa
+#define DOS_RAY_STACK_T_ANIM_INDEX_SIZE 1
+/* PROVEN: Snapshot of Rayman anim_frame. */
+#define DOS_RAY_STACK_T_ANIM_FRAME_OFFSET 0xb
+#define DOS_RAY_STACK_T_ANIM_FRAME_SIZE 1
+/* PROVEN: Snapshot of Rayman flip_x. */
+#define DOS_RAY_STACK_T_FLIP_X_OFFSET 0xc
+#define DOS_RAY_STACK_T_FLIP_X_SIZE 1
+/* PROVEN: Snapshot of fist anim_index. */
+#define DOS_RAY_STACK_T_POING_ANIM_INDEX_OFFSET 0xd
+#define DOS_RAY_STACK_T_POING_ANIM_INDEX_SIZE 1
+/* PROVEN: Snapshot of fist anim_frame. */
+#define DOS_RAY_STACK_T_POING_ANIM_FRAME_OFFSET 0xe
+#define DOS_RAY_STACK_T_POING_ANIM_FRAME_SIZE 1
+/* PROVEN: Snapshot of fist flip_x. */
+#define DOS_RAY_STACK_T_POING_FLIP_X_OFFSET 0xf
+#define DOS_RAY_STACK_T_POING_FLIP_X_SIZE 1
+/* PROVEN: Validity byte for the optional fist snapshot. */
+#define DOS_RAY_STACK_T_POING_IS_ACTIVE_OFFSET 0x10
+#define DOS_RAY_STACK_T_POING_IS_ACTIVE_SIZE 1
+/* PROVEN: Low8 bits of Rayman scale at the history sample. */
+#define DOS_RAY_STACK_T_SCALE_OFFSET 0x11
+#define DOS_RAY_STACK_T_SCALE_SIZE 1
 #endif
 

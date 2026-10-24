@@ -155,6 +155,20 @@ def validate_schema(reg):
             if type_signedness(e['declarator']) != e.get('signedness'): errors.append(label + ': signedness metadata differs from declared C type')
             for k in ('offset','size'):
                 if not isinstance(e.get(k), int) or e[k] < 0: errors.append(label + ': invalid ' + k)
+    # Optional actor-specific state labels are separately graded; a proven field
+    # layout must never silently promote an unknown state's intended meaning.
+    machine = reg.get('ray_state_machine')
+    if machine is not None:
+        pairs = set()
+        for state in machine.get('substates', []):
+            pair = (state.get('main'),state.get('sub'))
+            if pair in pairs: errors.append('duplicate Rayman state pair ' + str(pair))
+            pairs.add(pair)
+            if any(not isinstance(v,int) or not 0 <= v <= 255 for v in pair): errors.append('invalid Rayman state pair ' + str(pair))
+            level = state.get('evidence_level')
+            if level not in LEVELS: errors.append('invalid Rayman state level ' + str(pair))
+            if state.get('name') and level not in ('PROVEN','STRONG'): errors.append('Rayman state name lacks PROVEN/STRONG evidence ' + str(pair))
+            if not state.get('evidence'): errors.append('Rayman state lacks evidence ' + str(pair))
     return errors
 
 def function_declarations(ast):
@@ -269,6 +283,27 @@ def check_collection(registries, source_root=None):
             for key in reg['scope'].get('types', []):
                 if key not in by_id or by_id[key]['kind'] != 'type': errors.append(name + ': unresolved type entity ' + key)
         for problem in check_source(reg, source_root, shared_entities=by_id.values()): errors.append(name + ': ' + problem)
+    # A shared semantic owner may describe compatibility typedefs repeated in
+    # different TUs (ray_stack_t, obj_procs_t). Check every scoped declaration,
+    # not just the owner's chosen layout-probe context. No typedef is moved.
+    shared_fields = collections.defaultdict(dict)
+    for e in by_id.values():
+        if e['kind'] == 'field': shared_fields[e['struct']][e.get('proposed_name') or e['current_name']] = e
+    for name,reg in registries.items():
+        if reg['scope']['kind'] != 'unit': continue
+        ast = parse_source(Path(source_root or DEFAULT_SOURCE),reg['scope'])
+        declared = field_declarations(ast)
+        owners = {td.name for td in ast.ext if isinstance(td,ca.Typedef)}
+        for owner,expected in shared_fields.items():
+            if owner not in owners: continue
+            actual = {member:d for (typ,member),d in declared.items() if typ == owner}
+            if actual.keys() != expected.keys():
+                errors.append(name + ': shared type field coverage drift: ' + owner)
+            for member in actual.keys() & expected.keys():
+                e = expected[member]; d = actual[member]
+                bits = int(d.bitsize.value) if d.bitsize else None
+                if reverse_names(canonical_type(d),by_id.values()) != e['declarator'] or bits != e.get('bit_width'):
+                    errors.append(name + ': shared declaration drift: ' + owner + '.' + member)
     return errors
 
 def dependency_path(path, base, artifact_root):

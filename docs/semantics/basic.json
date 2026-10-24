@@ -19580,8 +19580,8 @@
   "src/cheat.c": "069aece168b09dbe4bc333c6e76158622ffcf364e6d9cbff1ed92fbdb9db2d66",
   "src/cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
   "src/clown.c": "723929934ea2155a0f979a97d57697ffa491e744a336924ae2c6ea9ae72afd64",
-  "src/collision1.c": "4887056fbed96c867e627a6e17bd80713a58f98220fa8bc66cf526c1842ad42e",
-  "src/collision2.c": "fdf99078eb25f29bb63af5f0b72cae08bed9d947cfc61bcbb2fc725ee0aa3e7b",
+  "src/collision1.c": "13d7f0a9a312ab01ec7bbb13864670b4ec8fe2b04fb27d1846dd064760abffc7",
+  "src/collision2.c": "eaf5d5db49950c825e675b806f84572a55aa4c299a7e85c366760aff4e307022",
   "src/collision2_local.h": "2957f20942bea7ef88f0462f932a220964cbbdc8865563786c7da595a1afef12",
   "src/cymbal.c": "c7d8d44a28892a557a798b9a6c4c2ab7ba8d8de7b2064c88b47ac8fd0315c17c",
   "src/dark.c": "2f894302ae3da291bc3b55de074a501de2728d5803156e658ff708fef2ebdd74",
@@ -19642,7 +19642,7 @@
   "src/pmama.c": "8cd4f6561264671c1783aac1e69f43b6ad2152b20aae65f8b9eb5c86f095d8c6",
   "src/poing.c": "9104941336ec700b48a00c999a553cb3ca15c0524a1a0ce217eee2e8a3d41e22",
   "src/poisson.c": "83f49d44102bf7f78af1dcdfa2a5b8c22492beeaf2fde010973f152b5e515ea4",
-  "src/ray.c": "03884f530c41b84c134d9ac95902562e9c40d814e9badd9c0e80dfc436b9edd2",
+  "src/ray.c": "7ae221e4c8a9cfca514835d1ff5dc03664ea3fde78780861e1ddd91702e2f4fe",
   "src/ray_pc.c": "1fb15adbb715a86d34421dba2bdf663ecdd5397476e3ff3524cf025891fe4c44",
   "src/save.c": "33e318faf911715f088936f6e0a2b6997075c93f339f4852b24dca010a35f066",
   "src/saxo.c": "dff53e5667bb23506b7ee25954a6b97e8592cc56567a8d58c3f651eba83e5237",
@@ -19889,8 +19889,35 @@
   "external/rayman-ps1-decomp/src/moteur_update.c": "d176d11d2f4ec21befa8464f8044040e453de0441df929acc0a5cf629cf51f39",
   "external/rayman-ps1-decomp/src/moteur_init_end.c": "4b95677636c7ca967cd978b0e09a1df31f40731dd59161441d10c6c434f5454f"
  },
- "evidence_artifact_fingerprints": {
-  "evidence/moteur.dos.txt": "a0a9b6fd6e8eb1964406751bdae05b7a73858af46801dbcbe6c29355f6e41ec6",
-  "pilot/evidence/symbols.json": "def2c585194ce907a1c91704d1045e546947aff946a0451461965a1a2f21017e"
+ "pass3_evidence": {
+  "artifact_root": "build/workers/sem_ray",
+  "files": {
+   "evidence/allfix_descriptor_bindings.json": "36a595d64bb5ef030d902aae65bdaf4016eb38ddc98fd3083262c66434166bf4",
+   "evidence/canonical_input_hashes.json": "35a764ffb43b15023249b1fe71020587efd51dfbdead6c2fdf885e3dce82cfce",
+   "evidence/collision1.dos.txt": "78942313e8ffe70be2f85cb03ea5179623b917a198d1937ff14a6b2450b835cc",
+   "evidence/collision1_typed_accesses.json": "39f93678fc21c4a822ba18b9f397bc4067e26136a3f0823b0d5f90ba31e5dd64",
+   "evidence/collision2.dos.txt": "e4e55c619fc9ec0c2c3ca0d31231cf163fe4a1f2845b5998f065b5658b0efacd",
+   "evidence/collision2_typed_accesses.json": "1011aea9a63059dd1ed4ae31c31660bde4b59dd9d2c2d9901c80475f3259d6fa",
+   "evidence/collision_table_domains.json": "b21b9ec45a6d37d19844a7197a8264032d23527ed9996bc257f7b06375d81cd1",
+   "evidence/contracts_probe.json": "da26f468f5f85b77d28a1591b6aed8ea90ee0b7629c474f20f14700c28540b96",
+   "evidence/displacement_candidates.json": "fb83833c9dfbc6f2401d7017f76cc431b48194ce2237b01ded1f1e71a30654f7",
+   "evidence/external_candidates.json": "80ae2120cb2cb6d92c10677086c030eb25725c850416426719ed0b232885e460",
+   "evidence/external_fields.json": "bb428d1db75bec91d363ca797360bfd99ca24aa7a9880be9db209b34fa01f118",
+   "evidence/field_source_candidates.json": "f356fae536e95395de987bd7b8fee5d4b59c4691f85f223374ad5c4968d9f8a3",
+   "evidence/inherited_missing_artifacts.json": "ea7f152c44198e55af79e321df645a19be7b4c3205ff0779803c731f2f1165ad",
+   "evidence/name_provenance_checks.json": "f8694b2c18059fb790d95f75bdb4adddb9cff0d824ccc84290f59e55c882f5c3",
+   "evidence/oracle_table_domains.json": "2c04a0cb810b7ff3eb2cb91465685f3a4d0d8657c88d918c34558c2a04406701",
+   "evidence/ray.dos.txt": "24d45b64009be609eae545c1802fa28cea6e9e332528fb8baa9cdc2c6b778d64",
+   "evidence/ray_state_source_sites.json": "7eeb1ba0c69aa7b87ff20e2ddff6892e0630a6b9144d4d5c9f225031fbee0b98",
+   "evidence/ray_typed_accesses.json": "cda7bd5a6fc923ec3669e6a956aec0faa47ad541e451d9ea428ef4a6c83ca360",
+   "evidence/reference_input_hashes.json": "c216db670c86e72c8c0c37b0caeb4c5b637b9495a41ac67df2eb4aecc1dc68c8",
+   "evidence/secondary_dos.txt": "a565cc066976cbb2c7fcf83009111c1c5f78d44367a3886498a2ad7a5b4f4838",
+   "evidence/shipped_map_domains.json": "396d24351640ddbcd7dccbecf7269c7fe1e4ef4add9615c514989fdcfd44c08c",
+   "evidence/shipped_object_animation_domains.json": "d266a9b43a88ef623893ab3839dc5863bbce7097eab9013ec39cfa0d5a3cecd3",
+   "evidence/shipped_ray_states.json": "3d80fde83c0ee5cff278e28d80c2b979df729740ba001918765b464477c69bc6",
+   "evidence/symbols.json": "fef8cb334671332d33d245fd4e87ccd73612a81add652556fe4e9f81718feb2b",
+   "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f"
+  },
+  "limitation": "Inherited missing/pruned artifacts are listed in evidence/inherited_missing_artifacts.json. Prior hashes are retained, never silently refreshed as new proof."
  }
 }

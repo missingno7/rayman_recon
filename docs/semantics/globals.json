@@ -294,6 +294,260 @@
      "global:zonediffx",
      "global:zonediffy"
     ]
+   },
+   {
+    "kind": "unit",
+    "source": "ray.c",
+    "headers": [
+     "include/rtypes.h",
+     "include/palette.h",
+     "include/obj.h",
+     "include/game.h",
+     "include/map.h"
+    ],
+    "local_headers": [],
+    "preamble": "",
+    "statement_macros": [
+     "MAX_2",
+     "MAX_3",
+     "MIN_3"
+    ],
+    "layout_local_types": [
+     "ray_stack_t"
+    ],
+    "globals": [
+     "global:LEFT_MAP_BORDER",
+     "global:RIGHT_MAP_BORDER",
+     "global:RayEvts",
+     "global:SauveRayEvts",
+     "global:actobj",
+     "global:animation_attente",
+     "global:block_flags",
+     "global:button_released",
+     "global:compteur_attente",
+     "global:dead_time",
+     "global:decalage_en_cours",
+     "global:eau_obj_id",
+     "global:finBosslevel",
+     "global:fin_boss",
+     "global:fin_du_jeu",
+     "global:flags",
+     "global:gerbe",
+     "global:h_scroll_speed",
+     "global:hand_btyp",
+     "global:hand_btypd",
+     "global:hand_btypg",
+     "global:helico_time",
+     "global:horloge",
+     "global:id_obj_grapped",
+     "global:in_air_because_hit",
+     "global:joy_done",
+     "global:jump_time",
+     "global:left_time",
+     "global:level",
+     "global:lidol_source_obj",
+     "global:lidol_to_allocate",
+     "global:map_time",
+     "global:mp",
+     "global:new_level",
+     "global:new_world",
+     "global:no_ray_landing_smoke",
+     "global:num_level",
+     "global:num_world",
+     "global:options_jeu",
+     "global:pierreAcorde_obj_id",
+     "global:poing",
+     "global:poing_obj",
+     "global:pos_stack",
+     "global:ray",
+     "global:rayStack",
+     "global:ray_Suphelico_bis",
+     "global:ray_between_clic",
+     "global:ray_clic",
+     "global:ray_in_fee_zone",
+     "global:ray_inertie",
+     "global:ray_last_ground_btyp",
+     "global:ray_mode",
+     "global:ray_on_poelle",
+     "global:ray_pos_in_stack",
+     "global:ray_se_noie",
+     "global:ray_stack_is_full",
+     "global:ray_wind_force",
+     "global:ray_zdc_h",
+     "global:ray_zdc_w",
+     "global:ray_zdc_x",
+     "global:ray_zdc_y",
+     "global:record",
+     "global:remoteRayXToReach",
+     "global:saveRMjumpX",
+     "global:saveRMjumpY",
+     "global:scroll_y",
+     "global:star_ray_der",
+     "global:star_ray_dev",
+     "global:status_bar",
+     "global:v_scroll_speed",
+     "global:xmapmax",
+     "global:ymap"
+    ],
+    "types": [
+     "type:active_objects_t",
+     "type:anim_t",
+     "type:block_flags_t",
+     "type:eta_t",
+     "type:finbosslevel_t",
+     "type:level_t",
+     "type:map_data_t",
+     "type:map_tile_t",
+     "type:obj_flags_t",
+     "type:obj_t",
+     "type:obj_type_flags_t",
+     "type:options_jeu_t",
+     "type:poing_t",
+     "type:ray_stack_t",
+     "type:rayevts_t",
+     "type:record_t",
+     "type:status_bar_t"
+    ]
+   },
+   {
+    "kind": "unit",
+    "source": "collision1.c",
+    "headers": [
+     "include/rtypes.h",
+     "include/palette.h",
+     "include/obj.h",
+     "include/game.h",
+     "include/map.h"
+    ],
+    "local_headers": [
+     "collision1_local.h"
+    ],
+    "preamble": "",
+    "statement_macros": [],
+    "layout_local_types": [
+     "obj_procs_t"
+    ],
+    "globals": [
+     "global:ObjectsFonctions",
+     "global:RayEvts",
+     "global:ZDCPTR",
+     "global:actobj",
+     "global:bagDy",
+     "global:bagH",
+     "global:bagW",
+     "global:block_flags",
+     "global:boss_mort",
+     "global:button_released",
+     "global:dead_time",
+     "global:decalage_en_cours",
+     "global:fin_boss",
+     "global:flags",
+     "global:helico_time",
+     "global:in_air_because_hit",
+     "global:jump_time",
+     "global:level",
+     "global:link_init",
+     "global:mp",
+     "global:new_level",
+     "global:new_world",
+     "global:num_world",
+     "global:pente",
+     "global:poing",
+     "global:poing_obj",
+     "global:poing_obj_id",
+     "global:ray",
+     "global:ray_mode",
+     "global:ray_speed_inv",
+     "global:ray_zdc_h",
+     "global:ray_zdc_w",
+     "global:ray_zdc_x",
+     "global:ray_zdc_y",
+     "global:scroll_end_y",
+     "global:scroll_start_y",
+     "global:ymap",
+     "global:zdc_tab"
+    ],
+    "types": [
+     "type:active_objects_t",
+     "type:anim_layer_t",
+     "type:anim_t",
+     "type:eta_t",
+     "type:level_t",
+     "type:map_data_t",
+     "type:map_tile_t",
+     "type:obj_flags_t",
+     "type:obj_procs_t",
+     "type:obj_t",
+     "type:obj_type_flags_t",
+     "type:poing_t",
+     "type:rayevts_t",
+     "type:zdc_t"
+    ]
+   },
+   {
+    "kind": "unit",
+    "source": "collision2.c",
+    "headers": [
+     "include/rtypes.h",
+     "include/palette.h",
+     "include/obj.h",
+     "include/game.h",
+     "include/map.h"
+    ],
+    "local_headers": [
+     "collision2_local.h"
+    ],
+    "preamble": "",
+    "statement_macros": [],
+    "globals": [
+     "global:Bloc_lim_H2",
+     "global:GameModeVideo",
+     "global:N_anim",
+     "global:RayEvts",
+     "global:SauveRayEvts",
+     "global:black_fist_obj_id",
+     "global:black_pos_in_stack",
+     "global:block_flags",
+     "global:dead_time",
+     "global:eau_obj_id",
+     "global:horloge",
+     "global:id_obj_grapped",
+     "global:level",
+     "global:link_init",
+     "global:mp",
+     "global:num_level",
+     "global:num_world",
+     "global:pierreAcorde_obj_id",
+     "global:poing",
+     "global:poing_obj",
+     "global:ray",
+     "global:rayStack",
+     "global:ray_mode",
+     "global:ray_on_poelle",
+     "global:ray_pos_in_stack",
+     "global:ray_stack_is_full",
+     "global:scroll_end_x",
+     "global:scroll_end_y",
+     "global:scroll_start_x",
+     "global:scroll_start_y",
+     "global:scroll_x",
+     "global:scroll_y",
+     "global:xmap",
+     "global:ymap",
+     "global:ymapmax"
+    ],
+    "types": [
+     "type:anim_t",
+     "type:eta_t",
+     "type:level_t",
+     "type:map_data_t",
+     "type:map_tile_t",
+     "type:obj_flags_t",
+     "type:obj_t",
+     "type:poing_t",
+     "type:ray_stack_t",
+     "type:rayevts_t"
+    ]
    }
   ]
  },
@@ -371,6 +625,31 @@
       "MOVE_OBJECT",
       "DO_AUTO_SCROLL"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "horloge",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_BAG1_COMMAND",
+      "DO_EAU_QUI_MONTE",
+      "DO_PAC_COMMAND",
+      "DO_CFUMEE_COMMAND",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "horloge",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_UP"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -379,7 +658,9 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -490,6 +771,55 @@
       "Ray_RayEcrase",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "unleashMonsterHost",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS",
+      "DO_OBJ_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ACTIVE_L_EAU",
+      "DO_EAU_QUI_MONTE",
+      "allocateOtherPosts",
+      "doBlackRaymanCommand",
+      "DO_CORDE_COMMAND",
+      "DO_CFUMEE_COMMAND",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "ray_jump",
+      "RAY_SWIP",
+      "RAY_BALANCE",
+      "RAY_FIN_BALANCE",
+      "RepousseRay",
+      "RayEstIlBloque",
+      "RAY_SURF",
+      "RAY_FOLLOW",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -498,7 +828,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -865,6 +1198,34 @@
       "correct_link",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "flags",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "SET_RAY_DIST",
+      "DO_POING_COLLISION",
+      "RAY_HIT",
+      "unleashMonsterHost",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS",
+      "DoRaymanCollisionDefault"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "flags",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "RayEstIlBloque",
+      "RAY_FOLLOW"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -873,7 +1234,9 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1234,6 +1597,30 @@
       "INIT_MOTEUR",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "actobj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS",
+      "DO_OBJ_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "actobj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "RayEstIlBloque"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1242,7 +1629,9 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1327,6 +1716,39 @@
       "INIT_MOTEUR",
       "DO_MOTEUR"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "num_world",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "BOX_IN_COLL_ZONES"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "num_world",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "num_world",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "ray_inertia_speed",
+      "RAY_SWIP",
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1335,7 +1757,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1504,6 +1929,51 @@
       "RAY_DEMIRAY",
       "Ray_RayEcrase"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "block_flags",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "block_flags",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "YaUnBloc",
+      "MarCoince",
+      "move_fruit_in_water"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "block_flags",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "ray_inertia_speed",
+      "RAY_SWIP",
+      "AIR",
+      "MUR",
+      "RAY_RESPOND_TO_UP",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_BALANCE",
+      "STOPPE_RAY_CONTRE_PAROIS",
+      "RAY_IN_THE_AIR",
+      "RAY_HURT",
+      "TEST_FIN_FOLLOW"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1512,7 +1982,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1698,6 +2171,103 @@
       "Ray_RayEcrase",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "possible_sprite",
+      "setToleranceDist",
+      "SET_RAY_DIST_SLOPEY_PLAT",
+      "SET_RAY_DIST_MULTISPR_CANTCHANGE",
+      "SET_RAY_DIST_BAG",
+      "COLL_RAY_PIC",
+      "COLL_RAY_BLK_MORTEL",
+      "RAY_KO",
+      "RAY_HIT",
+      "DO_COLLISIONS",
+      "DoRaymanCollisionDefault",
+      "DO_OBJ_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ray",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision",
+      "DO_ROLL_EYES",
+      "DoRaymanBag1Collision",
+      "DO_MOVE_MARACAS_COMMAND",
+      "DO_EAU_QUI_MONTE",
+      "doBlackRaymanCommand",
+      "doBlKRayRaymanCollision",
+      "DO_POELLE_COMMAND",
+      "DO_CORDE_COMMAND",
+      "DO_PAC_COMMAND",
+      "DO_CFUMEE_COMMAND",
+      "move_fruit_in_water",
+      "DO_RAY_POS_CMD"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "allocateRayLandingSmoke",
+      "recale_ray_on_liane",
+      "calc_bhand_typ",
+      "IS_RAY_ON_LIANE",
+      "rayMayLandOnAnObject",
+      "set_air_speed",
+      "determineRayAirInertia",
+      "ray_jump",
+      "ray_inertia_speed",
+      "RAY_SWIP",
+      "RAY_STOP",
+      "RAY_HELICO",
+      "Make_Ray_Hang",
+      "CAN_RAY_HANG_BLOC",
+      "RAY_TOMBE",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_UP",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_RESPOND_TO_BUTTON3",
+      "RAY_RESPOND_TO_FIRE1",
+      "RAY_BALANCE_ANIM",
+      "SET_RAY_BALANCE",
+      "RAY_GOING_BALANCE",
+      "RAY_BALANCE",
+      "RAY_FIN_BALANCE",
+      "RayTestBlocSH",
+      "remoteControlRay",
+      "STOPPE_RAY_CONTRE_PAROIS",
+      "RAY_IN_THE_AIR",
+      "snifRayIsDead",
+      "rayfallsinwater",
+      "RAY_DEAD",
+      "RAY_HURT",
+      "RepousseRay",
+      "RayEstIlBloque",
+      "stackRay",
+      "RAY_SURF",
+      "DO_SURF_CHANGE_HAIRS",
+      "DO_MORT_DE_RAY",
+      "TEST_FIN_FOLLOW",
+      "RAY_FOLLOW",
+      "RAY_RESPOND_TO_ALL_DIRS",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1706,7 +2276,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1794,6 +2367,17 @@
       "DO_MOTEUR2",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "xmap",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ACTIVE_L_EAU",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1802,7 +2386,8 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "meaning_history": [
     {
@@ -1895,6 +2480,37 @@
       "DO_MOTEUR2",
       "DO_MOTEUR_GELE"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ymap",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "COLL_RAY_BLK_MORTEL"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ymap",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ymap",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RepousseRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1903,7 +2519,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -1988,6 +2607,46 @@
       "RayCoince",
       "INIT_MOTEUR"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "mp",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "COLL_RAY_PIC",
+      "COLL_RAY_BLK_MORTEL",
+      "SET_DETECT_ZONE_FLAG"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "mp",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "test_allowed",
+      "YaUnBloc",
+      "MarCoince"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "mp",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "AIR",
+      "MUR",
+      "CAN_RAY_HANG_BLOC",
+      "RAY_IN_THE_AIR",
+      "RAY_DEAD",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -1996,7 +2655,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2088,6 +2750,58 @@
       "RAY_DEMIRAY",
       "Ray_RayEcrase"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "RayEvts",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "setToleranceDist",
+      "SET_RAY_DIST_SLOPEY_PLAT",
+      "SET_RAY_DIST_MULTISPR_CANTCHANGE",
+      "COLL_RAY_PIC",
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "RayEvts",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision",
+      "DoRaymanBag1Collision",
+      "DO_POELLE_COMMAND"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "RayEvts",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "calc_bhand_typ",
+      "IS_RAY_ON_LIANE",
+      "rayMayLandOnAnObject",
+      "ray_jump",
+      "RAY_HELICO",
+      "Make_Ray_Hang",
+      "CAN_RAY_HANG_BLOC",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_UP",
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_RESPOND_TO_BUTTON3",
+      "RAY_RESPOND_TO_FIRE0",
+      "RAY_IN_THE_AIR",
+      "snifRayIsDead",
+      "DO_MORT_DE_RAY",
+      "RAY_RESPOND_TO_ALL_DIRS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -2096,7 +2810,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2124,16 +2841,17 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa72",
    "binding_kind": "game_data",
-   "meaning": "Sticky ordinary/slippery ground classification, not the literal last tile-type number.",
-   "unit": "classification0/1",
+   "meaning": "Rayman ground/support classification used by airborne inertia and direction transitions.",
+   "unit": "classification code",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "see specific computation/reader/writer evidence; bounds are storage limits",
     "code_contract": "Despite name, stores0/1 rather than tile type; tile25 and unhandled types retain it. No rename until all consumers are reviewed.",
-    "moteur_contract": "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes."
+    "moteur_contract": "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes.",
+    "pass3_contract": "Object landing sets1, slope type254 overrides0. determineRayAirInertia gives class0 a magnitude>256 inertia test and clears class1; other class values leave the selector unchanged. Do not universally interpret this byte as a raw tile-type id."
    },
-   "evidence_level": "PROVEN",
+   "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence": [
     {
@@ -2177,15 +2895,35 @@
      "functions": [
       "INIT_RAY"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_last_ground_btyp",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "determineRayAirInertia",
+      "RAY_RESPOND_TO_DIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
     "Despite name, stores0/1 rather than tile type; tile25 and unhandled types retain it. No rename until all consumers are reviewed.",
-    "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes."
+    "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes.",
+    "Pass3 refinement: Object landing sets1, slope type254 overrides0. determineRayAirInertia gives class0 a magnitude>256 inertia test and clears class1; other class values leave the selector unchanged. Do not universally interpret this byte as a raw tile-type id."
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2202,6 +2940,23 @@
      "port_notes": [
       "Despite name, stores0/1 rather than tile type; tile25 and unhandled types retain it. No rename until all consumers are reviewed."
      ]
+    },
+    {
+     "meaning": "Sticky ordinary/slippery ground classification, not the literal last tile-type number.",
+     "unit": "classification0/1",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "see specific computation/reader/writer evidence; bounds are storage limits",
+      "code_contract": "Despite name, stores0/1 rather than tile type; tile25 and unhandled types retain it. No rename until all consumers are reviewed.",
+      "moteur_contract": "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes."
+     },
+     "evidence_level": "PROVEN",
+     "port_notes": [
+      "Despite name, stores0/1 rather than tile type; tile25 and unhandled types retain it. No rename until all consumers are reviewed.",
+      "INIT_RAY writes1; basic ground helper preserves it for tile25 and updates it for other classes."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
     }
    ]
   },
@@ -2276,6 +3031,40 @@
       "INIT_RAY_ON_MS",
       "DO_MOTEUR2"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_mode",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoRaymanCollisionDefault"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ray_mode",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision",
+      "doBlackRaymanCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_mode",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "STOPPE_RAY_CONTRE_PAROIS",
+      "RAY_IN_THE_AIR",
+      "RAY_DEAD",
+      "RAY_HURT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -2284,7 +3073,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2367,6 +3159,46 @@
       "INIT_RAY",
       "INIT_MOTEUR_BEGIN"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "poing",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "do_boum",
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "poing",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision",
+      "DoFallingObjPoingCollision"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "poing",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump",
+      "RAY_STOP",
+      "RAY_TOMBE",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_FIRE0",
+      "terminateFistWhenRayDies",
+      "stackRay",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -2375,7 +3207,10 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2455,6 +3290,16 @@
      "functions": [
       "INIT_MOTEUR"
      ]
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "finBosslevel",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -2463,7 +3308,8 @@
    ],
    "evidence_units": [
     "basic.c",
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "meaning_history": [
     {
@@ -2661,6 +3507,1094 @@
      ]
     }
    ]
+  },
+  {
+   "id": "global:hand_btyp",
+   "kind": "global",
+   "current_name": "hand_btyp",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa7c",
+   "binding_kind": "game_data",
+   "meaning": "Tile type at the central Rayman hand sample.",
+   "unit": "tile-type id",
+   "value_domain": {
+    "contract": "calc_bhand_typ samples x+offset_bx and byte-narrowed y offset; recale_ray_on_liane may replace it with a side vine type12."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "hand_btyp",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "recale_ray_on_liane",
+      "calc_bhand_typ",
+      "IS_RAY_ON_LIANE",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_UP",
+      "RAY_RESPOND_TO_DIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "calc_bhand_typ samples x+offset_bx and byte-narrowed y offset; recale_ray_on_liane may replace it with a side vine type12."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:hand_btypd",
+   "kind": "global",
+   "current_name": "hand_btypd",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa80",
+   "binding_kind": "game_data",
+   "meaning": "Tile type at the hand sample eight pixels to the right.",
+   "unit": "tile-type id",
+   "value_domain": {
+    "contract": "Central vine12 forces this byte15; otherwise samples anchor x+8. This sample is not always freshly read when centre is a vine."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "hand_btypd",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "recale_ray_on_liane",
+      "calc_bhand_typ",
+      "IS_RAY_ON_LIANE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Central vine12 forces this byte15; otherwise samples anchor x+8. This sample is not always freshly read when centre is a vine."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:hand_btypg",
+   "kind": "global",
+   "current_name": "hand_btypg",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa7f",
+   "binding_kind": "game_data",
+   "meaning": "Tile type at the hand sample eight pixels to the left.",
+   "unit": "tile-type id",
+   "value_domain": {
+    "contract": "Central vine12 forces this byte15; otherwise samples anchor x-8."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "hand_btypg",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "recale_ray_on_liane",
+      "calc_bhand_typ",
+      "IS_RAY_ON_LIANE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Central vine12 forces this byte15; otherwise samples anchor x-8."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_on_poelle",
+   "kind": "global",
+   "current_name": "ray_on_poelle",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa54",
+   "binding_kind": "game_data",
+   "meaning": "Whether Rayman is attached to the pan support with its restricted capability set.",
+   "unit": "boolean",
+   "value_domain": {
+    "contract": "rayMayLandOnAnObject saves RayEvts, clears all capabilities except fist, writes1 and detaches ordinary support. DO_POELLE_COMMAND/death paths restore SauveRayEvts and clear0."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ray_on_poelle",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POELLE_COMMAND"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_on_poelle",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "ray_jump",
+      "RAY_SWIP",
+      "RAY_TOMBE",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_BUTTON3",
+      "rayfallsinwater",
+      "DO_MORT_DE_RAY",
+      "RAY_RESPOND_TO_ALL_DIRS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "rayMayLandOnAnObject saves RayEvts, clears all capabilities except fist, writes1 and detaches ordinary support. DO_POELLE_COMMAND/death paths restore SauveRayEvts and clear0."
+   ],
+   "evidence_units": [
+    "collision2.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:saveRMjumpX",
+   "kind": "global",
+   "current_name": "saveRMjumpX",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "oracle_address": "2:3f89c",
+   "binding_kind": "game_data",
+   "meaning": "Low16 bits of Rayman world x captured on a successful jump.",
+   "unit": "pixel coordinate modulo65536",
+   "value_domain": {
+    "contract": "ray_jump writes current ray.x only after permission/release checks; DOS declaration is unsigned16. Consumers outside ray are retained in the symbol evidence."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "saveRMjumpX",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "ray_jump writes current ray.x only after permission/release checks; DOS declaration is unsigned16. Consumers outside ray are retained in the symbol evidence."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:saveRMjumpY",
+   "kind": "global",
+   "current_name": "saveRMjumpY",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "oracle_address": "2:3f89a",
+   "binding_kind": "game_data",
+   "meaning": "Low16 bits of Rayman world y captured on a successful jump.",
+   "unit": "pixel coordinate modulo65536",
+   "value_domain": {
+    "contract": "ray_jump writes current ray.y; declaration and binding are retained, without importing the Android ordering."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "saveRMjumpY",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "ray_jump writes current ray.y; declaration and binding are retained, without importing the Android ordering."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:options_jeu",
+   "kind": "global",
+   "current_name": "options_jeu",
+   "proposed_name": null,
+   "c_type": "options_jeu_t",
+   "declarator": "options_jeu_t $",
+   "oracle_address": "2:32f78",
+   "binding_kind": "game_data",
+   "meaning": "Input callback table and packed game-option storage.",
+   "unit": "record",
+   "value_domain": {
+    "contract": "Rayman calls four s16(void) callbacks at offsets0/4/8/12. Their runtime targets are assigned by input/menu setup. Remaining option fields retain separately documented meanings or UNKNOWN."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "options_jeu",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HELICO",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_IN_THE_AIR",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Rayman calls four s16(void) callbacks at offsets0/4/8/12. Their runtime targets are assigned by input/menu setup. Remaining option fields retain separately documented meanings or UNKNOWN."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_between_clic",
+   "kind": "global",
+   "current_name": "ray_between_clic",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f848",
+   "binding_kind": "game_data",
+   "meaning": "Super-helicopter retrigger window countdown.",
+   "unit": "airborne update calls",
+   "value_domain": {
+    "contract": "RAY_HELICO writes20; RAY_IN_THE_AIR decrements every call unless -1. A later retrigger tests >=0. -1 is the disabled/expired sentinel;0 is still in the accepted window before the next decrement."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_between_clic",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HELICO",
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "RAY_HELICO writes20; RAY_IN_THE_AIR decrements every call unless -1. A later retrigger tests >=0. -1 is the disabled/expired sentinel;0 is still in the accepted window before the next decrement."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_clic",
+   "kind": "global",
+   "current_name": "ray_clic",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f840",
+   "binding_kind": "game_data",
+   "meaning": "Signed16 slot cleared when super-helicopter activation starts.",
+   "unit": "unknown",
+   "value_domain": {
+    "contract": "Whole-source scan and whole-image fixups find the clear, with no computational reader or nonzero writer established. Android symbol size1 differs from this DOS16-bit slot; do not transfer its type or infer a click counter."
+   },
+   "evidence_level": "UNKNOWN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_clic",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HELICO"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Whole-source scan and whole-image fixups find the clear, with no computational reader or nonzero writer established. Android symbol size1 differs from this DOS16-bit slot; do not transfer its type or infer a click counter."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_inertie",
+   "kind": "global",
+   "current_name": "ray_inertie",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa5e",
+   "binding_kind": "game_data",
+   "meaning": "Byte count of super-helicopter retriggers used for the paired impulse rule.",
+   "unit": "retrigger count",
+   "value_domain": {
+    "contract": "Activation clears0; retriggers increment, compare>=2, then reset0 on impulse or1 on a rejected window. Android has size2 for the same spelling; DOS byte accesses decide."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_inertie",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HELICO"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Activation clears0; retriggers increment, compare>=2, then reset0 on impulse or1 on a rejected window. Android has size2 for the same spelling; DOS byte accesses decide."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:joy_done",
+   "kind": "global",
+   "current_name": "joy_done",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:2994",
+   "binding_kind": "game_data",
+   "meaning": "Per-Rayman-update count/latch of handled directional inputs.",
+   "unit": "byte count",
+   "value_domain": {
+    "contract": "DO_RAYMAN/DO_RAY_ON_MS clear it. Horizontal handlers increment it; down/up are conditionally gated on zero in normal mode. Both horizontal inputs can increment it twice; it is not a strict boolean."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "joy_done",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_RESPOND_TO_ALL_DIRS",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "DO_RAYMAN/DO_RAY_ON_MS clear it. Horizontal handlers increment it; down/up are conditionally gated on zero in normal mode. Both horizontal inputs can increment it twice; it is not a strict boolean."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:animation_attente",
+   "kind": "global",
+   "current_name": "animation_attente",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f76c",
+   "binding_kind": "game_data",
+   "meaning": "Index of the next Rayman idle animation in a five-step cycle.",
+   "unit": "cycle index",
+   "value_domain": {
+    "contract": "RAY_RESPOND_TO_NOTHING selects59,64,62,63,65 for indices0..4 and wraps to0. Handled direction/airborne paths clear it."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "animation_attente",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_RESPOND_TO_ALL_DIRS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "RAY_RESPOND_TO_NOTHING selects59,64,62,63,65 for indices0..4 and wraps to0. Handled direction/airborne paths clear it."
+   ],
+   "evidence_units": [
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:id_obj_grapped",
+   "kind": "global",
+   "current_name": "id_obj_grapped",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f842",
+   "binding_kind": "game_data",
+   "meaning": "Level-object id of the grapple used by Rayman swinging.",
+   "unit": "object id",
+   "value_domain": {
+    "contract": "DoPTGRAPPINPoingCollision writes the hit object id; RAY_BALANCE/FIN_BALANCE index level.objects directly. Do not infer a universal null sentinel for all reads."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "id_obj_grapped",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "id_obj_grapped",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_BALANCE",
+      "RAY_FIN_BALANCE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "DoPTGRAPPINPoingCollision writes the hit object id; RAY_BALANCE/FIN_BALANCE index level.objects directly. Do not infer a universal null sentinel for all reads."
+   ],
+   "evidence_units": [
+    "collision2.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_zdc_h",
+   "kind": "global",
+   "current_name": "ray_zdc_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f862",
+   "binding_kind": "game_data",
+   "meaning": "Cached Rayman collision-box world y coordinate, despite the h suffix.",
+   "unit": "pixels",
+   "value_domain": {
+    "contract": "DO_RAYMAN and DO_RAY_ON_MS pass its address as GET_RAY_ZDC out_y. Collision queries use it as rectangle y; poing.c uses it as fist vertical origin. Keep the existing binding2:3f862."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_zdc_h",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "SET_DETECT_ZONE_FLAG",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_zdc_h",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RayEstIlBloque",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "DO_RAYMAN and DO_RAY_ON_MS pass its address as GET_RAY_ZDC out_y. Collision queries use it as rectangle y; poing.c uses it as fist vertical origin. Keep the existing binding2:3f862."
+   ],
+   "evidence_units": [
+    "collision1.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_zdc_w",
+   "kind": "global",
+   "current_name": "ray_zdc_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f864",
+   "binding_kind": "game_data",
+   "meaning": "Cached Rayman collision-box width span.",
+   "unit": "pixels",
+   "value_domain": {
+    "contract": "GET_RAY_ZDC out_w at2:3f864; inclusive inter_box uses x+w as the boundary, not x+w-1."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_zdc_w",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "SET_DETECT_ZONE_FLAG",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_zdc_w",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RayEstIlBloque",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "GET_RAY_ZDC out_w at2:3f864; inclusive inter_box uses x+w as the boundary, not x+w-1."
+   ],
+   "evidence_units": [
+    "collision1.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:ray_zdc_x",
+   "kind": "global",
+   "current_name": "ray_zdc_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f860",
+   "binding_kind": "game_data",
+   "meaning": "Cached Rayman collision-box world x coordinate.",
+   "unit": "pixels",
+   "value_domain": {
+    "contract": "GET_RAY_ZDC out_x at2:3f860; compared against object collision rectangles after movement."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_zdc_x",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "SET_DETECT_ZONE_FLAG",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_zdc_x",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RayEstIlBloque",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "GET_RAY_ZDC out_x at2:3f860; compared against object collision rectangles after movement."
+   ],
+   "evidence_units": [
+    "collision1.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:rayStack",
+   "kind": "global",
+   "current_name": "rayStack",
+   "proposed_name": null,
+   "c_type": "ray_stack_t [101]",
+   "declarator": "ray_stack_t $[101]",
+   "oracle_address": "2:3f026",
+   "binding_kind": "game_data",
+   "meaning": "101-entry ring of Rayman and optional fist display snapshots for Black Rayman replay.",
+   "unit": "18-byte records",
+   "value_domain": {
+    "contract": "Writer cursor wraps0..100 and full flag latches1; consumer uses a separate cursor. Coordinates are signed16, scale unsigned8 even though live ray.scale is16 bits. No fixed milliseconds delay is claimed."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "rayStack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doBlackRaymanCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "rayStack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "stackRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Writer cursor wraps0..100 and full flag latches1; consumer uses a separate cursor. Coordinates are signed16, scale unsigned8 even though live ray.scale is16 bits. No fixed milliseconds delay is claimed."
+   ],
+   "evidence_units": [
+    "collision2.c",
+    "ray.c"
+   ]
+  },
+  {
+   "id": "global:zdc_tab",
+   "kind": "global",
+   "current_name": "zdc_tab",
+   "proposed_name": null,
+   "c_type": "zdc_t [200]",
+   "declarator": "zdc_t $[200]",
+   "oracle_address": "2:2dae",
+   "binding_kind": "game_data",
+   "meaning": "Table of packed8-byte object collision-zone records.",
+   "unit": "zdc_t records",
+   "value_domain": {
+    "contract": "High5 bits of obj.zdc select count and low11 bits start. Zone flags2 mean sprite-local geometry,4 mean fist-only; unused flag bits retain no inferred meaning. Initial200 records are read from the oracle."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "zdc_tab",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "get_zdc"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "High5 bits of obj.zdc select count and low11 bits start. Zone flags2 mean sprite-local geometry,4 mean fist-only; unused flag bits retain no inferred meaning. Initial200 records are read from the oracle."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:ZDCPTR",
+   "kind": "global",
+   "current_name": "ZDCPTR",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "oracle_address": "2:3f81c",
+   "binding_kind": "game_data",
+   "meaning": "Unsigned16 slot returned by get_ZDCPTR.",
+   "unit": "unknown",
+   "value_domain": {
+    "contract": "No live writer or interpretive consumer was established by the full-image direct-reference and source-token scans. The name alone does not establish pointer, allocator or zone-count semantics."
+   },
+   "evidence_level": "UNKNOWN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ZDCPTR",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "get_ZDCPTR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "No live writer or interpretive consumer was established by the full-image direct-reference and source-token scans. The name alone does not establish pointer, allocator or zone-count semantics."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:bagDy",
+   "kind": "global",
+   "current_name": "bagDy",
+   "proposed_name": null,
+   "c_type": "s16 [20]",
+   "declarator": "s16 $[20]",
+   "oracle_address": "2:4b9c",
+   "binding_kind": "game_data",
+   "meaning": "Per-animation-frame vertical offset for the special bag collision rectangle.",
+   "unit": "pixels / sentinel",
+   "value_domain": {
+    "contract": "BOX_HIT_SPECIAL_ZDC indexes by anim_frame; -1 disables a rectangle for that frame. Source references and oracle initial20 signed16 values are archived."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "bagDy",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "BOX_HIT_SPECIAL_ZDC"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "BOX_HIT_SPECIAL_ZDC indexes by anim_frame; -1 disables a rectangle for that frame. Source references and oracle initial20 signed16 values are archived."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:bagH",
+   "kind": "global",
+   "current_name": "bagH",
+   "proposed_name": null,
+   "c_type": "s16 [20]",
+   "declarator": "s16 $[20]",
+   "oracle_address": "2:4bec",
+   "binding_kind": "game_data",
+   "meaning": "Per-frame height of the special bag collision rectangle.",
+   "unit": "pixels",
+   "value_domain": {
+    "contract": "BOX_HIT_SPECIAL_ZDC uses y+offset_by+bagDy[frame]-bagH[frame], height=bagH[frame]. The20-entry declaration is retained; no capacity analysis is added."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "bagH",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "BOX_HIT_SPECIAL_ZDC"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "BOX_HIT_SPECIAL_ZDC uses y+offset_by+bagDy[frame]-bagH[frame], height=bagH[frame]. The20-entry declaration is retained; no capacity analysis is added."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:bagW",
+   "kind": "global",
+   "current_name": "bagW",
+   "proposed_name": null,
+   "c_type": "s16 [20]",
+   "declarator": "s16 $[20]",
+   "oracle_address": "2:4bc4",
+   "binding_kind": "game_data",
+   "meaning": "Per-frame width of the special bag collision rectangle.",
+   "unit": "pixels",
+   "value_domain": {
+    "contract": "BOX_HIT_SPECIAL_ZDC centres x on object x+offset_bx using width>>1."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "bagW",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "BOX_HIT_SPECIAL_ZDC"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "BOX_HIT_SPECIAL_ZDC centres x on object x+offset_bx using width>>1."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:pente",
+   "kind": "global",
+   "current_name": "pente",
+   "proposed_name": null,
+   "c_type": "s16 [16]",
+   "declarator": "s16 $[16]",
+   "oracle_address": "2:4a7c",
+   "binding_kind": "game_data",
+   "meaning": "Angle lookup used to project slope-platform width from absolute signed slope.",
+   "unit": "1/512-turn angle",
+   "value_domain": {
+    "contract": "SET_RAY_DIST_SLOPEY_PLAT calls cosinus(pente[abs((s8)hit_points)]) and shifts product9. Retain exact lookup entries and signed index contract; do not replace with floating atan."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "pente",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "SET_RAY_DIST_SLOPEY_PLAT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "SET_RAY_DIST_SLOPEY_PLAT calls cosinus(pente[abs((s8)hit_points)]) and shifts product9. Retain exact lookup entries and signed index contract; do not replace with floating atan."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:poing_obj_id",
+   "kind": "global",
+   "current_name": "poing_obj_id",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f88a",
+   "binding_kind": "game_data",
+   "meaning": "Level-object id of the live fist object.",
+   "unit": "object id",
+   "value_domain": {
+    "contract": "DO_POING_COLLISION uses it for a type-selected impact sound owner; object initialization establishes the associated poing_obj pointer. Existing -1 initialization is not a blanket safe call domain."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "poing_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "DO_POING_COLLISION uses it for a type-selected impact sound owner; object initialization establishes the associated poing_obj pointer. Existing -1 initialization is not a blanket safe call domain."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:ray_speed_inv",
+   "kind": "global",
+   "current_name": "ray_speed_inv",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f83c",
+   "binding_kind": "game_data",
+   "meaning": "Signed16 slot cleared when Rayman enters hit knockback.",
+   "unit": "unknown",
+   "value_domain": {
+    "contract": "Whole-source/image scans establish the RAY_HIT zero store but no computational reader/nonzero writer. Keep its spelling and width without inventing an inverse-speed meaning."
+   },
+   "evidence_level": "UNKNOWN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_speed_inv",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Whole-source/image scans establish the RAY_HIT zero store but no computational reader/nonzero writer. Keep its spelling and width without inventing an inverse-speed meaning."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "global:N_anim",
+   "kind": "global",
+   "current_name": "N_anim",
+   "proposed_name": null,
+   "c_type": "u8 [256]",
+   "declarator": "u8 $[256]",
+   "oracle_address": "2:4a9c",
+   "binding_kind": "game_data",
+   "meaning": "Integer slope-ratio lookup for eye aiming direction.",
+   "unit": "direction offsets",
+   "value_domain": {
+    "contract": "DO_ROLL_EYES computes45*abs(dx)/abs(dy), uses indices<=255 and adds quadrant offsets0/9/18/27. Preserve exact table and integer/narrowing order; no continuous-angle equivalence is asserted."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "N_anim",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_ROLL_EYES"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "DO_ROLL_EYES computes45*abs(dx)/abs(dy), uses indices<=255 and adds quadrant offsets0/9/18/27. Preserve exact table and integer/narrowing order; no continuous-angle equivalence is asserted."
+   ],
+   "evidence_units": [
+    "collision2.c"
+   ]
+  },
+  {
+   "id": "global:black_fist_obj_id",
+   "kind": "global",
+   "current_name": "black_fist_obj_id",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "oracle_address": "2:3f8be",
+   "binding_kind": "game_data",
+   "meaning": "Level-object id of Black Rayman replay fist.",
+   "unit": "object id",
+   "value_domain": {
+    "contract": "doBlackRaymanCommand copies fist snapshot fields only when validity byte is set and clears alive on absent/terminated playback."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "black_fist_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doBlackRaymanCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "doBlackRaymanCommand copies fist snapshot fields only when validity byte is set and clears alive on absent/terminated playback."
+   ],
+   "evidence_units": [
+    "collision2.c"
+   ]
+  },
+  {
+   "id": "global:black_pos_in_stack",
+   "kind": "global",
+   "current_name": "black_pos_in_stack",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "oracle_address": "2:3fa8a",
+   "binding_kind": "game_data",
+   "meaning": "Next history entry read by Black Rayman replay.",
+   "unit": "ring index",
+   "value_domain": {
+    "contract": "Increments and wraps after100 only while full history is replayed. Equality with ray_pos_in_stack-1 triggers alive-flag termination; subtraction is promoted, so write cursor0 compares with-1 rather than100."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "Android original symbol (DOS layout independently retained)",
+   "evidence": [
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "black_pos_in_stack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doBlackRaymanCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    }
+   ],
+   "port_notes": [
+    "Increments and wraps after100 only while full history is replayed. Equality with ray_pos_in_stack-1 triggers alive-flag termination; subtraction is promoted, so write cursor0 compares with-1 rather than100."
+   ],
+   "evidence_units": [
+    "collision2.c"
+   ]
   }
  ],
  "source_fingerprints": {
@@ -2707,8 +4641,8 @@
   "src/cheat.c": "069aece168b09dbe4bc333c6e76158622ffcf364e6d9cbff1ed92fbdb9db2d66",
   "src/cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
   "src/clown.c": "723929934ea2155a0f979a97d57697ffa491e744a336924ae2c6ea9ae72afd64",
-  "src/collision1.c": "4887056fbed96c867e627a6e17bd80713a58f98220fa8bc66cf526c1842ad42e",
-  "src/collision2.c": "fdf99078eb25f29bb63af5f0b72cae08bed9d947cfc61bcbb2fc725ee0aa3e7b",
+  "src/collision1.c": "13d7f0a9a312ab01ec7bbb13864670b4ec8fe2b04fb27d1846dd064760abffc7",
+  "src/collision2.c": "eaf5d5db49950c825e675b806f84572a55aa4c299a7e85c366760aff4e307022",
   "src/collision2_local.h": "2957f20942bea7ef88f0462f932a220964cbbdc8865563786c7da595a1afef12",
   "src/cymbal.c": "c7d8d44a28892a557a798b9a6c4c2ab7ba8d8de7b2064c88b47ac8fd0315c17c",
   "src/dark.c": "2f894302ae3da291bc3b55de074a501de2728d5803156e658ff708fef2ebdd74",
@@ -2768,7 +4702,7 @@
   "src/pmama.c": "8cd4f6561264671c1783aac1e69f43b6ad2152b20aae65f8b9eb5c86f095d8c6",
   "src/poing.c": "9104941336ec700b48a00c999a553cb3ca15c0524a1a0ce217eee2e8a3d41e22",
   "src/poisson.c": "83f49d44102bf7f78af1dcdfa2a5b8c22492beeaf2fde010973f152b5e515ea4",
-  "src/ray.c": "03884f530c41b84c134d9ac95902562e9c40d814e9badd9c0e80dfc436b9edd2",
+  "src/ray.c": "7ae221e4c8a9cfca514835d1ff5dc03664ea3fde78780861e1ddd91702e2f4fe",
   "src/ray_pc.c": "1fb15adbb715a86d34421dba2bdf663ecdd5397476e3ff3524cf025891fe4c44",
   "src/save.c": "33e318faf911715f088936f6e0a2b6997075c93f339f4852b24dca010a35f066",
   "src/saxo.c": "dff53e5667bb23506b7ee25954a6b97e8592cc56567a8d58c3f651eba83e5237",
@@ -3015,8 +4949,35 @@
   "external/rayman-ps1-decomp/src/moteur_update.c": "d176d11d2f4ec21befa8464f8044040e453de0441df929acc0a5cf629cf51f39",
   "external/rayman-ps1-decomp/src/moteur_init_end.c": "4b95677636c7ca967cd978b0e09a1df31f40731dd59161441d10c6c434f5454f"
  },
- "evidence_artifact_fingerprints": {
-  "evidence/symbols.json": "7cc305fd8c671a9d7a795268f867d1f66caa0b332c2d4632c88cc7cc8d2d1704",
-  "pilot/evidence/symbols.json": "def2c585194ce907a1c91704d1045e546947aff946a0451461965a1a2f21017e"
+ "pass3_evidence": {
+  "artifact_root": "build/workers/sem_ray",
+  "files": {
+   "evidence/allfix_descriptor_bindings.json": "36a595d64bb5ef030d902aae65bdaf4016eb38ddc98fd3083262c66434166bf4",
+   "evidence/canonical_input_hashes.json": "35a764ffb43b15023249b1fe71020587efd51dfbdead6c2fdf885e3dce82cfce",
+   "evidence/collision1.dos.txt": "78942313e8ffe70be2f85cb03ea5179623b917a198d1937ff14a6b2450b835cc",
+   "evidence/collision1_typed_accesses.json": "39f93678fc21c4a822ba18b9f397bc4067e26136a3f0823b0d5f90ba31e5dd64",
+   "evidence/collision2.dos.txt": "e4e55c619fc9ec0c2c3ca0d31231cf163fe4a1f2845b5998f065b5658b0efacd",
+   "evidence/collision2_typed_accesses.json": "1011aea9a63059dd1ed4ae31c31660bde4b59dd9d2c2d9901c80475f3259d6fa",
+   "evidence/collision_table_domains.json": "b21b9ec45a6d37d19844a7197a8264032d23527ed9996bc257f7b06375d81cd1",
+   "evidence/contracts_probe.json": "da26f468f5f85b77d28a1591b6aed8ea90ee0b7629c474f20f14700c28540b96",
+   "evidence/displacement_candidates.json": "fb83833c9dfbc6f2401d7017f76cc431b48194ce2237b01ded1f1e71a30654f7",
+   "evidence/external_candidates.json": "80ae2120cb2cb6d92c10677086c030eb25725c850416426719ed0b232885e460",
+   "evidence/external_fields.json": "bb428d1db75bec91d363ca797360bfd99ca24aa7a9880be9db209b34fa01f118",
+   "evidence/field_source_candidates.json": "f356fae536e95395de987bd7b8fee5d4b59c4691f85f223374ad5c4968d9f8a3",
+   "evidence/inherited_missing_artifacts.json": "ea7f152c44198e55af79e321df645a19be7b4c3205ff0779803c731f2f1165ad",
+   "evidence/name_provenance_checks.json": "f8694b2c18059fb790d95f75bdb4adddb9cff0d824ccc84290f59e55c882f5c3",
+   "evidence/oracle_table_domains.json": "2c04a0cb810b7ff3eb2cb91465685f3a4d0d8657c88d918c34558c2a04406701",
+   "evidence/ray.dos.txt": "24d45b64009be609eae545c1802fa28cea6e9e332528fb8baa9cdc2c6b778d64",
+   "evidence/ray_state_source_sites.json": "7eeb1ba0c69aa7b87ff20e2ddff6892e0630a6b9144d4d5c9f225031fbee0b98",
+   "evidence/ray_typed_accesses.json": "cda7bd5a6fc923ec3669e6a956aec0faa47ad541e451d9ea428ef4a6c83ca360",
+   "evidence/reference_input_hashes.json": "c216db670c86e72c8c0c37b0caeb4c5b637b9495a41ac67df2eb4aecc1dc68c8",
+   "evidence/secondary_dos.txt": "a565cc066976cbb2c7fcf83009111c1c5f78d44367a3886498a2ad7a5b4f4838",
+   "evidence/shipped_map_domains.json": "396d24351640ddbcd7dccbecf7269c7fe1e4ef4add9615c514989fdcfd44c08c",
+   "evidence/shipped_object_animation_domains.json": "d266a9b43a88ef623893ab3839dc5863bbce7097eab9013ec39cfa0d5a3cecd3",
+   "evidence/shipped_ray_states.json": "3d80fde83c0ee5cff278e28d80c2b979df729740ba001918765b464477c69bc6",
+   "evidence/symbols.json": "fef8cb334671332d33d245fd4e87ccd73612a81add652556fe4e9f81718feb2b",
+   "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f"
+  },
+  "limitation": "Inherited missing/pruned artifacts are listed in evidence/inherited_missing_artifacts.json. Prior hashes are retained, never silently refreshed as new proof."
  }
 }

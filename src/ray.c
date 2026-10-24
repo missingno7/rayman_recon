@@ -313,43 +313,51 @@ void allocateRayLandingSmoke(void)
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5c004
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * x -> vine_tile_left
+ */
 void recale_ray_on_liane(void)
 {
-    s16 x;
+    s16 vine_tile_left;
     s32 unk_1;
 
     if (hand_btyp == BTYP_LIANE)
-        x = (ray.offset_bx + ray.x) & 0xFFF0; /* why the &? */
+        vine_tile_left = (ray.offset_bx + ray.x) & 0xFFF0; /* why the &? */
     else
     {
         if (hand_btypg == BTYP_LIANE)
         {
-            x = (ray.offset_bx + ray.x - 15) & 0xFFF0;
+            vine_tile_left = (ray.offset_bx + ray.x - 15) & 0xFFF0;
             hand_btyp = hand_btypg;
         }
         else if (hand_btypd == BTYP_LIANE)
         {
-            x = (ray.offset_bx + ray.x + 15) & 0xFFF0;
+            vine_tile_left = (ray.offset_bx + ray.x + 15) & 0xFFF0;
             hand_btyp = hand_btypd;
         }
     }
     unk_1 = 8;
-    ray.x = 8 + x - ray.offset_bx;
+    ray.x = 8 + vine_tile_left - ray.offset_bx;
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5c088
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_1 -> hand_y_offset
+ */
 void calc_bhand_typ(void) {
     s16 x;
-    u8 unk_1;
+    u8 hand_y_offset;
     s16 y;
 
     /* 5D2C0 80181AC0 -O2 -msoft-float */
     //NOTE: the PS1 version takes an obj_t as an argument (instead of using ray)
     x = ray.offset_bx + ray.x;
-    unk_1 = ray.offset_hy; unk_1 += 22; unk_1 += ray.speed_y;
+    hand_y_offset = ray.offset_hy; hand_y_offset += 22; hand_y_offset += ray.speed_y;
     if (RayEvts.tiny) {
-        unk_1 = 80 - ((80 - unk_1) >> 1);
+        hand_y_offset = 80 - ((80 - hand_y_offset) >> 1);
     }
-    y = unk_1 + ray.y;
+    y = hand_y_offset + ray.y;
     hand_btyp = BTYP(x >> 4, y >> 4);
     if (hand_btyp != BTYP_LIANE) {
         hand_btypg = BTYP((x - 8) >> 4, y >> 4);
@@ -388,43 +396,48 @@ void IS_RAY_ON_LIANE(void) {
     }
 }
 
-void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:5c224
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_y -> landing_tolerance, unk_1 -> minimum_tolerance, param_1 -> no_support_acquired, obj_id ->
+ * excluded_support_id
+ */
+void rayMayLandOnAnObject(u8* no_support_acquired, s16 excluded_support_id) {
     /* COMPILER_STEERED: split narrowing/addition preserves the same low 16 bits; output declaration order steers stack homes. */
     s16 var_a1_1;
     u16 cur_type;
-    s16 unk_y;
+    s16 landing_tolerance;
     obj_t* cur_obj;
     s16 i;
-    s16 unk_1;
+    s16 minimum_tolerance;
 
     /* 5D518 80181D18 -O2 -msoft-float */
 
     
 
     if (RayEvts.tiny)
-        unk_1 = 8;
+        minimum_tolerance = 8;
     else
-        unk_1 = 4;
+        minimum_tolerance = 4;
     cur_obj = &level.objects[actobj.objects[0]];
     ray.follow_id = -1;
     i = 0;
     while (i < actobj.num_active_objects) {
-        if (cur_obj->flags.follow_enabled && cur_obj->id != obj_id) {
+        if (cur_obj->flags.follow_enabled && cur_obj->id != excluded_support_id) {
             if (flags[cur_obj->type].raw & flags1_0x20_move_y)
-                unk_y = instantSpeed(cur_obj->speed_y);
+                landing_tolerance = instantSpeed(cur_obj->speed_y);
             else
-                unk_y = cur_obj->speed_y;
+                landing_tolerance = cur_obj->speed_y;
 
-            unk_y = abs32_inline((s16) (unk_y + (cur_obj->follow_y - ray.speed_y)));
-            unk_y += 2;
-            unk_y = max32(unk_y, unk_1);
+            landing_tolerance = abs32_inline((s16) (landing_tolerance + (cur_obj->follow_y - ray.speed_y)));
+            landing_tolerance += 2;
+            landing_tolerance = max32(landing_tolerance, minimum_tolerance);
 
             cur_type = cur_obj->type;
             if (cur_type == TYPE_PI || cur_type == TYPE_HERSE_HAUT || cur_type == TYPE_HERSE_BAS_NEXT) {
-                unk_y += 8;
+                landing_tolerance += 8;
             }
 
-            if (abs32_inline(cur_obj->ray_dist) < unk_y && !(block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)) {
+            if (abs32_inline(cur_obj->ray_dist) < landing_tolerance && !(block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)) {
     s16 foll_w, foll_h, foll_y, foll_x;
 
                 ray.follow_id = actobj.objects[i];
@@ -603,7 +616,7 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
                     ray.speed_y -= ashr16((s16)((s8)cur_obj->hit_points * distance), 4);
                     ray_last_ground_btyp = 0;
                 }
-                *param_1 = 0;
+                *no_support_acquired = 0;
                 ray.link = -1;
                 helico_time = -1;
                 break;
@@ -614,36 +627,41 @@ void rayMayLandOnAnObject(u8* param_1, s16 obj_id) {
         cur_obj = &level.objects[actobj.objects[i]];
     }
 
-    if (obj_id != -1 && ray.follow_id == -1)
-        ray.follow_id = obj_id;
+    if (excluded_support_id != -1 && ray.follow_id == -1)
+        ray.follow_id = excluded_support_id;
     else if (ray.follow_id != -1)
         level.objects[ray.follow_id].ray_dist = 0;
 }
 
-void set_air_speed(u8 main_etat, u8 sub_etat, s16 param_3, u8 param_4) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:5ca70
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * param_3 -> horizontal_momentum, param_4 -> minimum_speed_limit, unk_1 -> speed_magnitude, unk_2 ->
+ * negative_speed_magnitude
+ */
+void set_air_speed(u8 main_etat, u8 sub_etat, s16 horizontal_momentum, u8 minimum_speed_limit) {
     /* COMPILER_STEERED: the direct u8 eta index is coupled with the original fixed-EAX absolute helper (DOS 1:5ca93); left selects speed_x_left. */
     /* 5DE3C 8018263C -O2 -msoft-float */
     eta_t *eta;
     s8 *left;
-    s8 unk_1;
-    s8 unk_2;
+    s8 speed_magnitude;
+    s8 negative_speed_magnitude;
 
     eta = &ray.eta[main_etat][sub_etat];
     
-    unk_1 = abs32_inline(param_3) >> 4;
+    speed_magnitude = abs32_inline(horizontal_momentum) >> 4;
     left = &eta->speed_x_left;
-    unk_1 = min32(unk_1, 112);
-    unk_2 = -unk_1; /* TODO: ??? */
+    speed_magnitude = min32(speed_magnitude, 112);
+    negative_speed_magnitude = -speed_magnitude; /* TODO: ??? */
 
     if (ray.speed_x > 0) {
         (*left) = -16;
-        eta->speed_x_right = max32(param_4, unk_1);
+        eta->speed_x_right = max32(minimum_speed_limit, speed_magnitude);
     } else if (ray.speed_x < 0) {
-        (*left) = min32(-param_4, unk_2);
+        (*left) = min32(-minimum_speed_limit, negative_speed_magnitude);
         eta->speed_x_right = 16;
     } else {
-        (*left) = -param_4;
-        eta->speed_x_right = param_4;
+        (*left) = -minimum_speed_limit;
+        eta->speed_x_right = minimum_speed_limit;
     }
 }
 
@@ -685,12 +703,16 @@ void determineRayAirInertia(void) {
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5cd40
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_2 -> rolling_threshold
+ */
 void ray_jump(void) {
     /* SYNTHETIC: explicit unsigned tile-dispatch tree, DOS 1:5ce09..5cebf.
      * The four slope groups and default are unchanged; follow_y still holds a signed-short field. */
     s16 speed_y;
     s32 follow_y;
-    s32 unk_2;
+    s32 rolling_threshold;
     u8 is_rolling_speed;
 
     /* 5E15C 8018295C -O2 -msoft-float */
@@ -751,7 +773,7 @@ void ray_jump(void) {
         }
         ray.speed_y = speed_y;
         determineRayAirInertia();
-        unk_2 = (RayEvts.tiny) ? 256 : 512;
+        rolling_threshold = (RayEvts.tiny) ? 256 : 512;
 
         if (ray_on_poelle) {
             Reset_air_speed(0);
@@ -760,7 +782,7 @@ void ray_jump(void) {
             else
                 set_main_and_sub_etat(&ray, 2, 27);
         } else {
-            is_rolling_speed = unk_2 < Abs(decalage_en_cours);
+            is_rolling_speed = rolling_threshold < Abs(decalage_en_cours);
             Reset_air_speed(is_rolling_speed);
             if (is_rolling_speed)
                 set_main_and_sub_etat(&ray, 2, 17);
@@ -783,27 +805,33 @@ void ray_jump(void) {
     }
 }
 
-void ray_inertia_speed(u8 a1, s16 a2, s16 prev_speed_x, s16 a4) {
-    /* COMPILER_STEERED: unk_1 is the normalized decay step, always 1..31. */
+/* Local/parameter names are editorial (INVENTED); DOS 1:5d020
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * a1 -> inertia_coefficient, a2 -> surface_acceleration, a4 -> wind_force, unk_1 -> decay_step, unk_2 ->
+ * weighted_prior_speed, unk_3 -> surface_step, unk_4 -> momentum_step, unk_5 -> world_acceleration_bias,
+ * unk_6 -> momentum_limit
+ */
+void ray_inertia_speed(u8 inertia_coefficient, s16 surface_acceleration, s16 prev_speed_x, s16 wind_force) {
+    /* COMPILER_STEERED: decay_step is the normalized decay step, always 1..31. */
     /* 5E4BC 80182CBC -O2 -msoft-float */
-    s32 unk_1;
-    s16 unk_2;
-    s16 unk_3;
-    s16 unk_4;
-    s16 unk_5 = 0;
-    s16 unk_6;
+    s32 decay_step;
+    s16 weighted_prior_speed;
+    s16 surface_step;
+    s16 momentum_step;
+    s16 world_acceleration_bias = 0;
+    s16 momentum_limit;
 
-    if (a1 == 0) {
+    if (inertia_coefficient == 0) {
         decalage_en_cours = prev_speed_x;
-        unk_1 = 0;
+        decay_step = 0;
     }
     else
     {
-        unk_2 = ashr32(prev_speed_x * a1, 8);
-        unk_1 = ashr16(a1, 3);
-        unk_1 = unk_1 != 0 ? unk_1 : 1;
-        unk_3 = ashl16(a2, 2);
-        unk_4 = ashl16(a4, 3) + (unk_2 + unk_3);
+        weighted_prior_speed = ashr32(prev_speed_x * inertia_coefficient, 8);
+        decay_step = ashr16(inertia_coefficient, 3);
+        decay_step = decay_step != 0 ? decay_step : 1;
+        surface_step = ashl16(surface_acceleration, 2);
+        momentum_step = ashl16(wind_force, 3) + (weighted_prior_speed + surface_step);
 
         switch ((s16) (num_world - 1))
         {
@@ -811,50 +839,50 @@ void ray_inertia_speed(u8 a1, s16 a2, s16 prev_speed_x, s16 a4) {
             case 1:
             case 3:
             case 5:
-                unk_5 = 6;
+                world_acceleration_bias = 6;
                 break;
             case 2:
-                unk_5 = 3;
+                world_acceleration_bias = 3;
                 break;
         }
 
         /* ??? duplication ??? */
-        if (unk_4 > 0)
+        if (momentum_step > 0)
         {
-            unk_6 =
-                    (unk_2 > 0 ? prev_speed_x : 0) +
-                    (unk_3 > 0 ? (ashl16(a2 + unk_5, 8) / unk_1) : 0) +
-                    ashl16(a4, 8);
+            momentum_limit =
+                    (weighted_prior_speed > 0 ? prev_speed_x : 0) +
+                    (surface_step > 0 ? (ashl16(surface_acceleration + world_acceleration_bias, 8) / decay_step) : 0) +
+                    ashl16(wind_force, 8);
 
-            MAX_3(unk_6, decalage_en_cours);
+            MAX_3(momentum_limit, decalage_en_cours);
         }
-        else if (unk_4 < 0)
+        else if (momentum_step < 0)
         {
-            unk_6 =
-                    (unk_2 < 0 ? prev_speed_x : 0) +
-                    (unk_3 < 0 ? (ashl16(a2 - unk_5, 8)) / unk_1 : 0) +
-                    ashl16(a4, 8);
+            momentum_limit =
+                    (weighted_prior_speed < 0 ? prev_speed_x : 0) +
+                    (surface_step < 0 ? (ashl16(surface_acceleration - world_acceleration_bias, 8)) / decay_step : 0) +
+                    ashl16(wind_force, 8);
 
-            MIN_3(unk_6, decalage_en_cours);
+            MIN_3(momentum_limit, decalage_en_cours);
         }
         else
-            unk_6 = decalage_en_cours;
+            momentum_limit = decalage_en_cours;
 
-        if (unk_4 != 0)
+        if (momentum_step != 0)
         {
-            if (unk_6 > 0)
+            if (momentum_limit > 0)
             {
-                if (decalage_en_cours < unk_6)
-                    decalage_en_cours += unk_4;
-                if (decalage_en_cours > unk_6)
-                    decalage_en_cours = unk_6;
+                if (decalage_en_cours < momentum_limit)
+                    decalage_en_cours += momentum_step;
+                if (decalage_en_cours > momentum_limit)
+                    decalage_en_cours = momentum_limit;
             }
             else
             {
-                if (decalage_en_cours > unk_6)
-                    decalage_en_cours += unk_4;
-                if (decalage_en_cours < unk_6)
-                    decalage_en_cours = unk_6;
+                if (decalage_en_cours > momentum_limit)
+                    decalage_en_cours += momentum_step;
+                if (decalage_en_cours < momentum_limit)
+                    decalage_en_cours = momentum_limit;
             }
         }
     }
@@ -876,28 +904,33 @@ void ray_inertia_speed(u8 a1, s16 a2, s16 prev_speed_x, s16 a4) {
         CALC_MOV_ON_BLOC(&ray);
 
     if (ray.main_etat == 2 && ray.sub_etat == 15)
-        unk_1 += 2;
+        decay_step += 2;
 
-    if (decalage_en_cours >= unk_1)
-        decalage_en_cours -= unk_1;
-    else if (decalage_en_cours <= -unk_1)
-        decalage_en_cours += unk_1;
+    if (decalage_en_cours >= decay_step)
+        decalage_en_cours -= decay_step;
+    else if (decalage_en_cours <= -decay_step)
+        decalage_en_cours += decay_step;
     else
         decalage_en_cours = 0;
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5d2e8
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * temp_a2 -> prior_speed_16, temp_v0 -> selected_speed_16, var_a1 -> small_speed_coefficient, var_s4 ->
+ * ground_coefficient, var_s0 -> inertia_coefficient, sp10 -> no_support_acquired
+ */
 void RAY_SWIP(void) {
     /* COMPILER_STEERED: x_accel holds small constants or a negated signed-byte half-shift; every value fits s16. */
-    s16 temp_a2;
-    s16 temp_v0;
+    s16 prior_speed_16;
+    s16 selected_speed_16;
     s32 var_v0_2;
     s32 var_v0_3;
-    s32 var_a1;
+    s32 small_speed_coefficient;
     s32 var_v1;
     u8 temp_v1_2;
     s32 x_accel;
-    u8 var_s4;
-    u8 var_s0;
+    u8 ground_coefficient;
+    u8 inertia_coefficient;
 
     /* 5E9AC 801831AC -O2 -msoft-float */
     // NOTE: PS1 decomp is non-matching
@@ -906,9 +939,9 @@ void RAY_SWIP(void) {
 
     
 
-    /*var_s0 = saved_reg_s0;*/
+    /*inertia_coefficient = saved_reg_s0;*/
     x_accel = 0;
-    if (num_world == 3) var_s4 = 32; else var_s4 = 16;
+    if (num_world == 3) ground_coefficient = 32; else ground_coefficient = 16;
     if (ray.follow_id != -1) {
     obj_t* follow_obj;
     s16 ray_dist;
@@ -919,10 +952,10 @@ void RAY_SWIP(void) {
         }
         ray_dist = follow_obj->ray_dist;
         if ((Abs(ray_dist) > 8) || (follow_obj->ray_dist < 0) || (ray.follow_id == -1)) {
-    u8 sp10;
+    u8 no_support_acquired;
 
             
-            rayMayLandOnAnObject(&sp10, ray.follow_id);
+            rayMayLandOnAnObject(&no_support_acquired, ray.follow_id);
             if (ray.follow_id != -1) {
                 if (Abs(follow_obj->ray_dist) > 8) {
     u8 old_ray_main_etat;
@@ -968,35 +1001,35 @@ void RAY_SWIP(void) {
     if (ray.main_etat == 1 && (ray.sub_etat == 9 || ray.sub_etat == 48 || ray.sub_etat == 11)) {
         ray.speed_x = -ray.speed_x;
     }
-    temp_v0 = ashl16((s16) ray.speed_x, 4);
-    temp_a2 = temp_v0;
+    selected_speed_16 = ashl16((s16) ray.speed_x, 4);
+    prior_speed_16 = selected_speed_16;
     if (ray.speed_x != 0) {
-        var_a1 = -(Abs(temp_v0) < 257);
+        small_speed_coefficient = -(Abs(selected_speed_16) < 257);
         if (ray_wind_force > 0) {
             ray.speed_x = ray.speed_x + 10;
         } else if (ray_wind_force < 0) {
             ray.speed_x = ray.speed_x - 10;
         }
     } else {
-        var_a1 = 0;
+        small_speed_coefficient = 0;
     }
     /* could try gotos-only for this entire section... */
-    var_s0 = 0;
+    inertia_coefficient = 0;
     if (ray.main_etat == 2) {
         if ((ray.sub_etat == 0x0F) || (ray.nb_cmd != 0)) {
             if (ray.flags.flip_x) {
-                var_s0 = 12;
+                inertia_coefficient = 12;
                 if (decalage_en_cours <= 0) {
-                    var_s0 = 8;
+                    inertia_coefficient = 8;
                 }
             } else {
-                var_s0 = 8;
+                inertia_coefficient = 8;
                 if (decalage_en_cours < 0) {
-                    var_s0 = 12;
+                    inertia_coefficient = 12;
                 }
             }
         } else {
-            var_s0 = var_a1;
+            inertia_coefficient = small_speed_coefficient;
         }
         x_accel = 0;
         /*default:
@@ -1010,10 +1043,10 @@ void RAY_SWIP(void) {
             // NOTE: slopey plat code is not present in the PS1 version
             follow_obj = &level.objects[ray.follow_id];
             if (follow_obj->type == TYPE_254_SLOPEY_PLAT) {
-                var_s0 = 255 / (Abs((s8)follow_obj->hit_points) + 1);
+                inertia_coefficient = 255 / (Abs((s8)follow_obj->hit_points) + 1);
                 x_accel = -ashr16((s8)follow_obj->hit_points, 1);
             } else {
-                var_s0 = 0;
+                inertia_coefficient = 0;
                 x_accel = 0;
             }
 
@@ -1035,19 +1068,19 @@ void RAY_SWIP(void) {
                      ) {
                         if ((ray.speed_x != 0 || decalage_en_cours != 0 || ray_wind_force != 0))
                         {
-                            var_s0 = var_s4;
+                            inertia_coefficient = ground_coefficient;
                             x_accel = 0;
                         }
                         else
                         {
 
-                            var_s0 = var_a1;
+                            inertia_coefficient = small_speed_coefficient;
                             x_accel = 0;
                         }
                     }
                     else
                     {
-                        var_s0 = var_a1;
+                        inertia_coefficient = small_speed_coefficient;
                         x_accel = 0;
                     }
                     break;
@@ -1057,36 +1090,36 @@ void RAY_SWIP(void) {
                     {
                         case 20:
                         case 21:
-                            var_s0 = var_s4;
+                            inertia_coefficient = ground_coefficient;
                             x_accel = -4;
                             break;
                         case 22:
                         case 23:
-                            var_s0 = var_s4;
+                            inertia_coefficient = ground_coefficient;
                             x_accel = 4;
                             break;
                         case 18:
-                            var_s0 = var_s4;
+                            inertia_coefficient = ground_coefficient;
                             x_accel = -6;
                             break;
                         case 19:
-                            var_s0 = var_s4;
+                            inertia_coefficient = ground_coefficient;
                             x_accel = 6;
                             break;
                         default:
-                            var_s0 = var_a1;
+                            inertia_coefficient = small_speed_coefficient;
                             x_accel = 0;
                             break;
                     }
                     break;
                 case 20:
                 case 21:
-                    var_s0 = var_s4;
+                    inertia_coefficient = ground_coefficient;
                     x_accel = -4;
                     break;
                 case 22:
                 case 23:
-                    var_s0 = var_s4;
+                    inertia_coefficient = ground_coefficient;
                     x_accel = 4;
                     break;
                 case 2:
@@ -1097,15 +1130,15 @@ void RAY_SWIP(void) {
                 case 7:
                 case 12:
                 case 14:
-                    var_s0 = var_a1;
+                    inertia_coefficient = small_speed_coefficient;
                     x_accel = 0;
                     break;
                 case 18:
-                    var_s0 = var_s4;
+                    inertia_coefficient = ground_coefficient;
                     x_accel = -6;
                     break;
                 case 19:
-                    var_s0 = var_s4;
+                    inertia_coefficient = ground_coefficient;
                     x_accel = 6;
                     break;
             }
@@ -1113,9 +1146,9 @@ void RAY_SWIP(void) {
     }
     if (ray_on_poelle == 1)
     {
-        var_s0 = var_s0 >> 1;
+        inertia_coefficient = inertia_coefficient >> 1;
     }
-    ray_inertia_speed(var_s0, x_accel, temp_a2, ray_wind_force);
+    ray_inertia_speed(inertia_coefficient, x_accel, prior_speed_16, ray_wind_force);
 }
 
 void RAY_STOP(void)
@@ -1233,12 +1266,16 @@ void RAY_HELICO(void) {
     }
 }
 
-void Make_Ray_Hang(s16 a1, s16 a2) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:5db1c
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * a1 -> ledge_x, a2 -> ledge_y, unk_1 -> vertical_offset, unk_2 -> ledge_inset, unk_3 -> facing_inset
+ */
+void Make_Ray_Hang(s16 ledge_x, s16 ledge_y) {
     /* COMPILER_STEERED: the promoted x-coordinate sum is reordered; its bounded operands fit s32. */
     s32 unk_4;
-    s16 unk_1;
-    u8 unk_2;
-    s16 unk_3;
+    s16 vertical_offset;
+    u8 ledge_inset;
+    s16 facing_inset;
 
     /* 5F52C 80183D2C -O2 -msoft-float */
     
@@ -1247,19 +1284,19 @@ void Make_Ray_Hang(s16 a1, s16 a2) {
         ray.iframes_timer = 90;
     }
     set_main_and_sub_etat(&ray, 5, 0);
-    unk_1 = get_proj_dist2(ray.scale, 32);
+    vertical_offset = get_proj_dist2(ray.scale, 32);
 
-    unk_2 = (RayEvts.tiny) ? 3 : 7;
-    unk_3 = (ray.flags.flip_x) ? 16 - unk_2 : unk_2;
+    ledge_inset = (RayEvts.tiny) ? 3 : 7;
+    facing_inset = (ray.flags.flip_x) ? 16 - ledge_inset : ledge_inset;
 
     if (RayEvts.tiny) {
-        unk_1 += 37;
+        vertical_offset += 37;
     }
-    ray.y = (a2 >> 4 << 4) - unk_1;
+    ray.y = (ledge_y >> 4 << 4) - vertical_offset;
     ray.follow_id = -1;
     decalage_en_cours = 0;
     ray.speed_y = 0;
-    ray.x = (a1 >> 4 << 4) - ray.offset_bx - 1 + unk_3;
+    ray.x = (ledge_x >> 4 << 4) - ray.offset_bx - 1 + facing_inset;
     ray.speed_x = 0;
     ray.link = 0;
     ray.gravity_value_1 = 0;
@@ -1268,10 +1305,24 @@ void Make_Ray_Hang(s16 a1, s16 a2) {
 
 }
 
-s16 AIR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return !block_flags[btyp].bits.solid; }
+/* Local/parameter names are editorial (INVENTED); DOS 1:5dc24
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * a1 -> tile_index
+ */
+s16 AIR(s32 tile_index) { u8 btyp = mp.map[tile_index].tile_type; return !block_flags[btyp].bits.solid; }
 
-s16 MUR(s32 a1) { u8 btyp = mp.map[a1].tile_type; return block_flags[btyp].bits.solid; }
+/* Local/parameter names are editorial (INVENTED); DOS 1:5dc4c
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * a1 -> tile_index
+ */
+s16 MUR(s32 tile_index) { u8 btyp = mp.map[tile_index].tile_type; return block_flags[btyp].bits.solid; }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5dc78
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_1 -> hand_tile_index, unk_2 -> above_wall_index, unk_3 -> below_hand_index, unk_4 ->
+ * two_below_hand_index, unk_5 -> lowest_clearance_index, unk_6 -> wall_tile_index, unk_7 ->
+ * two_below_wall_index, unk_8 -> below_wall_index
+ */
 void CAN_RAY_HANG_BLOC(void) {
     /* COMPILER_STEERED, STRICT: ray_y_2 is a signed-short value >> 4 (-2048..2047); widen it and reorder the three s32 declarations together. */
     /* 5F6FC 80183EFC -O2 -msoft-float */
@@ -1284,8 +1335,8 @@ void CAN_RAY_HANG_BLOC(void) {
         if (inrange(ray_x_2, 1, mp.width - 2)) {
     s16 ray_y_1;
     s16 dir_x;
-    s32 unk_2;
-    s32 unk_1;
+    s32 above_wall_index;
+    s32 hand_tile_index;
     s32 ray_y_2;
 
             ray_y_1 = ray.y + ray.offset_hy + 32;
@@ -1296,35 +1347,35 @@ void CAN_RAY_HANG_BLOC(void) {
 
             dir_x = (ray.flags.flip_x) ? 1 : -1;
             ray_y_2 = ray_y_1 >> 4;
-            unk_1 = ray_x_2 + ray_y_2 * mp.width;
-            unk_2 = unk_1 - mp.width + dir_x;
-            if (unk_2 >= 0) {
-    s32 unk_3;
-    s32 unk_4;
-    s32 unk_5;
-    s32 unk_6;
-    s32 unk_7;
-    s32 unk_8;
+            hand_tile_index = ray_x_2 + ray_y_2 * mp.width;
+            above_wall_index = hand_tile_index - mp.width + dir_x;
+            if (above_wall_index >= 0) {
+    s32 below_hand_index;
+    s32 two_below_hand_index;
+    s32 lowest_clearance_index;
+    s32 wall_tile_index;
+    s32 two_below_wall_index;
+    s32 below_wall_index;
 
-                unk_3 = unk_1 + mp.width;
-                unk_4 = unk_3 + mp.width;
-                unk_5 = unk_4 + mp.width;
-                unk_6 = unk_1 + dir_x;
-                unk_7 = unk_4 + dir_x;
-                unk_8 = unk_3 + dir_x;
+                below_hand_index = hand_tile_index + mp.width;
+                two_below_hand_index = below_hand_index + mp.width;
+                lowest_clearance_index = two_below_hand_index + mp.width;
+                wall_tile_index = hand_tile_index + dir_x;
+                two_below_wall_index = two_below_hand_index + dir_x;
+                below_wall_index = below_hand_index + dir_x;
                 if (ray.scale != 0) {
-                    unk_5 = unk_4;
+                    lowest_clearance_index = two_below_hand_index;
                 }
 
-                if ((MUR(unk_6) || MUR(unk_8) || MUR(unk_7)) && ray.main_etat == 2 && jump_time > 8) {
-                    if (AIR(unk_1) && AIR(unk_4) && AIR(unk_3) && AIR(unk_2) && AIR(unk_5) && MUR(unk_6)) {
+                if ((MUR(wall_tile_index) || MUR(below_wall_index) || MUR(two_below_wall_index)) && ray.main_etat == 2 && jump_time > 8) {
+                    if (AIR(hand_tile_index) && AIR(two_below_hand_index) && AIR(below_hand_index) && AIR(above_wall_index) && AIR(lowest_clearance_index) && MUR(wall_tile_index)) {
                         Make_Ray_Hang(ray_x_1, ray_y_1);
                     } else {
                         if ((ray.scale == 0) && (ray_x_2 >= 2 || !(ray.flags.flip_x)) &&
                                 ((ray_x_2 <= mp.width - 3) || ray.flags.flip_x)
                         ) {
-                            if (AIR(unk_1 - dir_x) && AIR(unk_4 - dir_x) && AIR(unk_3 - dir_x) &&
-                                AIR(unk_2 - dir_x) && AIR(unk_5 - dir_x) && MUR(unk_6 - dir_x)
+                            if (AIR(hand_tile_index - dir_x) && AIR(two_below_hand_index - dir_x) && AIR(below_hand_index - dir_x) &&
+                                AIR(above_wall_index - dir_x) && AIR(lowest_clearance_index - dir_x) && MUR(wall_tile_index - dir_x)
                             ) {
                                 Make_Ray_Hang(ray_x_1 - dir_x * 16, ray_y_1);
                             }
@@ -1509,6 +1560,10 @@ void RAY_RESPOND_TO_UP(void) {
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5e548
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * v5 -> stop_crawling
+ */
 void RAY_RESPOND_TO_DIR(s16 flip_x) {
     /* COMPILER_STEERED: new_main_etat/new_sub_etat hold only the listed small state constants. */
     /* 602E8 80184AE8 -O2 -msoft-float */
@@ -1523,16 +1578,16 @@ void RAY_RESPOND_TO_DIR(s16 flip_x) {
             // NOTE: this section is substantially different in the PS1 and PC versions.
             ++joy_done;
             if (ray.sub_etat == 8 || ray.sub_etat == 10) {
-                s32 v5 = !options_jeu.test_fire1() || ray_on_poelle || !downjoy();
-                if (v5) {
+                s32 stop_crawling = !options_jeu.test_fire1() || ray_on_poelle || !downjoy();
+                if (stop_crawling) {
                     new_main_etat = 0;
                     new_sub_etat = 47;
                     goto update_moving_state;
                 }
             }
             if (ray.sub_etat == 9 || ray.sub_etat == 11) {
-                s32 v5 = !downjoy() || !options_jeu.test_fire1() || ray_on_poelle;
-                if (v5) {
+                s32 stop_crawling = !downjoy() || !options_jeu.test_fire1() || ray_on_poelle;
+                if (stop_crawling) {
                     new_main_etat = 0;
                     new_sub_etat = 48;
                     goto update_moving_state;
@@ -1896,12 +1951,16 @@ void SET_RAY_BALANCE(void) {
     button_released = 1;
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5f328
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_3 -> radius_from_x, unk_4 -> radius_from_y
+ */
 void RAY_GOING_BALANCE(obj_t* obj) {
     /* 619C0 801861C0 -O2 -msoft-float */
     s16 cosine_angle;
     s16 sine_angle;
-    s32 unk_3;
-    s32 unk_4;
+    s32 radius_from_x;
+    s32 radius_from_y;
     s16 angle;
     s16 follow_y;
     s16 diff_x = (ray.x + ray.offset_bx) - obj->x - obj->offset_bx;
@@ -1933,9 +1992,9 @@ void RAY_GOING_BALANCE(obj_t* obj) {
 
             abs_sinus_cosinus(angle + 128, &sine_angle, &cosine_angle);
             if (sine_angle > 2 && cosine_angle > 2) {
-                unk_3 = ashl32(diff_x, 9) / cosine_angle;
-                unk_4 = ashl32(diff_y, 9) / sine_angle;
-                follow_y = (unk_3 + unk_4) >> 1;
+                radius_from_x = ashl32(diff_x, 9) / cosine_angle;
+                radius_from_y = ashl32(diff_y, 9) / sine_angle;
+                follow_y = (radius_from_x + radius_from_y) >> 1;
             } else if (sine_angle <= 2) {
                 follow_y = diff_x;
             } else {
@@ -1965,16 +2024,21 @@ void RAY_GOING_BALANCE(obj_t* obj) {
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5f500
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_1 -> minimum_swing_angle, unk_2 -> maximum_swing_angle, unk_spd_x -> anchor_delta_x, unk_spd_y ->
+ * anchor_delta_y, v4 -> angle_step
+ */
 void RAY_BALANCE(void) {
     /* COMPILER_STEERED: 128/384 are nonescaping constant bounds; earlier initialization and widening the lower bound preserve the comparisons. */
     s16 cosine_grp_angle;
     s16 sine_grp_angle;
-    s32 unk_1;
-    s16 unk_2;
+    s32 minimum_swing_angle;
+    s16 maximum_swing_angle;
     s32 unk_3;
     s16 unk_4;
-    s16 unk_spd_x;
-    s16 unk_spd_y;
+    s16 anchor_delta_x;
+    s16 anchor_delta_y;
     s16 grp_angle;
 
     /* 61C48 80186448 -O2 -msoft-float */
@@ -1985,14 +2049,14 @@ void RAY_BALANCE(void) {
     eta_t **ray_eta = ray.eta;
     obj_t *obj_grp = &level.objects[id_obj_grapped];
     grp_angle = obj_grp->follow_x;
-    unk_1 = 128;
-    unk_2 = 384;
+    minimum_swing_angle = 128;
+    maximum_swing_angle = 384;
 
     if (ray.sub_etat == 0) {
         RAY_GOING_BALANCE(obj_grp);
     } else if (ray.sub_etat == 1) {
         if (obj_grp->timer == 0) {
-    s16 v4;
+    s16 angle_step;
 
             if (obj_grp->follow_y > 100) {
                 obj_grp->follow_y -= 2;
@@ -2005,27 +2069,27 @@ void RAY_BALANCE(void) {
             /* not in bottom half of circle? */
             
             
-            if (grp_angle >= unk_2) {
+            if (grp_angle >= maximum_swing_angle) {
                 if (obj_grp->link > 0)
                     obj_grp->timer = 5;
                 obj_grp->link = -1;
-            } else if (grp_angle <= unk_1) {
+            } else if (grp_angle <= minimum_swing_angle) {
                 if (obj_grp->link < 0)
                     obj_grp->timer = 5;
                 obj_grp->link = 1;
             }
 
-            v4 = (abs_cosinus(grp_angle) >> 7) + 1;
+            angle_step = (abs_cosinus(grp_angle) >> 7) + 1;
             if (obj_grp->link < 0) {
-                v4 = -v4;
+                angle_step = -angle_step;
             }
-            obj_grp->follow_x += v4;
+            obj_grp->follow_x += angle_step;
 
             /* unk_spd_*??? */
-            unk_spd_x = obj_grp->x + obj_grp->offset_bx + ((obj_grp->follow_y * cosine_grp_angle) >> 9) - ray.offset_bx - ray.x;
-            unk_spd_y = obj_grp->y + obj_grp->offset_by - ((obj_grp->follow_y * sine_grp_angle) >> 9) - ray.offset_by - ray.y;
-            ray.speed_x = unk_spd_x;
-            ray.speed_y = unk_spd_y;
+            anchor_delta_x = obj_grp->x + obj_grp->offset_bx + ((obj_grp->follow_y * cosine_grp_angle) >> 9) - ray.offset_bx - ray.x;
+            anchor_delta_y = obj_grp->y + obj_grp->offset_by - ((obj_grp->follow_y * sine_grp_angle) >> 9) - ray.offset_by - ray.y;
+            ray.speed_x = anchor_delta_x;
+            ray.speed_y = anchor_delta_y;
         }
         else
         {
@@ -2075,43 +2139,48 @@ void RAY_FIN_BALANCE(void) {
     ray.x -= ray.speed_x;
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5f870
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * var_a1 -> adjusted_anchor_x, temp_v1 -> anchor_x_in_tile, var_a0 -> forward_tile_step, temp_v1_2 ->
+ * forward_sample_x
+ */
 void RayTestBlocSH(void)
 {
-    /* COMPILER_STEERED: widened x intermediates retain their low 16 bits at every unchanged MURDUR argument or temp_v1_2 assignment. */
+    /* COMPILER_STEERED: widened x intermediates retain their low 16 bits at every unchanged MURDUR argument or forward_sample_x assignment. */
     s32 x_1;
     s16 y_1;
-    s16 temp_v1_2;
-    s32 var_a1;
+    s16 forward_sample_x;
+    s32 adjusted_anchor_x;
     s32 var_v0;
-    s32 temp_v1;
-    s32 var_a0;
+    s32 anchor_x_in_tile;
+    s32 forward_tile_step;
     u32 var_v0_2;
 
     x_1 = ray.x + ray.offset_bx;
-    var_a1 = x_1;
+    adjusted_anchor_x = x_1;
     y_1 = ray.y + ray.offset_hy;
-    temp_v1 = x_1 & 15;
+    anchor_x_in_tile = x_1 & 15;
     if (
         decalage_en_cours > 0 ||
         (decalage_en_cours == 0 && (ray.flags.flip_x))
     )
     {
-        var_a0 = 16;
-        if ((u8) temp_v1 > 13)
-            var_a1 = x_1 + 16;
+        forward_tile_step = 16;
+        if ((u8) anchor_x_in_tile > 13)
+            adjusted_anchor_x = x_1 + 16;
     }
     else
     {
-        var_a0 = -16;
-        if ((u8) temp_v1 < 4)
-            var_a1 -= 16;
+        forward_tile_step = -16;
+        if ((u8) anchor_x_in_tile < 4)
+            adjusted_anchor_x -= 16;
     }
-    temp_v1_2 = var_a1 + var_a0;
+    forward_sample_x = adjusted_anchor_x + forward_tile_step;
     if (
         decalage_en_cours != 0 &&
-        (MURDUR(temp_v1_2, y_1 + 16) ||
-        MURDUR(temp_v1_2, y_1 + 32) ||
-        MURDUR(temp_v1_2, y_1 + 48))
+        (MURDUR(forward_sample_x, y_1 + 16) ||
+        MURDUR(forward_sample_x, y_1 + 32) ||
+        MURDUR(forward_sample_x, y_1 + 48))
     )
     {
         ray.speed_x = 0;
@@ -2154,10 +2223,14 @@ void STOPPE_RAY_CONTRE_PAROIS(u8 block) {
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:5fa44
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * anim_speed -> gravity_mode, new_timer -> landing_invulnerability
+ */
 void RAY_IN_THE_AIR(void) {
     /* COMPILER_STEERED: guard the eta pointer, use the existing absolute-value helper, and reverse the equivalent final X comparison (w3_ray/FINDINGS.md). */
     u8 may_land_obj;
-    s16 anim_speed;
+    s16 gravity_mode;
     eta_t **eta = ray.eta;
     u8 block;
 
@@ -2180,8 +2253,8 @@ void RAY_IN_THE_AIR(void) {
     }
     ++jump_time;
 
-    anim_speed = ray.eta[ray.main_etat][ray.sub_etat].anim_speed_bits.high;
-    if (anim_speed != 11 && anim_speed != 10) {
+    gravity_mode = ray.eta[ray.main_etat][ray.sub_etat].anim_speed_bits.high;
+    if (gravity_mode != 11 && gravity_mode != 10) {
         ++ray.gravity_value_1;
         if (ray.gravity_value_1 >= 3) {
             ray.gravity_value_1 = 0;
@@ -2221,7 +2294,7 @@ void RAY_IN_THE_AIR(void) {
     }
     STOPPE_RAY_CONTRE_PAROIS(block);
     {
-    if (ray.speed_y < -3 && ray.sub_etat == 15 && anim_speed == 11) {
+    if (ray.speed_y < -3 && ray.sub_etat == 15 && gravity_mode == 11) {
         eta_t *ray_eta = &eta[ray.main_etat][ray.sub_etat];
         ray_eta->anim_speed_bits.high = 1;
         ray.gravity_value_1 = 0;
@@ -2288,10 +2361,10 @@ void RAY_IN_THE_AIR(void) {
                     button_released = 1;
                 }
             } else if (ray.sub_etat == 8) {
-    s16 new_timer;
+    s16 landing_invulnerability;
 
-                new_timer = min32(ray.iframes_timer, 90);
-                ray.iframes_timer = new_timer;
+                landing_invulnerability = min32(ray.iframes_timer, 90);
+                ray.iframes_timer = landing_invulnerability;
             }
             if (ray.sub_etat == 17 || ray.sub_etat == 18 || ray.sub_etat == 19) {
                 /* DOS 1:5fee2..5ff17: shift before reading horizontal speed.
@@ -2487,10 +2560,14 @@ void RepousseRay(void)
     }
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:60598
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_x -> leading_box_x, unk_h -> vertical_sample_step, unk_y -> sample_y
+ */
 s16 RayEstIlBloque(void) {
     /* COMPILER_STEERED: res contains only 0 or 1; the public return type is unchanged. */
-    s16 unk_x;
-    s32 unk_h;
+    s16 leading_box_x;
+    s32 vertical_sample_step;
     s16 i;
     s16 ani_x;
     s16 ani_y;
@@ -2502,7 +2579,7 @@ s16 RayEstIlBloque(void) {
     s16 spr_h;
     s16 ani_xw;
     s16 ani_yh;
-    s16 unk_y;
+    s16 sample_y;
     s16 res;
 
     /* 636B4 80187EB4 -O2 -msoft-float */
@@ -2517,8 +2594,8 @@ s16 RayEstIlBloque(void) {
 
     if (ray.speed_x != 0)
     {
-        unk_x = ray_zdc_x + (ray.speed_x > 0 ? ray_zdc_w : 0);
-        unk_h = ray_zdc_y >> 2;
+        leading_box_x = ray_zdc_x + (ray.speed_x > 0 ? ray_zdc_w : 0);
+        vertical_sample_step = ray_zdc_y >> 2;
 
         i = 0;
         cur_obj = &level.objects[actobj.objects[i]];
@@ -2545,19 +2622,19 @@ s16 RayEstIlBloque(void) {
                 }
                 ani_xw = ani_x + ani_w;
                 if (
-                        (ray.speed_x <= 0 || !inrange(unk_x, ani_x - ray.speed_x, ani_x + ray.speed_x)) &&
-                        !inrange(unk_x, ani_xw + ray.speed_x, ani_xw - ray.speed_x)
+                        (ray.speed_x <= 0 || !inrange(leading_box_x, ani_x - ray.speed_x, ani_x + ray.speed_x)) &&
+                        !inrange(leading_box_x, ani_xw + ray.speed_x, ani_xw - ray.speed_x)
                         )
                     goto block_30;
 
                 ani_yh = ani_y + ani_h;
-                unk_y = ray_zdc_h;
+                sample_y = ray_zdc_h;
                 if (
-                        !inrange(unk_y, ani_y, ani_yh) &&
-                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
-                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
-                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh)) &&
-                        (unk_y += unk_h, !inrange(unk_y, ani_y, ani_yh))
+                        !inrange(sample_y, ani_y, ani_yh) &&
+                        (sample_y += vertical_sample_step, !inrange(sample_y, ani_y, ani_yh)) &&
+                        (sample_y += vertical_sample_step, !inrange(sample_y, ani_y, ani_yh)) &&
+                        (sample_y += vertical_sample_step, !inrange(sample_y, ani_y, ani_yh)) &&
+                        (sample_y += vertical_sample_step, !inrange(sample_y, ani_y, ani_yh))
                         )
                     goto block_30;
 
@@ -2705,22 +2782,26 @@ void DO_MORT_DE_RAY(void) {
     stackRay();
 }
 
+/* Local/parameter names are editorial (INVENTED); DOS 1:60c20
+ * and docs/semantics/ray.json record their dataflow evidence.
+ * unk_1 -> vertical_probe_mode
+ */
 void TEST_FIN_FOLLOW(void) {
     /* 318D8 801560D8 -O2 -msoft-float */
-    u8 unk_1;
+    u8 vertical_probe_mode;
     s16 btyp;
 
     if (block_flags[calc_typ_travd(&ray, 0)].raw & 1) {
         ray.speed_x = 0;
     }
 
-    if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) unk_1 = 0; else unk_1 = 2;
+    if (ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) vertical_probe_mode = 0; else vertical_probe_mode = 2;
     if (ray.speed_y > 0) {
         ray.y -= ray.speed_y;
         btyp = (u8) BTYP((ray.x + ray.offset_bx) >> 4, (ray.y + ray.offset_by) >> 4);
         ray.y += ray.speed_y;
     } else {
-        btyp = (u8) calc_typ_trav(&ray, unk_1);
+        btyp = (u8) calc_typ_trav(&ray, vertical_probe_mode);
     }
 
     if (block_flags[btyp].raw & 2) {

@@ -21188,7 +21188,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -21225,6 +21226,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "Bloc_lim_H2",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -21819,7 +21830,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -21857,6 +21869,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "GameModeVideo",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -21946,7 +21968,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -21984,6 +22007,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "LEFT_MAP_BORDER",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_DEAD"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -22457,7 +22490,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c"
    ],
    "evidence": [
     {
@@ -22496,6 +22530,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ObjectsFonctions",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -22649,7 +22694,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -22687,6 +22733,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "RIGHT_MAP_BORDER",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_DEAD"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -22838,7 +22894,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -22875,6 +22933,27 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "SauveRayEvts",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POELLE_COMMAND"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "SauveRayEvts",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "DO_MORT_DE_RAY"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -23347,7 +23426,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c"
    ],
    "evidence": [
     {
@@ -23384,6 +23464,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "boss_mort",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -23399,18 +23490,21 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa7d",
    "binding_kind": "game_data",
-   "meaning": "Player jump/input-release latch set before the forced hybrid landing jump.",
-   "unit": "boolean",
+   "meaning": "Rayman jump/helicopter press-release phase latch.",
+   "unit": "phase code",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump."
+    "code_contract": "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump.",
+    "pass3_contract": "Normal grounded release writes1; jumping writes0; airborne unpressed even value increments to odd. Helicopter activation1->2, later release2->3 and pressed stop3->4. ray_jump tests odd parity, not equality with1; do not reduce to boolean."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -23447,10 +23541,64 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "button_released",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "button_released",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump",
+      "RAY_HELICO",
+      "RAY_TOMBE",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_FIRE1",
+      "SET_RAY_BALANCE",
+      "RAY_GOING_BALANCE",
+      "STOPPE_RAY_CONTRE_PAROIS",
+      "RAY_IN_THE_AIR",
+      "RepousseRay",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump."
+    "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump.",
+    "Pass3 refinement: Normal grounded release writes1; jumping writes0; airborne unpressed even value increments to odd. Helicopter activation1->2, later release2->3 and pressed stop3->4. ray_jump tests odd parity, not equality with1; do not reduce to boolean."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Player jump/input-release latch set before the forced hybrid landing jump.",
+     "unit": "boolean",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -23473,7 +23621,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -23510,6 +23659,19 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "compteur_attente",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump",
+      "RAY_RESPOND_TO_NOTHING",
+      "SET_RAY_BALANCE",
+      "RAY_RESPOND_TO_ALL_DIRS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -23652,18 +23814,22 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa7e",
    "binding_kind": "game_data",
-   "meaning": "Byte death/entry sequence countdown used for fades, reinitialization and delayed player death.",
-   "unit": "engine calls / sequence state",
+   "meaning": "Context-dependent byte death/drowning countdown shared with the fade/death lifecycle.",
+   "unit": "handler calls / byte countdown",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0."
+    "code_contract": "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0.",
+    "pass3_contract": "Drowning and spikes set1; RAY_DEAD decrements only2:9 or EOA-qualified3:22/32, then writes64 on retirement. DO_MORT_DE_RAY writes128.0 underflows255 if decremented; no milliseconds duration is inferred."
    },
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -23703,10 +23869,66 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "dead_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "COLL_RAY_BLK_MORTEL"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "dead_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAY_POS_CMD"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "dead_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayfallsinwater",
+      "RAY_DEAD",
+      "DO_MORT_DE_RAY"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0."
+    "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0.",
+    "Pass3 refinement: Drowning and spikes set1; RAY_DEAD decrements only2:9 or EOA-qualified3:22/32, then writes64 on retirement. DO_MORT_DE_RAY writes128.0 underflows255 if decremented; no milliseconds duration is inferred."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Byte death/entry sequence countdown used for fades, reinitialization and delayed player death.",
+     "unit": "engine calls / sequence state",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0."
+     },
+     "evidence_level": "PROVEN",
+     "port_notes": [
+      "Normal initialization uses64, the dead-player branch decrements when nonzero, and INIT_MOTEUR_DEAD resets the engine at0."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -23718,18 +23940,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f866",
    "binding_kind": "game_data",
-   "meaning": "Rayman horizontal inertia state also used to choose the camera-follow direction.",
-   "unit": "player inertia units",
+   "meaning": "Rayman horizontal momentum accumulator, converted through two four-bit stages to pixel motion.",
+   "unit": "1/256 pixel before phase quantization",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it."
+    "code_contract": "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it.",
+    "pass3_contract": "ray_inertia_speed computes instantSpeed(ashr16(momentum,4)); instantSpeed performs the second4-bit conversion. RAY_SWIP passes selected eta speed<<4. Preserve signed16 intermediate wrap and decay after extracting pixel speed."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -23771,10 +23996,73 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "decalage_en_cours",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "decalage_en_cours",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "IS_RAY_ON_LIANE",
+      "Reset_air_speed",
+      "determineRayAirInertia",
+      "ray_jump",
+      "ray_inertia_speed",
+      "RAY_SWIP",
+      "RAY_STOP",
+      "Make_Ray_Hang",
+      "RAY_RESPOND_TO_DOWN",
+      "RAY_RESPOND_TO_UP",
+      "RAY_RESPOND_TO_DIR",
+      "RAY_RESPOND_TO_NOTHING",
+      "SET_RAY_BALANCE",
+      "RAY_GOING_BALANCE",
+      "RAY_BALANCE",
+      "RayTestBlocSH",
+      "RAY_IN_THE_AIR",
+      "rayfallsinwater",
+      "RAY_RESPOND_TO_ALL_DIRS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it."
+    "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it.",
+    "Pass3 refinement: ray_inertia_speed computes instantSpeed(ashr16(momentum,4)); instantSpeed performs the second4-bit conversion. RAY_SWIP passes selected eta speed<<4. Preserve signed16 intermediate wrap and decay after extracting pixel speed."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Rayman horizontal inertia state also used to choose the camera-follow direction.",
+     "unit": "player inertia units",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Not a direct pixel displacement in recale_ray_pos; its sign selects target, and collision/clamp paths reset it."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -24119,7 +24407,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -24156,6 +24446,26 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "eau_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "eau_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -24555,7 +24865,9 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -24592,6 +24904,28 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "fin_boss",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "fin_boss",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_RESPOND_TO_FIRE1",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -24811,7 +25145,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -24849,6 +25184,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "fin_du_jeu",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_DEAD",
+      "DO_MORT_DE_RAY"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -24940,7 +25286,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -24979,6 +25326,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "gerbe",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "snifRayIsDead",
+      "DO_MORT_DE_RAY"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25005,7 +25363,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25047,6 +25406,19 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "h_scroll_speed",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayfallsinwater",
+      "DO_MORT_DE_RAY",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25062,18 +25434,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f898",
    "binding_kind": "game_data",
-   "meaning": "Signed16 helicopter-duration state with-1 reset sentinel.",
-   "unit": "player update calls / -1",
+   "meaning": "Helicopter duration/impulse countdown advanced by the airborne handler.",
+   "unit": "airborne update calls",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c."
+    "code_contract": "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c.",
+    "pass3_contract": "-1 disables decrement; ordinary activation writes50, super paired impulse70,0 is handled by RAY_HELICO before it can be decremented again. Other nonair paths do not necessarily advance it."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25110,10 +25485,61 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "helico_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "helico_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject",
+      "ray_jump",
+      "RAY_HELICO",
+      "RAY_TOMBE",
+      "RAY_BALANCE",
+      "RAY_FIN_BALANCE",
+      "RAY_IN_THE_AIR",
+      "RepousseRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c."
+    "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c.",
+    "Pass3 refinement: -1 disables decrement; ordinary activation writes50, super paired impulse70,0 is handled by RAY_HELICO before it can be decremented again. Other nonair paths do not necessarily advance it."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Signed16 helicopter-duration state with-1 reset sentinel.",
+     "unit": "player update calls / -1",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Reset by INIT_MOTEUR; full helico consumption belongs to ray.c."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -25253,18 +25679,21 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa8c",
    "binding_kind": "game_data",
-   "meaning": "Marker that Rayman airborne motion originated from a hit.",
+   "meaning": "Marker that airborne gravity must not be suppressed by holding jump after a hit.",
    "unit": "boolean",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers."
+    "code_contract": "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers.",
+    "pass3_contract": "RAY_HIT writes1; ray_jump and tile landing clear0. RAY_IN_THE_AIR includes it in the OR condition calling DO_PESANTEUR. Support acquisition differs from the tile-landing clear path."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25301,10 +25730,55 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "in_air_because_hit",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "in_air_because_hit",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ray_jump",
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers."
+    "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers.",
+    "Pass3 refinement: RAY_HIT writes1; ray_jump and tile landing clear0. RAY_IN_THE_AIR includes it in the OR condition calling DO_PESANTEUR. Support acquisition differs from the tile-landing clear path."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Marker that Rayman airborne motion originated from a hit.",
+     "unit": "boolean",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "INIT_RAY clears it; ray.c hit/air logic supplies its writers/readers."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -25442,18 +25916,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f8a4",
    "binding_kind": "game_data",
-   "meaning": "Signed16 player jump-duration counter reset on level initialization.",
-   "unit": "player update calls",
+   "meaning": "Number of airborne handler calls since the last jump/fall/hit reset.",
+   "unit": "airborne update calls",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Rayman jump processing supplies its nonzero progression."
+    "code_contract": "Rayman jump processing supplies its nonzero progression.",
+    "pass3_contract": "RAY_IN_THE_AIR preincrements; tests6 for departure animation changes,23 for extra speed_y increment, >=3 for landing eligibility, >8 for ledge catch, >10 vine catch and >12 to end held-jump gravity suppression. Not milliseconds or all engine ticks."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25490,10 +25967,62 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "jump_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HIT"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "jump_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "IS_RAY_ON_LIANE",
+      "ray_jump",
+      "RAY_SWIP",
+      "Make_Ray_Hang",
+      "CAN_RAY_HANG_BLOC",
+      "RAY_TOMBE",
+      "RAY_IN_THE_AIR",
+      "RAY_HURT",
+      "RepousseRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Rayman jump processing supplies its nonzero progression."
+    "Rayman jump processing supplies its nonzero progression.",
+    "Pass3 refinement: RAY_IN_THE_AIR preincrements; tests6 for departure animation changes,23 for extra speed_y increment, >=3 for landing eligibility, >8 for ledge catch, >10 vine catch and >12 to end held-jump gravity suppression. Not milliseconds or all engine ticks."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Signed16 player jump-duration counter reset on level initialization.",
+     "unit": "player update calls",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Rayman jump processing supplies its nonzero progression."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Rayman jump processing supplies its nonzero progression."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -25516,7 +26045,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25554,6 +26084,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "left_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25579,7 +26119,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25616,6 +26157,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "lidol_source_obj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "snifRayIsDead"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25642,7 +26193,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -25680,6 +26232,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "lidol_to_allocate",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "snifRayIsDead"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25780,7 +26342,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -25830,6 +26394,27 @@
      "artifact": "evidence/contracts_probe.json",
      "key": "shipped_links",
      "detail": "Executed independent arithmetic models against DOS in Unicorn; link cycles checked directly in all82 level files. Not a STRICT certificate."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "link_init",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "unleashMonsterHost"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "link_init",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "allocateOtherPosts",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -25981,7 +26566,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26021,6 +26607,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "map_time",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "rayMayLandOnAnObject"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -26174,7 +26770,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26214,6 +26812,27 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "new_level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "new_level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAY_ON_MS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -26240,7 +26859,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26280,6 +26901,27 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "new_world",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_POING_COLLISION",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "new_world",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAY_ON_MS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -26306,7 +26948,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26343,6 +26986,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "no_ray_landing_smoke",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "allocateRayLandingSmoke"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -26369,7 +27022,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26409,6 +27064,26 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "num_level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "num_level",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -26817,7 +27492,9 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -26854,6 +27531,29 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "pierreAcorde_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE",
+      "DO_CORDE_COMMAND",
+      "DO_CFUMEE_COMMAND"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "pierreAcorde_obj_id",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RepousseRay",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27007,7 +27707,10 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27044,6 +27747,39 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "poing_obj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "do_boum",
+      "DO_POING_COLLISION"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "poing_obj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoPTGRAPPINPoingCollision",
+      "DoFallingObjPoingCollision"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "poing_obj",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "terminateFistWhenRayDies",
+      "stackRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27072,7 +27808,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27109,6 +27846,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "pos_stack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27198,7 +27945,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27235,6 +27983,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_Suphelico_bis",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_HELICO"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27387,7 +28145,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27424,6 +28183,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_in_fee_zone",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_SWIP"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27567,18 +28336,21 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa8b",
    "binding_kind": "game_data",
-   "meaning": "Current write slot in rayStack, the full Rayman/fist snapshot ring replayed by black Rayman.",
+   "meaning": "Next Rayman replay-history ring write index.",
    "unit": "ring index",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history."
+    "code_contract": "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history.",
+    "pass3_contract": "stackRay writes then increments and wraps after100; full flag latches1. Black consumer cursor comparison uses promoted ray_pos_in_stack-1, preserving the cursor0 boundary quirk."
    },
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27615,10 +28387,54 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ray_pos_in_stack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doBlackRaymanCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_pos_in_stack",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "stackRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history."
+    "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history.",
+    "Pass3 refinement: stackRay writes then increments and wraps after100; full flag latches1. Black consumer cursor comparison uses promoted ray_pos_in_stack-1, preserving the cursor0 boundary quirk."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Current write slot in rayStack, the full Rayman/fist snapshot ring replayed by black Rayman.",
+     "unit": "ring index",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history."
+     },
+     "evidence_level": "PROVEN",
+     "port_notes": [
+      "stackRay increments/wraps this index and sets ray_stack_is_full; unrelated to the ten-entry pos_stack shift history."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -27641,7 +28457,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27678,6 +28495,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_se_noie",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "snifRayIsDead",
+      "rayfallsinwater"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27693,18 +28521,21 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa88",
    "binding_kind": "game_data",
-   "meaning": "Whether the Rayman/fist snapshot ring rayStack has wrapped and can be replayed by black Rayman.",
+   "meaning": "Latch indicating the101-entry Rayman replay ring has wrapped.",
    "unit": "boolean",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack."
+    "code_contract": "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack.",
+    "pass3_contract": "stackRay sets1 on first write wrap; doBlackRaymanCommand and Black collision use it. Initialization clears it; no claim of a fixed wall-clock delay."
    },
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27741,10 +28572,55 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ray_stack_is_full",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doBlackRaymanCommand",
+      "doBlKRayRaymanCollision"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_stack_is_full",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "stackRay"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack."
+    "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack.",
+    "Pass3 refinement: stackRay sets1 on first write wrap; doBlackRaymanCommand and Black collision use it. Initialization clears it; no claim of a fixed wall-clock delay."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Whether the Rayman/fist snapshot ring rayStack has wrapped and can be replayed by black Rayman.",
+     "unit": "boolean",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack."
+     },
+     "evidence_level": "PROVEN",
+     "port_notes": [
+      "Set by stackRay on wrap, reset during INIT_RAY and final-boss setup; not a marker for pos_stack."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -27767,7 +28643,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27805,6 +28682,20 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_wind_force",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "determineRayAirInertia",
+      "RAY_SWIP",
+      "RAY_HELICO",
+      "RAY_RESPOND_TO_NOTHING",
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -27820,18 +28711,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f876",
    "binding_kind": "game_data",
-   "meaning": "Rayman collision-height value used in the vertical camera target calculation.",
+   "meaning": "Cached Rayman collision-box height span, despite the y suffix.",
    "unit": "pixels",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name."
+    "code_contract": "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name.",
+    "pass3_contract": "DO_RAYMAN/DO_RAY_ON_MS supply it as GET_RAY_ZDC out_h; y position is ray_zdc_h. Collision and fist callers prove the reversed legacy names. The existing camera half-height interpretation is confirmed."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -27868,10 +28762,59 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "ray_zdc_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "BOX_HIT_SPECIAL_ZDC",
+      "SET_DETECT_ZONE_FLAG",
+      "SHOW_COLLISIONS_ZONES",
+      "DO_COLLISIONS"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "ray_zdc_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RayEstIlBloque",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "meaning_refinement",
+     "supplied_by": "ray/collision pass3",
+     "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
+     "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
     }
    ],
    "port_notes": [
-    "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name."
+    "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name.",
+    "Pass3 refinement: DO_RAYMAN/DO_RAY_ON_MS supply it as GET_RAY_ZDC out_h; y position is ray_zdc_h. Collision and fist callers prove the reversed legacy names. The existing camera half-height interpretation is confirmed."
+   ],
+   "meaning_history": [
+    {
+     "meaning": "Rayman collision-height value used in the vertical camera target calculation.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "recale_ray_pos uses (ray_zdc_y>>1)-offset_by+114; collision code supplies the value, despite its y-oriented name."
+     ],
+     "supplied_by": "accepted passes1-2 before ray/collision pass3"
+    }
    ]
   },
   {
@@ -28021,7 +28964,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -28059,6 +29003,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "record",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -28149,7 +29103,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -28186,6 +29141,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "remoteRayXToReach",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "remoteControlRay",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -28789,7 +29755,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -28827,6 +29794,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_end_x",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -28853,7 +29830,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -28893,6 +29872,27 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "scroll_end_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "COLL_RAY_BLK_MORTEL"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_end_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_EAU_QUI_MONTE",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -28984,7 +29984,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -29023,6 +30024,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_start_x",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29049,7 +30060,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision1.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -29089,6 +30102,26 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision1.c",
+     "key": "scroll_start_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "COLL_RAY_BLK_MORTEL"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_start_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29115,7 +30148,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -29156,6 +30190,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_x",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoRaymanBag1Collision"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29182,7 +30226,9 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -29222,6 +30268,28 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "scroll_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DoRaymanBag1Collision",
+      "DO_EAU_QUI_MONTE"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "scroll_y",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_DEAD",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29564,7 +30632,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -29601,6 +30670,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "star_ray_der",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29626,7 +30705,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -29663,6 +30743,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "star_ray_dev",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29688,7 +30778,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -29729,6 +30820,18 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "status_bar",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "snifRayIsDead",
+      "RAY_DEAD",
+      "DO_MORT_DE_RAY"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -29818,7 +30921,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -29862,6 +30966,19 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "v_scroll_speed",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_RESPOND_TO_UP",
+      "DO_MORT_DE_RAY",
+      "DO_RAY_ON_MS",
+      "DO_RAYMAN"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -30017,7 +31134,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "ray.c"
    ],
    "evidence": [
     {
@@ -30057,6 +31175,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "ray.c",
+     "key": "xmapmax",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "RAY_IN_THE_AIR"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -30211,7 +31339,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "collision2.c"
    ],
    "evidence": [
     {
@@ -30249,6 +31378,18 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "kind": "ray_collision_readers_writers",
+     "supplied_by": "collision2.c",
+     "key": "ymapmax",
+     "artifact": "build/workers/sem_ray/evidence/symbols.json",
+     "functions": [
+      "ACTIVE_L_EAU",
+      "DO_EAU_QUI_MONTE",
+      "doShipCommand"
+     ],
+     "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
     }
    ],
    "port_notes": [
@@ -30535,8 +31676,8 @@
   "src/cheat.c": "069aece168b09dbe4bc333c6e76158622ffcf364e6d9cbff1ed92fbdb9db2d66",
   "src/cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
   "src/clown.c": "723929934ea2155a0f979a97d57697ffa491e744a336924ae2c6ea9ae72afd64",
-  "src/collision1.c": "4887056fbed96c867e627a6e17bd80713a58f98220fa8bc66cf526c1842ad42e",
-  "src/collision2.c": "fdf99078eb25f29bb63af5f0b72cae08bed9d947cfc61bcbb2fc725ee0aa3e7b",
+  "src/collision1.c": "13d7f0a9a312ab01ec7bbb13864670b4ec8fe2b04fb27d1846dd064760abffc7",
+  "src/collision2.c": "eaf5d5db49950c825e675b806f84572a55aa4c299a7e85c366760aff4e307022",
   "src/collision2_local.h": "2957f20942bea7ef88f0462f932a220964cbbdc8865563786c7da595a1afef12",
   "src/cymbal.c": "c7d8d44a28892a557a798b9a6c4c2ab7ba8d8de7b2064c88b47ac8fd0315c17c",
   "src/dark.c": "2f894302ae3da291bc3b55de074a501de2728d5803156e658ff708fef2ebdd74",
@@ -30602,7 +31743,7 @@
   "src/pmama.c": "8cd4f6561264671c1783aac1e69f43b6ad2152b20aae65f8b9eb5c86f095d8c6",
   "src/poing.c": "9104941336ec700b48a00c999a553cb3ca15c0524a1a0ce217eee2e8a3d41e22",
   "src/poisson.c": "83f49d44102bf7f78af1dcdfa2a5b8c22492beeaf2fde010973f152b5e515ea4",
-  "src/ray.c": "03884f530c41b84c134d9ac95902562e9c40d814e9badd9c0e80dfc436b9edd2",
+  "src/ray.c": "7ae221e4c8a9cfca514835d1ff5dc03664ea3fde78780861e1ddd91702e2f4fe",
   "src/ray_pc.c": "1fb15adbb715a86d34421dba2bdf663ecdd5397476e3ff3524cf025891fe4c44",
   "src/save.c": "33e318faf911715f088936f6e0a2b6997075c93f339f4852b24dca010a35f066",
   "src/saxo.c": "dff53e5667bb23506b7ee25954a6b97e8592cc56567a8d58c3f651eba83e5237",
@@ -30797,10 +31938,35 @@
   "external/rayman-ps1-decomp/src/moteur_update.c": "d176d11d2f4ec21befa8464f8044040e453de0441df929acc0a5cf629cf51f39",
   "external/rayman-ps1-decomp/src/moteur_init_end.c": "4b95677636c7ca967cd978b0e09a1df31f40731dd59161441d10c6c434f5454f"
  },
- "evidence_artifact_fingerprints": {
-  "evidence/contracts_probe.json": "edbca5fbabc388d1940b9ae773caa757e95ded76a234b469dfb8375fdcc64d23",
-  "evidence/moteur.dos.txt": "a0a9b6fd6e8eb1964406751bdae05b7a73858af46801dbcbe6c29355f6e41ec6",
-  "evidence/name_provenance_checks.json": "f94ea4b99ae95265bdef0bf2731a5299af9a568295beee0e7101e6b276ce75e4",
-  "evidence/symbols.json": "7cc305fd8c671a9d7a795268f867d1f66caa0b332c2d4632c88cc7cc8d2d1704"
+ "pass3_evidence": {
+  "artifact_root": "build/workers/sem_ray",
+  "files": {
+   "evidence/allfix_descriptor_bindings.json": "36a595d64bb5ef030d902aae65bdaf4016eb38ddc98fd3083262c66434166bf4",
+   "evidence/canonical_input_hashes.json": "35a764ffb43b15023249b1fe71020587efd51dfbdead6c2fdf885e3dce82cfce",
+   "evidence/collision1.dos.txt": "78942313e8ffe70be2f85cb03ea5179623b917a198d1937ff14a6b2450b835cc",
+   "evidence/collision1_typed_accesses.json": "39f93678fc21c4a822ba18b9f397bc4067e26136a3f0823b0d5f90ba31e5dd64",
+   "evidence/collision2.dos.txt": "e4e55c619fc9ec0c2c3ca0d31231cf163fe4a1f2845b5998f065b5658b0efacd",
+   "evidence/collision2_typed_accesses.json": "1011aea9a63059dd1ed4ae31c31660bde4b59dd9d2c2d9901c80475f3259d6fa",
+   "evidence/collision_table_domains.json": "b21b9ec45a6d37d19844a7197a8264032d23527ed9996bc257f7b06375d81cd1",
+   "evidence/contracts_probe.json": "da26f468f5f85b77d28a1591b6aed8ea90ee0b7629c474f20f14700c28540b96",
+   "evidence/displacement_candidates.json": "fb83833c9dfbc6f2401d7017f76cc431b48194ce2237b01ded1f1e71a30654f7",
+   "evidence/external_candidates.json": "80ae2120cb2cb6d92c10677086c030eb25725c850416426719ed0b232885e460",
+   "evidence/external_fields.json": "bb428d1db75bec91d363ca797360bfd99ca24aa7a9880be9db209b34fa01f118",
+   "evidence/field_source_candidates.json": "f356fae536e95395de987bd7b8fee5d4b59c4691f85f223374ad5c4968d9f8a3",
+   "evidence/inherited_missing_artifacts.json": "ea7f152c44198e55af79e321df645a19be7b4c3205ff0779803c731f2f1165ad",
+   "evidence/name_provenance_checks.json": "f8694b2c18059fb790d95f75bdb4adddb9cff0d824ccc84290f59e55c882f5c3",
+   "evidence/oracle_table_domains.json": "2c04a0cb810b7ff3eb2cb91465685f3a4d0d8657c88d918c34558c2a04406701",
+   "evidence/ray.dos.txt": "24d45b64009be609eae545c1802fa28cea6e9e332528fb8baa9cdc2c6b778d64",
+   "evidence/ray_state_source_sites.json": "7eeb1ba0c69aa7b87ff20e2ddff6892e0630a6b9144d4d5c9f225031fbee0b98",
+   "evidence/ray_typed_accesses.json": "cda7bd5a6fc923ec3669e6a956aec0faa47ad541e451d9ea428ef4a6c83ca360",
+   "evidence/reference_input_hashes.json": "c216db670c86e72c8c0c37b0caeb4c5b637b9495a41ac67df2eb4aecc1dc68c8",
+   "evidence/secondary_dos.txt": "a565cc066976cbb2c7fcf83009111c1c5f78d44367a3886498a2ad7a5b4f4838",
+   "evidence/shipped_map_domains.json": "396d24351640ddbcd7dccbecf7269c7fe1e4ef4add9615c514989fdcfd44c08c",
+   "evidence/shipped_object_animation_domains.json": "d266a9b43a88ef623893ab3839dc5863bbce7097eab9013ec39cfa0d5a3cecd3",
+   "evidence/shipped_ray_states.json": "3d80fde83c0ee5cff278e28d80c2b979df729740ba001918765b464477c69bc6",
+   "evidence/symbols.json": "fef8cb334671332d33d245fd4e87ccd73612a81add652556fe4e9f81718feb2b",
+   "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f"
+  },
+  "limitation": "Inherited missing/pruned artifacts are listed in evidence/inherited_missing_artifacts.json. Prior hashes are retained, never silently refreshed as new proof."
  }
 }

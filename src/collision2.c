@@ -195,9 +195,13 @@ void special_pour_liv(obj_t* event) {
 }
 
 //2F658
+/* Local/parameter names are editorial (INVENTED); DOS 1:1f658
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * etat -> previous_main_state
+ */
 void DO_ONE_CMD(obj_t* obj) {
     /* 49844 8016E044 -O2 */
-    s16 etat = obj->main_etat;
+    s16 previous_main_state = obj->main_etat;
     special_pour_liv(obj);
     switch (obj->cmd) {
         case GO_WAIT:
@@ -211,13 +215,13 @@ void DO_ONE_CMD(obj_t* obj) {
                 obj->flags.flip_x = 1;
             }
 
-            if (etat == 1) {
+            if (previous_main_state == 1) {
                 SET_X_SPEED(obj);
                 CALC_MOV_ON_BLOC(obj);
             }
-            else if (etat == 2) {
+            else if (previous_main_state == 2) {
                 SET_X_SPEED(obj);
-            } else if (etat == 0) {
+            } else if (previous_main_state == 0) {
                 DO_ONE_CMD_LR_ATTENTE(obj);
             }
             break;
@@ -235,12 +239,16 @@ void DO_ONE_CMD(obj_t* obj) {
 }
 
 //2F714
+/* Local/parameter names are editorial (INVENTED); DOS 1:1f714
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * unk_x_1 -> aim_x_magnitude, unk_y_1 -> aim_y_magnitude, fire_par_3 -> aim_direction
+ */
 void DO_ROLL_EYES(obj_t* obj) {
     /* 4BC40 80170440 -O2 -msoft-float */
     s16 diff_x, diff_y;
     s16 screen_x, screen_y;
-    s16 unk_x_1, unk_y_1;
-    s16 fire_par_3;
+    s16 aim_x_magnitude, aim_y_magnitude;
+    s16 aim_direction;
     u8 y_gt_0, x_gt_0;
     extern void DO_REDEYE_FIRE(s16, s16, s16);
 
@@ -263,93 +271,93 @@ void DO_ROLL_EYES(obj_t* obj) {
     }
     diff_x = ray.x - obj->x;
     diff_y = ray.y - obj->y;
-    unk_x_1 = diff_x + 0x20;
-    unk_y_1 = diff_y + 0x19;
+    aim_x_magnitude = diff_x + 0x20;
+    aim_y_magnitude = diff_y + 0x19;
     if (obj->type == TYPE_145_KILLING_EYES)
     {
-        unk_x_1 += 20;
-        unk_y_1 += 10;
+        aim_x_magnitude += 20;
+        aim_y_magnitude += 10;
     }
-    x_gt_0 = unk_x_1 > 0;
-    y_gt_0 = (unk_y_1 > 0);
+    x_gt_0 = aim_x_magnitude > 0;
+    y_gt_0 = (aim_y_magnitude > 0);
     if (x_gt_0 == 0)
     {
-        unk_x_1 = -unk_x_1;
+        aim_x_magnitude = -aim_x_magnitude;
     }
     if (y_gt_0 == 0)
     {
-        unk_y_1 = -unk_y_1;
+        aim_y_magnitude = -aim_y_magnitude;
     }
-    if (unk_x_1 > 200)
+    if (aim_x_magnitude > 200)
     {
-        unk_x_1 = ashr16(unk_x_1, 1);
-        unk_y_1 = ashr16(unk_y_1, 1);
+        aim_x_magnitude = ashr16(aim_x_magnitude, 1);
+        aim_y_magnitude = ashr16(aim_y_magnitude, 1);
     }
 
-    if (unk_y_1 == 0)
+    if (aim_y_magnitude == 0)
     {
         if (x_gt_0)
         {
-            fire_par_3 = 0x1B;
+            aim_direction = 0x1B;
         }
         else
         {
-            if (unk_x_1 != 0)
+            if (aim_x_magnitude != 0)
             {
-                fire_par_3 = 9;
+                aim_direction = 9;
             }
             else
-                fire_par_3 = -1;
+                aim_direction = -1;
         }
     }
     else
     {
-        fire_par_3 = unk_x_1 * 0x2D / unk_y_1;
+        aim_direction = aim_x_magnitude * 0x2D / aim_y_magnitude;
         if (x_gt_0)
         {
             if (y_gt_0)
             {
-                if (fire_par_3 > 255)
+                if (aim_direction > 255)
                 {
-                    fire_par_3 = 0x1B;
+                    aim_direction = 0x1B;
                 }
                 else
                 {
-                    fire_par_3 = N_anim[fire_par_3] + 0x1B;
+                    aim_direction = N_anim[aim_direction] + 0x1B;
                 }
             }
             else
             {
-                if (fire_par_3 > 255)
+                if (aim_direction > 255)
                 {
-                    fire_par_3 = 0;
+                    aim_direction = 0;
                 }
                 else
                 {
-                    fire_par_3 = N_anim[fire_par_3];
+                    aim_direction = N_anim[aim_direction];
                 }
             }
         }
         else if (y_gt_0)
         {
-            if (fire_par_3 > 255)
+            if (aim_direction > 255)
             {
-                fire_par_3 = 0x12;
+                aim_direction = 0x12;
             }
             else
             {
-                fire_par_3 = N_anim[fire_par_3] + 0x12;
+                aim_direction = N_anim[aim_direction] + 0x12;
             }
         }
         else
         {
-            if (fire_par_3 > 255)
+            if (aim_direction > 255)
             {
-                fire_par_3 = 9;
+                aim_direction = 9;
             }
             else
             {
-                fire_par_3 = N_anim[fire_par_3] + 9;
+                aim_direction = N_anim[aim_direction] + 9;
             }
         }
     }
@@ -366,16 +374,16 @@ void DO_ROLL_EYES(obj_t* obj) {
                     (screen_x < 0x131) && (screen_y < 195)
                     )
             {
-                DO_REDEYE_FIRE(obj->x, obj->y, fire_par_3);
+                DO_REDEYE_FIRE(obj->x, obj->y, aim_direction);
             }
             else {
                 obj->param = 40;
             }
         }
     }
-    if ((fire_par_3) != -1)
+    if ((aim_direction) != -1)
     {
-        obj->anim_frame = fire_par_3 - 1;
+        obj->anim_frame = aim_direction - 1;
     }
 }
 
@@ -391,9 +399,13 @@ void DoKillingEyesPoingCollision(obj_t* obj, s16 sprite) {
 }
 
 //2F9B8
+/* Local/parameter names are editorial (INVENTED); DOS 1:1f9b8
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * unk_y -> sample_y_offset
+ */
 s32 YaUnBloc(obj_t *obj, s16 dir) {
     s16 i;
-    s16 unk_y;
+    s16 sample_y_offset;
     s32 res = false;
 
     switch (dir) {
@@ -410,22 +422,22 @@ s32 YaUnBloc(obj_t *obj, s16 dir) {
                 res = true;
             break;
         case 0:
-            unk_y = 6;
+            sample_y_offset = 6;
             i = 0;
             while (i < 10) {
-                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx - 16) >> 4) + mp.width * ((obj->y + sample_y_offset) >> 4)].tile_type] & 1)
                     res = true;
-                unk_y += 16;
+                sample_y_offset += 16;
                 i++;
             }
             break;
         case 1:
-            unk_y = 6;
+            sample_y_offset = 6;
             i = 0;
             while (i < 10) {
-                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + mp.width * ((obj->y + unk_y) >> 4)].tile_type] & 1)
+                if (((u8 *)block_flags)[mp.map[((obj->x + obj->offset_bx + 16) >> 4) + mp.width * ((obj->y + sample_y_offset) >> 4)].tile_type] & 1)
                     res = true;
-                unk_y += 16;
+                sample_y_offset += 16;
                 i++;
             }
             break;
@@ -456,10 +468,14 @@ void DoRaymanBag1Collision(obj_t* obj) {
 }
 
 //2FCB0
+/* Local/parameter names are editorial (INVENTED); DOS 1:1fcb0
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * pos_to_check -> coordinate_remainder
+ */
 s16 MarCoince(obj_t* obj, s16 dir) {
     /* 4CB88 80171388 -O2 -msoft-float */
     s32 map_ind;
-    s32 pos_to_check;
+    s32 coordinate_remainder;
     s16 res = false;
     s16 y;
     s16 x;
@@ -469,8 +485,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
     switch (dir)
     {
         case 2:
-            pos_to_check = y % 16;
-            if (pos_to_check < 3)
+            coordinate_remainder = y % 16;
+            if (coordinate_remainder < 3)
             {
                 map_ind = (x >> 4) + mp.width * (y >> 4);
                 if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
@@ -482,8 +498,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 3:
-            pos_to_check = y % 16;
-            if (pos_to_check > 12)
+            coordinate_remainder = y % 16;
+            if (coordinate_remainder > 12)
             {
                 map_ind = (x >> 4) + mp.width * ((y + 16 * 3) >> 4);
                 if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
@@ -495,8 +511,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 0:
-            pos_to_check = x % 16;
-            if (pos_to_check < 3)
+            coordinate_remainder = x % 16;
+            if (coordinate_remainder < 3)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) - 1;
                 if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
@@ -508,8 +524,8 @@ s16 MarCoince(obj_t* obj, s16 dir) {
             }
             break;
         case 1:
-            pos_to_check = x % 16;
-            if (pos_to_check > 12)
+            coordinate_remainder = x % 16;
+            if (coordinate_remainder > 12)
             {
                 map_ind = ((x >> 4) + mp.width * ((y + 16) >> 4)) + 3;
                 if (((u8 *)block_flags)[mp.map[map_ind].tile_type] & 2)
@@ -1039,13 +1055,17 @@ void DO_POELLE_COMMAND(obj_t* po_obj) {
 }
 
 //30EA8
+/* Local/parameter names are editorial (INVENTED); DOS 1:20ea8
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * bVar2 -> rectangle_ready
+ */
 void DO_CORDE_COMMAND(obj_t* obj) {
     /* COMPILER_STEERED: Materialized result keeps the preceding switch-table carrier STRICT. */
     /* 4FB58 80174358 -O2 -msoft-float */
     extern s16 inter_box(s32, s32, s32, s32, s16, s16, s32, s32);
     extern void DO_FUMEE_CORDE(s16, s16);
     s32 pa_id;
-    s16 bVar2;
+    s16 rectangle_ready;
     s16 obj_x_pos;
     s16 obj_y_pos;
     s16 ray_x_pos;
@@ -1073,10 +1093,10 @@ void DO_CORDE_COMMAND(obj_t* obj) {
 
             obj_x_pos = obj->x;
             obj_y_pos = obj->y;
-            bVar2 = ray.x;
-            ray_x_pos = bVar2;
+            rectangle_ready = ray.x;
+            ray_x_pos = rectangle_ready;
             ray_y_pos = ray.y;
-            bVar2 = true;
+            rectangle_ready = true;
             switch (obj->sub_etat)
             {
                 case 16:
@@ -1097,10 +1117,10 @@ void DO_CORDE_COMMAND(obj_t* obj) {
                     obj_h = 64;
                     break;
                 default:
-                    bVar2 = false;
+                    rectangle_ready = false;
                     break;
             }
-            inter = bVar2;
+            inter = rectangle_ready;
             if (inter) inter = inter_box(ray_x_pos + 57, ray_y_pos + 26, 46, 4, obj_x_pos + 126, obj_y_pos + obj_y_offs, 4, obj_h);
             if (inter) {
                 if (--obj->hit_points < 1)
@@ -1188,14 +1208,19 @@ void DO_NOVA2_COMMAND(obj_t* obj) {
 }
 
 //31208
+/* Local/parameter names are editorial (INVENTED); DOS 1:21208
+ * and docs/semantics/collision2.json record their dataflow evidence.
+ * temp_s0_2 -> released_object, temp_a0_1 -> previous_release_id, var_s2 -> advance_release_phase, temp_v1
+ * -> current_command, var_s3 -> release_type, test_3 -> linked_object_id
+ */
 void doShipCommand(obj_t* obj) {
     // NOTE(Falcury): PS1 non-matching function - needs checking!
-    obj_t *temp_s0_2;
-    s32 temp_a0_1;
-    u8 var_s2;
-    u8 temp_v1;
-    u16 var_s3;
-    s16 test_3;
+    obj_t *released_object;
+    s32 previous_release_id;
+    u8 advance_release_phase;
+    u8 current_command;
+    u16 release_type;
+    s16 linked_object_id;
 
     scroll_end_y = ymapmax;
     scroll_start_y = ymapmax;
@@ -1205,8 +1230,8 @@ void doShipCommand(obj_t* obj) {
         xmap = scroll_end_x;
     }
 
-    temp_v1 = obj->cmd;
-    switch (temp_v1)
+    current_command = obj->cmd;
+    switch (current_command)
     {
         case 2:
             obj->speed_x = obj->speed_y = 0;
@@ -1217,20 +1242,20 @@ void doShipCommand(obj_t* obj) {
             return;
         case 30:
             if (obj->link_has_gendoor) {
-                temp_a0_1 = obj->param;
-                var_s2 = 1;
-                if (temp_a0_1 != -1)
+                previous_release_id = obj->param;
+                advance_release_phase = 1;
+                if (previous_release_id != -1)
                 {
-                    if (level.objects[temp_a0_1].is_active)
-                        var_s2 = 0;
+                    if (level.objects[previous_release_id].is_active)
+                        advance_release_phase = 0;
                 }
-                if ((var_s2) && (obj->timer != 0) && (horloge[2] != 0))
+                if ((advance_release_phase) && (obj->timer != 0) && (horloge[2] != 0))
                 {
                     obj->timer--;
                 }
                 do
                 {
-                    var_s2 = 0;
+                    advance_release_phase = 0;
                     if (obj->timer == 0)
                     {
                         switch (obj->link)
@@ -1238,72 +1263,72 @@ void doShipCommand(obj_t* obj) {
                             case 0:
                                 obj->link = 2;
                             case 4:
-                                var_s3 = obj->type;
+                                release_type = obj->type;
                                 break;
                             case 1:
                                 obj->link = 3;
-                                var_s3 = TYPE_77_PIRATE_GUETTEUR;
+                                release_type = TYPE_77_PIRATE_GUETTEUR;
                                 break;
                             case 2:
                                 obj->link = 1;
-                                var_s3 = TYPE_72_PIRATE_NGAWE;
-                                var_s2 = 1;
+                                release_type = TYPE_72_PIRATE_NGAWE;
+                                advance_release_phase = 1;
                                 break;
                             case 3:
                                 obj->link = 4;
-                                var_s3 = TYPE_187_MAMA_PIRATE;
+                                release_type = TYPE_187_MAMA_PIRATE;
                                 break;
                         }
-                        if (var_s2 == 0)
+                        if (advance_release_phase == 0)
                         {
                             obj->timer = 50;
                         }
-                        if (var_s3 != obj->type)
+                        if (release_type != obj->type)
                         {
                             skipOneCommand(obj);
                             obj->nb_cmd = 0;
-                            test_3 = obj->id;
+                            linked_object_id = obj->id;
                             do
                             {
                                 {
                                     /* COMPILER_STEERED: named signed index and pointer update preserve DOS allocation. */
                                     s32 index;
                                     s16 *links;
-                                    index = test_3;
+                                    index = linked_object_id;
                                     links = link_init;
                                     links += index;
-                                    test_3 = *links;
+                                    linked_object_id = *links;
                                 }
-                                temp_s0_2 = &level.objects[test_3];
-                                if (var_s3 == temp_s0_2->type)
+                                released_object = &level.objects[linked_object_id];
+                                if (release_type == released_object->type)
                                 {
                                     break;
                                 }
-                            } while (temp_s0_2->type != obj->type);
+                            } while (released_object->type != obj->type);
 
-                            if (temp_s0_2->type != obj->type)
+                            if (released_object->type != obj->type)
                             {
-                                switch (temp_s0_2->type) {
+                                switch (released_object->type) {
                                     case TYPE_77_PIRATE_GUETTEUR:
-                                        guetteurFollowsShip(temp_s0_2);
+                                        guetteurFollowsShip(released_object);
                                         break;
                                     case TYPE_72_PIRATE_NGAWE:
-                                        ngaweTriesToGrabShip(temp_s0_2);
+                                        ngaweTriesToGrabShip(released_object);
                                         break;
                                     case TYPE_187_MAMA_PIRATE:
-                                        pmamaFollowsShip(temp_s0_2);
-                                        PMA_SORT_DU_CANON(temp_s0_2);
+                                        pmamaFollowsShip(released_object);
+                                        PMA_SORT_DU_CANON(released_object);
                                         break;
                                 }
-                                suppressFromLinkList(temp_s0_2);
-                                MOVE_OBJECT(temp_s0_2);
-                                calc_obj_pos(temp_s0_2);
-                                temp_s0_2->flags.alive = 1;
-                                obj->param = temp_s0_2->id;
+                                suppressFromLinkList(released_object);
+                                MOVE_OBJECT(released_object);
+                                calc_obj_pos(released_object);
+                                released_object->flags.alive = 1;
+                                obj->param = released_object->id;
                             }
                         }
                     }
-                } while (var_s2 != 0);
+                } while (advance_release_phase != 0);
             }
             return;
     }

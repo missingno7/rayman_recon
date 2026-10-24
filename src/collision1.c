@@ -107,8 +107,12 @@ s16 get_zdc_index(obj_t* obj) {
 }
 
 //2B2E8
-zdc_t* get_zdc(obj_t* obj, s16 a2) {
-    return zdc_tab + (get_zdc_index(obj) + a2);
+/* Local/parameter names are editorial (INVENTED); DOS 1:1b2e8
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * a2 -> relative_zone_index
+ */
+zdc_t* get_zdc(obj_t* obj, s16 relative_zone_index) {
+    return zdc_tab + (get_zdc_index(obj) + relative_zone_index);
 }
 
 //2B300
@@ -117,72 +121,86 @@ u16 get_ZDCPTR(void) {
 }
 
 //2B308
-s16 in_coll_sprite_list(obj_t* obj, s16 a2) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:1b308
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_1 -> eligible_layers, a2 -> layer_index
+ */
+s16 in_coll_sprite_list(obj_t* obj, s16 layer_index) {
     /* 1B2E0 8013FAE0 -O2 -msoft-float */
-    u8 unk_1[12];
+    u8 eligible_layers[12];
     s16 i;
     s16 res = false;
 
     switch (obj->type)
     {
         case TYPE_GENEBADGUY:
-            unk_1[0] = 0;
-            unk_1[1] = 1;
-            unk_1[2] = 2;
-            unk_1[3] = 0xFF;
+            eligible_layers[0] = 0;
+            eligible_layers[1] = 1;
+            eligible_layers[2] = 2;
+            eligible_layers[3] = 0xFF;
             break;
         case TYPE_MITE:
         case TYPE_MITE2:
-            unk_1[0] = 1;
+            eligible_layers[0] = 1;
             if (obj->sub_etat == 11)
             {
                 if (obj->main_etat == 2)
-                    unk_1[1] = 3;
+                    eligible_layers[1] = 3;
                 else
                 {
                     if (obj->anim_frame > 15)
-                        unk_1[1] = 2;
+                        eligible_layers[1] = 2;
                     else
-                        unk_1[1] = 0xFF;
+                        eligible_layers[1] = 0xFF;
                 }
-                unk_1[2] = 0xFF;
+                eligible_layers[2] = 0xFF;
             }
             else
-                unk_1[1] = 0xFF;
+                eligible_layers[1] = 0xFF;
             break;
         default:
-            unk_1[0] = 0;
-            unk_1[1] = 0xFF;
+            eligible_layers[0] = 0;
+            eligible_layers[1] = 0xFF;
             break;
     }
 
     i = 0;
     do
     {
-        res = a2 == unk_1[i++];
-    } while (unk_1[i] != 0xFF && res != true);
+        res = layer_index == eligible_layers[i++];
+    } while (eligible_layers[i] != 0xFF && res != true);
 
     return res;
 }
 
 //2B3B8
-s16 box_inter_v_line(s16 a1, s16 a2, s16 a3, s16 a4, s16 a5, s16 a6, s16 a7) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:1b3b8
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * a1 -> box_left, a2 -> box_right, a3 -> box_top, a4 -> box_bottom, a5 -> line_x, a6 -> line_top, a7 ->
+ * line_bottom
+ */
+s16 box_inter_v_line(s16 box_left, s16 box_right, s16 box_top, s16 box_bottom, s16 line_x, s16 line_top, s16 line_bottom) {
     s16 res = 0;
-    if (a1 < a5 && a2 > a5) {
-        if (a3 > a6 && a3 < a7)
+    if (box_left < line_x && box_right > line_x) {
+        if (box_top > line_top && box_top < line_bottom)
             res = 1;
-        else if (a4 > a6 && a4 < a7)
+        else if (box_bottom > line_top && box_bottom < line_bottom)
             res = 1;
     }
     return res;
 }
 
-s16 box_inter_h_line(s16 a1, s16 a2, s16 a3, s16 a4, s16 a5, s16 a6, s16 a7) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:1b3f4
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * a1 -> box_left, a2 -> box_right, a3 -> box_top, a4 -> box_bottom, a5 -> line_y, a6 -> line_left, a7 ->
+ * line_right
+ */
+s16 box_inter_h_line(s16 box_left, s16 box_right, s16 box_top, s16 box_bottom, s16 line_y, s16 line_left, s16 line_right) {
     s16 res = 0;
-    if (a3 < a5 && a4 > a5) {
-        if (a1 > a6 && a1 < a7)
+    if (box_top < line_y && box_bottom > line_y) {
+        if (box_left > line_left && box_left < line_right)
             res = 1;
-        else if (a2 > a6 && a2 < a7)
+        else if (box_right > line_left && box_right < line_right)
             res = 1;
     }
     return res;
@@ -487,14 +505,18 @@ void GET_OBJ_ZDC(obj_t* obj, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
 
 //2C028
 /* DOS BOX_IN_COLL_ZONES 1:1c9d0..1c9f9 passes a sign-extended index. */
+/* Local/parameter names are editorial (INVENTED); DOS 1:1c028
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_x -> x_adjustment, unk_y -> y_adjustment, unk_w -> width_adjustment, unk_h -> height_adjustment
+ */
 s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s16 *out_h) {
-    s16 unk_y; s16 unk_x; s16 unk_h; s16 unk_w; s16 spr_x; u16 type; s16 spr_y; s16 spr_w; s16 spr_h; s16 succ; s16 temp_h;
+    s16 y_adjustment; s16 x_adjustment; s16 height_adjustment; s16 width_adjustment; s16 spr_x; u16 type; s16 spr_y; s16 spr_w; s16 spr_h; s16 succ; s16 temp_h;
 
     type = obj->type;
-    unk_h = 0;
-    unk_w = 0;
-    unk_y = 0;
-    unk_x = 0;
+    height_adjustment = 0;
+    width_adjustment = 0;
+    y_adjustment = 0;
+    x_adjustment = 0;
     succ = GET_SPRITE_POS(obj, index, &spr_x, &spr_y, &spr_w, &spr_h);
     if (succ)
     {
@@ -504,22 +526,22 @@ s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s1
                 switch (index)
                 {
                     case 3:
-                        unk_x = 4;
-                        unk_y = 2;
-                        unk_w = -4;
-                        unk_h = -10;
+                        x_adjustment = 4;
+                        y_adjustment = 2;
+                        width_adjustment = -4;
+                        height_adjustment = -10;
                         break;
                     case 4:
-                        unk_x = 0;
-                        unk_y = 2;
-                        unk_w = 0;
-                        unk_h = -10;
+                        x_adjustment = 0;
+                        y_adjustment = 2;
+                        width_adjustment = 0;
+                        height_adjustment = -10;
                         break;
                     case 5:
-                        unk_x = 0;
-                        unk_y = 2;
-                        unk_w = -4;
-                        unk_h = -10;
+                        x_adjustment = 0;
+                        y_adjustment = 2;
+                        width_adjustment = -4;
+                        height_adjustment = -10;
                         break;
                 }
                 break;
@@ -532,19 +554,19 @@ s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s1
                     switch (index)
                     {
                         case 0:
-                            unk_x = 10;
-                            unk_y = 0;
+                            x_adjustment = 10;
+                            y_adjustment = 0;
                             spr_w = 34;
                             spr_h = 32;
                             break;
                         case 1:
-                            unk_x = 4;
-                            unk_y = 0;
+                            x_adjustment = 4;
+                            y_adjustment = 0;
                             spr_w = 26;
                             break;
                         case 2:
-                            unk_x = 4;
-                            unk_y = 0;
+                            x_adjustment = 4;
+                            y_adjustment = 0;
                             spr_w = 48;
                             spr_h = 24;
                             break;
@@ -570,56 +592,60 @@ s16 GET_SPRITE_ZDC(obj_t* obj, s16 index, s16 *out_x, s16 *out_y, s16 *out_w, s1
                 {
                     case 1:
                         if (obj->main_etat == 0 && (obj->sub_etat == 9 || obj->sub_etat == 10 || obj->sub_etat == 11)) {
-                            unk_x = -8;
-                            unk_y = 5;
+                            x_adjustment = -8;
+                            y_adjustment = 5;
                             spr_w = 26;
                             spr_h = 8;
                         } else {
-                            unk_x = 1;
-                            unk_y = -5;
+                            x_adjustment = 1;
+                            y_adjustment = -5;
                             spr_w = 16;
                             spr_h = 30;
                         }
                         break;
                     case 2:
-                        unk_x = 0;
-                        unk_y = 7;
+                        x_adjustment = 0;
+                        y_adjustment = 7;
                         spr_w = 16;
                         spr_h = 16;
                         break;
                     case 3:
-                        unk_x = 0;
-                        unk_y = 2;
+                        x_adjustment = 0;
+                        y_adjustment = 2;
                         spr_w = 13;
                         spr_h = 9;
                         break;
                 }
                 break;
         }
-        *out_x = spr_x + unk_x;
-        *out_y = spr_y + unk_y;
-        *out_w = spr_w + unk_w;
-        *out_h = spr_h + unk_h;
+        *out_x = spr_x + x_adjustment;
+        *out_y = spr_y + y_adjustment;
+        *out_w = spr_w + width_adjustment;
+        *out_h = spr_h + height_adjustment;
     }
     return succ;
 }
 
 //2C33C
+/* Local/parameter names are editorial (INVENTED); DOS 1:1c33c
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * d -> bag_bottom_offset
+ */
 s16 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 frame;
-    s16 d;
+    s16 bag_bottom_offset;
     s16 bb1_x_2; s16 bb1_y_2; s16 bb1_w_2; s16 bb1_h_2; s16 bb1_x_1; s16 bb1_y_1; s16 bb1_h_1; s16 bb1_w_1;
     s16 res = -1;
 
     switch (obj->type) {
         case TYPE_BAG1:
             frame = obj->anim_frame;
-            d = bagDy[frame];
-            if (d != -1) {
+            bag_bottom_offset = bagDy[frame];
+            if (bag_bottom_offset != -1) {
                 if (inter_box(in_x, in_y, in_w, in_h,
                         obj->x + obj->offset_bx - (bagW[frame] >> 1),
-                        obj->y + obj->offset_by + d - bagH[frame],
+                        obj->y + obj->offset_by + bag_bottom_offset - bagH[frame],
                         bagW[frame],
                         bagH[frame]
                 ))
@@ -657,10 +683,14 @@ s16 BOX_HIT_SPECIAL_ZDC(s16 in_x, s16 in_y, s16 in_w, s16 in_h, obj_t* obj) {
 }
 
 //2C670
+/* Local/parameter names are editorial (INVENTED); DOS 1:1c670
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_x -> zone_x, unk_y -> zone_y, unk_w -> zone_width, unk_h -> zone_height
+ */
 s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     /* 1C7E4 80140FE4 -O2 -msoft-float */
     s16 res;
-    s16 unk_x; s16 unk_y; s16 unk_w; s16 unk_h;
+    s16 zone_x; s16 zone_y; s16 zone_width; s16 zone_height;
     s16 nb_zdc;
     s16 i;
     s16 sprite_index;
@@ -669,10 +699,10 @@ s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     anim_layer_t* cur_layer;
     s16 layers_count;
 
-    unk_h = 0;
-    unk_w = 0;
-    unk_y = 0;
-    unk_x = 0;
+    zone_height = 0;
+    zone_width = 0;
+    zone_y = 0;
+    zone_x = 0;
     res = -1;
 
 
@@ -702,31 +732,31 @@ s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
                     cur_layer = &cur_anim->layers[obj->anim_frame * (cur_anim->layers_per_frame & 0x3FFF)];
                     if (cur_layer[cur_zdc->sprite].sprite_index != 0)
                     {
-                        GET_SPRITE_POS(obj, cur_zdc->sprite, &unk_x, &unk_y, &unk_w, &unk_h);
+                        GET_SPRITE_POS(obj, cur_zdc->sprite, &zone_x, &zone_y, &zone_width, &zone_height);
                         if (obj->flags.flip_x)
-                            unk_x += unk_w - cur_zdc->width - cur_zdc->x_pos;
+                            zone_x += zone_width - cur_zdc->width - cur_zdc->x_pos;
                         else
-                            unk_x += cur_zdc->x_pos;
+                            zone_x += cur_zdc->x_pos;
 
-                        unk_y += cur_zdc->y_pos;
-                        unk_w = cur_zdc->width;
-                        unk_h = cur_zdc->height;
+                        zone_y += cur_zdc->y_pos;
+                        zone_width = cur_zdc->width;
+                        zone_height = cur_zdc->height;
                     }
                 }
                 else
                 {
-                    unk_x = obj->x + cur_zdc->x_pos;
-                    unk_y = obj->y + cur_zdc->y_pos;
-                    unk_w = cur_zdc->width;
-                    unk_h = cur_zdc->height;
+                    zone_x = obj->x + cur_zdc->x_pos;
+                    zone_y = obj->y + cur_zdc->y_pos;
+                    zone_width = cur_zdc->width;
+                    zone_height = cur_zdc->height;
                     /* TODO: can't take << 1 or * 2??? */
                     if (obj->flags.flip_x)
-                        unk_x =
+                        zone_x =
                                 (obj->x + obj->offset_bx) + (obj->x + obj->offset_bx) -
-                                (unk_x + unk_w);
+                                (zone_x + zone_width);
                 }
 
-                if (inter_box(x, y, w, h, unk_x, unk_y, unk_w, unk_h))
+                if (inter_box(x, y, w, h, zone_x, zone_y, zone_width, zone_height))
                 {
                     res = cur_zdc->sprite;
                     break;
@@ -738,13 +768,13 @@ s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
     {
         if (obj->hit_sprite == 0xFE)
         {
-            GET_OBJ_ZDC(obj, &unk_x, &unk_y, &unk_w, &unk_h);
+            GET_OBJ_ZDC(obj, &zone_x, &zone_y, &zone_width, &zone_height);
             if (obj->flags.flip_x)
-                unk_x =
+                zone_x =
                         (obj->x + obj->offset_bx) + (obj->x + obj->offset_bx) -
-                        (unk_x + unk_w);
+                        (zone_x + zone_width);
 
-            res = inter_box(x, y, w, h, unk_x, unk_y, unk_w, unk_h);
+            res = inter_box(x, y, w, h, zone_x, zone_y, zone_width, zone_height);
             res = res ? res : -1;
         }
         else if (obj->hit_sprite == 0xFF)
@@ -754,8 +784,8 @@ s16 BOX_IN_COLL_ZONES(u16 type, s16 x, s16 y, s16 w, s16 h, obj_t* obj) {
             {
                 if (
                         in_coll_sprite_list(obj, sprite_index) &&
-                        GET_SPRITE_ZDC(obj, sprite_index, &unk_x, &unk_y, &unk_w, &unk_h) &&
-                        inter_box(x, y, w, h, unk_x, unk_y, unk_w, unk_h)
+                        GET_SPRITE_ZDC(obj, sprite_index, &zone_x, &zone_y, &zone_width, &zone_height) &&
+                        inter_box(x, y, w, h, zone_x, zone_y, zone_width, zone_height)
                         )
                 {
                     res = sprite_index;
@@ -879,17 +909,21 @@ s16 possible_sprite(obj_t* obj, s16 index) {
 }
 
 //2CE34
+/* Local/parameter names are editorial (INVENTED); DOS 1:1ce34
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_1 -> support_right, unk_2 -> lateral_tolerance
+ */
 s16 setToleranceDist(s16 x, s16 w, s16 y) {
     /* 1D11C 8014191C -O2 -msoft-float */
     s16 ray_x = ray.x + ray.offset_bx;
     s16 ray_y = ray.y + ray.offset_by;
-    s16 unk_1 = x + w - 1;
+    s16 support_right = x + w - 1;
 
-    s16 unk_2 = 8;
-    if (RayEvts.tiny) unk_2 = 4;
+    s16 lateral_tolerance = 8;
+    if (RayEvts.tiny) lateral_tolerance = 4;
     /* DOS 1:1ced4..1cf09: conditional absolute value. */
-    if (inrange(ray_x, x - unk_2, unk_1 + unk_2)) {
-        if (inrange(ray_x, x, unk_1)) return ((ray_y - y < 0) ? -(ray_y - y) : ray_y - y);
+    if (inrange(ray_x, x - lateral_tolerance, support_right + lateral_tolerance)) {
+        if (inrange(ray_x, x, support_right)) return ((ray_y - y < 0) ? -(ray_y - y) : ray_y - y);
         else return -((ray_y - y < 0) ? -(ray_y - y) : ray_y - y) - 1;
     }
     return 10000;
@@ -945,10 +979,14 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
 }
 
 //2D0D4
+/* Local/parameter names are editorial (INVENTED); DOS 1:1d0d4
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_1 -> lateral_tolerance
+ */
 void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
     /* COMPILER_STEERED: Existing ABS helper and scope; swapping i/new_dist declarations fixes stack homes. */
     {
-        s16 unk_1;
+        s16 lateral_tolerance;
 
         s16 ray_x;
 
@@ -964,8 +1002,8 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
 
         /* 1D228 80141A28 -O2 -msoft-float */
 
-        unk_1 = 8;
-        if (RayEvts.tiny) unk_1 = 4;
+        lateral_tolerance = 8;
+        if (RayEvts.tiny) lateral_tolerance = 4;
         i = 0;
         new_dist = 10000;
         ray_x = ray.x + ray.offset_bx;
@@ -1003,7 +1041,7 @@ void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
                     spr_x += 5;
                 }
 
-                if ((ray_x <= spr_x + spr_w + unk_1) && (ray_x >= spr_x - unk_1))
+                if ((ray_x <= spr_x + spr_w + lateral_tolerance) && (ray_x >= spr_x - lateral_tolerance))
                 {
                     new_dist = ray_y - spr_y;
                     if (obj->type == TYPE_TIBETAIN_6 && (new_dist >= 8 && new_dist < 11))
@@ -1111,6 +1149,10 @@ void do_boum(void) {
 }
 
 //2D5FC
+/* Local/parameter names are editorial (INVENTED); DOS 1:1d5fc
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * unk_1 -> gravity_mode
+ */
 void DO_POING_COLLISION(void) {
     /* COMPILER_STEERED: Private sprite result stays promoted; CHECK_BOX_COLLISION returns s16. */
     s16 x, y, w, h;
@@ -1119,7 +1161,7 @@ void DO_POING_COLLISION(void) {
     obj_t *obj;
     s32 sprite;
     s16 old_hp;
-    s32 unk_1;
+    s32 gravity_mode;
 
     btyp = 0;
     GET_SPRITE_POS(poing_obj, 0, &x, &y, &w, &h);
@@ -1148,8 +1190,8 @@ void DO_POING_COLLISION(void) {
                     do_boum();
                     obj->gravity_value_1 = 0;
                     /* DOS 1:1d7c4..1d7d7: high nibble, then promotion. */
-                    unk_1 = get_eta(obj)->anim_speed_bits.high;
-                    if (!(unk_1 == 11 || unk_1 == 10)) {
+                    gravity_mode = get_eta(obj)->anim_speed_bits.high;
+                    if (!(gravity_mode == 11 || gravity_mode == 10)) {
                         obj->gravity_value_2 = 0;
                     }
                     if (obj->hit_points == old_hp && (flags[obj->type].raw & flags3_1_poing_collision_snd)) {
@@ -1357,11 +1399,15 @@ void standard_frontZone(obj_t* obj, s16* x, s16* w) {
 }
 
 //2DF88
+/* Local/parameter names are editorial (INVENTED); DOS 1:1df88
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * det_zn_flg -> previous_detection_phase
+ */
 void SET_DETECT_ZONE_FLAG(obj_t* obj) {
     /* 1FAB4 801442B4 -O2 -msoft-float */
 
     s16 obj_w; s16 obj_y; s16 obj_h; s16 obj_x;
-    u8 det_zn_flg;
+    u8 previous_detection_phase;
 
     GET_ANIM_POS(obj, &obj_x, &obj_y, &obj_w, &obj_h);
     switch (obj->type)
@@ -1534,12 +1580,12 @@ void SET_DETECT_ZONE_FLAG(obj_t* obj) {
 
     if (inter_box(obj_x, obj_y, obj_w, obj_h, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y))
     {
-        det_zn_flg = obj->detect_zone_flag;
-        if (det_zn_flg < 2)
+        previous_detection_phase = obj->detect_zone_flag;
+        if (previous_detection_phase < 2)
         {
-            if (det_zn_flg == 0)
+            if (previous_detection_phase == 0)
                 obj->detect_zone_flag = 1;
-            else if (det_zn_flg == 1)
+            else if (previous_detection_phase == 1)
                 obj->detect_zone_flag = 2;
         }
         else
@@ -1754,7 +1800,11 @@ void DoRaymanCollisionDefault(obj_t* obj) {
 }
 
 //2EE20
-void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
+/* Local/parameter names are editorial (INVENTED); DOS 1:1ee20
+ * and docs/semantics/collision1.json record their dataflow evidence.
+ * offs -> inset
+ */
+void DO_OBJ_COLLISIONS(obj_t* obj, s16 inset) {
     /* 218C0 801460C0 -O2 -msoft-float */
     s16 in_x; s16 in_y; s16 in_w; s16 in_h;
     u8 done;
@@ -1773,10 +1823,10 @@ void DO_OBJ_COLLISIONS(obj_t* obj, s16 offs) {
     }
     else
     {
-        in_x = offs + in_x;
-        in_y = offs + in_y;
-        in_w -= offs * 2;
-        in_h -= offs * 2;
+        in_x = inset + in_x;
+        in_y = inset + in_y;
+        in_w -= inset * 2;
+        in_h -= inset * 2;
     }
     i = 0;
     cur_obj = &level.objects[actobj.objects[i]];

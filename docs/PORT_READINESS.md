@@ -37,7 +37,7 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 ## 4. Meaning (names, types) - needed for a maintainable port, not for behaviour
 | item | size | state |
 |---|---|---|
-| semantic registry (names and meanings) | docs/semantics: types.json (shared types/fields, documented once), globals.json, basic.json, moteur.json - 1,113 entities after moteur (926 PROVEN, 141 STRONG, 46 UNKNOWN; per-entity units, domains, port notes); enforced against code and compiled layout (tools/semantics.py, tests/test_semantics.py: ownership, cross-registry references, bodies, layout, bit masks). Renames: basic 22 locals + 2 fields; moteur 29 locals + eta_t.flags_bits.bit4 -> anim_reverse; compiled objects identical (basic, moteur, mite, ray). Next: ray.c + collision1/2, objinit.c + load.c | IN PROGRESS |
+| semantic registry (names and meanings) | docs/semantics: types.json, globals.json + per-unit basic, moteur, ray, collision1, collision2 - 1,853 entities (1,417 PROVEN, 361 STRONG, 75 UNKNOWN); Rayman state machine: 53 named (main, sub) pairs (25 PROVEN, 28 STRONG; RAY_STATES.md), 144 unnamed rows; collision boxes inclusive, HP underflow and replay truncation documented. Enforced against code and compiled layout (tools/semantics.py, tests/test_semantics.py). Renames: 156 locals/parameters + 3 fields, compiled objects identical (basic, moteur, mite, ray, collision1, collision2). Next: objinit.c + load.c, object-type behaviour units | IN PROGRESS |
 | function names INVENTED / placeholder-style | 241 INVENTED (198 sub_/effect_helper_-style) of 1,851 | OPEN |
 | data names INVENTED / placeholder-style | 228 INVENTED (165 placeholder-style) of 1,358 | OPEN |
 | unk_/field_/sub_/dword_ identifiers in src | 353 distinct | OPEN |
