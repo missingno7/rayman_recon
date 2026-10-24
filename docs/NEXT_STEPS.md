@@ -5,6 +5,16 @@ Acceptance (docs/MATCHING.md "Acceptance policy and roadmap"): any valid, semant
 verifier reports STRICT; mark compiler-steered or synthetic source with `quality`. Never patch compiled output.
 
 ## Priorities (by recovered bytes, functions unlocked and measured effort)
+Targeting by tools/semir.py (2026-10-24, all 235 NEAR functions, build/semir_near.json): 78 EXACT_LOCAL_EQUIVALENT
+(6,026 differing bytes, ~77 per function: only allocation/scheduling left -> explain.py + the fast permuter), 152
+MISMATCH (62,569 bytes: first fix the computation semir names - local widths, test order, operand order, load/store
+order, stores - before any allocation work; guided editing beat the permuter 4/8 vs 2/8 to exact equivalence and took
+RecaleRayPosInJumelle 581 -> 24), 5 UNKNOWN/similar. Clue kinds in MISMATCH: effect 66, branch 32, effect order 24,
+branch order 17, terminator 12. Causal clustering (H13) is not a targeting method; source twins are the exception.
+Potential contribution to D:/Prog/ai_decomp (not exported): (1) semantic-IR first difference as the step between
+"is it equivalent" and "why did the compiler differ" - lift both sides to width-exact block expressions with symbolic
+relocations, align CFGs by predicates, report the earliest differing effect; validate with STRICT controls and semantic
+mutants (0 false equivalences); (2) per-candidate disk/CPU hygiene for permuters (prune artifacts, persistent workers).
 Latest wave (wave 3, 2026-10-24): 8 parallel Sol workers on the 181 NEAR functions whose computational core is within
 4 ops of DOS (scratch/core_ops.py): +25 STRICT (1,547 -> 1,572), several banked reductions, 0 losses; worker
 FINDINGS.md under build/workers/w3_*/ keep the negatives. Yield per wave is falling (~14% of targets closed); the
