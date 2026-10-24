@@ -788,7 +788,12 @@ obj_t* oldest_planted(void) {
             cur_obj = &level.objects[unk_1];
         }
         cnt_2++;
-        cnt_1 = ng_ids[cnt_2];
+        /* B19: DOS 1:6b17f..6b18b loads the next id BEFORE the bound test (inc al; movzx edx,al;
+         * mov bx,[esp+edx*2]; cmp al,2; jb), so the last pass reads [esp+4] - the saved EBP, past the
+         * 4-byte frame (sub esp,4 at 1:6b0e6; a 3-element array compiles to sub esp,8). The value is dead.
+         * That read is undefined in C, so the load is guarded: same behaviour, function stays NEAR. */
+        if (cnt_2 < LEN(ng_ids))
+            cnt_1 = ng_ids[cnt_2];
     }
 
     cur_obj->iframes_timer = 1;
