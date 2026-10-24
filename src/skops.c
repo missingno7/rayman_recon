@@ -753,7 +753,8 @@ void do_sko_rayon(void)
 
 void do_sko_rayon2(void)
 {
-    /* COMPILER_STEERED: conditional absolute value preserves signed-word promotion. */
+    /* COMPILER_STEERED: shared absolute helpers at DOS 1:6938b..6939c;
+     * final clock test reads horloge[3] directly at 1:69488. */
     s16 horl_zero;
     s16 diff_x;
     s16 diff_y;
@@ -774,7 +775,7 @@ void do_sko_rayon2(void)
         }
         diff_y = sko_final_y - sko_rayon_y;
         diff_x = sko_final_x - sko_rayon_x;
-        dist = ABS(diff_x) + (diff_y >= 0 ? diff_y : -diff_y);
+        dist = ABS(diff_x) + ABS(diff_y);
         if (dist > 0) {
             diff_x = ashl16(diff_x, D_801E4E10) / dist;
             diff_y = ashl16(diff_y, D_801E4E10) / dist;
@@ -790,8 +791,7 @@ void do_sko_rayon2(void)
             sko_rayon_x += sko_rayon_dx;
             sko_rayon_x += sko_rayon_dx;
         }
-        horl_zero = horloge[3] == 0;
-        if (horl_zero && dist != 0)
+        if (horloge[3] == 0 && dist != 0)
             allocate_rayon(sko_rayon_x, sko_rayon_y);
         if (sko_rayon_on == 0) {
             sko_rayon_x = -32000;

@@ -710,8 +710,9 @@ void DO_TIR(obj_t* obj) {
                     if (obj->type == TYPE_14_CHASSEUR2) {
                         distance = ((obj->x - ray.x) < 0 ? -(obj->x - ray.x) : (obj->x - ray.x)) >> 5;
                         cur_obj->type = TYPE_15_BALLE2;
-                        numerator = ray.y;
-                        numerator -= obj->y;
+                        /* COMPILER_STEERED: DOS 1:6afd0 loads obj->y before ray.y. */
+                        numerator = obj->y;
+                        numerator = ray.y - numerator;
                         numerator *= 2;
 
                         speed_y = numerator / ((obj->x - ray.x) < 0 ? -(obj->x - ray.x) : (obj->x - ray.x)) - (s16)distance;

@@ -7018,7 +7018,7 @@
      "quality": "COMPILER_STEERED"
     },
     "do_sko_rayon2": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -11594,7 +11594,8 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "effect_cleanup_6ee28": {
      "status": "STRICT",

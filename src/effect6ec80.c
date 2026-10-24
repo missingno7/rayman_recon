@@ -50,6 +50,8 @@ extern void effect_cleanup_6ee28(void);
 /* DOS routine at 1:00045 reads EAX and ESI and uses PUSHAD/POPAD. */
 #pragma aux draw_effect_segment parm [eax] [esi] modify exact []
 
+/* COMPILER_STEERED: max32 speed clamps follow DOS 1:6ece1..6ed03.
+ * The fraction is assigned once; surface writes share DOS 1:6ed5e. */
 void effect_helper_6ec80(s16 speed, u16 step)
 {
     effect_state_6e_t *state;
@@ -62,6 +64,7 @@ void effect_helper_6ec80(s16 speed, u16 step)
     u8 index;
     u8 y;
     u16 x;
+    u32 surface;
 
     state = effect_state_6e;
     step_x = (u8)(320 / state->columns);
@@ -69,11 +72,9 @@ void effect_helper_6ec80(s16 speed, u16 step)
     vertex = state->vertices;
     effect_reset_geometry();
     state->current = 0;
-    state->speed_fraction = 1;
-    if (state->speed_fraction < step)
-        state->speed_fraction = step;
+    state->speed_fraction = step > 1 ? step : 1;
     state->speed = speed >= 0 ?
-        (1 < speed ? speed : 1) : -(1 < -speed ? -speed : 1);
+        max32(1, speed) : -max32(1, -speed);
 
     row = 0;
     do {
@@ -84,11 +85,12 @@ void effect_helper_6ec80(s16 speed, u16 step)
             vertex->x = vertex->next_x = x;
             vertex->y = vertex->next_y = y;
             if (x < 160) {
-                vertex->surface = (u32)state->surface_a;
+                surface = (u32)state->surface_a;
             } else {
-                vertex->surface = (u32)state->surface_b;
+                surface = (u32)state->surface_b;
                 x -= 160;
             }
+            vertex->surface = surface;
             vertex->rectangle[0] = vertex->rectangle[2] = (u8)x;
             vertex->rectangle[4] = vertex->rectangle[6] = (u8)(x + step_x - 1);
             vertex->rectangle[1] = vertex->rectangle[7] = y;
