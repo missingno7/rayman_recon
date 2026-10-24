@@ -1,0 +1,46 @@
+{
+  "unit": "ray",
+  "function": "ray_inertia_speed",
+  "evidence": "num_world is a loaded level world 1..6 (STRICT INIT_WORLD_INFO / DEPART_LEVEL, src/worldmap.c:726, src/cheat.c:589). Nonzero slope acceleration a2 comes only from RAY_SWIP slope types 18..23 or type-254 platforms, and the 12 shipped CAVE (world 5) levels contain neither (difftriage evidence/cave_domain.json, STRONG). difftriage case 3.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "arg": 1
+            },
+            "values": [
+              0
+            ]
+          }
+        ]
+      ],
+      "evidence": "worlds 1..6; world 5 only with a2 == 0 (no slopes / type-254 platforms in shipped CAVE levels)"
+    }
+  ]
+}

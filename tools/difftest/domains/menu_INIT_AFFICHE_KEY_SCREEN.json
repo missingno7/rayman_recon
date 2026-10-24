@@ -1,0 +1,63 @@
+{
+  "unit": "menu",
+  "function": "INIT_AFFICHE_KEY_SCREEN",
+  "evidence": "STRICT INIT_KEY_SCREEN sets position=nbre_options=option_exit=8 (src/menu.c:1297..1311); first_option stays 0. difftriage case 8.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              8
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              8
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              8
+            ]
+          }
+        ]
+      ],
+      "evidence": "INIT_KEY_SCREEN"
+    },
+    {
+      "loc": {
+        "global": "language",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "evidence": "STRICT INIT_OPTIONS_CHOICE / InitParamGraphicsScreen switch (language) handle cases 0, 1, 2 only (src/menu.c:959..963, 2005..2009)"
+    }
+  ]
+}

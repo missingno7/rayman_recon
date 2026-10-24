@@ -1,0 +1,40 @@
+{
+  "unit": "jumelle",
+  "function": "RecaleRayPosInJumelle",
+  "evidence": "Binocular geometry is only produced by DefaultJumelleVariable (RayonJumelle=25), ChangeDeltaSizeJumelle (clamp 25..64) and ChangeJumelleVariable (LargeurJumelle=7*r/2, HauteurJumelle=2*r), all STRICT (src/jumelle.c:329..356, 516..517). difftriage case 2.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "RayonJumelle",
+        "size": 4
+      },
+      "range": [
+        25,
+        64
+      ],
+      "evidence": "STRICT ChangeDeltaSizeJumelle clamps to 25..64; DefaultJumelleVariable sets 25"
+    },
+    {
+      "loc": {
+        "global": "LargeurJumelle",
+        "size": 4
+      },
+      "range": [
+        87,
+        224
+      ],
+      "evidence": "STRICT ChangeJumelleVariable: 7*r/2"
+    },
+    {
+      "loc": {
+        "global": "HauteurJumelle",
+        "size": 4
+      },
+      "range": [
+        50,
+        128
+      ],
+      "evidence": "STRICT ChangeJumelleVariable: 2*r"
+    }
+  ]
+}

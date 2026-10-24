@@ -1,0 +1,63 @@
+{
+  "unit": "menu",
+  "function": "INIT_AFFICHE_PAD_SCREEN",
+  "evidence": "STRICT INIT_PAD_SCREEN sets first_option=0, position=nbre_options=option_exit=5 (src/menu.c:1723..1739). difftriage case 9.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              5
+            ]
+          }
+        ]
+      ],
+      "evidence": "INIT_PAD_SCREEN"
+    },
+    {
+      "loc": {
+        "global": "language",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "evidence": "STRICT INIT_OPTIONS_CHOICE / InitParamGraphicsScreen switch (language) handle cases 0, 1, 2 only (src/menu.c:959..963, 2005..2009)"
+    }
+  ]
+}

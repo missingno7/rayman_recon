@@ -1,0 +1,19 @@
+{
+  "unit": "moteur",
+  "function": "DO_MOTEUR2",
+  "evidence": "Player scale is initialised/reset to 0 or 256 (src/objinit.c:440, src/worldmap.c:743,750) and only changed here by writing 256 or subtracting 5 with a zero clamp: 0..256 (STRONG). difftriage case 5.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "ray",
+        "offset": "0x5a",
+        "size": 2
+      },
+      "range": [
+        0,
+        256
+      ],
+      "evidence": "ray.scale (obj_t +0x5a)"
+    }
+  ]
+}

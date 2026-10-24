@@ -1,0 +1,219 @@
+{
+  "unit": "menu",
+  "function": "INIT_AFFICHE_GRAPHIC_SCREEN",
+  "evidence": "STRICT InitParamGraphicsScreen (src/menu.c:1960..2040) selects one of these row spans (after its --nbre_options where present); position starts inside and DO_COMMANDE keeps it inside [first_option, option_exit]. difftriage case 10.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              2
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              3
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              2,
+              5
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              3
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              2
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              3,
+              5
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              1
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              7
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              1,
+              7
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              3
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              4
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              3,
+              6
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              1
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              1,
+              6
+            ]
+          }
+        ]
+      ],
+      "evidence": "InitParamGraphicsScreen branches"
+    },
+    {
+      "loc": {
+        "global": "language",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "evidence": "STRICT INIT_OPTIONS_CHOICE / InitParamGraphicsScreen switch (language) handle cases 0, 1, 2 only (src/menu.c:959..963, 2005..2009)"
+    }
+  ]
+}

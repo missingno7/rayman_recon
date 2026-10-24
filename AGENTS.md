@@ -84,6 +84,8 @@ mechanism: rover offset, home sort, colour tie, Score substitution, selection, s
 permuter, needs pycparser; tools/permute.md),
 `tools/semir.py UNIT [FUNC] [--src COPY.c]` (earliest COMPUTATIONAL difference vs DOS - local widths, test order, operand
 order, stores; EXACT = only allocation left; run it before explain/permuter; docs/CAUSES.md H14),
+`tools/difftest/difftest.py UNIT FUNC | --all | --controls | --replay RESULT` (differential execution DOS vs ours in Unicorn,
+EQUIVALENT_TESTED evidence, never STRICT; outputs build/difftest),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`,
 `tools/integrate.py WORKER_DIR UNIT=FILE.c ... -m MSG` (integrator: copy, merge, register, gate, commit only if green).
 

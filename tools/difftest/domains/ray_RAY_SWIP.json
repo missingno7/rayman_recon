@@ -1,0 +1,21 @@
+{
+  "unit": "ray",
+  "function": "RAY_SWIP",
+  "evidence": "RAY_SWIP is called from the ground/air/state-3 branches of the player state machine (src/ray.c:1419,1434,1489,1555,1595,1601,1689,1756,2920); main_etat 255 is not a player state. Domain restricted to the states the triage verified (0..3). difftriage case 4.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "ray",
+        "offset": "0x6d",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "evidence": "ray.main_etat (obj_t +0x6d) in the calling branches"
+    }
+  ]
+}

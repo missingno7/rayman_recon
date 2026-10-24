@@ -7,3 +7,4 @@ __pycache__/
 to_delete/
 tools/portspec/*/results/
 tools/portspec/*/*.jsonl
+tools/difftest/__pycache__/

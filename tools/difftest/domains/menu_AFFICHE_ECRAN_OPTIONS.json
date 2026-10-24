@@ -1,0 +1,134 @@
+{
+  "unit": "menu",
+  "function": "AFFICHE_ECRAN_OPTIONS",
+  "evidence": "STRICT INIT_OPTIONS_CHOICE writes max_sound=20, ecart_barre=4 and the row range (src/menu.c:943..978); the sound volume is 0..max_sound. difftriage case 7.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              5
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              6
+            ]
+          }
+        ]
+      ],
+      "evidence": "INIT_OPTIONS_CHOICE row ranges"
+    },
+    {
+      "loc": {
+        "global": "max_sound",
+        "size": 2
+      },
+      "values": [
+        20
+      ],
+      "evidence": "INIT_OPTIONS_CHOICE max_sound = 20"
+    },
+    {
+      "loc": {
+        "global": "ecart_barre",
+        "size": 2
+      },
+      "values": [
+        4
+      ],
+      "evidence": "INIT_OPTIONS_CHOICE ecart_barre = 4"
+    },
+    {
+      "loc": {
+        "global": "options",
+        "offset": 2,
+        "size": 2
+      },
+      "range": [
+        0,
+        20
+      ],
+      "evidence": "options.sound_volume (options_t +2, src/menu_local.h:8) in 0..max_sound"
+    },
+    {
+      "loc": {
+        "global": "language",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "evidence": "STRICT INIT_OPTIONS_CHOICE / InitParamGraphicsScreen switch (language) handle cases 0, 1, 2 only (src/menu.c:959..963, 2005..2009)"
+    }
+  ]
+}

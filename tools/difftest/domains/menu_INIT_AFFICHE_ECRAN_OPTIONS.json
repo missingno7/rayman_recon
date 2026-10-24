@@ -1,0 +1,102 @@
+{
+  "unit": "menu",
+  "function": "INIT_AFFICHE_ECRAN_OPTIONS",
+  "evidence": "Row range set by STRICT INIT_OPTIONS_CHOICE: first_option=0, (nbre_options, option_exit, position)=(5,5,5) or (6,6,6) (src/menu.c:943..978); DO_COMMANDE moves position inside the rows. difftriage case 6.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              5
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "first_option",
+              "size": 1
+            },
+            "values": [
+              0
+            ]
+          },
+          {
+            "loc": {
+              "global": "nbre_options",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "option_exit",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "global": "position",
+              "size": 2
+            },
+            "range": [
+              0,
+              6
+            ]
+          }
+        ]
+      ],
+      "evidence": "INIT_OPTIONS_CHOICE OptionGame / !OptionGame branches"
+    },
+    {
+      "loc": {
+        "global": "language",
+        "size": 1
+      },
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "evidence": "STRICT INIT_OPTIONS_CHOICE / InitParamGraphicsScreen switch (language) handle cases 0, 1, 2 only (src/menu.c:959..963, 2005..2009)"
+    }
+  ]
+}
