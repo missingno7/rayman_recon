@@ -37,6 +37,7 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 ## 4. Meaning (names, types) - needed for a maintainable port, not for behaviour
 | item | size | state |
 |---|---|---|
+| semantic registry (names and meanings) | basic.c pilot 2026-10-24: 578 entities (475 PROVEN, 69 STRONG, 34 UNKNOWN) in docs/semantics/basic.json, enforced against code and compiled layout (tools/semantics.py, tests/test_semantics.py); 22 local/parameter + 2 field renames, compiled object identical. Next: moteur.c (movement/timing), ray.c + collision, objinit.c + load.c | IN PROGRESS |
 | function names INVENTED / placeholder-style | 241 INVENTED (198 sub_/effect_helper_-style) of 1,851 | OPEN |
 | data names INVENTED / placeholder-style | 228 INVENTED (165 placeholder-style) of 1,358 | OPEN |
 | unk_/field_/sub_/dword_ identifiers in src | 353 distinct | OPEN |

@@ -86,6 +86,8 @@ permuter, needs pycparser; tools/permute.md),
 order, stores; EXACT = only allocation left; run it before explain/permuter; docs/CAUSES.md H14),
 `tools/difftest/difftest.py UNIT FUNC | --all | --controls | --replay RESULT` (differential execution DOS vs ours in Unicorn,
 EQUIVALENT_TESTED evidence, never STRICT; outputs build/difftest),
+`tools/semantics.py check [--evidence] | refresh | generate` (semantic registry docs/semantics/*.json: names, meanings,
+evidence levels, port notes, enforced against code and compiled layout; docs/semantics/README.md),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`,
 `tools/integrate.py WORKER_DIR UNIT=FILE.c ... -m MSG` (integrator: copy, merge, register, gate, commit only if green).
 

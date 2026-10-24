@@ -107,19 +107,27 @@ extern display_item_t text_to_display[11];
 bool EOA(obj_t* obj);
 void save_objects_flags(void);
 void restore_objects_flags(void);
+/* PROVEN: parameter names only; DOS 1:0d204. */
 void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs);
 obj_t* findfirstObject(u16 obj_type);
 obj_t* findfirstInactiveObject(u16 obj_type);
-s16 sinYspeed(obj_t* obj, s16 a2, s16 a3, s16* a4);
+/* PROVEN: parameter names only; DOS 1:0d528. */
+s16 sinYspeed(obj_t* obj, s16 phase_step, s16 amplitude, s16* phase_accumulator);
 void set_proj_center(s16 x, s16 y);
 s16 get_proj_dist(s16 scale, s16 outer_dim);
-s32 get_proj_dist2(s16 scale, s16 a2);
-s16 get_proj_x(s16 scale, s16 a2);
-s16 get_proj_y(s16 scale, s16 a2);
+/* PROVEN: parameter names only; DOS 1:0d5b0. */
+s32 get_proj_dist2(s16 scale, s16 unprojected_dimension);
+/* PROVEN: parameter names only; DOS 1:0d5d8. */
+s16 get_proj_x(s16 scale, s16 unprojected_x);
+/* PROVEN: parameter names only; DOS 1:0d614. */
+s16 get_proj_y(s16 scale, s16 unprojected_y);
 void set_zoom_mode(u8 mode);
-s16 inverse_proj_x(s16 scale, s16 a2);
-s16 inverse_proj_y(s16 scale, s16 a2);
-s32 vblToEOA(obj_t* obj, u8 a2);
+/* PROVEN: parameter names only; DOS 1:0d658. */
+s16 inverse_proj_x(s16 scale, s16 projected_x);
+/* PROVEN: parameter names only; DOS 1:0d690. */
+s16 inverse_proj_y(s16 scale, s16 projected_y);
+/* PROVEN: parameter names only; DOS 1:0d6c8. */
+s32 vblToEOA(obj_t* obj, u8 duration_multiplier);
 void GET_ANIM_POS(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
 void add_actobj(s16 a1);
 void set_sub_etat(obj_t* obj, u8 sub_etat);
@@ -128,9 +136,12 @@ void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 s16 get_center_x(obj_t* obj);
 s16 get_center_y(obj_t* obj);
 s16 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y);
+/* PROVEN: parameter names only; DOS 1:0db04. */
 void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 anim_frame_2);
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
+/* PROVEN: parameter names only; DOS 1:0dbb4. */
+s16 GET_SPRITE_POS(obj_t* obj, s16 layer_index, s16* x, s16* y, s16* w, s16* h);
 void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h);
+/* PROVEN: parameter names only; DOS 1:0dec0. */
 void GET_BB1_ZDCs(obj_t* obj, s16 *x_1, s16 *y_1, s16 *w_1, s16 *h_1, s16 *x_2, s16 *y_2, s16 *w_2, s16 *h_2);
 void calc_obj_dir(obj_t* obj);
 s16 OBJ_IN_ZONE(obj_t* obj);
@@ -144,6 +155,7 @@ void init_obj_in_the_air(obj_t* obj);
 void make_my_fruit_go_down(obj_t* obj, s16 x_accel);
 void switchOff(obj_t* obj);
 void obj_hurt(obj_t* target);
+/* PROVEN: parameter names only; DOS 1:0eba0. */
 void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, s16 new_spd_y);
 void del_actobj(obj_t* obj);
 s16 calc_let_Width(u8 font_size, u32 num_let);
@@ -155,8 +167,10 @@ s16 calc_largmax_text(const char* text, s16 char_index, s16 space_width, s16 cha
 void INIT_TXT_BOX(display_item_t* box);
 void Deter_Option_Caract(char* text, s16 key, s16 offset);
 void SwapAB(s16* a, s16* b);
-void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s16 param_6, s16 percent);
+/* PROVEN: parameter names only; DOS 1:0f520. */
+void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s16 callback_gap, s16 endpoint_fraction_128);
 void init_finBossLevel(void);
+/* PROVEN: parameter names only; DOS 1:0f8a4. */
 void Change_Wait_Anim(void);
 void add_alwobj(obj_t* obj);
 void del_alwobj(s16 obj_index);

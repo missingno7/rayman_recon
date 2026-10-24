@@ -193,8 +193,8 @@ typedef union obj_type_flags_t {   /* flags[262] at 2:257c: one u32 per object t
         u8 flags1; /* raw byte view: special_flags_init DOS 1:50310/50319 */
         struct {
         u8 flags1_lo : 4;
-        u8 move_x : 1;                 /* byte 1 bit 4: DOS makeUturn tests [flags+type*4+1] & 0x10 */
-        u8 move_y : 1;                 /* byte 1 bit 5 */
+        u8 speed_x_uses_sixteenths : 1; /* PROVEN: snapToSprite 1:0d204 + MOVE_OBJECT/instantSpeed; name INVENTED. */
+        u8 speed_y_uses_sixteenths : 1; /* PROVEN: snapToSprite 1:0d204 + MOVE_OBJECT/instantSpeed; name INVENTED. */
         u8 flags1_hi : 2;
         };
         };

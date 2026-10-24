@@ -65,9 +65,22 @@ void restore_objects_flags(void) {
 }
 
 //1D204
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d204); meanings in docs/semantics/basic.json. */
 void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs) {
   /* COMPILER_STEERED: snapshots of the flag byte and X case order preserve
-   * all eight targets carried by restore_objects_flags. Locals INVENTED. */   u8 obj_2_frames_count;   eta_t *obj_2_eta_2;   s16 prev_frame;   s16 prev_index;   s16 obj_2_x;   s16 obj_2_y;   s16 obj_2_w;   s16 obj_2_h;   s16 new_spd_x;   s16 new_spd_y;   eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];   s16 obj_2_anim_index = obj_2_eta_1->anim_index;
+   * all eight targets carried by restore_objects_flags. Locals INVENTED. */
+  u8 obj_2_frames_count;
+  eta_t *obj_2_eta_2;
+  s16 prev_frame;
+  s16 prev_index;
+  s16 obj_2_x;
+  s16 obj_2_y;
+  s16 obj_2_w;
+  s16 obj_2_h;
+  s16 new_spd_x;
+  s16 new_spd_y;
+  eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];
+  s16 obj_2_anim_index = obj_2_eta_1->anim_index;
   s16 obj_2_anim_frame = obj_2->anim_frame;
   if (horloge[obj_2_eta_1->anim_speed & 0xF] == 0)
   {
@@ -79,9 +92,9 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
       obj_2_anim_index = obj_2_eta_2->anim_index;
       obj_2_frames_count = obj_2->animations[obj_2_anim_index].frames_count;
       {
-        s16 perm_value_7;
-        perm_value_7 = (obj_2_eta_2->flags & 0x10) ? (obj_2_frames_count - 1) : (0);
-        obj_2_anim_frame = perm_value_7;
+        s16 next_animation_start_frame;
+        next_animation_start_frame = (obj_2_eta_2->flags & 0x10) ? (obj_2_frames_count - 1) : (0);
+        obj_2_anim_frame = next_animation_start_frame;
       }
     }
   }
@@ -190,14 +203,15 @@ obj_t* findfirstInactiveObject(u16 obj_type) {
 }
 
 //1D528
-s16 sinYspeed(obj_t* obj, s16 a2, s16 a3, s16* a4) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d528); meanings in docs/semantics/basic.json. */
+s16 sinYspeed(obj_t* obj, s16 phase_step, s16 amplitude, s16* phase_accumulator) {
     /* 225B8 80146DB8 -O2 -msoft-float */
-    s16 unk_1 = (*a4 + a2) & 0xFFF;
+    s16 phase_4096 = (*phase_accumulator + phase_step) & 0xFFF;
     s16 diff_y = obj->y - obj->init_y;
-    s32 unk_2 = (sinus(unk_1 >> 3) * a3) >> 9;
+    s32 target_y_offset = (sinus(phase_4096 >> 3) * amplitude) >> 9;
 
-    *a4 = unk_1;
-    return unk_2 - diff_y;
+    *phase_accumulator = phase_4096;
+    return target_y_offset - diff_y;
 }
 
 //1D560
@@ -218,21 +232,24 @@ s16 get_proj_dist(s16 scale, s16 outer_dim) {
 }
 
 //1D5B0
-s32 get_proj_dist2(s16 scale, s16 a2) {
-    return (a2 * ((256*256) / (scale + 256))) >> 8;
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d5b0); meanings in docs/semantics/basic.json. */
+s32 get_proj_dist2(s16 scale, s16 unprojected_dimension) {
+    return (unprojected_dimension * ((256*256) / (scale + 256))) >> 8;
 }
 
 //1D5D8
-s16 get_proj_x(s16 scale, s16 a2) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d5d8); meanings in docs/semantics/basic.json. */
+s16 get_proj_x(s16 scale, s16 unprojected_x) {
     //NOTE: needs checking
-    s32 temp = ((256 * 256) / (scale + 256)) * (a2 - PROJ_CENTER_X);
+    s32 temp = ((256 * 256) / (scale + 256)) * (unprojected_x - PROJ_CENTER_X);
     return ((temp / 256) + PROJ_CENTER_X);
 }
 
 //1D614
-s16 get_proj_y(s16 scale, s16 a2) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d614); meanings in docs/semantics/basic.json. */
+s16 get_proj_y(s16 scale, s16 unprojected_y) {
     //NOTE: needs checking
-    s32 temp = ((256 * 256) / (scale + 256)) * (a2 - PROJ_CENTER_Y);
+    s32 temp = ((256 * 256) / (scale + 256)) * (unprojected_y - PROJ_CENTER_Y);
     return ((temp / 256) + PROJ_CENTER_Y);
 }
 
@@ -242,25 +259,28 @@ void set_zoom_mode(u8 mode) {
 }
 
 //1D658
-s16 inverse_proj_x(s16 scale, s16 a2) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d658); meanings in docs/semantics/basic.json. */
+s16 inverse_proj_x(s16 scale, s16 projected_x) {
     s32 divisor = (256*256) / (scale + 256);
-    return ((a2 - PROJ_CENTER_X) << 8) / divisor + PROJ_CENTER_X;
+    return ((projected_x - PROJ_CENTER_X) << 8) / divisor + PROJ_CENTER_X;
 }
 
 //1D690
-s16 inverse_proj_y(s16 scale, s16 a2) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d690); meanings in docs/semantics/basic.json. */
+s16 inverse_proj_y(s16 scale, s16 projected_y) {
     s32 divisor = (256*256) / (scale + 256);
-    return ((a2 - PROJ_CENTER_Y) << 8) / divisor + PROJ_CENTER_Y;
+    return ((projected_y - PROJ_CENTER_Y) << 8) / divisor + PROJ_CENTER_Y;
 }
 
 //1D6C8
-s32 vblToEOA(obj_t* obj, u8 a2) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0d6c8); meanings in docs/semantics/basic.json. */
+s32 vblToEOA(obj_t* obj, u8 duration_multiplier) {
     eta_t* eta = get_eta(obj);
     s16 anim_speed = eta->anim_speed & 15;
     s16 duration = anim_speed;
     s16 result;
     duration *= obj->animations[eta->anim_index].frames_count;
-    result = duration * a2 - horloge[anim_speed] + 1;
+    result = duration * duration_multiplier - horloge[anim_speed] + 1;
     if (result > 0) return result;
     else return 1;
 }
@@ -477,45 +497,47 @@ s16 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y) {
 }
 
 //1DB04
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0db04); meanings in docs/semantics/basic.json. */
 void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 anim_frame_2) {
     /* COMPILER_STEERED: declaration and independent X-load order. */
-    s32 unk_1;
+    s32 mirrored_layer_origin_x;
     s32 x_2;
     s32 x_1;
     u8 width_1;
-    u8 foll_spr;
+    u8 follow_layer_index;
     anim_layer_t* layer_1 = &anim_1->layers[(anim_1->layers_per_frame & 0x3FFF) * obj->anim_frame];
     anim_layer_t* layer_2 = &anim_2->layers[(anim_2->layers_per_frame & 0x3FFF) * anim_frame_2];
-    foll_spr = obj->follow_sprite;
+    follow_layer_index = obj->follow_sprite;
 
-    width_1 = obj->sprites[layer_1[foll_spr].sprite_index].outer_width;
+    width_1 = obj->sprites[layer_1[follow_layer_index].sprite_index].outer_width;
     if (obj->flags.flip_x) {
-        unk_1 = (obj->offset_bx * 2) - width_1;
-        x_1 = unk_1 - layer_1[foll_spr].x;
-        x_2 = unk_1 - layer_2[foll_spr].x;
+        mirrored_layer_origin_x = (obj->offset_bx * 2) - width_1;
+        x_1 = mirrored_layer_origin_x - layer_1[follow_layer_index].x;
+        x_2 = mirrored_layer_origin_x - layer_2[follow_layer_index].x;
     } else {
-        x_1 = layer_1[foll_spr].x;
-        x_2 = layer_2[foll_spr].x;
+        x_1 = layer_1[follow_layer_index].x;
+        x_2 = layer_2[follow_layer_index].x;
     }
     obj->follow_x = x_1 - x_2;
-    obj->follow_y = layer_1[foll_spr].y - layer_2[foll_spr].y;
+    obj->follow_y = layer_1[follow_layer_index].y - layer_2[follow_layer_index].y;
 }
 
 //1DBB4
-s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h) {
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0dbb4); meanings in docs/semantics/basic.json. */
+s16 GET_SPRITE_POS(obj_t* obj, s16 layer_index, s16* x, s16* y, s16* w, s16* h) {
     /* 230E0 801478E0 -O2 -msoft-float */
     anim_t *anim;
     anim_layer_t *layer;
-    u8 sprite_ind;
+    u8 selected_sprite_index;
     sprite_t *sprite;
     s16 res;
 
     anim = &obj->animations[obj->anim_index];
     layer = &anim->layers[(anim->layers_per_frame & 0x3FFF) * obj->anim_frame];
-    layer += index;
-    sprite_ind = layer->sprite_index;
-    sprite = &obj->sprites[sprite_ind];
-    if (sprite_ind != 0 && sprite->id != 0) {
+    layer += layer_index;
+    selected_sprite_index = layer->sprite_index;
+    sprite = &obj->sprites[selected_sprite_index];
+    if (selected_sprite_index != 0 && sprite->id != 0) {
         *w = sprite->inner_width;
         *h = sprite->inner_height;
         if (obj->flags.flip_x != (sprite->flags_bits.flip_x)) {
@@ -589,15 +611,16 @@ void GET_RAY_ZDC(obj_t* obj, s16* x, s16* y, s16* w, s16* h) {
 }
 
 //1DEC0
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0dec0); meanings in docs/semantics/basic.json. */
 void GET_BB1_ZDCs(obj_t* obj, s16 *x_1, s16 *y_1, s16 *w_1, s16 *h_1, s16 *x_2, s16 *y_2, s16 *w_2, s16 *h_2) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s16 spr_ind = 6;
+    s16 collision_layer_index = 6;
     s16 h_loc;
 
     GET_ANIM_POS(obj, x_1, y_1, w_1, &h_loc);
     if (obj->main_etat == 2 && (obj->sub_etat == 0 || obj->sub_etat == 4))
-        spr_ind = 3;
-    GET_SPRITE_POS(obj, spr_ind, x_1, y_1, w_1, h_1);
+        collision_layer_index = 3;
+    GET_SPRITE_POS(obj, collision_layer_index, x_1, y_1, w_1, h_1);
     *x_2 = *x_1 - 7;
     *y_2 = *y_1 + *h_1;
     *w_2 = *w_1 + 14;
@@ -841,7 +864,7 @@ void makeUturn(obj_t* obj) {
 
     if (label != 255) {
         // NOTE: difference with PS1 version
-        if (flags[obj->type].move_x) {
+        if (flags[obj->type].speed_x_uses_sixteenths) {
             obj->x -= instantSpeed(obj->speed_x);
         } else {
             obj->x -= obj->speed_x;
@@ -1089,11 +1112,12 @@ void obj_hurt(obj_t* target) {
 }
 
 //1EBA0
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0eba0); meanings in docs/semantics/basic.json. */
 void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, s16 new_spd_y) {
     /* 249D0 801491D0 -O2 -msoft-float */
     s16 diff_x; s16 diff_y;
     s16 diff_x_abs; s16 diff_y_abs;
-    s16 unk_x; s16 unk_y;
+    s16 target_step_x; s16 target_step_y;
     s32 spd_x;
 
     *out_spd_x = 0;
@@ -1104,8 +1128,8 @@ void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, 
     diff_y_abs = Abs(diff_y);
     if (diff_x != 0 && diff_y != 0) {
         if (diff_x_abs > diff_y_abs) {
-            unk_x = diff_x / diff_y_abs;
-            unk_y = diff_y / diff_y_abs;
+            target_step_x = diff_x / diff_y_abs;
+            target_step_y = diff_y / diff_y_abs;
             *out_spd_x = new_spd_x;
             if (diff_x <= 0) {
                 *out_spd_x = -new_spd_x;
@@ -1121,8 +1145,8 @@ void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, 
                 *out_spd_x = spd_x;
             }
         } else {
-            unk_y = diff_y / diff_x_abs;
-            unk_x = diff_x / diff_x_abs;
+            target_step_y = diff_y / diff_x_abs;
+            target_step_x = diff_x / diff_x_abs;
             *out_spd_y = new_spd_y;
             if (diff_y <= 0) {
                 *out_spd_y = -new_spd_y;
@@ -1134,20 +1158,20 @@ void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, 
         if (diff_x > 0) {
             *out_spd_x = -new_spd_x;
         }
-        unk_x = -1;
+        target_step_x = -1;
         if (diff_x > 0) {
-            unk_x = 1;
+            target_step_x = 1;
         }
-        unk_y = 0;
+        target_step_y = 0;
     } else {
         *out_spd_y = new_spd_y;
         if (diff_y <= 0) {
             *out_spd_y = -new_spd_y;
         }
-        unk_x = 0;
-        unk_y = -1;
+        target_step_x = 0;
+        target_step_y = -1;
         if (diff_y > 0) {
-            unk_y = 1;
+            target_step_y = 1;
         }
     }
 
@@ -1158,8 +1182,8 @@ void Projectil_to_RM(obj_t* obj, s16* out_spd_x, s16* out_spd_y, s16 new_spd_x, 
         }
     }
 
-    obj->follow_x += unk_x * 2;
-    obj->follow_y += unk_y * 2;
+    obj->follow_x += target_step_x * 2;
+    obj->follow_y += target_step_y * 2;
 }
 
 //1EE18
@@ -1387,78 +1411,6 @@ void INIT_TXT_BOX(display_item_t* box) { /* Close-out compiler steering; introdu
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //1F4A0
 void Deter_Option_Caract(char* text, s16 key, s16 offset) {
     u8 i;
@@ -1496,13 +1448,14 @@ void SwapAB(s16* a, s16* b) {
 /* DOS-derived Bresenham control flow. Endpoint fraction has denominator 128.
    The original redundant shift-helper branches are still not reproduced by C. */
 //1F520
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0f520); meanings in docs/semantics/basic.json. */
 void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
-               s16 dest_x, s16 dest_y, s16 param_6, s16 percent) {
+               s16 dest_x, s16 dest_y, s16 callback_gap, s16 endpoint_fraction_128) {
     s32 dx = dest_x - origin_x;
     s32 dy = dest_y - origin_y;
     s16 reversed = 0;
     s16 counter;
-    s16 gap = param_6;
+    s16 gap = callback_gap;
     s16 x_straight, x_diagonal, y_straight, y_diagonal;
     s32 step_x, step_y;
     s32 error, x, y, end;
@@ -1530,7 +1483,7 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
         x_diagonal = 2 * (dy - dx);
         if (reversed) {
             x = dest_x;
-            end = x + (((origin_x - x) * percent) >> 7);
+            end = x + (((origin_x - x) * endpoint_fraction_128) >> 7);
             ++x;
             y = dest_y;
             step_y = -step_y;
@@ -1543,7 +1496,7 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
             }
         } else {
             x = origin_x;
-            end = x + (((dest_x - x) * percent) >> 7);
+            end = x + (((dest_x - x) * endpoint_fraction_128) >> 7);
             ++x;
             y = origin_y;
             while (x <= end) {
@@ -1575,7 +1528,7 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
         y_diagonal = 2 * (dx - dy);
         if (reversed) {
             y = dest_y;
-            end = y + (((origin_y - y) * percent) >> 7);
+            end = y + (((origin_y - y) * endpoint_fraction_128) >> 7);
             ++y;
             x = dest_x;
             step_x = -step_x;
@@ -1588,7 +1541,7 @@ void Bresenham(void (*func)(s16, s16), s16 origin_x, s16 origin_y,
             }
         } else {
             y = origin_y;
-            end = y + (((dest_y - y) * percent) >> 7);
+            end = y + (((dest_y - y) * endpoint_fraction_128) >> 7);
             ++y;
             x = origin_x;
             while (y <= end) {
@@ -1619,12 +1572,13 @@ void init_finBossLevel(void) {
 }
 
 //1F8A4
+/* Parameter/local names INVENTED from the PROVEN computation (DOS 1:0f8a4); meanings in docs/semantics/basic.json. */
 void Change_Wait_Anim(void) {
     eta_t** ray_eta = ray.eta;
-    u8 prev_00 = ray_eta[0][0].anim_index;
+    u8 previous_idle_animation = ray_eta[0][0].anim_index;
     ray_eta[3][20].anim_index = ray_eta[0][56].anim_index;
     ray_eta[0][0].anim_index = ray_eta[0][56].anim_index;
-    ray_eta[0][56].anim_index = prev_00;
+    ray_eta[0][56].anim_index = previous_idle_animation;
     first_boss_meet = 1 - first_boss_meet;
 }
 
