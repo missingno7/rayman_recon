@@ -686,7 +686,8 @@ void determineRayAirInertia(void) {
 }
 
 void ray_jump(void) {
-    /* COMPILER_STEERED: follow_y is assigned only a signed-short field; the wider local preserves its value. */
+    /* SYNTHETIC: explicit unsigned tile-dispatch tree, DOS 1:5ce09..5cebf.
+     * The four slope groups and default are unchanged; follow_y still holds a signed-short field. */
     s16 speed_y;
     s32 follow_y;
     s32 unk_2;
@@ -713,35 +714,39 @@ void ray_jump(void) {
             follow_y = level.objects[ray.follow_id].follow_y;
             speed_y = min32(speed_y, follow_y);
         } else {
-            switch (ray.btypes[0]) {
-                case BTYP_NONE:
-                    break;
-                case BTYP_SOLID_RIGHT_45:
-                case BTYP_SLIPPERY_RIGHT_45:
-                    if (ray.speed_x >= 6)
-                        speed_y = ~ray.speed_x;
-                    break;
-                case BTYP_SOLID_LEFT_45:
-                case BTYP_SLIPPERY_LEFT_45:
-                    if (ray.speed_x < -5)
-                        speed_y = ray.speed_x - 1;
-                    break;
-                case BTYP_SOLID_RIGHT1_30:
-                case BTYP_SOLID_RIGHT2_30:
-                case BTYP_SLIPPERY_RIGHT1_30:
-                case BTYP_SLIPPERY_RIGHT2_30:
-                    if (ray.speed_x > 10)
-                        speed_y = ~ashr16(ray.speed_x, 1);
-                    break;
-                case BTYP_SOLID_LEFT1_30:
-                case BTYP_SOLID_LEFT2_30:
-                case BTYP_SLIPPERY_LEFT1_30:
-                case BTYP_SLIPPERY_LEFT2_30:
-                    if (ray.speed_x < -10)
-                        speed_y = ~ashr16(ray.speed_x, 1);
-                    break;
-                case BTYP_SLIPPERY:
-                    break;
+            {
+                u8 btype = ray.btypes[0];
+                if (btype < 12) {
+                    if (btype < 4) {
+                        if (btype < 2) goto jump_surface_done;
+                        if (btype <= 2) goto jump_surface_right45;
+                        goto jump_surface_left45;
+                    }
+                    if (btype <= 5) goto jump_surface_right30;
+                    if (btype < 8) goto jump_surface_left30;
+                    goto jump_surface_done;
+                }
+                if (btype <= 12) goto jump_surface_done;
+                if (btype < 20) {
+                    if (btype < 18) goto jump_surface_done;
+                    if (btype <= 18) goto jump_surface_right45;
+                    goto jump_surface_left45;
+                }
+                if (btype <= 21) goto jump_surface_right30;
+                if (btype < 24) goto jump_surface_left30;
+                goto jump_surface_done;
+            jump_surface_right45:
+                if (ray.speed_x > 5) speed_y = ~ray.speed_x;
+                goto jump_surface_done;
+            jump_surface_left45:
+                if (ray.speed_x < -5) speed_y = ray.speed_x - 1;
+                goto jump_surface_done;
+            jump_surface_right30:
+                if (ray.speed_x > 10) speed_y = ~ashr16(ray.speed_x, 1);
+                goto jump_surface_done;
+            jump_surface_left30:
+                if (ray.speed_x < -10) speed_y = ~ashr16(ray.speed_x, 1);
+            jump_surface_done: ;
             }
         }
         ray.speed_y = speed_y;
@@ -2603,23 +2608,40 @@ void stackRay(void) {
 }
 
 void RAY_SURF(void) {
-    /* COMPILER_STEERED: speed snapshots the magnitude used by the second branch; no intervening call can reach that branch. speed is INVENTED. */
-    if (ray.follow_id != -1) {
+    /* SYNTHETIC: branch-local magnitude reads and forward labels; empty scopes
+     * retained after ablation. DOS 1:6099f..60a86; no call can reach the slow branch. */
+    if (ray.follow_id != (-1)) {
         obj_t *obj = &level.objects[ray.follow_id];
-        if (obj->type == TYPE_160_TIBETAIN_2 || obj->type == TYPE_159_TIBETAIN_6) return;
-    }
-    {
-    s32 speed = abs32_inline(ray.speed_x);
-    if (ray.main_etat == 0 && ray.sub_etat != 13 && ray.sub_etat != 11 && ray.sub_etat != 12 && ray.sub_etat != 18) {
-        if (abs32_inline(ray.speed_x) > 3 && !(ray.sub_etat == 40)) {
-            if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40) && ray.sub_etat != 8 && ray.sub_etat != 52 && ray.sub_etat != 53) {
-                set_main_and_sub_etat(&ray,0,41);
-            }
-        } else if (speed < 3 && ray.sub_etat == 40) {
-            if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) set_main_and_sub_etat(&ray,0,42);
+        if ((obj->type == TYPE_160_TIBETAIN_2) || (obj->type == TYPE_159_TIBETAIN_6)) {
+            return;
         }
     }
-
+    {
+        {
+            if (((((ray.main_etat == 0) && (ray.sub_etat != 13)) && (ray.sub_etat != 11)) && (ray.sub_etat != 12)) && (ray.sub_etat != 18)) {
+                {
+                    if ((!((abs32_inline(ray.speed_x) > 3) && (!(ray.sub_etat == 40)))) != 0) {
+                        goto perm_else_3;
+                    }
+                    {
+                        if ((((!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) && (ray.sub_etat != 8)) && (ray.sub_etat != 52)) && (ray.sub_etat != 53)) {
+                            set_main_and_sub_etat(&ray, 0, 41);
+                        }
+                    }
+                    {
+                        goto perm_end_3;
+                    }
+                    perm_else_3: {
+                        if ((abs32_inline(ray.speed_x) < 3) && (ray.sub_etat == 40)) {
+                            if (!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)) {
+                                set_main_and_sub_etat(&ray, 0, 42);
+                            }
+                        }
+                    }
+                    perm_end_3:;
+                }
+            }
+        }
     }
 }
 

@@ -946,14 +946,14 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
 
 //2D0D4
 void SET_RAY_DIST_MULTISPR_CANTCHANGE(obj_t* obj) {
-    /* COMPILER_STEERED: Existing ABS helper, declaration order and scope steer stack homes. */
+    /* COMPILER_STEERED: Existing ABS helper and scope; swapping i/new_dist declarations fixes stack homes. */
     {
         s16 unk_1;
 
         s16 ray_x;
 
-        s16 i;
         s16 new_dist;
+        s16 i;
         s16 spr_x;
         s16 spr_y;
         s16 spr_w;

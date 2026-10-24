@@ -3310,7 +3310,7 @@
      ]
     },
     "SET_RAY_DIST_MULTISPR_CANTCHANGE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -6572,7 +6572,7 @@
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "ray_inertia_speed": {
      "status": "NEAR_MATCH",
@@ -6858,7 +6858,7 @@
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "DO_SURF_CHANGE_HAIRS": {
      "status": "STRICT",
