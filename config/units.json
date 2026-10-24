@@ -9435,7 +9435,7 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "AFFICHE_PAD_SCREEN": {
      "status": "NEAR_MATCH",
