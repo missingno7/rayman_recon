@@ -150,7 +150,7 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   allocation work for the affected functions.
 
 ## H12 - Wave-3 synthesis: closures are local; the reusable lever is layout dependency (2026-10-24)
-Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~60k compiles) plus a fresh census
+Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~98k compiles, ~18 worker-hours) plus a fresh census
 (build/near_census.json: 242 game NEAR = 182 SHAPE, 18 REFS_LAYOUT, 38 DIFF/CALL_ORDER).
 - Closure edits: declaration order (8), operand commute (6), accepted abs/ashr helper at DOS-cited sites (7), local
   width flip (3), address-taken local copy (5, SYNTHETIC), snapshot removal (3) / addition (1), store reorder (3).
