@@ -542,7 +542,9 @@ def explain_schedule(candidate, original, trace):
             # Exact duplicate machine instructions can denote distinct backend
             # nodes. Preserve every assignment and report when only some make
             # the DOS order a valid linear extension of the captured graph.
-            classification = 'legal' if mapping_ambiguous else next(iter(classifications))
+            # Legal when at least one assignment is a legal linear extension; several assignments that are all
+            # illegal stay illegal (rc_cluster 2026-10-24: n14 was reported legal with {'illegal': 3}).
+            classification = 'legal' if 'legal' in classifications else next(iter(classifications))
             common['classification'] = classification
             common['block_index'] = options[0][0]
             results = [row[3] for row in options]

@@ -195,6 +195,26 @@ Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~98k compile
   local edits; stopped ones had many failing entries or boundaries spread through the owner (DO_SAXO_ATTER: 3 deltas
   but independent dispatch/store boundaries). Those need the owner itself matched - ordinary NEAR work.
 
+## H13 - Causal clustering of NEAR functions does not yield transferable repairs (rc_cluster, 2026-10-24)
+45 normalised diagnostic records (30 current NEAR functions in 19 units + 15 historical fixes recompiled from their
+pre-fix sources; split into training / held-out before any trace; 140 compiles; build/workers/rc_cluster/REPORT.md,
+records.json). Mechanism profiles: record ownership/conflict order 11, home set/unstable sort 8, scheduler input 7,
+rover history 5, layout ownership 5, Score rings 2, unresolved mixed 5.
+- NEGATIVE: one mechanism label maps to different repairs. Ownership-order symptoms were repaired by a declaration
+  swap (c01), a swap plus a temporary (c03), a count snapshot plus store moves (c09), an abs helper plus a commute
+  (c12), or a single address copy (c14); 8 of 15 historical repairs are multi-family bundles. A label alone does not
+  predict the edit or its direction.
+- Limited positive: source twins in one unit transfer quantitatively (jumelle X/Y: identical name counts, phase
+  histograms and rover streams; the same edit worsened both 18->23). Held-out mechanism exclusions held (aff_luciole has
+  no sign-TEST Score residue). Layout-owner direction confirmed, but "0 differing bytes" is too narrow a carrier
+  criterion: Do_Effet_Chaleur had one internal CALL displacement byte without a fixup.
+- Stopped hypotheses: removing synthetic address copies reduces surviving names (X: 38->38, stopped after 2
+  compiles); the initialised `T *slot = &v` spelling is the mechanism (DO_STONEWOMAN stays STRICT when split).
+- Tool defect fixed: explain.py reported a schedule window "legal" whenever several machine->IR mappings existed even
+  if all were illegal (dosmem dos_allocate_conventional_block: {'illegal': 3}); now legal only if one mapping is.
+Decision: no broad clustering campaign; reopen only for a function pair whose complete record/eligibility/dependency
+constraints match (e.g. source twins).
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
