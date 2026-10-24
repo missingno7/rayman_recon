@@ -272,9 +272,30 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
     # not committed. IDs are monotonic; consumed compiler budget is never reset.
     stalled = 0
     processes = []
+
+    def prune_candidate(source_path, result):
+        """Keep only the candidate source and a compact result: the object, compiler log, copied headers and the
+        full match report (~190 KB per candidate) filled tens of GB across worker runs (2026-10-24). Everything
+        dropped is reproducible from the source; headers come back from out/input on a fresh hit check."""
+        d = source_path.parent
+        atomic_json(d / "result.json", {k: result[k] for k in ("strict", "score", "target", "error") if k in result})
+        for p in d.iterdir():
+            if p.is_dir():
+                shutil.rmtree(p)
+            elif p != source_path and p.name != "result.json":
+                p.unlink()
+
+    def restore_inputs(d):
+        for p in (out / "input").iterdir():
+            if p.is_dir():
+                shutil.copytree(p, d / p.name, dirs_exist_ok=True)
+            elif not (d / p.name).exists():      # never overwrites the candidate source
+                shutil.copy2(p, d / p.name)
+
     def check_hits(candidates):
         for c in candidates:
             if c.get("hit") and available() and state["accepted"] is None:
+                restore_inputs(Path(c["source"]).parent)
                 call = reserve("fresh_hit_check", c["id"])
                 result = evaluate_fn(make_task(root, Path(c["source"]), args.function, args,
                                                Path(c["source"]).parent / "fresh"))
@@ -329,8 +350,8 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
                     stalled += 1
             for c, call, fn, pending in batch:
                 result = pending.result() if args.jobs > 1 else pending
-                atomic_json(Path(c["source"]).parent / "result.json", result)
                 decision = assess(baseline, result, args.function)
+                prune_candidate(Path(c["source"]), result)
                 c.update(decision, score=result.get("score"), status=result.get("target", {}).get("status", "COMPILE_ERROR"),
                          compiles=call["invocation"], elapsed=initial_seconds + time.monotonic() - started,
                          first_diff=result.get("target", {}).get("first_diff"))

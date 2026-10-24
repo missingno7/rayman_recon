@@ -61,6 +61,12 @@ Hard rules
   pass. Only the integrator edits `src/`, `config/units.json` and `config/symbols.json`.
 - Workers: write only inside `build/workers/<name>/`; propose bindings in an overlay file used with
   `match.py --symbols`; no git commits; no background processes; bounded runs, one compile at a time.
+- Disk budget (2026-10-24, the disk filled up): a worker directory stays under 300 MB. Record each trial as one line
+  in a JSONL ledger (source hash, edit, status, byte diffs); keep a full source copy only for improvements and
+  deliverables; delete objects, logs, copied headers, match reports and allocator traces right after measuring
+  (tools/permute.py already does). Check `du -sh build/workers/<you>` before finishing. Integrator: run
+  `python tools/prune_worker.py --check` before launching workers and `python tools/prune_worker.py NAME` after
+  reviewing each one (deliverables stay, bulk goes to to_delete/, which the user empties).
 - Keep facts, hypotheses and open questions apart (PROVEN / STRONG / HYPOTHESIS / OPEN) and keep negative results.
 - Names: Rayverse/Android-derived names (RAYVERSE), PS1 decomp names (PS1), or INVENTED (say so). Check
   `python tools/android.py NAME` (original Android symbol: exists? data size/section = true type) before inventing;

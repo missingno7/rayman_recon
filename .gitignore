@@ -4,3 +4,4 @@ build/
 scratch/
 __pycache__/
 *.pyc
+to_delete/
