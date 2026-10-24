@@ -191,9 +191,9 @@ Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~98k compile
   Stopped (FINDINGS keep all reference tables): standard_frontZone (6 entries, best still 2 off), DO_SAXO_ATTER (16, 7
   failing), RAY_RESPOND_TO_UP (7 -> 3 failing), setMoskitoAtScrollBorder (25 failing), IS_ON_RESSORT_BLOC (9),
   DO_DARK2_AFFICHE_TEXT (12, 7 failing), DO_BBMONT_ATTER (14, 10 failing at 7 deltas), DO_BBMONT_TOUCHE, bonus_fall.
-  Predictor (measured over 14 carriers): carriers close when the owner has few failing entries confined to one or two
-  size boundaries (7/7 closed had <= 3 boundaries); owners with many failing entries across several deltas need the
-  owner itself matched - ordinary NEAR work, not a layout shortcut.
+  Observation (not a validated predictor): closed carriers had a few failing entries whose size boundaries were
+  local edits; stopped ones had many failing entries or boundaries spread through the owner (DO_SAXO_ATTER: 3 deltas
+  but independent dispatch/store boundaries). Those need the owner itself matched - ordinary NEAR work.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
