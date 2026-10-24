@@ -989,6 +989,8 @@ void INIT_OPTIONS_CHOICE(void) {
 
 /* DOS 1:3a628; menu.c:626 */
 void INIT_AFFICHE_ECRAN_OPTIONS(void) {
+    /* COMPILER_STEERED: local expression forms preserve the reference-carrier
+     * offsets; see build/workers/lay2_b/FINDINGS.md. Owners remain NEAR. */
     u8 v28[9] = {5, 5, 5, 5, 5, 5, 3, 0}; //0x5050505;
     char v39[3] = "on";
     char v32[4] = "off";
@@ -1014,14 +1016,17 @@ void INIT_AFFICHE_ECRAN_OPTIONS(void) {
             switch(i) {
                 case 0: {
                     // Text "music" offsetted to the left with "on off" to the right
-                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
-                                     calc_largmax_text(v39, -1, 8, 1, 2) + calc_largmax_text(v32, -1, 8, 1, 2);
+                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2);
+                    text_width += 16;
+                    text_width += calc_largmax_text(v39, -1, 8, 1, 2);
+                    text_width += calc_largmax_text(v32, -1, 8, 1, 2);
                     menu_to_display[i].xpos = (SCREEN_WIDTH / 2) - (text_width >> 1);
                 } break;
                 case 1: {
                     // Text "sound" offsetted to the left
-                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2) + 16 +
-                             20 * calc_largmax_text("|", -1, 8, 1, 2);
+                    s16 text_width = calc_largmax_text(menu_to_display[i].text, -1, 8, 1, 2);
+                    text_width += 16;
+                    text_width += 20 * calc_largmax_text("|", -1, 8, 1, 2);
                     menu_to_display[i].xpos = (SCREEN_WIDTH / 2) - (text_width >> 1);
                 } break;
                 case 2:
@@ -1323,6 +1328,8 @@ void INIT_KEY_SCREEN(void) {
 
 /* DOS 1:3b514; menu.c:916 */
 void INIT_AFFICHE_KEY_SCREEN(void) {
+    /* COMPILER_STEERED: local expression forms preserve the reference-carrier
+     * offsets; see build/workers/lay2_b/FINDINGS.md. Owners remain NEAR. */
     s16 i;
     u8 language_offset;
     s16 new_x, new_y, new_w, new_h;
@@ -1372,7 +1379,10 @@ void INIT_AFFICHE_KEY_SCREEN(void) {
     INIT_TXT_BOX(&msg_to_display[0]);
 
     new_x = basex - 2;
-    new_y = debut_titre - 25;
+    {
+        s16 layout_value = debut_titre - 25; /* INVENTED local. */
+        new_y = layout_value;
+    }
     new_w = byte_E4CFC * 2;
     new_h = menu_to_display[8].ypos - debut_titre + 35;
     left = new_x < word_E4CEC_x ? new_x : word_E4CEC_x;
@@ -1738,6 +1748,8 @@ void INIT_PAD_SCREEN(void) {
 
 /* DOS 1:3c4d0; menu.c:966 */
 void INIT_AFFICHE_PAD_SCREEN(void) {
+    /* COMPILER_STEERED: local expression forms preserve the reference-carrier
+     * offsets; see build/workers/lay2_b/FINDINGS.md. Owners remain NEAR. */
     u8 i;
     s16 x, h, y, w;
     s16 left, top, width, height;
@@ -1774,7 +1786,12 @@ void INIT_AFFICHE_PAD_SCREEN(void) {
     {
         s32 edge_value = word_E4CEC_x + word_E4CF4_w;
         left = x < word_E4CEC_x ? x : word_E4CEC_x;
-        top = y < word_E4CF0_y ? y : word_E4CF0_y;
+        {
+            s32 layout_value; /* INVENTED local; initialized through its address. */
+            s32 *slot = &layout_value;
+            *slot = y < word_E4CF0_y ? y : word_E4CF0_y;
+            top = layout_value;
+        }
         if (!(edge_value > x + w)) { width = x + w - left; } else { width = edge_value - left; }
         height = word_E4CEE_h + word_E4CF0_y > y + h ?
             word_E4CEE_h + word_E4CF0_y - top : y + h - top;
@@ -2053,6 +2070,8 @@ void INIT_GRAPHIC_SCREEN(void) {
 
 /* DOS 1:3d178; menu.c:996 */
 void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
+    /* COMPILER_STEERED: local expression forms preserve the reference-carrier
+     * offsets; see build/workers/lay2_b/FINDINGS.md. Owners remain NEAR. */
     s16 i;
     s16 x, w, y, h;
     s16 height, width, left, top;
@@ -2095,16 +2114,25 @@ void INIT_AFFICHE_GRAPHIC_SCREEN(void) {
         y = debut_titre - 25;
         if (!GameModeVideo) {
             x = basex;
-            h = menu_to_display[option_exit].ypos - debut_titre + 35;
+            {
+                s32 layout_value = menu_to_display[option_exit].ypos - debut_titre + 35;
+                h = layout_value;
+            }
         } else {
             x = basex;
-            h = menu_to_display[option_exit].ypos - debut_titre + 35;
+            {
+                s32 layout_value = menu_to_display[option_exit].ypos - debut_titre + 35;
+                h = layout_value;
+            }
         }
         w = byte_E4CFC * 2;
         {
             s32 old_bound_0 = word_E4CF4_w;
             s32 old_bound_1 = word_E4CEE_h;
-            left = x < word_E4CEC_x ? x : word_E4CEC_x;
+            {
+                s32 layout_value = x < word_E4CEC_x ? x : word_E4CEC_x;
+                left = layout_value;
+            }
             top = y < word_E4CF0_y ? y : word_E4CF0_y;
             width = word_E4CEC_x + old_bound_0 > x + w ?
                 word_E4CEC_x + old_bound_0 - left : x + w - left;
@@ -2419,6 +2447,8 @@ void INIT_VIDEOMODE_SCREEN(void) {
 
 /* DOS 1:3e1cc; menu.c:1021 */
 void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
+    /* COMPILER_STEERED: local expression forms preserve the reference-carrier
+     * offsets; see build/workers/lay2_b/FINDINGS.md. Owners remain NEAR. */
     s16 i;
     s16 x, h, y, w;
     s16 top, left, width, height;
@@ -2444,7 +2474,10 @@ void INIT_AFFICHE_VIDEOMODE_SCREEN(void) {
         }
         INIT_TXT_BOX(&menu_to_display[i]);
     }
-    w = byte_E4CFC * 2;
+    {
+        s16 layout_value = byte_E4CFC * 2; /* INVENTED local. */
+        w = layout_value;
+    }
     x = basex;
     h = menu_to_display[option_exit].ypos - debut_titre + 35;
     y = debut_titre - 25;

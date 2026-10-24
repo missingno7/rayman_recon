@@ -65,7 +65,9 @@ void restore_objects_flags(void) {
 }
 
 //1D204
-void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs) {   u8 obj_2_frames_count;   eta_t *obj_2_eta_2;   s16 prev_frame;   s16 prev_index;   s16 obj_2_x;   s16 obj_2_y;   s16 obj_2_w;   s16 obj_2_h;   s16 new_spd_x;   s16 new_spd_y;   eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];   s16 obj_2_anim_index = obj_2_eta_1->anim_index;
+void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_offs) {
+  /* COMPILER_STEERED: snapshots of the flag byte and X case order preserve
+   * all eight targets carried by restore_objects_flags. Locals INVENTED. */   u8 obj_2_frames_count;   eta_t *obj_2_eta_2;   s16 prev_frame;   s16 prev_index;   s16 obj_2_x;   s16 obj_2_y;   s16 obj_2_w;   s16 obj_2_h;   s16 new_spd_x;   s16 new_spd_y;   eta_t *obj_2_eta_1 = &obj_2->eta[obj_2->main_etat][obj_2->sub_etat];   s16 obj_2_anim_index = obj_2_eta_1->anim_index;
   s16 obj_2_anim_frame = obj_2->anim_frame;
   if (horloge[obj_2_eta_1->anim_speed & 0xF] == 0)
   {
@@ -105,7 +107,9 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
   }
 
   {
-    switch (flags[obj_1->type].move_x + (flags[obj_2->type].move_x * 2))
+    s32 first_flags = flags[obj_1->type].flags1;
+    s32 second_flags = flags[obj_2->type].flags1;
+    switch (((first_flags >> 4) & 1) + (((second_flags >> 4) & 1) * 2))
     {
       case 0:
         new_spd_x += obj_2->speed_x;
@@ -115,19 +119,22 @@ void snapToSprite(obj_t* obj_1, obj_t* obj_2, u8 obj_2_spr, s32 x_offs, u16 y_of
         new_spd_x = instantSpeed(obj_2->speed_x) + (new_spd_x * 16);
         break;
 
+      case 1:
+        new_spd_x = (new_spd_x + obj_2->speed_x) * 16;
+        break;
+
       case 2:
         new_spd_x += instantSpeed(obj_2->speed_x);
         break;
 
-      case 1:
-        new_spd_x = (new_spd_x + obj_2->speed_x) * 16;
-        break;
 
     }
 
   }
   {
-    switch (flags[obj_1->type].move_y + (flags[obj_2->type].move_y * 2))
+    s32 first_flags = flags[obj_1->type].flags1;
+    s32 second_flags = flags[obj_2->type].flags1;
+    switch (((first_flags >> 5) & 1) + (((second_flags >> 5) & 1) * 2))
     {
       case 0:
         new_spd_y += obj_2->speed_y;

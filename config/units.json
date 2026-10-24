@@ -797,7 +797,7 @@
      ]
     },
     "restore_objects_flags": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
@@ -9162,7 +9162,7 @@
      ]
     },
     "INIT_OPTIONS_CHOICE": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -9407,7 +9407,7 @@
      "quality": "COMPILER_STEERED"
     },
     "AFFICHE_BUTTON_JOYSTICK": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9483,7 +9483,7 @@
      "quality": "COMPILER_STEERED"
     },
     "DO_COMMANDE_GRAPHIC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
@@ -9508,7 +9508,7 @@
      "quality": "COMPILER_STEERED"
     },
     "AFFICHE_VIDEOMODE_SCREEN": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
