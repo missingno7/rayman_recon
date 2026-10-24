@@ -5,3 +5,5 @@ scratch/
 __pycache__/
 *.pyc
 to_delete/
+tools/portspec/*/results/
+tools/portspec/*/*.jsonl

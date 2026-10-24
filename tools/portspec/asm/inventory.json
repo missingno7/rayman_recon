@@ -1,0 +1,5593 @@
+[
+  {
+    "name": "effect_reset_geometry",
+    "address": "1:00010",
+    "offset": 16,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_00010.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/effect6ec80.c",
+        "line": 49,
+        "pragma": "#pragma aux effect_reset_geometry modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/effect2.c",
+        "line": 120,
+        "text": "effect_reset_geometry();"
+      },
+      {
+        "source": "src/effect50350.c",
+        "line": 28,
+        "text": "effect_reset_geometry();"
+      },
+      {
+        "source": "src/effect6ec80.c",
+        "line": 70,
+        "text": "effect_reset_geometry();"
+      },
+      {
+        "source": "src/effecthelp.c",
+        "line": 86,
+        "text": "effect_reset_geometry();"
+      }
+    ],
+    "callsite_count": 4,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Reset the affine rasterizer: patch writable code immediates and initialize 200 scanline records (32-byte stride) with empty bounds.",
+      "service": "Self-modifying x86 code; raster_rows",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_effect_segment",
+    "address": "1:00045",
+    "offset": 69,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_00010.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/effect2.c",
+        "line": 56,
+        "pragma": "#pragma aux draw_effect_segment parm [eax] [esi] modify exact []"
+      },
+      {
+        "source": "src/effect50350.c",
+        "line": 14,
+        "pragma": "#pragma aux draw_effect_segment parm [eax] [esi] modify exact []"
+      },
+      {
+        "source": "src/effect6ec80.c",
+        "line": 51,
+        "pragma": "#pragma aux draw_effect_segment parm [eax] [esi] modify exact []"
+      },
+      {
+        "source": "src/effecthelp.c",
+        "line": 64,
+        "pragma": "#pragma aux draw_effect_segment parm [eax] [esi] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/effect2.c",
+        "line": 311,
+        "text": "draw_effect_segment(state->destination,"
+      },
+      {
+        "source": "src/effect50350.c",
+        "line": 262,
+        "text": "draw_effect_segment(state->destination, (u8 *)points);"
+      },
+      {
+        "source": "src/effect50350.c",
+        "line": 264,
+        "text": "draw_effect_segment(state->destination, (u8 *)points);"
+      },
+      {
+        "source": "src/effect6ec80.c",
+        "line": 241,
+        "text": "draw_effect_segment(state->sprite, (u8 *)&vertex->surface);"
+      },
+      {
+        "source": "src/effecthelp.c",
+        "line": 395,
+        "text": "draw_effect_segment(state->destination, (u8 *)&item->screen);"
+      }
+    ],
+    "callsite_count": 5,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Rasterize a textured quadrilateral/effect segment into indexed 320-byte-stride destination; read texture pointer and geometry from descriptor, interpolate scanline/UV values, patch code operands and draw spans.",
+      "service": "Writable x86 CODE, fixed-point texture lookup",
+      "semantic_evidence": "STRONG",
+      "open_question": "Full descriptor semantic field names and exact texture-coordinate validity domain are OPEN; byte-level layout/operations are preserved in asm."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_02640",
+    "address": "1:02640",
+    "offset": 9792,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Compute horizontal texture interpolation increments from raster_rows+EBP fields +8,+C,+10,+14 and ECX span width; return packed stepping values in EAX/EBX/EDX/ESI.",
+      "service": "Internal rasterizer register protocol",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "sub_1268A",
+    "address": "1:0268a",
+    "offset": 9866,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/menu.c",
+        "line": 294,
+        "pragma": "#pragma aux sub_1268A parm [esi] [ebx] [edx]"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 427,
+        "pragma": "#pragma aux sub_1268A parm [esi] [ebx] [edx] modify exact [ebx ecx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/menu.c",
+        "line": 770,
+        "text": "sub_1268A(PLAN0BIT, plan0bit_nb_bytes, plan0bit_length >> 2);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 714,
+        "text": "sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 731,
+        "text": "sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1108,
+        "text": "sub_1268A(PLAN0BIT, plan0bit_nb_bytes, (u32)plan0bit_length >> 2);"
+      }
+    ],
+    "callsite_count": 4,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Upload four 80x200 source planes to VGA cache at AB000, honoring source row stride EBX and plane stride EDX.",
+      "service": "Sequencer 3C4h index2/map mask; VGA AB000",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "copy_dwords",
+    "address": "1:02737",
+    "offset": 10039,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 311,
+        "text": "copy_dwords((u32*)0, dest, 0x3fff);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 69,
+        "text": "extern copy_dwords_t copy_dwords;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy ECX dwords from ESI to EDI; DF-dependent REP MOVSD; advances pointers and consumes count.",
+      "service": "Flat x86 memory; caller must arrange direction flag",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "bios_wait_timer",
+    "address": "1:0273a",
+    "offset": 10042,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 309,
+        "text": "bios_wait_timer(7, 0xa120, unk_ptr_3d840);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 66,
+        "text": "extern bios_wait_timer_t bios_wait_timer;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Save EAX/ES, set ES=0 and AX=8300h, invoke INT15h with CX:DX interval and EBX flag pointer; restore EAX/ES. Caller requests 0007:A120h microseconds.",
+      "service": "BIOS INT 15h AH=83h event wait",
+      "semantic_evidence": "PROVEN",
+      "open_question": "ES is forced zero with a protected-mode EBX pointer. Exact PMODE/W real-mode pointer translation/preservation must be established; reference ABI explicitly withheld a full preserved-register contract."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "sub_2748",
+    "address": "1:02748",
+    "offset": 10056,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/effect1.c",
+        "line": 82,
+        "pragma": "#pragma aux sub_2748 parm [esi]"
+      },
+      {
+        "source": "src/sound.c",
+        "line": 71,
+        "pragma": "#pragma aux sub_2748 parm [esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/effect1.c",
+        "line": 664,
+        "text": "sub_2748(&effect_audio_clock_start);"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 684,
+        "text": "sub_2748(&effect_audio_clock_end);"
+      },
+      {
+        "source": "src/sound.c",
+        "line": 866,
+        "text": "sub_2748(&cdTimeStart);"
+      },
+      {
+        "source": "src/sound.c",
+        "line": 871,
+        "text": "sub_2748(&cdTimeEnd);"
+      },
+      {
+        "source": "src/sound.c",
+        "line": 885,
+        "text": "sub_2748(&cdTimeStart);"
+      }
+    ],
+    "callsite_count": 5,
+    "address_references": [
+      {
+        "source": "src/sound.c",
+        "line": 1,
+        "text": "/* sound.c (1:61b80..1:633e0: sound events, voices, volume/pan, music). Names RAYVERSE/ANDROID; seeded by tools/seed.py, worker w2_dispsave; measured status in NOTES.md. sub_2748 pragma declares an assembly routine's register ABI only. */"
+      }
+    ],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Read BIOS tick count CX:DX with INT1Ah AH=0, combine low 16-bit halves into u32 and write through ESI; preserves GPRs.",
+      "service": "BIOS INT 1Ah AH=00h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_0275c",
+    "address": "1:0275c",
+    "offset": 10076,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "display_emptypicture",
+    "address": "1:02783",
+    "offset": 10115,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 334,
+        "pragma": "#pragma aux display_emptypicture parm [edi] [ecx] modify exact [eax ecx edx edi]"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 183,
+        "pragma": "#pragma aux display_emptypicture parm [edi] [ecx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 1194,
+        "text": "display_emptypicture(draw_buffer, 16000);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 960,
+        "text": "display_emptypicture(draw_buffer, 0x3e80);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 961,
+        "text": "display_emptypicture(display_buffer, 0x3e80);"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Enable all four VGA planes and zero 4000 dwords at EDI (16000 aperture bytes, 64000 screen pixels); ECX argument in some callers is ignored.",
+      "service": "OUT 3C4h AX=0F02h; planar VGA",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "display_anypicture",
+    "address": "1:027a2",
+    "offset": 10146,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 1052,
+        "text": "display_anypicture(source, dest, height, source_stride + ((1 << source_plane) << 8), source_length, width);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 53,
+        "text": "extern display_anypicture_t display_anypicture;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy rectangular planar image: ESI source, EDI destination, EAX height, DL source pitch, DH source-plane phase, ECX plane stride, EBX dword width; iterate four planes, 80-byte destination rows. Mutates code-owned source/plane state.",
+      "service": "VGA sequencer map mask; planar source/destination",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_0283c",
+    "address": "1:0283c",
+    "offset": 10300,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 554,
+        "pragma": "#pragma aux asm_0283c parm [eax] modify exact [eax]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 621,
+        "text": "asm_0283c(mask);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Select VGA write-plane mask from input AL (replicated into AH, sequencer register2 in AL); preserves DX, modifies EAX.",
+      "service": "OUT 3C4h,AX",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_02850",
+    "address": "1:02850",
+    "offset": 10320,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 744,
+        "pragma": "#pragma aux asm_02850 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax edx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 775,
+        "text": "asm_02850(tiles, &frame_records_38f88[0][0], buffer_start, PLAN1_BUFFER, dest, row_skip * 6);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Traverse 6-byte map tile records and build cached foreground copy records using transparency/type fields and circular planar-buffer state.",
+      "service": "14x32-dword record arrays; planar map metadata",
+      "semantic_evidence": "STRONG",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_029d3",
+    "address": "1:029d3",
+    "offset": 10707,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 747,
+        "pragma": "#pragma aux asm_029d3 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ebx ecx edx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 772,
+        "text": "asm_029d3(tiles, &frame_records_38888[0][0], source, stride, dest, row_skip * 6);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Traverse map tile records and construct RAM-background render/copy records using current scroll/source/destination context.",
+      "service": "6-byte tile records; 14-row record lists",
+      "semantic_evidence": "STRONG",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_02a73",
+    "address": "1:02a73",
+    "offset": 10867,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 750,
+        "pragma": "#pragma aux asm_02a73 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ebx ecx edx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 768,
+        "text": "asm_02a73(tiles, &frame_records_38888[0][0], (((u8 *) 0xab000) + (row * 80)) + column, stride, (draw_buffer + (row * 80)) + column, row_skip * 6);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Build render records for video-memory cached background variant (AB000 path), using tile/source/destination strides.",
+      "service": "Mode-X VGA cached background; 6-byte tile records",
+      "semantic_evidence": "STRONG",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_02b30",
+    "address": "1:02b30",
+    "offset": 11056,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Advance AH plane mask to next plane; on wrap 10h reset to1 and increment EDI; output AX to DX. Input AL must be sequencer index2 and DX=3C4h.",
+      "service": "Internal plane-advance helper; OUT DX,AX",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2b3d",
+    "address": "1:02b3d",
+    "offset": 11069,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 202,
+        "text": "extern void_func_t mode_x_effect_2b3d;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1315,
+        "text": "drawflocon5NormalETX = (island_snow_t *)(&mode_x_effect_2b3d);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type5, single palette-index5 pixel at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon5NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "fplot_mode_x_2b86",
+    "address": "1:02b86",
+    "offset": 11142,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 213,
+        "text": "extern fplot_func_t fplot_mode_x_2b86;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1314,
+        "text": "fplotNormalETX = &fplot_mode_x_2b86;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Plot low byte of ESI at EDI+floor(x/4)+80*y with plane selected by x&3; no visible bounds tests in this primitive.",
+      "service": "Mode-X planar VGA and 3C4h/3C5h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "fplotNormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 961,
+        "text": "fplotNormalETX(draw_buffer, cur_item->x_pos >> 6,",
+        "alias": "fplotNormalETX"
+      }
+    ]
+  },
+  {
+    "name": "mode_x_effect_2bb7",
+    "address": "1:02bb7",
+    "offset": 11191,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 206,
+        "text": "extern void_func_t mode_x_effect_2bb7;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1316,
+        "text": "drawflocon1NormalETX = (island_snow_t *)(&mode_x_effect_2bb7);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type1, single palette-index7 pixel at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon1NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2c00",
+    "address": "1:02c00",
+    "offset": 11264,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 203,
+        "text": "extern void_func_t mode_x_effect_2c00;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1317,
+        "text": "drawflocon2NormalETX = (island_snow_t *)(&mode_x_effect_2c00);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type2, small multicolor flake at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon2NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2c59",
+    "address": "1:02c59",
+    "offset": 11353,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 204,
+        "text": "extern void_func_t mode_x_effect_2c59;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1318,
+        "text": "drawflocon3NormalETX = (island_snow_t *)(&mode_x_effect_2c59);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type3, larger multicolor flake at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon3NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2cbf",
+    "address": "1:02cbf",
+    "offset": 11455,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 210,
+        "text": "extern void_func_t mode_x_effect_2cbf;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1325,
+        "text": "drawpluie4NormalETX = (island_snow_t *)(&mode_x_effect_2cbf);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type4 stroke at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie4NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2d08",
+    "address": "1:02d08",
+    "offset": 11528,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 205,
+        "text": "extern void_func_t mode_x_effect_2d08;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1319,
+        "text": "drawflocon4NormalETX = (island_snow_t *)(&mode_x_effect_2d08);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type4, single palette-index3 pixel at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon4NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2da9",
+    "address": "1:02da9",
+    "offset": 11689,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 209,
+        "text": "extern void_func_t mode_x_effect_2da9;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1324,
+        "text": "drawpluie5NormalETX = (island_snow_t *)(&mode_x_effect_2da9);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type5 stroke at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie5NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2dfb",
+    "address": "1:02dfb",
+    "offset": 11771,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 207,
+        "text": "extern void_func_t mode_x_effect_2dfb;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1320,
+        "text": "drawflocon7NormalETX = (island_snow_t *)(&mode_x_effect_2dfb);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type7 flake at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon7NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 924,
+        "text": "drawflocon7NormalETX(draw_buffer,",
+        "alias": "drawflocon7NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "mode_x_effect_2e9c",
+    "address": "1:02e9c",
+    "offset": 11932,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 211,
+        "text": "extern void_func_t mode_x_effect_2e9c;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1323,
+        "text": "drawpluie6NormalETX = (island_snow_t *)(&mode_x_effect_2e9c);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type6 stroke at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie6NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "mode_x_effect_2f0c",
+    "address": "1:02f0c",
+    "offset": 12044,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 212,
+        "text": "extern void_func_t mode_x_effect_2f0c;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1321,
+        "text": "drawflocon6NormalETX = (island_snow_t *)(&mode_x_effect_2f0c);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type6 flake at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon6NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 918,
+        "text": "drawflocon6NormalETX(draw_buffer,",
+        "alias": "drawflocon6NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "mode_x_effect_300f",
+    "address": "1:0300f",
+    "offset": 12303,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 208,
+        "text": "extern void_func_t mode_x_effect_300f;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1322,
+        "text": "drawpluie7NormalETX = (island_snow_t *)(&mode_x_effect_300f);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type7 stroke at x=EAX,y=EBX into bufferEDI; test screen bounds then select planes and write fixed pattern.",
+      "service": "Mode-X VGA3C4h map mask/pitch80",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie7NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 931,
+        "text": "drawpluie7NormalETX(draw_buffer,",
+        "alias": "drawpluie7NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "asm_0309d",
+    "address": "1:0309d",
+    "offset": 12445,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": true,
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_blackbox",
+    "address": "1:03125",
+    "offset": 12581,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 264,
+        "pragma": "#pragma aux draw_blackbox parm [edi] [esi] [edx] [ebx] [ecx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 981,
+        "text": "draw_blackbox(draw_buffer, x, y, height, width);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Fill a planar black rectangle at x/y with width/height, selecting plane masks and clipping to dimensions.",
+      "service": "Mode-X 80-byte row, sequencer map mask",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_borderbox",
+    "address": "1:031ed",
+    "offset": 12781,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 266,
+        "pragma": "#pragma aux draw_borderbox parm [edi] [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 989,
+        "text": "draw_borderbox(draw_buffer, x, y, height, width);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 994,
+        "text": "draw_borderbox(draw_buffer, x, y, height, width);"
+      }
+    ],
+    "callsite_count": 2,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw planar rectangle border at x/y with width/height; caller prepares geometry in registers.",
+      "service": "Mode-X plane selection",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_03257",
+    "address": "1:03257",
+    "offset": 12887,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 80,
+        "pragma": "#pragma aux asm_03257 parm [eax] [edx] [ebx] [esi] [edi] [ecx] modify exact [eax ecx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 522,
+        "text": "asm_03257(mask, plan0bit_nb_bytes, offset, &frame_records_38888[0][0], dest, context);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 76,
+        "text": "asm_03257 parameter order is INVENTED: reverse argument preparation follows"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render per-row copy records into selected VGA planes, using EAX plane mask, EDX source pitch, EBX source offset, ESI record list, EDI destination, ECX three-word context. Variants differ in record interpretation/copy path.",
+      "service": "Mode-X record-list blitters",
+      "semantic_evidence": "STRONG",
+      "open_question": "Names and complete typed record-field meanings remain OPEN; raw layouts and register dataflow are explicit in source/reference ABI."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_037e4",
+    "address": "1:037e4",
+    "offset": 14308,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 82,
+        "pragma": "#pragma aux asm_037e4 parm [esi] [ecx] modify exact [eax ebx ecx edx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 518,
+        "text": "asm_037e4(frame_records_38888, draw_buffer);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render supplied row-copy record list from ESI into destination passed in ECX; consume source/destination/length fields and copy planar rows.",
+      "service": "Mode-X cached map/foreground records",
+      "semantic_evidence": "STRONG",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_03912",
+    "address": "1:03912",
+    "offset": 14610,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 549,
+        "pragma": "#pragma aux asm_03912 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 594,
+        "text": "asm_03912(mask, 80, offset, &context, &frame_records_38f88[0][0], dest);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render per-row copy records into selected VGA planes, using EAX plane mask, EDX source pitch, EBX source offset, ESI record list, EDI destination, ECX three-word context. Variants differ in record interpretation/copy path.",
+      "service": "Mode-X record-list blitters",
+      "semantic_evidence": "STRONG",
+      "open_question": "Names and complete typed record-field meanings remain OPEN; raw layouts and register dataflow are explicit in source/reference ABI."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_03ea1",
+    "address": "1:03ea1",
+    "offset": 16033,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_02640.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 552,
+        "pragma": "#pragma aux asm_03ea1 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [eax ecx esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 590,
+        "text": "asm_03ea1(mask, 80, offset, &context, &frame_records_38f88[1][0], dest);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render per-row copy records into selected VGA planes, using EAX plane mask, EDX source pitch, EBX source offset, ESI record list, EDI destination, ECX three-word context. Variants differ in record interpretation/copy path.",
+      "service": "Mode-X record-list blitters",
+      "semantic_evidence": "STRONG",
+      "open_question": "Names and complete typed record-field meanings remain OPEN; raw layouts and register dataflow are explicit in source/reference ABI."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_04430",
+    "address": "1:04430",
+    "offset": 17456,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 560,
+        "pragma": "#pragma aux asm_04430 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [edx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 634,
+        "text": "asm_04430(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Traverse up to14 map rows of20 six-byte tile records;for class byte+4==2 call nonnull block_add[tile_id] code with current EDI destination (tableECX,recordsEDX,contextEBX). Code is loaded/decoded from level assets,not generated by construct_MAP.",
+      "service": "Asset-provided x86 tile blitter callbacks",
+      "semantic_evidence": "PROVEN",
+      "open_question": "Physical callback-clobber contract must be audited for every asset code shape;reference ABI marks this OPEN despite accepted caller declarations."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_04493",
+    "address": "1:04493",
+    "offset": 17555,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 563,
+        "pragma": "#pragma aux asm_04493 parm [eax] [edx] [ebx] [ecx] [esi] [edi] modify exact [edx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 630,
+        "text": "asm_04493(phase << 8, draw_tiles, &context, block_add, background + plane_step, origin);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Asset-code callback renderer variant,skipping to second row/destination+80 and processing inner rows with count initialized12;same type2/table protocol as asm_04430.",
+      "service": "Asset-provided x86 tile blitter callbacks",
+      "semantic_evidence": "PROVEN",
+      "open_question": "Full asset-callback inputs,clobbers and code extents remain OPEN."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_04504",
+    "address": "1:04504",
+    "offset": 17668,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 423,
+        "pragma": "#pragma aux asm_04504 parm [edi] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 708,
+        "text": "asm_04504(draw_buffer);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Enable all planes and clear Mode-X side borders around EDI draw page (base adjusted -2), using fixed offsets/strides.",
+      "service": "VGA 3C4h map mask; 80-byte planar rows",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_0456e",
+    "address": "1:0456e",
+    "offset": 17774,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 425,
+        "pragma": "#pragma aux asm_0456e parm [edi] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 706,
+        "text": "asm_0456e(draw_buffer);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clear Mode-X side borders plus top/bottom bars around EDI draw page.",
+      "service": "VGA map mask and planar memory",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "select_display_buffer",
+    "address": "1:045f1",
+    "offset": 17905,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 274,
+        "text": "select_display_buffer(display_buffer);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 295,
+        "text": "select_display_buffer(display_buffer);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1343,
+        "text": "select_display_buffer(DisplayBufferNormal);"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "video",
+      "summary": "Program CRTC register0Ch using AH of caller buffer address; page bases are chosen with required low-byte/start alignment.",
+      "service": "OUT 3D4h,AX (high display-start register only)",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "InitFirstModeVideo",
+    "address": "1:045fc",
+    "offset": 17916,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 1299,
+        "text": "InitFirstModeVideo();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1336,
+        "text": "InitFirstModeVideo();"
+      }
+    ],
+    "callsite_count": 2,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "video",
+      "summary": "Set BIOS mode13h and save graphics/sequencer/CRTC registers needed for chained/unchained switching into saved_vga_registers_0196a.",
+      "service": "INT10h AX=13h; 3CE/3CF,3C4/3C5,3D4/3D5",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "InitModeNormal",
+    "address": "1:0465f",
+    "offset": 18015,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 1340,
+        "text": "InitModeNormal();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "video",
+      "summary": "Restore saved VGA graphics/sequencer/CRTC configuration for chained mode13h.",
+      "service": "VGA graphics controller, sequencer and CRTC",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "InitModeX",
+    "address": "1:046b8",
+    "offset": 18104,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 1303,
+        "text": "InitModeX();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "video",
+      "summary": "Unchain mode13h: modify graphics mode/memory map, sequencer memory mode/map mask and CRTC addressing bits; retain 320x200 screen.",
+      "service": "3CE/3CF,3C4/3C5,3D4/3D5",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "block_clear",
+    "address": "1:0471d",
+    "offset": 18205,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 391,
+        "text": "block_clear(dest);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 50,
+        "text": "extern block_clear_t block_clear;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clear a 4-byte-wide by16-row tile-plane rectangle at EDI, destination row stride80; all registers preserved.",
+      "service": "RAM planar tile cache",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "block_copy",
+    "address": "1:04765",
+    "offset": 18277,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 389,
+        "text": "block_copy((u8*)gros_patai_src[texture_id] + plane * 64, dest);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 417,
+        "text": "block_copy((u8*)gros_patai_src[texture_id] + plane, dest);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 446,
+        "text": "block_copy((u8*)gros_patai_src[texture_id] + plane, dest);"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 49,
+        "text": "extern block_copy_t block_copy;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy 64-byte tile plane from ESI to four bytes per row across16 rows at EDI, destination pitch80; all registers preserved.",
+      "service": "One of four contiguous 64-byte planes per16x16 tile",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "textmode",
+    "address": "1:047e7",
+    "offset": 18407,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 1330,
+        "text": "textmode();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "video",
+      "summary": "Set BIOS mode3 text display; preserve GPRs.",
+      "service": "INT10h AX=3",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_sprite_deform",
+    "address": "1:04828",
+    "offset": 18472,
+    "name_provenance": "RAYVERSE/ANDROID",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 306,
+        "pragma": "#pragma aux draw_sprite_deform parm [esi] [edi] [ecx] modify exact []"
+      },
+      {
+        "source": "src/araignee.c",
+        "line": 290,
+        "pragma": "#pragma aux draw_sprite_deform parm [esi] [edi] [ecx]"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 297,
+        "pragma": "#pragma aux draw_sprite_deform parm [esi] [edi] [ecx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 1483,
+        "text": "draw_sprite_deform(image + sprite->offset_in_atlas, new_sprite_deform, &geometry);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render deformed sprite into caller buffer using 13-dword geometry descriptor, fixed-point stepping and A1h prefilled mask; mutate code-owned working dwords.",
+      "service": "Indexed sprite pixels; code-owned non-reentrant deformation state",
+      "semantic_evidence": "STRONG",
+      "open_question": "All thirteen descriptor fields need semantic names/domain constraints before independent C replacement."
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "local_04a83",
+    "address": "1:04a83",
+    "offset": 19075,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DisplayBufferModeNormal",
+    "address": "1:04ab7",
+    "offset": 19127,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 182,
+        "pragma": "#pragma aux DisplayBufferModeNormal parm [esi] [edi]"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 28,
+        "pragma": "#pragma aux DisplayBufferModeNormal parm [esi] [edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 281,
+        "text": "DisplayBufferModeNormal(DrawBufferNormal, display_buffer);"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 59,
+        "text": "DisplayBufferModeNormal(DrawBufferNormal, display_buffer);"
+      }
+    ],
+    "callsite_count": 2,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy 16000 dwords (64000 indexed pixels) from ESI to EDI, preserving ECX; advances ESI/EDI.",
+      "service": "Normal packed framebuffer; REP MOVSD",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawWldPointPlan2Normal",
+    "address": "1:04ac1",
+    "offset": 19137,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 269,
+        "pragma": "#pragma aux DrawWldPointPlan2Normal parm [edi] [eax] [ebx] modify exact [ebx edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 680,
+        "text": "DrawWldPointPlan2Normal(PLAN2BIT, x, y - 2);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw a fixed world-map point pattern at buffer+x+384*y.",
+      "service": "Indexed world-map secondary plane, pitch384",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawBlackBoxNormal",
+    "address": "1:04aef",
+    "offset": 19183,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 260,
+        "pragma": "#pragma aux DrawBlackBoxNormal parm [edi] [eax] [ebx] [ecx] [edx] modify exact []"
+      },
+      {
+        "source": "src/box.c",
+        "line": 53,
+        "pragma": "#pragma aux DrawBlackBoxNormal parm [edi] [eax] [ebx] [ecx] [edx] modify []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 985,
+        "text": "DrawBlackBoxNormal(draw_buffer, x, y, height, width);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 352,
+        "text": "DrawBlackBoxNormal(draw_buffer, x, y, height, width);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 401,
+        "text": "DrawBlackBoxNormal(draw_buffer, fill, y + 1, height - 3, step);"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Fill caller rectangle in normal surface with palette index zero, destination pitch320.",
+      "service": "Packed 8-bit surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawFondBoxNormal",
+    "address": "1:04b2c",
+    "offset": 19244,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 261,
+        "pragma": "#pragma aux DrawFondBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify exact [eax ebx ecx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 983,
+        "text": "DrawFondBoxNormal(draw_buffer, x, y, height, width, is_fond);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Shade a rectangle from pixels displaced diagonally by321 bytes in same surface: typeEAX chooses subtract5/forward or add5/backward, clamping within32-color palette banks; ESI=x,EBX=y,ECX=height,EDX=width,EDI=base.",
+      "service": "Packed indexed surface, pitch320; no stack arguments",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawBorderBoxNormal",
+    "address": "1:04bbb",
+    "offset": 19387,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 262,
+        "pragma": "#pragma aux DrawBorderBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify exact [eax ebx ecx edx edi]"
+      },
+      {
+        "source": "src/box.c",
+        "line": 55,
+        "pragma": "#pragma aux DrawBorderBoxNormal parm [edi] [esi] [ebx] [ecx] [edx] [eax] modify [eax ebx ecx edx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 991,
+        "text": "DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2026);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 996,
+        "text": "DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2620);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 342,
+        "text": "DrawBorderBoxNormal(draw_buffer, x, y, h, old_w, 0x2026);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 353,
+        "text": "DrawBorderBoxNormal(draw_buffer, x, y, height, width, colors);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 386,
+        "text": "DrawBorderBoxNormal(draw_buffer, x, y, height, width, 0x2026);"
+      },
+      {
+        "source": "src/box.c",
+        "line": 402,
+        "text": "DrawBorderBoxNormal(draw_buffer, fill, y + 1, height - 3, step, 0x0308);"
+      }
+    ],
+    "callsite_count": 6,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rectangle outline in packed 320-byte-stride surface.",
+      "service": "Packed indexed pixels",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DisplayAnyPictureNormal",
+    "address": "1:04c19",
+    "offset": 19481,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 16,
+        "pragma": "#pragma aux DisplayAnyPictureNormal parm [esi] [edi] [eax] [ebx] [ecx] [edx] modify [eax ebx ecx edx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 477,
+        "text": "DisplayAnyPictureNormal(PLAN3BIT, draw_buffer, 0, 0, 0, 0, 320, 320, 137);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 705,
+        "text": "DisplayAnyPictureNormal(PLAN2BIT, draw_buffer, 0, 0, 0, 0, 320, 320, 200);"
+      },
+      {
+        "source": "src/jumelle.c",
+        "line": 693,
+        "text": "DisplayAnyPictureNormal(PLAN2BIT, EffetBufferNormal, xmap - LargeurJumelle/2, ymap - HauteurJumelle/2, 0, 0, WidthNworld, width, height);"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy image rectangle from ESI to EDI with source x/y, destination x/y and stack stride/width/height; callee RET12 removes three stack arguments.",
+      "service": "Packed 8-bit image; destination pitch320",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "ClearDrawAndDisplayBufferNormal",
+    "address": "1:04c6b",
+    "offset": 19563,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/frame.c",
+        "line": 184,
+        "pragma": "#pragma aux ClearDrawAndDisplayBufferNormal parm [edi] [esi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/frame.c",
+        "line": 963,
+        "text": "ClearDrawAndDisplayBufferNormal(DrawBufferNormal, DisplayBufferNormal);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Zero 64000 bytes in both EDI and ESI surfaces.",
+      "service": "Normal RAM/VRAM surfaces",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "N_CLRSCR",
+    "address": "1:04c8e",
+    "offset": 19598,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 20,
+        "pragma": "#pragma aux N_CLRSCR parm [edi] modify [edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 162,
+        "text": "N_CLRSCR(DrawBufferNormal);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 562,
+        "text": "N_CLRSCR(DrawBufferNormal);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 768,
+        "text": "N_CLRSCR(DrawBufferNormal);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3339,
+        "text": "N_CLRSCR(DrawBufferNormal);"
+      }
+    ],
+    "callsite_count": 4,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Zero 64000 bytes starting at EDI using REP STOSD; destination advances.",
+      "service": "Packed 320x200 surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Swap_To_Screen",
+    "address": "1:04c9c",
+    "offset": 19612,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 382,
+        "pragma": "#pragma aux Swap_To_Screen parm [esi] [edi] [ecx] [eax] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 510,
+        "text": "Swap_To_Screen(DrawBufferNormal + offset, DisplayBufferNormal + offset,"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 516,
+        "text": "Swap_To_Screen(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);"
+      }
+    ],
+    "callsite_count": 2,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy width/4 dwords per row for EAX height from ESI to EDI, using two code-owned pitches initialized320; preserve GPRs. Width remainder bytes are not copied.",
+      "service": "Packed8-bit normal framebuffer; state_stride_04c86[2]",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "clear_borders_Normal",
+    "address": "1:04cc7",
+    "offset": 19655,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 384,
+        "pragma": "#pragma aux clear_borders_Normal parm [edi] [ecx] [edx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 558,
+        "text": "clear_borders_Normal(DrawBufferNormal + Bloc_lim_W1 + (Bloc_lim_H1 << 8) +"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clear two 4-byte vertical border columns, paired rows per iteration, with row count ECX and border separation EDX.",
+      "service": "Packed normal surface, row pitch320",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Copy_Plan0Diff_To_Buf",
+    "address": "1:04cfa",
+    "offset": 19706,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 158,
+        "text": "Copy_Plan0_To_Buf = (island_copy_t *)(Copy_Plan0Diff_To_Buf);"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 68,
+        "text": "/* Copy_Plan0Diff_To_Buf assembly preserves all registers (PUSHA/POPA). */"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy positive width/height background rectangle to packed destination, width rounded to8 bytes per row; EDX source pitch, ESI source, EDI destination, ECX width, EBX height.",
+      "service": "Packed background/source and destination pitch320",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Copy_Plan0_To_Buf"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/skops.c",
+        "line": 276,
+        "text": "Copy_Plan0_To_Buf(source_buffer_pos - BufferNormalDeplt, dest_buffer_pos, plan_width, draw_height, draw_width);",
+        "alias": "Copy_Plan0_To_Buf"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 335,
+        "text": "Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, draw_height, draw_width);",
+        "alias": "Copy_Plan0_To_Buf"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 352,
+        "text": "Copy_Plan0_To_Buf(source_buffer_pos, dest_buffer_pos + BufferNormalDeplt, plan_width, draw_height, draw_width);",
+        "alias": "Copy_Plan0_To_Buf"
+      }
+    ]
+  },
+  {
+    "name": "asm_04d55",
+    "address": "1:04d55",
+    "offset": 19797,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy background rectangle in8x8 blocks: width rounded up to8, source pitchEDX, destination pitch320, heightEBX decremented by8 until zero; requires positive height multiple8.",
+      "service": "Packed 8-bit source/destination; preserves GPRs",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Display_Bloc",
+    "address": "1:04e64",
+    "offset": 20068,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 37,
+        "pragma": "#pragma aux Display_Bloc parm [esi] [edi] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 122,
+        "text": "Display_Bloc(big_map->tile_texture_offsets[tile_index], draw_buf);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render one16x16 masked tile: source pixels plus 256-byte mask plus row occupancy flags, using AND/OR on destination; mutable destination stride.",
+      "service": "Normal tile:256 pixels +256 mask +flags",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Display_Bloc_Plein",
+    "address": "1:05041",
+    "offset": 20545,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 39,
+        "pragma": "#pragma aux Display_Bloc_Plein parm [esi] [edi] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 120,
+        "text": "Display_Bloc_Plein(big_map->tile_texture_offsets[tile_index], draw_buf);"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Copy opaque16x16 tile into packed destination using configured stride; no transparency mask.",
+      "service": "256-byte indexed tile",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "loc_052DA",
+    "address": "1:052da",
+    "offset": 21210,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Display_Bloc_Clippe",
+    "address": "1:053c6",
+    "offset": 21446,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 41,
+        "pragma": "#pragma aux Display_Bloc_Clippe parm [esi] [edi] [eax] [ebx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 97,
+        "text": "Display_Bloc_Clippe(big_map->tile_texture_offsets[top_index], draw_buf, x, y);"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 113,
+        "text": "Display_Bloc_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, start_x, (s16)(start_y + tile_y * 16));"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 131,
+        "text": "Display_Bloc_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, (s16)(start_x + tile_x * 16), (s16)(start_y + tile_y * 16));"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 145,
+        "text": "Display_Bloc_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, x, y);"
+      }
+    ],
+    "callsite_count": 4,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render masked16x16 tile clipped against current normal map boundaries using EAX/EBX position.",
+      "service": "Masked normal tile format",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "Display_Bloc_Plein_Clippe",
+    "address": "1:0555e",
+    "offset": 21854,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 43,
+        "pragma": "#pragma aux Display_Bloc_Plein_Clippe parm [esi] [edi] [eax] [ebx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/map_ngawe.c",
+        "line": 95,
+        "text": "Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[top_index], draw_buf, x, y);"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 111,
+        "text": "Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, start_x, (s16)(start_y + tile_y * 16));"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 129,
+        "text": "Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, (s16)(start_x + tile_x * 16), (s16)(start_y + tile_y * 16));"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 143,
+        "text": "Display_Bloc_Plein_Clippe(big_map->tile_texture_offsets[tile_index], draw_buf, x, y);"
+      }
+    ],
+    "callsite_count": 4,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Render opaque16x16 tile clipped against current normal map boundaries using EAX/EBX position.",
+      "service": "Indexed tile format",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "fplot_Normal",
+    "address": "1:05609",
+    "offset": 22025,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 226,
+        "text": "extern fplot_func_t fplot_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1353,
+        "text": "fplotNormalETX = &fplot_Normal;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Store low color byte ESI at EDI+x+320*y; no clipping in this primitive.",
+      "service": "Packed 8-bit surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "fplotNormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 961,
+        "text": "fplotNormalETX(draw_buffer, cur_item->x_pos >> 6,",
+        "alias": "fplotNormalETX"
+      }
+    ]
+  },
+  {
+    "name": "flocon_clipping",
+    "address": "1:05628",
+    "offset": 22056,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 386,
+        "pragma": "#pragma aux flocon_clipping parm [eax] [ebx] [ecx] [edx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 541,
+        "text": "flocon_clipping(Bloc_lim_H1, Bloc_lim_H2 - 6,"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Store EAX/EBX as top/bottom and ECX/EDX as left/right weather bounds in code-owned variables.",
+      "service": "Writable CODE clip state",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon5_Normal",
+    "address": "1:05640",
+    "offset": 22080,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 220,
+        "text": "extern void_func_t draw_flocon5_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1354,
+        "text": "drawflocon5NormalETX = (island_snow_t *)(&draw_flocon5_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type5, single index5 pixel at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon5NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon1_Normal",
+    "address": "1:05670",
+    "offset": 22128,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 215,
+        "text": "extern void_func_t draw_flocon1_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1355,
+        "text": "drawflocon1NormalETX = (island_snow_t *)(&draw_flocon1_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type1, single index7 pixel at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon1NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon2_Normal",
+    "address": "1:056a0",
+    "offset": 22176,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 216,
+        "text": "extern void_func_t draw_flocon2_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1356,
+        "text": "drawflocon2NormalETX = (island_snow_t *)(&draw_flocon2_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type2, 2x2 pattern (top7,8; bottom6,7) at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon2NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon3_Normal",
+    "address": "1:056dc",
+    "offset": 22236,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 217,
+        "text": "extern void_func_t draw_flocon3_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1357,
+        "text": "drawflocon3NormalETX = (island_snow_t *)(&draw_flocon3_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type3, 3x3 cross-like multicolor pattern at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon3NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon4_Normal",
+    "address": "1:05725",
+    "offset": 22309,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 218,
+        "text": "extern void_func_t draw_flocon4_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1364,
+        "text": "drawpluie4NormalETX = (island_snow_t *)(&draw_flocon4_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw single index3 pixel (not selected by normal-mode snow type4 dispatch) at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie4NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_normal_5755",
+    "address": "1:05755",
+    "offset": 22357,
+    "name_provenance": "INVENTED",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 219,
+        "text": "extern void_func_t draw_normal_5755;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1358,
+        "text": "drawflocon4NormalETX = (island_snow_t *)(&draw_normal_5755);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal-mode snow type4, 4x4 rounded flake at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon4NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_pluie5_Normal",
+    "address": "1:057a6",
+    "offset": 22438,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 223,
+        "text": "extern void_func_t draw_pluie5_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1363,
+        "text": "drawpluie5NormalETX = (island_snow_t *)(&draw_pluie5_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type5 stroke at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie5NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon7_Normal",
+    "address": "1:057df",
+    "offset": 22495,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 222,
+        "text": "extern void_func_t draw_flocon7_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1359,
+        "text": "drawflocon7NormalETX = (island_snow_t *)(&draw_flocon7_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type7 flake at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon7NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 924,
+        "text": "drawflocon7NormalETX(draw_buffer,",
+        "alias": "drawflocon7NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "draw_pluie6_Normal",
+    "address": "1:05830",
+    "offset": 22576,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 224,
+        "text": "extern void_func_t draw_pluie6_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1362,
+        "text": "drawpluie6NormalETX = (island_snow_t *)(&draw_pluie6_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type6 stroke at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie6NormalETX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "draw_flocon6_Normal",
+    "address": "1:0587d",
+    "offset": 22653,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 221,
+        "text": "extern void_func_t draw_flocon6_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1360,
+        "text": "drawflocon6NormalETX = (island_snow_t *)(&draw_flocon6_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw snow type6 flake at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawflocon6NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 918,
+        "text": "drawflocon6NormalETX(draw_buffer,",
+        "alias": "drawflocon6NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "draw_pluie7_Normal",
+    "address": "1:058f4",
+    "offset": 22772,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 1,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 225,
+        "text": "extern void_func_t draw_pluie7_Normal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1361,
+        "text": "drawpluie7NormalETX = (island_snow_t *)(&draw_pluie7_Normal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw rain type7 stroke at x=EAX,y=EBX into bufferEDI; test weather clipping bounds then write fixed pattern in320-byte rows.",
+      "service": "Packed indexed software surface",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "drawpluie7NormalETX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 931,
+        "text": "drawpluie7NormalETX(draw_buffer,",
+        "alias": "drawpluie7NormalETX"
+      }
+    ]
+  },
+  {
+    "name": "get_joy_input2_dos1",
+    "address": "1:0595d",
+    "offset": 22877,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 677,
+        "text": "Read_Input_Func = get_joy_input2_dos1;"
+      },
+      {
+        "source": "src/input.c",
+        "line": 699,
+        "text": "Read_Input_Func = get_joy_input2_dos1;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Sample active-low game-port button bits, then unless During_The_Menu==1 measure two axis RC discharge times using clock_ticks (axis pair0/1 or2/3); timeout=2000 loops falls back to calibrated centers. CLI/CLD, final STI, preserve GPRs.",
+      "service": "Port201h; PIT channel2; axis/button globals",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Read_Input_Func"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/input.c",
+        "line": 386,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 391,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 406,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      }
+    ]
+  },
+  {
+    "name": "get_joy_input2_dos2",
+    "address": "1:05a57",
+    "offset": 23127,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 709,
+        "text": "Read_Input_Func = get_joy_input2_dos2;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Sample active-low game-port button bits, then unless During_The_Menu==1 measure two axis RC discharge times using clock_ticks (axis pair0/1 or2/3); timeout=2000 loops falls back to calibrated centers. CLI/CLD, final STI, preserve GPRs.",
+      "service": "Port201h; PIT channel2; axis/button globals",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Read_Input_Func"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/input.c",
+        "line": 386,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 391,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 406,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      }
+    ]
+  },
+  {
+    "name": "get_joy_input2_windows1",
+    "address": "1:05b55",
+    "offset": 23381,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 672,
+        "text": "Read_Input_Func = get_joy_input2_windows1;"
+      },
+      {
+        "source": "src/input.c",
+        "line": 694,
+        "text": "Read_Input_Func = get_joy_input2_windows1;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Poll same game-port button/axis pairs using iteration counts rather than PIT timestamps; 2000-loop timeout/invalid initial axis bits fall back to centers. CLI/CLD and final STI.",
+      "service": "Port201h direct I/O even in Windows-named variant",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Read_Input_Func"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/input.c",
+        "line": 386,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 391,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 406,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      }
+    ]
+  },
+  {
+    "name": "get_joy_input2_windows2",
+    "address": "1:05c13",
+    "offset": 23571,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 704,
+        "text": "Read_Input_Func = get_joy_input2_windows2;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Poll same game-port button/axis pairs using iteration counts rather than PIT timestamps; 2000-loop timeout/invalid initial axis bits fall back to centers. CLI/CLD and final STI.",
+      "service": "Port201h direct I/O even in Windows-named variant",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Read_Input_Func"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/input.c",
+        "line": 386,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 391,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      },
+      {
+        "source": "src/input.c",
+        "line": 406,
+        "text": "Read_Input_Func();",
+        "alias": "Read_Input_Func"
+      }
+    ]
+  },
+  {
+    "name": "dos_game_io_port_something",
+    "address": "1:05cdf",
+    "offset": 23775,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/input.c",
+        "line": 681,
+        "text": "if (dos_game_io_port_something() == 0 &&"
+      },
+      {
+        "source": "src/input.c",
+        "line": 691,
+        "text": "if (dos_game_io_port_something() != 0) {"
+      }
+    ],
+    "callsite_count": 2,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Trigger RC discharge (write FFh to201h), require selected axis bits to fall after at least one but before2000 iterations; return full EAX boolean. Pair masks3/Ch respectively.",
+      "service": "Game-port201h; CLI/CLD then STI",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "dos_game_io_port_something2",
+    "address": "1:05d14",
+    "offset": 23828,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/input.c",
+        "line": 682,
+        "text": "dos_game_io_port_something2() == 0) {"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Trigger RC discharge (write FFh to201h), require selected axis bits to fall after at least one but before2000 iterations; return full EAX boolean. Pair masks3/Ch respectively.",
+      "service": "Game-port201h; CLI/CLD then STI",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_joy_input1_dos1",
+    "address": "1:05d4a",
+    "offset": 23882,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 678,
+        "text": "Swap_And_Test_Joystick = get_joy_input1_dos1;"
+      },
+      {
+        "source": "src/input.c",
+        "line": 698,
+        "text": "Swap_And_Test_Joystick = get_joy_input1_dos1;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Interleave packed framebuffer row copying with game-port sampling so axis discharge is timed during transfer; update axes/buttons, use source/destination pitch state; preserve GPRs including input EAX height (no independent return).",
+      "service": "Port201h; normal framebuffer copying and PIT timing",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Swap_And_Test_Joystick"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/frame.c",
+        "line": 279,
+        "text": "Swap_And_Test_Joystick(display_buffer, DrawBufferNormal, 320, 200);",
+        "alias": "Swap_And_Test_Joystick"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 507,
+        "text": "Swap_And_Test_Joystick(DrawBufferNormal + offset, DisplayBufferNormal + offset,",
+        "alias": "Swap_And_Test_Joystick"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 514,
+        "text": "Swap_And_Test_Joystick(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);",
+        "alias": "Swap_And_Test_Joystick"
+      }
+    ]
+  },
+  {
+    "name": "get_joy_input1_dos2",
+    "address": "1:05f34",
+    "offset": 24372,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/input.c",
+        "line": 710,
+        "text": "Swap_And_Test_Joystick = get_joy_input1_dos2;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "joystick",
+      "summary": "Interleave packed framebuffer row copying with game-port sampling so axis discharge is timed during transfer; update axes/buttons, use source/destination pitch state; preserve GPRs including input EAX height (no independent return).",
+      "service": "Port201h; normal framebuffer copying and PIT timing",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "Swap_And_Test_Joystick"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/frame.c",
+        "line": 279,
+        "text": "Swap_And_Test_Joystick(display_buffer, DrawBufferNormal, 320, 200);",
+        "alias": "Swap_And_Test_Joystick"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 507,
+        "text": "Swap_And_Test_Joystick(DrawBufferNormal + offset, DisplayBufferNormal + offset,",
+        "alias": "Swap_And_Test_Joystick"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 514,
+        "text": "Swap_And_Test_Joystick(DrawBufferNormal, DisplayBufferNormal, 320, Bloc_lim_H2);",
+        "alias": "Swap_And_Test_Joystick"
+      }
+    ]
+  },
+  {
+    "name": "DetectCpu",
+    "address": "1:0611e",
+    "offset": 24862,
+    "name_provenance": "RAYVERSE/ANDROID",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 429,
+        "pragma": "#pragma aux DetectCpu parm [] value [eax] modify exact [eax ebx ecx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/pcmain.c",
+        "line": 1013,
+        "text": "TheProcesseur = DetectCpu();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "other",
+      "summary": "Classify CPU via EFLAGS alignment/ID toggling and optional CPUID; return family in EAX. BX-only restore leaves upper EBX and ECX potentially changed; EDX preserved.",
+      "service": "EFLAGS/CPUID",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "default_sprite_clipping",
+    "address": "1:06194",
+    "offset": 24980,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/menu.c",
+        "line": 565,
+        "text": "default_sprite_clipping();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1067,
+        "text": "default_sprite_clipping();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1103,
+        "text": "default_sprite_clipping();"
+      }
+    ],
+    "callsite_count": 3,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Set sprite clipping bounds to x8..312,y0..200 in code-owned XMIN/XMAX/YMIN/YMAX.",
+      "service": "Software state/format at this boundary; see callees.",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_sprite_clipping",
+    "address": "1:061bd",
+    "offset": 25021,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 341,
+        "pragma": "#pragma aux get_sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact []"
+      },
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 24,
+        "pragma": "#pragma aux get_sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 524,
+        "text": "get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 535,
+        "text": "get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 777,
+        "text": "get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);"
+      },
+      {
+        "source": "src/display.c",
+        "line": 798,
+        "text": "get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 467,
+        "text": "get_sprite_clipping(&xmin, &xmax, &ymin, &ymax);"
+      }
+    ],
+    "callsite_count": 5,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Write current clip bounds through four pointers EAX/EBX/ECX/EDX; preserves GPRs.",
+      "service": "Software state/format at this boundary; see callees.",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_sprite_clipping_xmin",
+    "address": "1:061e2",
+    "offset": 25058,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_sprite_clipping_xmax",
+    "address": "1:061e8",
+    "offset": 25064,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_sprite_clipping_ymin",
+    "address": "1:061ee",
+    "offset": 25070,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "get_sprite_clipping_ymax",
+    "address": "1:061f4",
+    "offset": 25076,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "sprite_clipping",
+    "address": "1:061fa",
+    "offset": 25082,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/affiche.c",
+        "line": 350,
+        "pragma": "#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 336,
+        "pragma": "#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]"
+      },
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 10,
+        "pragma": "#pragma aux sprite_clipping parm [eax] [ebx] [ecx] [edx] modify exact [eax ebx ecx edx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 525,
+        "text": "sprite_clipping(0, 100, 0, 100);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 527,
+        "text": "sprite_clipping(xmin, xmax, ymin, ymax);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 536,
+        "text": "sprite_clipping(0, 100, 0, 100);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 538,
+        "text": "sprite_clipping(xmin, xmax, ymin, ymax);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 778,
+        "text": "sprite_clipping(xmin, xmax, ymin, Bloc_lim_H2 - 40);"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 780,
+        "text": "sprite_clipping(xmin, xmax, ymin, ymax);"
+      },
+      {
+        "source": "src/display.c",
+        "line": 587,
+        "text": "sprite_clipping(0, 320, 0, 200);"
+      },
+      {
+        "source": "src/display.c",
+        "line": 799,
+        "text": "sprite_clipping(0, 320, 0, 200);"
+      },
+      {
+        "source": "src/display.c",
+        "line": 822,
+        "text": "sprite_clipping(xmin, xmax, ymin, ymax);"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 468,
+        "text": "sprite_clipping(0, 320, 0, 200);"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 470,
+        "text": "sprite_clipping(xmin, xmax, ymin, ymax);"
+      },
+      {
+        "source": "src/jumelle.c",
+        "line": 692,
+        "text": "sprite_clipping(0, width, 0, height);"
+      },
+      {
+        "source": "src/luciole.c",
+        "line": 77,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/map_ngawe.c",
+        "line": 156,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 558,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 561,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 706,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 767,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3335,
+        "text": "sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1045,
+        "text": "sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1069,
+        "text": "sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1116,
+        "text": "sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);"
+      }
+    ],
+    "callsite_count": 22,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clamp supplied xmin/xmax to0..320 and ymin/ymax to0..200 and store sprite bounds.",
+      "service": "Software state/format at this boundary; see callees.",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "clip_sprite_on_screen",
+    "address": "1:0626d",
+    "offset": 25197,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clip x/y and packed CL:CH sprite dimensions, adjust source pointer and saved source width; CF signals reject; flipped helper adjusts opposite horizontal source edge.",
+      "service": "Internal register/flags ABI and writable clip state",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "clip_sprite_on_screen_flipped",
+    "address": "1:06323",
+    "offset": 25379,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clip x/y and packed CL:CH sprite dimensions, adjust source pointer and saved source width; CF signals reject; flipped helper adjusts opposite horizontal source edge.",
+      "service": "Internal register/flags ABI and writable clip state",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteFlipNoClipX",
+    "address": "1:063e6",
+    "offset": 25574,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 197,
+        "text": "extern draw_func_t DrawSpriteFlipNoClipX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1309,
+        "text": "DrawSpriteNoClipNormalEtX = &DrawSpriteFlipNoClipX;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw indexed sprite to four VGA planes with destination pitch80 and source row width saved in state. Pixels <A0h draw; bytes>=A0h are transparent in X traversal. Clipped/no-clip and mirrored entry variants share bodies; canonical no-clip names are retained even where historical labels are unintuitive.",
+      "service": "Mode-X sprite planes; source packed CL width, CH height; 3C4h/3C5h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteNoClipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteX",
+    "address": "1:063f2",
+    "offset": 25586,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 200,
+        "text": "extern draw_func_t DrawSpriteX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1308,
+        "text": "DrawSpriteNormalEtX = (island_draw_t *)(&DrawSpriteX);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw indexed sprite to four VGA planes with destination pitch80 and source row width saved in state. Pixels <A0h draw; bytes>=A0h are transparent in X traversal. Clipped/no-clip and mirrored entry variants share bodies; canonical no-clip names are retained even where historical labels are unintuitive.",
+      "service": "Mode-X sprite planes; source packed CL width, CH height; 3C4h/3C5h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteNormalEtX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 743,
+        "text": "DrawSpriteNormalEtX(proj_x, color, proj_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1223,
+        "text": "DrawSpriteNormalEtX(draw_x, sprite->color >> 4, draw_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1485,
+        "text": "DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,",
+        "alias": "DrawSpriteNormalEtX"
+      }
+    ]
+  },
+  {
+    "name": "DrawSpriteNoClipX",
+    "address": "1:06559",
+    "offset": 25945,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 196,
+        "text": "extern draw_func_t DrawSpriteNoClipX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1311,
+        "text": "DrawSpriteFlipNoClipNormalEtX = &DrawSpriteNoClipX;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw indexed sprite to four VGA planes with destination pitch80 and source row width saved in state. Pixels <A0h draw; bytes>=A0h are transparent in X traversal. Clipped/no-clip and mirrored entry variants share bodies; canonical no-clip names are retained even where historical labels are unintuitive.",
+      "service": "Mode-X sprite planes; source packed CL width, CH height; 3C4h/3C5h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteFlipNoClipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteFlipX",
+    "address": "1:06565",
+    "offset": 25957,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 201,
+        "text": "extern draw_func_t DrawSpriteFlipX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1310,
+        "text": "DrawSpriteFlipNormalEtX = (island_draw_t *)(&DrawSpriteFlipX);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw indexed sprite to four VGA planes with destination pitch80 and source row width saved in state. Pixels <A0h draw; bytes>=A0h are transparent in X traversal. Clipped/no-clip and mirrored entry variants share bodies; canonical no-clip names are retained even where historical labels are unintuitive.",
+      "service": "Mode-X sprite planes; source packed CL width, CH height; 3C4h/3C5h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteFlipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteColorX",
+    "address": "1:066df",
+    "offset": 26335,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 8,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 198,
+        "text": "extern draw_func_t DrawSpriteColorX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1312,
+        "text": "DrawSpriteColorNormalEtX = (island_draw_t *)(&DrawSpriteColorX);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw clipped normal/mirrored X sprite; visible pixels <A0h are ORed with low byte of color*8; skip transparent values.",
+      "service": "Mode-X VGA; color-bank selection",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteColorNormalEtX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 1032,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1038,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1042,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1141,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1146,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1150,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/display.c",
+        "line": 617,
+        "text": "DrawSpriteColorNormalEtX(draw_x,",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/display.c",
+        "line": 634,
+        "text": "DrawSpriteColorNormalEtX(draw_x,",
+        "alias": "DrawSpriteColorNormalEtX"
+      }
+    ]
+  },
+  {
+    "name": "DrawSpriteColorFlipX",
+    "address": "1:06876",
+    "offset": 26742,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 199,
+        "text": "extern draw_func_t DrawSpriteColorFlipX;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1313,
+        "text": "DrawSpriteColorFlipNormalEtX = &DrawSpriteColorFlipX;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw clipped normal/mirrored X sprite; visible pixels <A0h are ORed with low byte of color*8; skip transparent values.",
+      "service": "Mode-X VGA; color-bank selection",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteColorFlipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteNormalNoClip",
+    "address": "1:06a18",
+    "offset": 27160,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 190,
+        "text": "extern draw_func_t DrawSpriteNormalNoClip;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1347,
+        "text": "DrawSpriteNoClipNormalEtX = &DrawSpriteNormalNoClip;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored sprite into320-byte rows; visible values<A0h, >=A0h encode transparent skip length value-A0h in destination/source index. Clipped and no-clip entries share bodies.",
+      "service": "Packed sprite rows with transparent run markers",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteNoClipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteNormal",
+    "address": "1:06a24",
+    "offset": 27172,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/display.c",
+        "line": 1083,
+        "text": "DrawSpriteNormalEtX = (island_draw_t *)(DrawSpriteNormal);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 194,
+        "text": "extern draw_func_t DrawSpriteNormal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1346,
+        "text": "DrawSpriteNormalEtX = (island_draw_t *)(&DrawSpriteNormal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored sprite into320-byte rows; visible values<A0h, >=A0h encode transparent skip length value-A0h in destination/source index. Clipped and no-clip entries share bodies.",
+      "service": "Packed sprite rows with transparent run markers",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteNormalEtX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 743,
+        "text": "DrawSpriteNormalEtX(proj_x, color, proj_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1223,
+        "text": "DrawSpriteNormalEtX(draw_x, sprite->color >> 4, draw_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1485,
+        "text": "DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,",
+        "alias": "DrawSpriteNormalEtX"
+      }
+    ]
+  },
+  {
+    "name": "DrawSpriteNormal256",
+    "address": "1:06a9d",
+    "offset": 27293,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 3,
+    "address_references": [
+      {
+        "source": "src/display.c",
+        "line": 1080,
+        "text": "DrawSpriteNormalEtX = (island_draw_t *)(DrawSpriteNormal256);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored raw256-color sprite into320-byte rows, treating palette index0 as transparent.",
+      "service": "Packed raw sprite rows, zero color-key",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteNormalEtX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 743,
+        "text": "DrawSpriteNormalEtX(proj_x, color, proj_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1223,
+        "text": "DrawSpriteNormalEtX(draw_x, sprite->color >> 4, draw_y, packed_size,",
+        "alias": "DrawSpriteNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1485,
+        "text": "DrawSpriteNormalEtX(min_x, sprite->color_bits.palette_index, min_y,",
+        "alias": "DrawSpriteNormalEtX"
+      }
+    ]
+  },
+  {
+    "name": "DrawSpriteFlipNormalNoClip",
+    "address": "1:06afc",
+    "offset": 27388,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 191,
+        "text": "extern draw_func_t DrawSpriteFlipNormalNoClip;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1350,
+        "text": "DrawSpriteFlipNoClipNormalEtX = &DrawSpriteFlipNormalNoClip;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored sprite into320-byte rows; visible values<A0h, >=A0h encode transparent skip length value-A0h in destination/source index. Clipped and no-clip entries share bodies.",
+      "service": "Packed sprite rows with transparent run markers",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteFlipNoClipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteFlipNormal",
+    "address": "1:06b08",
+    "offset": 27400,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/display.c",
+        "line": 1084,
+        "text": "DrawSpriteFlipNormalEtX = (island_draw_t *)(DrawSpriteFlipNormal);"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 195,
+        "text": "extern draw_func_t DrawSpriteFlipNormal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1349,
+        "text": "DrawSpriteFlipNormalEtX = (island_draw_t *)(&DrawSpriteFlipNormal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored sprite into320-byte rows; visible values<A0h, >=A0h encode transparent skip length value-A0h in destination/source index. Clipped and no-clip entries share bodies.",
+      "service": "Packed sprite rows with transparent run markers",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteFlipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteFlipNormal256",
+    "address": "1:06b88",
+    "offset": 27528,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/display.c",
+        "line": 1081,
+        "text": "DrawSpriteFlipNormalEtX = (island_draw_t *)(DrawSpriteFlipNormal256);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw normal/mirrored raw256-color sprite into320-byte rows, treating palette index0 as transparent.",
+      "service": "Packed raw sprite rows, zero color-key",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteFlipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteColorNormal",
+    "address": "1:06bea",
+    "offset": 27626,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 8,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 192,
+        "text": "extern draw_func_t DrawSpriteColorNormal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1351,
+        "text": "DrawSpriteColorNormalEtX = (island_draw_t *)(&DrawSpriteColorNormal);"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw clipped normal/mirrored run-marker sprite; visible bytes OR color*8, transparent skip markers>=A0h.",
+      "service": "Packed indexed surface; color-bank selection",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteColorNormalEtX"
+    ],
+    "indirect_callers": [
+      {
+        "source": "src/affiche.c",
+        "line": 1032,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1038,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1042,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1141,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha_numbers.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1146,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha2.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/affiche.c",
+        "line": 1150,
+        "text": "DrawSpriteColorNormalEtX(current_x, (u8)color, (s16)(current_y - sprite->outer_height + vertical_offset), (u16)((sprite->outer_height << 8) + let_width), draw_buffer, alpha.img_buffer + sprite->offset_in_atlas);",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/display.c",
+        "line": 617,
+        "text": "DrawSpriteColorNormalEtX(draw_x,",
+        "alias": "DrawSpriteColorNormalEtX"
+      },
+      {
+        "source": "src/display.c",
+        "line": 634,
+        "text": "DrawSpriteColorNormalEtX(draw_x,",
+        "alias": "DrawSpriteColorNormalEtX"
+      }
+    ]
+  },
+  {
+    "name": "DrawSpriteColorFlipNormal",
+    "address": "1:06c89",
+    "offset": 27785,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [],
+    "callsite_count": 0,
+    "address_references": [
+      {
+        "source": "src/frame.c",
+        "line": 193,
+        "text": "extern draw_func_t DrawSpriteColorFlipNormal;"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1352,
+        "text": "DrawSpriteColorFlipNormalEtX = &DrawSpriteColorFlipNormal;"
+      }
+    ],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Draw clipped normal/mirrored run-marker sprite; visible bytes OR color*8, transparent skip markers>=A0h.",
+      "service": "Packed indexed surface; color-bank selection",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [
+      "DrawSpriteColorFlipNormalEtX"
+    ],
+    "indirect_callers": []
+  },
+  {
+    "name": "asm_06d33",
+    "address": "1:06d33",
+    "offset": 27955,
+    "name_provenance": "INVENTED",
+    "private": true,
+    "newly_identified": false,
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT_CONTRIBUTION",
+    "contracts": [],
+    "callers": [],
+    "address_references": [],
+    "callsite_count": 0,
+    "prior_inventory": {},
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "DrawSpriteDiffNormal",
+    "address": "1:06e0d",
+    "offset": 28173,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/skops.c",
+        "line": 80,
+        "pragma": "#pragma aux DrawSpriteDiffNormal parm [eax] [ebx] [ecx] [edx] [edi] [esi] modify exact [eax ebx ecx edx esi edi]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/skops.c",
+        "line": 290,
+        "text": "DrawSpriteDiffNormal(source_x, Sprite[i].y - v68, size, Scroll_Masque[i + 1], draw_buffer,"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 297,
+        "text": "DrawSpriteDiffNormal(source_x, Sprite[i].y - v68, size, Scroll_Masque[i + 1],"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 366,
+        "text": "DrawSpriteDiffNormal(Sprite[i].x, source_x, size, Scroll_Masque[i + 1], draw_buffer,"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 373,
+        "text": "DrawSpriteDiffNormal(Sprite[i].x, source_x, size, Scroll_Masque[i + 1],"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 407,
+        "text": "DrawSpriteDiffNormal(source_x, source_y, size, Scroll_Masque[i + 1], draw_buffer,"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 414,
+        "text": "DrawSpriteDiffNormal(source_x, source_y, size, Scroll_Masque[i + 1], draw_buffer,"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 429,
+        "text": "DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,"
+      },
+      {
+        "source": "src/skops.c",
+        "line": 435,
+        "text": "DrawSpriteDiffNormal(Sprite[i].x, source_y, size, Scroll_Masque[i + 1], draw_buffer,"
+      }
+    ],
+    "callsite_count": 8,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "assembly_renderers",
+      "summary": "Clip source/mask/destination; per dword skip zero image word, otherwise destination=(destination&mask)|image. Source and mask use original sprite row width.",
+      "service": "Packed image+parallel mask; width rounded to dwords",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "synchro",
+    "address": "1:06e8a",
+    "offset": 28298,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/movie.c",
+        "line": 978,
+        "pragma": "#pragma aux synchro parm [] modify exact []"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 392,
+        "pragma": "#pragma aux synchro parm [] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/blood.c",
+        "line": 72,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 289,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 294,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 318,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 322,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 419,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 423,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 608,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 613,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 779,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 792,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 796,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 836,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 313,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 349,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 906,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 494,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 499,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 514,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 614,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 645,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 297,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 854,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 977,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 984,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1372,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 929,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 2828,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3040,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3058,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3068,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3198,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/movie.c",
+        "line": 808,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/movie.c",
+        "line": 1020,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 495,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 57,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 64,
+        "text": "synchro();"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 81,
+        "text": "synchro();"
+      }
+    ],
+    "callsite_count": 38,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Wait until VGA input-status bit3 is set (inside vertical retrace), preserving GPRs.",
+      "service": "IN3DAh bit3; unbounded busy wait",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "endsynchro",
+    "address": "1:06e9a",
+    "offset": 28314,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/movie.c",
+        "line": 976,
+        "pragma": "#pragma aux endsynchro parm [] modify exact []"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 394,
+        "pragma": "#pragma aux endsynchro parm [] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 286,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 292,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 315,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 417,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 422,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 609,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 612,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 780,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 791,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 795,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 312,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 348,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 905,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 492,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 498,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 513,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 613,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/effect1.c",
+        "line": 644,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 287,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 853,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 957,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 975,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 983,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 1371,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 928,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 2827,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3039,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3057,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3067,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/menu.c",
+        "line": 3197,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/movie.c",
+        "line": 807,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/movie.c",
+        "line": 1019,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 601,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 755,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 63,
+        "text": "endsynchro();"
+      },
+      {
+        "source": "src/ray_pc.c",
+        "line": 80,
+        "text": "endsynchro();"
+      }
+    ],
+    "callsite_count": 36,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Wait until VGA input-status bit3 clears (outside retrace), preserving GPRs.",
+      "service": "IN3DAh bit3; unbounded busy wait",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "set_speaker_on",
+    "address": "1:06eaa",
+    "offset": 28330,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 363,
+        "text": "set_speaker_on();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Reset channel2 software clock state, enable port61h bits0/1, program PIT2 control B4h and divisorFFFFh. This is frame clock initialization as well as speaker gating.",
+      "service": "PIT43h/42h and port61h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "set_speaker_off",
+    "address": "1:06eea",
+    "offset": 28394,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 941,
+        "text": "set_speaker_off();"
+      }
+    ],
+    "callsite_count": 1,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Clear port61h bits0/1, program PIT2 B4h and zero divisor; preserves GPRs.",
+      "service": "PIT43h/42h and port61h",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "clock_ticks",
+    "address": "1:06efd",
+    "offset": 28413,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 388,
+        "pragma": "#pragma aux clock_ticks parm [] value [eax] modify exact [eax]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 248,
+        "text": "times[i] = clock_ticks();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 287,
+        "text": "start_ticks = clock_ticks();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 290,
+        "text": "start_ticks = clock_ticks();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 293,
+        "text": "wait_until(clock_ticks() + 3000);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 296,
+        "text": "word_CF7F0 = (u16)((clock_ticks() - start_ticks) / i);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 316,
+        "text": "start_ticks = clock_ticks();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 319,
+        "text": "start_ticks = clock_ticks();"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 323,
+        "text": "end_ticks = clock_ticks();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 908,
+        "text": "tick = clock_ticks();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 979,
+        "text": "timer = (u32)clock_ticks();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 986,
+        "text": "timer = (u32)clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 497,
+        "text": "ticks = clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 519,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 530,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 548,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 551,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 655,
+        "text": "ticks = clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 673,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 689,
+        "text": "clock_ticks();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 692,
+        "text": "clock_ticks();"
+      }
+    ],
+    "callsite_count": 20,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Latch/read PIT2 counter, compute elapsed count from software period, account for wrap in accumulated epoch, update last/repeat state; after >20 identical readings disable period; return cumulative count EAX.",
+      "service": "PIT control43h=80h, reads42h; lowlevel_timer state",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "wait_until",
+    "address": "1:06f5d",
+    "offset": 28509,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 390,
+        "pragma": "#pragma aux wait_until parm [ebx] value [ecx] modify exact [eax ecx]"
+      },
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 28,
+        "pragma": "#pragma aux wait_until parm [ebx] value [ecx] modify exact [eax ecx]"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 288,
+        "text": "wait_until(start_ticks + 3000);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 293,
+        "text": "wait_until(clock_ticks() + 3000);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 317,
+        "text": "wait_until(start_ticks + 3000);"
+      },
+      {
+        "source": "src/cheat.c",
+        "line": 321,
+        "text": "wait_until(limit);"
+      },
+      {
+        "source": "src/display.c",
+        "line": 680,
+        "text": "if (!wait_until(next_clock_target)) {"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 595,
+        "text": "if (need_timer && use_sync && end_of_frame && !wait_until(deadline)) {"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 750,
+        "text": "if (need_timer && use_sync && end_of_frame && !wait_until(deadline)) {"
+      }
+    ],
+    "callsite_count": 7,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "If clock period zero return ECX=1 immediately; else poll clock_ticks until value>EBX target, returning ECX=polls-1 (EAX last tick).",
+      "service": "PIT clock busy wait; return is ECX",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  },
+  {
+    "name": "speaker_enable",
+    "address": "1:06f78",
+    "offset": 28536,
+    "name_provenance": "RAYVERSE",
+    "source": "src/lowlevel_04430.asm",
+    "reconstruction_status": "STRICT",
+    "contracts": [
+      {
+        "source": "src/pcmain.c",
+        "line": 396,
+        "pragma": "#pragma aux speaker_enable parm [] modify exact []"
+      },
+      {
+        "source": "src/include/lowlevel.h",
+        "line": 32,
+        "pragma": "#pragma aux speaker_enable parm [] modify exact []"
+      }
+    ],
+    "callers": [
+      {
+        "source": "src/cheat.c",
+        "line": 311,
+        "text": "speaker_enable();"
+      },
+      {
+        "source": "src/display.c",
+        "line": 904,
+        "text": "speaker_enable();"
+      },
+      {
+        "source": "src/frame.c",
+        "line": 973,
+        "text": "speaker_enable();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 493,
+        "text": "speaker_enable();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 652,
+        "text": "speaker_enable();"
+      },
+      {
+        "source": "src/pcmain.c",
+        "line": 1075,
+        "text": "speaker_enable();"
+      }
+    ],
+    "callsite_count": 6,
+    "address_references": [],
+    "prior_inventory": {
+      "area": "timer",
+      "summary": "Call set_speaker_on, resetting the software frame clock; no arguments or result.",
+      "service": "PIT/speaker wrapper",
+      "semantic_evidence": "PROVEN",
+      "open_question": null
+    },
+    "proof": {
+      "status": "OPEN"
+    },
+    "layouts": [],
+    "description_status": "OPEN",
+    "dispatch_aliases": [],
+    "indirect_callers": []
+  }
+]
