@@ -8734,7 +8734,7 @@
      "quality": "COMPILER_STEERED"
     },
     "init_divers_level_PC": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

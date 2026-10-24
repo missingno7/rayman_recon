@@ -352,11 +352,9 @@ void FIRST_INIT(void) {
     InitMatriceJumelle();
     {
         u8 frequency = Frequence;
-        if (frequency != 70) {
-            VGA_FREQ = 60;
-        } else {
-            VGA_FREQ = frequency;
-        }
+        /* COMPILER_STEERED: retain the frequency value before applying the fallback. */
+        VGA_FREQ = frequency;
+        if (frequency != 70) VGA_FREQ = 60;
     }
     InitModeNormalWithFrequency(VGA_FREQ);
     use_sync = 1;
