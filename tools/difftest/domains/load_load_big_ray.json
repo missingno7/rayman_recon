@@ -1,0 +1,17 @@
+{
+  "unit": "load",
+  "function": "load_big_ray",
+  "evidence": "load_big_ray reads the shipped PCMAP/BRAY.DAT (fixed name, src/load.c:589..592). Its only caller chain is STRICT DO_GROS_RAYMAN -> START_LOADER_ANIM -> LOAD_BIG_RAYMAN (src/display.c:1074, src/cheat.c:857), run once from PcMain before LOAD_ALL_FIX, when nb_des still holds its zero-initialised BSS value (the only writers are load_big_ray, LOAD_ALL_FIX and load_world).",
+  "environment": {
+    "file_layer": {"evidence": "fopen/fread/fclose of the Watcom C library on the installed game data (models.FileLayer)."},
+    "allocators": {"callees": {"block_malloc": 1, "temp_malloc": 0},
+                   "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."},
+    "noreturn": {"callees": ["FatalError"], "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."},
+    "budget": {"seconds": 240, "steps": 60000000, "events": 60000,
+               "evidence": "one complete BRAY.DAT load (98 KB, byte-wise XOR loop) per seed."}
+  },
+  "constraints": [
+    {"loc": {"global": "nb_des", "size": 2}, "values": [0],
+     "evidence": "BSS zero at the only call (START_LOADER_ANIM precedes LOAD_ALL_FIX in DO_GROS_RAYMAN, src/display.c:1092..1100)"}
+  ]
+}

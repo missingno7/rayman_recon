@@ -1,0 +1,14 @@
+{
+  "unit": "blood",
+  "function": "DoEffectBloodOut",
+  "evidence": "DoEffectBloodOut (end of PcMain) seeds 10 drip columns with myRand (modelled exactly as the STRICT myRand table lookup), then runs frames until every column passed row 200: each frame calls synchro() once and redraws the whole 320x200 display_buffer from DrawBufferNormal (src/blood.c:19..83). display_buffer is DisplayBufferNormal in normal mode (src/frame.c:277) and DrawBufferNormal the 64064-byte draw buffer (FIRST_INIT, src/cheat.c:347): both are modelled as separate fresh 64064-byte buffers.",
+  "environment": {
+    "boundary": {"callee": "synchro", "occurrence": 3,
+                 "evidence": "synchro() is called exactly once per drawn frame (src/blood.c:76); stopping at its third call compares the seeding, two complete column updates and two complete 64000-byte frame redraws (memory written before each synchro call and at the boundary) with an identical call prefix on both sides. The frame loop itself only repeats the same per-frame code until all columns reach 64000 (about 70..100 frames)."},
+    "budget": {"seconds": 240, "seeds": 32, "steps": 60000000, "evidence": "two full-screen redraws (32000 16-bit stores each) per seed"}
+  },
+  "constraints": [
+    {"loc": {"global": "display_buffer"}, "fresh": {"size": 64064}, "evidence": "DisplayBufferNormal"},
+    {"loc": {"global": "DrawBufferNormal"}, "fresh": {"size": 64064}, "evidence": "FIRST_INIT sub_6FBB4(64064)"}
+  ]
+}

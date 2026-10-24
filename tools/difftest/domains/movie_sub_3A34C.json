@@ -1,0 +1,63 @@
+{
+  "unit": "movie",
+  "function": "sub_3A34C",
+  "evidence": "sub_3A34C(surface, x, y, color16, width) fills a run of 16-bit pixel pairs; only caller sub_3A8A0 passes run >> 1 with run = -(s8*2) of a negative s8: 1..128 (src/movie.c:606..610).",
+  "constraints": [
+    {
+      "loc": {
+        "arg": 0
+      },
+      "fresh": {
+        "size": 32,
+        "fields": {
+          "0x0": {
+            "fresh": {
+              "size": 64064
+            }
+          },
+          "0x4": {
+            "values": [
+              320
+            ]
+          },
+          "0x8": {
+            "values": [
+              200
+            ]
+          }
+        }
+      },
+      "evidence": "the movie surface prepared by STRICT sub_3A238: pixels = movie_draw_buffer (DrawBufferNormal, 64064 bytes), width 320, height 200 (src/movie.c:183..186)"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "range": [
+        0,
+        319
+      ],
+      "evidence": "column on the surface"
+    },
+    {
+      "loc": {
+        "arg": 2
+      },
+      "range": [
+        0,
+        199
+      ],
+      "evidence": "row on the surface"
+    },
+    {
+      "loc": {
+        "arg": 4
+      },
+      "range": [
+        0,
+        128
+      ],
+      "evidence": "pair count 1..128 from sub_3A8A0"
+    }
+  ]
+}

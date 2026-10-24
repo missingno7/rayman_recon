@@ -1,0 +1,259 @@
+{
+  "unit": "load",
+  "function": "load_level",
+  "evidence": "load_level(mem_level, sprites, filename) is called only by STRICT DEPART_LEVEL with the name built by STRICT file_level: \"RAY\" + ltoa(level) + \".LEV\" (src/cheat.c:620..627, 379..385), after DEPART_LEVEL set num_world = num_world_choice (src/cheat.c:589); load_level opens PCMAP/<world_names[num_world-1]>/<filename> (src/load.c:386..419). Inputs = which shipped level (any_of per world: the level files present in that world directory of assets/GOG/PCMAP) x video mode x scroll option.",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 600,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 64,
+      "evidence": "one complete level load (28..567 KB file, byte-wise checksum/XOR loops over the block textures) per seed."
+    }
+  },
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              1
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV",
+              "RAY5.LEV",
+              "RAY6.LEV",
+              "RAY7.LEV",
+              "RAY8.LEV",
+              "RAY9.LEV",
+              "RAY10.LEV",
+              "RAY11.LEV",
+              "RAY12.LEV",
+              "RAY13.LEV",
+              "RAY14.LEV",
+              "RAY15.LEV",
+              "RAY16.LEV",
+              "RAY17.LEV",
+              "RAY18.LEV",
+              "RAY19.LEV",
+              "RAY20.LEV",
+              "RAY21.LEV",
+              "RAY22.LEV"
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              2
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV",
+              "RAY5.LEV",
+              "RAY6.LEV",
+              "RAY7.LEV",
+              "RAY8.LEV",
+              "RAY9.LEV",
+              "RAY10.LEV",
+              "RAY11.LEV",
+              "RAY12.LEV",
+              "RAY13.LEV",
+              "RAY14.LEV",
+              "RAY15.LEV",
+              "RAY16.LEV",
+              "RAY17.LEV",
+              "RAY18.LEV"
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              3
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV",
+              "RAY5.LEV",
+              "RAY6.LEV",
+              "RAY7.LEV",
+              "RAY8.LEV",
+              "RAY9.LEV",
+              "RAY10.LEV",
+              "RAY11.LEV",
+              "RAY12.LEV",
+              "RAY13.LEV"
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              4
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV",
+              "RAY5.LEV",
+              "RAY6.LEV",
+              "RAY7.LEV",
+              "RAY8.LEV",
+              "RAY9.LEV",
+              "RAY10.LEV",
+              "RAY11.LEV",
+              "RAY12.LEV",
+              "RAY13.LEV"
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              5
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV",
+              "RAY5.LEV",
+              "RAY6.LEV",
+              "RAY7.LEV",
+              "RAY8.LEV",
+              "RAY9.LEV",
+              "RAY10.LEV",
+              "RAY11.LEV",
+              "RAY12.LEV"
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "num_world",
+              "size": 2
+            },
+            "values": [
+              6
+            ]
+          },
+          {
+            "loc": {
+              "arg": 2
+            },
+            "string": [
+              "RAY1.LEV",
+              "RAY2.LEV",
+              "RAY3.LEV",
+              "RAY4.LEV"
+            ]
+          }
+        ]
+      ],
+      "evidence": "world 1..6 with exactly the level files shipped in its directory"
+    },
+    {
+      "loc": {
+        "global": "path_has_changed",
+        "size": 2
+      },
+      "values": [
+        0
+      ],
+      "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"
+    },
+    {
+      "loc": {
+        "global": "GameModeVideo",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "MODE_NORMAL = 0 / MODE_X = 1 (src/load.c:33; DEPART_WORLD src/cheat.c:550..552)"
+    },
+    {
+      "loc": {
+        "global": "ScrollDiffOn",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean option (src/menu.c:2327, 2388: ScrollDiffOn = (u8)options.ScrollDiffOn, toggled with !)"
+    }
+  ]
+}

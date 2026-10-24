@@ -1,0 +1,191 @@
+{
+  "unit": "load",
+  "function": "LoadPlan0InVignet",
+  "evidence": "LoadPlan0InVignet(resource_id) decodes a background of VIGNET.DAT (src/load.c:1008..). Its callers pass Plan0NumPcx[...] (load_world src/load.c:369, INIT_FND src/fnd.c:70, src/pcmain.c:730), which load_world fills from the shipped PCMAP/RAY1..6.WLD headers (pcx numbers XOR 0x15, src/load.c:230..236): the 40 ids 0..47 except 11,12,13,28..32 (parsed from the six world files). Destination buffers are the blocks the game allocates: DrawBufferNormal 64064 and EffetBufferNormal 128000 bytes (FIRST_INIT, src/cheat.c:347..348), PLAN0 from allocate_PLAN0(width*2, height) <= 768x289 (load_world, src/load.c:217..225).",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 600,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 48,
+      "evidence": "one background (13..134 KB, byte-wise XOR loop, PCX decode into a 320x200..768x289 plane) per seed."
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "global": "path_has_changed",
+        "size": 2
+      },
+      "values": [
+        0
+      ],
+      "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"
+    },
+    {
+      "loc": {
+        "arg": 0
+      },
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "evidence": "Plan0NumPcx values of the shipped world files"
+    },
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "global": "FondAutorise",
+              "size": 1
+            },
+            "values": [
+              2
+            ]
+          },
+          {
+            "loc": {
+              "global": "P486",
+              "size": 1
+            },
+            "values": [
+              1
+            ]
+          },
+          {
+            "loc": {
+              "global": "GameModeVideo",
+              "size": 1
+            },
+            "values": [
+              1
+            ]
+          }
+        ],
+        [
+          {
+            "loc": {
+              "global": "FondAutorise",
+              "size": 1
+            },
+            "values": [
+              1
+            ]
+          },
+          {
+            "loc": {
+              "global": "P486",
+              "size": 1
+            },
+            "values": [
+              0,
+              1
+            ]
+          },
+          {
+            "loc": {
+              "global": "GameModeVideo",
+              "size": 1
+            },
+            "values": [
+              0,
+              1
+            ]
+          }
+        ]
+      ],
+      "evidence": "memory profiles src/pcmain.c:882..909 (FondAutorise=2 implies P486=1 and MODE_X: src/cheat.c:550..555); P486 is a menu option 0/1 otherwise (src/menu.c:430..434)"
+    },
+    {
+      "loc": {
+        "global": "DrawBufferNormal"
+      },
+      "fresh": {
+        "size": 64064
+      },
+      "evidence": "FIRST_INIT sub_6FBB4(64064)"
+    },
+    {
+      "loc": {
+        "global": "EffetBufferNormal"
+      },
+      "fresh": {
+        "size": 128000
+      },
+      "evidence": "FIRST_INIT sub_6FBB4(128000)"
+    },
+    {
+      "loc": {
+        "global": "PLAN0"
+      },
+      "fresh": {
+        "size": 221952
+      },
+      "evidence": "allocate_PLAN0(width*2, height), largest shipped background 384x289"
+    },
+    {
+      "loc": {
+        "global": "PLAN0BIT"
+      },
+      "fresh": {
+        "size": 221952
+      },
+      "evidence": "same plane (MODE_NORMAL: PLAN0 = PLAN0BIT after decoding)"
+    }
+  ]
+}

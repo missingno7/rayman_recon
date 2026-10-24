@@ -1,0 +1,210 @@
+{
+  "unit": "effect2",
+  "function": "sub_38ED4",
+  "evidence": "sub_38ED4 advances the 8x8 tile-explosion effect built by sub_38DCC(8, 8, scale, 120, ...) (only caller sub_380A4 case 1, src/effect1.c:328) and STRICT sub_38B58 (src/effect2.c:108..168): count = 64 items, item i spans x (i%8)*40 .. +39, y (i/8)*25 .. +24, all four depths 0x200; random_x in -2..2, random_y -6..1 (incremented by step every 5th frame after frame 20, so up to 21 within the 120-frame run), sort_key -2..2, colour steps 2..6, colours wrap freely; frame_limit = max(1,120); speed = +/-max(1,|scale|) with scale = (s16)(s8)byte_964CA (sub_380A4, src/effect1.c:323) and byte_964CA is only ever 1 (sub_38208) or 0xff (sub_38220), so scale is +1 or -1. The tile geometry is the state of the first frame (the per-frame drift is not modelled). sinus_cosinus is STRICT and executed natively, so the rotations use the real table and the perspective divisor z + center_z stays positive.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "effect_data"
+      },
+      "fresh": {
+        "size": 32,
+        "fields": {
+          "0x0": {
+            "values": [
+              8
+            ],
+            "size": 1
+          },
+          "0x1": {
+            "values": [
+              8
+            ],
+            "size": 1
+          },
+          "0x2": {
+            "values": [
+              64
+            ],
+            "size": 2
+          },
+          "0x4": {
+            "range": [
+              0,
+              120
+            ],
+            "size": 2
+          },
+          "0x6": {
+            "values": [
+              120
+            ],
+            "size": 2
+          },
+          "0x8": {
+            "values": [
+              1,
+              -1
+            ],
+            "size": 2
+          },
+          "0x1c": {
+            "fresh": {
+              "size": 6912,
+              "array": {
+                "count": 64,
+                "stride": 108,
+                "fields": {
+                  "0x0": {
+                    "index": {
+                      "mod": 8,
+                      "mul": 40
+                    }
+                  },
+                  "0xc": {
+                    "index": {
+                      "mod": 8,
+                      "mul": 40
+                    }
+                  },
+                  "0x18": {
+                    "index": {
+                      "mod": 8,
+                      "mul": 40,
+                      "add": 39
+                    }
+                  },
+                  "0x24": {
+                    "index": {
+                      "mod": 8,
+                      "mul": 40,
+                      "add": 39
+                    }
+                  },
+                  "0x4": {
+                    "index": {
+                      "div": 8,
+                      "mul": 25
+                    }
+                  },
+                  "0x28": {
+                    "index": {
+                      "div": 8,
+                      "mul": 25
+                    }
+                  },
+                  "0x10": {
+                    "index": {
+                      "div": 8,
+                      "mul": 25,
+                      "add": 24
+                    }
+                  },
+                  "0x1c": {
+                    "index": {
+                      "div": 8,
+                      "mul": 25,
+                      "add": 24
+                    }
+                  },
+                  "0x8": {
+                    "values": [
+                      512
+                    ]
+                  },
+                  "0x14": {
+                    "values": [
+                      512
+                    ]
+                  },
+                  "0x20": {
+                    "values": [
+                      512
+                    ]
+                  },
+                  "0x2c": {
+                    "values": [
+                      512
+                    ]
+                  },
+                  "0x30": {
+                    "range": [
+                      -2,
+                      2
+                    ],
+                    "size": 2
+                  },
+                  "0x32": {
+                    "range": [
+                      -6,
+                      21
+                    ],
+                    "size": 2
+                  },
+                  "0x34": {
+                    "range": [
+                      -2,
+                      2
+                    ],
+                    "size": 2
+                  },
+                  "0x36": {
+                    "range": [
+                      0,
+                      255
+                    ],
+                    "size": 1
+                  },
+                  "0x37": {
+                    "range": [
+                      0,
+                      255
+                    ],
+                    "size": 1
+                  },
+                  "0x38": {
+                    "range": [
+                      0,
+                      255
+                    ],
+                    "size": 1
+                  },
+                  "0x39": {
+                    "range": [
+                      2,
+                      6
+                    ],
+                    "size": 1
+                  },
+                  "0x3a": {
+                    "range": [
+                      2,
+                      6
+                    ],
+                    "size": 1
+                  },
+                  "0x3b": {
+                    "range": [
+                      2,
+                      6
+                    ],
+                    "size": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "evidence": "state and items as initialised by sub_38DCC / STRICT sub_38B58"
+    }
+  ],
+  "environment": {
+    "execute": {
+      "callees": [
+        "sinus_cosinus"
+      ],
+      "evidence": "sinus_cosinus is STRICT (unit mathutil) and a leaf (table lookup, src/mathutil.c:102)"
+    }
+  }
+}

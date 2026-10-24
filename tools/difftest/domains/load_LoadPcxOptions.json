@@ -1,0 +1,61 @@
+{
+  "unit": "load",
+  "function": "LoadPcxOptions",
+  "evidence": "LoadPcxOptions(buffer, resource_id, &width, &height) decodes HeaderFilevignet[resource_id] of VIGNET.DAT into buffer (src/load.c). Its callers are LOAD_GENERAL_SCREEN (resource 13) and LOAD_OPTIONS_SCREEN (resource 12), both with buffer = EffetBufferNormal (src/cheat.c:676..686), a 128000-byte block allocated by FIRST_INIT (src/cheat.c:348).",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 300,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 32,
+      "evidence": "one VIGNET.DAT entry (22..25 KB) per seed."
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "global": "path_has_changed",
+        "size": 2
+      },
+      "values": [
+        0
+      ],
+      "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "values": [
+        12,
+        13
+      ],
+      "evidence": "LOAD_OPTIONS_SCREEN / LOAD_GENERAL_SCREEN"
+    },
+    {
+      "loc": {
+        "arg": 0
+      },
+      "fresh": {
+        "size": 128000
+      },
+      "evidence": "EffetBufferNormal = sub_6FBB4(128000) (FIRST_INIT)"
+    }
+  ]
+}

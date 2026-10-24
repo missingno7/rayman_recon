@@ -1,4 +1,9 @@
-"""Writes the per-function domain files used by difftest.py (evidence: difftriage/TRIAGE.md and STRICT setters)."""
+"""Writes the per-function domain files used by difftest.py (evidence: difftriage/TRIAGE.md and STRICT setters).
+
+Only the files listed below are (re)written. The v3 domain files with environment models (load_*, movie_*, effect*,
+affiche_display2 / DISPLAY_DEFORMATION, blood_DoEffectBloodOut, box_CalcTab, pcmain_PcMain) are maintained directly
+as JSON next to them; their real-data values (slices of the shipped movies, ALLFIX/world/level facts) were measured
+by parsing the shipped files with the game's record formats, as each file's evidence states."""
 import json
 from pathlib import Path
 

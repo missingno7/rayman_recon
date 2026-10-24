@@ -1,0 +1,348 @@
+{
+  "unit": "effect633e0",
+  "function": "effect_helper_63838",
+  "evidence": "effect_helper_63838 renders one frame of the page-turn effect set up by STRICT effect_helper_634f0(22, scale*2, ...) (sub_380A4 case 8, src/effect1.c:339): width = max(8, min(22, 40)) = 22, span 44, period1 = (u16)(22*pi) = 69, period2 = (u16)(pi*22*0.5) = 34, source = EffetBufferNormal (64000 bytes copied), table = 44 s32 entries written by STRICT effect_update_table_633e0 as (s32)(acos(y/22)*22) for y = -22..21 (effect_math_curve = acos at 1:75b4a), delta = -2 (scale 1) or +2 (scale -1) (src/effect633e0.c:39..58, 84..106). mode 0..4 and 0xff and the per-frame fields come from STRICT effect_helper_63614 (src/effect633e0.c:108..186): field_0c in -22..22, field_14 in -22..319, field_10/04/08 within -22..341.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "effect_state_55760"
+      },
+      "fresh": {
+        "size": 48,
+        "fields": {
+          "0x0": {
+            "range": [
+              0,
+              400
+            ],
+            "size": 2
+          },
+          "0x2": {
+            "values": [
+              -2,
+              2
+            ],
+            "size": 2
+          },
+          "0x4": {
+            "range": [
+              -22,
+              341
+            ]
+          },
+          "0x8": {
+            "range": [
+              -22,
+              341
+            ]
+          },
+          "0xc": {
+            "range": [
+              -22,
+              22
+            ]
+          },
+          "0x10": {
+            "range": [
+              -22,
+              341
+            ]
+          },
+          "0x14": {
+            "range": [
+              -22,
+              319
+            ]
+          },
+          "0x18": {
+            "values": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              255
+            ],
+            "size": 1
+          },
+          "0x19": {
+            "values": [
+              0,
+              1,
+              2
+            ],
+            "size": 1
+          },
+          "0x1c": {
+            "values": [
+              22
+            ],
+            "size": 2
+          },
+          "0x1e": {
+            "values": [
+              44
+            ],
+            "size": 2
+          },
+          "0x20": {
+            "values": [
+              69
+            ],
+            "size": 2
+          },
+          "0x22": {
+            "values": [
+              34
+            ],
+            "size": 2
+          },
+          "0x24": {
+            "fresh": {
+              "size": 176,
+              "fields": {
+                "0x0": {
+                  "values": [
+                    69
+                  ]
+                },
+                "0x4": {
+                  "values": [
+                    62
+                  ]
+                },
+                "0x8": {
+                  "values": [
+                    59
+                  ]
+                },
+                "0xc": {
+                  "values": [
+                    57
+                  ]
+                },
+                "0x10": {
+                  "values": [
+                    55
+                  ]
+                },
+                "0x14": {
+                  "values": [
+                    53
+                  ]
+                },
+                "0x18": {
+                  "values": [
+                    52
+                  ]
+                },
+                "0x1c": {
+                  "values": [
+                    51
+                  ]
+                },
+                "0x20": {
+                  "values": [
+                    49
+                  ]
+                },
+                "0x24": {
+                  "values": [
+                    48
+                  ]
+                },
+                "0x28": {
+                  "values": [
+                    47
+                  ]
+                },
+                "0x2c": {
+                  "values": [
+                    46
+                  ]
+                },
+                "0x30": {
+                  "values": [
+                    44
+                  ]
+                },
+                "0x34": {
+                  "values": [
+                    43
+                  ]
+                },
+                "0x38": {
+                  "values": [
+                    42
+                  ]
+                },
+                "0x3c": {
+                  "values": [
+                    41
+                  ]
+                },
+                "0x40": {
+                  "values": [
+                    40
+                  ]
+                },
+                "0x44": {
+                  "values": [
+                    39
+                  ]
+                },
+                "0x48": {
+                  "values": [
+                    38
+                  ]
+                },
+                "0x4c": {
+                  "values": [
+                    37
+                  ]
+                },
+                "0x50": {
+                  "values": [
+                    36
+                  ]
+                },
+                "0x54": {
+                  "values": [
+                    35
+                  ]
+                },
+                "0x58": {
+                  "values": [
+                    34
+                  ]
+                },
+                "0x5c": {
+                  "values": [
+                    33
+                  ]
+                },
+                "0x60": {
+                  "values": [
+                    32
+                  ]
+                },
+                "0x64": {
+                  "values": [
+                    31
+                  ]
+                },
+                "0x68": {
+                  "values": [
+                    30
+                  ]
+                },
+                "0x6c": {
+                  "values": [
+                    29
+                  ]
+                },
+                "0x70": {
+                  "values": [
+                    28
+                  ]
+                },
+                "0x74": {
+                  "values": [
+                    27
+                  ]
+                },
+                "0x78": {
+                  "values": [
+                    26
+                  ]
+                },
+                "0x7c": {
+                  "values": [
+                    25
+                  ]
+                },
+                "0x80": {
+                  "values": [
+                    24
+                  ]
+                },
+                "0x84": {
+                  "values": [
+                    23
+                  ]
+                },
+                "0x88": {
+                  "values": [
+                    21
+                  ]
+                },
+                "0x8c": {
+                  "values": [
+                    20
+                  ]
+                },
+                "0x90": {
+                  "values": [
+                    19
+                  ]
+                },
+                "0x94": {
+                  "values": [
+                    18
+                  ]
+                },
+                "0x98": {
+                  "values": [
+                    16
+                  ]
+                },
+                "0x9c": {
+                  "values": [
+                    15
+                  ]
+                },
+                "0xa0": {
+                  "values": [
+                    13
+                  ]
+                },
+                "0xa4": {
+                  "values": [
+                    11
+                  ]
+                },
+                "0xa8": {
+                  "values": [
+                    9
+                  ]
+                },
+                "0xac": {
+                  "values": [
+                    6
+                  ]
+                }
+              }
+            }
+          },
+          "0x28": {
+            "fresh": {
+              "size": 64000
+            }
+          },
+          "0x2c": {
+            "fresh": {
+              "size": 64000
+            }
+          }
+        }
+      },
+      "evidence": "state built by effect_helper_634f0 / effect_update_table_633e0 / effect_helper_63614"
+    }
+  ],
+  "environment": {
+    "budget": {
+      "seconds": 120,
+      "evidence": "one full 320x200 frame (64000 byte writes) per seed"
+    }
+  }
+}

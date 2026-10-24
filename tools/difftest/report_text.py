@@ -1,6 +1,6 @@
 """Hand-written method/limitations text of REPORT.md (report.py adds the measured tables)."""
 
-HEAD = """# Differential execution harness v2 - report
+HEAD = """# Differential execution harness v3 - report
 
 Scope: every NEAR game function of `build/near_census.json` (src/hmi excluded), run as an isolated function on the
 decoded GOG v1.21 oracle image (DOS side) and on our pinned-Watcom-10.6 object (C side) in Unicorn 2.1.4, from
@@ -12,9 +12,61 @@ Files: `difftest.py` (harness), `cdecls.py` (project-wide declaration table), `d
 (per-function input domains, written by `make_domains.py`), `controls.py` (controls), `report.py` + `report_text.py`
 (this report), `tests/test_difftest.py` (unit/pipeline tests). Per-function results: `results/UNIT_FUNCTION.json`;
 aggregate `RESULTS.json`; first sweep kept as `RESULTS_v1.json`, `results_v1/`, `CONTROLS_v1.json`;
-`PROTOTYPES_UNKNOWN.json` lists the callables without a determinable contract.
+`PROTOTYPES_UNKNOWN.json` lists the callables without a determinable contract. v3 adds `models.py` (environment
+models) and `prototypes.json` (evidence-backed contracts of undeclared callables); the previous sweep is kept as
+`RESULTS_v2.json`, `REPORT_v2.md`, `CONTROLS_v2.json`.
 
-## What changed from v1, and why
+## What changed from v2 (harness v3), and why
+
+The v2 sweep left 28 functions at HARNESS_LIMIT: loaders whose loops are driven by file contents, main loops that
+only end through callee side effects, divide-by-zero / #GP on generated state, runs too slow for the budget, and
+missing contracts. v3 adds models of the environment; every model is applied identically to both executions and
+only replaces a random stub or generated value by the behaviour of the real environment.
+
+1. **File layer** (`models.FileLayer`, opt-in per function via `environment.file_layer` in its domain file). The
+   Watcom C runtime calls fopen / fread / fseek / ftell / fclose are modelled on the REAL installed game data
+   (assets/GOG, read at run time, never written or copied): fopen reads the path the game built from emulated memory
+   and maps it case-insensitively below the game directory (a drive letter, leading backslash or `..` component - the
+   game's path_has_changed variant - and missing files return NULL; a writing mode is refused); each open file has a
+   position; fread copies min(size*n, bytes left) real bytes into the destination (identically on both sides,
+   tracked as written memory) and returns the number of complete items; fseek implements SEEK_SET/CUR/END with a
+   signed long offset (negative result: -1, beyond EOF allowed); ftell returns the position; fclose releases the
+   handle (unknown handle: -1). FILE* values are synthetic identities in the k-th-fopen order. Not modelled (no
+   function in scope uses them): fgetc/fgets/fscanf, open/read/_dos_read/lseek/filelength/close, any writing call.
+   Inputs become "which file / which entry" seeds: the six world files, every level file of each world directory,
+   ALLFIX.DAT, BRAY.DAT, the five RAY.LNG blocks, the 75 VIGNET.DAT entries, the background ids of the world files.
+2. **Allocators** (`environment.allocators`): block_malloc / temp_malloc return fresh disjoint aligned regions of the
+   requested size (bump allocator), so loaded data is not overwritten by unrelated allocations.
+3. **No-return callees** (`environment.noreturn`): FatalError ends in exit(-1) (src/basic.c:1651); after its call is
+   compared both sides end with status EXIT.
+4. **Natively executed STRICT leaf callees** (`environment.execute`): sinus_cosinus, sinus, GetStringTxt are STRICT
+   and contain no calls (checked at load); after the call is compared they run from the oracle image on both sides,
+   so their results are the game's (real sine table, real text splitting).
+5. **Comparison boundary** (`environment.boundary`): for loops that cannot end under stubs (PcMain), whose length is
+   irrelevant (DoEffectBloodOut frames) or that busy-wait on a stubbed clock (sub_3ABE4), both executions stop at the
+   Nth call of a named callee or the Nth logged event. The boundary is the same event on both sides only when their
+   event sequences agree up to it; everything before it (calls, arguments, pointees, system events, memory written
+   before each call and at the boundary) is compared. Termination status BOUNDARY; nothing after it is judged.
+6. **Hardware models (automatic).** BIOS tick 0:046C: in functions that reference 0x46c, every read access observes
+   the counter advanced by one (DOS busy-waits for the next tick end). Selector loads (lgs/lfs/les/lds, mov/pop sreg):
+   a flat descriptor table (every GDT/LDT selector = writable 4 GB data segment, base 0; SS reloaded as a 32-bit
+   segment) so far pointers address flat memory. `void __interrupt __far` entries: no arguments, IRETD at the
+   interrupt frame is the return.
+7. **Far pointers** (`__far *` parameters) take two Watcom register slots or two stack words (offset, selector); the
+   selector is compared as a 16-bit argument. Before, a far-pointer argument shifted every later argument and the
+   callee did not pop its stack word (sub_195ec escaped through a wrong return address).
+8. **Undeclared callables** get a contract from `prototypes.json` only with DOS-code evidence (set_speaker_on:
+   hand-written assembly 1:06eaa, no register inputs, preserves all registers; __GETDS 1:70408: loads DS only).
+9. **Speed only:** library/runtime-helper code runs without a Python block hook, on an unobserved alternate stack
+   (top 64 bytes of the caller's stack mirrored and written back), and stack accesses are observed only from the
+   function's own frame upwards (in-function ESP is checked against that range). Per-function time, top-tier
+   instruction/call budgets and main-phase seed counts can be raised in `environment.budget`.
+10. **Domains** additionally support fresh NUL-terminated strings, slices of shipped data files (FLC movie frames of
+   assets/DOS/INTRO.DAT and CONCLU.DAT), arguments derived from other arguments, and arrays of structures with
+   per-element ranges, index-derived values (grids) and per-element fresh allocations. Domains with an environment
+   but no input constraints skip the (identical) unconstrained exploration phase.
+
+## What changed from v1 to v2, and why
 
 1. **Code/data aliasing** (difftriage: GET_SPRITE_POS, DISPLAY_CYMBALE). Every page - oracle image, candidate code,
    stack, generated memory - is materialised lazily from one function of (seed, address), so both executions see
@@ -77,6 +129,15 @@ TAIL = """
   domain unless a domain file says otherwise). These cases need triage (difftriage method), not an automatic fix.
 - HYPOTHESIS: the callee contracts read from our C declarations are the contracts of the original callees; an odd-seed
   divergence that disappears on even seeds points at a return-width disagreement between DOS and our declaration.
+- PROVEN (v3 controls): with the file layer, an identical copy of a loader is EQUIVALENT on real VIGNET.DAT data;
+  reading the wrong offset (LoadPcxOptions header at +1: the integrity check of the real data fails and the mutant
+  ends in FatalError), the wrong size (load_big_ray nb_sprites) and a wrong decode of real bytes (load_big_ray XOR
+  key) are DIVERGENT.
+- STRONG (v3 models): the file layer follows the C library semantics stated above; the domain files cite the setters
+  and the parsed game data for every pinned value. HYPOTHESIS: the flat selector model (all selectors base 0) and the
+  per-read BIOS tick are admissible environments, not the DOS/4GW selector layout or a 18.2 Hz clock; a boundary
+  verdict says nothing about behaviour after the boundary; the movie data comes from the assets/DOS install copy of
+  the same game (the movies are not in assets/GOG; INTRO.DAT is listed on the game CD image assets/DOS_CD).
 - OPEN: functions whose only remaining blocker is a missing domain (self-referential link cycles, file contents
   driving loop counts, menu/screen state machines) need domain files with evidence before their HARNESS_LIMIT can be
   lifted; struct pointees are neither compared nor written by the stubs; callee side effects on globals are not

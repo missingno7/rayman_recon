@@ -1,0 +1,42 @@
+{
+  "unit": "load",
+  "function": "LOAD_ALL_FIX",
+  "evidence": "LOAD_ALL_FIX loads the fixed file PCMAP/ALLFIX.DAT (src/load.c:679..684); its only caller is STRICT DO_GROS_RAYMAN (src/display.c:1099). The input that matters is the shipped file; seeds vary the unrelated memory only.",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 600,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 24,
+      "evidence": "one complete ALLFIX.DAT load (519 KB, byte-wise checksum/XOR loop over every fixed sprite atlas) per seed."
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "global": "path_has_changed",
+        "size": 2
+      },
+      "values": [
+        0
+      ],
+      "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"
+    }
+  ]
+}

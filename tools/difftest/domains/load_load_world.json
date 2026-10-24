@@ -1,0 +1,31 @@
+{
+  "unit": "load",
+  "function": "load_world",
+  "evidence": "load_world(mem_world, mem_sprite, filename) is called only by STRICT DEPART_WORLD with the name built by STRICT world_level: 'RAY' + ltoa(world) + '.WLD' (src/cheat.c:574..577, 387..393); the six shipped world files PCMAP/RAY1..RAY6.WLD are loaded from the installed game data. Before it, LOAD_ALL_FIX has set nb_fix_des / nb_fix_eta from PCMAP/ALLFIX.DAT. Inputs = which world file x memory profile x video mode.",
+  "environment": {
+    "file_layer": {"evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."},
+    "allocators": {"callees": {"block_malloc": 1, "temp_malloc": 0},
+                   "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."},
+    "noreturn": {"callees": ["FatalError"], "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."},
+    "budget": {"seconds": 600, "steps": 120000000, "events": 60000,
+               "evidence": "one complete world load (0.77..1.0 MB file, byte-wise checksum/XOR loops over every loaded sprite atlas) per seed."}
+  },
+  "constraints": [
+    {"loc": {"arg": 2}, "string": ["RAY1.WLD", "RAY2.WLD", "RAY3.WLD", "RAY4.WLD", "RAY5.WLD", "RAY6.WLD"],
+     "evidence": "STRICT world_level builds RAY<n>.WLD; the six worlds shipped in assets/GOG/PCMAP"},
+    {"loc": {"global": "path_has_changed", "size": 2}, "values": [0],
+     "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"},
+    {"loc": {"global": "nb_fix_des", "size": 2}, "values": [8],
+     "evidence": "LOAD_ALL_FIX: nb_fix_des = nb_des read from PCMAP/ALLFIX.DAT (src/load.c:706..707); the shipped file holds 8 (parsed with the loader's record format, whole file consumed)"},
+    {"loc": {"global": "nb_fix_eta", "size": 1}, "values": [4],
+     "evidence": "LOAD_ALL_FIX: nb_fix_eta = first byte of PCMAP/ALLFIX.DAT = 4 (src/load.c:692..693)"},
+    {"any_of": [
+      [{"loc": {"global": "ToutSpriteAutorise", "size": 1}, "values": [0]},
+       {"loc": {"global": "FondAutorise", "size": 1}, "values": [2]},
+       {"loc": {"global": "GameModeVideo", "size": 1}, "values": [1]}],
+      [{"loc": {"global": "ToutSpriteAutorise", "size": 1}, "values": [1]},
+       {"loc": {"global": "FondAutorise", "size": 1}, "values": [1]},
+       {"loc": {"global": "GameModeVideo", "size": 1}, "values": [0, 1]}]],
+     "evidence": "the two memory profiles of src/pcmain.c:882..909 (low memory: ToutSpriteAutorise=0, FondAutorise=2, ModeNormalAutorise=0 so DEPART_WORLD forces MODE_X, src/cheat.c:550..552; otherwise ToutSpriteAutorise=1, FondAutorise=1 and either video mode)"}
+  ]
+}

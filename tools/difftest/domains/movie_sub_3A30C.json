@@ -1,0 +1,63 @@
+{
+  "unit": "movie",
+  "function": "sub_3A30C",
+  "evidence": "sub_3A30C(surface, x, y, color, width) fills one run of a movie row. Callers: STRICT sub_3A6F0 (BYTE_RUN, count = s8 >= 0, so 0..127) and sub_3A7B4 (LC, run = -count of a negative s8, 1..128) (src/movie.c:484..487, 531..537); x/y stay on the 320x200 surface.",
+  "constraints": [
+    {
+      "loc": {
+        "arg": 0
+      },
+      "fresh": {
+        "size": 32,
+        "fields": {
+          "0x0": {
+            "fresh": {
+              "size": 64064
+            }
+          },
+          "0x4": {
+            "values": [
+              320
+            ]
+          },
+          "0x8": {
+            "values": [
+              200
+            ]
+          }
+        }
+      },
+      "evidence": "the movie surface prepared by STRICT sub_3A238: pixels = movie_draw_buffer (DrawBufferNormal, 64064 bytes), width 320, height 200 (src/movie.c:183..186)"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "range": [
+        0,
+        319
+      ],
+      "evidence": "column on the surface"
+    },
+    {
+      "loc": {
+        "arg": 2
+      },
+      "range": [
+        0,
+        199
+      ],
+      "evidence": "row on the surface"
+    },
+    {
+      "loc": {
+        "arg": 4
+      },
+      "range": [
+        0,
+        128
+      ],
+      "evidence": "run length 0..128 from the two callers"
+    }
+  ]
+}

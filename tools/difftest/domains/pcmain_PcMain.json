@@ -1,0 +1,95 @@
+{
+  "unit": "pcmain",
+  "function": "PcMain",
+  "evidence": "PcMain is the game's main loop: initialisation, then nested loops that only end when callees set fin_de_rayman / fin_du_jeu / new_world / new_level (src/pcmain.c PcMain). With callees as stubs these flags never change, so a seed either skips a loop or repeats one iteration of it forever. The loop flags are therefore drawn from their boolean domains (both outcomes per loop) and the comparison stops at a fixed call count (environment.boundary). The BIOS-tick busy-waits at the start (DOS 1:08442..08481) end through the hardware tick model.",
+  "environment": {
+    "boundary": {
+      "calls": 400,
+      "evidence": "the 400th logged event (outgoing call or system instruction) is the same event on both sides when the event sequences agree; all calls, arguments, pointees, system events and the memory written before each of them (and at the boundary) are compared. One iteration of the deepest loop body issues fewer than 60 calls, so the prefix covers initialisation and several loop iterations."
+    },
+    "budget": {
+      "seconds": 120,
+      "seeds": 96,
+      "evidence": "short runs (at most 400 stubbed calls)"
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "global": "fin_de_rayman",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean game-exit flag"
+    },
+    {
+      "loc": {
+        "global": "fin_du_jeu",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (PcMain sets 1 in demo mode)"
+    },
+    {
+      "loc": {
+        "global": "new_world",
+        "size": 2
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (DEPART_WORLD / DEPART_LEVEL store 0/1, src/cheat.c:557..568, 590)"
+    },
+    {
+      "loc": {
+        "global": "new_level",
+        "size": 2
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (src/cheat.c:559..568, 591)"
+    },
+    {
+      "loc": {
+        "global": "ModeDemo",
+        "size": 1
+      },
+      "range": [
+        0,
+        4
+      ],
+      "evidence": "demo state 0..4 (PC_keyboard_interrupt_handler stores 3/4, src/input.c:581..586)"
+    },
+    {
+      "loc": {
+        "global": "GameModeVideo",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "MODE_NORMAL / MODE_X"
+    },
+    {
+      "loc": {
+        "global": "ExitMenu",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (PcMain clears it)"
+    }
+  ]
+}

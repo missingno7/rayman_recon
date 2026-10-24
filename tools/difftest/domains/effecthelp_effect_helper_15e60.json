@@ -1,0 +1,106 @@
+{
+  "unit": "effecthelp",
+  "function": "effect_helper_15e60",
+  "evidence": "effect_helper_15e60(radius, speed, frame_limit) builds the sphere mesh; its only caller is effect_helper_1623c(20, 8, 61, scale*2, 50, ...) (sub_380A4 case 5, src/effect1.c:332), which first sets effect5_width = 0x100, effect5_height = 0xc8 and allocates the 0x3c-byte state with columns 20, rows 8, count 160, point_count 189, items 160*52 and points 189*10 bytes (src/effecthelp.c:185..215); scale = (s16)(s8)byte_964CA (sub_380A4, src/effect1.c:323) and byte_964CA is only ever 1 (sub_38208) or 0xff (sub_38220), so scale is +1 or -1, so speed = +/-2.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "effect5_state"
+      },
+      "fresh": {
+        "size": 60,
+        "fields": {
+          "0x0": {
+            "values": [
+              20
+            ],
+            "size": 1
+          },
+          "0x1": {
+            "values": [
+              8
+            ],
+            "size": 1
+          },
+          "0x2": {
+            "values": [
+              160
+            ],
+            "size": 2
+          },
+          "0x4": {
+            "values": [
+              189
+            ],
+            "size": 2
+          },
+          "0x20": {
+            "fresh": {
+              "size": 1890
+            }
+          },
+          "0x24": {
+            "fresh": {
+              "size": 8320
+            }
+          }
+        }
+      },
+      "evidence": "state allocated by effect_helper_1623c"
+    },
+    {
+      "loc": {
+        "global": "effect5_width",
+        "size": 2
+      },
+      "values": [
+        256
+      ],
+      "evidence": "effect_helper_1623c"
+    },
+    {
+      "loc": {
+        "global": "effect5_height",
+        "size": 2
+      },
+      "values": [
+        200
+      ],
+      "evidence": "effect_helper_1623c"
+    },
+    {
+      "loc": {
+        "arg": 0
+      },
+      "values": [
+        61
+      ],
+      "evidence": "radius 61"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "values": [
+        2,
+        -2
+      ],
+      "evidence": "speed = scale*2"
+    },
+    {
+      "loc": {
+        "arg": 2
+      },
+      "values": [
+        50
+      ],
+      "evidence": "frame_limit 50"
+    }
+  ],
+  "environment": {
+    "budget": {
+      "seconds": 120,
+      "evidence": "189 mesh points with soft-float sin/cos per seed"
+    }
+  }
+}

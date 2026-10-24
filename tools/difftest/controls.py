@@ -59,6 +59,21 @@ NEUTRAL = [
     ('basic', 'snapToSprite', 'escaped_local_reordered',
      's16 obj_2_x;   s16 obj_2_y;', 's16 obj_2_y;   s16 obj_2_x;'),
 ]
+# File-layer controls (models.FileLayer on the real game data; the functions' domain files enable the file layer).
+FILE_MUTATIONS = [
+    ('load', 'LoadPcxOptions', 'file_wrong_offset',
+     'fseek(fp, HeaderFilevignet[resource_id].offset, 0);\n  fread(&header, 128, 1, fp);',
+     'fseek(fp, HeaderFilevignet[resource_id].offset + 1, 0);\n  fread(&header, 128, 1, fp);'),
+    ('load', 'load_big_ray', 'file_wrong_size',
+     'fread(&wldobj[index].nb_sprites, 2, 1, fp);', 'fread(&wldobj[index].nb_sprites, 1, 1, fp);'),
+    ('load', 'load_big_ray', 'file_data_misdecoded',
+     'wldobj[index].img_buffer[i] ^= 0x8f;', 'wldobj[index].img_buffer[i] ^= 0x8e;'),
+]
+FILE_NEUTRAL = [
+    ('load', 'LoadPcxOptions', 'file_identical_copy', 'fclose(fp);', 'fclose(fp); /* identical copy */'),
+]
+FILE_EXPECTED_KIND = {'file_wrong_offset': ('termination', 'call_arguments'), 'file_wrong_size': 'call_arguments',
+                      'file_data_misdecoded': ('memory', 'memory_at_call')}
 EXPECTED_KIND = {
     'swapped_output_parameters': None, 'aliased_output_parameter': 'call_argument_identity',
     'wrong_output_parameter_value': 'memory', 'wrong_callee_argument_width': 'call_arguments',
@@ -98,6 +113,20 @@ def run_controls(p=None, seeds=96):
         r = run_function(p, unit, name, seeds=seeds, seconds=25, scenario=scenario)
         report['known_cases'].append(compact(r))
         print('known', name, r['verdict'], r['coverage'], r.get('reason', ''), flush=True)
+    report['file_layer'] = []
+    for kind, mutations in (('negative', FILE_MUTATIONS), ('neutral', FILE_NEUTRAL)):
+        for unit, name, label, old, new in mutations:
+            src = mutation_source(unit, name, label, old, new)
+            r = run_function(p, unit, name, seeds=24, seconds=60, source=src, allow_losses=True)
+            r['mutation'] = {'kind': label, 'old': old, 'new': new, 'source': str(src.relative_to(ROOT)), 'expect': kind}
+            d = (r.get('counterexample') or {}).get('first_difference') or {}
+            want = FILE_EXPECTED_KIND.get(label)
+            r['first_kind'] = d.get('kind')
+            r['kind_ok'] = want is None or d.get('kind') in ((want,) if isinstance(want, str) else want)
+            r['files_opened'] = ((r.get('counterexample') or {}).get('original') or {}).get('files')
+            report['file_layer'].append(compact(r))
+            print('file_layer', kind, label, name, r['verdict'], d.get('kind'), r['coverage'], r.get('reason', ''), flush=True)
+    fl = report['file_layer']
     b20 = report['known_cases'][1]
     b20_ok = (b20['verdict'] == 'DIVERGENT' and bool((b20.get('counterexample') or {}).get('original', {}).get('uninitialized_stack')))
     report['checks'] = {
@@ -107,6 +136,8 @@ def run_controls(p=None, seeds=96):
         'neutral_equivalent': all(r['verdict'] == 'EQUIVALENT_TESTED' for r in report['neutral']),
         'b19_equivalent': report['known_cases'][0]['verdict'] == 'EQUIVALENT_TESTED',
         'b20_divergent_with_uninitialised_read': b20_ok,
+        'file_layer_mutants_divergent': all(r['verdict'] == 'DIVERGENT' and r['kind_ok'] for r in fl if r['mutation']['expect'] == 'negative'),
+        'file_layer_identical_copy_equivalent': all(r['verdict'] == 'EQUIVALENT_TESTED' for r in fl if r['mutation']['expect'] == 'neutral'),
     }
     report['passed'] = all(report['checks'].values())
     write_json(OUT / 'CONTROLS.json', report)

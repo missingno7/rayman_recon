@@ -1,0 +1,139 @@
+{
+  "unit": "effect6ec80",
+  "function": "effect_helper_6ef5c",
+  "evidence": "effect_helper_6ef5c advances the ripple effect initialised by effect_helper_6ec80. effect_helper_6ee54(20, 10, scale, 400, ...) is the only constructor (sub_380A4 case 3, src/effect1.c:330): columns 20, rows 10, vertex_count (20+1)*(10+1) = 231, 0x34-byte vertices (src/effect6ec80.c:126..150); scale = (s16)(s8)byte_964CA (sub_380A4, src/effect1.c:323) and byte_964CA is only ever 1 (sub_38208) or 0xff (sub_38220), so scale is +1 or -1. The grid is the one effect_helper_6ec80 writes (vertex (r, c): x = next_x = c*(320/20) = 16c, y = next_y = r*(200/10) = 20r, src/effect6ec80.c:76..99); speed = +/-max(1,|scale|) = +/-1, speed_fraction = max(1, 400); history/ramp bytes are the ramp values (u8)(s32)(sinus(2a)*-40/512), i.e. -40..40, shifted through the history; history_position advances by 2 per step.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "effect_state_6e"
+      },
+      "fresh": {
+        "size": 188,
+        "fields": {
+          "0x0": {
+            "values": [
+              20
+            ],
+            "size": 1
+          },
+          "0x1": {
+            "values": [
+              10
+            ],
+            "size": 1
+          },
+          "0x2": {
+            "values": [
+              231
+            ],
+            "size": 2
+          },
+          "0x1c": {
+            "fresh": {
+              "size": 12012,
+              "array": {
+                "count": 231,
+                "stride": 52,
+                "fields": {
+                  "0x0": {
+                    "index": {
+                      "mod": 21,
+                      "mul": 16
+                    },
+                    "size": 2
+                  },
+                  "0x4": {
+                    "index": {
+                      "mod": 21,
+                      "mul": 16
+                    },
+                    "size": 2
+                  },
+                  "0x2": {
+                    "index": {
+                      "div": 21,
+                      "mul": 20
+                    },
+                    "size": 1
+                  },
+                  "0x6": {
+                    "index": {
+                      "div": 21,
+                      "mul": 20
+                    },
+                    "size": 1
+                  }
+                }
+              }
+            }
+          },
+          "0x4": {
+            "range": [
+              0,
+              400
+            ],
+            "size": 2
+          },
+          "0x6": {
+            "values": [
+              400
+            ],
+            "size": 2
+          },
+          "0x8": {
+            "values": [
+              1,
+              -1
+            ],
+            "size": 2
+          },
+          "0xb6": {
+            "range": [
+              0,
+              1000
+            ],
+            "size": 2
+          },
+          "0xb8": {
+            "range": [
+              0,
+              75
+            ],
+            "size": 1
+          }
+        },
+        "array": [
+          {
+            "offset": 32,
+            "count": 75,
+            "stride": 1,
+            "fields": {
+              "0x0": {
+                "range": [
+                  -40,
+                  40
+                ],
+                "size": 1
+              }
+            }
+          },
+          {
+            "offset": 107,
+            "count": 75,
+            "stride": 1,
+            "fields": {
+              "0x0": {
+                "range": [
+                  -40,
+                  40
+                ],
+                "size": 1
+              }
+            }
+          }
+        ]
+      },
+      "evidence": "state, grid and ripple tables as produced by effect_helper_6ee54 / effect_helper_6ec80"
+    }
+  ]
+}

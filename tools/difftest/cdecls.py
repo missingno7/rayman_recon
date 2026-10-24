@@ -42,6 +42,7 @@ class CType:
     const_pointee: bool = False
     fnproto: 'Prototype | None' = None
     struct: str | None = None
+    far: bool = False          # 48-bit far pointer (offset + selector): two register slots in the Watcom 386 convention
 
     def brief(self):
         return self.text
@@ -100,6 +101,13 @@ class Context:
         self.pragmas = {}     # name -> spec text
 
     def ctype(self, text, depth_guard=0):
+        far = bool(re.search(r'\b__far\s*\*', text)) and text.count('*') == 1
+        x = self.ctype_near(text, depth_guard)
+        if far and x.pointer:
+            x = dataclasses.replace(x, far=True)
+        return x
+
+    def ctype_near(self, text, depth_guard=0):
         t = re.sub(r'\b(extern|static|register|typedef|volatile|__far|__near|__watcall|__cdecl|__pascal|_Packed)\b',
                    ' ', text).strip()
         t = re.sub(r'=.*$', '', t, flags=re.S).strip()

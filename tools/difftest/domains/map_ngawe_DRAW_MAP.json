@@ -1,0 +1,9 @@
+{
+  "unit": "map_ngawe",
+  "function": "DRAW_MAP",
+  "evidence": "No input constraint. DRAW_MAP's judged seeds are bounded by wall-clock time, not by inputs: v2 judged 17 of 23 seeds in its 45 s, the v3 sweep 14 of 18 under parallel load (both sides exceed the top budget on a few seeds, each costing ~10 s). Only the per-function time budget is raised.",
+  "environment": {
+    "budget": {"seconds": 120, "evidence": "time-bound function: about 2 s per completed seed plus ~10 s per seed that exceeds the top instruction budget on both sides"}
+  },
+  "constraints": []
+}

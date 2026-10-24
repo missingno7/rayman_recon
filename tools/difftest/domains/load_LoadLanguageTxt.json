@@ -1,0 +1,51 @@
+{
+  "unit": "load",
+  "function": "LoadLanguageTxt",
+  "evidence": "LoadLanguageTxt(mem, language) reads block language_infos[language] of RAY.LNG (fixed name, src/load.c) and splits it with the STRICT leaf parser GetStringTxt, executed natively (environment.execute) so the split loop ends at the real end marker. Callers in this build pass 0 (LOAD_CONFIG, src/menu.c:425, 486); language_infos (src/data/blk_215c.c:100) describes the five language blocks of the shipped RAY.LNG (offsets/sizes tile the 18727-byte file exactly), all included as real inputs.",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 300,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 32,
+      "evidence": "one complete RAY.LNG block (2.4..4.9 KB) load and split per seed."
+    },
+    "execute": {
+      "callees": [
+        "GetStringTxt"
+      ],
+      "evidence": "GetStringTxt is STRICT (config/units.json, unit load) and a leaf: no calls (src/load.c GetStringTxt)."
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "arg": 1
+      },
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "evidence": "language_infos[0..4]; callers pass 0"
+    }
+  ]
+}

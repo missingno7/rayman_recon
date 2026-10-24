@@ -1,0 +1,86 @@
+{
+  "unit": "effect6c3b0",
+  "function": "effect_helper_6c3b0",
+  "evidence": "effect_helper_6c3b0(x, y, velocity, step) computes the lens displacement map; its only caller is STRICT effect_helper_6c7cc(160, 100, 48, scale*4, 1000, ...) (sub_380A4 case 7, src/effect1.c:346), which allocates the 0x20-byte state with radius = max(8, min(48, 48)) = 48, width = height = 97 and a 97*97*2-byte map (src/effect6c3b0.c:144..170); scale = (s16)(s8)byte_964CA (sub_380A4, src/effect1.c:323) and byte_964CA is only ever 1 (sub_38208) or 0xff (sub_38220), so scale is +1 or -1, so velocity = +/-4.",
+  "constraints": [
+    {
+      "loc": {
+        "global": "effect_state_6c"
+      },
+      "fresh": {
+        "size": 32,
+        "fields": {
+          "0xe": {
+            "values": [
+              48
+            ],
+            "size": 2
+          },
+          "0x10": {
+            "values": [
+              97
+            ],
+            "size": 2
+          },
+          "0x12": {
+            "values": [
+              97
+            ],
+            "size": 2
+          },
+          "0x14": {
+            "fresh": {
+              "size": 18818
+            }
+          }
+        }
+      },
+      "evidence": "state allocated by effect_helper_6c7cc"
+    },
+    {
+      "loc": {
+        "arg": 0
+      },
+      "values": [
+        160
+      ],
+      "evidence": "x = 160"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "values": [
+        100
+      ],
+      "evidence": "y = 100"
+    },
+    {
+      "loc": {
+        "arg": 2
+      },
+      "values": [
+        4,
+        -4
+      ],
+      "evidence": "velocity = scale*4"
+    },
+    {
+      "loc": {
+        "arg": 3
+      },
+      "values": [
+        1000
+      ],
+      "evidence": "step = 1000"
+    }
+  ],
+  "environment": {
+    "budget": {
+      "seconds": 400,
+      "seeds": 24,
+      "steps": 200000000,
+      "evidence": "97x97 map points, each with soft-float sqrt/exp/atan2/cos/sin, per seed"
+    }
+  }
+}

@@ -16,6 +16,16 @@ CONSTRAINT := {"loc": LOC, "values": [v, ...], "evidence": "..."}
             | {"loc": LOC, "fresh": {"size": n, "fields": {"0x10": {"fresh": {...}} | {"copy_global": NAME} |
                                                      {"values": [...], "size": s}}}, "evidence": "..."}
             | {"any_of": [[CONSTRAINT, ...], [CONSTRAINT, ...]], "evidence": "..."}  (one alternative per seed)
+            | {"loc": LOC, "string": ["RAY1.WLD", ...], "evidence": "..."}   (pointer to a fresh NUL-terminated copy)
+            | {"loc": LOC, "file_slice": {"file": "assets/...", "slices": [[off, len], ...]}, "evidence": "..."}
+                  (pointer to a fresh copy of one slice of a shipped data file, read at run time)
+            | {"loc": {"arg": k}, "from_arg": j, "add": n, "evidence": "..."}   (argument k = argument j + n)
+FRESH fields may also hold {"string": [...]} and a fresh spec may carry
+            "array": {"count": n, "stride": s, "offset": o, "fields": {"0x4": FIELD, ...}}   (or a list of arrays)
+          (n elements of s bytes from offset o; FIELD := {"values"|"range": ..., "size": s} picked per element
+           | {"index": {"div": d, "mod": m, "mul": a, "add": b}} = ((k // d) % m) * a + b for element k
+           | {"fresh": {...}} a separate fresh allocation per element)
+"environment": {...} configures the environment models of models.py (file layer, allocators, ...), not inputs.
 LOC := {"global": NAME, "offset": n, "size": s}         memory at the bound oracle address of NAME (+offset)
      | {"arg": k}                                       the k-th entry argument (register or stack word)
      | {"arg": k, "offset": n, "size": s}               memory at (argument k) + n
@@ -122,6 +132,12 @@ class Domain:
         where = self.resolve(c['loc'], state, state.read_initial)
         if 'fresh' in c:
             v = self.fresh(c['fresh'], state)
+        elif 'string' in c:
+            v = self.fresh_string(c['string'], state, salt)
+        elif 'file_slice' in c:
+            v = self.fresh_file_slice(c['file_slice'], state, salt)
+        elif 'from_arg' in c:
+            v = (self.arg_value(state, int(c['from_arg'])) + num(c.get('add', 0))) & 0xffffffff
         else:
             v = self.pick(c, state, salt)
         if where[0] == 'arg':
@@ -130,13 +146,59 @@ class Domain:
             state.put(where[1], v, where[2])
         state.domain_applied.append({'loc': c['loc'], 'value': v})
 
+    def fresh_file_slice(self, spec, state, salt):
+        """Fresh copy of one [offset, length] slice of a shipped data file (read-only, at run time)."""
+        from difftest import mix, ROOT
+        import models
+        data = models.file_bytes(ROOT / spec['file'])
+        slices = spec['slices']
+        off, n = slices[mix(state.seed, 0xf11e + salt, 53) % len(slices)]
+        off, n = num(off), num(n)
+        if off < 0 or off + n > len(data):
+            raise ValueError('domain: file slice outside ' + spec['file'])
+        a = state.fresh(n)
+        for k, byte in enumerate(data[off:off + n]):
+            state.overrides[a + k] = byte
+        state.domain_applied.append({'file_slice': spec['file'], 'offset': off, 'length': n})
+        return a
+
+    def fresh_string(self, choices, state, salt):
+        from difftest import mix
+        text = choices[mix(state.seed, 0x5751 + salt, 47) % len(choices)].encode('latin-1') + b'\0'
+        a = state.fresh(len(text))
+        for k, ch in enumerate(text):
+            state.put(a + k, ch, 1)
+        return a
+
     def fresh(self, spec, state):
         size = num(spec['size'])
         a = state.fresh(size)
+        arrays = spec.get('array') or []
+        for arr in ([arrays] if isinstance(arrays, dict) else arrays):
+            n, stride, base = num(arr['count']), num(arr['stride']), num(arr.get('offset', 0))
+            if base + n * stride > size:
+                raise ValueError('domain: array exceeds the fresh allocation')
+            for k in range(n):
+                for off, sub in (arr.get('fields') or {}).items():
+                    off = num(off)
+                    at = a + base + k * stride + off
+                    if 'fresh' in sub:
+                        v = self.fresh(sub['fresh'], state)
+                    elif 'index' in sub:
+                        # value from the element index: ((k // div) % mod) * mul + add
+                        ix = sub['index']
+                        q = k // num(ix.get('div', 1))
+                        if 'mod' in ix: q %= num(ix['mod'])
+                        v = q * num(ix.get('mul', 1)) + num(ix.get('add', 0))
+                    else:
+                        v = self.pick(sub, state, at)
+                    state.put(at, v & 0xffffffff, num(sub.get('size', 4)))
         for off, sub in (spec.get('fields') or {}).items():
             off = num(off)
             if 'fresh' in sub:
                 state.put(a + off, self.fresh(sub['fresh'], state), 4)
+            elif 'string' in sub:
+                state.put(a + off, self.fresh_string(sub['string'], state, off), 4)
             elif 'copy_global' in sub:
                 g = self.global_addr(sub['copy_global'])
                 state.put(a + off, (state.read_initial(g, 4) + num(sub.get('add', 0))) & 0xffffffff, 4)
@@ -170,6 +232,19 @@ class Domain:
         if 'fresh' in c:
             ok = self.fresh_ok(v, c['fresh'], state)
             return None if ok else {'loc': c['loc'], 'value': v, 'expected': 'fresh disjoint allocation'}
+        if 'from_arg' in c:
+            want = (self.arg_value(state, int(c['from_arg'])) + num(c.get('add', 0))) & 0xffffffff
+            return None if v == want else {'loc': c['loc'], 'value': v, 'expected': f'argument {c["from_arg"]} + {c.get("add", 0)}'}
+        if 'file_slice' in c:
+            from difftest import FRESH, HEAP
+            return None if FRESH <= v < HEAP + 0x1000000 else {'loc': c['loc'], 'value': v, 'expected': 'fresh file slice'}
+        if 'string' in c:
+            from difftest import FRESH, HEAP
+            text = None
+            if FRESH <= v < HEAP + 0x1000000:
+                text = bytes(state.initial_byte((v + k) & 0xffffffff) for k in range(64)).split(b'\0', 1)[0]
+            ok = text is not None and text.decode('latin-1') in c['string']
+            return None if ok else {'loc': c['loc'], 'value': v, 'expected': 'fresh string from the list'}
         if 'values' in c:
             allowed = {num(x) & ((1 << (8 * size)) - 1) for x in c['values']}
             return None if v in allowed else {'loc': c['loc'], 'value': v, 'expected': c['values']}

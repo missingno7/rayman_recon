@@ -1,4 +1,4 @@
-"""Bounded differential execution of pinned DOS code and pinned-toolchain C (harness v2).
+"""Bounded differential execution of pinned DOS code and pinned-toolchain C (harness v3).
 
 All generated files stay next to this script. No verdict is a matching verdict (never STRICT).
 Usage: python -B build/workers/difftest/difftest.py UNIT FUNCTION [--seeds 128]
@@ -15,6 +15,13 @@ project-wide declaration table (widths, signedness, pointees, #pragma aux regist
 variables and struct members); pointer arguments are compared by object identity; non-const scalar pointees are
 written by the stubs; globals written before a call must agree at that call; per-seed instruction budgets escalate;
 CPU exceptions are terminations; optional per-function domains (domains/UNIT_FUNCTION.json).
+
+v3 changes: optional per-function ENVIRONMENT models declared in the domain file (models.py: Watcom stdio file layer on
+the real game data, bump allocators, no-return callees, natively executed STRICT leaf callees, a comparison boundary
+at the Nth call, per-function budgets); hardware models applied automatically when the code needs them (BIOS tick
+0:046C advancing per read, a flat GDT/LDT so selector loads and far pointers work, __interrupt entries returning
+through IRETD); far-pointer arguments take two register/stack slots; evidence-backed contracts for undeclared
+callables (prototypes.json); runtime helpers run unhooked on an alternate stack (speed only).
 """
 from __future__ import annotations
 
@@ -48,6 +55,8 @@ import wcc
 from image import Image, IDA_BASE, parse_addr
 import cdecls
 from cdecls import CType, Prototype, split_args
+import models
+from models import Environment, FileLayer, Allocator, ModelError, BIOS_TICK
 
 PAGE = 4096
 CAND = 0x58000000          # candidate code; mapped with identical bytes in BOTH executions
@@ -55,6 +64,8 @@ FNPTR = 0x5e000000         # synthetic identities of declared function pointers 
 HEAP = 0x2000000
 FRESH = HEAP + 0x800000    # domain-file allocations (disjoint pages)
 STACK_LO, STACK_TOP, STACK_HI = 0x70000000, 0x70040000, 0x70041000
+STACK_GUARD = 0x400        # in-function ESP must stay this far above Function.stack_low (observed stack range)
+ALT_STACK, ALT_COPY = STACK_LO + 0x20000, 64   # unobserved stack of natively executed runtime helpers
 STOP = 0x60000000
 MASK = 0xffffffff
 REGS = ('eax', 'edx', 'ebx', 'ecx', 'esi', 'edi', 'ebp', 'esp')
@@ -65,8 +76,13 @@ PARENT = {s: p for p, ss in {
 }.items() for s in ss}
 MD = cs.Cs(cs.CS_ARCH_X86, cs.CS_MODE_32)
 MD.detail = True
-HARNESS_SHA256 = hashlib.sha256(b''.join((HERE / n).read_bytes() for n in ('difftest.py', 'cdecls.py', 'domains.py'))).hexdigest()
+HARNESS_SHA256 = hashlib.sha256(b''.join((HERE / n).read_bytes() for n in ('difftest.py', 'cdecls.py', 'domains.py', 'models.py',
+                                                                         'prototypes.json'))).hexdigest()
+GDT_BASE = 0x5d000000      # flat descriptor table (every selector: data, base 0, 4 GB) for segment-register loads
+SEG_LOADS = ('lds', 'les', 'lfs', 'lgs', 'lss')
+SEGREGS = ('ds', 'es', 'fs', 'gs', 'ss')
 GENERATOR = 'splitmix64-guided-v3'
+HARNESS_VERSION = 3        # v3: environment models (models.py), hardware models, far pointers, unhooked runtime helpers
 TIERS = (20000, 300000, 2000000, 8000000)     # per-seed instruction budgets, escalated only while a side is still running
 MAX_EVENTS = (400, 3000, 12000, 30000)      # per-tier outgoing call/system-event budgets (stubs are Python, instructions are native)
 MIN_EQUAL = 16                       # judged equal seeds needed for EQUIVALENT_TESTED
@@ -127,6 +143,26 @@ def copy_unit(unit, source=None):
 
 
 _TABLE = None
+_OVERLAY = None
+
+
+def overlay_prototype(name):
+    """Evidence-backed contract from prototypes.json (only for callables without any C declaration)."""
+    global _OVERLAY
+    if _OVERLAY is None:
+        _OVERLAY = {k: v for k, v in json.loads((HERE / 'prototypes.json').read_text(encoding='utf-8')).items()
+                    if not k.startswith('_')}
+    e = _OVERLAY.get(name)
+    if not e:
+        return None
+    ctx = cdecls.Context()
+    ctx.scalar.update({'s8': 'signed char', 'u8': 'unsigned char', 's16': 'signed short', 'u16': 'unsigned short',
+                       's32': 'signed int', 'u32': 'unsigned int'})
+    p = ctx.make_proto(name, e['ret'], ', '.join(e['args']) or 'void', 'tools/difftest/prototypes.json')
+    p.parm, p.value, p.modify = list(e['parm']), list(e['value']), list(e['modify'])
+    p.pragma = True
+    p.contract = 'prototypes.json: ' + e['evidence'][:120]
+    return p
 
 
 def table():
@@ -163,6 +199,23 @@ class Program:
         self.transparent = sorted((a, self.oracle_end(a)) for a, n in self.names.items()
                                   if IDA_BASE[1] <= a < IDA_BASE[1] + len(self.img.code) and TRANSPARENT.match(n))
         self.transparent_starts = {a for a, _ in self.transparent}
+        # Library code (libscan members) and the executed runtime helpers run WITHOUT a Python block hook: they
+        # are entered only through a call to a transparent helper (the call site marks the helper state), and any
+        # block outside these ranges is still hooked (game code, escapes, the math-error path).  Speed only.
+        lib = sorted((a, self.oracle_end(a)) for a in self.lib_starts if IDA_BASE[1] <= a < IDA_BASE[1] + len(self.img.code))
+        merged = []
+        for a, b in sorted(lib + self.transparent):
+            if merged and a <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], b))
+            else:
+                merged.append((a, b))
+        self.native_ranges = merged
+        gaps = []; lo = 0
+        for a, b in merged:
+            if a > lo: gaps.append((lo, a - 1))
+            lo = b
+        gaps.append((lo, MASK))
+        self.hook_gaps = gaps
         self.cache = {}
         self.table = table()
 
@@ -238,10 +291,21 @@ class Function:
         self.unknown_prototypes = {}   # name/address -> why
         cands = [p for p in unit_table.functions.get(name, []) if p.defined] or unit_table.functions.get(name, [])
         self.proto = cands[0] if cands else None
+        self.interrupt = False
+        if self.proto is None and self.interrupt_entry(unit_table, name):
+            # `void __interrupt __far f(void)`: Watcom saves every register and returns with IRETD; no arguments,
+            # no return value.  The entry stack holds the interrupt frame (EIP=STOP, CS, EFLAGS).
+            self.proto = Prototype(name, CType('void', 0), [], True, parm=[], value=[], modify=[],
+                                   source='__interrupt entry', defined=True, contract='__interrupt __far (IRETD)')
+            self.interrupt = True
+        self.env = Environment()
+        self.native_callees = {}
         if not self.proto or not self.proto.known or self.proto.ret.width is None or any(x.width is None for x in self.proto.args):
             raise Limit('entry prototype unknown or unsupported: ' + name)
         if self.proto.variadic:
             raise Limit('variadic entry function')
+        if any(a.far for a in self.proto.args):
+            raise Limit('far pointer entry argument')
         self.stack_args = max(0, len(self.proto.args) - len(self.proto.parm))
         self.start = flat(program.binds.lookup(name)[0])
         self.end = program.oracle_end(self.start)
@@ -320,13 +384,63 @@ class Function:
             raise Limit('unresolved executed candidate fixups: ' + str(relevant[:6]))
         self.oaddrs = sorted(self.oin); self.caddrs = sorted(self.cin)
         self.oblocks = sorted(self.blocks); self.cblocks_sorted = sorted(self.cblocks)
+        # instructions that lower ESP (the guard of the observed stack range is checked on blocks containing one)
+        lowers = lambda i: (i.mnemonic.startswith(('push', 'enter')) or
+                            (i.mnemonic in ('sub', 'lea', 'mov', 'and') and i.operands and i.operands[0].type == cs.CS_OP_REG
+                             and i.reg_name(i.operands[0].reg) == 'esp'))
+        self.esp_lowering = {False: sorted(a for a, i in self.oin.items() if lowers(i)),
+                             True: sorted(a for a, i in self.cin.items() if lowers(i))}
         self.special = {False: self.specials(self.oin), True: self.specials(self.cin)}
         self.constants = list(dict.fromkeys(o.imm & MASK for i in sorted(self.oin.values(), key=lambda i: i.address) for o in i.operands
                                             if o.type == cs.CS_OP_IMM and not i.group(cs.CS_GRP_JUMP) and not i.group(cs.CS_GRP_CALL)
                                             and (1, i.address - IDA_BASE[1] + i.imm_offset) not in program.img.fixups))
+        frames = [i.operands[1].imm for ins in (self.oin, self.cin) for i in ins.values()
+                  if i.mnemonic == 'sub' and len(i.operands) == 2 and i.operands[0].type == cs.CS_OP_REG
+                  and i.reg_name(i.operands[0].reg) == 'esp' and i.operands[1].type == cs.CS_OP_IMM]
+        self.stack_low = STACK_TOP - (max(frames, default=0) & 0xfffff) - 0x1000 - STACK_GUARD
+        self.bios_tick = any(any((o.type == cs.CS_OP_IMM and o.imm & MASK == BIOS_TICK) or
+                                 (o.type == cs.CS_OP_MEM and not o.mem.base and not o.mem.index and o.mem.disp & MASK == BIOS_TICK)
+                                 for o in i.operands) for ins in (self.oin, self.cin) for i in ins.values())
+        self.segment_loads = any(i.mnemonic in SEG_LOADS or
+                                 (i.mnemonic in ('mov', 'pop') and i.operands and i.operands[0].type == cs.CS_OP_REG
+                                  and i.reg_name(i.operands[0].reg) in SEGREGS)
+                                 for ins in (self.oin, self.cin) for i in ins.values())
         self.fnptr_slots = self.function_pointer_slots()
         self.mem_specs = self.memory_specs()
         self.global_guidance, self.field_guidance, self.bound_globals, self.bound_fields = self.guidance()
+
+    @staticmethod
+    def interrupt_entry(unit_table, name):
+        for ctx_file in unit_table.contexts:
+            text = cdecls.strip_comments(Path(ctx_file).read_text(encoding='utf-8', errors='replace'))
+            if re.search(r'\bvoid\s+__interrupt\s+(?:__far\s+)?' + re.escape(name) + r'\s*\(\s*(?:void)?\s*\)\s*\{', text):
+                return True
+        return False
+
+    def attach_environment(self, env):
+        """Validate and attach a domain's environment models (models.py)."""
+        self.env = env
+        self.native_callees = {}
+        units = self.p.units
+        for name in env.execute:
+            a, _ = self.p.binds.lookup(name)
+            if not a:
+                raise Limit(f'environment.execute: {name} is not bound')
+            status = next((e['functions'][name].get('status') for e in units.values() if name in e['functions']), None)
+            if status != 'STRICT':
+                raise Limit(f'environment.execute: {name} is {status}, only STRICT callees are executed')
+            start = flat(a); end = self.p.oracle_end(start)
+            ins, _, lim = self.cfg(start, end, False)
+            def escapes(i):
+                if not i.group(cs.CS_GRP_JUMP): return False
+                op = i.operands[0]
+                return op.type != cs.CS_OP_IMM or not start <= op.imm < end
+            if lim or any(i.group(cs.CS_GRP_CALL) or escapes(i) or self.specials({0: i}) for i in ins.values()):
+                raise Limit(f'environment.execute: {name} is not a leaf function (calls, indirect jumps or system code)')
+            self.native_callees[start] = (end, name)
+        for name in env.allocators:
+            if self.p.table.prototype(name)[0] is None:
+                raise Limit(f'environment.allocators: no declaration of {name}')
 
     # ---------------------------------------------------------------- static model
     def data_at(self, addr, size, candidate):
@@ -411,6 +525,10 @@ class Function:
                 return None, None, 'call through a NULL function pointer (seed-chosen NULL)'
             return None, None, f'indirect target {target:#x} has no declared contract'
         p, why = self.p.table.prototype(name)
+        if p is None:
+            p = overlay_prototype(name)
+            if p is not None:
+                why = 'prototypes.json (DOS-code evidence)'
         if p is None or not p.known or p.ret.width is None or any(a.width is None for a in p.args):
             return None, name, why if p is None else 'incomplete prototype (' + why + ')'
         return p, name, why
@@ -787,9 +905,20 @@ class Execution:
         self.frame_ids = {}
         self.status = 'RUNNING'; self.reason = None; self.limit_class = None; self.steps = steps
         self.max_events = MAX_EVENTS[TIERS.index(steps)] if steps in TIERS else 12000
+        self.env = f.env
+        if steps > TIERS[-1]:
+            self.max_events = MAX_EVENTS[-1]
+        if self.env.top_events and steps >= TIERS[-1]:
+            self.max_events = max(self.max_events, int(self.env.top_events))
+        self.files = FileLayer() if self.env.file_layer else None
+        self.alloc = Allocator() if self.env.allocators else None
+        self.native = None
+        self.callee_counts = collections.Counter()
+        self.tick = None
         self.unknown = []
         self.smc = []
         self.in_helper = False
+        self.alt = None
         self.ins = f.cin if candidate else f.oin
         self.iaddrs = f.caddrs if candidate else f.oaddrs
         self.bstarts = f.cblocks_sorted if candidate else f.oblocks
@@ -803,14 +932,23 @@ class Execution:
         self.machine.reg_write(ux.UC_X86_REG_EFLAGS, 0x202)
         self.machine.reg_write(ux.UC_X86_REG_FPCW, 0x037f)
         self.machine.hook_add(uc.UC_HOOK_MEM_UNMAPPED, self.on_unmapped)
-        self.machine.hook_add(uc.UC_HOOK_MEM_WRITE, self.on_write)
-        self.machine.hook_add(uc.UC_HOOK_MEM_READ, self.on_stack_read, begin=STACK_LO, end=STACK_HI - 1)
+        # Stack accesses are observed from f.stack_low upwards (the function's own frame and its arguments).  The
+        # region below it is used only by natively executed runtime helpers (their push/pop traffic is not an
+        # observable); in-function blocks check that the function's own stack pointer stays above the guard band.
+        self.machine.hook_add(uc.UC_HOOK_MEM_WRITE, self.on_write, begin=0, end=STACK_LO - 1)
+        self.machine.hook_add(uc.UC_HOOK_MEM_WRITE, self.on_write, begin=f.stack_low, end=MASK)
+        self.machine.hook_add(uc.UC_HOOK_MEM_READ, self.on_stack_read, begin=f.stack_low, end=STACK_HI - 1)
         if track_reads:
             self.machine.hook_add(uc.UC_HOOK_MEM_READ, self.on_read)
-        self.machine.hook_add(uc.UC_HOOK_BLOCK, self.on_block)
+        for lo, hi in f.p.hook_gaps:
+            self.machine.hook_add(uc.UC_HOOK_BLOCK, self.on_block, begin=lo, end=hi)
         for a in f.special[candidate]:
             self.machine.hook_add(uc.UC_HOOK_CODE, self.on_special, begin=a, end=a)
         self.machine.hook_add(uc.UC_HOOK_INTR, self.on_intr)
+        if f.bios_tick:
+            self.machine.hook_add(uc.UC_HOOK_MEM_READ, self.on_tick_read, begin=BIOS_TICK, end=BIOS_TICK + 3)
+        if f.segment_loads or self.env.flat_selectors:
+            self.flat_descriptor_table()
         try:
             self.machine.emu_start(self.fstart, STOP, timeout=timeout_us)
             if self.status == 'RUNNING':
@@ -825,6 +963,29 @@ class Execution:
         self.return_value = regread(self.machine, f.proto.value[0] if f.proto.value else 'eax')
         if f.proto.ret.width is not None:
             self.return_value &= (1 << f.proto.ret.width) - 1 if f.proto.ret.width else 0
+
+    def flat_descriptor_table(self):
+        """Model of the DOS/4GW selector space: every GDT/LDT selector is a present, writable, DPL3, 4 GB data
+        segment with base 0 (identical on both sides), so far pointers (selector:offset) address flat memory and
+        segment-register loads do not fault."""
+        table = bytearray(struct.pack('<HHBBBB', 0xffff, 0, 0, 0xf2, 0xcf, 0) * 8192)
+        # selector 0x10: the same flat segment at DPL0, loaded into SS so that the 32-bit stack attribute survives
+        # the descriptor-cache refresh that any segment-register load triggers in the emulator
+        table[16:24] = struct.pack('<HHBBBB', 0xffff, 0, 0, 0x92, 0xcf, 0)
+        self.machine.mem_map(GDT_BASE, 0x10000)
+        self.machine.mem_write(GDT_BASE, bytes(table))
+        self.pages.update(range(GDT_BASE, GDT_BASE + 0x10000, PAGE))
+        self.machine.reg_write(ux.UC_X86_REG_GDTR, (0, GDT_BASE, 0xffff, 0))
+        self.machine.reg_write(ux.UC_X86_REG_LDTR, (0, GDT_BASE, 0xffff, 0x82))
+        self.machine.reg_write(ux.UC_X86_REG_SS, 0x10)
+
+    def on_tick_read(self, m, access, address, size, value, data):
+        """BIOS data area timer tick 0:046C (models.py): advances by one per read access."""
+        if access != uc.UC_MEM_READ:
+            return
+        self.tick = self.inputs.read_initial(BIOS_TICK, 4) if self.tick is None else (self.tick + 1) & MASK
+        self.ensure(BIOS_TICK)
+        m.mem_write(BIOS_TICK, struct.pack('<I', self.tick))
 
     # ------------------------------------------------------------ termination helpers
     def set_limit(self, why, cls):
@@ -910,6 +1071,10 @@ class Execution:
         if address == STOP:
             return
         if not self.fstart <= address < self.fend:
+            if self.native is not None and self.native[0] <= address < self.native[1]:
+                self.count += max(1, size // 3)
+                if self.count > self.steps: self.halt('BUDGET')
+                return
             if self.f.p.in_transparent(address):
                 self.in_helper = True
                 self.count += max(1, size // 3)
@@ -934,6 +1099,14 @@ class Execution:
                 self.halt('LIMIT', f'control escaped function at {address:x}', 'control')
             return
         self.in_helper = False
+        self.native = None
+        if self.alt is not None:
+            self.leave_alt_stack()
+        lw = self.f.esp_lowering[self.candidate]
+        k = bisect.bisect_left(lw, address)
+        if k < len(lw) and lw[k] < address + size and self.machine.reg_read(ux.UC_X86_REG_ESP) < self.f.stack_low + STACK_GUARD:
+            self.halt('LIMIT', 'function stack frame below the observed stack range', 'model')
+            return
         if address not in self.ins:
             self.halt('LIMIT', f'execution reached {address:x} outside the static instruction set', 'control')
             return
@@ -963,7 +1136,17 @@ class Execution:
                     if not a: raise Limit('unbound intra-unit callee')
                     target = flat(a)
                 if target in self.f.p.transparent_starts:
-                    return   # executed natively from the oracle image (pure runtime helper)
+                    # executed natively from the oracle image (pure runtime helper, unhooked library ranges)
+                    self.in_helper = True
+                    self.count += 1
+                    self.enter_alt_stack()
+                    return
+                if target in self.f.native_callees:
+                    # environment.execute: the call is compared, then the STRICT leaf callee runs natively
+                    self.call(target, native=True)
+                    if self.status == 'RUNNING':
+                        self.native = (target, self.f.native_callees[target][0])
+                    return
                 self.call(target)
                 if self.status == 'RUNNING':
                     m.reg_write(ux.UC_X86_REG_EIP, address + size)
@@ -972,9 +1155,39 @@ class Execution:
                 if self.status == 'RUNNING':
                     m.reg_write(ux.UC_X86_REG_EIP, address + size)
             elif kind == 'segmented':
+                if self.f.interrupt and ins.mnemonic in ('iret', 'iretd'):
+                    if regread(self.machine, 'esp') != STACK_TOP:
+                        self.halt('LIMIT', 'IRETD with an unbalanced stack', 'control')
+                    else:
+                        self.halt('RETURN')   # interrupt function returns through its interrupt frame
+                    return
                 self.halt('LIMIT', 'segmented control transfer ' + ins.mnemonic, 'control')
         except Limit as e:
             self.halt('LIMIT', str(e), 'pages' if 'page budget' in str(e) else 'model')
+
+    # ------------------------------------------------------------ executed runtime helpers
+    def enter_alt_stack(self):
+        """Run a pure runtime helper on an unobserved alternate stack (speed: its push/pop traffic would otherwise
+        cost one Python callback per access).  The top ALT_COPY bytes of the caller's stack are mirrored so stack
+        arguments read identically; changes the helper makes to them are written back on return."""
+        esp = self.machine.reg_read(ux.UC_X86_REG_ESP)
+        copy = self.read_bytes(esp, ALT_COPY)
+        self.ensure_range(ALT_STACK - PAGE, PAGE + ALT_COPY)
+        self.machine.mem_write(ALT_STACK, copy)
+        self.alt = (esp, copy)
+        self.machine.reg_write(ux.UC_X86_REG_ESP, ALT_STACK)
+
+    def leave_alt_stack(self):
+        esp, copy = self.alt
+        self.alt = None
+        cur = self.machine.reg_read(ux.UC_X86_REG_ESP)
+        now = bytes(self.machine.mem_read(ALT_STACK, ALT_COPY))
+        if now != copy:
+            changed = [k for k in range(ALT_COPY) if now[k] != copy[k]]
+            for k in changed:
+                self.machine.mem_write(esp + k, now[k:k + 1])
+            self.on_write(self.machine, uc.UC_MEM_WRITE, esp + changed[0], changed[-1] - changed[0] + 1, 0, None)
+        self.machine.reg_write(ux.UC_X86_REG_ESP, (esp + cur - ALT_STACK) & MASK)
 
     # ------------------------------------------------------------ calls
     def operand_value(self, op, ins):
@@ -1018,11 +1231,19 @@ class Execution:
         self.boundaries.append(vals)
         self.pending = set()
 
+    def ensure_range(self, a, n):
+        if n <= 0: return
+        if (a & MASK) + n > MASK + 1:
+            for k in range(n): self.ensure((a + k) & MASK)
+            return
+        for page in range(a & ~(PAGE - 1), a + n, PAGE):
+            if page not in self.pages: self.ensure(page)
+
     def read_bytes(self, a, n):
-        for k in range(n): self.ensure((a + k) & MASK)
+        self.ensure_range(a, n)
         return bytes(self.machine.mem_read(a, n))
 
-    def call(self, target, tail=False):
+    def call(self, target, tail=False, native=False):
         p, label, why = self.f.callee(target)
         regs = {n: regread(self.machine, n) for n in REGS[:-1]}
         sp = regread(self.machine, 'esp')
@@ -1036,18 +1257,26 @@ class Execution:
         writes = []
         if p is not None:
             words = []
-            nreg = 0 if p.variadic else len(p.parm)
+            regs_left = [] if p.variadic else list(p.parm)
+            sidx = 0
             for k, t in enumerate(p.args):
-                if k < nreg:
-                    rn = p.parm[k]
-                    if len(rn.split()) != 1 or PARENT.get(rn, rn) not in REGID:
-                        known = False; why = 'unsupported register contract ' + rn; break
-                    v = regread(self.machine, rn)
+                # a far pointer (offset, selector) takes two slots: two parm registers or two stack words
+                nslots = 2 if t.far else 1
+                if regs_left:
+                    if len(regs_left) < nslots:
+                        known = False; why = 'far pointer split between register and stack'; break
+                    rns = [regs_left.pop(0) for _ in range(nslots)]
+                    if any(len(rn.split()) != 1 or PARENT.get(rn, rn) not in REGID for rn in rns):
+                        known = False; why = 'unsupported register contract ' + ' '.join(rns); break
+                    vals = [regread(self.machine, rn) for rn in rns]
                 else:
-                    idx = k - nreg; stack_count = max(stack_count, idx + 1)
-                    if idx >= 8: known = False; why = 'more than 8 stack arguments'; break
-                    v = raw_stack[idx]
+                    if sidx + nslots > 8: known = False; why = 'more than 8 stack arguments'; break
+                    vals = raw_stack[sidx:sidx + nslots]; sidx += nslots
+                    stack_count = max(stack_count, sidx)
+                v = vals[0]
                 args.append(self.normalize(v, t))
+                if t.far:
+                    args.append(vals[1] & 0xffff)      # selector, compared as a 16-bit value
                 words.append((k, t, v))
             if known and p.variadic:
                 fmt_arg = next(((k, v) for k, t, v in words if t.pointer and t.const_pointee and t.pointee and t.pointee.width == 8), None)
@@ -1091,8 +1320,28 @@ class Execution:
         seed = self.inputs.seed
         if ix >= self.max_events:
             self.halt('BUDGET')
+        name_ = label or self.f.p.names.get(target) or hex(target)
+        self.callee_counts[name_] += 1
+        if known and name_ in self.env.noreturn:
+            self.halt('EXIT', f'{name_} does not return (environment.noreturn)')
+            return
+        b = self.env.boundary
+        if b and ((b[0] == 'calls' and ix + 1 >= b[1]) or (b[0] == 'callee' and name_ == b[1] and self.callee_counts[name_] >= b[2])):
+            self.halt('BOUNDARY', f'comparison boundary reached at call {ix} ({name_})')
+            return
+        if native:
+            return
         lib_result = None
-        if known and label in LIB_EFFECTS:
+        try:
+            if known and self.files is not None and label in models.FILE_CALLS:
+                lib_result = self.file_effect(label, [w for _, _, w in words]); writes = []
+            elif known and self.alloc is not None and label in self.env.allocators:
+                lib_result = self.alloc.alloc([w for _, _, w in words][self.env.allocators[label]]); writes = []
+        except ModelError as exc:
+            raise Limit(str(exc))
+        if lib_result is not None:
+            pass
+        elif known and label in LIB_EFFECTS:
             lib_result = self.library_effect(label, [v for _, _, v in words] if p.variadic else [w for _, _, w in words], raw_stack, ix, target)
             writes = []
         if known:
@@ -1129,6 +1378,30 @@ class Execution:
             regwrite(self.machine, rn, result if rn in value else mix(seed, target, ix + 1))
         if stack_count and p and not p.cdecl and not tail:
             self.machine.reg_write(REGID['esp'], sp + 4 * stack_count)
+
+    def cstring(self, a, limit=4096):
+        out = bytearray()
+        while len(out) < limit:
+            b = self.read_bytes((a + len(out)) & MASK, 1)
+            if b == b'\0': break
+            out += b
+        return bytes(out)
+
+    def file_effect(self, name, a):
+        """models.FileLayer: Watcom stdio on the real game data (read-only)."""
+        fl = self.files
+        if name == 'fopen':
+            return fl.fopen(self.cstring(a[0]).decode('latin-1'), self.cstring(a[1]).decode('latin-1'))
+        if name == 'fread':
+            data, items = fl.fread(a[1], a[2], a[3])
+            if data:
+                self.stub_write(a[0], data)
+            return items
+        if name == 'fseek':
+            return fl.fseek(a[0], a[1], a[2]) & MASK
+        if name == 'ftell':
+            return fl.ftell(a[0]) & MASK
+        return fl.fclose(a[0]) & MASK
 
     def library_effect(self, name, args, raw_stack, ix, target):
         """C-library semantics for the few library callees whose effect is a memory write (bounded)."""
@@ -1170,7 +1443,7 @@ class Execution:
         return None
 
     def stub_write(self, a, data):
-        for k in range(len(data)): self.ensure((a + k) & MASK)
+        self.ensure_range(a, len(data))
         self.machine.mem_write(a, data)
         rng = range(a, a + len(data))
         if STACK_LO <= a < STACK_HI:
@@ -1261,6 +1534,7 @@ class Execution:
                 'return': self.return_value, 'uninitialized_stack': self.uninit, 'unknown_calls': self.unknown[:16],
                 'discarded_stack_reads': self.discarded_stack_reads, 'fault': getattr(self, 'fault', None),
                 'call_log': log, 'call_log_length': len(self.log),
+                'files': self.files.log[:32] if self.files is not None else None,
                 'writes': {hex(a): v for a, v in list(self.snapshot().items())[:256]}, 'writes_total': len(self.dirty)}
 
 
@@ -1393,19 +1667,26 @@ def compare_boundary(a, b, k, acc_a, acc_b):
 def run_pair(f, state, deadline, track_reads=False, tiers=TIERS, stats=None):
     """Run both sides, escalating the instruction budget while one of them is still running.
     Adaptive per function (stats): a tier >= 2 that has already failed twice without ever completing a seed is
-    not tried again, so endless loops do not consume the function's whole time budget."""
+    skipped when a higher tier completes at least as many seeds as it fails, and otherwise not tried again, so endless loops do not consume
+    the function's whole time budget while long finite runs still reach the tier that completes them."""
     stats = stats if stats is not None else {'ok': collections.Counter(), 'fail': collections.Counter()}
-    for t, steps in enumerate(tiers):
+    dead = lambda u: u >= 2 and stats['fail'][u] >= 2 and not stats['ok'][u]
+    t = 0
+    while True:
+        steps = tiers[t]
         a = Execution(f, state, False, steps, track_reads=track_reads)
         b = Execution(f, state, True, steps, track_reads=track_reads)
         both = a.status == b.status == 'BUDGET'
         if both: stats['fail'][t] += 1
         elif 'BUDGET' not in (a.status, b.status): stats['ok'][t] += 1
         nxt = t + 1
-        hopeless = nxt < len(tiers) and nxt >= 2 and stats['fail'][nxt] >= 2 and not stats['ok'][nxt]
+        while nxt < len(tiers) - 1 and dead(nxt) and any(stats['ok'][u] and stats['ok'][u] >= stats['fail'][u]
+                                                         for u in range(nxt + 1, len(tiers))):
+            nxt += 1
+        hopeless = nxt < len(tiers) and dead(nxt)
         if 'BUDGET' not in (a.status, b.status) or nxt == len(tiers) or time.monotonic() > deadline or (both and hopeless):
             return a, b
-    return a, b
+        t = nxt
 
 
 def minimize(f, state, original, candidate, difference, deadline_seconds=5, top=TIERS[-1]):
@@ -1470,16 +1751,34 @@ def run_function(p, unit, name, seeds=128, seconds=45, source=None, scenario=Non
     result = {'unit': unit, 'function': name, 'verdict': 'HARNESS_LIMIT', 'seeds': 0, 'coverage': 0,
               'counterexample': None, 'uninitialized_reads': [],
               'stack_read_statistics': {'seeds_with_reads': 0, 'events': 0, 'discarded_overread_events': 0},
-              'harness_version': 2, 'harness_sha256': HARNESS_SHA256, 'unicorn_version': uc.__version__}
+              'harness_version': HARNESS_VERSION, 'harness_sha256': HARNESS_SHA256, 'unicorn_version': uc.__version__}
     try:
         f = Function(p, unit, name, source, allow_losses)
     except (Limit, ValueError, KeyError, IndexError, struct.error) as e:
         result['reason'] = str(e); result['blocking_limits'] = {str(e): 1}; return result
+    # the time budget starts after compiling the unit and building the static model (compile time is not seed time)
+    result['setup_seconds'] = round(time.monotonic() - started, 3)
+    started = time.monotonic()
+    deadline = started + seconds
     domain = domains.load(unit, name, f) if use_domain else None
+    try:
+        f.attach_environment(Environment(domain.spec.get('environment') if domain else None))
+    except (Limit, ValueError) as e:
+        result['reason'] = 'environment: ' + str(e); result['blocking_limits'] = {str(e): 1}; return result
+    if f.env.seconds:
+        seconds = max(seconds, float(f.env.seconds))
+        deadline = started + seconds
+    if f.env.seeds:
+        seeds = min(seeds, int(f.env.seeds))
+    tiers = TIERS if not f.env.top_steps else TIERS[:-1] + (max(TIERS[-1], int(f.env.top_steps)),)
     result['domain'] = domain.describe() if domain else None
+    result['environment'] = f.env.describe() or None
+    result['hardware_models'] = [m for m, on in (('BIOS timer tick 0:046C advances per read', f.bios_tick),
+                                                 ('flat selector table (segment-register loads)', f.segment_loads or f.env.flat_selectors),
+                                                 ('__interrupt entry (IRETD frame)', f.interrupt)) if on]
     result['whole_unit'] = {k: f.receipt[k] for k in ('strict_before', 'strict_after', 'strict_losses', 'source_sha256', 'object_sha256')}
     result['source'] = f.receipt['source']
-    result['step_tiers'] = list(TIERS)
+    result['step_tiers'] = list(tiers)
     result['recorded_matching_status'] = p.units[unit]['functions'].get(name, {}).get('status')
     result['prototype'] = {'ret': f.proto.ret.text, 'args': [a.text for a in f.proto.args], 'parm': f.proto.parm,
                            'value': f.proto.value, 'source': f.proto.source}
@@ -1491,16 +1790,16 @@ def run_function(p, unit, name, seeds=128, seconds=45, source=None, scenario=Non
     out_of_domain = None; explored = {'seeds': 0, 'equal': 0, 'in_domain_draws': 0}
     tier_stats = {'ok': collections.Counter(), 'fail': collections.Counter()}
     phases = [('main', range(seeds))]
-    if domain:
+    if domain and domain.constraints:
         phases.append(('explore', range(10000, 10000 + explore_seeds)))
     for phase, seed_range in phases:
         for seed in seed_range:
             if time.monotonic() >= deadline: break
-            if phase == 'main' and seed >= MIN_EQUAL * 2 and time.monotonic() >= started + seconds * (0.75 if domain else 1.0):
+            if phase == 'main' and seed >= MIN_EQUAL * 2 and time.monotonic() >= started + seconds * (0.75 if domain and domain.constraints else 1.0):
                 break
             try:
                 state = Inputs(f, seed, scenario, domain=domain if phase == 'main' else None)
-                a, b = run_pair(f, state, deadline, stats=tier_stats)
+                a, b = run_pair(f, state, deadline, tiers=tiers, stats=tier_stats)
             except (Limit, uc.UcError) as exc:
                 (unjudged if phase == 'main' else collections.Counter())['input/emulator setup: ' + str(exc)] += 1
                 if phase == 'main': result['seeds'] += 1
@@ -1555,7 +1854,7 @@ def run_function(p, unit, name, seeds=128, seconds=45, source=None, scenario=Non
     result['unknown_callees'] = dict(unknown_callees)
     result['notes'] = dict(notes); result['diagnostics'] = diagnostics
     result['budget_tiers_used'] = {str(k): v for k, v in sorted(tiers_used.items())}
-    result['exploration'] = explored if domain else None
+    result["exploration"] = explored if domain and domain.constraints else None
     result['out_of_domain_difference'] = out_of_domain
     result['elapsed_seconds'] = round(time.monotonic() - started, 3)
     if result['verdict'] != 'DIVERGENT':
@@ -1638,6 +1937,9 @@ def main(argv=None):
     if args.replay:
         r = json.loads(Path(args.replay).read_text()); c = r['counterexample'] or r.get('out_of_domain_difference')
         f = Function(p, r['unit'], r['function'], args.source)
+        import domains
+        dom = domains.load(r['unit'], r['function'], f)
+        f.attach_environment(Environment(dom.spec.get('environment') if dom else None))
         state = Inputs.restore(f, c['inputs'])
         a, b = run_pair(f, state, time.monotonic() + 60)
         d = compare(a, b)
@@ -1665,7 +1967,7 @@ def main(argv=None):
         path = OUT / 'results' / f'{unit}_{name}.json'
         if args.resume and path.exists():
             old = json.loads(path.read_text())
-            if old.get('harness_version') == 2 and old.get('harness_sha256') == HARNESS_SHA256:
+            if old.get('harness_version') == HARNESS_VERSION and old.get('harness_sha256') == HARNESS_SHA256:
                 print(f'{unit}/{name}: cached {old["verdict"]}', flush=True); continue
         try:
             r = run_function(p, unit, name, args.seeds, args.seconds, args.source, args.scenario, use_domain=not args.no_domain)
@@ -1675,7 +1977,7 @@ def main(argv=None):
             r = {'unit': unit, 'function': name, 'verdict': 'HARNESS_LIMIT', 'seeds': 0, 'coverage': 0,
                  'counterexample': None, 'reason': 'unexpected harness exception: ' + str(exc),
                  'blocking_limits': {'unexpected harness exception': 1},
-                 'harness_version': 2, 'harness_sha256': HARNESS_SHA256}
+                 'harness_version': HARNESS_VERSION, 'harness_sha256': HARNESS_SHA256}
         results.append(r)
         write_json(path, r)
         print(f"{unit}/{name}: {r['verdict']} {r['seeds']} seeds eq={r.get('equal_seeds')} cov={r['coverage']}% "
@@ -1686,18 +1988,19 @@ def main(argv=None):
 
 
 def collect():
-    """Aggregate RESULTS.json from all v2 per-function results (compact: no traces)."""
+    """Aggregate RESULTS.json from all current-version per-function results (compact: no traces)."""
     out = []
     for path in sorted((OUT / 'results').glob('*.json')):
         r = json.loads(path.read_text())
-        if r.get('harness_version') != 2:
+        if r.get('harness_version') != HARNESS_VERSION:
             continue
         c = r.get('counterexample') or {}
         o = r.get('out_of_domain_difference') or {}
         out.append({k: r.get(k) for k in ('unit', 'function', 'verdict', 'in_domain_verdict', 'seeds', 'equal_seeds',
                                           'unjudged_seeds', 'coverage', 'blocks_covered', 'blocks_total', 'reason',
                                           'unjudged', 'blocking_limits', 'unknown_callees', 'notes', 'domain',
-                                          'elapsed_seconds', 'recorded_matching_status', 'harness_sha256')}
+                                          'elapsed_seconds', 'recorded_matching_status', 'harness_sha256',
+                                          'environment', 'hardware_models')}
                    | {'first_difference': c.get('first_difference'), 'counterexample_seed': c.get('seed'),
                       'out_of_domain_first_difference': o.get('first_difference'),
                       'out_of_domain_violations': o.get('violations')})

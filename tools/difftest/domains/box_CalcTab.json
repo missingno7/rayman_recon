@@ -1,0 +1,10 @@
+{
+  "unit": "box",
+  "function": "CalcTab",
+  "evidence": "CalcTab has no inputs: it fills byte_DA43C[128*128] from the loop indices with the Watcom -fpc runtime (sqrt, sin; executed natively from the oracle image on both sides). Only the per-function time budget is raised; the inputs stay the generic generated memory.",
+  "environment": {
+    "budget": {"seconds": 200, "seeds": 24, "steps": 20000000,
+               "evidence": "16384 table entries, each with soft-float sqrt and sin, take ~3.5 s per side and seed with the unhooked runtime helpers"}
+  },
+  "constraints": []
+}

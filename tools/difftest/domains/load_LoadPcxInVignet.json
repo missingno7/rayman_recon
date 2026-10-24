@@ -1,0 +1,52 @@
+{
+  "unit": "load",
+  "function": "LoadPcxInVignet",
+  "evidence": "LoadPcxInVignet(buffer, resource_id, &width, &height) decodes entry HeaderFilevignet[resource_id] of VIGNET.DAT (fixed name, src/load.c:836..856). HeaderFilevignet[75] is initialised data (src/data/blk_215c.c:21) whose offsets/sizes tile the shipped 3009138-byte VIGNET.DAT exactly; every entry is a real input.",
+  "environment": {
+    "file_layer": {
+      "evidence": "fopen/fread/fseek/ftell/fclose of the Watcom C library on the installed game data (models.FileLayer)."
+    },
+    "allocators": {
+      "callees": {
+        "block_malloc": 1,
+        "temp_malloc": 0
+      },
+      "evidence": "block_malloc(mem, size) / temp_malloc(size) return a new block of at least size bytes (game memory manager); modelled as fresh disjoint regions."
+    },
+    "noreturn": {
+      "callees": [
+        "FatalError"
+      ],
+      "evidence": "FatalError ends with exit(-1) (src/basic.c:1651, STRICT)."
+    },
+    "budget": {
+      "seconds": 600,
+      "steps": 120000000,
+      "events": 60000,
+      "seeds": 48,
+      "evidence": "one VIGNET.DAT entry (9..134 KB, byte-wise XOR loop, PCX decode) per seed."
+    }
+  },
+  "constraints": [
+    {
+      "loc": {
+        "global": "path_has_changed",
+        "size": 2
+      },
+      "values": [
+        0
+      ],
+      "evidence": "only writer FIRST_INIT stores 0 (src/cheat.c:365); BSS zero otherwise"
+    },
+    {
+      "loc": {
+        "arg": 1
+      },
+      "range": [
+        0,
+        74
+      ],
+      "evidence": "the 75 HeaderFilevignet entries"
+    }
+  ]
+}

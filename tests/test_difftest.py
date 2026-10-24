@@ -236,4 +236,161 @@ class PipelineTests(unittest.TestCase):
                 self.assertEqual(st.regs[f.proto.parm[1]] & 0xffff, 0)
 
 
+class ModelTests(unittest.TestCase):
+    """models.py: file layer on the real game data, allocator, environment parsing (no emulation)."""
+
+    def test_resolve_is_case_insensitive_and_stays_inside_the_game_directory(self):
+        import models
+        p = models.resolve('pcmap\\jungle\\ray1.lev')
+        self.assertIsNotNone(p)
+        self.assertEqual(p.name.upper(), 'RAY1.LEV')
+        self.assertTrue(p.is_relative_to(models.GAME_ROOT))
+        self.assertIsNone(models.resolve('..\\VIGNET.DAT'))      # path_has_changed variant: parent directory
+        self.assertIsNone(models.resolve('C:\\RAYMAN\\VIGNET.DAT'))
+        self.assertIsNone(models.resolve('PCMAP\\NOSUCH.DAT'))
+        self.assertIsNone(models.resolve('PCMAP'))                # a directory is not a file
+
+    def test_file_layer_follows_the_c_library(self):
+        import models
+        fl = models.FileLayer()
+        h = fl.fopen('RAY.LNG', 'rb')
+        data = models.file_bytes(models.resolve('RAY.LNG'))
+        self.assertNotEqual(h, 0)
+        self.assertEqual(fl.fread(4, 2, h), (data[:8], 2))
+        self.assertEqual(fl.ftell(h), 8)
+        self.assertEqual(fl.fseek(h, len(data) - 3, 0), 0)
+        self.assertEqual(fl.fread(2, 2, h), (data[-3:], 1))      # partial item: 3 bytes read, 1 complete item
+        self.assertEqual(fl.ftell(h), len(data))
+        self.assertEqual(fl.fread(1, 10, h), (b'', 0))           # at EOF
+        self.assertEqual(fl.fseek(h, -1 & 0xffffffff, 1), 0)     # SEEK_CUR with a negative long
+        self.assertEqual(fl.ftell(h), len(data) - 1)
+        self.assertEqual(fl.fseek(h, -len(data) - 5 & 0xffffffff, 2), -1)
+        self.assertEqual(fl.fseek(h, 100, 2), 0)                 # beyond EOF is allowed; reads return nothing
+        self.assertEqual(fl.fread(1, 1, h), (b'', 0))
+        self.assertEqual(fl.fclose(h), 0)
+        self.assertEqual(fl.fclose(h), -1)
+        self.assertEqual(fl.fopen('NOSUCH.DAT', 'rb'), 0)
+        with self.assertRaises(models.ModelError):
+            fl.fopen('RAY.LNG', 'wb')
+
+    def test_allocator_and_environment(self):
+        import models
+        a = models.Allocator()
+        x, y, z = a.alloc(10), a.alloc(0), a.alloc(100)
+        self.assertTrue(x < y < z and y - x >= 10 and z - y >= 1 and x % 16 == y % 16 == z % 16 == 0)
+        with self.assertRaises(ValueError):
+            models.Environment({'file_layer': {}})                # every model needs evidence
+        with self.assertRaises(ValueError):
+            models.Environment({'nonsense': {'evidence': 'x'}})
+        e = models.Environment({'boundary': {'callee': 'synchro', 'occurrence': 3, 'evidence': 'x'}})
+        self.assertEqual(e.boundary, ('callee', 'synchro', 3))
+        self.assertFalse(models.Environment())
+
+
+class EnvironmentPipelineTests(unittest.TestCase):
+    """Environment models and hardware models inside the emulation (single seeds, both sides)."""
+
+    @classmethod
+    def setUpClass(cls): cls.p = Program()
+
+    def pair(self, unit, name, seed=1):
+        f = Function(self.p, unit, name)
+        d = domains.load(unit, name, f)
+        f.attach_environment(Environment(d.spec.get('environment') if d else None))
+        st = Inputs(f, seed, domain=d)
+        return f, st, Execution(f, st, False, TIERS[-1]), Execution(f, st, True, TIERS[-1])
+
+    def test_loader_reads_the_real_file_identically(self):
+        f, st, a, b = self.pair('load', 'load_big_ray', 3)
+        self.assertEqual((a.status, b.status), ('RETURN', 'RETURN'))
+        self.assertIsNone(compare(a, b))
+        self.assertTrue(a.files.log[0][1].upper().endswith('BRAY.DAT'))
+        reads = [x for x in a.log if x.get('name') == 'fread']
+        self.assertEqual(reads[0]['args'][1:3], [4, 1])
+        # the first dword of BRAY.DAT (atlas size) arrived in wldobj[nb_des].x and sized the first allocation
+        import models
+        size = int.from_bytes(models.file_bytes(models.resolve('PCMAP\\BRAY.DAT'))[:4], 'little')
+        allocs = [x for x in a.log if x.get('name') == 'block_malloc']
+        self.assertEqual(allocs[0]['args'][1], size)
+
+    def test_noreturn_ends_both_sides_after_the_compared_call(self):
+        f = Function(self.p, 'load', 'LoadPcxOptions')
+        d = domains.load('load', 'LoadPcxOptions', f)
+        f.attach_environment(Environment(d.spec['environment']))
+        st = Inputs(f, 5, domain=d)
+        st.put(flat(self.p.binds.game['path_has_changed']), 1, 2)    # "..\\VIGNET.DAT" is not in the installation
+        st.put(IDA_BASE[2] + 0x30e40, int.from_bytes(b'..\\\0', 'little'), 4)   # the "..\\" literal (inline strcpy source)
+        st.page_cache = {}; st._po_key = None
+        a = Execution(f, st); b = Execution(f, st, True, TIERS[0])
+        self.assertEqual((a.status, b.status), ('EXIT', 'EXIT'))
+        self.assertEqual(a.log[-1]['name'], 'FatalError')
+        self.assertIsNone(compare(a, b))
+
+    def test_boundary_stops_both_sides_at_the_same_call(self):
+        f, st, a, b = self.pair('blood', 'DoEffectBloodOut', 2)
+        self.assertEqual((a.status, b.status), ('BOUNDARY', 'BOUNDARY'))
+        self.assertEqual(a.log[-1]['name'], 'synchro')
+        self.assertEqual(sum(x.get('name') == 'synchro' for x in a.log), 3)
+        self.assertIsNone(compare(a, b))
+
+    def test_strict_leaf_callee_is_executed_natively(self):
+        f, st, a, b = self.pair('effect2', 'sub_38ED4', 2)
+        self.assertIn(flat(self.p.binds.lookup('sinus_cosinus')[0]), f.native_callees)
+        self.assertEqual(a.status, 'RETURN')
+        self.assertTrue(any(x.get('name') == 'sinus_cosinus' for x in a.log))
+        self.assertIsNone(compare(a, b))
+        with self.assertRaises(Limit):     # a non-leaf callee is refused
+            f.attach_environment(Environment({'execute': {'callees': ['MOVE_OBJECT'], 'evidence': 'x'}}))
+
+    def test_bios_tick_busy_waits_terminate(self):
+        f = Function(self.p, 'pcmain', 'PcMain')
+        self.assertTrue(f.bios_tick)
+        f, st, a, b = self.pair('pcmain', 'PcMain', 1)
+        self.assertIn(a.status, ('RETURN', 'BOUNDARY'))
+        self.assertTrue(any(x.get('operation') == 'write_dr7' for x in a.log))
+
+    def test_far_pointer_arguments_and_flat_selectors(self):
+        t = table().prototype('sub_194a8')[0]
+        self.assertTrue(t.args[0].far)
+        f, st, a, b = self.pair('cdaudio', 'sub_195ec', 4)
+        self.assertTrue(f.segment_loads)
+        self.assertEqual((a.status, b.status), ('RETURN', 'RETURN'))
+        call = next(x for x in a.log if x.get('name') == 'sub_194a8')
+        self.assertEqual(len(call['args']), 5)                    # offset, selector, argument, command, size
+        self.assertEqual(call['stack_arg_count'], 1)              # size is the one stack word (callee pops it)
+
+    def test_interrupt_entry_and_overlay_prototypes(self):
+        f, st, a, b = self.pair('input', 'PC_keyboard_interrupt_handler', 2)
+        self.assertTrue(f.interrupt)
+        self.assertEqual((a.status, b.status), ('RETURN', 'RETURN'))
+        self.assertEqual(a.log[0]['name'], '__GETDS')
+        self.assertTrue(a.log[0]['known'])
+        f, st, a, b = self.pair('cheat', 'FIRST_INIT', 2)
+        speaker = next(x for x in a.log if x.get('name') == 'set_speaker_on')
+        self.assertTrue(speaker['known'])
+        self.assertIsNone(compare(a, b))
+
+    def test_domain_strings_slices_arrays_and_derived_arguments(self):
+        f = Function(self.p, 'movie', 'sub_3ABE4')
+        d = domains.load('movie', 'sub_3ABE4', f)
+        for seed in range(4):
+            st = Inputs(f, seed, domain=d)
+            frame = d.arg_value(st, 1)
+            self.assertEqual(d.arg_value(st, 2), frame + 16)
+            self.assertEqual(st.read_initial(frame + 4, 2), 0xf1fa)     # a real FLC frame header
+            self.assertTrue(d.contains(st), d.violations(st))
+        f = Function(self.p, 'load', 'load_level')
+        d = domains.load('load', 'load_level', f)
+        st = Inputs(f, 7, domain=d)
+        name = bytes(st.initial_byte(d.arg_value(st, 2) + k) for k in range(12)).split(b'\0')[0]
+        self.assertRegex(name.decode(), r'^RAY\d+\.LEV$')
+        f = Function(self.p, 'effect6ec80', 'effect_helper_6ef5c')
+        d = domains.load('effect6ec80', 'effect_helper_6ef5c', f)
+        st = Inputs(f, 3, domain=d)
+        state = st.read_initial(flat(self.p.binds.game['effect_state_6e']), 4)
+        verts = st.read_initial(state + 0x1c, 4)
+        self.assertEqual([st.read_initial(verts + 0x34 * k, 2) for k in (0, 1, 20, 21, 22)], [0, 16, 320, 0, 16])
+        self.assertEqual([st.read_initial(verts + 0x34 * k + 2, 1) for k in (0, 21, 230)], [0, 20, 200])
+
+
 if __name__ == '__main__': unittest.main()

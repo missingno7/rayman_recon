@@ -1,0 +1,19 @@
+{
+  "_comment": "Evidence-backed callee contracts for callables with no usable C declaration in src/ or the pinned Watcom headers. Used only when cdecls finds no declaration; every entry cites the DOS code it is read from. ret/args use C type text; parm/value/modify are Watcom register lists (empty = none).",
+  "set_speaker_on": {
+    "ret": "void",
+    "args": [],
+    "parm": [],
+    "value": [],
+    "modify": [],
+    "evidence": "Hand-written assembly at DOS 1:06eaa (src/lowlevel_04430.asm:5253, unit lowlevel_04430 STRICT): reads no register (writes four timer globals with constants), saves and restores EAX around the port I/O (push eax ... pop eax), touches no other general register; plain RET. Only C caller FIRST_INIT (src/cheat.c:363) calls it without a declaration."
+  },
+  "__GETDS": {
+    "ret": "void",
+    "args": [],
+    "parm": [],
+    "value": [],
+    "modify": [],
+    "evidence": "Watcom runtime member at DOS 1:70408: 'mov ds, word ptr cs:[0x70411]; ret' - loads DS with the program's flat data selector saved by the startup code and changes no general register. In the harness's flat model DS already addresses the program data, so the call has no further effect."
+  }
+}

@@ -1,5 +1,5 @@
-"""Builds REPORT.md (the task deliverable) from RESULTS_v1.json, results/*.json, CONTROLS.json and
-PROTOTYPES_UNKNOWN.json; the method text is in report_text.py."""
+"""Builds REPORT.md (the task deliverable) from RESULTS_v1.json, RESULTS_v2.json (previous sweeps), results/*.json
+(current harness version), CONTROLS.json and PROTOTYPES_UNKNOWN.json; the method text is in report_text.py."""
 import collections
 import json
 from pathlib import Path
@@ -11,13 +11,27 @@ OUT = HERE.parents[1] / 'build' / 'difftest'
 ORDER = ['EQUIVALENT_TESTED', 'DIVERGENT', 'OUT_OF_DOMAIN_DIFFERENCE', 'HARNESS_LIMIT']
 
 
-def load_v2():
+CURRENT = 3
+
+
+def load_current():
     out = {}
     for p in sorted((OUT / 'results').glob('*.json')):
         r = json.loads(p.read_text())
-        if r.get('harness_version') == 2:
+        if r.get('harness_version') == CURRENT:
             out[(r['unit'], r['function'])] = r
     return out
+
+
+def means(r):
+    """How a function's inputs/environment were modelled (domain constraints, environment models, hardware models)."""
+    out = []
+    if r.get('domain') and r['domain'].get('constraints'):
+        out.append(f"domain ({r['domain']['constraints']} constraints)")
+    out += ['env:' + k for k in (r.get('environment') or {})]
+    out += ['hw:' + m.split(' (')[0] for m in (r.get('hardware_models') or [])]
+    return ', '.join(out) or '-'
+
 
 
 def fmt_value(v):
@@ -66,27 +80,38 @@ def pc(v):
 
 def main():
     v1 = {(r['unit'], r['function']): r for r in json.loads((OUT / 'RESULTS_v1.json').read_text())}
-    v2 = load_v2()
+    prev = {(r['unit'], r['function']): r for r in json.loads((OUT / 'RESULTS_v2.json').read_text())}
+    v2 = load_current()
     lines = []
     c1 = collections.Counter(r['verdict'] for r in v1.values())
+    cp = collections.Counter(r['verdict'] for r in prev.values())
     c2 = collections.Counter(r['verdict'] for r in v2.values())
-    lines.append('## Verdict counts, v1 -> v2\n')
-    lines.append('| verdict | v1 (first sweep) | v2 (this sweep) |')
-    lines.append('|---|---:|---:|')
+    lines.append('## Verdict counts, v1 -> v2 -> v3\n')
+    lines.append('| verdict | v1 (first sweep) | v2 (previous sweep) | v3 (this sweep) |')
+    lines.append('|---|---:|---:|---:|')
     for k in ORDER:
-        lines.append(f'| {k} | {c1.get(k, 0)} | {c2.get(k, 0)} |')
-    lines.append(f'| total | {sum(c1.values())} | {sum(c2.values())} |\n')
-    trans = collections.Counter((v1.get(k, {}).get('verdict', '(absent)'), r['verdict']) for k, r in v2.items())
-    lines.append('Transitions (v1 verdict -> v2 verdict):\n')
-    lines.append('| v1 \\ v2 | ' + ' | '.join(ORDER) + ' |')
+        lines.append(f'| {k} | {c1.get(k, 0)} | {cp.get(k, 0)} | {c2.get(k, 0)} |')
+    lines.append(f'| total | {sum(c1.values())} | {sum(cp.values())} | {sum(c2.values())} |\n')
+    trans = collections.Counter((prev.get(k, {}).get('verdict', '(absent)'), r['verdict']) for k, r in v2.items())
+    lines.append('Transitions (v2 verdict -> v3 verdict):\n')
+    lines.append('| v2 \\ v3 | ' + ' | '.join(ORDER) + ' |')
     lines.append('|---|' + '---:|' * len(ORDER))
     for a in ORDER + ['(absent)']:
         if any(trans[(a, b)] for b in ORDER):
             lines.append(f'| {a} | ' + ' | '.join(str(trans[(a, b)]) for b in ORDER) + ' |')
-    missing = sorted(set(v1) - set(v2))
+    missing = sorted(set(prev) - set(v2))
     if missing:
-        lines.append(f'\nNot in v2 (v1 only): {missing}')
+        lines.append(f'\nNot in v3 (v2 only): {missing}')
     lines.append('')
+    lifted = [(k, r) for k, r in sorted(v2.items()) if prev.get(k, {}).get('verdict') == 'HARNESS_LIMIT']
+    if lifted:
+        lines.append('## The v2 HARNESS_LIMIT functions in v3\n')
+        lines.append('| unit/function | v2 reason | v3 verdict | equal/run seeds | coverage | modelled by |')
+        lines.append('|---|---|---|---|---:|---|')
+        for (u, f), r in lifted:
+            lines.append(f"| {u}/{f} | {esc((prev[(u, f)].get('reason') or '')[:110])} | {r['verdict']} | "
+                         f"{r.get('equal_seeds', 0)}/{r.get('seeds', 0)} | {r.get('coverage', 0)}% | {esc(means(r))} |")
+        lines.append('')
 
     eq = [r for r in v2.values() if r['verdict'] in ('EQUIVALENT_TESTED', 'OUT_OF_DOMAIN_DIFFERENCE')
           and r.get('in_domain_verdict', r['verdict']) == 'EQUIVALENT_TESTED']
@@ -96,7 +121,7 @@ def main():
     lines.append('Coverage = DOS basic blocks visited by judged (equal) seeds / all statically reachable DOS blocks. '
                  'Seeds that hit a per-seed limit (budget, CPU exception on both sides, NULL/unknown callee, one-sided '
                  'code aliasing) are not counted as evidence and do not contribute coverage.\n')
-    lines.append('| coverage | functions (EQUIVALENT_TESTED in domain) | v1 EQUIVALENT_TESTED |')
+    lines.append('| coverage | functions (EQUIVALENT_TESTED in domain, v3) | v1 EQUIVALENT_TESTED |')
     lines.append('|---|---:|---:|')
     v1eq = [r for r in v1.values() if r['verdict'] == 'EQUIVALENT_TESTED']
     for name, pred in bins:
@@ -117,7 +142,7 @@ def main():
         lines.append('')
 
     lines.append('## DIVERGENT (first differing observable only; not triaged)\n')
-    lines.append('| unit/function | v1 | seed | first observable | stub return mode |')
+    lines.append('| unit/function | v2 | seed | first observable | stub return mode |')
     lines.append('|---|---|---:|---|---|')
     for (u, f), r in sorted(v2.items()):
         if r['verdict'] != 'DIVERGENT':
@@ -126,7 +151,7 @@ def main():
         mode = 'even seed: extended' if c.get('seed', 0) % 2 == 0 else 'odd seed: upper bits callee-defined'
         ctx = (' [' + r['divergence_context'] + ']') if r.get('divergence_context') else ''
         dom = ' (inside documented domain)' if r.get('domain') else ''
-        lines.append(f"| {u}/{f}{dom} | {v1.get((u, f), {}).get('verdict', '-')} | {c.get('seed')} | {esc(first_obs(c.get('first_difference')))}{ctx} | {mode} |")
+        lines.append(f"| {u}/{f}{dom} | {prev.get((u, f), {}).get('verdict', '-')} | {c.get('seed')} | {esc(first_obs(c.get('first_difference')))}{ctx} | {mode} |")
     lines.append('')
 
     lines.append('## OUT_OF_DOMAIN_DIFFERENCE (difference only outside the documented domain)\n')
@@ -152,10 +177,10 @@ def main():
     for k, n in cats.most_common():
         lines.append(f'| {k} | {n} |')
     lines.append('')
-    lines.append('| unit/function | v1 | seeds (equal/run) | coverage of judged seeds | precise reason |')
+    lines.append('| unit/function | v2 | seeds (equal/run) | coverage of judged seeds | precise reason |')
     lines.append('|---|---|---|---:|---|')
     for (u, f), r in sorted(hl.items()):
-        lines.append(f"| {u}/{f} | {v1.get((u, f), {}).get('verdict', '-')} | {r.get('equal_seeds', 0)}/{r.get('seeds', 0)} | "
+        lines.append(f"| {u}/{f} | {prev.get((u, f), {}).get('verdict', '-')} | {r.get('equal_seeds', 0)}/{r.get('seeds', 0)} | "
                      f"{r.get('coverage', 0)}% | {esc((r.get('reason') or '')[:400])} |")
     lines.append('')
     proto = OUT / 'PROTOTYPES_UNKNOWN.json'
@@ -177,7 +202,7 @@ def main():
         lines.append(f"passed: **{c.get('passed')}**; checks: {c.get('checks')}\n")
         lines.append('| kind | function | mutation | verdict | first observable |')
         lines.append('|---|---|---|---|---|')
-        for kind in ('positive', 'negative', 'neutral', 'known_cases'):
+        for kind in ('positive', 'negative', 'neutral', 'known_cases', 'file_layer'):
             for r in c.get(kind, []):
                 m = (r.get('mutation') or {}).get('kind', '-')
                 d = (r.get('counterexample') or {}).get('first_difference')

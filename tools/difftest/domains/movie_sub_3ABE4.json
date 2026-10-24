@@ -1,0 +1,727 @@
+{
+  "unit": "movie",
+  "function": "sub_3ABE4",
+  "evidence": "sub_3ABE4(work, frame, chunks, surface, timer) plays one movie frame: dispatches its chunks to the decoders, keeps the CD audio in step and copies the surface to the display. Called only by STRICT sub_3AF20 with frame = the 16-byte frame header just read and chunks = the frame body (src/movie.c:852..866). Movie data is the real FLC content of the shipped movies assets/DOS/INTRO.DAT (1804 frames) and CONCLU.DAT (242 frames), played by playVideo(..., \"intro.dat\", ...) (src/pcmain.c PcMain); frames parsed with the player record format (frame header 16 bytes, magic 0xF1FA; chunk = u32 size, u16 type), both files consumed exactly. The movies are not in the GOG install directory; INTRO.DAT is listed on the game CD image (assets/DOS_CD/RAYMAN.bin); the assets/DOS install copy of the same game is read here, read-only.",
+  "constraints": [
+    {
+      "any_of": [
+        [
+          {
+            "loc": {
+              "arg": 1
+            },
+            "file_slice": {
+              "file": "assets/DOS/INTRO.DAT",
+              "slices": [
+                [
+                  12,
+                  1758
+                ],
+                [
+                  240724,
+                  13526
+                ],
+                [
+                  637578,
+                  8786
+                ],
+                [
+                  981484,
+                  16028
+                ],
+                [
+                  1410486,
+                  15114
+                ],
+                [
+                  1842868,
+                  13734
+                ],
+                [
+                  2274296,
+                  15818
+                ],
+                [
+                  2699830,
+                  14754
+                ],
+                [
+                  3301370,
+                  34460
+                ],
+                [
+                  4283086,
+                  36792
+                ],
+                [
+                  5328666,
+                  36798
+                ],
+                [
+                  6336230,
+                  36798
+                ],
+                [
+                  7361920,
+                  34738
+                ],
+                [
+                  8377772,
+                  36794
+                ],
+                [
+                  9407988,
+                  36788
+                ],
+                [
+                  10474920,
+                  36790
+                ],
+                [
+                  11500534,
+                  36796
+                ],
+                [
+                  12490486,
+                  16444
+                ],
+                [
+                  12936406,
+                  13602
+                ],
+                [
+                  13292674,
+                  6572
+                ],
+                [
+                  13925452,
+                  36794
+                ],
+                [
+                  14955568,
+                  36798
+                ],
+                [
+                  15918516,
+                  36796
+                ],
+                [
+                  16840168,
+                  31312
+                ],
+                [
+                  17715490,
+                  36798
+                ],
+                [
+                  18725564,
+                  33536
+                ],
+                [
+                  19696452,
+                  34046
+                ],
+                [
+                  20714272,
+                  36790
+                ],
+                [
+                  21739906,
+                  34512
+                ],
+                [
+                  22760430,
+                  36790
+                ],
+                [
+                  23755410,
+                  34446
+                ],
+                [
+                  24705954,
+                  33408
+                ],
+                [
+                  25641132,
+                  33672
+                ],
+                [
+                  26362504,
+                  9648
+                ],
+                [
+                  26620286,
+                  8316
+                ],
+                [
+                  26827588,
+                  5920
+                ],
+                [
+                  26870910,
+                  33360
+                ],
+                [
+                  27749332,
+                  31302
+                ],
+                [
+                  28636512,
+                  31750
+                ],
+                [
+                  29527160,
+                  30842
+                ],
+                [
+                  30446708,
+                  32484
+                ],
+                [
+                  31334898,
+                  33002
+                ],
+                [
+                  32154412,
+                  962
+                ],
+                [
+                  32698042,
+                  31078
+                ],
+                [
+                  33584444,
+                  32662
+                ],
+                [
+                  34448972,
+                  29054
+                ],
+                [
+                  35262852,
+                  27194
+                ],
+                [
+                  36030982,
+                  27522
+                ],
+                [
+                  36839862,
+                  27750
+                ],
+                [
+                  37670586,
+                  34524
+                ],
+                [
+                  38657050,
+                  33692
+                ],
+                [
+                  39590234,
+                  32272
+                ],
+                [
+                  40521444,
+                  34550
+                ],
+                [
+                  41054216,
+                  10822
+                ],
+                [
+                  41369076,
+                  10814
+                ],
+                [
+                  41697202,
+                  9666
+                ],
+                [
+                  41981364,
+                  10078
+                ],
+                [
+                  42198056,
+                  27274
+                ],
+                [
+                  43060602,
+                  28818
+                ],
+                [
+                  43870018,
+                  28396
+                ],
+                [
+                  44668468,
+                  27384
+                ],
+                [
+                  45495534,
+                  31342
+                ],
+                [
+                  46343468,
+                  31926
+                ],
+                [
+                  47229170,
+                  31976
+                ]
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "loc": {
+              "arg": 1
+            },
+            "file_slice": {
+              "file": "assets/DOS/CONCLU.DAT",
+              "slices": [
+                [
+                  12,
+                  36652
+                ],
+                [
+                  110192,
+                  36758
+                ],
+                [
+                  257248,
+                  36770
+                ],
+                [
+                  404294,
+                  36756
+                ],
+                [
+                  551402,
+                  36798
+                ],
+                [
+                  661796,
+                  36798
+                ],
+                [
+                  808988,
+                  36798
+                ],
+                [
+                  956180,
+                  36798
+                ],
+                [
+                  1103372,
+                  36798
+                ],
+                [
+                  1250552,
+                  36786
+                ],
+                [
+                  1360890,
+                  36780
+                ],
+                [
+                  1505610,
+                  33680
+                ],
+                [
+                  1649684,
+                  36798
+                ],
+                [
+                  1792544,
+                  34324
+                ],
+                [
+                  1927306,
+                  32810
+                ],
+                [
+                  2025450,
+                  33018
+                ],
+                [
+                  2157938,
+                  33528
+                ],
+                [
+                  2291176,
+                  32642
+                ],
+                [
+                  2421892,
+                  32618
+                ],
+                [
+                  2552452,
+                  33478
+                ],
+                [
+                  2652886,
+                  32846
+                ],
+                [
+                  2786122,
+                  33588
+                ],
+                [
+                  2926810,
+                  36770
+                ],
+                [
+                  3073974,
+                  36798
+                ],
+                [
+                  3221166,
+                  36798
+                ],
+                [
+                  3331560,
+                  36798
+                ],
+                [
+                  3478720,
+                  36786
+                ],
+                [
+                  3625824,
+                  36798
+                ],
+                [
+                  3773016,
+                  36798
+                ],
+                [
+                  3920208,
+                  36798
+                ],
+                [
+                  4030602,
+                  36798
+                ],
+                [
+                  4177774,
+                  36788
+                ],
+                [
+                  4324912,
+                  36788
+                ],
+                [
+                  4472068,
+                  36784
+                ],
+                [
+                  4619216,
+                  36770
+                ],
+                [
+                  4729550,
+                  36792
+                ],
+                [
+                  4876704,
+                  36792
+                ],
+                [
+                  5023890,
+                  36798
+                ],
+                [
+                  5171082,
+                  36798
+                ],
+                [
+                  5318274,
+                  36796
+                ],
+                [
+                  5428666,
+                  36798
+                ],
+                [
+                  5575858,
+                  36798
+                ],
+                [
+                  5723018,
+                  36788
+                ],
+                [
+                  5870126,
+                  36798
+                ],
+                [
+                  6017318,
+                  36798
+                ],
+                [
+                  6127712,
+                  36798
+                ],
+                [
+                  6274904,
+                  36798
+                ],
+                [
+                  6422046,
+                  36784
+                ],
+                [
+                  6569178,
+                  36784
+                ],
+                [
+                  6716312,
+                  36788
+                ],
+                [
+                  6826656,
+                  36780
+                ],
+                [
+                  6973760,
+                  36780
+                ],
+                [
+                  7120888,
+                  36798
+                ],
+                [
+                  7268080,
+                  36798
+                ],
+                [
+                  7415272,
+                  36798
+                ],
+                [
+                  7525666,
+                  36798
+                ],
+                [
+                  7672858,
+                  36798
+                ],
+                [
+                  7820050,
+                  36798
+                ],
+                [
+                  7967236,
+                  36784
+                ],
+                [
+                  8114400,
+                  36798
+                ],
+                [
+                  8224794,
+                  36798
+                ],
+                [
+                  8371986,
+                  36798
+                ],
+                [
+                  8519178,
+                  36796
+                ],
+                [
+                  8661060,
+                  31818
+                ]
+              ]
+            }
+          }
+        ]
+      ],
+      "evidence": "real frames (header + body) of the shipped movies"
+    },
+    {
+      "loc": {
+        "arg": 2
+      },
+      "from_arg": 1,
+      "add": 16,
+      "evidence": "chunks = frame body after the 16-byte header (sub_3AF20)"
+    },
+    {
+      "loc": {
+        "arg": 0
+      },
+      "fresh": {
+        "size": 153,
+        "fields": {
+          "0x8": {
+            "values": [
+              240
+            ],
+            "size": 2
+          },
+          "0xa": {
+            "values": [
+              150
+            ],
+            "size": 2
+          },
+          "0x8c": {
+            "values": [
+              40
+            ]
+          },
+          "0x90": {
+            "values": [
+              25
+            ]
+          },
+          "0x94": {
+            "values": [
+              8040
+            ]
+          },
+          "0x84": {
+            "range": [
+              1,
+              1804
+            ]
+          },
+          "0x98": {
+            "values": [
+              0,
+              1,
+              2
+            ],
+            "size": 1
+          }
+        }
+      },
+      "evidence": "movie_work_t of the shipped movies (INTRO.DAT / CONCLU.DAT: FLC magic 0xAF12, 240x150, header file_size 12 -> data_offset 12, accepted by STRICT sub_3AA70 width<=320/height<=200, src/movie.c:685), placed by sub_3AFB4: x_offset (320-240)/2 = 40, y_offset (200-150)/2 = 25, surface_offset 40 + 25*320 = 8040 (src/movie.c:876..881)"
+    },
+    {
+      "loc": {
+        "arg": 3
+      },
+      "fresh": {
+        "size": 32,
+        "fields": {
+          "0x0": {
+            "fresh": {
+              "size": 64064
+            }
+          },
+          "0x4": {
+            "values": [
+              320
+            ]
+          },
+          "0x8": {
+            "values": [
+              200
+            ]
+          }
+        }
+      },
+      "evidence": "the movie surface prepared by STRICT sub_3A238: pixels = movie_draw_buffer (DrawBufferNormal, 64064 bytes), width 320, height 200 (src/movie.c:183..186)"
+    },
+    {
+      "loc": {
+        "global": "DisplayBufferNormal"
+      },
+      "fresh": {
+        "size": 64064
+      },
+      "evidence": "display buffer of 320x200 (+64) bytes"
+    },
+    {
+      "loc": {
+        "global": "movie_audio_counter",
+        "size": 1
+      },
+      "range": [
+        -1,
+        4
+      ],
+      "evidence": "set 0 by sub_3B014/sub_3B138, incremented here and reset to -1 at 5 (src/movie.c:795..796, 898)"
+    },
+    {
+      "loc": {
+        "global": "movie_audio_state",
+        "size": 1
+      },
+      "range": [
+        0,
+        2
+      ],
+      "evidence": "audio state 0/1, tested against 2"
+    },
+    {
+      "loc": {
+        "global": "movie_audio_enabled",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (src/movie.c:691, 842)"
+    },
+    {
+      "loc": {
+        "global": "movie_audio_track",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "0 or (WindowsLance == 0) (src/movie.c:401..405)"
+    },
+    {
+      "loc": {
+        "global": "movie_playback_state",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean (src/movie.c:751, 829, 1039)"
+    },
+    {
+      "loc": {
+        "global": "playing_intro_video",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "stricmp result test (src/movie.c:1040)"
+    },
+    {
+      "loc": {
+        "global": "MusicCdActive",
+        "size": 1
+      },
+      "values": [
+        0,
+        1
+      ],
+      "evidence": "boolean option"
+    }
+  ],
+  "environment": {
+    "boundary": {
+      "callee": "sub_3A4B8",
+      "occurrence": 16,
+      "evidence": "frame-rate busy-wait on the stubbed timer sub_3A4B8 (src/movie.c:811..813): the 16th timer read is the same call on both sides when their call prefixes agree; seeds whose stubbed clock passes earlier run to completion"
+    }
+  }
+}
