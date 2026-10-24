@@ -509,7 +509,7 @@ void AFFICHE_ECRAN_SAVE(void)
 
 s16 select_level_prg(u32 a1)
 {
-    s32 num[6] = {0x1100, 0x1000, 11, 11, 11, 4};
+    s32 num[6] = {17, 16, 11, 11, 11, 4};
     char level_text[12];
 
     readinput();

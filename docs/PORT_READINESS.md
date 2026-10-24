@@ -12,15 +12,15 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 | NEAR game functions, census-flagged (DIFF/CALL_ORDER) | 43 | DOS-disassembly triage (sem_triage, sem_a3): 42 EQUIVALENT, MOVE_OBJECT UNRESOLVED (B20) | DONE except B20 |
 | NEAR game functions, SHAPE / REFS_LAYOUT | ~200 (~166 KB) | same calls/globals/fields/constants (census) - strong, not certified. Close by differential execution (item 1a) | OPEN |
 | 1a. differential execution | all NEAR game functions | run the DOS function and our compiled function on identical random machine states (Unicorn), compare every memory write, every outgoing call (target, arguments) and the return value; a counterexample is either a behaviour bug (fix) or an original quirk (document). Evidence level EQUIVALENT_TESTED, never STRICT | TO BUILD |
-| code-range gaps between bound functions | 146 gaps, 3,071 B (38 > 16 B, 2,248 B) | classify each: jump table / literal / alignment padding / unbound code; bind or explain every byte | OPEN |
+| code-range gaps between bound functions | 146 gaps, 3,071 B | gap_code 2026-10-24: 1,633 B reachable tails of NEAR functions longer than our candidates, 658 B padding, 492 B private _TEXT initialisers, 288 B switch tables; **0 unexplained**. Found one real data bug: select_level_prg `num[6]` was 0x1100,0x1000 instead of 17,16 (fixed); the verifier now checks CODE prefixes | DONE |
 | original hand-written assembly | 106 entries, all STRICT as asm | behaviour exact; the port needs C equivalents - each checked against the asm with item 1a | LATER (port) |
 
 ## 2. Known behaviour questions
 | item | state |
 |---|---|
-| B19 oldest_planted: fewer than 2 seed objects -> uninitialised ng_ids read | OPEN: check every level that enables the seed power (level data, as sem_a3 did for links) |
-| B20 MOVE_OBJECT: fist path writes a bit computed from uninitialised EDI/[ESP] | OPEN: prove the bit has no reader (code + data) or find it |
-| LoadTchatchPerdu -> PlayTchatch reference 5 bytes off although PlayTchatch is STRICT | OPEN |
+| B19 oldest_planted: fewer than 2 seed objects -> uninitialised ng_ids read | RESOLVED (gap_code): only Jungle 9 enables the seed power and it has exactly two type-39 objects - the case cannot occur with the shipped levels |
+| B20 MOVE_OBJECT: fist path writes a bit computed from uninitialised EDI/[ESP] | STRONG (gap_code): every reader of obj+0x82 masks the bit away; no gameplay or save-data consumer found - observably dead |
+| LoadTchatchPerdu -> PlayTchatch reference 5 bytes off although PlayTchatch is STRICT | EXPLAINED (gap_code): the table carried by LoadTchatchPerdu is PlayTchatch's switch; its sound-5 entry targets a different basic block in our build |
 | box CalcTab constant (B17) | value known exactly (1/9.5 as stored in DOS); behaviour known; only the C spelling is blocked |
 | protection sequences (B16: INIT_OPTIONS_CHOICE, FIN_MAP_LOOP, LOAD_CONTINUE_SCREEN) | bytes exact; the port must document what each check does and what the game does on failure |
 

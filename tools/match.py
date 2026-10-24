@@ -271,12 +271,63 @@ def segment_report(img, mod, seg_base, binds):
     return out
 
 
+def code_prefix_problems(img, mod, si, base, binds, seg_base):
+    """Problems of a CODE segment's prefix: the bytes before its first public (Watcom puts private initialisers of
+    local arrays and switch data there). A reference into the prefix is verified only when every prefix byte equals
+    the oracle at the segment's base and every prefix relocation coincides with an oracle relocation to the same
+    target (gap_code 2026-10-24: select_level_prg was STRICT while its local initialiser differed)."""
+    seg = mod.segments[si]
+    first = min((o for _, s, o, _ in mod.publics if s == si), default=seg.size)
+    o, b = base
+    problems, masked, sites = [], set(), set()
+    if bytes(seg.covered[:first]) != b"\x01" * first:
+        problems.append("prefix has uncovered bytes")
+    for f in (f for f in mod.fixups if f.seg == si and f.off < first):
+        if f.self_rel or f.size() != 4:
+            problems.append(f"prefix +{f.off:x}: unsupported fixup {f.kind()}")
+            continue
+        sites.add(f.off)
+        masked.update(range(f.off, f.off + 4))
+        ofx = img.fixups.get((o, b + f.off))
+        if not ofx:
+            problems.append(f"prefix +{f.off:x}: candidate relocation, oracle has none")
+            continue
+        _, tobj, toff = ofx
+        addend = f.disp + struct.unpack_from("<i", seg.data, f.off)[0]
+        tm = f.target[0] & 3
+        taddr = binds.lookup(mod.target_name(f))[0] if tm == 2 else seg_base.get(f.target[1]) if tm == 0 else None
+        if taddr is None and tm == 0:
+            # own data segment not placed yet: the oracle relocation implies its base; accept only when that whole
+            # segment's contents equal the oracle there (same rule as references into own segments)
+            tseg = mod.segments[f.target[1]]
+            implied = (tobj, toff - addend)
+            if tseg.size and tseg.cls.upper() not in ("BSS", "CODE") and \
+                    bytes(tseg.covered) == b"\x01" * tseg.size and \
+                    img.obj[implied[0]][implied[1]:implied[1] + tseg.size] == bytes(tseg.data):
+                taddr = implied
+        if taddr is None or (taddr[0], taddr[1] + addend) != (tobj, toff):
+            problems.append(f"prefix +{f.off:x}: relocation target not verified (oracle {tobj}:{toff:x})")
+    extra = [s - b for (ob, s) in img.fixups if ob == o and b <= s < b + first and s - b not in sites]
+    if extra:
+        problems.append("prefix: oracle relocations without candidate relocation")
+    orig = img.obj[o][b:b + first]
+    diffs = [i for i in range(first) if i not in masked and (i >= len(orig) or orig[i] != seg.data[i])]
+    if diffs:
+        problems.append(f"prefix: first byte difference at +{diffs[0]:x} ({len(diffs)} bytes differ)")
+    return problems, first
+
+
 def verify_object(img, mod, only=None, seg_report=None):
     binds = Bindings(img)
     code_si = [i for i, s in enumerate(mod.segments) if s and s.cls.upper() == "CODE"]
     results = []
     seg_base = {}          # segment index -> oracle (obj, base) inferred or placed
     seg_votes = {}
+
+    def prefix_unverified(si_, base_, addend_):
+        """First problem of the CODE prefix that a reference at addend_ points into, else None."""
+        problems_, first_ = code_prefix_problems(img, mod, si_, base_, binds, seg_base)
+        return problems_[0] if addend_ < first_ and problems_ else None
 
     def segment_contents_ok(si_, base_):
         s_ = mod.segments[si_]
@@ -401,6 +452,12 @@ def verify_object(img, mod, only=None, seg_report=None):
                         # reference into it is not verified (placement alone is not content; worker sfin_action)
                         res["unverified"].append(f"+{rel:x} -> segment {mod.segments[f.target[1]].name}+{addend:x} "
                                                  f"(oracle {tobj}:{toff:x}; contents not verified)")
+                    elif tsrc == "segment" and mod.segments[f.target[1]].cls.upper() == "CODE" and \
+                            prefix_unverified(f.target[1], taddr, addend):
+                        # a reference into the CODE prefix (private initialisers) needs the prefix contents too
+                        res["unverified"].append(f"+{rel:x} -> {mod.segments[f.target[1]].name} prefix+{addend:x} "
+                                                 f"(oracle {tobj}:{toff:x}; "
+                                                 f"{prefix_unverified(f.target[1], taddr, addend)})")
                     else:
                         ref["verified_by"] = tsrc
                 res["references"].append(ref)

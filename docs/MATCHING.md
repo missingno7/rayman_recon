@@ -23,7 +23,10 @@ For each public function of the compiled object's `_TEXT`:
    candidate's target symbol; `off32` targets must equal bound address + displacement (Watcom keeps the addend in the
    field). Library symbols bind through `libsyms.json` (exact library-member matches, `tools/libscan.py --symbols`).
    A reference to the object's own CONST/_DATA counts only if the whole segment's bytes equal the oracle at the
-   implied location and all references agree.
+   implied location and all references agree. A reference into the object's own CODE prefix (the private
+   initialisers Watcom places before the first public: local arrays, pointer tables) counts only if every prefix
+   byte equals the oracle and every prefix relocation is verified (added 2026-10-24 after gap_code found
+   select_level_prg STRICT with a wrong `num[6]` initialiser; tests/test_code_prefix.py).
 
 ## Status vocabulary
 | status | meaning |
