@@ -598,53 +598,41 @@ scale = 0x200000 / (RayonJumelle * RayonJumelle);
 void RecaleRayPosInJumelle(void) {
     /* COMPILER_STEERED: exact s32 promotions of signed-word absolute-value inputs. */
     if (scroll_y == -1) {
-        s32 v13 = ((3 * HauteurJumelle) >> 2) - ray.offset_by;
+        s16 v13 = ((3 * HauteurJumelle) >> 2) - ray.offset_by;
         if (v_scroll_speed != 255 || decalage_en_cours != 0) {
-            s32 v14 = ray.screen_y - v13;
+            s16 v14 = ray.screen_y - v13;
             v_scroll_speed = ashr16(v14, 2);
             if (Abs((s32)ray.speed_y) <= Abs((s32)v_scroll_speed)) {
-                s32 v16 = max32(3, Abs((s32)ray.speed_y));
-                if (v_scroll_speed <= 0) {
-                    if (v_scroll_speed != 0) {
-                        v_scroll_speed = max32(v_scroll_speed, -v16);
-                    } else if (v14 <= 0) {
-                        if (v14 != 0) {
-                            v_scroll_speed = -1;
-                        }
-                    } else {
-                        v_scroll_speed = 1;
-                    }
-                } else {
+                s16 v16 = max32(3, Abs((s32)ray.speed_y));
+                if (v_scroll_speed > 0) {
                     v_scroll_speed = min32(v_scroll_speed, v16);
+                } else if (v_scroll_speed < 0) {
+                    v_scroll_speed = max32(v_scroll_speed, -v16);
+                } else if (v14 <= 0) {
+                    if (v14 < 0)
+                        v_scroll_speed = -1;
+                } else {
+                    v_scroll_speed = 1;
                 }
             }
         } else if (ray.main_etat != 1) {
-            v_scroll_speed = (ray.screen_y >= v13 + 48) ? 0 : -4;
+            if (ray.screen_y < v13 + 48)
+                v_scroll_speed = -4;
+            else
+                v_scroll_speed = 0;
         }
     }
 
     if (scroll_x == -1) {
-        s32 v2 = 3 * LargeurJumelle + 7;
-        s32 min_x;
-        s32 v4;
-        s32 max_x;
-        if (3 * LargeurJumelle >= 0) {
-            v2 = 3 * LargeurJumelle;
-        }
-        min_x = (v2 >> 3) - ray.offset_bx;
-
-        v4 = 5 * LargeurJumelle + 7;
-        if (5 * LargeurJumelle >= 0) {
-            v4 = 5 * LargeurJumelle;
-        }
-        max_x = (v4 >> 3) - ray.offset_bx;
+        s16 min_x = (3 * LargeurJumelle) / 8 - ray.offset_bx;
+        s16 max_x = (5 * LargeurJumelle) / 8 - ray.offset_bx;
 
         if (decalage_en_cours > 0 || ray.speed_x > 0) {
             s16 unk_x_3 = ashr16(ray.screen_x - min_x, 2);
-            if (unk_x_3 > dhspeed) {
-                dhspeed++;
-            } else if (unk_x_3 < dhspeed) {
+            if (unk_x_3 < dhspeed) {
                 dhspeed--;
+            } else if (unk_x_3 > dhspeed) {
+                dhspeed++;
             }
         } else if (decalage_en_cours < 0 || ray.speed_x < 0) {
             s16 unk_x_3 = ashr16(ray.screen_x - max_x, 2);
@@ -656,12 +644,12 @@ void RecaleRayPosInJumelle(void) {
         } else {
             if (ray.flags.flip_x) {
                 s16 unk_x_3 = ashr16(ray.screen_x - min_x, 2);
-                if (unk_x_3 > dhspeed) {
-                    dhspeed++;
-                } else if (unk_x_3 < dhspeed) {
+                if (unk_x_3 < dhspeed) {
                     dhspeed--;
+                } else if (unk_x_3 > dhspeed) {
+                    dhspeed++;
                 }
-            } else {
+            } else if (!ray.flags.flip_x) {
                 s16 unk_x_3 = ashr16(ray.screen_x - max_x, 2);
                 if (unk_x_3 > dhspeed) {
                     dhspeed++;
