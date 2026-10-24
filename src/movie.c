@@ -217,13 +217,20 @@ void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color)
 
 void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
-    /* COMPILER_STEERED: retain the two-stage row product and accumulation. */
     u8 *dst;
     s32 offset;
     offset = y * 64;
     x += offset;
     offset *= 4;
-    x += offset;
+    /* SYNTHETIC: nonescaping address copy retained after permutation ablation.
+     * Local names sum and sum_ptr are INVENTED. */
+    {
+        s32 sum;
+        s32 *sum_ptr;
+        sum_ptr = &sum;
+        *sum_ptr = x + offset;
+        x = sum;
+    }
     offset = x;
     dst = offset + surface->pixels;
     /* DOS 1:2a2f2..2a304: the existing shared guarded-copy sequence. */

@@ -478,10 +478,11 @@ s16 on_block_chdir(obj_t* obj, s16 center_x, s16 center_y) {
 
 //1DB04
 void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 anim_frame_2) {
-    u8 width_1;
+    /* COMPILER_STEERED: declaration and independent X-load order. */
     s32 unk_1;
-    s32 x_1;
     s32 x_2;
+    s32 x_1;
+    u8 width_1;
     u8 foll_spr;
     anim_layer_t* layer_1 = &anim_1->layers[(anim_1->layers_per_frame & 0x3FFF) * obj->anim_frame];
     anim_layer_t* layer_2 = &anim_2->layers[(anim_2->layers_per_frame & 0x3FFF) * anim_frame_2];
@@ -490,8 +491,8 @@ void CALC_FOLLOW_SPRITE_SPEED(obj_t* obj, anim_t* anim_1, anim_t* anim_2, s16 an
     width_1 = obj->sprites[layer_1[foll_spr].sprite_index].outer_width;
     if (obj->flags.flip_x) {
         unk_1 = (obj->offset_bx * 2) - width_1;
-        x_2 = unk_1 - layer_2[foll_spr].x;
         x_1 = unk_1 - layer_1[foll_spr].x;
+        x_2 = unk_1 - layer_2[foll_spr].x;
     } else {
         x_1 = layer_1[foll_spr].x;
         x_2 = layer_2[foll_spr].x;

@@ -269,7 +269,8 @@ void Display_and_free_luciole(u8 *draw_buf)
         s32 dy;
         s32 distance;
 
-        dx = ((old_x_luc - x_luc) >= 0 ? old_x_luc - x_luc : -(old_x_luc - x_luc));
+        /* COMPILER_STEERED: s16 differences cannot reach signed 32-bit minimum. */
+        dx = abs32_inline(old_x_luc - x_luc);
         dy = ((old_y_luc - y_luc) >= 0 ? old_y_luc - y_luc : -(old_y_luc - y_luc));
         distance = max32(dy, dx);
         ADDLUCLIP = distance + 6;

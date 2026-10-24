@@ -818,27 +818,46 @@ void start_fade_out(s16 speed, rgb_palette_t *palette) {
 #define WRITE_PALETTE_BYTES(p,n) palette_output(0, (n)-1, p)
 
 void do_fade(rgb_palette_t* source_pal, rgb_palette_t* dest_pal) {
-    if (nb_fade > 0) {
+    /* SYNTHETIC: DOS pointer walks with nonescaping scalar address copies.
+     * New local names are INVENTED; colors is the palette's first member. */
+    u16 steps = nb_fade;
+    if (steps != 0) {
         s16 i;
-        --nb_fade;
+        s16 *accum = rvb_fade;
+        u8 *source = (u8 *)source_pal;
+        u8 *dest = (u8 *)dest_pal;
+        nb_fade = --steps;
         if (fade == 1) {
-            for (i = 0; i < 256 * 3; ++i) {
-                u8 c1 = ((u8*)source_pal->colors)[i];
-                u32 temp = c1 << fade_speed;
-                rvb_fade[i] += temp;
+            for (i = 0; i < 768; ++i) {
+                u32 c1;
+                u32 *c1_slot = &c1;
+                u32 temp;
+                *c1_slot = *source;
+                temp = c1 << fade_speed;
+                *accum += temp;
+                ++accum;
+                ++source;
             }
         } else if (fade == 2) {
-            for (i = 0; i < 256 * 3; ++i) {
-                if (rvb_fade[i] > 0) {
-                    u8 c1 = ((u8*)source_pal->colors)[i];
-                    u32 temp = c1 << fade_speed;
-                    rvb_fade[i] -= temp;
+            for (i = 0; i < 768; ++i) {
+                if (*accum > 0) {
+                    u32 c1;
+                    u32 *c1_slot = &c1;
+                    u32 temp;
+                    *c1_slot = *source;
+                    temp = c1 << fade_speed;
+                    *accum -= temp;
                 }
+                ++accum;
+                ++source;
             }
         }
-        for (i = 0; i < 256 * 3; ++i) {
-            s16 temp = rvb_fade[i] >> 6;
-            ((u8*)dest_pal->colors)[i] = (u8)temp;
+        accum = rvb_fade;
+        for (i = 0; i < 768; ++i) {
+            s16 temp = *accum >> 6;
+            *dest = (u8)temp;
+            ++accum;
+            ++dest;
         }
         WRITE_PALETTE_BYTES(&current_rvb, 256);
         if (nb_fade == 0) fade |= 0x40;

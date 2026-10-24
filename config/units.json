@@ -979,7 +979,8 @@
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "GET_SPRITE_POS": {
      "status": "NEAR_MATCH",
@@ -1985,7 +1986,8 @@
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "free_luciole": {
      "status": "STRICT",
@@ -8360,7 +8362,7 @@
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "fade_out": {
      "status": "STRICT",
@@ -11734,7 +11736,7 @@
      "provenance": [
       "DOS_BINARY_DERIVED"
      ],
-     "quality": "COMPILER_STEERED"
+     "quality": "SYNTHETIC"
     },
     "sub_3A30C": {
      "status": "NEAR_MATCH",
