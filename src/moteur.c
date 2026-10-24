@@ -2700,7 +2700,7 @@ void RECALE_ALL_OBJECTS(void)
             if (cur_obj->type == 254) {
                 s32 dx;
 
-                dx = (ray.x + ray.offset_bx) - ((x >> 1) + w);
+                dx = (ray.x + ray.offset_bx) - (x + (w >> 1));
                 ray.y -= ashr16((s16)((s8)cur_obj->hit_points * dx), 4);
             }
             calc_obj_pos(&ray);

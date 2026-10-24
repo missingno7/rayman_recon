@@ -90,8 +90,8 @@ void effect_activate(u8 mode, s16 speed)
     switch (state->mode) {
     case 3: state->step_z = (s16)step; break;
     case 4: state->step_y = (s16)step; step *= 2; state->step_x = (s16)step; break;
-    case 5: state->step_z = (s16)step;
-    case 2: step *= 2; state->step_y = (s16)step; break;
+    case 5: state->step_z = (s16)step; step *= 2;
+    case 2: state->step_y = (s16)step; break;
     case 6: state->step_z = (s16)step; step *= 2; state->step_x = (s16)step; break;
     case 7: state->step_z = (s16)step; state->step_y = (s16)(3 * step); step *= 2;
     case 1: state->step_x = (s16)step; break;

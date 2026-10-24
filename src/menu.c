@@ -1108,6 +1108,8 @@ void AFFICHE_ECRAN_OPTIONS(void)
     s16 draw_x;
     s16 x;
     s16 y;
+    /* COMPILER_STEERED: snapshot keeps STRICT peers' prefix references unchanged. */
+    s32 bar_offset;
     char on_text[3] = "on";
     char off_text[4] = "off";
     const char *nonselected_text;
@@ -1168,8 +1170,9 @@ void AFFICHE_ECRAN_OPTIONS(void)
                 } else if (i < max_sound && i >= (2 * word_CF79E) / 3) {
                     v5 = 1;
                 }
-                /* DOS 3aec3..3aecc uses the outer row index here. */
-                display_text("|", x + (s32)option_index * ecart_barre + v6,
+                /* DOS 1:3aec3 reads the inner index after the color push. */
+                bar_offset = i * ecart_barre;
+                display_text("|", x + bar_offset + v6,
                              ecart_options + 15 + debut_options, 2, v5);
             }
         }
