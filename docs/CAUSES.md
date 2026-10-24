@@ -149,6 +149,35 @@ experiment -> what it would unblock. Status: OPEN / TESTING / CONFIRMED / REFUTE
   improvement); most remaining NEAR are category 4. A correct idiom does not by itself yield STRICT - it resets the
   allocation work for the affected functions.
 
+## H12 - Wave-3 synthesis: closures are local; the reusable lever is layout dependency (2026-10-24)
+Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~60k compiles) plus a fresh census
+(build/near_census.json: 242 game NEAR = 182 SHAPE, 18 REFS_LAYOUT, 38 DIFF/CALL_ORDER).
+- Closure edits: declaration order (8), operand commute (6), accepted abs/ashr helper at DOS-cited sites (7), local
+  width flip (3), address-taken local copy (5, SYNTHETIC), snapshot removal (3) / addition (1), store reorder (3).
+  Each is a known allocator knob (home sort, rover, colour); almost all closures needed 2-3 COUPLED edits whose
+  single-edit ablations fail. No new compiler mechanism.
+- REFUTED as a transferable lever (predictive test, 2026-10-24): converting the remaining plain-C abs sites to
+  abs32_inline in the three closest NEAR functions with DOS TEST/JGE/NEG EAX sites made all worse
+  (Display_and_free_luciole 2->58, DO_BBL_COMMAND 5->17, moskitoDropFruitOnRay 11->276): there the ternary already
+  emits the DOS bytes. The helper is a coupled knob, not a standalone fix.
+- HYPOTHESIS (inconsistent evidence): PS1-decomp-inherited snapshot locals are wrong for Watcom (3 removals closed
+  PAR_REACT_TO_RAY_IN_ZONE, move_ball, set_rubis_list/Do_Effet_Chaleur; one addition closed DO_TOTEM_COMMAND).
+- PROVEN reusable mechanism: a reference is verified at our object's internal offset, so a function whose bytes are
+  equal becomes STRICT as soon as the code it references sits at the DOS offset - the referenced function itself
+  may stay NEAR. Instances: DO_CORDE_COMMAND stays NEAR (worse) yet its 5 case labels at DOS offsets close
+  DO_POELLE_COMMAND; set_rubis_list extent 452 closes Do_Effet_Chaleur; menu key/video initializer extents close
+  AFFICHE_BUTTON_JOYSTICK and DO_COMMANDE_GRAPHIC (w3_menu/collateral_pair, not integrated: conflicts with CalcSpeed).
+  Carrier -> owner map (census deltas, ours - DOS): IS_MIT_PAF -> DO_MIT_COMMAND (+8 uniform), IS_ON_RESSORT_BLOC ->
+  CALC_MOV_ON_BLOC (-4 uniform), swapMereDenisCollZones -> prepareNewMereDenisAttack (+1 uniform), standard_frontZone
+  -> SET_DETECT_ZONE_FLAG (-2,+1), DO_SAXO_ATTER -> DO_SAXO2_COMMAND (-12,1,2), RAY_RESPOND_TO_UP ->
+  RAY_RESPOND_TO_DIR (-6,-1,1), INIT_OPTIONS_CHOICE -> INIT_AFFICHE_ECRAN_OPTIONS (-4,-2), setMoskitoAtScrollBorder ->
+  prepareNewMoskitoAttack (-8,-5), DO_BBMONT_ATTER -> DO_BBMONT_COMMAND (8,15), DO_BBMONT_TOUCHE -> DO_BBMONT2_COMMAND
+  (-20,-4), restore_objects_flags -> snapToSprite (-4,-2,20), bonus_fall -> collision_briques (82..85),
+  DO_DARK2_AFFICHE_TEXT -> DO_DARK_PHASE2_COMMAND (-9,-5,1). Prefix/literal references (deter_num_let +60,
+  LOAD_CREDITS_VIGNET +48, AFFICHE_BUTTON_JOYSTICK +52, AFFICHE_VIDEOMODE_SCREEN +148) follow cumulative TU drift;
+  LoadTchatchPerdu -> PlayTchatch (-5) persists although PlayTchatch is STRICT (OPEN).
+- Tool defect found: explain.py/cgtrace.group_events rejects units with case-different names (frame do_fade/DO_FADE).
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
