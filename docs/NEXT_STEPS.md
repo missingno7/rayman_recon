@@ -14,8 +14,8 @@ helper (docs/COMPILER.md).
    constant differs from DOS). Real behaviour errors matter for the port and are fixed before any matching work;
    equivalent lowerings (memset vs inline REP STOSD fill, mask spellings) become ordinary matching work.
    Result 2026-10-23 (sem_triage, DOS disassembly at every flagged site): 18/18 non-pilot DIFF functions are
-   EQUIVALENT lowerings, 0 behaviour errors. The ~12 DIFF functions in pilot units (moteur, ray, basic, pmama,
-   luciole, menu) are still to be triaged.
+   EQUIVALENT lowerings, 0 behaviour errors. Result 2026-10-24 (sem_a3): the remaining 25 (pilot units and CALL_ORDER) are 24 EQUIVALENT,
+   1 UNRESOLVED (MOVE_OBJECT, B20) - no confirmed behaviour difference in NEAR code.
 2. **Large coherent SHAPE functions.** ~150 NEAR functions (~125 KB) already have DOS calls/globals/fields/constants
    and differ mainly in Watcom code shape (strong evidence, not a certified equivalence). An agent restructures one coherent region (a unit or a jump-table owner and
    its neighbour) until it is close or STRICT; a bounded permuter run (tools/permute.py) finishes the last bytes.

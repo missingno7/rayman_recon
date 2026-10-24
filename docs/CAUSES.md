@@ -177,6 +177,15 @@ Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~98k compile
   LOAD_CREDITS_VIGNET +48, AFFICHE_BUTTON_JOYSTICK +52, AFFICHE_VIDEOMODE_SCREEN +148) follow cumulative TU drift;
   LoadTchatchPerdu -> PlayTchatch (-5) persists although PlayTchatch is STRICT (OPEN).
 - Tool defect found: explain.py/cgtrace.group_events rejects units with case-different names (frame do_fade/DO_FADE).
+- Layout pilot (lay_pilot 2026-10-24, 664 compiles, 15 min): carriers IS_MIT_PAF and swapMereDenisCollZones STRICT by
+  moving owner labels only (DO_MIT_COMMAND 499->638 stays NEAR; prepareNewMereDenisAttack 718->221); blocs
+  IS_ON_RESSORT_BLOC not closed (27 failing entries at -4/+2, not 3 uniform; best 27->9). REFUTED shortcut: a uniform
+  census delta does not mean one size divergence (meredenis +1 = three compensating 1-byte encodings). Method for the
+  rest: enumerate ALL table entries and cumulative size boundaries, objective = carrier STRICT + 0 losses.
+- Semantic triage (sem_a3 2026-10-24): 24/25 untriaged DIFF/CALL_ORDER functions EQUIVALENT (shared call tails, switch
+  partitioning - ray_jump case sets checked for all 256 btypes -, masks, literal materialization; restore_gendoor_link
+  u8 lossless: all 82 PCMAP levels have links <= 253); MOVE_OBJECT UNRESOLVED (B20). With sem_triage: 42/43 flagged
+  functions EQUIVALENT, 0 confirmed behaviour differences in NEAR code.
 
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
