@@ -1295,7 +1295,7 @@
      "quality": "SYNTHETIC"
     },
     "IS_MIT_PAF": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -3092,7 +3092,7 @@
      ]
     },
     "swapMereDenisCollZones": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"

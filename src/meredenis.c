@@ -748,7 +748,13 @@ block_98:
                 setMereDenisAtScrollBorder(smama_obj, smama_obj->flags.flip_x);
                 if (cur_act == 45)
                 {
-                    bossXToReach = ray.x + ray.offset_bx - smama_obj->offset_bx;
+                    {
+                        /* COMPILER_STEERED: full-width sum changes instruction
+                         * lengths before the six late switch targets.
+                         * Local name INVENTED. DOS divergence starts 1:4217c. */
+                        s32 center = ray.x + ray.offset_bx;
+                        bossXToReach = center - smama_obj->offset_bx;
+                    }
                     smama_obj->x = bossXToReach;
                 }
                 else if (cur_act == 25)

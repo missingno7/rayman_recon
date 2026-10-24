@@ -326,16 +326,15 @@ u8 IS_MIT_PAF(obj_t* obj) {
 
 //5342C
 void DO_MIT_COMMAND(obj_t* obj) {
+    /* SYNTHETIC layout steering: preserve all four switch targets carried by
+     * IS_MIT_PAF. The owner remains NEAR; see lay_pilot/FINDINGS.md. */
     /* 4B3A0 8016FBA0 -O2 -msoft-float */
     s16 diff_x_1;
     s16 diff_x_2;
     s16 diff_y_1;
     s16 esquive_x;
     u8 prev_flip_x;
-    s32 diff_y_base;
-    s32 main_index = obj->main_etat;
-    eta_t *eta_row = obj->eta[main_index];
-    eta_t* obj_eta = &eta_row[obj->sub_etat];
+    eta_t* obj_eta = &obj->eta[obj->main_etat][obj->sub_etat];
 
     if (!IS_MIT_PAF(obj)) {
         if (obj->follow_id >= 500) {
@@ -352,9 +351,16 @@ void DO_MIT_COMMAND(obj_t* obj) {
             if (obj->detect_zone_flag != 0)
             {
                 diff_x_1 = ((s16)ray.x + ray.offset_bx) - (s16)obj->x - obj->offset_bx;
-                diff_x_2 = ABS(diff_x_1) >> 1;
-                diff_y_base = obj->offset_by + (s16)obj->y - (s16)ray.y;
-                diff_y_1 = diff_y_base - ray.offset_by;
+                /* ORIGINAL_INLINE abs32_inline: DOS 1:434d1..434d7. */
+                diff_x_2 = abs32_inline(diff_x_1) >> 1;
+                {
+                    /* SYNTHETIC: initialized address copy steers short allocation.
+                     * Local names INVENTED; arithmetic and final s16 are unchanged. */
+                    s16 y_delta;
+                    s16 *slot = &y_delta;
+                    *slot = obj->offset_by + (s16)obj->y - (s16)ray.y - ray.offset_by;
+                    diff_y_1 = y_delta;
+                }
                 obj->follow_id++;
                 if (ray_over_mit(obj, diff_x_1))
                 {
@@ -402,7 +408,7 @@ void DO_MIT_COMMAND(obj_t* obj) {
                             obj->speed_x = 0;
                             break;
                         case 1:
-                            if (obj->main_etat != 2 &&
+                            if ((obj->main_etat != 2 ? true : false) &&
                                 !(obj->main_etat == 0 && obj->sub_etat == 9) &&
                                 !(obj->main_etat == 0 && obj->sub_etat == 10) &&
                                 !(obj->main_etat == 0 && obj->sub_etat == 11))
