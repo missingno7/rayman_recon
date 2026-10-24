@@ -171,6 +171,7 @@ extern u8 * cheat_code_win_map;
 extern u8 * cheat_code_win_map_alt;
 extern s32 saved_frequence;
 extern u8 byte_CFA2A;
+extern u8 drm_byte_CFA27;
 extern char level_filename[20];
 extern mem_t main_mem_fix;
 extern mem_t main_mem_sprite;
@@ -468,7 +469,8 @@ void LOAD_PERFECT_SCREEN(mem_t* mem) {
 
 void LOAD_CONTINUE_SCREEN(mem_t* mem) {
     LoadPlan3InVignet(mem, 11);
-    //stub: there is a DRM check here
+    /* DRM check (DOS 1:2661c..26641): exits unless the CD drive is a valid read-only disk. */
+    exit_if_not_cd_drive(0x3600, drm_byte_CFA27 - 0x40);
 }
 
 void DISPLAY_FOND_CONTINUE(void) {

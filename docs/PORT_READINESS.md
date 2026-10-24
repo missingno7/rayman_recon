@@ -14,6 +14,8 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 | 1a. differential execution | all NEAR game functions | run the DOS function and our compiled function on identical random machine states (Unicorn), compare every memory write, every outgoing call (target, arguments) and the return value; a counterexample is either a behaviour bug (fix) or an original quirk (document). Evidence level EQUIVALENT_TESTED, never STRICT | TO BUILD |
 | code-range gaps between bound functions | 146 gaps, 3,071 B | gap_code 2026-10-24: 1,633 B reachable tails of NEAR functions longer than our candidates, 658 B padding, 492 B private _TEXT initialisers, 288 B switch tables; **0 unexplained**. Found one real data bug: select_level_prg `num[6]` was 0x1100,0x1000 instead of 17,16 (fixed); the verifier now checks CODE prefixes | DONE |
 | original hand-written assembly | 106 entries, all STRICT as asm | behaviour exact; the port needs C equivalents - each checked against the asm with item 1a | LATER (port) |
+| x86 code shipped inside level files | per level | load_level (1:35688) loads XOR-F3h-encoded tile callbacks from the level files and relocates block_add pointers; asm 1:04486/1:044f7 CALL them. A native port cannot run them: every shipped code shape must be decoded and specified (platform audit O-ASSET-CODE) | OPEN |
+| stubs in src | 1 found | LOAD_CONTINUE_SCREEN had "//stub: there is a DRM check here"; DOS check now implemented (B16). Other TODO markers are inherited Rayverse call-site notes in functions whose callees exist (STRICT or covered by item 1a) | DONE |
 
 ## 2. Known behaviour questions
 | item | state |
@@ -42,7 +44,7 @@ Numbers from main 0fb458b (tools/status.py, build/verify/report.json, build/near
 ## 5. Platform boundary (what the SDL3 port replaces)
 | item | state |
 |---|---|
-| inventory of DOS-specific functions (video/VGA ports, keyboard ISR, timer, DPMI/memory, CD/MSCDEX, HMI sound, file I/O paths) with each one's contract | OPEN |
+| inventory of DOS-specific functions (video/VGA ports, keyboard ISR, timer, DPMI/memory, CD/MSCDEX, HMI sound, file I/O paths) with each one's contract | DONE as inventory (platform worker 2026-10-24, build/workers/platform/PLATFORM.md + platform.json, not tracked: quotes disassembly): 655 contracts (562 STRICT / 93 NEAR), all 1,689 game callables classified, 109 asm entries, 346 platform globals, 18 HMI APIs via 11 game entry points. 26 OPEN items: asset-shipped tile code (above), asm record field meanings (draw_effect_segment, draw_sprite_deform, 03257/03912/03ea1), BIOS INT 15h wait under PMODE/W, debug-register startup watch, PCM signedness/loop convention, HMI capabilities buffer extent, CD auxiliary status bytes, check_cd_for_save probe path, word_E0CD0 meaning |
 
 ## 6. Runtime
 | item | state |
