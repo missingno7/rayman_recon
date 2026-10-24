@@ -596,7 +596,7 @@ scale = 0x200000 / (RayonJumelle * RayonJumelle);
 
 
 void RecaleRayPosInJumelle(void) {
-    /* COMPILER_STEERED: exact s32 promotions of signed-word absolute-value inputs. */
+    /* Local widths (s16) and branch order follow the DOS computation (semir-guided, Experiment C 2026-10-24). */
     if (scroll_y == -1) {
         s16 v13 = ((3 * HauteurJumelle) >> 2) - ray.offset_by;
         if (v_scroll_speed != 255 || decalage_en_cours != 0) {
