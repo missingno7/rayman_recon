@@ -82,6 +82,8 @@ mechanism: rover offset, home sort, colour tie, Score substitution, selection, s
 `tools/cgtrace.py SRC.c --func NAME --out build/cgtrace/<new dir>` (raw allocator trace),
 `tools/permute.py SRC.c FUNC --conservative|--aggressive --seed N --max-compiles N --out build/<new dir>` (guided source
 permuter, needs pycparser; tools/permute.md),
+`tools/semir.py UNIT [FUNC] [--src COPY.c]` (earliest COMPUTATIONAL difference vs DOS - local widths, test order, operand
+order, stores; EXACT = only allocation left; run it before explain/permuter; docs/CAUSES.md H14),
 `tools/disasm.py NAME|1:off [LEN]`, `tools/match.py SRC.c [FUNC]`, `tools/verify.py`,
 `tools/integrate.py WORKER_DIR UNIT=FILE.c ... -m MSG` (integrator: copy, merge, register, gate, commit only if green).
 

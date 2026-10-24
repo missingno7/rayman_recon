@@ -215,6 +215,26 @@ rover history 5, layout ownership 5, Score rings 2, unresolved mixed 5.
 Decision: no broad clustering campaign; reopen only for a function pair whose complete record/eligibility/dependency
 constraints match (e.g. source twins).
 
+## H14 - Semantic-IR comparison finds source structure the byte score cannot (semir + guided editing, 2026-10-24)
+tools/semir.py (Experiment B) lifts the DOS function and ours into width-exact expressions per basic block (symbolic
+relocations, partial registers, flags, aliasing-ordered memory, calls with Watcom arguments), aligns the CFGs and
+reports EXACT_LOCAL_EQUIVALENT / STRUCTURALLY_SIMILAR / MISMATCH (earliest computational difference) / UNKNOWN.
+Controls: 287/288 STRICT functions EXACT (the other an empty extent), 11/11 semantic mutants MISMATCH at the mutated
+expression, 0 false equivalences; 72,969/72,975 instructions lifted. On 71 NEAR functions: 39 EXACT (only allocation /
+scheduling left; 10 of them untestable by the Unicorn harness), 32 MISMATCH with one concrete clue each. In 25 of 32
+the computational difference lies after match.py's first differing byte (median +165 bytes).
+Experiment C (build/workers/guided): following semir's first difference (8 targets, same 60-compile budget as the
+permuter): 4/8 reached exact local equivalence vs 2/8 for the permuter; 0 STRICT either way. RecaleRayPosInJumelle:
+6 clues (s16 locals v13/v14/v16/min_x/max_x, DOS test order, if/else for a ternary) -> all 79 blocks equal, 581 -> 24
+differing bytes (integrated f8e87f2); the permuter ended at 494 and never passed the first clue. DO_TIR 37 -> 20.
+Historical controls: the first difference pointed at part of the real fix for AllocateBonus (store order) and
+DO_THROWN_BOMB_REBOND (nibble test), not for calc_btyp_square (its fix is computationally invisible: allocation only).
+Limits (PROVEN): "missing effect" need not mean a missing store (split blocks); ret-vs-jmp differences are CFG shape;
+memory-history clues after independent stores are often scheduling or the conservative alias model; exact-local
+edits can cost bytes (dos_allocate 4 -> 13, casse_brique_init 159 -> 242: not integrated). No new compiler mechanism.
+Workflow: run semir first on a NEAR function; MISMATCH -> fix the named computation in C (widths, test order, operand
+order, stores); EXACT -> only allocation remains (explain.py, permuter).
+
 ## Confirmed / refuted causes (short)
 - CONFIRMED: switch-table blockers (13 owners) = allocation-driven instruction length, not case order (sw_layout).
 - CONFIRMED: census DIFF tags were mostly tool blind spots (t_census), not semantic errors.
