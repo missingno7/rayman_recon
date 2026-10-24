@@ -480,6 +480,17 @@ the raw per-function trace (IR per phase, home and conflict sorts, colour decisi
 instructions, Score substitutions). Validated on the fee, effect_helper_168c8 and INIT_OPTIONS_CHOICE histories.
 
 ## Source permutation (pilot 2026-10-23, build/pilot, build/workers/pilot_mine)
+Throughput (2026-10-24, moteur DO_AUTO_SCROLL, 80 compiles): before 1.0 compiles/s; now 5.3/s with --jobs 1,
+12/s with --jobs 4, 15/s with --jobs 8 (persistent WorkerPool). Profile showed the compiler at <5% of the old run:
+whole-unit AST deepcopy per mutation, whole-unit re-parse per round trip (now a typedef-stub mini context, full
+context as fallback), full-state JSON per compile (now throttled; resume reconciles from candidates.jsonl), symbol
+tables re-read per evaluation, and the verifier scanning all ~22k oracle fixups per function (now indexed;
+verify report byte-identical). Candidates keep only source + compact result (~50 KB instead of ~194 KB).
+NEGATIVE (batch_probe 2026-10-24): several variants of one function cannot share one compile. Renamed copies
+appended to a unit compile differently (86/484 copies): Watcom 10.6 merges identical code across functions in a
+TU (copies collapse to another copy's body or jump into its identical tail). One full-unit compile per candidate
+stays the rule; parallelism comes from --jobs.
+
 - Three arms on 26 NEAR functions: PS1 seeding 0/16 STRICT; conservative permuter 0/26; aggressive permuter 1/26
   (ufo DO_MOVING_WITH_INDICATOR_COMMAND). The hit is repeatable: 4/4 seeds, 138..338 compiles, <= 90 s. Solvable
   functions fall fast, so short broad runs (a few minutes per function) beat long ones; conservative mode is retired.

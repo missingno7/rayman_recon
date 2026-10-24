@@ -40,6 +40,14 @@ from image import Image, parse_addr  # noqa: E402
 MD = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
 
 
+def oracle_sites_in(img, obj, start, end):
+    """Oracle fixup sites of obj in [start, end): indexed on a real Image, plain scan for minimal test doubles."""
+    index = getattr(img, "sites_in", None)
+    if index:
+        return index(obj, start, end)
+    return sorted(s for (o, s) in img.fixups if o == obj and start <= s < end)
+
+
 def demangle(n):
     """Watcom __watcall: functions 'name_', data '_name'. Returns the plain C name."""
     if n.endswith("_") and not n.startswith("_"):
@@ -52,7 +60,19 @@ def demangle(n):
 class Bindings:
     extra = None        # optional overlay file (worker hypotheses); same layout as config/symbols.json
 
+    _cache = {}         # (oracle, files with mtime/size) -> (game, lib): parsed once per process per file state
+
     def __init__(self, img):
+        files = [CONFIG / "symbols.json"] + ([Path(self.extra)] if self.extra else []) +             [BUILD / "oracles" / img.name / "libsyms.json"]
+        key = (img.name,) + tuple((str(p), p.stat().st_mtime_ns, p.stat().st_size) if p.exists() else (str(p),)
+                                  for p in files)
+        if key not in Bindings._cache:
+            self._load(img)
+            Bindings._cache.clear()
+            Bindings._cache[key] = (self.game, self.lib)
+        self.game, self.lib = Bindings._cache[key]
+
+    def _load(self, img):
         self.game = {}
         for p in [CONFIG / "symbols.json"] + ([Path(self.extra)] if self.extra else []):
             if not p.exists():
@@ -255,7 +275,7 @@ def segment_report(img, mod, seg_base, binds):
                 elif (taddr[0], taddr[1] + addend) != (tobj, toff):
                     problems.append(f"+{f.off:x}: -> {mod.target_name(f)}+{addend:x} = {taddr[0]}:{taddr[1] + addend:x}, "
                                     f"oracle {tobj}:{toff:x}")
-            extra = sorted(s - b for (ob, s) in img.fixups if ob == o and b <= s < b + seg.size and s - b not in cand_sites)
+            extra = sorted(s - b for s in oracle_sites_in(img, o, b, b + seg.size) if s - b not in cand_sites)
             if extra:
                 problems.append("oracle relocations without candidate relocation at +" + ",".join(f"{x:x}" for x in extra[:8]))
             diffs = [i for i in range(seg.size) if i not in masked and img.obj[o][b + i] != seg.data[i]]
@@ -307,7 +327,7 @@ def code_prefix_problems(img, mod, si, base, binds, seg_base):
                 taddr = implied
         if taddr is None or (taddr[0], taddr[1] + addend) != (tobj, toff):
             problems.append(f"prefix +{f.off:x}: relocation target not verified (oracle {tobj}:{toff:x})")
-    extra = [s - b for (ob, s) in img.fixups if ob == o and b <= s < b + first and s - b not in sites]
+    extra = [s - b for s in oracle_sites_in(img, o, b, b + first) if s - b not in sites]
     if extra:
         problems.append("prefix: oracle relocations without candidate relocation")
     orig = img.obj[o][b:b + first]
@@ -461,7 +481,7 @@ def verify_object(img, mod, only=None, seg_report=None):
                     else:
                         ref["verified_by"] = tsrc
                 res["references"].append(ref)
-            orig_sites = {s - paddr for (ob, s) in img.fixups if ob == pobj and paddr <= s < paddr + len(cand)}
+            orig_sites = {s - paddr for s in oracle_sites_in(img, pobj, paddr, paddr + len(cand))}
             extra = sorted(orig_sites - cand_abs_sites)
             if extra:
                 res["problems"].append("oracle fixups without candidate fixup at +" + ",".join(f"{x:x}" for x in extra))

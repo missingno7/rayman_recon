@@ -9,6 +9,7 @@ tricks are offered. Guards deliberately sacrifice coverage for soundness.
 from __future__ import annotations
 
 import copy
+import functools
 import re
 from dataclasses import dataclass
 
@@ -45,8 +46,10 @@ def walk(node):
         yield from walk(child)
 
 
+@functools.lru_cache(maxsize=64)
 def body_bounds(source, function):
-    """Find a unique top-level definition without interpreting comments/strings."""
+    """Find a unique top-level definition without interpreting comments/strings (memoised: the same unit text is
+    scanned for every candidate)."""
     clean = DIRECTIVE.sub(lambda m: re.sub(r"[^\n]", " ", m[0]), source)
     ts = [m for m in LEX.finditer(clean) if not m[0].startswith(("//", "/*"))]
     depth, found = 0, []
@@ -159,16 +162,28 @@ class Model:
     ast: C.FileAST
     macros: frozenset = frozenset()
     context: str = ""
+    mini: str = ""
 
     def round_trip(self, text):
-        """The emitted body must re-read as exactly the intended tree (refuse otherwise)."""
+        """The emitted body must re-read as exactly the intended tree (refuse otherwise).
+
+        Parsed in a mini context (one `typedef int T;` per typedef in scope + the signature): typedef-ness is the only
+        context the C grammar needs, and re-parsing the whole preprocessed unit per candidate cost ~0.5 s. The full
+        context is the fallback, so a mini-context failure never weakens the check."""
         if not self.context:
             return
-        a, b = body_bounds(self.context, self.function)
-        try:
-            again = c_parser.CParser().parse(self.context[:a] + sanitize(text) + self.context[b:])
-        except Exception as exc:
-            raise Refusal(f"emitted body does not re-parse: {exc}") from exc
+        again = None
+        if self.mini:
+            try:
+                again = c_parser.CParser().parse(self.mini + sanitize(text) + "\n")
+            except Exception:
+                again = None
+        if again is None:
+            a, b = body_bounds(self.context, self.function)
+            try:
+                again = c_parser.CParser().parse(self.context[:a] + sanitize(text) + self.context[b:])
+            except Exception as exc:
+                raise Refusal(f"emitted body does not re-parse: {exc}") from exc
         if emit(self.target(again).body).rstrip() != text:
             raise Refusal("emitted body re-reads as a different tree")
 
@@ -197,7 +212,9 @@ class Model:
             if isinstance(n, C.ArrayDecl) and n.dim is not None and not (isinstance(n.dim, C.Constant) and "int" in n.dim.type):
                 raise Refusal("nonliteral array extent (possible VLA) is outside the safe subset")
         macros = frozenset(macros) | frozenset(re.findall(r"(?m)^\s*#\s*define\s+(\w+)", source))
-        model = cls(source, function, ast, macros, sanitize(pp))
+        typedefs = "".join(f"typedef int {n.name};\n" for n in ast.ext if isinstance(n, C.Typedef))
+        signature = c_generator.CGenerator().visit(fns[0].decl)
+        model = cls(source, function, ast, macros, sanitize(pp), typedefs + signature + "\n")
         model.unit(fns[0])  # reject possible second macro expansion before search
         return model
 
@@ -216,9 +233,27 @@ class Model:
         return self.source[:a] + body + self.source[b:]
 
 
+_UNIT_CACHE = {}
+
+
+def unit_facts(ast):
+    """Typedefs and every declared/used name of a parsed unit, computed once per tree (the tree is never mutated:
+    mutate() works on a copy of the target body)."""
+    key = id(ast)
+    if key not in _UNIT_CACHE or _UNIT_CACHE[key][0] is not ast:
+        typedefs = {n.name: n.type for n in ast.ext if isinstance(n, C.Typedef)}
+        names = frozenset(n.name for n in walk(ast) if isinstance(n, (C.ID, C.Decl, C.Label)))
+        _UNIT_CACHE[key] = (ast, typedefs, names)
+    return _UNIT_CACHE[key]
+
+
+def unit_names(ast):
+    return unit_facts(ast)[2]
+
+
 class Facts:
     def __init__(self, ast, fn):
-        self.typedefs = {n.name: n.type for n in ast.ext if isinstance(n, C.Typedef)}
+        self.typedefs = unit_facts(ast)[1]
         # Struct members and function-pointer parameter names are not locals.
         # Never infer a global's type from a same-spelled member declaration.
         decls = [n for n in (fn.decl.type.args.params if fn.decl.type.args else []) if isinstance(n, C.Decl)]
@@ -277,7 +312,7 @@ def mutations(ast, fn, family):
     """Yield (replacement target, replacement, proof note) for ONE safe pass."""
     facts = Facts(ast, fn)
     nodes = list(walk(fn.body))
-    used = {n.name for n in walk(ast) if isinstance(n, (C.ID, C.Decl, C.Label))}
+    used = set(unit_names(ast)) | {n.name for n in nodes if isinstance(n, (C.ID, C.Decl, C.Label))}
     def fresh(stem):
         i = 0
         while f"perm_{stem}_{i}" in used:
@@ -402,8 +437,9 @@ def mutations(ast, fn, family):
 
 
 def mutate(model, parent, rng, mode, mechanisms=()):
-    ast = copy.deepcopy(model.ast)
-    fn = model.target(ast)
+    # Only the target body changes: copy it, never the whole unit tree (that deepcopy was ~0.9 s per mutation).
+    ast = model.ast
+    fn = copy.copy(model.target(ast))
     fn.body = copy.deepcopy(parent.body)
     families = list(CONSERVATIVE if mode == "conservative" else AGGRESSIVE)
     guided = [f for m in mechanisms for f in MECHANISMS.get(m, []) if f in families]

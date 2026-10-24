@@ -28,7 +28,7 @@ import time
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-from permute_backend import IsolatedProcess, assess, digest, evaluate, load_pipeline
+from permute_backend import IsolatedProcess, WorkerPool, assess, digest, evaluate, load_pipeline
 from permute_source import Model, Refusal, body_bounds, mutate
 
 SCHEMA = 1
@@ -198,6 +198,14 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
         for pending in state.get("pending", []):
             append_event(out, {"event": "interrupted", **pending, "budget_charged": True})
         state["pending"] = []
+        # state.json is checkpointed at most every 2 s: charge every compile and skip every candidate id that the
+        # append-only log recorded after the last checkpoint.
+        for line in (out / "candidates.jsonl").read_text(encoding="utf-8").splitlines():
+            e = json.loads(line)
+            if e.get("event") == "started":
+                state["compiles"] = max(state["compiles"], e["invocation"])
+            if e.get("event") == "candidate":
+                state["next_id"] = max(state["next_id"], e["id"] + 1)
         for rel, entry in identity["inputs"].items():
             if digest((out / "input" / rel).read_bytes()) != entry["sha256"]:
                 raise Refusal(f"frozen input changed: {rel}")
@@ -218,8 +226,15 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, dst)
     initial_seconds = state["seconds"]
-    def checkpoint():
-        state["seconds"] = initial_seconds + time.monotonic() - started
+    last_checkpoint = [0.0]
+    def checkpoint(force=False):
+        # Throttled: candidates.jsonl (append-only, fsync'd) is the record of every reserved compile and candidate;
+        # resume reconciles the budget and ids from it, so a lagging state.json never under-counts.
+        now = time.monotonic()
+        if not force and now - last_checkpoint[0] < 2.0:
+            return
+        last_checkpoint[0] = now
+        state["seconds"] = initial_seconds + now - started
         atomic_json(out / "state.json", state)
     def available():
         return state["compiles"] < args.max_compiles and initial_seconds + time.monotonic() - started < args.seconds
@@ -254,7 +269,8 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
         if required - set(baseline["strict"]):
             finish(call, baseline)
             raise Refusal("baseline loses recorded STRICT functions; fix context first")
-        state["baseline"] = baseline
+        # Only these fields are read later; the full per-function report made every checkpoint ~100+ KB.
+        state["baseline"] = {k: baseline[k] for k in ("target", "score", "strict", "shape", "seconds") if k in baseline}
         finish(call, {"score": baseline["score"], "strict": baseline["strict"]})
     baseline = state["baseline"]
     if baseline is None:
@@ -272,6 +288,8 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
     # not committed. IDs are monotonic; consumed compiler budget is never reset.
     stalled = 0
     processes = []
+    # Persistent evaluation workers for --jobs > 1 (the real evaluator only; tests inject their own evaluate_fn).
+    pool = WorkerPool(args.jobs) if args.jobs > 1 and evaluate_fn is evaluate else None
 
     def prune_candidate(source_path, result):
         """Keep only the candidate source and a compact result: the object, compiler log, copied headers and the
@@ -341,9 +359,13 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
                     append_event(out, {"event": "candidate", **c})
                     call = reserve("candidate", ident)
                     task = make_task(root, dest, args.function, args, d / "compile")
-                    result = IsolatedProcess(task) if args.jobs > 1 else evaluate_fn(task)
-                    if args.jobs > 1:
+                    if pool:
+                        result = pool.submit(task)
+                    elif args.jobs > 1:
+                        result = IsolatedProcess(task)
                         processes.append(result)
+                    else:
+                        result = evaluate_fn(task)
                     batch.append((c, call, fn, result))
                 except Refusal as exc:
                     append_event(out, {"event": "mutation_rejected", "id": ident, "reason": str(exc), "chain": chain})
@@ -368,7 +390,9 @@ def main(argv=None, evaluate_fn=evaluate, preprocess_fn=preprocess):
     finally:
         for process in processes:
             process.close()
-        checkpoint()
+        if pool:
+            pool.close()
+        checkpoint(force=True)
     eligible = [c for c in state["candidates"] if c.get("eligible")]
     best = min(eligible, key=lambda c: (c["score"]["total"], c["id"]), default=None)
     if best and best["score"]["total"] >= baseline["score"]["total"]:

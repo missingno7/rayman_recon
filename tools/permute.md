@@ -109,7 +109,8 @@ pilot functions in both modes and an identical-input serial/parallel control.
 Its throughput includes compile+full-unit verification and process startup.
 Process workers use ordinary files/pipes, not multiprocessing's named Windows
 semaphores. All workers are bounded and reaped; there are no daemon services.
-Default jobs=1 keeps the normal serial policy. Measured concurrency is optional.
+Default jobs=1 keeps the normal serial policy. Measured concurrency is optional. With --jobs N the permuter keeps N persistent evaluation processes (oracle decoded once each); measured
+15 compiles/s at --jobs 8 vs 5.3/s serial (docs/COMPILER.md "Source permutation").
 
 Quality: conservative successful rewrites are COMPILER_STEERED; chains using
 synthetic families are SYNTHETIC. An unchanged winning baseline is NATURAL.

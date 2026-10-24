@@ -52,8 +52,22 @@ class Image:
     def code_fixup_sites(self):
         return sorted(off for (o, off) in self.fixups if o == 1)
 
+    @cached_property
+    def _sorted_sites(self):
+        sites = {}
+        for o, off in self.fixups:
+            sites.setdefault(o, []).append(off)
+        return {o: sorted(v) for o, v in sites.items()}
+
+    def sites_in(self, obj, start, end):
+        """Fixup site offsets of object obj in [start, end), ascending (indexed; the full scan cost 3/4 of a
+        permuter evaluation)."""
+        import bisect
+        s = self._sorted_sites.get(obj, [])
+        return s[bisect.bisect_left(s, start):bisect.bisect_left(s, end)]
+
     def fixups_in(self, obj, start, end):
-        return {off: self.fixups[(obj, off)] for (o, off) in self.fixups if o == obj and start <= off < end}
+        return {off: self.fixups[(obj, off)] for off in self.sites_in(obj, start, end)}
 
     def target_value(self, obj, off):
         """The 32-bit value stored at a fixup site (PMW1 stores the unrelocated image; normally 0 or addend)."""

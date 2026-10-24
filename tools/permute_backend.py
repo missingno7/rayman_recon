@@ -114,7 +114,7 @@ def score_target(img, mods, target, result, match):
                         rels.update(range(loc, loc + f.size()))
                     elif f.size() == 4:
                         sites.add(loc)
-            oracle_sites = {s - start for o, s in img.fixups if o == ob and start <= s < start + extent}
+            oracle_sites = {s - start for s in img.sites_in(ob, start, start + extent)}
             oracle_masks = rels | {i for s in oracle_sites for i in range(s, s + 4)}
             insns = instruction_distance(cand, oracle, masks, oracle_masks)
             parts = {"byte_diffs": result.get("byte_diffs", len(cand)),
@@ -129,6 +129,9 @@ def score_target(img, mods, target, result, match):
     raise ValueError("target public missing from object")
 
 
+_CACHE = {}
+
+
 def evaluate(task):
     """One fresh full-unit compile + unchanged full-unit verifier invocation."""
     began = time.monotonic()
@@ -141,7 +144,11 @@ def evaluate(task):
     Path(task["log"]).write_text(text, encoding="utf-8")
     if rc or not out.exists():
         return {"error": "compile failed", "returncode": rc, "seconds": time.monotonic() - began}
-    img = image.Image(task.get("oracle"))
+    key = (task.get("oracle"), task.get("symbols"))
+    if _CACHE.get("key") != key:           # one oracle decode per process, not per candidate
+        _CACHE.clear()
+        _CACHE.update(key=key, img=image.Image(task.get("oracle")))
+    img = _CACHE["img"]
     match.Bindings.extra = task.get("symbols")
     mods = omf.load(out)
     results, segments = [], []
@@ -209,6 +216,68 @@ class IsolatedProcess:
         self.process.communicate()
 
 
+COMPACT = ("target", "score", "strict", "shape", "error", "returncode", "seconds")
+
+
+class WorkerPool:
+    """N persistent evaluation processes (one task per JSON line on stdin, one result per line on stdout).
+
+    Replaces one-process-per-candidate: each worker imports the pipeline and decodes the oracle once. Every task is
+    still a full fresh compile + verifier run in its own PID (wcc isolation); results are the fields the permuter
+    reads (COMPACT). Plain pipes, no multiprocessing primitives (Windows restricted tokens)."""
+    def __init__(self, n):
+        flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        self.procs = [subprocess.Popen([sys.executable, "-B", str(Path(__file__).resolve()), "--serve"],
+                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                       text=True, encoding="utf-8", creationflags=flags) for _ in range(n)]
+        self.free = list(self.procs)
+
+    def submit(self, task):
+        proc = self.free.pop(0)
+        proc.stdin.write(json.dumps(task) + "\n")
+        proc.stdin.flush()
+        return _Pending(self, proc)
+
+    def close(self):
+        for p in self.procs:
+            if p.poll() is None:
+                try:
+                    p.stdin.close()
+                    p.wait(timeout=10)
+                except Exception:
+                    p.kill()
+
+
+class _Pending:
+    def __init__(self, pool, proc):
+        self.pool, self.proc, self.value = pool, proc, None
+
+    def result(self):
+        if self.value is None:
+            line = self.proc.stdout.readline()
+            self.value = json.loads(line) if line else {"error": "pool worker died", "returncode": self.proc.poll()}
+            self.pool.free.append(self.proc)
+        return self.value
+
+    def close(self):
+        pass
+
+
+def serve():
+    for line in sys.stdin:
+        task = json.loads(line)
+        try:
+            r = evaluate(task)
+            r = {k: r[k] for k in COMPACT if k in r}
+        except Exception as exc:          # reported as a failed candidate, never a crash of the run
+            r = {"error": f"evaluation failed: {exc}"}
+        sys.stdout.write(json.dumps(r) + "\n")
+        sys.stdout.flush()
+
+
 if __name__ == "__main__":
-    task = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    Path(sys.argv[2]).write_text(json.dumps(evaluate(task)), encoding="utf-8")
+    if sys.argv[1:] == ["--serve"]:
+        serve()
+    else:
+        task = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+        Path(sys.argv[2]).write_text(json.dumps(evaluate(task)), encoding="utf-8")
