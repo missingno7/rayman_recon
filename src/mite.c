@@ -165,7 +165,7 @@ void fix_mit_Xspeed(obj_t* obj, s16 a2) {
         }
 
         if (obj->main_etat == 1) {
-            obj->eta[obj->main_etat][obj->sub_etat].flags_bits.bit4 = (
+            obj->eta[obj->main_etat][obj->sub_etat].flags_bits.anim_reverse = (
                     (!(obj->flags.flip_x) && obj->speed_x > 0) ||
                     (obj->flags.flip_x && obj->speed_x < 0)) ? true : false;
         }

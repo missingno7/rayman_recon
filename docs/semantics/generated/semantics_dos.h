@@ -1,4 +1,4 @@
-/* Generated DOS layout facts. Native structs need not share DOS packing. */
+/* Generated DOS ABI facts; native runtime structs need not be packed. */
 #ifndef RAYMAN_SEMANTICS_DOS_H
 #define RAYMAN_SEMANTICS_DOS_H
 #define DOS_OBJ_T_SIZE 132
@@ -42,22 +42,22 @@
 /* STRONG: Object script stream/context member cmd_contexts. */
 #define DOS_OBJ_T_CMD_CONTEXTS_OFFSET 0x18
 #define DOS_OBJ_T_CMD_CONTEXTS_SIZE 4
-/* UNKNOWN: Neutral obj_t.field_1C storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Overloaded 32-bit scratch mark: set by make_active/make_active2 and tested to suppress repeat linked activation; also set during save restoration for gate types179/242 and tested by INIT_OBJECTS. */
 #define DOS_OBJ_T_FIELD_1C_OFFSET 0x1c
 #define DOS_OBJ_T_FIELD_1C_SIZE 4
-/* UNKNOWN: Neutral obj_t.link_has_gendoor storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: Marker enabling linked-group operations; normally set for eligible non-self successor groups, not a proof that a generating door exists. */
 #define DOS_OBJ_T_LINK_HAS_GENDOOR_OFFSET 0x20
 #define DOS_OBJ_T_LINK_HAS_GENDOOR_SIZE 4
 /* PROVEN: Object participation flag saved as the high bit of each two-bit snapshot entry. */
 #define DOS_OBJ_T_IS_ACTIVE_OFFSET 0x24
 #define DOS_OBJ_T_IS_ACTIVE_SIZE 4
-/* PROVEN: World-space live-object origin coordinate on the x axis, with loader-descriptor reuse. */
+/* PROVEN: Signed32 world pixel x origin in live object movement; loader also reuses object records as descriptors. */
 #define DOS_OBJ_T_X_OFFSET 0x28
 #define DOS_OBJ_T_X_SIZE 4
-/* PROVEN: World-space live-object origin coordinate on the y axis, with loader-descriptor reuse. */
+/* PROVEN: Signed32 world pixel y origin in live object movement. */
 #define DOS_OBJ_T_Y_OFFSET 0x2c
 #define DOS_OBJ_T_Y_SIZE 4
-/* UNKNOWN: Neutral obj_t.active_flag storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Activation lifecycle code used by zone transitions: 0 activated/default,1 dead/outside,2 reinitialised awaiting departure,4 waiting for the linked group to leave. */
 #define DOS_OBJ_T_ACTIVE_FLAG_OFFSET 0x30
 #define DOS_OBJ_T_ACTIVE_FLAG_SIZE 4
 /* PROVEN: Object identifier stored in the active and always-object id lists. */
@@ -78,10 +78,10 @@
 /* STRONG: Initial position component init_y used by reset and relative-displacement logic. */
 #define DOS_OBJ_T_INIT_Y_OFFSET 0x3e
 #define DOS_OBJ_T_INIT_Y_SIZE 2
-/* PROVEN: Signed per-axis movement quantity whose scale is selected by object-type flags. */
+/* PROVEN: Signed16 horizontal speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. */
 #define DOS_OBJ_T_SPEED_X_OFFSET 0x40
 #define DOS_OBJ_T_SPEED_X_SIZE 2
-/* PROVEN: Signed per-axis movement quantity whose scale is selected by object-type flags. */
+/* PROVEN: Signed16 vertical speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. */
 #define DOS_OBJ_T_SPEED_Y_OFFSET 0x42
 #define DOS_OBJ_T_SPEED_Y_SIZE 2
 /* PROVEN: Count bounding the object sprite-table search. */
@@ -105,7 +105,7 @@
 /* PROVEN: Type-specific signed scratch parameter, including Rayman edge classification in calc_btyp. */
 #define DOS_OBJ_T_PARAM_OFFSET 0x50
 #define DOS_OBJ_T_PARAM_SIZE 2
-/* UNKNOWN: Neutral obj_t.link storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Type-dependent signed16 storage: generating doors save their detached successor id here; live Rayman initialization uses-1, and template swaps copy the field. A universal meaning across object types remains unresolved. */
 #define DOS_OBJ_T_LINK_OFFSET 0x52
 #define DOS_OBJ_T_LINK_SIZE 2
 /* PROVEN: Context-dependent Rayman tile index or signed object-to-Rayman support distance. */
@@ -123,7 +123,7 @@
 /* UNKNOWN: Neutral obj_t.zdc storage/view; its intended meaning is not established by this pilot. */
 #define DOS_OBJ_T_ZDC_OFFSET 0x5c
 #define DOS_OBJ_T_ZDC_SIZE 2
-/* UNKNOWN: Neutral obj_t.active_timer storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Delay inhibiting reactivation, counted down while the living object is in its action zone. */
 #define DOS_OBJ_T_ACTIVE_TIMER_OFFSET 0x5e
 #define DOS_OBJ_T_ACTIVE_TIMER_SIZE 2
 /* PROVEN: Unsigned object type discriminator indexing flags and selecting behaviour. */
@@ -162,10 +162,10 @@
 /* STRONG: Current script command discriminator. */
 #define DOS_OBJ_T_CMD_OFFSET 0x70
 #define DOS_OBJ_T_CMD_SIZE 1
-/* STRONG: Byte gravity integration state component gravity_value_1. */
+/* PROVEN: First gravity counter: modulo3 in ordinary airborne updates, or the byte phase counter compared against gravity_value_2 by gravity modes10/11. */
 #define DOS_OBJ_T_GRAVITY_VALUE_1_OFFSET 0x71
 #define DOS_OBJ_T_GRAVITY_VALUE_1_SIZE 1
-/* STRONG: Byte gravity integration state component gravity_value_2. */
+/* PROVEN: Second gravity counter: modulo4 in ordinary airborne updates, or the comparison threshold retained for gravity modes10/11. */
 #define DOS_OBJ_T_GRAVITY_VALUE_2_OFFSET 0x72
 #define DOS_OBJ_T_GRAVITY_VALUE_2_SIZE 1
 /* PROVEN: Animation transition mode set to1 by the state setters. */
@@ -204,7 +204,7 @@
 /* STRONG: Object drawing-order bucket selector. */
 #define DOS_OBJ_T_DISPLAY_PRIO_OFFSET 0x7e
 #define DOS_OBJ_T_DISPLAY_PRIO_SIZE 1
-/* UNKNOWN: Neutral obj_t.timer storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Type-dependent byte storage; the cling pickup animation path decrements it as a delay while holding frame zero. Its other object-specific roles remain unresolved. */
 #define DOS_OBJ_T_TIMER_OFFSET 0x7f
 #define DOS_OBJ_T_TIMER_SIZE 1
 /* STRONG: Number of animations in the object descriptor. */
@@ -231,7 +231,7 @@
 /* PROVEN: State indices selected when an animation crosses its frame bounds. */
 #define DOS_ETA_T_NEXT_SUB_ETAT_OFFSET 0x4
 #define DOS_ETA_T_NEXT_SUB_ETAT_SIZE 1
-/* PROVEN: Packed animation timing/control byte whose low nibble selects the clock. */
+/* PROVEN: Packed state timing/control byte: low nibble selects the animation clock, high nibble selects the airborne gravity/control mode. */
 #define DOS_ETA_T_ANIM_SPEED_OFFSET 0x5
 #define DOS_ETA_T_ANIM_SPEED_SIZE 1
 /* PROVEN: Overlapping nibble/bit alias container for the corresponding eta byte. */
@@ -241,7 +241,7 @@
 #define DOS_ETA_T_ANIM_SPEED_BITS_LOW_OFFSET 0x5
 #define DOS_ETA_T_ANIM_SPEED_BITS_LOW_SIZE 1
 #define DOS_ETA_T_ANIM_SPEED_BITS_LOW_MASK 0x0f
-/* PROVEN: High-nibble state control selector used by gravity/helicopter processing. */
+/* PROVEN: High-nibble gravity/control selector consumed by DO_PESANTEUR and specialized state logic. */
 #define DOS_ETA_T_ANIM_SPEED_BITS_HIGH_OFFSET 0x5
 #define DOS_ETA_T_ANIM_SPEED_BITS_HIGH_SIZE 1
 #define DOS_ETA_T_ANIM_SPEED_BITS_HIGH_MASK 0xf0
@@ -266,14 +266,14 @@
 #define DOS_ETA_T_FLAGS_BITS_BIT2_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT2_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT2_MASK 0x04
-/* UNKNOWN: Neutral eta_t.flags_bits.bit3 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Observed state flag0x08: DO_OBJECTS increments a nonboss object hit_points from0 to1 after its update when this bit is set. A broader intended state name is unresolved. */
 #define DOS_ETA_T_FLAGS_BITS_BIT3_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT3_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT3_MASK 0x08
-/* PROVEN: Alias for reverse animation playback flag0x10. */
-#define DOS_ETA_T_FLAGS_BITS_BIT4_OFFSET 0x7
-#define DOS_ETA_T_FLAGS_BITS_BIT4_SIZE 1
-#define DOS_ETA_T_FLAGS_BITS_BIT4_MASK 0x10
+/* PROVEN: Reverse animation playback flag0x10, selecting decrement and last-frame initialization. */
+#define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_OFFSET 0x7
+#define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_SIZE 1
+#define DOS_ETA_T_FLAGS_BITS_ANIM_REVERSE_MASK 0x10
 /* UNKNOWN: Neutral eta_t.flags_bits.bit5 storage/view; its intended meaning is not established by this pilot. */
 #define DOS_ETA_T_FLAGS_BITS_BIT5_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT5_SIZE 1
@@ -359,7 +359,7 @@
 /* PROVEN: Pointer to one bounding rectangle per animation frame. */
 #define DOS_ANIM_T_FRAMES_OFFSET 0x4
 #define DOS_ANIM_T_FRAMES_SIZE 4
-/* PROVEN: Packed layer-count and horizontal-speed clock selector. */
+/* PROVEN: Packed animation header: low14 bits are layer count per frame, top2 bits encode the horizontal-speed clock period minus one. */
 #define DOS_ANIM_T_LAYERS_PER_FRAME_OFFSET 0x8
 #define DOS_ANIM_T_LAYERS_PER_FRAME_SIZE 2
 /* PROVEN: Number of frames in this animation. */
@@ -413,7 +413,7 @@
 #define DOS_OBJ_FLAGS_T_FOLLOW_ENABLED_OFFSET 0x0
 #define DOS_OBJ_FLAGS_T_FOLLOW_ENABLED_SIZE 1
 #define DOS_OBJ_FLAGS_T_FOLLOW_ENABLED_MASK 0x20
-/* UNKNOWN: Neutral obj_flags_t.flag_0x40 storage/view; its intended meaning is not established by this pilot. */
+/* STRONG: Water-entry/splash suppression flag in the generic movement path; also cleared by many spawned-object initializers. */
 #define DOS_OBJ_FLAGS_T_FLAG_0X40_OFFSET 0x0
 #define DOS_OBJ_FLAGS_T_FLAG_0X40_SIZE 1
 #define DOS_OBJ_FLAGS_T_FLAG_0X40_MASK 0x40
@@ -437,13 +437,13 @@
 /* PROVEN: Count bounding the level object array. */
 #define DOS_LEVEL_T_NB_OBJECTS_OFFSET 0x4
 #define DOS_LEVEL_T_NB_OBJECTS_SIZE 2
-/* PROVEN: Always-object list member obj_ids. */
+/* PROVEN: Object-id sequence pointer shared by the level_obj activation-candidate descriptor and the separate level_alw always-type pool descriptor. */
 #define DOS_LEVEL_OBJ_T_OBJ_IDS_OFFSET 0x0
 #define DOS_LEVEL_OBJ_T_OBJ_IDS_SIZE 4
-/* PROVEN: Always-object list member nb_objects. */
+/* PROVEN: Signed16 counted length of the id sequence in either level_obj or level_alw. */
 #define DOS_LEVEL_OBJ_T_NB_OBJECTS_OFFSET 0x4
 #define DOS_LEVEL_OBJ_T_NB_OBJECTS_SIZE 2
-/* PROVEN: Active-object list member objects. */
+/* PROVEN: Counted active-object id array with an additional -1 terminator written at the next slot. */
 #define DOS_ACTIVE_OBJECTS_T_OBJECTS_OFFSET 0x0
 #define DOS_ACTIVE_OBJECTS_T_OBJECTS_SIZE 200
 /* PROVEN: Active-object list member num_active_objects. */
@@ -513,7 +513,7 @@
 /* PROVEN: Byte/bitfield views of block-type behaviour flags. */
 #define DOS_BLOCK_FLAGS_T_BITS_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_SIZE 1
-/* UNKNOWN: Neutral block_flags_t.bits.unused0 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Observed raw bit0 used by underSlope, stone-dog side probes and mounted Rayman side-strip probes; its universal collision-class meaning remains unresolved. */
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED0_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED0_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED0_MASK 0x01
@@ -521,7 +521,7 @@
 #define DOS_BLOCK_FLAGS_T_BITS_SOLID_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_SOLID_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_SOLID_MASK 0x02
-/* UNKNOWN: Neutral block_flags_t.bits.unused2 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Three-bit view of raw bits2..4; moteur tests bit3 together with bit6 for icy slopes, and bit4 for ceiling/wall blocking. Bit2 meaning is unresolved. */
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED2_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED2_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED2_MASK 0x1c
@@ -529,7 +529,7 @@
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_CHDIR_MASK 0x20
-/* UNKNOWN: Neutral block_flags_t.bits.unused1 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Two-bit view of raw bits6..7; moteur consumes bit6 in slope predicates while the role of bit7 remains unresolved. */
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_OFFSET 0x0
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_SIZE 1
 #define DOS_BLOCK_FLAGS_T_BITS_UNUSED1_MASK 0xc0
@@ -637,7 +637,7 @@
 #define DOS_FINBOSSLEVEL_T_HELPED_MUSICIAN_OFFSET 0x1
 #define DOS_FINBOSSLEVEL_T_HELPED_MUSICIAN_SIZE 1
 #define DOS_FINBOSSLEVEL_T_HELPED_MUSICIAN_MASK 0x08
-/* PROVEN: Fist vertical position accumulator scaled by16. */
+/* PROVEN: Fist signed32 vertical position accumulator scaled by16, separately maintained from integer obj.y. */
 #define DOS_POING_T_Y_16_OFFSET 0x0
 #define DOS_POING_T_Y_16_SIZE 4
 /* UNKNOWN: Neutral poing_t.field_4 storage/view; its intended meaning is not established by this pilot. */
@@ -718,4 +718,217 @@
 /* STRONG: Text palette/color selector passed to display_text. */
 #define DOS_DISPLAY_ITEM_T_COLOR_OFFSET 0xd7
 #define DOS_DISPLAY_ITEM_T_COLOR_SIZE 1
+#define DOS_STATUS_BAR_T_SIZE 10
+#define DOS_SAVE_STATE_T_SIZE 604
+#define DOS_RECORD_T_SIZE 24
+#define DOS_MEM_T_SIZE 12
+#define DOS_PIX_GERBE_ITEM_T_SIZE 10
+#define DOS_PIX_GERBE_T_SIZE 642
+#define DOS_OBJ_PROCS_T_SIZE 20
+#define DOS_FLOCON_T_SIZE 8
+/* PROVEN: Signed life counter with -1 display sentinel and upper gameplay cap99. */
+#define DOS_STATUS_BAR_T_LIVES_OFFSET 0x0
+#define DOS_STATUS_BAR_T_LIVES_SIZE 2
+/* PROVEN: Tens then units decimal display digits of lives. */
+#define DOS_STATUS_BAR_T_LIVES_DIGITS_OFFSET 0x2
+#define DOS_STATUS_BAR_T_LIVES_DIGITS_SIZE 2
+/* PROVEN: Two HUD health-sprite selectors, slot1 for the first two health points and slot0 for extra health. */
+#define DOS_STATUS_BAR_T_HP_SPRITES_OFFSET 0x4
+#define DOS_STATUS_BAR_T_HP_SPRITES_SIZE 2
+/* PROVEN: Collected tings count used by the HUD and bonus/checkpoint rules. */
+#define DOS_STATUS_BAR_T_NUM_WIZ_OFFSET 0x6
+#define DOS_STATUS_BAR_T_NUM_WIZ_SIZE 1
+/* PROVEN: Tens then units decimal display digits for the tings count. */
+#define DOS_STATUS_BAR_T_WIZ_DIGITS_OFFSET 0x7
+#define DOS_STATUS_BAR_T_WIZ_DIGITS_SIZE 2
+/* PROVEN: HUD maximum health class, normally2 or4. */
+#define DOS_STATUS_BAR_T_MAX_HITP_OFFSET 0x9
+#define DOS_STATUS_BAR_T_MAX_HITP_SIZE 1
+/* PROVEN: Alive-bit snapshot for object types141,164,179,242 indexed by object id bit. */
+#define DOS_SAVE_STATE_T_TRIGGERED_OBJECTS_OFFSET 0x0
+#define DOS_SAVE_STATE_T_TRIGGERED_OBJECTS_SIZE 32
+/* PROVEN: Saved eight weather-layer flake counts. */
+#define DOS_SAVE_STATE_T_NB_FLOC_OFFSET 0x20
+#define DOS_SAVE_STATE_T_NB_FLOC_SIZE 16
+/* PROVEN: Saved VENT_X weather/wind value. */
+#define DOS_SAVE_STATE_T_VENT_X_OFFSET 0x30
+#define DOS_SAVE_STATE_T_VENT_X_SIZE 2
+/* PROVEN: Saved VENT_Y weather/wind value. */
+#define DOS_SAVE_STATE_T_VENT_Y_OFFSET 0x32
+#define DOS_SAVE_STATE_T_VENT_Y_SIZE 2
+/* PROVEN: Saved horizontal camera origin. */
+#define DOS_SAVE_STATE_T_X_MAP_OFFSET 0x34
+#define DOS_SAVE_STATE_T_X_MAP_SIZE 2
+/* PROVEN: Saved vertical camera origin. */
+#define DOS_SAVE_STATE_T_Y_MAP_OFFSET 0x36
+#define DOS_SAVE_STATE_T_Y_MAP_SIZE 2
+/* PROVEN: Saved Rayman world x narrowed to signed16. */
+#define DOS_SAVE_STATE_T_RAY_X_POS_OFFSET 0x38
+#define DOS_SAVE_STATE_T_RAY_X_POS_SIZE 2
+/* PROVEN: Saved Rayman world y narrowed to signed16. */
+#define DOS_SAVE_STATE_T_RAY_Y_POS_OFFSET 0x3a
+#define DOS_SAVE_STATE_T_RAY_Y_POS_SIZE 2
+/* PROVEN: Saved Rayman screen x. */
+#define DOS_SAVE_STATE_T_RAY_SCREEN_X_OFFSET 0x3c
+#define DOS_SAVE_STATE_T_RAY_SCREEN_X_SIZE 2
+/* PROVEN: Saved Rayman screen y. */
+#define DOS_SAVE_STATE_T_RAY_SCREEN_Y_OFFSET 0x3e
+#define DOS_SAVE_STATE_T_RAY_SCREEN_Y_SIZE 2
+/* PROVEN: Saved Rayman facing flag widened to u16. */
+#define DOS_SAVE_STATE_T_RAY_FLIP_X_OFFSET 0x40
+#define DOS_SAVE_STATE_T_RAY_FLIP_X_SIZE 2
+/* PROVEN: Saved checkpoint-object world x narrowed to signed16. */
+#define DOS_SAVE_STATE_T_SAVE_OBJ_X_POS_OFFSET 0x42
+#define DOS_SAVE_STATE_T_SAVE_OBJ_X_POS_SIZE 2
+/* PROVEN: Saved checkpoint-object world y narrowed to signed16. */
+#define DOS_SAVE_STATE_T_SAVE_OBJ_Y_POS_OFFSET 0x44
+#define DOS_SAVE_STATE_T_SAVE_OBJ_Y_POS_SIZE 2
+/* PROVEN: Checkpoint-object id, with-1 when saveGameState receives no object. */
+#define DOS_SAVE_STATE_T_SAVE_OBJ_ID_OFFSET 0x46
+#define DOS_SAVE_STATE_T_SAVE_OBJ_ID_SIZE 2
+/* PROVEN: Snapshot of live circular successor ids, stored as u16. */
+#define DOS_SAVE_STATE_T_LINK_INIT_OFFSET 0x48
+#define DOS_SAVE_STATE_T_LINK_INIT_SIZE 512
+/* PROVEN: Saved checkpoint-object detection-zone classification. */
+#define DOS_SAVE_STATE_T_SAVE_OBJ_DETECT_ZONE_FLAG_OFFSET 0x248
+#define DOS_SAVE_STATE_T_SAVE_OBJ_DETECT_ZONE_FLAG_SIZE 1
+/* PROVEN: Saved checkpoint-object hurtbyfist bit, despite the neutral numbered spelling. */
+#define DOS_SAVE_STATE_T_SAVE_OBJ_FLAG_1_OFFSET 0x249
+#define DOS_SAVE_STATE_T_SAVE_OBJ_FLAG_1_SIZE 1
+/* PROVEN: Saved five Rayman tile-collision sample types. */
+#define DOS_SAVE_STATE_T_RAY_COLL_BTYPE_OFFSET 0x24a
+#define DOS_SAVE_STATE_T_RAY_COLL_BTYPE_SIZE 5
+/* PROVEN: Saved Rayman animation selector. */
+#define DOS_SAVE_STATE_T_RAY_ANIM_INDEX_OFFSET 0x24f
+#define DOS_SAVE_STATE_T_RAY_ANIM_INDEX_SIZE 1
+/* PROVEN: Saved Rayman animation frame selector. */
+#define DOS_SAVE_STATE_T_RAY_ANIM_FRAME_OFFSET 0x250
+#define DOS_SAVE_STATE_T_RAY_ANIM_FRAME_SIZE 1
+/* PROVEN: Saved Rayman main state. */
+#define DOS_SAVE_STATE_T_RAY_MAIN_ETAT_OFFSET 0x251
+#define DOS_SAVE_STATE_T_RAY_MAIN_ETAT_SIZE 1
+/* PROVEN: Saved Rayman substate. */
+#define DOS_SAVE_STATE_T_RAY_SUB_ETAT_OFFSET 0x252
+#define DOS_SAVE_STATE_T_RAY_SUB_ETAT_SIZE 1
+/* PROVEN: Saved fist power/substate selection. */
+#define DOS_SAVE_STATE_T_POING_SUB_ETAT_OFFSET 0x253
+#define DOS_SAVE_STATE_T_POING_SUB_ETAT_SIZE 1
+/* PROVEN: Saved two-bit RayEvts.reverse value widened to a byte. */
+#define DOS_SAVE_STATE_T_RAYEVTS_REVERSE_OFFSET 0x254
+#define DOS_SAVE_STATE_T_RAYEVTS_REVERSE_SIZE 1
+/* PROVEN: Saved RayEvts.super_helico bit. */
+#define DOS_SAVE_STATE_T_RAYEVTS_SUPER_HELICO_OFFSET 0x255
+#define DOS_SAVE_STATE_T_RAYEVTS_SUPER_HELICO_SIZE 1
+/* PROVEN: Saved RayEvts.poing ability bit. */
+#define DOS_SAVE_STATE_T_RAYEVTS_POING_OFFSET 0x256
+#define DOS_SAVE_STATE_T_RAYEVTS_POING_SIZE 1
+/* PROVEN: Saved palette selector. */
+#define DOS_SAVE_STATE_T_CURRENT_PAL_ID_OFFSET 0x257
+#define DOS_SAVE_STATE_T_CURRENT_PAL_ID_SIZE 1
+/* PROVEN: Saved entry/death sequence counter. */
+#define DOS_SAVE_STATE_T_DEAD_TIME_OFFSET 0x258
+#define DOS_SAVE_STATE_T_DEAD_TIME_SIZE 1
+/* PROVEN: Checkpoint-valid marker set after a save image is filled. */
+#define DOS_SAVE_STATE_T_IS_JUST_SAVED_OFFSET 0x259
+#define DOS_SAVE_STATE_T_IS_JUST_SAVED_SIZE 1
+/* PROVEN: Saved HUD tings count. */
+#define DOS_SAVE_STATE_T_STATUS_BAR_TINGS_OFFSET 0x25a
+#define DOS_SAVE_STATE_T_STATUS_BAR_TINGS_SIZE 1
+/* UNKNOWN: Trailing checkpoint byte with no typed reader/writer found. */
+#define DOS_SAVE_STATE_T_FIELD_25B_OFFSET 0x25b
+#define DOS_SAVE_STATE_T_FIELD_25B_SIZE 1
+/* STRONG: Current byte cursor into the recorded demo stream. */
+#define DOS_RECORD_T_CURRENT_OFFSET_OFFSET 0x0
+#define DOS_RECORD_T_CURRENT_OFFSET_SIZE 4
+/* STRONG: Length of the current repeated demo-input run. */
+#define DOS_RECORD_T_REPEAT_LENGTH_OFFSET 0x4
+#define DOS_RECORD_T_REPEAT_LENGTH_SIZE 4
+/* STRONG: Progress within the current repeated demo-input run. */
+#define DOS_RECORD_T_REPEAT_INDEX_OFFSET 0x8
+#define DOS_RECORD_T_REPEAT_INDEX_SIZE 4
+/* STRONG: Recorded demo stream length used by input playback. */
+#define DOS_RECORD_T_LENGTH_OFFSET 0xc
+#define DOS_RECORD_T_LENGTH_SIZE 4
+/* STRONG: Demo stream byte buffer pointer. */
+#define DOS_RECORD_T_DATA_OFFSET 0x10
+#define DOS_RECORD_T_DATA_SIZE 4
+/* PROVEN: Nonzero while demo input recording is enabled. */
+#define DOS_RECORD_T_IS_RECORDING_OFFSET 0x14
+#define DOS_RECORD_T_IS_RECORDING_SIZE 1
+/* PROVEN: Nonzero while recorded demo input is being played. */
+#define DOS_RECORD_T_IS_PLAYING_OFFSET 0x15
+#define DOS_RECORD_T_IS_PLAYING_SIZE 1
+/* PROVEN: Request to stop demo playback at the current repeat-run boundary. */
+#define DOS_RECORD_T_IS_FINISHED_OFFSET 0x16
+#define DOS_RECORD_T_IS_FINISHED_SIZE 1
+/* UNKNOWN: Declared record_t.unknown_17 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_RECORD_T_UNKNOWN_17_OFFSET 0x17
+#define DOS_RECORD_T_UNKNOWN_17_SIZE 1
+/* PROVEN: Used-byte bump offset relative to arena data, despite the alignment-oriented field name. */
+#define DOS_MEM_T_ALIGN_OFFSET 0x0
+#define DOS_MEM_T_ALIGN_SIZE 4
+/* PROVEN: Arena base allocation pointer, with the live bump offset stored separately in align. */
+#define DOS_MEM_T_DATA_OFFSET 0x4
+#define DOS_MEM_T_DATA_SIZE 4
+/* PROVEN: Total arena byte capacity against which the bump offset is checked. */
+#define DOS_MEM_T_CAPACITY_OFFSET 0x8
+#define DOS_MEM_T_CAPACITY_SIZE 4
+/* UNKNOWN: Declared pix_gerbe_item_t.x_pos storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_X_POS_OFFSET 0x0
+#define DOS_PIX_GERBE_ITEM_T_X_POS_SIZE 2
+/* UNKNOWN: Declared pix_gerbe_item_t.y_pos storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_Y_POS_OFFSET 0x2
+#define DOS_PIX_GERBE_ITEM_T_Y_POS_SIZE 2
+/* UNKNOWN: Declared pix_gerbe_item_t.speed_x storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_SPEED_X_OFFSET 0x4
+#define DOS_PIX_GERBE_ITEM_T_SPEED_X_SIZE 2
+/* UNKNOWN: Declared pix_gerbe_item_t.speed_y storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_SPEED_Y_OFFSET 0x6
+#define DOS_PIX_GERBE_ITEM_T_SPEED_Y_SIZE 2
+/* UNKNOWN: Declared pix_gerbe_item_t.y_accel storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_Y_ACCEL_OFFSET 0x8
+#define DOS_PIX_GERBE_ITEM_T_Y_ACCEL_SIZE 1
+/* UNKNOWN: Declared pix_gerbe_item_t.unk_1 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_PIX_GERBE_ITEM_T_UNK_1_OFFSET 0x9
+#define DOS_PIX_GERBE_ITEM_T_UNK_1_SIZE 1
+/* PROVEN: 64-item particle storage view. */
+#define DOS_PIX_GERBE_T_ITEMS_OFFSET 0x0
+#define DOS_PIX_GERBE_T_ITEMS_SIZE 640
+/* PROVEN: 320-word alias of the same640-byte particle item storage. */
+#define DOS_PIX_GERBE_T_WORDS_OFFSET 0x0
+#define DOS_PIX_GERBE_T_WORDS_SIZE 640
+/* PROVEN: Signed16 active marker for a particle batch. */
+#define DOS_PIX_GERBE_T_IS_ACTIVE_OFFSET 0x280
+#define DOS_PIX_GERBE_T_IS_ACTIVE_SIZE 2
+/* PROVEN: Object command/update callback. */
+#define DOS_OBJ_PROCS_T_COMMAND_OFFSET 0x0
+#define DOS_OBJ_PROCS_T_COMMAND_SIZE 4
+/* PROVEN: Object fist-collision callback receiving a signed16 sprite selector. */
+#define DOS_OBJ_PROCS_T_POING_COLLISION_OFFSET 0x4
+#define DOS_OBJ_PROCS_T_POING_COLLISION_SIZE 4
+/* PROVEN: Object Rayman-collision callback. */
+#define DOS_OBJ_PROCS_T_RAYMAN_COLLISION_OFFSET 0x8
+#define DOS_OBJ_PROCS_T_RAYMAN_COLLISION_SIZE 4
+/* PROVEN: Object Rayman-in-detection-zone callback. */
+#define DOS_OBJ_PROCS_T_RAYMAN_IN_ZONE_OFFSET 0xc
+#define DOS_OBJ_PROCS_T_RAYMAN_IN_ZONE_SIZE 4
+/* STRONG: Fifth callback slot, initialized with turn-handler function pointers. */
+#define DOS_OBJ_PROCS_T_U_TURN_OFFSET 0x10
+#define DOS_OBJ_PROCS_T_U_TURN_SIZE 4
+/* UNKNOWN: Declared flocon_t.field_0 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_FLOCON_T_FIELD_0_OFFSET 0x0
+#define DOS_FLOCON_T_FIELD_0_SIZE 2
+/* UNKNOWN: Declared flocon_t.field_2 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_FLOCON_T_FIELD_2_OFFSET 0x2
+#define DOS_FLOCON_T_FIELD_2_SIZE 2
+/* UNKNOWN: Declared flocon_t.field_4 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_FLOCON_T_FIELD_4_OFFSET 0x4
+#define DOS_FLOCON_T_FIELD_4_SIZE 2
+/* UNKNOWN: Declared flocon_t.field_6 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_FLOCON_T_FIELD_6_OFFSET 0x6
+#define DOS_FLOCON_T_FIELD_6_SIZE 1
+/* UNKNOWN: Declared flocon_t.field_7 storage; moteur only clears its enclosing storage or never accesses it. */
+#define DOS_FLOCON_T_FIELD_7_OFFSET 0x7
+#define DOS_FLOCON_T_FIELD_7_SIZE 1
 #endif
+

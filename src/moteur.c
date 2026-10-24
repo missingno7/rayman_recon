@@ -955,53 +955,61 @@ void fades(void) {
     }
 }
 
-s16 frapsol(s16 param_1)
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:45b24:
+ * param_1 -> sample_index. See docs/semantics/moteur.json. */
+s16 frapsol(s16 sample_index)
 {
-    return ashr16(expsin[param_1], 7);
+    return ashr16(expsin[sample_index], 7);
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:45b48:
+ * unk_1 -> shake_y_offset. See docs/semantics/moteur.json. */
 void DO_SCREEN_TREMBLE(void)
 {
-    s16 unk_1;
+    s16 shake_y_offset;
 
     if (screen_trembling != 0)
     {
-        unk_1 = frapsol(screen_trembling);
+        shake_y_offset = frapsol(screen_trembling);
         screen_trembling++;
-        if (unk_1 == 0xFF)
+        if (shake_y_offset == 0xFF)
         {
-            unk_1 = 0;
+            shake_y_offset = 0;
             screen_trembling = 0;
         }
-        ymap += unk_1;
+        ymap += shake_y_offset;
     }
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:45b90:
+ * unk_1 -> shake_y_offset. See docs/semantics/moteur.json. */
 void DO_SCREEN_TREMBLE3(void)
 {
-    s16 unk_1;
+    s16 shake_y_offset;
 
-    unk_1 = expsin2[screen_trembling3];
+    shake_y_offset = expsin2[screen_trembling3];
 
-    if (unk_1 != 0xFF)
+    if (shake_y_offset != 0xFF)
     {
         screen_trembling3++;
-        ymap += unk_1;
+        ymap += shake_y_offset;
     }
     else
         screen_trembling3 = 0;
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:45bcc:
+ * unk_1 -> shake_x_offset. See docs/semantics/moteur.json. */
 void DO_SCREEN_TREMBLE2(void)
 {
-    s16 unk_1;
+    s16 shake_x_offset;
 
-    unk_1 = expsin2[screen_trembling2];
+    shake_x_offset = expsin2[screen_trembling2];
 
-    if (unk_1 != 0xFF)
+    if (shake_x_offset != 0xFF)
     {
         screen_trembling2++;
-        xmap += unk_1;
+        xmap += shake_x_offset;
     }
     else
         screen_trembling2 = 0;
@@ -1163,14 +1171,16 @@ void make_active(obj_t* obj, u8 do_nova) {
     }
 }
 
-s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:45fe4:
+ * unk_1 -> in_zone, param_4 -> was_active. See docs/semantics/moteur.json. */
+s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 was_active)
 {
-    s16 unk_1;
+    s16 in_zone;
     s16 zdiff_x;
     s16 zdiff_y;
     u8 offset_bx;
 
-    unk_1 = 0;
+    in_zone = 0;
     zdiff_x = zonediffx[ot];
     zdiff_y = zonediffy[ot];
     offset_bx = obj->offset_bx;
@@ -1178,7 +1188,7 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
     if (flags[ot].flags0 & 0x10)
     {
         if (flags[ot].flags0 & 0x80 && IsBossThere)
-            unk_1 = 1;
+            in_zone = 1;
         else
         {
             switch (ot)
@@ -1191,12 +1201,12 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
             case TYPE_COUTEAU:
             case TYPE_DARK_SORT:
             case TYPE_NOVA2:
-                unk_1 = 1;
+                in_zone = 1;
                 break;
             case TYPE_FISH:
             case TYPE_BBL:
                 if (in_x > -284 && in_x < 444)
-                    unk_1 = 1;
+                    in_zone = 1;
                 break;
             case TYPE_PIERREACORDE:
                 if (((s16) in_y + zdiff_y > -50) && in_x > -284 && in_x < 500)
@@ -1209,15 +1219,15 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
                 }
             case TYPE_CORDE:
                 if (level.objects[pierreAcorde_obj_id].hit_points > 0)
-                    unk_1 = 1;
+                    in_zone = 1;
                 break;
             case TYPE_EAU:
                 if (in_x > -284 && in_x < 500)
-                    unk_1 = 1;
+                    in_zone = 1;
                 break;
             case TYPE_STONEDOG2:
                 if ((in_x > -284 && in_x < 444) && (in_y > -100 && in_y < 250))
-                    unk_1 = 1;
+                    in_zone = 1;
                 break;
             case TYPE_SMA_PETIT_LASER:
             case TYPE_SMA_GRAND_LASER:
@@ -1228,9 +1238,9 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
         }
     }
 
-    if (unk_1 == 0)
+    if (in_zone == 0)
     {
-        if (param_4)
+        if (was_active)
         {
             zdiff_x += 60;
             zdiff_y += 60;
@@ -1242,12 +1252,12 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
             (obj->y + obj->offset_by < -30) || (obj->y > mp.height * 16 + 30) ||
             (obj->x + offset_bx * 2 < 0) || (obj->x > mp.width * 16)
         )
-            unk_1 = 0;
+            in_zone = 0;
         else
-            unk_1 = 1;
+            in_zone = 1;
         }
 
-    if (unk_1 == 1)
+    if (in_zone == 1)
     {
         if (flags[ot].flags0 & 0x80)
         {
@@ -1259,7 +1269,7 @@ s16 in_action_zone(s16 in_x, s16 in_y, obj_t *obj, u8 param_4)
                 Change_Wait_Anim();
         }
     }
-    return unk_1 == 1;
+    return in_zone == 1;
 }
 
 void kill_obj(obj_t *obj)
@@ -1359,19 +1369,21 @@ void SET_ACTIVE_FLAG(s16 screen_x, s16 screen_y, obj_t* obj) {
     }
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:465d0:
+ * anim_speed_div -> gravity_mode, res -> bounce_compensation. See docs/semantics/moteur.json. */
 s16 DO_PESANTEUR(obj_t* obj) {
     s16 y_accel;
-    s16 res;
-    u8 anim_speed_div;
+    s16 bounce_compensation;
+    u8 gravity_mode;
 
     /* 2C214 80150A14 -O2 -msoft-float */
 
-    res = 0;
+    bounce_compensation = 0;
     y_accel = 0;
-    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
-    anim_speed_div >>= 4;
+    gravity_mode = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
+    gravity_mode >>= 4;
 
-    if (anim_speed_div != 0)
+    if (gravity_mode != 0)
     {
         if (obj->type == TYPE_TAMBOUR1 || obj->type == TYPE_TAMBOUR2)
         {
@@ -1379,33 +1391,33 @@ s16 DO_PESANTEUR(obj_t* obj) {
                 obj->config--;
             else if (obj->gravity_value_1 == 0)
             {
-                res = 1;
-                obj->speed_y += res;
+                bounce_compensation = 1;
+                obj->speed_y += bounce_compensation;
             }
         }
         else
         {
-            switch (anim_speed_div)
+            switch (gravity_mode)
             {
                 case 6:
                     if (horloge[2] == 0)
                     {
                         y_accel = 1;
-                        res = 1;
+                        bounce_compensation = 1;
                     }
                     break;
                 case 1:
                     if (obj->gravity_value_1 == 0)
                     {
                         y_accel = 1;
-                        res = 1;
+                        bounce_compensation = 1;
                     }
                     break;
                 case 2:
                     if (obj->gravity_value_2 == 0)
                     {
                         y_accel = 1;
-                        res = 1;
+                        bounce_compensation = 1;
                     }
                     break;
                 case 3:
@@ -1430,7 +1442,7 @@ s16 DO_PESANTEUR(obj_t* obj) {
                     {
                         obj->gravity_value_1 = 0;
                         y_accel = 1;
-                        res = 1;
+                        bounce_compensation = 1;
                     }
                     break;
                 case 11:
@@ -1439,7 +1451,7 @@ s16 DO_PESANTEUR(obj_t* obj) {
                     {
                         obj->gravity_value_1 = 0;
                         y_accel = -1;
-                        res = 1;
+                        bounce_compensation = 1;
                     }
                     break;
             }
@@ -1449,10 +1461,12 @@ s16 DO_PESANTEUR(obj_t* obj) {
             y_accel = ashl16(y_accel, 4);
         obj->speed_y += y_accel;
     }
-    return res;
+    return bounce_compensation;
 }
 
-void freezeAnim(obj_t *obj, u8 param_2)
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:46734:
+ * param_2 -> frame_offset. See docs/semantics/moteur.json. */
+void freezeAnim(obj_t *obj, u8 frame_offset)
 {
     s16 count;
 
@@ -1461,11 +1475,11 @@ void freezeAnim(obj_t *obj, u8 param_2)
     if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x10)
     {
         /* duplicate... */
-        obj->anim_frame = count - min32(count, param_2) + 1;
+        obj->anim_frame = count - min32(count, frame_offset) + 1;
     }
     else
     {
-        obj->anim_frame = min32(count, param_2);
+        obj->anim_frame = min32(count, frame_offset);
     }
 }
 
@@ -1484,7 +1498,7 @@ void DO_ANIM(obj_t* obj) {
     prev_anim = obj->animations + obj->anim_index;
     anim_speed = eta->anim_speed & 15;
     if (anim_speed != 0 && horloge[anim_speed] == 0) {
-        switch (eta->flags_bits.bit4) {
+        switch (eta->flags_bits.anim_reverse) {
         case 0: ++obj->anim_frame; break;
         default: --obj->anim_frame; break;
         }
@@ -1665,13 +1679,15 @@ void DO_STONEBOMB_REBOND(obj_t* obj) {
     obj->gravity_value_2 = 2;
 }
 
-void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:46cd8:
+ * pesanteur -> bounce_compensation, a3 -> rebound_offset, anim_speed -> gravity_mode. See docs/semantics/moteur.json. */
+void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 bounce_compensation, s16 rebound_offset) {
     s32 mul_45;
     u8 btyp;
     u16 old_type;
     u8 under;
     s32 mul_30;
-    u8 anim_speed;
+    u8 gravity_mode;
 
     /* COMPILER_STEERED: declaration order and high-nibble test reproduce DOS allocation/selection; private values and control flow are unchanged. */
     /* 2CBC4 801513C4 -O2 -msoft-float */
@@ -1740,10 +1756,10 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
                     obj->speed_y++;
                 break;
         }
-        if (a3 > 0) {
+        if (rebound_offset > 0) {
             if (obj->speed_y > 1) {
-                obj->speed_y = a3 - obj->speed_y;
-                if (pesanteur)
+                obj->speed_y = rebound_offset - obj->speed_y;
+                if (bounce_compensation)
                     obj->speed_y++;
             }
             else
@@ -1767,17 +1783,19 @@ void DO_THROWN_BOMB_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
             recale_position(obj);
     }
     obj->gravity_value_1 = 0;
-    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed_bits.high;
-    if(anim_speed != 11 && anim_speed != 10)
+    gravity_mode = obj->eta[obj->main_etat][obj->sub_etat].anim_speed_bits.high;
+    if(gravity_mode != 11 && gravity_mode != 10)
         obj->gravity_value_2 = 0;
 }
 
-void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:46f00:
+ * pesanteur -> bounce_compensation, a3 -> rebound_offset, anim_speed -> gravity_mode. See docs/semantics/moteur.json. */
+void DO_FRUIT_REBOND(obj_t* obj, s16 bounce_compensation, s16 rebound_offset) {
     s16 gravity;
     s16 bounce;
     u8 under;
     u8 btyp;
-    u8 anim_speed;
+    u8 gravity_mode;
     s32 accel_x;
     s32 speed_x_bnd;
     s16 mul_45;
@@ -1787,8 +1805,8 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
 
     /* 2D008 80151808 -O2 -msoft-float */
 
-    gravity = pesanteur;
-    bounce = a3;
+    gravity = bounce_compensation;
+    bounce = rebound_offset;
     if (obj->type == TYPE_GRAINE) {
         accel_x = 1;
         speed_x_bnd = 1;
@@ -1908,8 +1926,8 @@ void DO_FRUIT_REBOND(obj_t* obj, s16 pesanteur, s16 a3) {
     }
 
     obj->gravity_value_1 = 0;
-    anim_speed = obj->eta[obj->main_etat][obj->sub_etat].anim_speed >> 4;
-    if (!(anim_speed == 10 || anim_speed == 11))
+    gravity_mode = obj->eta[obj->main_etat][obj->sub_etat].anim_speed >> 4;
+    if (!(gravity_mode == 10 || gravity_mode == 11))
         obj->gravity_value_2 = 0;
 }
 
@@ -2013,20 +2031,22 @@ void NormalAtter(obj_t *obj)
     recale_position(obj);
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:47530:
+ * pesanteur -> bounce_compensation, anim_speed_div -> gravity_mode. See docs/semantics/moteur.json. */
 void OBJ_IN_THE_AIR(obj_t* obj) {
-    s16 pesanteur;
+    s16 bounce_compensation;
     s16 spr_w;
     s16 spr_x;
     s16 spr_y;
     s16 spr_h;
-    u8 anim_speed_div;
+    u8 gravity_mode;
 
     /* 2DA58 80152258 -O2 -msoft-float */
 
-    anim_speed_div = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
-    anim_speed_div >>= 4;
+    gravity_mode = obj->eta[obj->main_etat][obj->sub_etat].anim_speed;
+    gravity_mode >>= 4;
 
-    if (!(anim_speed_div == 11 || anim_speed_div == 10))
+    if (!(gravity_mode == 11 || gravity_mode == 10))
     {
         obj->gravity_value_1++;
         if (obj->gravity_value_1 >= 3)
@@ -2037,7 +2057,7 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
             obj->gravity_value_2 = 0;
     }
 
-    pesanteur = DO_PESANTEUR(obj);
+    bounce_compensation = DO_PESANTEUR(obj);
     if (obj->type == TYPE_LIDOLPINK)
     {
         if (obj->speed_y >= 0 && obj->sub_etat == 0)
@@ -2174,14 +2194,14 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
             case TYPE_STONEBOMB:
                 if (obj->speed_y != 0)
                     PlaySnd(200, obj->id);
-                DO_THROWN_BOMB_REBOND(obj, pesanteur, 1);
+                DO_THROWN_BOMB_REBOND(obj, bounce_compensation, 1);
                 break;
             case TYPE_STONEDOG:
             case TYPE_STONEDOG2:
                 stoneDogAtter(obj);
                 break;
             case TYPE_PIRATE_BOMB:
-                DO_FRUIT_REBOND(obj, pesanteur, 1);
+                DO_FRUIT_REBOND(obj, bounce_compensation, 1);
                 break;
             case TYPE_MST_SHAKY_FRUIT:
                 if (obj->param != 0)
@@ -2233,7 +2253,7 @@ void OBJ_IN_THE_AIR(obj_t* obj) {
                         PlaySnd(0, obj->id);
                         break;
                 }
-                DO_FRUIT_REBOND(obj, pesanteur, 0);
+                DO_FRUIT_REBOND(obj, bounce_compensation, 0);
                 break;
             case TYPE_CAGE:
                 set_main_and_sub_etat(obj, 0, 11);
@@ -2779,8 +2799,10 @@ s16 RayCoince(s16 dir) {
     return res;
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:48de8:
+ * unk_y_1 -> top_margin. See docs/semantics/moteur.json. */
 void move_up_ray(void) {
-    s16 unk_y_1;
+    s16 top_margin;
 
     /* 30E34 80155634 -O2 -msoft-float */
     if (ray_mode == MODE_2_RAY_ON_MS && RayCoince(2)) {
@@ -2788,13 +2810,13 @@ void move_up_ray(void) {
     }
 
     if ((get_eta(&ray)->flags & 0x40) || RayEvts.tiny)
-        unk_y_1 = 40;
+        top_margin = 40;
     else
-        unk_y_1 = 25;
+        top_margin = 25;
 
     ray.y += ray.speed_y;
-    if (ray.y < scroll_start_y - 20 - unk_y_1) {
-        ray.y = scroll_start_y - 20 - unk_y_1;
+    if (ray.y < scroll_start_y - 20 - top_margin) {
+        ray.y = scroll_start_y - 20 - top_margin;
         ray.speed_y = 0;
         if (ray.follow_id != -1) {
             RAY_HIT(ray.iframes_timer == -1, NULL);
@@ -2825,6 +2847,8 @@ void move_down_ray(void)
     }
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:48f70:
+ * unk_y_1 -> target_screen_y, unk_y_2 -> vertical_error, unk_x_1 -> rightward_screen_target, unk_x_2 -> leftward_screen_target, unk_x_3 -> horizontal_error_quarter. See docs/semantics/moteur.json. */
 void recale_ray_pos(void) {
     /* 3103C 8015583C -O2 -msoft-float */
     //NOTE: is this function really called RecaleRayPosInJumelle in the PS1 version?? maybe not right?
@@ -2832,18 +2856,18 @@ void recale_ray_pos(void) {
         return;
     }
     if (scroll_y == -1) {
-    s16 unk_y_1;
+    s16 target_screen_y;
 
-        unk_y_1 = ((ray_zdc_y >> 1) - ray.offset_by) + 114; // 136 in the PS1 version
+        target_screen_y = ((ray_zdc_y >> 1) - ray.offset_by) + 114; // 136 in the PS1 version
         if (!((ray.main_etat == 2 && !(ray.sub_etat == 15 && ray_Suphelico_bis)) || screen_trembling)) {
             if (v_scroll_speed != 255 || decalage_en_cours != 0)
             {
-    s16 unk_y_2;
+    s16 vertical_error;
     s32 v_scr_temp;
     s32 spd_y_abs_1;
 
-                unk_y_2 = ray.screen_y - unk_y_1;
-                v_scr_temp = v_scroll_speed = ashr16(unk_y_2, 2);
+                vertical_error = ray.screen_y - target_screen_y;
+                v_scr_temp = v_scroll_speed = ashr16(vertical_error, 2);
                 spd_y_abs_1 = Abs(ray.speed_y);
                 if (Abs(v_scr_temp) >= spd_y_abs_1) {
     s16 spd_y_abs_2;
@@ -2856,14 +2880,14 @@ void recale_ray_pos(void) {
                         v_scr_temp = max32(v_scr_temp, -spd_y_abs_2);
                         v_scroll_speed = v_scr_temp;
                     } else {
-                        if (unk_y_2 > 0)
+                        if (vertical_error > 0)
                             v_scroll_speed = 1;
-                        else if (unk_y_2 < 0)
+                        else if (vertical_error < 0)
                             v_scroll_speed = -1;
                     }
                 }
             } else if (ray.main_etat != 1) {
-                if (ray.screen_y < unk_y_1 + 48) {
+                if (ray.screen_y < target_screen_y + 48) {
                     v_scroll_speed = -4;
                 } else {
                     v_scroll_speed = 0;
@@ -2871,7 +2895,7 @@ void recale_ray_pos(void) {
 
             }
         } else {
-            if ((ymap != scroll_end_y && (unk_y_1 < ray.screen_y - ray.speed_y) && ray.speed_y > 0) ||
+            if ((ymap != scroll_end_y && (target_screen_y < ray.screen_y - ray.speed_y) && ray.speed_y > 0) ||
                 (ymap != scroll_start_y && (-ray.offset_hy - 16 >= ray.screen_y) && ray.speed_y < 0))
             {
                 if (ray.speed_y <= 16)
@@ -2883,50 +2907,50 @@ void recale_ray_pos(void) {
     }
 
     if (scroll_x == -1) {
-    s16 unk_x_1;
-    s16 unk_x_2;
+    s16 rightward_screen_target;
+    s16 leftward_screen_target;
 
-        unk_x_1 = (112 - ray.offset_bx) - special_ray_mov_win_x_left;
-        unk_x_2 = special_ray_mov_win_x_right - (ray.offset_bx - 208);
+        rightward_screen_target = (112 - ray.offset_bx) - special_ray_mov_win_x_left;
+        leftward_screen_target = special_ray_mov_win_x_right - (ray.offset_bx - 208);
         if (decalage_en_cours > 0 || ray.speed_x > 0) {
-    s32 unk_x_3;
+    s32 horizontal_error_quarter;
 
-            unk_x_3 = ashr16(ray.screen_x - unk_x_1, 2);
-            if (unk_x_3 >= dhspeed) {
-                if (unk_x_3 > dhspeed) {
+            horizontal_error_quarter = ashr16(ray.screen_x - rightward_screen_target, 2);
+            if (horizontal_error_quarter >= dhspeed) {
+                if (horizontal_error_quarter > dhspeed) {
                     dhspeed++;
                 }
             } else {
                 dhspeed--;
             }
         } else if (decalage_en_cours < 0 || ray.speed_x < 0) {
-    s32 unk_x_3;
+    s32 horizontal_error_quarter;
 
-            unk_x_3 = ashr16(ray.screen_x - unk_x_2, 2);
-            if (unk_x_3 > dhspeed) {
+            horizontal_error_quarter = ashr16(ray.screen_x - leftward_screen_target, 2);
+            if (horizontal_error_quarter > dhspeed) {
                 dhspeed++;
-            } else if (unk_x_3 < dhspeed) {
+            } else if (horizontal_error_quarter < dhspeed) {
                 dhspeed--;
             }
         } else {
             if (ray.flags.flip_x) {
-    s32 unk_x_3;
+    s32 horizontal_error_quarter;
 
-                unk_x_3 = ashr16(ray.screen_x - unk_x_1, 2);
-                if (unk_x_3 >= dhspeed) {
-                    if (unk_x_3 > dhspeed) {
+                horizontal_error_quarter = ashr16(ray.screen_x - rightward_screen_target, 2);
+                if (horizontal_error_quarter >= dhspeed) {
+                    if (horizontal_error_quarter > dhspeed) {
                         dhspeed++;
                     }
                 } else {
                     dhspeed--;
                 }
             } else {
-    s32 unk_x_3;
+    s32 horizontal_error_quarter;
 
-                unk_x_3 = ashr16(ray.screen_x - unk_x_2, 2);
-                if (unk_x_3 > dhspeed) {
+                horizontal_error_quarter = ashr16(ray.screen_x - leftward_screen_target, 2);
+                if (horizontal_error_quarter > dhspeed) {
                     dhspeed++;
-                } else if (unk_x_3 < dhspeed) {
+                } else if (horizontal_error_quarter < dhspeed) {
                     dhspeed--;
                 }
             }
@@ -2939,7 +2963,7 @@ void recale_ray_pos(void) {
         }
 
         h_scroll_speed += ashr16(dhspeed, 2);
-        if ((unk_x_2 > ray.screen_x && ray.speed_x < 0) || (unk_x_1 < ray.screen_x && ray.speed_x > 0)) {
+        if ((leftward_screen_target > ray.screen_x && ray.speed_x < 0) || (rightward_screen_target < ray.screen_x && ray.speed_x > 0)) {
             h_scroll_speed += ray.speed_x;
         }
     }
@@ -3059,7 +3083,9 @@ s16 linkListHoldsAGendoor(obj_t *obj)
     return res;
 }
 
-void correct_gendoor_link(u8 a1) {
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:496c0:
+ * a1 -> unlink_dead_groups. See docs/semantics/moteur.json. */
+void correct_gendoor_link(u8 unlink_dead_groups) {
     s16 i;
 
     obj_t *obj;
@@ -3093,7 +3119,7 @@ void correct_gendoor_link(u8 a1) {
                 obj->link_has_gendoor = 0;
             }
 
-            if (a1 && !obj->flags.alive) {
+            if (unlink_dead_groups && !obj->flags.alive) {
     s16 init_link;
     s16 linked_obj_id;
 
@@ -3639,7 +3665,9 @@ void INIT_MOTEUR_WORLD(void)
     new_level = 1;
 }
 
-void INIT_MOTEUR_LEVEL(s32 a1) {
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:4a6f4:
+ * a1 -> new_level_flag. See docs/semantics/moteur.json. */
+void INIT_MOTEUR_LEVEL(s32 new_level_flag) {
     Bloc_lim_W1_Aff = Bloc_lim_W1;
     Bloc_lim_W2_Aff = Bloc_lim_W2;
     Bloc_lim_H1_Aff = Bloc_lim_H1;
@@ -3653,7 +3681,7 @@ void INIT_MOTEUR_LEVEL(s32 a1) {
             initGameSave();
             MapAvecPluieOuNeige = 0;
         }
-        INIT_MOTEUR(a1); //TODO
+        INIT_MOTEUR(new_level_flag); //TODO
         if (need_save_game_state) {
             saveGameState(NULL, &save1);
         }
@@ -3810,6 +3838,8 @@ void DO_MOTEUR(void) {
     DO_OBJECTS();
 }
 
+/* Local/parameter names INVENTED from PROVEN DOS computation 1:4ac70:
+ * v20 -> followed_obj. See docs/semantics/moteur.json. */
 void DO_MOTEUR2(void) {
     DO_WIZ_AFTER_BONUS_MAP();
     DO_PERFECT_BONUS_MAP();
@@ -3903,12 +3933,12 @@ void DO_MOTEUR2(void) {
         build_active_table();
         RECALE_ALL_OBJECTS();
         if (ray.follow_id != -1) {
-    obj_t * v20;
+    obj_t * followed_obj;
 
-            v20 = level.objects + ray.follow_id;
-            oldPrio = v20->display_prio;
+            followed_obj = level.objects + ray.follow_id;
+            oldPrio = followed_obj->display_prio;
             if (oldPrio > 3) {
-                v20->display_prio = 3;
+                followed_obj->display_prio = 3;
             }
         }
     } else {

@@ -1407,9 +1407,9 @@ void RAY_RESPOND_TO_DOWN(void) {
             }
             else if (ray.sub_etat == 20 && EOA(&ray)) {
                 sel_eta_1 = &ray.eta[ray.main_etat][ray.sub_etat];
-                sel_eta_1->flags_bits.bit4 = !sel_eta_1->flags_bits.bit4;
+                sel_eta_1->flags_bits.anim_reverse = !sel_eta_1->flags_bits.anim_reverse;
                 freezeAnim(&ray, 1);
-                sel_eta_1->flags_bits.bit4 = !sel_eta_1->flags_bits.bit4;
+                sel_eta_1->flags_bits.anim_reverse = !sel_eta_1->flags_bits.anim_reverse;
             }
             // NOTE: not present in the PS1 version
             else if (options_jeu.test_fire1() && !ray_on_poelle)  {
@@ -1725,9 +1725,9 @@ void RAY_RESPOND_TO_NOTHING(void) {
                     if (block_flags[(u8) calc_typ_trav(&ray, 2)].raw & 0x10)
                     {
                         sel_eta_1 = &ray.eta[ray.main_etat][ray.sub_etat];
-                        sel_eta_1->flags_bits.bit4 = !sel_eta_1->flags_bits.bit4;
+                        sel_eta_1->flags_bits.anim_reverse = !sel_eta_1->flags_bits.anim_reverse;
                         freezeAnim(&ray, 1);
-                        sel_eta_1->flags_bits.bit4 = !sel_eta_1->flags_bits.bit4;
+                        sel_eta_1->flags_bits.anim_reverse = !sel_eta_1->flags_bits.anim_reverse;
                     }
                 }
                 else if (ray.sub_etat == 59 || ray.sub_etat == 62 || ray.sub_etat == 63 ||

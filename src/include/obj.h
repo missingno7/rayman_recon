@@ -25,7 +25,7 @@ typedef struct eta_t {
     u8 sound_index;
     union {                            /* bit view PROVEN by ray RAY_RESPOND_TO_DOWN (bitfield vs mask control) */
         u8 flags;
-        struct { u8 bit0:1; u8 bit1:1; u8 bit2:1; u8 bit3:1; u8 bit4:1; u8 bit5:1; u8 bit6:1; u8 bit7:1; } flags_bits;
+        struct { u8 bit0:1; u8 bit1:1; u8 bit2:1; u8 bit3:1; u8 anim_reverse:1; /* INVENTED name, PROVEN reverse playback: DO_ANIM DOS 1:467ac; EOA 1:0d074. */ u8 bit5:1; u8 bit6:1; u8 bit7:1; } flags_bits;
     };
 } eta_t;
 
