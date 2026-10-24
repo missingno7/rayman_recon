@@ -11,6 +11,9 @@ MISMATCH (62,569 bytes: first fix the computation semir names - local widths, te
 order, stores - before any allocation work; guided editing beat the permuter 4/8 vs 2/8 to exact equivalence and took
 RecaleRayPosInJumelle 581 -> 24), 5 UNKNOWN/similar. Clue kinds in MISMATCH: effect 66, branch 32, effect order 24,
 branch order 17, terminator 12. Causal clustering (H13) is not a targeting method; source twins are the exception.
+Wave 4 (2026-10-24, w4_a/b/c, semir-targeted, disjoint unit groups, ~4,400 compiles, ~30 min per worker): +2 STRICT
+(do_sko_rayon2, SET_RAY_DIST_MULTISPR_CANTCHANGE), ~410 fewer differing bytes, 0 losses. Yield stays low (~1 closure
+per 2,000 compiles); the semantic route mostly improves fidelity and bytes, closures still come from allocation knobs.
 Potential contribution to D:/Prog/ai_decomp (not exported): (1) semantic-IR first difference as the step between
 "is it equivalent" and "why did the compiler differ" - lift both sides to width-exact block expressions with symbolic
 relocations, align CFGs by predicates, report the earliest differing effect; validate with STRICT controls and semantic
