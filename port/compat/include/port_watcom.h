@@ -54,6 +54,8 @@
 #define getche port_getche
 #define sleep port_sleep
 #define tmpnam port_tmpnam
+#define malloc port_malloc
+#define time port_time
 #define rand port_rand
 #define srand port_srand
 

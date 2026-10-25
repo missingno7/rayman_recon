@@ -36,6 +36,8 @@ int port_host_quit_requested(void);
 int port_host_next_scancode(void);
 /* Tests and recorded input: queue a scan code as if typed. */
 void port_host_inject_scancode(uint8_t code);
+/* Called at every pump, before host events (tests: scripted input). */
+void port_host_set_pump_hook(void (*hook)(void));
 
 #ifdef __cplusplus
 }

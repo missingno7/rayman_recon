@@ -39,9 +39,15 @@ def main(argv):
         else:
             rows = []
             for at in range(0, size, 8):
-                rows.append("{%d,%s}" % (int.from_bytes(b[at:at + 2], "little"), ",".join(str(x) for x in b[at + 2:at + 8])))
-            # Def_Bande[6][10][300]: brace elision fills it in row-major order.
+                rows.append("%d,%s" % (int.from_bytes(b[at:at + 2], "little"), ",".join(str(x) for x in b[at + 2:at + 8])))
+            # Def_Bande[6][10][300] of {u16 length; 6 bytes}: one flat scalar list, filled in row-major order by
+            # brace elision (a braced record would initialise a whole [10][300] sub-array instead).
             text.append("def_bande_t Def_Bande[6][10][300] = {" + ",\n".join(rows) + "};")
+        # FNV-1a of the source bytes: tests/unit_tests.c compares it with the compiled table's memory.
+        h = 1469598103934665603
+        for x in b:
+            h = ((h ^ x) * 1099511628211) & 0xFFFFFFFFFFFFFFFF
+        text.append("const unsigned long long port_asset_fnv_%s = 0x%016xULL;" % (name, h))
     out.parent.mkdir(parents=True, exist_ok=True)
     new = "\n".join(text) + "\n"
     if not out.exists() or out.read_text() != new:

@@ -12,6 +12,8 @@ Everything the port does differently from the DOS executable, with the reason. D
 | `menu_patch_once` | self-modifying run-once trampoline | no-op | it only patches its own code |
 | Free memory (DPMI 0500h) | measured | 16 MiB | InitMemoryVariable takes its full-feature branch (normal mode, all sprites, backgrounds) |
 | Block arenas | TailleMainMem* bytes | twice that on 64-bit hosts | native records with pointers are larger; only the out-of-memory threshold moves |
+| Heap contents | whatever the DPMI host left (zero on fresh pages) | every `malloc` block zero-filled | some effects read freshly allocated memory before writing it; zero-fill makes runs reproducible instead of depending on host heap layout |
+| `time()` | wall clock (the game seeds its random table with srand(time(NULL)) in MakeMyRand) | wall clock in real time; in `--deterministic` runs a fixed epoch (default 1996-01-01, `--epoch`) plus the port clock | reproducible regression runs; the interactive game stays randomized as on DOS |
 | CPU | CPUID family | Pentium (5) | only printed |
 | DOS / Windows detection | INT 21h 30h, INT 2Fh 1600h/4680h | DOS 6.22, no Windows | printed; Windows paths not taken |
 | Video presentation | VGA normal mode or Mode X | normal mode only; Mode X entries stop the program | first milestone; GameModeVideo = Mode X from a config file would stop with a clear message |

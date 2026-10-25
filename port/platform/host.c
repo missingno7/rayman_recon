@@ -15,6 +15,7 @@ static SDL_Texture *texture;
 static int headless = 1;
 static int quit_requested;
 
+static void (*pump_hook)(void);
 static uint8_t scan_queue[512];
 static unsigned scan_head, scan_tail;
 
@@ -185,9 +186,13 @@ void port_host_present(const uint8_t *pixels, int pitch, const uint8_t *dac_rgb6
     SDL_RenderPresent(renderer);
 }
 
+void port_host_set_pump_hook(void (*hook)(void)) { pump_hook = hook; }
+
 void port_host_pump(void)
 {
     SDL_Event e;
+    if (pump_hook)
+        pump_hook();
     if (headless)
         return;
     while (SDL_PollEvent(&e)) {

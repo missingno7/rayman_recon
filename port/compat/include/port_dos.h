@@ -64,6 +64,17 @@ char *port_strupr(char *s);
 int port_rand(void);
 void port_srand(unsigned seed);
 
+/* Heap: zero-filled blocks (port decision, docs/DIVERGENCES.md). The DOS program read some freshly allocated
+   memory before writing it; fresh DPMI pages were zero on a booted machine, and zero-filling makes the port
+   deterministic instead of dependent on host heap layout. */
+void *port_malloc(size_t size);
+
+/* time(): wall clock in real time; in deterministic mode the port clock from a fixed epoch (MakeMyRand seeds the
+   game's random table with srand(time(NULL)), src/rand.c). */
+#include <time.h>
+time_t port_time(time_t *out);
+void port_set_time_epoch(long long seconds);
+
 /* BIOS keyboard buffer (INT 16h as seen through Watcom kbhit/getch). */
 int port_kbhit(void);
 int port_getch(void);

@@ -2,7 +2,11 @@
  * Process entry of the native port: options, platform start-up, then one of the game entries (port_main.h).
  *
  *   rayman [--data DIR] [--save DIR] [--demo N | --menus | --dos-main] [--headless] [--deterministic]
- *          [--frames N] [--frame-log FILE] [--dump-frames DIR --dump-every N] [--scale N] [--fullscreen]
+ *          [--frames N] [--frame-log FILE] [--dump-frames DIR --dump-every N] [--epoch SECONDS]
+ *          [--scale N] [--fullscreen]
+ *
+ * --keys FILE queues scan codes at given presented frames (tests).
+ * --epoch sets the wall-clock time a deterministic run starts at (the game seeds its random table from time()).
  *
  * --frames/--frame-log exist for regression runs: stop after N presented images, log one hash per image.
  */
@@ -11,6 +15,9 @@
 #include "platform/files.h"
 #include "platform/host.h"
 #include "video/vga.h"
+
+time_t port_time(time_t *out);
+void port_set_time_epoch(long long seconds);
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -23,6 +30,28 @@ static long frame_count;
 static FILE *frame_log;
 static const char *dump_dir;
 static long dump_every = 0;
+
+/* Scripted keyboard input for tests: "MILLISECONDS SCANCODE" lines (port-clock time, hex set-1 codes, 0x80 bit =
+   release), queued once the clock reaches the time - the same queue SDL key events feed. */
+static struct { long frame; int code; } key_script[4096];
+static int key_count, key_next;
+
+static void load_key_script(const char *path)
+{
+    FILE *f = fopen(path, "r");
+    long frame;
+    unsigned code;
+    if (!f) {
+        fprintf(stderr, "rayman: cannot read key script %s\n", path);
+        exit(2);
+    }
+    while (key_count < 4096 && fscanf(f, "%ld %x", &frame, &code) == 2) {
+        key_script[key_count].frame = frame;
+        key_script[key_count].code = (int)code;
+        key_count++;
+    }
+    fclose(f);
+}
 
 /* 320x200 8-bit BMP with the DAC palette (6-bit components scaled like the host presentation). */
 static void dump_frame(const uint8_t *pixels, const uint8_t *dac)
@@ -83,6 +112,14 @@ static void on_frame(const uint8_t *pixels, const uint8_t *dac, void *user)
         exit(0);
 }
 
+/* Called by the host pump: release scripted keys whose time has come. */
+static void key_script_pump(void)
+{
+    long now_ms = (long)(port_clock_ns() / 1000000ULL);
+    while (key_next < key_count && key_script[key_next].frame <= now_ms)
+        port_host_inject_scancode((uint8_t)key_script[key_next++].code);
+}
+
 static void at_exit(void)
 {
     port_host_shutdown();
@@ -110,6 +147,8 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--frame-log") && v) frame_log = fopen(argv[++i], "w");
         else if (!strcmp(a, "--dump-frames") && v) dump_dir = argv[++i];
         else if (!strcmp(a, "--dump-every") && v) dump_every = atol(argv[++i]);
+        else if (!strcmp(a, "--keys") && v) load_key_script(argv[++i]);
+        else if (!strcmp(a, "--epoch") && v) port_set_time_epoch(atoll(argv[++i]));
         else if (!strcmp(a, "--scale") && v) host.scale = atoi(argv[++i]);
         else if (!strcmp(a, "--fullscreen")) host.fullscreen = 1;
         else {
@@ -136,6 +175,8 @@ int main(int argc, char **argv)
         return 1;
     atexit(at_exit);
     port_vga_set_frame_hook(on_frame, NULL);
+    if (key_count)
+        port_host_set_pump_hook(key_script_pump);
     if (dos_main)
         return port_run_dos_main(argc, argv);
     if (demo >= 0)

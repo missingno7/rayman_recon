@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -201,6 +202,25 @@ void clear_memory(void *destination, int value, int length)
 char *itoa_dos(int value, char *destination, int radix)
 {
     return port_itoa(value, destination, radix);
+}
+
+static long long time_epoch = 820454400;   /* 1996-01-01 00:00:00 UTC, deterministic runs only */
+
+void port_set_time_epoch(long long seconds) { time_epoch = seconds; }
+
+time_t port_time(time_t *out)
+{
+    time_t t = port_clock_mode() == PORT_CLOCK_DETERMINISTIC
+                   ? (time_t)(time_epoch + (long long)(port_clock_ns() / 1000000000ULL))
+                   : time(NULL);
+    if (out)
+        *out = t;
+    return t;
+}
+
+void *port_malloc(size_t size)
+{
+    return calloc(1, size ? size : 1);
 }
 
 /* Watcom 10.6 rand/srand (DOS 1:71396 / 1:713ba, seed at 2:2d9b4, initially 1). */

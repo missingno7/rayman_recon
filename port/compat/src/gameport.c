@@ -11,6 +11,8 @@
  */
 #include <string.h>
 
+#include "compat/src/pc_hardware.h"
+#include "platform/clock.h"
 #include "rtypes.h"
 
 extern s16 joyx0, joyy0, joy_buttonA1, joy_buttonA2, joy_buttonB1, joy_buttonB2, xpadcentre, ypadcentre;
@@ -18,8 +20,15 @@ extern s16 During_The_Menu;
 
 void port_vga_display_changed(void);
 
+/* With nothing connected the original sampling loops ran their 2000-read timeout (about 2 ms of ISA port
+   reads), during which interrupts (keyboard) were delivered. The port charges that time and delivers them, so
+   the game's input-polling loops behave as on the machine (and terminate in deterministic time). */
+#define GAMEPORT_TIMEOUT_NS 2000000ULL
+
 static void no_joystick(int sample_axes)
 {
+    port_clock_wait_until(port_clock_ns() + GAMEPORT_TIMEOUT_NS);
+    port_pc_poll();
     joy_buttonA1 = joy_buttonA2 = joy_buttonB1 = joy_buttonB2 = 0;
     if (sample_axes) {
         joyx0 = xpadcentre;

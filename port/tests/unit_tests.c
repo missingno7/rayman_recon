@@ -132,8 +132,28 @@ static void test_obj_record(void)
     CHECK(o.sprites == NULL && o.cmds == NULL);
 }
 
+/* The external data assets generated from the player's RAYMAN.EXE (tools/gen_assets.py) must hold exactly the
+   executable's bytes: the native layouts of rgb_t (3 bytes) and def_bande_t (8 bytes) equal the DOS ones. */
+extern unsigned char PalPlasma[], Def_Bande[];
+extern const unsigned long long port_asset_fnv_PalPlasma, port_asset_fnv_Def_Bande;
+
+static unsigned long long fnv(const unsigned char *p, size_t n)
+{
+    unsigned long long h = 1469598103934665603ULL;
+    while (n--)
+        h = (h ^ *p++) * 1099511628211ULL;
+    return h;
+}
+
+static void test_assets(void)
+{
+    CHECK(fnv(PalPlasma, 48) == port_asset_fnv_PalPlasma);
+    CHECK(fnv(Def_Bande, 144000) == port_asset_fnv_Def_Bande);
+}
+
 int main(void)
 {
+    test_assets();
     test_inline_helpers();
     test_forward_copy();
     test_clib();
