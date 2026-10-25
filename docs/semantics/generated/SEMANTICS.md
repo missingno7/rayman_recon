@@ -824,6 +824,314 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | globals.json / global:N_anim | STRONG | Integer slope-ratio lookup for eye aiming direction. | direction offsets | 2:4a9c |
 | globals.json / global:black_fist_obj_id | PROVEN | Level-object id of Black Rayman replay fist. | object id | 2:3f8be |
 | globals.json / global:black_pos_in_stack | PROVEN | Next history entry read by Black Rayman replay. | ring index | 2:3fa8a |
+| globals.json / global:BIG_MAP | STRONG | Runtime ModeNormal map descriptor passed to construct_MAP. | map descriptor | 2:321d8 |
+| globals.json / global:BiosCheckSum | UNKNOWN | Uninterpreted world-header byte under the existing BiosCheckSum name. | raw byte | 2:3fa2b |
+| globals.json / global:DrawBufferNormal | STRONG | ModeNormal screen drawing buffer reused for direct background decoding. | byte-buffer pointer | 2:3d138 |
+| globals.json / global:EffetBufferNormal | STRONG | ModeNormal effect buffer reused for compressed background input or duplicate background storage. | byte-buffer pointer | 2:3d130 |
+| globals.json / global:FondAutorise | PROVEN | Background-loading mode selecting disabled, allocated background, or screen/effect buffers. | mode byte | 2:3fa1a |
+| globals.json / global:HeaderFilevignet | PROVEN | Executable-resident descriptors selecting encoded PCX blocks in VIGNET.DAT. | 12-byte archive descriptor array | 2:215c |
+| globals.json / global:MAP_BLOCKS | PROVEN | Decoded ModeNormal level tile-pixel byte buffer. | byte-buffer pointer | 2:3d830 |
+| globals.json / global:Mus_obj_id | PROVEN | Level-object index selected for type55 during INIT_OBJECTS. | object index | 2:3f896 |
+| globals.json / global:P486 | PROVEN | Byte mode switch that selects the cropped background decode path when equal1. | mode byte | 2:3fa20 |
+| globals.json / global:PLAN0 | PROVEN | Primary background pointer, republished to PLAN0BIT after Normal decoding. | byte-buffer pointer | 2:3d800 |
+| globals.json / global:PLAN0BIT | PROVEN | Duplicate/planar background destination selected by allocate_PLAN0. | byte-buffer pointer | 2:3d824 |
+| globals.json / global:PLAN1_BUFFER | PROVEN | ModeX runtime map-render buffer allocated during world load. | byte-buffer pointer | 2:3d838 |
+| globals.json / global:PLAN2 | PROVEN | Allocated presentation PCX pixels returned by LoadPcxInVignet. | indexed-pixel pointer | 2:3d804 |
+| globals.json / global:PLAN2BIT | PROVEN | Published presentation pixel pointer, aliasing PLAN2 after image load. | byte-buffer pointer | 2:3d828 |
+| globals.json / global:Plan0NumPcx | PROVEN | World-local signed8 map from background slot to VIGNET resource index. | resource index array | 2:3ef48 |
+| globals.json / global:RaymanExeCheckSum1 | UNKNOWN | Uninterpreted raw32 ALLFIX field read before each fixed atlas. | raw32 value | 2:3d070 |
+| globals.json / global:RaymanExeCheckSum2 | UNKNOWN | Uninterpreted raw32 ALLFIX field read after each fixed atlas and trailing8-bit checksum. | raw32 value | 2:3d068 |
+| globals.json / global:RaymanExeCheckSum3 | UNKNOWN | Uninterpreted raw32 ALLFIX field read after all fixed descriptors. | raw32 value | 2:3d06c |
+| globals.json / global:RaymanExeSize | UNKNOWN | Uninterpreted raw32 ALLFIX field under the existing executable-size name. | raw32 value | 2:3d05c |
+| globals.json / global:ScrollDiffOn | PROVEN | Differential scrolling switch used to choose background slot and mask construction. | boolean-like byte | 2:3fa1f |
+| globals.json / global:ScrollDiffSprites | PROVEN | World descriptor for differential-scroll foreground sprites, orNULL. | obj_t pointer | 2:3e634 |
+| globals.json / global:TailleMainMemFix | PROVEN | Requested fixed-resource arena capacity. | bytes | 2:3d898 |
+| globals.json / global:TailleMainMemLevel | PROVEN | Requested level arena capacity. | bytes | 2:3d844 |
+| globals.json / global:TailleMainMemSprite | PROVEN | Requested sprite-pixel arena capacity. | bytes | 2:3d848 |
+| globals.json / global:TailleMainMemWorld | PROVEN | Requested world arena capacity. | bytes | 2:3d89c |
+| globals.json / global:ToutSpriteAutorise | PROVEN | Override to load world descriptor payloads even when not marked always-used. | boolean-like byte | 2:3fa18 |
+| globals.json / global:VideoBiosCheckSum | UNKNOWN | Second uninterpreted world-header byte under the existing VideoBiosCheckSum name. | raw byte | 2:3fa28 |
+| globals.json / global:alternateBossSpeedFactor | PROVEN | Additive adjustment to the boss state-speed multiplier. | 1/16384 multiplier | 2:3e5b4 |
+| globals.json / global:bigray | PROVEN | 132-byte template copied from the appended BRAY descriptor. | object template | 2:3e784 |
+| globals.json / global:black_ray_obj_id | PROVEN | Level-object index selected for type204 during INIT_OBJECTS. | object index | 2:3f8bc |
+| globals.json / global:block_add | PROVEN | Tile lookup table whose interpretation differs between video modes. | offset/pointer table | 2:34268 |
+| globals.json / global:blocks_code | PROVEN | Decoded ModeX tile callback code buffer. | byte-buffer pointer | 2:3d7c4 |
+| globals.json / global:bossEncounter | STRONG | Boss encounter/phase selector consumed by action scripts. | selector | 2:3fa6e |
+| globals.json / global:bossSpeedFactor | PROVEN | Base boss state-speed multiplier. | 1/16384 multiplier | 2:3e5b0 |
+| globals.json / global:bossXToReach | PROVEN | Horizontal target used by boss approach-speed computation. | world pixels | 2:3f850 |
+| globals.json / global:bossYToReach | PROVEN | Vertical target used by boss approach-speed computation. | world pixels | 2:3f84a |
+| globals.json / global:cb_ball_obj_id | PROVEN | Level-object index selected for type257 during INIT_OBJECTS. | object index | 2:3f814 |
+| globals.json / global:clockobj | PROVEN | Fixed-resource template selected by the sixth ALLFIX tail index. | object template | 2:3ed44 |
+| globals.json / global:corde_dark_obj_id | PROVEN | Level-object index selected for type246 during INIT_OBJECTS. | object index | 2:3f8ce |
+| globals.json / global:currentBossAction | STRONG | Current action selector in boss scripts. | selector | 2:3fa6f |
+| globals.json / global:currentBossActionIsOver | STRONG | Boss action-completion marker. | boolean-like byte | 2:3fa6c |
+| globals.json / global:current_rvb | PROVEN | Current768-byte256-color palette used for display/palette effects. | RGB6 component bytes | 2:37988 |
+| globals.json / global:cymbal_obj_id | PROVEN | Indices of type81 objects encountered during level initialization. | object-index array | 2:3e5cc |
+| globals.json / global:div_obj | PROVEN | Fixed-resource template selected by the seventh ALLFIX tail index. | object template | 2:3e6ec |
+| globals.json / global:gros_patai_block | PROVEN | ModeX tile pixel-record allocation. | 256-byte record pointer | 2:3d7d4 |
+| globals.json / global:gros_patai_src | PROVEN | ModeX tile pixel-source lookup table. | 32-bit pointer table | 2:32fa8 |
+| globals.json / global:language_infos | PROVEN | Executable-resident descriptors selecting the five encoded RAY.LNG language blocks. | 12-byte archive descriptor array | 2:24e0 |
+| globals.json / global:language_txt | PROVEN | Pointers into the decoded mutable language block, separated in place. | char-pointer table | 2:32b48 |
+| globals.json / global:laserSourceSprNumInAnim | STRONG | Space-Mama laser-source animation-layer selection, initialized to byte255. | animation layer or255 | 2:3fa6d |
+| globals.json / global:last_plan1_palette | PROVEN | LEV palette index used to select current_rvb from rvb. | palette index | 2:3fa83 |
+| globals.json / global:level_alw | PROVEN | Index list for objects whose type flag has flags0 bit0 set. | object-index list | 2:3cde8 |
+| globals.json / global:loaded_eta | PROVEN | Runtime bank of main-state-to-substate-table pointers. | eta-bank pointer array | 2:3ce48 |
+| globals.json / global:main_mem_fix | PROVEN | Arena descriptor for fixed-resource metadata, state banks and deformation scratch. | allocator arena | 2:3d874 |
+| globals.json / global:main_mem_sprite | PROVEN | Arena descriptor used for fixed sprite-atlas pixels and caller-supplied world sprite resources. | allocator arena | 2:3d860 |
+| globals.json / global:main_mem_world | PROVEN | Arena descriptor initialized for world resource metadata and backgrounds. | allocator arena | 2:3d880 |
+| globals.json / global:mama_pirate_obj_id | PROVEN | Level-object index selected for type187 during INIT_OBJECTS. | object index | 2:3f80c |
+| globals.json / global:mapobj | PROVEN | World-map object instances whose resources are bound from one fixed descriptor. | object array | 2:3d8cc |
+| globals.json / global:moskitomama_droite_obj_id | PROVEN | Level-object index selected for type231 during INIT_OBJECTS. | object index | 2:3f8d8 |
+| globals.json / global:moskitomama_gauche_obj_id | PROVEN | Level-object index selected for type232 during INIT_OBJECTS. | object index | 2:3f8c8 |
+| globals.json / global:moskitosaxo_obj_id | PROVEN | Level-object index selected for type218 during INIT_OBJECTS. | object index | 2:3f8d6 |
+| globals.json / global:mst_scroll_obj_id | PROVEN | Selected type147 object with hit_points0. | object index | 2:3f878 |
+| globals.json / global:nb_blocks_plein | PROVEN | ModeNormal count of full tile-pixel records read from LEV. | tile count | 2:3d054 |
+| globals.json / global:nb_cymbal_in_map | PROVEN | Number of type81 entries appended to cymbal_obj_id by initialization. | count | 2:3fa81 |
+| globals.json / global:nb_des | PROVEN | Live descriptor count/end index, including fixed resources after world append. | descriptor count | 2:251c |
+| globals.json / global:nb_fix_des | PROVEN | Fixed descriptor count/end index preserved across world loads. | descriptor count | 2:251e |
+| globals.json / global:nb_fix_eta | PROVEN | Fixed eta-bank prefix count. | bank count | 2:3fa9a |
+| globals.json / global:nb_loaded_eta | PROVEN | Loaded eta-bank count with loader-specific update rules. | bank count | 2:3fa9b |
+| globals.json / global:nb_total_blocks | PROVEN | ModeNormal total tile-block count read from LEV. | tile count | 2:3d058 |
+| globals.json / global:nb_wiz | PROVEN | Bonus-stage Ting object count accumulated during initialization. | Ting count | 2:3fa56 |
+| globals.json / global:nb_wiz_save | PROVEN | Saved status-bar Ting count at bonus-stage initialization. | Ting count | 2:3d8ac |
+| globals.json / global:new_sprite_deform | PROVEN | Runtime sprite-deformation scratch allocation. | byte-buffer pointer | 2:3d7bc |
+| globals.json / global:no_fnd | PROVEN | Signed8 selected world background slot. | world background slot | 2:3fa22 |
+| globals.json / global:path_has_changed | PROVEN | Path-prefix switch for selected data loaders. | boolean-like unsigned16 | 2:3f8f2 |
+| globals.json / global:plan0_height | PROVEN | Published background height after decode/conversion. | pixels | 2:3f7e4 |
+| globals.json / global:plan0_width | PROVEN | Published background width in the active representation. | pixels/storage columns | 2:3f7de |
+| globals.json / global:plan0bit_length | PROVEN | Published total duplicated planar background byte span. | bytes | 2:3d808 |
+| globals.json / global:plan0bit_nb_bytes | PROVEN | Published planar background row-stride parameter. | bytes | 2:3d7f4 |
+| globals.json / global:plan2_height | PROVEN | Published presentation image height in signed16 storage. | pixels | 2:3f7e2 |
+| globals.json / global:plan2_width | PROVEN | Published presentation image width. | pixels | 2:3d7ec |
+| globals.json / global:plan2bit_length | PROVEN | Published presentation image pixel-area byte count. | bytes | 2:3d7f8 |
+| globals.json / global:plan2bit_nb_bytes | PROVEN | Presentation display row-stride parameter set towidth/4. | bytes | 2:3d7fc |
+| globals.json / global:prise_branchee | STRONG | Plug/power state used by the Joe sequence. | state | 2:3f796 |
+| globals.json / global:raylittle | PROVEN | Small-Rayman object whose sprite resources are selected by the fourth ALLFIX tail index. | object template | 2:3e808 |
+| globals.json / global:rideau_obj_id | PROVEN | Level-object index selected for type249 with initial substate2. | object index | 2:3f8cc |
+| globals.json / global:rvb | PROVEN | Three raw level palettes loaded from the LEV header. | RGB component bytes | 2:37f88 |
+| globals.json / global:rvb_pres | PROVEN | Palette copy preserved when a presentation image is loaded. | RGB6 component bytes | 2:37088 |
+| globals.json / global:saveBossEncounter | STRONG | Saved boss encounter selector with255 initialization sentinel. | selector | 2:3fa69 |
+| globals.json / global:sbar_obj_id | PROVEN | Level-object index selected for type11 during INIT_OBJECTS. | object index | 2:3f87e |
+| globals.json / global:sko_phase | STRONG | Scorpion controller phase selector. | selector | 2:3f816 |
+| globals.json / global:stosko_obj_id | PROVEN | Level-object index selected for type223 during INIT_OBJECTS. | object index | 2:3f8d0 |
+| globals.json / global:t_world_info | STRONG | World-map stage records consulted for the current stage cage count. | stage record array | 2:4d5c |
+| globals.json / global:type_zdc | PROVEN | Per-object-type packed collision-zone reference defaults. | packed collision-zone reference | 2:33ee |
+| globals.json / global:wldobj | PROVEN | Resource-holder records sharing obj_t layout, separate from the live level.objects allocation. | resource descriptor array | 2:50d18 |
+| globals.json / global:world_index | PROVEN | Current world-map stage-record index. | stage index | 2:3fa60 |
+| load.json / function:load_world | STRONG | Load world resource descriptors, state banks and background selections after the fixed resources. | see parameter/result and side-effect contract | 1:34de0 |
+| load.json / local:load_world:i:1 | STRONG | Observed local computation: i = 0;; Plan0NumPcx[i++] = -1;; while (i < 10); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:layer_table_size:1 | STRONG | Unsigned16 byte length of the next animation layer payload (including any unindexed bytes). | bytes |  |
+| load.json / local:load_world:img_buffer_checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:load_world:full_filename:1 | STRONG | Observed local computation: full_filename = (char *) temp_malloc(100);; strcpy(full_filename, "..\\");; full_filename[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:load_world:fp:1 | STRONG | Observed local computation: fp = fopen(full_filename, "rb");; if (fp == 0); fread(&background_width, 2, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:tick:1 | STRONG | Observed local computation: tick = perm_value_3;; while (tick == (*((volatile u8 *) 0x46c))); tick = *((volatile u8 *) 0x46c); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:perm_value_3:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:load_world:perm_address_2:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:load_world:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "Can not open file %s (load_world).\n", full_filename);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:background_width:1 | STRONG | Observed local computation: fread(&background_width, 2, 1, fp);; PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);; PLAN0 = allocate_PLAN0(mem_world, background_width, background_height); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:des_index:1 | STRONG | Observed local computation: for (des_index = nb_fix_des; des_index < (nb_des + nb_fix_des); ++des_index); fread(&wldobj[des_index].x, 4, 1, fp);; wldobj[des_index].img_buffer = (u8 *) block_malloc(mem_sprite, wldobj[des_index].x); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:plan0_num_pcx_count:1 | STRONG | Observed local computation: fread(&plan0_num_pcx_count, 1, 1, fp);; for (i = 0; i < plan0_num_pcx_count; ++i) | declared C storage; exact operations retained |  |
+| load.json / local:load_world:background_height:1 | STRONG | Observed local computation: fread(&background_height, 2, 1, fp);; PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);; PLAN0 = allocate_PLAN0(mem_world, background_width, background_height); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:pcx_number:1 | STRONG | Observed local computation: fread(&pcx_number, 1, 1, fp);; pcx_number ^= 0x15;; Plan0NumPcx[i] = pcx_number; | declared C storage; exact operations retained |  |
+| load.json / local:load_world:sprite_is_always_used:1 | STRONG | Observed local computation: fread(&sprite_is_always_used, 1, 1, fp);; if (sprite_is_always_used \|\| ToutSpriteAutorise) | declared C storage; exact operations retained |  |
+| load.json / local:load_world:image_offset:1 | STRONG | Observed local computation: image_offset = ftell(fp);; fseek(fp, image_offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:retry_index:1 | STRONG | Observed local computation: for (retry_index = 0; retry_index < ((u32) wldobj[des_index].x); retry_index++); fread(wldobj[des_index].img_buffer + retry_index, 1, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:error_buffer:2 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "Can not open file %s (load_world).\n", full_filename);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:layers_per_frame:1 | STRONG | Observed local computation: fread(&wldobj[des_index].animations[i].layers_per_frame, 2, 1, fp);; fread(&layers_per_frame, 2, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:frame_count:1 | STRONG | Observed local computation: fread(&frame_count, 2, 1, fp);; fseek(fp, frame_count * (sizeof(anim_frame_t)), 1); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:frames_ptr:1 | STRONG | Discarded producer pointer used only as sentinel: -1 skips frame rectangles; any other value requires frame_count*4 bytes. | serialized32 presence value |  |
+| load.json / local:load_world:num_eta_groups:1 | STRONG | Observed local computation: fread(&num_eta_groups, 1, 1, fp);; loaded_eta[i] = (eta_t **) block_malloc(mem_world, num_eta_groups * (sizeof(eta_t *)));; for (j = 0; j < num_eta_groups; ++j) | declared C storage; exact operations retained |  |
+| load.json / local:load_world:j:1 | STRONG | Observed local computation: for (j = 0; j < num_eta_groups; ++j); loaded_eta[i][j] = (eta_t *) block_malloc(mem_world, num_eta_entries * (sizeof(eta_t)));; fread(loaded_eta[i][j], sizeof(eta_t), num_eta_entries, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:num_eta_entries:1 | STRONG | Observed local computation: fread(&num_eta_entries, 1, 1, fp);; loaded_eta[i][j] = (eta_t *) block_malloc(mem_world, num_eta_entries * (sizeof(eta_t)));; fread(loaded_eta[i][j], sizeof(eta_t), num_eta_entries, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:mem_world:1 | STRONG | Observed parameter computation: PLAN1_BUFFER = block_malloc(mem_world, 71680);; PLAN0 = allocate_PLAN0(mem_world, background_width * 2, background_height);; PLAN0 = allocate_PLAN0(mem_world, background_width, background_height); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:mem_sprite:1 | STRONG | Observed parameter computation: wldobj[des_index].img_buffer = (u8 *) block_malloc(mem_sprite, wldobj[des_index].x); | declared C storage; exact operations retained |  |
+| load.json / local:load_world:filename:1 | STRONG | Observed parameter computation: strcat(full_filename, filename); | declared C storage; exact operations retained |  |
+| load.json / function:load_level | STRONG | Load map palettes, video-mode tile resources and serialized level instances; rebind indices to runtime pointers. | see parameter/result and side-effect contract | 1:35688 |
+| load.json / local:load_level:world_names:1 | STRONG | Observed local computation: strcat(full_filename, world_names[num_world - 1]); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:full_filename:1 | STRONG | Observed local computation: full_filename = (char *) temp_malloc(100);; strcpy(full_filename, "..\\");; full_filename[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:load_level:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "Can not open file %s (load_level).\n", full_filename);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:fp:1 | STRONG | Observed local computation: fp = fopen(full_filename, "rb");; if (fp == NULL); fread(&event_offset, 4, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:event_offset:1 | STRONG | Observed local computation: fread(&event_offset, 4, 1, fp);; fseek(fp, event_offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:texture_data_size:1 | STRONG | Observed local computation: fread(&texture_data_size, 4, 1, fp);; MAP_BLOCKS = (u8 *) block_malloc(mem_level, texture_data_size);; fread(MAP_BLOCKS, texture_data_size, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:x_texture_count:1 | STRONG | Observed local computation: fread(&x_texture_count, 4, 1, fp);; if (x_texture_count != 0); gros_patai_block = (x_texture_local_t *) block_malloc(mem_level, x_texture_count * (sizeof(x_texture_local_t))); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:x_code_size:1 | STRONG | Observed local computation: fread(&x_code_size, 4, 1, fp);; if (x_code_size != 0); blocks_code = (u8 *) block_malloc(mem_level, x_code_size); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:texture_offset:1 | STRONG | Observed local computation: fread(&texture_offset, 4, 1, fp);; fseek(fp, texture_offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:image_offset:1 | STRONG | Observed local computation: image_offset = ftell(fp);; fseek(fp, image_offset, 0);; image_offset = ftell(fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:i:1 | STRONG | Observed local computation: for (i = 0; i < 1200; i++); gros_patai_src[i] = ((u32) gros_patai_block) + gros_patai_src[i];; for (i = 0; 1200 > i; i++) | declared C storage; exact operations retained |  |
+| load.json / local:load_level:retry_index:1 | STRONG | Observed local computation: for (retry_index = 0; retry_index < (x_texture_count * (sizeof(x_texture_local_t))); retry_index++); checksum -= ((u8 *) gros_patai_block)[retry_index];; ((u8 *) gros_patai_block)[retry_index] ^= 0x7d; | declared C storage; exact operations retained |  |
+| load.json / local:load_level:background_static:1 | STRONG | u8 slot copied to signed8 no_fnd in ModeX or when differential scrolling is off; LOAD_FND indexes Plan0NumPcx[no_fnd]. | world background slot |  |
+| load.json / local:load_level:checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:load_level:background_scroll:1 | STRONG | u8 alternative slot copied to no_fnd for ModeNormal with ScrollDiffOn. | world background slot |  |
+| load.json / local:load_level:cmd_count:1 | STRONG | Observed local computation: fread(&cmd_count, 2, 1, fp);; if (cmd_count != 0); level.objects[i].cmds = (u8 *) block_malloc(mem_level, cmd_count); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:label_count:1 | STRONG | Observed local computation: fread(&label_count, 2, 1, fp);; if (label_count != 0); level.objects[i].cmd_labels = (s16 *) block_malloc(mem_level, label_count * 2); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:mem_level:1 | STRONG | Observed parameter computation: mp.map = (map_tile_t *) block_malloc(mem_level, mp.length * (sizeof(map_tile_t)));; MaskScrollDiffSprites(mem_level);; gros_patai_block = (x_texture_local_t *) block_malloc(mem_level, x_texture_count * (sizeof(x_texture_local_t))); | declared C storage; exact operations retained |  |
+| load.json / local:load_level:world_id:1 | UNKNOWN | No value-consuming use in DOS load_level; caller passes a sprite-arena pointer in EDX. Existing s32 declaration is retained; no purpose name is assigned. | unused |  |
+| load.json / local:load_level:filename:1 | STRONG | Observed parameter computation: strcat(full_filename, filename); | declared C storage; exact operations retained |  |
+| load.json / function:load_big_ray | STRONG | Append the big-Rayman sprite/animation descriptor and replace the loaded state-bank prefix. | see parameter/result and side-effect contract | 1:36078 |
+| load.json / local:load_big_ray:fp:1 | STRONG | Observed local computation: fp = fopen(filename, "rb");; if (fp == 0); fread(&wldobj[index].x, 4, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:filename:1 | STRONG | Observed local computation: filename = (char *) temp_malloc(100);; filename[0] = '\0';; strcpy(filename, "PCMAP"); | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "Can not open file %s (load_big_ray).\n", filename);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:index:1 | STRONG | wldobj descriptor index; ALLFIX tail reads reuse it to choose template resources. | descriptor index |  |
+| load.json / local:load_big_ray:i:1 | STRONG | Observed local computation: for (i = 0; (i < wldobj[index].x) != 0; i++); wldobj[index].img_buffer[i] ^= 0x8f;; for (i = 0; i < nb_loaded_eta; i++) | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:j:1 | STRONG | Observed local computation: for (j = 0; j < groups; j++); loaded_eta[i][j] = (eta_t *) block_malloc(buffer, entries * (sizeof(eta_t)));; fread(loaded_eta[i][j], sizeof(eta_t), entries, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:anim_index:1 | STRONG | Observed local computation: for (anim_index = 0; anim_index < wldobj[index].anim_count; anim_index++); fread(&wldobj[index].animations[anim_index].layers_per_frame, 2, 1, fp);; fread(&wldobj[index].animations[anim_index].frames_count, 2, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:groups:1 | STRONG | u8 number of main-state groups in one loaded eta bank. | count |  |
+| load.json / local:load_big_ray:entries:1 | STRONG | u8 number of8-byte substate records in one main-state group. | count |  |
+| load.json / local:load_big_ray:layer_table_size:1 | STRONG | Unsigned16 byte length of the next animation layer payload (including any unindexed bytes). | bytes |  |
+| load.json / local:load_big_ray:perm_value_6:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:load_big_ray:buffer:1 | STRONG | Observed parameter computation: wldobj[index].img_buffer = (u8 *) block_malloc(buffer, wldobj[index].x);; wldobj[index].sprites = (sprite_t *) block_malloc(buffer, wldobj[index].nb_sprites * (sizeof(sprite_t)));; wldobj[index].animations = (anim_t *) block_malloc(buffer, wldobj[index].anim_count * (sizeof(anim_t))); | declared C storage; exact operations retained |  |
+| load.json / function:LOAD_ALL_FIX | STRONG | Create the four arenas and load fixed resources, state banks and template bindings. | see parameter/result and side-effect contract | 1:364bc |
+| load.json / local:LOAD_ALL_FIX:filename:1 | STRONG | Observed local computation: filename = (char *) temp_malloc(100);; strcpy(filename, "..\\");; filename[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "Can not open file %s (load_all_fix).\n", filename);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:fp:1 | STRONG | Observed local computation: fp = fopen(filename, "rb");; if (fp == NULL); fread(&nb_loaded_eta, 1, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:index:1 | STRONG | wldobj descriptor index; ALLFIX tail reads reuse it to choose template resources. | descriptor index |  |
+| load.json / local:LOAD_ALL_FIX:i:1 | STRONG | Observed local computation: for (i = 0; i < num_eta_groups; i++); loaded_eta[index][i] = (eta_t *) block_malloc(&main_mem_fix, num_eta_entries * (sizeof(eta_t)));; fread(loaded_eta[index][i], sizeof(eta_t), num_eta_entries, fp); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:image_offset:1 | STRONG | Observed local computation: image_offset = ftell(fp);; fseek(fp, image_offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:retry_index:1 | STRONG | Observed local computation: for (retry_index = 0; retry_index < ((u32) wldobj[index].x); retry_index++); fread(wldobj[index].img_buffer + retry_index, 1, 1, fp); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:num_eta_groups:1 | STRONG | Observed local computation: fread(&num_eta_groups, 1, 1, fp);; loaded_eta[index] = (eta_t **) block_malloc(&main_mem_fix, num_eta_groups * (sizeof(eta_t *)));; for (i = 0; i < num_eta_groups; i++) | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:num_eta_entries:1 | STRONG | Observed local computation: fread(&num_eta_entries, 1, 1, fp);; loaded_eta[index][i] = (eta_t *) block_malloc(&main_mem_fix, num_eta_entries * (sizeof(eta_t)));; fread(loaded_eta[index][i], sizeof(eta_t), num_eta_entries, fp); | declared C storage; exact operations retained |  |
+| load.json / local:LOAD_ALL_FIX:checksum_byte:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LOAD_ALL_FIX:layer_table_size:1 | STRONG | Unsigned16 byte length of the next animation layer payload (including any unindexed bytes). | bytes |  |
+| load.json / local:LOAD_ALL_FIX:atlas:1 | STRONG | Observed local computation: mapobj[i].img_buffer = atlas; | declared C storage; exact operations retained |  |
+| load.json / function:LoadPcxInVignet | STRONG | Read and XOR-decode a VIGNET PCX entry, then allocate and expand its indexed pixels. | see parameter/result and side-effect contract | 1:36d68 |
+| load.json / local:LoadPcxInVignet:pcx_buf:1 | STRONG | Observed local computation: pcx_buf = (u8 *) temp_malloc(pcx_data_size);; fread(pcx_buf, 1, pcx_data_size, fp);; end = pcx_buf + pcx_data_size; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:path:1 | STRONG | Observed local computation: path = (char *) temp_malloc(100);; strcpy(path, "..\\");; path[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:header:1 | STRONG | Observed local computation: pcx_header_local_t header;; fread(&header, 128, 1, fp);; checksum -= ((u8 *) (&header))[i]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:fp:1 | STRONG | Observed local computation: fp = fopen(path, "rb");; for (; (fp == 0) && (i < 10);); fp = fopen(path, "rb"); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:y:1 | STRONG | Observed local computation: for (y = 0; y < (*height); y++); pixels[(y * (*width)) + (x++)] = value;; pixels[(x++) + (y * (*width))] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:source_pos:1 | STRONG | Observed local computation: source_pos = 0;; perm_value_11 = pcx_buf[source_pos++];; perm_value_26 = pcx_buf[source_pos++]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:i:1 | STRONG | Observed local computation: i = 0;; for (; (fp == 0) && (i < 10);); i++; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:retry_checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadPcxInVignet:pos:1 | STRONG | Observed local computation: for (pos = pcx_buf; pos < end; pos++); checksum -= *pos;; *pos ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:pcx_data_size:1 | STRONG | Encoded entry size minus128-byte PCX header; includes RLE data and terminal palette bytes. | bytes |  |
+| load.json / local:LoadPcxInVignet:line_bytes:1 | STRONG | Decoded PCX bytes_per_line used as the expanded-byte target for each scanline. | decoded scanline bytes |  |
+| load.json / local:LoadPcxInVignet:checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadPcxInVignet:end:1 | STRONG | Observed local computation: end = pcx_buf + pcx_data_size;; for (pos = pcx_buf; pos < end; pos++); end = pos + 16384; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:x:1 | STRONG | Observed local computation: x = 0;; pixels[(y * (*width)) + (x++)] = value;; pixels[(x++) + (y * (*width))] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "%s : Can not open (pcx).\n", path);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:run_length:1 | STRONG | Observed local computation: run_length = value & 0x3f;; while ((--run_length) != (-1)) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:value:1 | STRONG | Observed local computation: value = perm_value_11;; if (0xc0 == (value & 0xc0)); run_length = value & 0x3f; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:pixels:1 | STRONG | Observed local computation: pixels = (u8 *) block_malloc(buffer, (*width) * (*height));; pixels = (u8 *) block_malloc(buffer, (*width) * (*height));; if ((pixels != 0) && (pcx_buf != 0)) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:perm_value_11:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:perm_value_26:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:buffer:1 | STRONG | Observed parameter computation: pixels = (u8 *) block_malloc(buffer, (*width) * (*height));; pixels = (u8 *) block_malloc(buffer, (*width) * (*height)); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:resource_id:1 | STRONG | Observed parameter computation: checksum = HeaderFilevignet[resource_id].checksum_byte;; pcx_data_size = HeaderFilevignet[resource_id].size - 128;; fseek(fp, HeaderFilevignet[resource_id].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:width:1 | STRONG | Observed parameter computation: *width = (header.max_x - header.min_x) + 1;; pixels = (u8 *) block_malloc(buffer, (*width) * (*height));; *width = (header.max_x - header.min_x) + 1; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxInVignet:height:1 | STRONG | Observed parameter computation: *height = (header.max_y - header.min_y) + 1;; pixels = (u8 *) block_malloc(buffer, (*width) * (*height));; *height = (header.max_y - header.min_y) + 1; | declared C storage; exact operations retained |  |
+| load.json / function:LoadPcxPaletteInVignet | PROVEN | Load the final768 bytes of a VIGNET entry as a VGA palette. | see parameter/result and side-effect contract | 1:37280 |
+| load.json / local:LoadPcxPaletteInVignet:fp:1 | PROVEN | Observed local computation: fp = fopen(path, "rb");; for (; (fp == NULL) && (tries < 10);); fp = fopen(path, "rb"); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:path:1 | PROVEN | Observed local computation: path = (char *) temp_malloc(100);; strcpy(path, "..\\");; path[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:error_buffer:1 | PROVEN | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "%s : Can not open (palette).\n", path);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:colors:1 | PROVEN | Observed local computation: colors = (u8 *) palette;; colors[i] ^= HeaderFilevignet[resource_id].xor_byte;; colors[i] /= 4; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:i:1 | PROVEN | Observed local computation: for (i = 0; i < 768; ++i); colors[i] ^= HeaderFilevignet[resource_id].xor_byte;; colors[i] /= 4; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:tries:1 | PROVEN | Observed local computation: tries = 0;; for (; (fp == NULL) && (tries < 10);); ++tries; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:path_has_changed:1 | PROVEN | Function-scope extern declaration of global path_has_changed; it introduces no additional local storage. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:seconds:1 | UNKNOWN | Parameter name in the function-scope extern sleep prototype; no local object or value-consuming role in this function. | prototype parameter |  |
+| load.json / local:LoadPcxPaletteInVignet:resource_id:1 | PROVEN | Observed parameter computation: fseek(fp, (HeaderFilevignet[resource_id].offset + HeaderFilevignet[resource_id].size) - 0x300, 0);; colors[i] ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxPaletteInVignet:palette:1 | PROVEN | Observed parameter computation: sprintf(error_buffer, "%s : Can not open (palette).\n", path);; fread(palette, 0x300, 1, fp);; colors = (u8 *) palette; | declared C storage; exact operations retained |  |
+| load.json / function:LoadPlan0InVignet | STRONG | Decode a VIGNET background into PLAN0 or the existing screen/effect buffers. | see parameter/result and side-effect contract | 1:373d0 |
+| load.json / local:LoadPlan0InVignet:header_index:1 | STRONG | Observed local computation: for (header_index = 0; header_index < 128; header_index++); checksum -= ((u8 *) (&header))[header_index];; ((u8 *) (&header))[header_index] ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:destination:1 | STRONG | Observed local computation: destination = DrawBufferNormal;; destination = PLAN0;; destination = DrawBufferNormal; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:run:1 | STRONG | Observed local computation: run = perm_value_28;; while ((--run) != (-1)); run = value & 0x3f; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:end:1 | STRONG | Observed local computation: end = pos + 16384;; while (pos != end); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:line_bytes:1 | STRONG | Decoded PCX bytes_per_line used as the expanded-byte target for each scanline. | decoded scanline bytes |  |
+| load.json / local:LoadPlan0InVignet:x:1 | STRONG | Observed local computation: x = 0;; if (((x < width) && (output_y >= 0)) && (output_y < 200)); destination[(width * output_y) + x] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:truncated:1 | STRONG | Observed local computation: truncated = 0;; truncated = 1;; if ((truncated == 0) && (checksum != 0)) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:pos:1 | STRONG | Observed local computation: for (i = 0, pos = compressed; i < data_size; i++, pos++); checksum -= *pos;; *pos ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadPlan0InVignet:compressed:1 | STRONG | Observed local computation: compressed = EffetBufferNormal;; compressed = (u8 *) temp_malloc(data_size);; fread(compressed, 1, data_size, fp); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:tries:1 | STRONG | Observed local computation: tries = 0;; for (; (fp == 0) && (tries < 10);); tries++; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:header:1 | STRONG | Observed local computation: pcx_header_local_t header;; fread(&header, 128, 1, fp);; checksum -= ((u8 *) (&header))[header_index]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:width:1 | STRONG | Observed local computation: width = (header.max_x - header.min_x) + 1;; width = (header.max_x - header.min_x) + 1;; if (width > 320) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "%s : Can not open (background).\n", path);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:data_size:1 | STRONG | Encoded entry size minus128-byte PCX header; includes RLE data and terminal palette bytes. | bytes |  |
+| load.json / local:LoadPlan0InVignet:i:1 | STRONG | Observed local computation: for (i = 0, pos = compressed; i < data_size; i++, pos++); for (i = 0, pos = compressed; i < data_size; i++, pos++); for (i = 0, pos = compressed; i < data_size; i++, pos++) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:source_pos:1 | STRONG | Observed local computation: source_pos = 0;; value = compressed[source_pos++];; value = compressed[source_pos++]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:value:1 | STRONG | Observed local computation: value = compressed[source_pos++];; if ((value & 0xc0) == 0xc0); *perm_address_25 = value & 0x3f; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:fp:1 | STRONG | Observed local computation: fp = fopen(path, "rb");; for (; (fp == 0) && (tries < 10);); fp = fopen(path, "rb"); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:path:1 | STRONG | Observed local computation: path = (char *) temp_malloc(100);; strcpy(path, "..\\");; path[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:height:1 | STRONG | Observed local computation: height = (header.max_y - header.min_y) + 1;; height = (header.max_y - header.min_y) + 1;; if (height > 200) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:y:1 | STRONG | Observed local computation: for (y = 0; y < (height + crop); y++); output_y = y - crop;; for (y = 0; y < height; y++) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:crop:1 | STRONG | Observed local computation: crop = 0;; crop = height - 200;; crop = 0; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:output_y:1 | STRONG | Observed local computation: output_y = y - crop;; if (((x < width) && (output_y >= 0)) && (output_y < 200)); destination[(width * output_y) + x] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:perm_value_4:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:perm_value_28:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:perm_address_25:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:perm_value_37:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:perm_value_39:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan0InVignet:resource_id:1 | STRONG | Observed parameter computation: perm_value_4 = HeaderFilevignet[resource_id].checksum_byte;; data_size = HeaderFilevignet[resource_id].size - 128;; fseek(fp, HeaderFilevignet[resource_id].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / function:allocate_PLAN0 | PROVEN | Obtain primary and duplicate/planar background buffers. | see parameter/result and side-effect contract | 1:37bb0 |
+| load.json / local:allocate_PLAN0:buffer1:1 | PROVEN | Observed local computation: buffer1 = DrawBufferNormal;; buffer1 = (u8 *) block_malloc(mem_world, width * height);; return buffer1; | declared C storage; exact operations retained |  |
+| load.json / local:allocate_PLAN0:buffer2:1 | PROVEN | Observed local computation: buffer2 = EffetBufferNormal;; buffer2 = (u8 *) block_malloc(mem_world, ((2 * width) * height) + (8 * width));; PLAN0BIT = buffer2; | declared C storage; exact operations retained |  |
+| load.json / local:allocate_PLAN0:mem_world:1 | PROVEN | Observed parameter computation: buffer1 = (u8 *) block_malloc(mem_world, width * height);; buffer2 = (u8 *) block_malloc(mem_world, ((2 * width) * height) + (8 * width)); | declared C storage; exact operations retained |  |
+| load.json / local:allocate_PLAN0:width:1 | PROVEN | Observed parameter computation: buffer1 = (u8 *) block_malloc(mem_world, width * height);; buffer2 = (u8 *) block_malloc(mem_world, ((2 * width) * height) + (8 * width)); | declared C storage; exact operations retained |  |
+| load.json / local:allocate_PLAN0:height:1 | PROVEN | Observed parameter computation: buffer1 = (u8 *) block_malloc(mem_world, width * height);; buffer2 = (u8 *) block_malloc(mem_world, ((2 * width) * height) + (8 * width)); | declared C storage; exact operations retained |  |
+| load.json / function:PLAN0FND_to_bits_planes | STRONG | Rearrange indexed background pixels into duplicated four-plane storage with top-row extension. | see parameter/result and side-effect contract | 1:37c10 |
+| load.json / local:PLAN0FND_to_bits_planes:x:1 | STRONG | Observed local computation: for (x = 0; x < plan0bit_nb_bytes; ++x); offset = ((x & 3) * (plan0bit_length >> 1)) + (x >> 2);; pixel = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:y:1 | STRONG | Observed local computation: for (y = 0; y < height; ++y); offset += y * (plan0bit_nb_bytes >> 1);; pixel = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:source:1 | STRONG | Observed local computation: source = buffer;; pixel = source[(y * width) + x];; buffer[offset + (plan0bit_nb_bytes >> 2)] = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:offset:1 | STRONG | Observed local computation: offset = ((x & 3) * (plan0bit_length >> 1)) + (x >> 2);; offset += y * (plan0bit_nb_bytes >> 1);; buffer[offset] = pixel; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:pixel:1 | STRONG | Observed local computation: pixel = source[(y * width) + x];; buffer[offset] = pixel;; pixel = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:perm_value_2:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:pixel:2 | STRONG | Observed local computation: pixel = source[(y * width) + x];; buffer[offset] = pixel;; pixel = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:buffer:1 | STRONG | Observed parameter computation: source = buffer;; buffer = PLAN0BIT;; if (buffer == 0) | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:width:1 | STRONG | Observed parameter computation: plan0_width = width;; pixel = source[(y * width) + x];; buffer[offset + (plan0bit_nb_bytes >> 2)] = source[(y * width) + x]; | declared C storage; exact operations retained |  |
+| load.json / local:PLAN0FND_to_bits_planes:height:1 | STRONG | Observed parameter computation: plan0bit_length = plan0bit_nb_bytes * height;; plan0_height = height;; for (y = 0; y < height; ++y) | declared C storage; exact operations retained |  |
+| load.json / function:LoadPlan2InVignet | PROVEN | Load a presentation image and palette, and publish its display geometry. | see parameter/result and side-effect contract | 1:37d3c |
+| load.json / local:LoadPlan2InVignet:saved_resource_id:1 | PROVEN | Observed local computation: PLAN2 = LoadPcxInVignet(buffer, saved_resource_id, &width, &height);; LoadPcxPaletteInVignet(saved_resource_id, &current_rvb); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan2InVignet:width:1 | PROVEN | Observed local computation: PLAN2 = LoadPcxInVignet(buffer, saved_resource_id, &width, &height);; plan2_width = width;; plan2bit_nb_bytes = width; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan2InVignet:height:1 | PROVEN | Observed local computation: PLAN2 = LoadPcxInVignet(buffer, saved_resource_id, &width, &height);; plan2bit_length = plan2bit_nb_bytes * height;; plan2_height = height; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan2InVignet:buffer:1 | PROVEN | Observed parameter computation: PLAN2 = LoadPcxInVignet(buffer, saved_resource_id, &width, &height); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPlan2InVignet:resource_id:1 | PROVEN | Observed parameter computation: s32 saved_resource_id = resource_id; | declared C storage; exact operations retained |  |
+| load.json / function:GetStringTxt | PROVEN | Scan one comma-delimited language entry into scratch storage and return the following cursor. | see parameter/result and side-effect contract | 1:37dd8 |
+| load.json / local:GetStringTxt:txt:1 | PROVEN | Observed parameter computation: while (((*txt) != ',') && ((*txt) != '*')); if ((*txt) >= ' '); *(out_buf++) = *(txt++); | declared C storage; exact operations retained |  |
+| load.json / local:GetStringTxt:out_buf:1 | PROVEN | Observed parameter computation: *(out_buf++) = *(txt++);; *out_buf = '\0'; | declared C storage; exact operations retained |  |
+| load.json / function:LoadLanguageTxt | STRONG | Decode one RAY.LNG block and build pointers into its mutable allocation. | see parameter/result and side-effect contract | 1:37e10 |
+| load.json / local:LoadLanguageTxt:language_data:1 | STRONG | Observed local computation: language_data = (char *) block_malloc(mem, size);; if ((language_data == NULL) \|\| (temp_buffer == NULL)); end = ((u8 *) language_data) + size; | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:str_index:1 | STRONG | Observed local computation: str_index = 0;; language_txt[str_index++] = txt; | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadLanguageTxt:parse_buffer:1 | STRONG | Points to400-byte temp_buffer; filtered scratch output is discarded after delimiter scanning. | scratch byte pointer |  |
+| load.json / local:LoadLanguageTxt:temp_buffer:1 | STRONG | Observed local computation: temp_buffer = (char *) temp_malloc(400);; parse_buffer = temp_buffer;; if ((language_data == NULL) \|\| (temp_buffer == NULL)) | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:retry_checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadLanguageTxt:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "%s : Can not open.\n", path);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:pos:1 | STRONG | Observed local computation: for (pos = (u8 *) language_data; pos < end; pos++); checksum -= *pos;; *pos ^= language_infos[language_index].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:txt:1 | STRONG | Start of the string assigned to language_txt; first block byte, then GetStringTxt return+2. | allocation byte pointer |  |
+| load.json / local:LoadLanguageTxt:i:1 | STRONG | Observed local computation: for (i = 0, pos = (u8 *) language_data; i < size; i++, pos++); for (i = 0; i < size; i++); retry_checksum -= language_data[i]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:path:1 | STRONG | Observed local computation: path = (char *) temp_malloc(100);; strcpy(path, "RAY.LNG");; lng_file = fopen(path, "rb"); | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:next_txt:1 | STRONG | GetStringTxt scan cursor; each comma advances it just one byte, independently of the string-start+2 skip. | allocation byte pointer |  |
+| load.json / local:LoadLanguageTxt:end:1 | STRONG | Observed local computation: end = ((u8 *) language_data) + size;; for (pos = (u8 *) language_data; pos < end; pos++) | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:lng_file:1 | STRONG | Observed local computation: lng_file = fopen(path, "rb");; if (lng_file == NULL); fseek(lng_file, language_infos[language_index].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:size:1 | STRONG | Observed local computation: size = language_infos[language_index].size;; language_data = (char *) block_malloc(mem, size);; end = ((u8 *) language_data) + size; | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:mem:1 | STRONG | Observed parameter computation: language_data = (char *) block_malloc(mem, size); | declared C storage; exact operations retained |  |
+| load.json / local:LoadLanguageTxt:language_index:1 | STRONG | Observed parameter computation: checksum = language_infos[language_index].checksum_byte;; size = language_infos[language_index].size;; fseek(lng_file, language_infos[language_index].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / function:LoadPcxOptions | STRONG | Decode a VIGNET PCX entry into a caller-provided pixel buffer. | see parameter/result and side-effect contract | 1:38038 |
+| load.json / local:LoadPcxOptions:y:1 | STRONG | Observed local computation: for (y = 0; y < (*height); y++); buffer[(y * (*width)) + (x++)] = value;; buffer[(x++) + (y * (*width))] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadPcxOptions:run_length:1 | STRONG | Observed local computation: run_length = 0x3f & value;; while ((--run_length) != (-1)) | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:pcx_buf:1 | STRONG | Observed local computation: pcx_buf = (u8 *) temp_malloc(pcx_data_size);; fread(pcx_buf, 1, pcx_data_size, fp);; end = pcx_buf + pcx_data_size; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:source_pos:1 | STRONG | Observed local computation: source_pos = 0;; perm_value_15 = pcx_buf[source_pos++];; perm_value_29 = pcx_buf[source_pos++]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:path:1 | STRONG | Observed local computation: path = (char *) temp_malloc(100);; strcpy(path, "..\\");; path[0] = '\0'; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:value:1 | STRONG | Observed local computation: value = perm_value_15;; if ((value & 0xc0) == 0xc0); run_length = 0x3f & value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:pos:1 | STRONG | Observed local computation: for (pos = pcx_buf; pos < end; pos++); checksum -= *pos;; *pos ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:x:1 | STRONG | Observed local computation: x = 0;; buffer[(y * (*width)) + (x++)] = value;; buffer[(x++) + (y * (*width))] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:end:1 | STRONG | Observed local computation: end = pcx_buf + pcx_data_size;; for (pos = pcx_buf; pos < end; pos++); end = pos + 16384; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:fp:1 | STRONG | Observed local computation: fp = fopen(path, "rb");; if (fp == 0); fseek(fp, HeaderFilevignet[resource_id].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:error_buffer:1 | STRONG | Observed local computation: error_buffer = (char *) temp_malloc(200);; sprintf(error_buffer, "%s : Can not open.\n", path);; FatalError(error_buffer); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:header:1 | STRONG | Observed local computation: pcx_header_local_t header;; fread(&header, 128, 1, fp);; checksum -= ((u8 *) (&header))[i]; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:line_bytes:1 | STRONG | Decoded PCX bytes_per_line used as the expanded-byte target for each scanline. | decoded scanline bytes |  |
+| load.json / local:LoadPcxOptions:pcx_data_size:1 | STRONG | Encoded entry size minus128-byte PCX header; includes RLE data and terminal palette bytes. | bytes |  |
+| load.json / local:LoadPcxOptions:i:1 | STRONG | Observed local computation: for (i = 0; i < 128; i++); checksum -= ((u8 *) (&header))[i];; ((u8 *) (&header))[i] ^= HeaderFilevignet[resource_id].xor_byte; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:retry_checksum:1 | STRONG | Modulo256 residual: start at stored encoded-byte sum, subtract encoded bytes before XOR; zero means valid. | mod256 byte sum |  |
+| load.json / local:LoadPcxOptions:perm_value_0:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:perm_value_10:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:perm_value_20:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:perm_address_5:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:perm_value_15:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:perm_value_29:1 | STRONG | Compiler-steering temporary preserving the exact shown value/address dataflow; no separate gameplay entity. | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:buffer:1 | STRONG | Observed parameter computation: if (!((buffer != 0) && (pcx_buf != 0))); buffer[(y * (*width)) + (x++)] = value;; buffer[(x++) + (y * (*width))] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:resource_id:1 | STRONG | Observed parameter computation: perm_value_0 = HeaderFilevignet[resource_id].checksum_byte;; pcx_data_size = HeaderFilevignet[resource_id].size - 128;; fseek(fp, HeaderFilevignet[resource_id].offset, 0); | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:width:1 | STRONG | Observed parameter computation: *width = (header.max_x - header.min_x) + 1;; *width = (header.max_x - header.min_x) + 1;; buffer[(y * (*width)) + (x++)] = value; | declared C storage; exact operations retained |  |
+| load.json / local:LoadPcxOptions:height:1 | STRONG | Observed parameter computation: *height = (header.max_y - header.min_y) + 1;; *height = (header.max_y - header.min_y) + 1;; for (y = 0; y < (*height); y++) | declared C storage; exact operations retained |  |
 | moteur.json / function:INIT_HORLOGES | PROVEN | Clear the 25-byte global phase-counter bank. | see parameter/result contract | 1:45480 |
 | moteur.json / local:INIT_HORLOGES:i:1 | PROVEN | Clock-bank byte index 0..24. | clock index |  |
 | moteur.json / function:horloges | PROVEN | Advance each clock once with period equal to its index, and add the byte argument to map_time. | see parameter/result contract | 1:45498 |
@@ -1283,6 +1591,31 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | moteur.json / global:ymapsave | STRONG | Saved camera origin restored on wizard/bonus return. | pixels | 2:3f8b8 |
 | moteur.json / global:zonediffx | PROVEN | Per-type horizontal/vertical action-zone expansion margins. | pixels | 2:2996 |
 | moteur.json / global:zonediffy | PROVEN | Per-type horizontal/vertical action-zone expansion margins. | pixels | 2:2ba2 |
+| objinit.json / function:Prio | PROVEN | Choose the object draw-order bucket from its type and a few level/object conditions. | see parameter/result and side-effect contract | 1:4e160 |
+| objinit.json / local:Prio:obj:1 | PROVEN | Observed parameter computation: switch (obj->type); if (obj->hit_points == 0) | declared C storage; exact operations retained |  |
+| objinit.json / function:first_obj_init | PROVEN | Capture per-instance reset state once and establish type-specific detection defaults. | see parameter/result and side-effect contract | 1:4e640 |
+| objinit.json / local:first_obj_init:obj:1 | PROVEN | Observed parameter computation: if (((flags[obj->type].raw & 1) != 0) \|\| (((obj->type == TYPE_0_BADGUY1) \|\| (obj->type == TYPE_9_BADGUY2)) && (obj->x < 0))); obj->x = -32000;; obj->y = -32000; | declared C storage; exact operations retained |  |
+| objinit.json / function:obj_init | PROVEN | Restore an instance from its captured reset state, reset common runtime members, then apply type-specific defaults. | see parameter/result and side-effect contract | 1:4e9bc |
+| objinit.json / local:obj_init:unk_1:1 | UNKNOWN | Unused local; no value-consuming purpose is established. | declared C storage; exact operations retained |  |
+| objinit.json / local:obj_init:frame_count:1 | PROVEN | Observed local computation: obj->anim_frame = myRand(frame_count - 1); | declared C storage; exact operations retained |  |
+| objinit.json / local:obj_init:unk_2:1 | PROVEN | Signed16 vblToEOA(obj,1)-2 assigned to param and iframes_timer for non-jungle type26. | engine calls |  |
+| objinit.json / local:obj_init:obj:1 | PROVEN | Observed parameter computation: obj->nb_cmd = 0;; obj->is_active = 0;; obj->display_prio = Prio(obj); | declared C storage; exact operations retained |  |
+| objinit.json / function:init_struct_level | PROVEN | Build always-object and ordinary object-index lists after initialization. | see parameter/result and side-effect contract | 1:4f1e8 |
+| objinit.json / local:init_struct_level:i:1 | PROVEN | Observed local computation: for (i = 0; i < level.nb_objects; ++i); level_alw.obj_ids[i] = 0;; level_obj.obj_ids[i] = 0; | declared C storage; exact operations retained |  |
+| objinit.json / local:init_struct_level:obj:1 | PROVEN | Observed local computation: obj = &level.objects[i];; if ((bonus_map \|\| ((flags[obj->type].flags1 & 2) == 0)) \|\| (!bonus_taken(obj->id))); if (flags[obj->type].flags0 & 1) | declared C storage; exact operations retained |  |
+| objinit.json / local:init_struct_level:nb_objs:1 | PROVEN | Signed16 level-object count cached for the iteration. | object count |  |
+| objinit.json / function:INIT_OBJECTS | STRONG | Initialize all level instances and discover special-object IDs and lists. | see parameter/result and side-effect contract | 1:4f2d4 |
+| objinit.json / local:INIT_OBJECTS:found_bbf2_droite:1 | STRONG | Observed local computation: found_bbf2_droite = -1;; Mus_obj_id = found_bbf2_droite;; rayman_obj_id = found_bbf2_droite; | declared C storage; exact operations retained |  |
+| objinit.json / local:INIT_OBJECTS:found_bbf2_gauche:1 | STRONG | Observed local computation: found_bbf2_gauche = -1;; found_bbf2_gauche = obj->id;; if ((found_bbf2_droite != (-1)) && (found_bbf2_gauche != (-1))) | declared C storage; exact operations retained |  |
+| objinit.json / local:INIT_OBJECTS:i:1 | STRONG | Observed local computation: i = 0;; obj = &level.objects[i];; while (i < nb_objs) | declared C storage; exact operations retained |  |
+| objinit.json / local:INIT_OBJECTS:obj:1 | STRONG | Observed local computation: obj = &level.objects[i];; obj->id = i;; first_obj_init(obj); | declared C storage; exact operations retained |  |
+| objinit.json / local:INIT_OBJECTS:nb_objs:1 | STRONG | Signed16 level-object count cached for the iteration. | object count |  |
+| objinit.json / local:INIT_OBJECTS:prev_obj:1 | STRONG | Observed local computation: if ((prev_obj->type == TYPE_10_FISH) && (prev_obj->x == obj->x)) | declared C storage; exact operations retained |  |
+| objinit.json / local:INIT_OBJECTS:a1:1 | STRONG | Nonzero captures initial position/state/hit points with first_obj_init; zero reuses the earlier snapshots. | boolean |  |
+| objinit.json / function:REINIT_OBJECT | PROVEN | Reset an existing instance for reactivation without recreating its resources. | see parameter/result and side-effect contract | 1:50288 |
+| objinit.json / local:REINIT_OBJECT:obj:1 | PROVEN | Observed parameter computation: obj_init(obj);; obj->flags.alive = 1;; obj->active_flag = 2; | declared C storage; exact operations retained |  |
+| objinit.json / function:special_flags_init | PROVEN | Apply world/level exceptions to type-level activation/collision tables. | see parameter/result and side-effect contract | 1:502c4 |
+| objinit.json / local:special_flags_init:i:1 | PROVEN | Observed local computation: for (i = 0; i < 262; ++i); if (i == TYPE_0_BADGUY1); zonediffx[i] = -120; | declared C storage; exact operations retained |  |
 | ray.json / function:allocateRayLandingSmoke | PROVEN | Allocate the landing explosion effect unless the suppression byte is set. | see parameter/result and side-effect contract | 1:5bfd0 |
 | ray.json / local:allocateRayLandingSmoke:obj:1 | PROVEN | Observed local dataflow: obj = allocateExplosion(&ray);; if (obj); set_main_and_sub_etat(obj, 0, 1); | declared C storage; see exact computation and function contract |  |
 | ray.json / function:recale_ray_on_liane | PROVEN | Align Rayman's horizontal anchor to the centre of the detected vine tile. | see parameter/result and side-effect contract | 1:5c004 |
@@ -1534,41 +1867,41 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / type:poing_t | PROVEN | Packed DOS record; member meanings and remaining unknowns are recorded separately. | record |  |
 | types.json / type:font_t | PROVEN | Packed DOS record; member meanings and remaining unknowns are recorded separately. | record |  |
 | types.json / type:display_item_t | PROVEN | Packed DOS record; member meanings and remaining unknowns are recorded separately. | record |  |
-| types.json / field:obj_t.sprites | PROVEN | Pointer to the object-specific sprites table. | pointer | +0x0, 4 B |
-| types.json / field:obj_t.animations | PROVEN | Pointer to the object-specific animations table. | pointer | +0x4, 4 B |
-| types.json / field:obj_t.img_buffer | STRONG | Object sprite pixel-atlas buffer. | pointer | +0x8, 4 B |
-| types.json / field:obj_t.eta | PROVEN | Pointer to the object-specific eta table. | pointer | +0xc, 4 B |
-| types.json / field:obj_t.cmds | STRONG | Object script stream/context member cmds. | script dependent | +0x10, 4 B |
-| types.json / field:obj_t.cmd_labels | STRONG | Object script stream/context member cmd_labels. | script dependent | +0x14, 4 B |
+| types.json / field:obj_t.sprites | PROVEN | Runtime sprite-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits. | sprite-table pointer | +0x0, 4 B |
+| types.json / field:obj_t.animations | PROVEN | Runtime animation-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits. | animation-table pointer | +0x4, 4 B |
+| types.json / field:obj_t.img_buffer | PROVEN | Runtime atlas pointer; serialized instance slot is a signed16 descriptor index carried in32bits. | byte-buffer pointer | +0x8, 4 B |
+| types.json / field:obj_t.eta | PROVEN | Runtime main-state pointer table; serialized instance slot is a signed16 bank index carried in32bits. | eta-bank pointer | +0xc, 4 B |
+| types.json / field:obj_t.cmds | PROVEN | Runtime object command byte stream, replacing an ignored serialized producer pointer. | command-byte pointer | +0x10, 4 B |
+| types.json / field:obj_t.cmd_labels | PROVEN | Runtime signed16 command-label offset table, replacing an ignored serialized producer pointer. | signed16 offset pointer | +0x14, 4 B |
 | types.json / field:obj_t.cmd_contexts | STRONG | Object script stream/context member cmd_contexts. | script dependent | +0x18, 4 B |
-| types.json / field:obj_t.field_1C | PROVEN | Overloaded 32-bit scratch mark: set by make_active/make_active2 and tested to suppress repeat linked activation; also set during save restoration for gate types179/242 and tested by INIT_OBJECTS. | boolean mark | +0x1c, 4 B |
-| types.json / field:obj_t.link_has_gendoor | STRONG | Marker enabling linked-group operations; normally set for eligible non-self successor groups, not a proof that a generating door exists. | boolean marker | +0x20, 4 B |
+| types.json / field:obj_t.field_1C | PROVEN | Overloaded32-bit activation/restore scratch marker. | marker | +0x1c, 4 B |
+| types.json / field:obj_t.link_has_gendoor | STRONG | Marker enabling linked-group operations, also selecting the reinitialization delay. | boolean-like32-bit marker | +0x20, 4 B |
 | types.json / field:obj_t.is_active | PROVEN | Object participation flag saved as the high bit of each two-bit snapshot entry. | boolean | +0x24, 4 B |
-| types.json / field:obj_t.x | PROVEN | Signed32 world pixel x origin in live object movement; loader also reuses object records as descriptors. | pixels in live objects | +0x28, 4 B |
+| types.json / field:obj_t.x | PROVEN | Signed32 live-instance world-pixel x; resource-holder wldobj records reuse the same member as atlas byte length. | world pixels / atlas bytes | +0x28, 4 B |
 | types.json / field:obj_t.y | PROVEN | Signed32 world pixel y origin in live object movement. | pixels in live objects | +0x2c, 4 B |
 | types.json / field:obj_t.active_flag | PROVEN | Activation lifecycle code used by zone transitions: 0 activated/default,1 dead/outside,2 reinitialised awaiting departure,4 waiting for the linked group to leave. | state code | +0x30, 4 B |
 | types.json / field:obj_t.id | PROVEN | Object identifier stored in the active and always-object id lists. | object index | +0x34, 2 B |
 | types.json / field:obj_t.screen_x | PROVEN | Stored screen-space origin coordinate screen_x after camera subtraction. | pixels | +0x36, 2 B |
 | types.json / field:obj_t.screen_y | PROVEN | Stored screen-space origin coordinate screen_y after camera subtraction. | pixels | +0x38, 2 B |
 | types.json / field:obj_t.sub_speed | UNKNOWN | Type-dependent signed16 scratch used for a water-motion residual and another type's horizontal distance. | type-dependent pixels / sixteenths | +0x3a, 2 B |
-| types.json / field:obj_t.init_x | STRONG | Initial position component init_x used by reset and relative-displacement logic. | pixels | +0x3c, 2 B |
-| types.json / field:obj_t.init_y | STRONG | Initial position component init_y used by reset and relative-displacement logic. | pixels | +0x3e, 2 B |
+| types.json / field:obj_t.init_x | PROVEN | Signed16 reset x captured from the low16bits of live x by first_obj_init. | world pixels | +0x3c, 2 B |
+| types.json / field:obj_t.init_y | PROVEN | Signed16 reset y captured from the low16bits of live y by first_obj_init. | world pixels | +0x3e, 2 B |
 | types.json / field:obj_t.speed_x | PROVEN | Signed16 horizontal speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. | pixels/call or 1/16 pixels/call | +0x40, 2 B |
 | types.json / field:obj_t.speed_y | PROVEN | Signed16 vertical speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. | pixels/call or 1/16 pixels/call | +0x42, 2 B |
-| types.json / field:obj_t.nb_sprites | PROVEN | Count bounding the object sprite-table search. | sprites | +0x44, 2 B |
+| types.json / field:obj_t.nb_sprites | PROVEN | Signed16 sprite count in obj_t, including resource holders. | sprite count | +0x44, 2 B |
 | types.json / field:obj_t.cmd_offset | STRONG | Object script stream/context member cmd_offset. | script dependent | +0x46, 2 B |
 | types.json / field:obj_t.nb_cmd | STRONG | Type-dependent script count or Rayman airborne-inertia selector. | count / selector | +0x48, 2 B |
-| types.json / field:obj_t.follow_id | STRONG | Type-dependent support/object id or reused vertical command parameter. | object id / type-dependent speed | +0x4a, 2 B |
+| types.json / field:obj_t.follow_id | STRONG | Multipurpose signed16 slot: support/object ID in some actors, timing/command parameter in others. | type dependent | +0x4a, 2 B |
 | types.json / field:obj_t.follow_y | STRONG | Type-dependent vertical follower displacement or grapple radius. | pixels / type-dependent | +0x4c, 2 B |
 | types.json / field:obj_t.follow_x | STRONG | Type-dependent horizontal follower displacement or grapple angle. | pixels / 1/512-turn angle | +0x4e, 2 B |
 | types.json / field:obj_t.param | PROVEN | Type-specific signed scratch parameter, including Rayman edge classification in calc_btyp. | context dependent | +0x50, 2 B |
-| types.json / field:obj_t.link | UNKNOWN | Type-dependent signed16 scratch with proven Rayman fall, grapple-direction, door-id and initialization roles. | type-dependent pixels/state/id | +0x52, 2 B |
+| types.json / field:obj_t.link | UNKNOWN | Multipurpose signed16 scratch; initialization includes paired-object links and unrelated timers/parameters. | type dependent | +0x52, 2 B |
 | types.json / field:obj_t.ray_dist | STRONG | Type-dependent Rayman tile index or support-distance code with several geometric conventions. | linear tile index / pixels / code | +0x54, 2 B |
-| types.json / field:obj_t.iframes_timer | STRONG | Type-dependent signed16 response timer or reused command/state storage; Rayman uses -1 for vulnerability. | type-dependent calls/state/axis speed | +0x56, 2 B |
+| types.json / field:obj_t.iframes_timer | STRONG | Multipurpose signed16 timer/state slot, including invulnerability, platform delays and command parameters. | type dependent | +0x56, 2 B |
 | types.json / field:obj_t.test_block_index | PROVEN | Last row-major map tile index used by the changed-block test. | tile index | +0x58, 2 B |
 | types.json / field:obj_t.scale | PROVEN | Projection-depth parameter whose denominator is signed_scale+256. | projection depth units | +0x5a, 2 B |
 | types.json / field:obj_t.zdc | PROVEN | Packed reference to an object collision-zone run. | packed count/index | +0x5c, 2 B |
-| types.json / field:obj_t.active_timer | PROVEN | Delay inhibiting reactivation, counted down while the living object is in its action zone. | activation calls | +0x5e, 2 B |
+| types.json / field:obj_t.active_timer | PROVEN | Object reactivation-delay counter. | engine calls | +0x5e, 2 B |
 | types.json / field:obj_t.type | PROVEN | Unsigned object type discriminator indexing flags and selecting behaviour. | object type id | +0x60, 2 B |
 | types.json / field:obj_t.btypes | PROVEN | Five cached collision block types in centre,left,right,above,below order. | block type id | +0x62, 5 B |
 | types.json / field:obj_t.unused_padding | UNKNOWN | Neutral obj_t.unused_padding storage/view; its intended meaning is not established by this pilot. | unknown | +0x67, 1 B |
@@ -1578,25 +1911,25 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / field:obj_t.anim_frame | PROVEN | Current animation selector or current frame selector (anim_frame). | index | +0x6b, 1 B |
 | types.json / field:obj_t.sub_etat | PROVEN | Object-type- and main-state-specific substate-table index. | state index | +0x6c, 1 B |
 | types.json / field:obj_t.main_etat | PROVEN | Object-type-specific main state-table index; Rayman's controller dispatches eight observed state families. | state index | +0x6d, 1 B |
-| types.json / field:obj_t.init_sub_etat | STRONG | Reset value for init_sub_etat. | state index or hit points | +0x6e, 1 B |
-| types.json / field:obj_t.init_main_etat | STRONG | Reset value for init_main_etat. | state index or hit points | +0x6f, 1 B |
+| types.json / field:obj_t.init_sub_etat | PROVEN | Substate reset byte captured by first_obj_init and modified by some type-specific defaults. | substate index | +0x6e, 1 B |
+| types.json / field:obj_t.init_main_etat | PROVEN | Main-state reset byte captured by first_obj_init. | main-state index | +0x6f, 1 B |
 | types.json / field:obj_t.cmd | STRONG | Current script command discriminator. | opcode | +0x70, 1 B |
-| types.json / field:obj_t.gravity_value_1 | STRONG | Type-dependent gravity phase byte. | handler-call phase | +0x71, 1 B |
-| types.json / field:obj_t.gravity_value_2 | STRONG | Second type-dependent gravity phase byte or high-nibble10/11 period. | handler-call phase/period | +0x72, 1 B |
+| types.json / field:obj_t.gravity_value_1 | STRONG | First type-dependent gravity/control phase byte. | phase/control byte | +0x71, 1 B |
+| types.json / field:obj_t.gravity_value_2 | STRONG | Second type-dependent gravity/control phase byte. | phase/control byte | +0x72, 1 B |
 | types.json / field:obj_t.change_anim_mode | PROVEN | Animation transition mode set to1 by the state setters. | mode | +0x73, 1 B |
 | types.json / field:obj_t.offset_hy | STRONG | Unsigned vertical upper-body/collision anchor offset. | pixels | +0x74, 1 B |
 | types.json / field:obj_t.follow_sprite | PROVEN | Selected animation layer for following, also overloaded as Blacktoon behaviour selector. | layer index or subtype | +0x75, 1 B |
 | types.json / field:obj_t.hit_points | PROVEN | Unsigned hit-point byte in obj_hurt, with type-specific reuse including signed deformation angle input. | hit points or type-specific state | +0x76, 1 B |
-| types.json / field:obj_t.init_hit_points | STRONG | Reset value for init_hit_points. | state index or hit points | +0x77, 1 B |
-| types.json / field:obj_t.init_flag | UNKNOWN | Neutral obj_t.init_flag storage/view; its intended meaning is not established by this pilot. | unknown | +0x78, 1 B |
+| types.json / field:obj_t.init_hit_points | PROVEN | Reset byte captured from hit_points by first_obj_init. | type-dependent initial parameter | +0x77, 1 B |
+| types.json / field:obj_t.init_flag | UNKNOWN | Serialized byte with initializer writes of7; no intended common meaning or typed reader is established. | unknown | +0x78, 1 B |
 | types.json / field:obj_t.hit_sprite | PROVEN | Collision layer selector with three special dispatch codes. | layer id / sentinel | +0x79, 1 B |
-| types.json / field:obj_t.detect_zone | STRONG | Type-dependent size/range parameter used by the detection-zone computation. | pixels or type-specific range | +0x7a, 1 B |
+| types.json / field:obj_t.detect_zone | PROVEN | Type-dependent unsigned8 detection-range parameter with initialization defaults. | pixels/type parameter | +0x7a, 1 B |
 | types.json / field:obj_t.detect_zone_flag | PROVEN | Detection-zone classification tested by OBJ_IN_ZONE. | classification | +0x7b, 1 B |
 | types.json / field:obj_t.cmd_context_depth | STRONG | Object script stream/context member cmd_context_depth. | script dependent | +0x7c, 1 B |
 | types.json / field:obj_t.config | PROVEN | Type-specific byte configuration tested for Blacktoon edge-turning. | context dependent | +0x7d, 1 B |
 | types.json / field:obj_t.display_prio | STRONG | Object drawing-order bucket selector. | priority bucket | +0x7e, 1 B |
-| types.json / field:obj_t.timer | UNKNOWN | Type-dependent byte countdown/state scratch with multiple independently established roles. | type-dependent handler calls/state | +0x7f, 1 B |
-| types.json / field:obj_t.anim_count | STRONG | Number of animations in the object descriptor. | animations | +0x80, 1 B |
+| types.json / field:obj_t.timer | UNKNOWN | Multipurpose byte countdown/state scratch with common reset0 and actor-specific defaults. | type dependent | +0x7f, 1 B |
+| types.json / field:obj_t.anim_count | PROVEN | Unsigned8 animation count loaded into resource-holder records. | animation count | +0x80, 1 B |
 | types.json / field:obj_t.flags | PROVEN | Packed two-byte per-object flag record. | bitset | +0x81, 2 B |
 | types.json / field:obj_t.field_83 | UNKNOWN | Neutral obj_t.field_83 storage/view; its intended meaning is not established by this pilot. | unknown | +0x83, 1 B |
 | types.json / field:eta_t.speed_x_right | STRONG | Signed state-selected horizontal speed for the speed_x_right facing. | object speed units | +0x0, 1 B |
@@ -1619,7 +1952,7 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / field:eta_t.flags_bits.bit5 | STRONG | State gate for Rayman contact dispatch and collision-zone traversal. | participation bit | +0x7, 1 B |
 | types.json / field:eta_t.flags_bits.bit6 | PROVEN | Context-dependent state bit selecting Rayman's low collision shape and participating in generating-door inset encoding. | state flag | +0x7, 1 B |
 | types.json / field:eta_t.flags_bits.bit7 | STRONG | Low-weight bit of generating-door collision inset selection, paired with bit6. | packed selector bit | +0x7, 1 B |
-| types.json / field:sprite_t.offset_in_atlas | STRONG | Pixel offset of this sprite in its object atlas buffer. | bytes | +0x0, 4 B |
+| types.json / field:sprite_t.offset_in_atlas | PROVEN | Unsigned32 byte offset of sprite pixels relative to the atlas base. | atlas bytes | +0x0, 4 B |
 | types.json / field:sprite_t.id | PROVEN | Sprite reference id, with0 treated as an absent sprite in GET_SPRITE_POS. | reference id | +0x4, 1 B |
 | types.json / field:sprite_t.outer_width | STRONG | Outer sprite rectangle dimension outer_width. | pixels | +0x5, 1 B |
 | types.json / field:sprite_t.outer_height | STRONG | Outer sprite rectangle dimension outer_height. | pixels | +0x6, 1 B |
@@ -1639,8 +1972,8 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / field:sprite_t.flags_bits.unused0 | UNKNOWN | Neutral sprite_t.flags_bits.unused0 storage/view; its intended meaning is not established by this pilot. | unknown | +0xb, 1 B |
 | types.json / field:sprite_t.flags_bits.flip_x | PROVEN | Sprite horizontal flip bit XORed with object flip to select the bounds reflection. | boolean | +0xb, 1 B |
 | types.json / field:sprite_t.flags_bits.unused3 | UNKNOWN | Neutral sprite_t.flags_bits.unused3 storage/view; its intended meaning is not established by this pilot. | unknown | +0xb, 1 B |
-| types.json / field:anim_t.layers | PROVEN | Pointer to frame-major animation layers. | pointer | +0x0, 4 B |
-| types.json / field:anim_t.frames | PROVEN | Pointer to one bounding rectangle per animation frame. | pointer | +0x4, 4 B |
+| types.json / field:anim_t.layers | PROVEN | Runtime pointer to the allocated animation layer payload. | byte/4-byte-layer pointer | +0x0, 4 B |
+| types.json / field:anim_t.frames | PROVEN | Runtime frame-rectangle pointer, with serialized32-bit-1 sentinel indicating no rectangle payload. | frame-rectangle pointer or-1 | +0x4, 4 B |
 | types.json / field:anim_t.layers_per_frame | PROVEN | Packed animation header: low14 bits are layer count per frame, top2 bits encode the horizontal-speed clock period minus one. | layer count / period selector | +0x8, 2 B |
 | types.json / field:anim_t.frames_count | PROVEN | Number of frames in this animation. | frames | +0xa, 2 B |
 | types.json / field:anim_frame_t.x | PROVEN | Unsigned offset of the animation bounding rectangle (x). | pixels | +0x0, 1 B |
@@ -1683,9 +2016,9 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / field:map_data_t.map | PROVEN | Pointer to row-major six-byte tile records. | pointer | +0x8, 4 B |
 | types.json / field:map_tile_t.texture_id | STRONG | Index of a visual16x16 tile texture. | texture index | +0x0, 2 B |
 | types.json / field:map_tile_t.tile_type | PROVEN | Collision/behaviour type byte returned by BTYP. | block type id | +0x2, 1 B |
-| types.json / field:map_tile_t.field_3 | UNKNOWN | Neutral map_tile_t.field_3 storage/view; its intended meaning is not established by this pilot. | unknown | +0x3, 1 B |
+| types.json / field:map_tile_t.field_3 | UNKNOWN | Raw serialized map byte+3 with no intended meaning assigned. | unknown | +0x3, 1 B |
 | types.json / field:map_tile_t.transparency | PROVEN | Computed texture coverage classification:0 opaque,1 empty,2 mixed. | classification | +0x4, 1 B |
-| types.json / field:map_tile_t.field_5 | UNKNOWN | Neutral map_tile_t.field_5 storage/view; its intended meaning is not established by this pilot. | unknown | +0x5, 1 B |
+| types.json / field:map_tile_t.field_5 | UNKNOWN | Raw serialized map byte+5 with no intended meaning assigned. | unknown | +0x5, 1 B |
 | types.json / field:block_flags_t.raw | PROVEN | Byte/bitfield views of block-type behaviour flags. | bitset | +0x0, 1 B |
 | types.json / field:block_flags_t.bits | PROVEN | Byte/bitfield views of block-type behaviour flags. | bitset | +0x0, 1 B |
 | types.json / field:block_flags_t.bits.unused0 | UNKNOWN | Observed raw bit0 used by underSlope, stone-dog side probes and mounted Rayman side-strip probes; its universal collision-class meaning remains unresolved. | tile-class bit | +0x0, 1 B |
@@ -1857,3 +2190,79 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | types.json / field:ray_stack_t.poing_flip_x | PROVEN | Snapshot of fist flip_x. | state/frame/index byte | +0xf, 1 B |
 | types.json / field:ray_stack_t.poing_is_active | PROVEN | Validity byte for the optional fist snapshot. | boolean | +0x10, 1 B |
 | types.json / field:ray_stack_t.scale | PROVEN | Low8 bits of Rayman scale at the history sample. | scale modulo256 | +0x11, 1 B |
+| types.json / type:world_info_t | PROVEN | Packed DOS world-map stage record; pass4 directly uses its cage-count byte. | record |  |
+| types.json / type:rgb_t | PROVEN | Three-byte RGB component record. | record |  |
+| types.json / type:rgb_palette_t | PROVEN | 256-entry DOS palette. | record |  |
+| types.json / type:archive_header_local_t | PROVEN | Local view of executable-resident archive descriptors; no such header is read from the archive file. | record |  |
+| types.json / type:pcx_header_local_t | PROVEN | 128-byte decoded PCX header view, with only coordinate bounds and scanline byte count consumed. | record |  |
+| types.json / type:x_texture_local_t | PROVEN | 256-byte ModeX pixel record. | record |  |
+| types.json / type:level_local_t | PROVEN | load.c local compatibility declaration of the six-byte runtime level descriptor. | record |  |
+| types.json / type:level_obj_local_t | PROVEN | load.c local compatibility declaration of a six-byte runtime object-index list. | record |  |
+| types.json / type:display_map_local_t | PROVEN | Existing load.c display-map record view, reached only as a pointer in this unit. | record |  |
+| types.json / type:big_map_local_t | PROVEN | Existing30-byte prefix view passed by address to construct_MAP; canonical big_map_t has additional trailing storage. | record |  |
+| types.json / field:world_info_t.xpos | UNKNOWN | Declared world_info_t.xpos storage; no intended meaning is assigned from its spelling alone. | unknown | +0x0, 2 B |
+| types.json / field:world_info_t.ypos | UNKNOWN | Declared world_info_t.ypos storage; no intended meaning is assigned from its spelling alone. | unknown | +0x2, 2 B |
+| types.json / field:world_info_t.index_up | UNKNOWN | Declared world_info_t.index_up storage; no intended meaning is assigned from its spelling alone. | unknown | +0x4, 1 B |
+| types.json / field:world_info_t.index_down | UNKNOWN | Declared world_info_t.index_down storage; no intended meaning is assigned from its spelling alone. | unknown | +0x5, 1 B |
+| types.json / field:world_info_t.index_left | UNKNOWN | Declared world_info_t.index_left storage; no intended meaning is assigned from its spelling alone. | unknown | +0x6, 1 B |
+| types.json / field:world_info_t.index_right | UNKNOWN | Declared world_info_t.index_right storage; no intended meaning is assigned from its spelling alone. | unknown | +0x7, 1 B |
+| types.json / field:world_info_t.state | UNKNOWN | Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 1 B |
+| types.json / field:world_info_t.is_unlocked | UNKNOWN | Declared world_info_t.is_unlocked storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 1 B |
+| types.json / field:world_info_t.state_bit1 | UNKNOWN | Declared world_info_t.state_bit1 storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 1 B |
+| types.json / field:world_info_t.is_unlocking | UNKNOWN | Declared world_info_t.is_unlocking storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 1 B |
+| types.json / field:world_info_t.state_rest | UNKNOWN | Declared world_info_t.state_rest storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 1 B |
+| types.json / field:world_info_t.nb_cages | PROVEN | Collected-cage count of one world-map stage record. | cage count | +0x9, 1 B |
+| types.json / field:world_info_t.world | UNKNOWN | Declared world_info_t.world storage; no intended meaning is assigned from its spelling alone. | unknown | +0xa, 1 B |
+| types.json / field:world_info_t.level | UNKNOWN | Declared world_info_t.level storage; no intended meaning is assigned from its spelling alone. | unknown | +0xb, 1 B |
+| types.json / field:world_info_t.color | UNKNOWN | Declared world_info_t.color storage; no intended meaning is assigned from its spelling alone. | unknown | +0xc, 1 B |
+| types.json / field:world_info_t.field_D | UNKNOWN | Declared world_info_t.field_D storage; no intended meaning is assigned from its spelling alone. | unknown | +0xd, 1 B |
+| types.json / field:world_info_t.field_E | UNKNOWN | Declared world_info_t.field_E storage; no intended meaning is assigned from its spelling alone. | unknown | +0xe, 1 B |
+| types.json / field:world_info_t.field_F | UNKNOWN | Declared world_info_t.field_F storage; no intended meaning is assigned from its spelling alone. | unknown | +0xf, 1 B |
+| types.json / field:world_info_t.text | UNKNOWN | Declared world_info_t.text storage; no intended meaning is assigned from its spelling alone. | unknown | +0x10, 4 B |
+| types.json / field:rgb_t.r | STRONG | First component in each three-byte RGB palette entry. | component byte | +0x0, 1 B |
+| types.json / field:rgb_t.g | STRONG | Second component in each three-byte RGB palette entry. | component byte | +0x1, 1 B |
+| types.json / field:rgb_t.b | STRONG | Third component in each three-byte RGB palette entry. | component byte | +0x2, 1 B |
+| types.json / field:rgb_palette_t.colors | PROVEN | 256 three-byte palette entries. | RGB records | +0x0, 768 B |
+| types.json / field:archive_header_local_t.offset | PROVEN | Absolute file byte offset of one encoded archive payload. | file bytes | +0x0, 4 B |
+| types.json / field:archive_header_local_t.size | PROVEN | Encoded payload byte length including PCX header/body/palette where applicable. | bytes | +0x4, 4 B |
+| types.json / field:archive_header_local_t.xor_byte | PROVEN | Per-entry XOR decode byte. | key byte | +0x8, 1 B |
+| types.json / field:archive_header_local_t.checksum_byte | PROVEN | Modulo256 sum of the encoded payload bytes. | mod256 byte sum | +0x9, 1 B |
+| types.json / field:archive_header_local_t.reserved | UNKNOWN | Two table bytes at+10 not read as archive fields by the scoped loaders. | unknown | +0xa, 2 B |
+| types.json / field:pcx_header_local_t.header_byte | UNKNOWN | Declared pcx_header_local_t.header_byte storage; no intended meaning is assigned from its spelling alone. | unknown | +0x0, 1 B |
+| types.json / field:pcx_header_local_t.software_version | UNKNOWN | Declared pcx_header_local_t.software_version storage; no intended meaning is assigned from its spelling alone. | unknown | +0x1, 1 B |
+| types.json / field:pcx_header_local_t.encoding_method | UNKNOWN | Declared pcx_header_local_t.encoding_method storage; no intended meaning is assigned from its spelling alone. | unknown | +0x2, 1 B |
+| types.json / field:pcx_header_local_t.bits_per_bitplane | UNKNOWN | Declared pcx_header_local_t.bits_per_bitplane storage; no intended meaning is assigned from its spelling alone. | unknown | +0x3, 1 B |
+| types.json / field:pcx_header_local_t.min_x | PROVEN | Decoded16-bit horizontal lower bound used in width computation. | pixels | +0x4, 2 B |
+| types.json / field:pcx_header_local_t.min_y | PROVEN | Decoded16-bit vertical lower bound used in height computation. | pixels | +0x6, 2 B |
+| types.json / field:pcx_header_local_t.max_x | PROVEN | Decoded16-bit horizontal upper bound used in width computation. | pixels | +0x8, 2 B |
+| types.json / field:pcx_header_local_t.max_y | PROVEN | Decoded16-bit vertical upper bound used in height computation. | pixels | +0xa, 2 B |
+| types.json / field:pcx_header_local_t.hor_dpi | UNKNOWN | Declared pcx_header_local_t.hor_dpi storage; no intended meaning is assigned from its spelling alone. | unknown | +0xc, 2 B |
+| types.json / field:pcx_header_local_t.ver_dpi | UNKNOWN | Declared pcx_header_local_t.ver_dpi storage; no intended meaning is assigned from its spelling alone. | unknown | +0xe, 2 B |
+| types.json / field:pcx_header_local_t.ega_palette | UNKNOWN | Declared pcx_header_local_t.ega_palette storage; no intended meaning is assigned from its spelling alone. | unknown | +0x10, 48 B |
+| types.json / field:pcx_header_local_t.reserved1 | UNKNOWN | Declared pcx_header_local_t.reserved1 storage; no intended meaning is assigned from its spelling alone. | unknown | +0x40, 1 B |
+| types.json / field:pcx_header_local_t.n_color_planes | UNKNOWN | Declared pcx_header_local_t.n_color_planes storage; no intended meaning is assigned from its spelling alone. | unknown | +0x41, 1 B |
+| types.json / field:pcx_header_local_t.bytes_per_line | PROVEN | Number of expanded bytes required by each RLE scanline loop. | decoded bytes per scanline | +0x42, 2 B |
+| types.json / field:pcx_header_local_t.palette_mode | UNKNOWN | Declared pcx_header_local_t.palette_mode storage; no intended meaning is assigned from its spelling alone. | unknown | +0x44, 2 B |
+| types.json / field:pcx_header_local_t.source_hor_res | UNKNOWN | Declared pcx_header_local_t.source_hor_res storage; no intended meaning is assigned from its spelling alone. | unknown | +0x46, 2 B |
+| types.json / field:pcx_header_local_t.source_ver_res | UNKNOWN | Declared pcx_header_local_t.source_ver_res storage; no intended meaning is assigned from its spelling alone. | unknown | +0x48, 2 B |
+| types.json / field:pcx_header_local_t.reserved2 | UNKNOWN | Declared pcx_header_local_t.reserved2 storage; no intended meaning is assigned from its spelling alone. | unknown | +0x4a, 54 B |
+| types.json / field:x_texture_local_t.pixels | PROVEN | One256-byte ModeX tile-pixel record. | indexed pixels | +0x0, 256 B |
+| types.json / field:level_local_t.objects | PROVEN | Runtime pointer to132-byte live level-instance records. | obj_t pointer | +0x0, 4 B |
+| types.json / field:level_local_t.nb_objects | PROVEN | Signed16 live level-instance count. | object count | +0x4, 2 B |
+| types.json / field:level_obj_local_t.obj_ids | PROVEN | Runtime pointer to a signed16 index list. | object-index pointer | +0x0, 4 B |
+| types.json / field:level_obj_local_t.nb_objects | PROVEN | Signed16 number of populated object-index list entries. | object count | +0x4, 2 B |
+| types.json / field:display_map_local_t.x | UNKNOWN | Declared display_map_local_t.x storage; no intended meaning is assigned from its spelling alone. | unknown | +0x0, 2 B |
+| types.json / field:display_map_local_t.y | UNKNOWN | Declared display_map_local_t.y storage; no intended meaning is assigned from its spelling alone. | unknown | +0x2, 2 B |
+| types.json / field:display_map_local_t.width_in_tiles | UNKNOWN | Declared display_map_local_t.width_in_tiles storage; no intended meaning is assigned from its spelling alone. | unknown | +0x4, 1 B |
+| types.json / field:display_map_local_t.height_in_tiles | UNKNOWN | Declared display_map_local_t.height_in_tiles storage; no intended meaning is assigned from its spelling alone. | unknown | +0x5, 1 B |
+| types.json / field:display_map_local_t.tile_index | UNKNOWN | Declared display_map_local_t.tile_index storage; no intended meaning is assigned from its spelling alone. | unknown | +0x6, 2 B |
+| types.json / field:big_map_local_t.map | UNKNOWN | Declared big_map_local_t.map storage; no intended meaning is assigned from its spelling alone. | unknown | +0x0, 4 B |
+| types.json / field:big_map_local_t.tile_texture_offsets | UNKNOWN | Declared big_map_local_t.tile_texture_offsets storage; no intended meaning is assigned from its spelling alone. | unknown | +0x4, 4 B |
+| types.json / field:big_map_local_t.display_map | UNKNOWN | Declared big_map_local_t.display_map storage; no intended meaning is assigned from its spelling alone. | unknown | +0x8, 4 B |
+| types.json / field:big_map_local_t.map_blocks | UNKNOWN | Declared big_map_local_t.map_blocks storage; no intended meaning is assigned from its spelling alone. | unknown | +0xc, 4 B |
+| types.json / field:big_map_local_t.field_10 | UNKNOWN | Declared big_map_local_t.field_10 storage; no intended meaning is assigned from its spelling alone. | unknown | +0x10, 4 B |
+| types.json / field:big_map_local_t.field_14 | UNKNOWN | Declared big_map_local_t.field_14 storage; no intended meaning is assigned from its spelling alone. | unknown | +0x14, 2 B |
+| types.json / field:big_map_local_t.width | UNKNOWN | Declared big_map_local_t.width storage; no intended meaning is assigned from its spelling alone. | unknown | +0x16, 2 B |
+| types.json / field:big_map_local_t.height | UNKNOWN | Declared big_map_local_t.height storage; no intended meaning is assigned from its spelling alone. | unknown | +0x18, 2 B |
+| types.json / field:big_map_local_t.field_1A | UNKNOWN | Declared big_map_local_t.field_1A storage; no intended meaning is assigned from its spelling alone. | unknown | +0x1a, 2 B |
+| types.json / field:big_map_local_t.field_1C | UNKNOWN | Declared big_map_local_t.field_1C storage; no intended meaning is assigned from its spelling alone. | unknown | +0x1c, 2 B |

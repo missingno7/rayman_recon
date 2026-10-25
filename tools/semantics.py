@@ -97,8 +97,22 @@ def parse_source(base, scope):
         parts.append(clean(source_path(base, rel).read_text(encoding='latin-1')))
     parts.append(scope.get('preamble', ''))
     if scope.get('source'):
-        parts.append(expand_statement_macros(source_path(base, scope['source']).read_text(encoding='latin-1'),scope.get('statement_macros',[])))
-    return c_parser.CParser().parse('\n'.join(parts), filename=scope.get('source') or 'shared headers')
+        source = source_path(base, scope['source']).read_text(encoding='latin-1')
+        for alias, target in scope.get('type_aliases', {}).items():
+            definition = re.search(r'^\s*#define\s+'+re.escape(alias)+r'\s+(\w+)\s*$',source,re.M)
+            if not definition or definition[1] != target:
+                raise ValueError('scoped typedef macro drift: '+alias)
+        parts.append(expand_statement_macros(source,scope.get('statement_macros',[])))
+    # Scope-declared typedef macros are parser aliases only. The compiled source
+    # and its typedefs stay in the original TU. Record each expansion explicitly.
+    text = '\n'.join(parts)
+    for alias, target in scope.get('type_aliases', {}).items():
+        text = re.sub(r'\b'+re.escape(alias)+r'\b', target, text)
+    return c_parser.CParser().parse(text, filename=scope.get('source') or 'shared headers')
+
+def source_contexts(scope):
+    if scope.get('kind') == 'globals': return scope.get('contexts', [])
+    return [scope] + scope.get('additional_contexts', [])
 
 def field_declarations(ast):
     out = {}
@@ -131,7 +145,7 @@ def validate_schema(reg):
     scope = reg.get('scope')
     if not isinstance(scope, dict): return ['scope must declare kind, headers and source/contexts']
     if scope.get('kind') not in ('unit', 'types', 'globals'): errors.append('invalid scope kind')
-    contexts = scope.get('contexts', []) if scope.get('kind') == 'globals' else [scope]
+    contexts = source_contexts(scope)
     if not contexts: errors.append('scope has no source contexts')
     for c in contexts:
         if not isinstance(c.get('headers'), list): errors.append('scope headers must be a list')
@@ -150,6 +164,12 @@ def validate_schema(reg):
         if not e.get('evidence'): errors.append(label + ': no evidence')
         if e.get('kind') in ('field','local','global') and 'declarator' in e:
             if type_text(e['declarator']) != e['c_type']: errors.append(label + ': C type metadata differs from declarator')
+        if e.get('context_declarators'):
+            for context, declaration in e['context_declarators'].items():
+                if e['kind'] != 'global' or Path(context).is_absolute() or '..' in Path(context).parts:
+                    errors.append(label + ': invalid contextual declarator source')
+                if not isinstance(declaration,str) or declaration.count('$') != 1:
+                    errors.append(label + ': invalid contextual declarator')
         if e.get('kind') == 'field':
             if 'declarator' not in e: errors.append(label + ': missing declarator'); continue
             if type_signedness(e['declarator']) != e.get('signedness'): errors.append(label + ': signedness metadata differs from declared C type')
@@ -201,9 +221,9 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
     errors = validate_schema(reg)
     if errors: return errors
     scope = reg['scope']; entities = reg['entities']; all_entities = list(entities) + list(shared_entities)
-    contexts = scope['contexts'] if scope['kind'] == 'globals' else [scope]
+    contexts = source_contexts(scope)
     asts = [parse_source(base, c) for c in contexts]
-    ast = asts[0]; fds = field_declarations(ast)
+    ast = asts[0]; fds = {key:d for a in asts for key,d in field_declarations(a).items()}
     funcs = function_declarations(ast) if scope['kind'] == 'unit' else {}
     globs_by_context = [global_declarations(a) for a in asts]
     globs = {n:d for g in globs_by_context for n,d in g.items()}
@@ -227,7 +247,7 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
             bits = int(d.bitsize.value) if d.bitsize else None
             if bits != e.get('bit_width'): errors.append(label + ': bit width drift')
         elif kind == 'type':
-            if n not in {td.name for td in ast.ext if isinstance(td,ca.Typedef)}: errors.append(label + ': type declaration missing')
+            if n not in {td.name for a in asts for td in a.ext if isinstance(td,ca.Typedef)}: errors.append(label + ': type declaration missing')
         elif kind == 'function':
             if n not in funcs: errors.append(label + ': source definition missing'); continue
             if b['functions'].get(e['current_name'],{}).get('addr') != e['oracle_address']: errors.append(label + ': symbol address drift')
@@ -239,7 +259,8 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
             for c,g in zip(contexts,globs_by_context):
                 if n not in g: continue
                 found = True
-                if reverse_names(canonical_type(g[n]), all_entities) != e['declarator']: errors.append(label + ': global type drift in ' + str(c.get('source')))
+                expected_decl = e.get('context_declarators', {}).get(c.get('source'), e['declarator'])
+                if reverse_names(canonical_type(g[n]), all_entities) != expected_decl: errors.append(label + ': global type drift in ' + str(c.get('source')))
             if not found: errors.append(label + ': declaration missing'); continue
             if e.get('binding_kind') == 'game_data':
                 if b['data'].get(e['current_name'],{}).get('addr') != e['oracle_address']: errors.append(label + ': global binding drift')
@@ -268,6 +289,7 @@ def check_collection(registries, source_root=None):
             if e['id'] in by_id: errors.append('duplicate cross-registry entity ' + e['id'])
             by_id[e['id']] = e
     fields = set(); globals_ = set()
+    unit_sources = {r['scope']['source'] for r in registries.values() if r['scope']['kind'] == 'unit'}
     for e in by_id.values():
         if e['kind'] == 'field':
             key = (e['struct'],e.get('proposed_name') or e['current_name'])
@@ -276,6 +298,8 @@ def check_collection(registries, source_root=None):
         elif e['kind'] == 'global':
             if e['current_name'] in globals_: errors.append('duplicate global ownership ' + e['current_name'])
             globals_.add(e['current_name'])
+            for context in e.get('context_declarators', {}):
+                if context not in unit_sources: errors.append(e['id'] + ': contextual declarator has no scoped unit: ' + context)
     for name,reg in registries.items():
         if reg['scope']['kind'] == 'unit':
             for key in reg['scope']['globals']:
@@ -292,6 +316,17 @@ def check_collection(registries, source_root=None):
     for name,reg in registries.items():
         if reg['scope']['kind'] != 'unit': continue
         ast = parse_source(Path(source_root or DEFAULT_SOURCE),reg['scope'])
+        # Enforce a shared global in every consuming unit, including globals
+        # whose semantic ownership remains in an earlier unit registry.
+        declarations = global_declarations(ast)
+        for key in reg['scope']['globals']:
+            e = by_id.get(key)
+            if not e or e['kind'] != 'global': continue
+            member = e.get('proposed_name') or e['current_name']
+            if member not in declarations: continue
+            expected = e.get('context_declarators', {}).get(reg['scope']['source'], e['declarator'])
+            if reverse_names(canonical_type(declarations[member]),by_id.values()) != expected:
+                errors.append(name + ': shared global declaration drift: ' + member)
         declared = field_declarations(ast)
         owners = {td.name for td in ast.ext if isinstance(td,ca.Typedef)}
         for owner,expected in shared_fields.items():
@@ -327,9 +362,13 @@ def assertion_source(reg, proposal=False, source_root=None):
     if scope['kind'] == 'globals': return None
     lines = ['#include <stddef.h>'] + ['#include "' + h.removeprefix('include/') + '"' for h in scope['headers']]
     lines += ['#include "' + h + '"' for h in scope.get('local_headers', [])]
-    if scope.get('layout_local_types'):
-        ast = parse_source(Path(source_root or DEFAULT_SOURCE),scope)
-        lines += [GEN.visit(td) + ';' for td in ast.ext if isinstance(td,ca.Typedef) and td.name in scope['layout_local_types']]
+    emitted = set()
+    for context in source_contexts(scope):
+        if context.get('layout_local_types'):
+            ast = parse_source(Path(source_root or DEFAULT_SOURCE),context)
+            for td in ast.ext:
+                if isinstance(td,ca.Typedef) and td.name in context['layout_local_types'] and td.name not in emitted:
+                    lines.append(GEN.visit(td) + ';'); emitted.add(td.name)
     lines += ['typedef char sem_pointer_width[(sizeof(void*) == 4) ? 1 : -1];',
               'typedef char sem_int_width[(sizeof(int) == 4) ? 1 : -1];',
               'typedef char sem_short_width[(sizeof(short) == 2) ? 1 : -1];',

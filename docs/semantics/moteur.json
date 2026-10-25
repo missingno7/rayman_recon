@@ -21189,7 +21189,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "collision2.c"
+    "collision2.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -21236,6 +21237,16 @@
       "DO_EAU_QUI_MONTE"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "Bloc_lim_H2",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -21831,7 +21842,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "collision2.c"
+    "collision2.c",
+    "load.c"
    ],
    "evidence": [
     {
@@ -21879,6 +21891,18 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "GameModeVideo",
+     "supplied_by": "load.c",
+     "functions": [
+      "load_world",
+      "load_level",
+      "LoadPlan0InVignet"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -21905,7 +21929,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -21942,6 +21967,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "IsBossThere",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "obj_init",
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -22424,7 +22460,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -22462,6 +22499,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "NumScrollObj",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -23297,7 +23344,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -23334,6 +23382,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "bateau_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "Prio",
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -23360,7 +23419,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -23400,6 +23460,17 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "bonus_map",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "init_struct_level",
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -23698,7 +23769,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "load.c"
    ],
    "evidence": [
     {
@@ -23735,6 +23807,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "current_pal_id",
+     "supplied_by": "load.c",
+     "functions": [
+      "load_level"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -24409,7 +24491,8 @@
    "evidence_units": [
     "moteur.c",
     "collision2.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -24466,6 +24549,16 @@
       "DO_RAYMAN"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "eau_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -24802,7 +24895,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE/ANDROID",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -24839,6 +24933,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "fee_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -25562,7 +25666,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -25600,6 +25705,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "id_Cling_1up",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -25626,7 +25741,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -25664,6 +25780,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "id_Cling_Pow",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -26344,7 +26470,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "collision2.c"
+    "collision2.c",
+    "load.c"
    ],
    "evidence": [
     {
@@ -26415,6 +26542,16 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "link_init",
+     "supplied_by": "load.c",
+     "functions": [
+      "load_level"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -26503,7 +26640,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "load.c"
    ],
    "evidence": [
     {
@@ -26540,6 +26678,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "main_mem_level",
+     "supplied_by": "load.c",
+     "functions": [
+      "LOAD_ALL_FIX"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -27024,7 +27172,8 @@
    "evidence_units": [
     "moteur.c",
     "collision2.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -27084,6 +27233,18 @@
       "RAY_IN_THE_AIR"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "num_level",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "Prio",
+      "INIT_OBJECTS",
+      "special_flags_init"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -27494,7 +27655,8 @@
    "evidence_units": [
     "moteur.c",
     "collision2.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -27554,6 +27716,16 @@
       "DO_RAYMAN"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "pierreAcorde_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -27710,7 +27882,8 @@
     "moteur.c",
     "collision1.c",
     "collision2.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -27780,6 +27953,16 @@
       "stackRay"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "poing_obj",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -28837,7 +29020,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -28875,6 +29059,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "rayman_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -29039,7 +29233,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -29077,6 +29272,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "reduced_rayman_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -29306,7 +29511,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -29346,6 +29552,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "save1",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -29691,7 +29907,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -29729,6 +29946,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "scrollLocked",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "obj_init"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -29921,7 +30148,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -29958,6 +30186,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "scroll_obj_id",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -30633,7 +30871,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -30680,6 +30919,16 @@
       "DO_RAYMAN"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "star_ray_der",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "obj_init"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -30706,7 +30955,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -30753,6 +31003,16 @@
       "DO_RAYMAN"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "star_ray_dev",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "obj_init"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -30779,7 +31039,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -30832,6 +31093,16 @@
       "DO_MORT_DE_RAY"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "status_bar",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -31340,7 +31611,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "collision2.c"
+    "collision2.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -31390,6 +31662,16 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "ymapmax",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "INIT_OBJECTS"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -31481,7 +31763,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "ANDROID",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "objinit.c"
    ],
    "evidence": [
     {
@@ -31518,6 +31801,16 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_load/evidence/symbols.json",
+     "kind": "objinit_load_readers_writers",
+     "key": "zonediffx",
+     "supplied_by": "objinit.c",
+     "functions": [
+      "special_flags_init"
+     ],
+     "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
     }
    ],
    "port_notes": [
@@ -31717,7 +32010,7 @@
   "src/include/lowlevel.h": "a32157b711022f58a157b3cd8eae70d2ca89ade6622f270226ddfef3c060e7d8",
   "src/input.c": "b8a2474fcfa3bc415c634efb08007bbc577e43932e60ea530009f1a3193ea59c",
   "src/jumelle.c": "f09afe0b902f363eced30f864eb2f09959790bdd448d920e0ab94f50d0a7b75d",
-  "src/load.c": "5a030a6c67742a6bf8adf20d2e3883b761521e44238db0c9c215ea6a5527903f",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
   "src/lowlevel_00010.asm": "165083072dcc7e373b2826d00efc2d56c6afcebbcad98e8d56837cb5b06a31d8",
   "src/lowlevel_02640.asm": "37034a8081fc882d8bcd482de39d8ad67d8b7e17abb8ed7ab2a5acca4672eef9",
   "src/lowlevel_04430.asm": "089cfa5bb9bb7b99e11e4705055ca7e09ad62768582f72d6dba760f8e8338a36",
@@ -31734,7 +32027,7 @@
   "src/moskito.c": "64bc059d5e70df1e9249166d1bf2b6c3776b3b1cf4f88099f24a0355296a5208",
   "src/movie.c": "dae4c6a7de11580392a99f465ffadbaedbdaa374845321957d6f767d5301ef27",
   "src/neige.c": "d85fb91c0688f0712441c801eb07779421888f2fcc3095a6e174ee0eecfff3b5",
-  "src/objinit.c": "b9baa7c58f63af9e88ee9ed4650a28a6f1588d6db8eb5720f8f040590d254df5",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
   "src/objupdate1.c": "58073eaaa3cf46ac78e9f5a3593ddb0a240327d226c0d70e673c3e427ed1d456",
   "src/objupdate2.c": "817c7aba028dc4e1bf0670c86f97ff2963c46c5e652589047dbdf554870c3612",
   "src/objupdate3.c": "2ca64e996f5a1233d63715db36eb439280b380bd4a3f0bcf58cda3f8815be200",
@@ -31968,5 +32261,38 @@
    "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f"
   },
   "limitation": "Inherited missing/pruned artifacts are listed in evidence/inherited_missing_artifacts.json. Prior hashes are retained, never silently refreshed as new proof."
+ },
+ "pass4_evidence": {
+  "artifact_root": "build/workers/sem_load",
+  "files": {
+   "evidence/archive_formats.json": "2a32cc120087612867017267b1506a1734f21704571b22ef257fd5112cb7cbb3",
+   "evidence/canonical_input_hashes.json": "d1e1f55eccaef7365e468f0b42d6c71722cb949d1a1bbaf1e3c9718edb1bed30",
+   "evidence/context_declarations.json": "8bd216ce5d36ccc22327a0f4362e81b05a166d4300667c2a0c0b97e8c0f3f8f7",
+   "evidence/displacement_candidates.json": "fb83833c9dfbc6f2401d7017f76cc431b48194ce2237b01ded1f1e71a30654f7",
+   "evidence/external_fields.json": "bb428d1db75bec91d363ca797360bfd99ca24aa7a9880be9db209b34fa01f118",
+   "evidence/field_source_candidates.json": "70d96b30e48c73c5176edd67c0b81bb3d888230691c5d8722d356f1a26d88563",
+   "evidence/file_formats.json": "5c752eab9a300d255ec38347ea728c6abfe23ee1dd15d58318dc10d2478a59f7",
+   "evidence/load.dos.txt": "1a850ad55e578572afa996fec35cf9944ae258ec2afed1dd8210d24c30748514",
+   "evidence/load_extent.json": "9009b527da1b7a0d6af07614a3dfba168f637faed634df08a98be7e86f8ce048",
+   "evidence/load_typed_accesses.json": "33d6932f9d21de07f56fe388a10b9d38db4605bee031ec5d57438d6a421856ec",
+   "evidence/name_provenance_checks.json": "fbbc924aaf56efd589d0ae52f4001a6ae988c04b4494379ae862fc43d9405b60",
+   "evidence/negative_results.json": "dfb8d54b702e7acaf095780ba43f474a8ef9cf2787082f93025269a06c265fc8",
+   "evidence/object_defaults.json": "d986ae738dfb0eab7516878946b7209c273312a0224c004e9f413cf38d5c6651",
+   "evidence/object_lifecycle.json": "00b436405a3c15016697f4e7509b86298675add27b4411d214fc7096b169e920",
+   "evidence/objinit.dos.txt": "6ef3d7cdcc3a7398cadc550b0ad005f69d05f798553258e56d97da0f9603afc0",
+   "evidence/objinit_extent.json": "87b977e407f6f5deb83109de17714dbac43a65ce261972b64b57082f10cd6d13",
+   "evidence/objinit_typed_accesses.json": "5f9ff5b45320510c8e69be43cc5611f5f2b12d0fa81aa3dca7551d5fae5a14ce",
+   "evidence/oracle_table_domains.json": "2c04a0cb810b7ff3eb2cb91465685f3a4d0d8657c88d918c34558c2a04406701",
+   "evidence/quirks.json": "bee0d68f075526b7a1bd04e3687871362bc9934aaae8a278001bf78cc8713a35",
+   "evidence/reference_input_hashes.json": "74e3a18b19e58f1d7ea020a50a88d3306645281fd06389685859ee543e93b8e9",
+   "evidence/reused_evidence.json": "f20ec02b53fdb3a5749eeece07c9aa69cc93b89b2c1e57b5ab70af1f0c03c625",
+   "evidence/secondary.dos.txt": "f5986d622eed7edc530bad6781345b8b0a468e9f869567acd39b24299c232821",
+   "evidence/secondary_functions.json": "624f895840018672fa66ad23f1989824f1c28980f5b9eda80337c4e210b45467",
+   "evidence/shipped_map_domains.json": "396d24351640ddbcd7dccbecf7269c7fe1e4ef4add9615c514989fdcfd44c08c",
+   "evidence/symbols.json": "c3857445ea153d264f77cce07666c22d7a8ab509de0af93092ce9f408ea702a1",
+   "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f",
+   "evidence/xref_names.json": "4ddd076bab425bbae5facee1686a58cd0e5e824c9d7b62ca18247e30cd222773"
+  },
+  "limitation": "Earlier evidence hashes/roots are retained, including missing/pruned artifacts. This supplement does not silently refresh earlier proof."
  }
 }

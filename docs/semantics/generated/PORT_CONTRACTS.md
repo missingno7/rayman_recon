@@ -1544,6 +1544,866 @@ Units: ring index. DOS layout/address: 2:3fa8a.
 
 Increments and wraps after100 only while full history is replayed. Equality with ray_pos_in_stack-1 triggers alive-flag termination; subtraction is promoted, so write cursor0 compares with-1 rather than100.
 
+### global:BIG_MAP
+
+STRONG: Runtime ModeNormal map descriptor passed to construct_MAP.
+
+Units: map descriptor. DOS layout/address: 2:321d8.
+
+load_level passes its address after decoding Normal map blocks. Local declaration describes a30-byte prefix; canonical big_map_t is32 bytes. No last-field/capacity change is proposed.
+
+### global:BiosCheckSum
+
+UNKNOWN: Uninterpreted world-header byte under the existing BiosCheckSum name.
+
+Units: raw byte. DOS layout/address: 2:3fa2b.
+
+Read immediately after background count. The only direct absolute reference is the load_world fread destination at1:34fe6; other nearby widened-load candidates do not establish a consumer. No BIOS checksum algorithm or intended use is proved.
+
+### global:DrawBufferNormal
+
+STRONG: ModeNormal screen drawing buffer reused for direct background decoding.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d138.
+
+FondAutorise2 returns/decodes here. Renderer-owned capacity is not redeclared or inferred from one loader allocation.
+
+### global:EffetBufferNormal
+
+STRONG: ModeNormal effect buffer reused for compressed background input or duplicate background storage.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d130.
+
+FondAutorise2 uses it as compressed input (cap128000) and PLAN0BIT in allocate_PLAN0. Preserve lifetime/aliasing; it is not always compressed data.
+
+### global:FondAutorise
+
+PROVEN: Background-loading mode selecting disabled, allocated background, or screen/effect buffers.
+
+Units: mode byte. DOS layout/address: 2:3fa1a.
+
+0=>skip LoadPlan0;2=>DrawBufferNormal/EffetBufferNormal and possible128000-byte truncation. Other nonzero values use allocated background buffers. Do not reduce to boolean.
+
+### global:HeaderFilevignet
+
+PROVEN: Executable-resident descriptors selecting encoded PCX blocks in VIGNET.DAT.
+
+Units: 12-byte archive descriptor array. DOS layout/address: 2:215c.
+
+DOS table has75 entries/900bytes; source load declaration remains[71], Android71 differs. All75 partition VIGNET.DAT and pass checksums. Descriptor count is known from earlier data audit; this pass does not change capacity/declaration.
+
+### global:MAP_BLOCKS
+
+PROVEN: Decoded ModeNormal level tile-pixel byte buffer.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d830.
+
+load_level allocates texture_data_size bytes and XORff-decodes them after encoded-byte sum verification; passes buffer toconstruct_MAP.
+
+### global:Mus_obj_id
+
+PROVEN: Level-object index selected for type55 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f896.
+
+Initialized-1; type55 supplies obj.id. Consumers include DO_MUSICIEN. Do not assume every world supplies this type.
+
+### global:P486
+
+PROVEN: Byte mode switch that selects the cropped background decode path when equal1.
+
+Units: mode byte. DOS layout/address: 2:3fa20.
+
+LoadPlan0 uses P486==1, not any nonzero value. Hardware identification/origin is outside this pass; no CPU-capability inference from its name.
+
+### global:PLAN0
+
+PROVEN: Primary background pointer, republished to PLAN0BIT after Normal decoding.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d800.
+
+load_world obtains it from allocate_PLAN0. ModeNormal uses doubled horizontal storage; ModeX converts into PLAN0BIT. Follow each consumer's representation rather than assuming one universal layout.
+
+### global:PLAN0BIT
+
+PROVEN: Duplicate/planar background destination selected by allocate_PLAN0.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d824.
+
+Allocated capacity2*W*H+8*W or EffetBufferNormal; PLAN0FND_to_bits_planes writes duplicate planes/top rows. Normal loader later assigns PLAN0=this pointer.
+
+### global:PLAN1_BUFFER
+
+PROVEN: ModeX runtime map-render buffer allocated during world load.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d838.
+
+71680 bytes whenGameModeVideo==1;NULL otherwise. Map build/update routines consume it; not serialized.
+
+### global:PLAN2
+
+PROVEN: Allocated presentation PCX pixels returned by LoadPcxInVignet.
+
+Units: indexed-pixel pointer. DOS layout/address: 2:3d804.
+
+LoadPlan2InVignet sets PLAN2BIT equal toPLAN2 without conversion.
+
+### global:PLAN2BIT
+
+PROVEN: Published presentation pixel pointer, aliasing PLAN2 after image load.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d828.
+
+LoadPlan2 publishes same address asPLAN2; quarter-width metadata alone does not prove the pixel bytes were converted.
+
+### global:Plan0NumPcx
+
+PROVEN: World-local signed8 map from background slot to VIGNET resource index.
+
+Units: resource index array. DOS layout/address: 2:3ef48.
+
+Reset10 bytes to-1; decoded file IDs XOR15 fill count slots. LOAD_FND indexes with signed8 no_fnd and skips-1. All shipped world counts fit10.
+
+### global:RaymanExeCheckSum1
+
+UNKNOWN: Uninterpreted raw32 ALLFIX field read before each fixed atlas.
+
+Units: raw32 value. DOS layout/address: 2:3d070.
+
+Repeated3178074698 in shipped ALLFIX. Only loader destinations are found. It is separate from the8-bit encoded-atlas checksum; no algorithm or intended use is proved.
+
+### global:RaymanExeCheckSum2
+
+UNKNOWN: Uninterpreted raw32 ALLFIX field read after each fixed atlas and trailing8-bit checksum.
+
+Units: raw32 value. DOS layout/address: 2:3d068.
+
+Repeated1866446967 in shipped ALLFIX. Only loader destinations are found; no algorithm or intended use is established.
+
+### global:RaymanExeCheckSum3
+
+UNKNOWN: Uninterpreted raw32 ALLFIX field read after all fixed descriptors.
+
+Units: raw32 value. DOS layout/address: 2:3d06c.
+
+Shipped ALLFIX has952344370, immediately before7 descriptor bindings. Only loader destinations are found; no algorithm or intended use is established.
+
+### global:RaymanExeSize
+
+UNKNOWN: Uninterpreted raw32 ALLFIX field under the existing executable-size name.
+
+Units: raw32 value. DOS layout/address: 2:3d05c.
+
+ALLFIX repeats427907 before each atlas. Only loader destinations are found; no comparison/computation or intended use is proved. Do not infer the current GOG executable's physical file size.
+
+### global:ScrollDiffOn
+
+PROVEN: Differential scrolling switch used to choose background slot and mask construction.
+
+Units: boolean-like byte. DOS layout/address: 2:3fa1f.
+
+ModeNormal&&nonzero chooses scroll-background slot and calls MaskScrollDiffSprites if descriptor present; ModeX ignores this choice and uses static slot.
+
+### global:ScrollDiffSprites
+
+PROVEN: World descriptor for differential-scroll foreground sprites, orNULL.
+
+Units: obj_t pointer. DOS layout/address: 2:3e634.
+
+LEV stores raw32 descriptor index; -1=>NULL, otherwise full signed32 index into wldobj (unlike signed16 instance pointer slots). Mask built only in ModeNormal with ScrollDiffOn.
+
+### global:TailleMainMemFix
+
+PROVEN: Requested fixed-resource arena capacity.
+
+Units: bytes. DOS layout/address: 2:3d898.
+
+Passed unsigned32 toinit_memory(main_mem_fix) inLOAD_ALL_FIX; actual used offset is maintained by allocator.
+
+### global:TailleMainMemLevel
+
+PROVEN: Requested level arena capacity.
+
+Units: bytes. DOS layout/address: 2:3d844.
+
+Passed unsigned32 toinit_memory(main_mem_level).
+
+### global:TailleMainMemSprite
+
+PROVEN: Requested sprite-pixel arena capacity.
+
+Units: bytes. DOS layout/address: 2:3d848.
+
+Passed unsigned32 toinit_memory(main_mem_sprite). Fixed atlas bytes allocate here.
+
+### global:TailleMainMemWorld
+
+PROVEN: Requested world arena capacity.
+
+Units: bytes. DOS layout/address: 2:3d89c.
+
+Passed unsigned32 toinit_memory(main_mem_world).
+
+### global:ToutSpriteAutorise
+
+PROVEN: Override to load world descriptor payloads even when not marked always-used.
+
+Units: boolean-like byte. DOS layout/address: 2:3fa18.
+
+load_world loads a descriptor when its file byte!=0 OR thisglobal!=0; otherwise skips payload and leaves resource pointersNULL (animation alias exception).
+
+### global:VideoBiosCheckSum
+
+UNKNOWN: Second uninterpreted world-header byte under the existing VideoBiosCheckSum name.
+
+Units: raw byte. DOS layout/address: 2:3fa28.
+
+Read after BiosCheckSum. The only direct absolute reference is the load_world fread destination at1:34ff9; neighboring-data candidates are not proof of a reader. No video-BIOS checksum computation or intended use is established.
+
+### global:alternateBossSpeedFactor
+
+PROVEN: Additive adjustment to the boss state-speed multiplier.
+
+Units: 1/16384 multiplier. DOS layout/address: 2:3e5b4.
+
+obj_init sets0; setBossReachingSpeeds adds to bossSpeedFactor, multiplies state speed then divides16384.
+
+### global:bigray
+
+PROVEN: 132-byte template copied from the appended BRAY descriptor.
+
+Units: object template. DOS layout/address: 2:3e784.
+
+load_big_ray sets descriptor.eta=loaded_eta[0] then memcpy132 to bigray. It does not itself establish live Rayman position/state.
+
+### global:black_ray_obj_id
+
+PROVEN: Level-object index selected for type204 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8bc.
+
+Reset-1; type204 copies ray.animations, disables alive/is_active and suppliesobj.id.
+
+### global:block_add
+
+PROVEN: Tile lookup table whose interpretation differs between video modes.
+
+Units: offset/pointer table. DOS layout/address: 2:34268.
+
+1200 raw32entries. ModeX signed-1=>0, else callback-base+offset. Normal retains offsets for construct_MAP. Never use host pointer casts to parse the on-disk words.
+
+### global:blocks_code
+
+PROVEN: Decoded ModeX tile callback code buffer.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d7c4.
+
+Allocate x_code_size (orNULL), verify sum of encodedbytes then XORf3. Only the external block_add table is rebound; callback code contains no loader patch stream. Reuse docs/port/TILE_CODE.md native specification.
+
+### global:bossEncounter
+
+STRONG: Boss encounter/phase selector consumed by action scripts.
+
+Units: selector. DOS layout/address: 2:3fa6e.
+
+obj_init initializes0 for type50/213,2 for type227; per-boss script domains differ. Not a world or object ID.
+
+### global:bossSpeedFactor
+
+PROVEN: Base boss state-speed multiplier.
+
+Units: 1/16384 multiplier. DOS layout/address: 2:3e5b0.
+
+obj_init sets0x4000 (unity); setBossReachingSpeeds divides product by0x4000, with signed arithmetic.
+
+### global:bossXToReach
+
+PROVEN: Horizontal target used by boss approach-speed computation.
+
+Units: world pixels. DOS layout/address: 2:3f850.
+
+Signed16 target; -32000 on either target disables setBossReachingSpeeds motion. Type218 initializes from objectx.
+
+### global:bossYToReach
+
+PROVEN: Vertical target used by boss approach-speed computation.
+
+Units: world pixels. DOS layout/address: 2:3f84a.
+
+Signed16 target; type218 initializes firstFloorBelow(ray)-offset_by+16. Preserve signed16 narrowing.
+
+### global:cb_ball_obj_id
+
+PROVEN: Level-object index selected for type257 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f814.
+
+Reset-1; type257 suppliesobj.id. DO_BAT_COMMAND / DISPLAY_FIXE use the selected breakout object.
+
+### global:clockobj
+
+PROVEN: Fixed-resource template selected by the sixth ALLFIX tail index.
+
+Units: object template. DOS layout/address: 2:3ed44.
+
+memcpy132 fromwldobj[index]; consumed by continue-screen initialization/display. Existing name has no Android dynamic symbol.
+
+### global:corde_dark_obj_id
+
+PROVEN: Level-object index selected for type246 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8ce.
+
+Reset-1; type246 suppliesobj.id. Dark rope consumers use it; no allocation here.
+
+### global:currentBossAction
+
+STRONG: Current action selector in boss scripts.
+
+Units: selector. DOS layout/address: 2:3fa6f.
+
+obj_init resets0 for types50/227/213; action/phase consumers in moskito and mere-denis retain actor-specific values.
+
+### global:currentBossActionIsOver
+
+STRONG: Boss action-completion marker.
+
+Units: boolean-like byte. DOS layout/address: 2:3fa6c.
+
+obj_init resets0; action-end consumers set/test this byte. No universal enum inferred.
+
+### global:current_rvb
+
+PROVEN: Current768-byte256-color palette used for display/palette effects.
+
+Units: RGB6 component bytes. DOS layout/address: 2:37988.
+
+load_level copies rvb[last_plan1_palette]; LoadPcxPaletteInVignet XOR-decodes8-bit channels then divides4. LEV palettes are read raw, without that conversion.
+
+### global:cymbal_obj_id
+
+PROVEN: Indices of type81 objects encountered during level initialization.
+
+Units: object-index array. DOS layout/address: 2:3e5cc.
+
+INIT_OBJECTS appends each type81 index using nb_cymbal_in_map; declaration has2 entries. No overflow check here; do not infer a larger capacity.
+
+### global:div_obj
+
+PROVEN: Fixed-resource template selected by the seventh ALLFIX tail index.
+
+Units: object template. DOS layout/address: 2:3e6ec.
+
+memcpy132 fromwldobj[index]; used by save/continue sprite display. No per-instance init here.
+
+### global:gros_patai_block
+
+PROVEN: ModeX tile pixel-record allocation.
+
+Units: 256-byte record pointer. DOS layout/address: 2:3d7d4.
+
+x_texture_count records, each256bytes; NULL when count0. Raw pixels XOR7d and checksum checked. Rebased source-table entries may point beyond allocated records for partial/unused tiles; native interpreter must use established tile contracts.
+
+### global:gros_patai_src
+
+PROVEN: ModeX tile pixel-source lookup table.
+
+Units: 32-bit pointer table. DOS layout/address: 2:32fa8.
+
+Read1200 u32 byte offsets and add gros_patai_block base unconditionally, with no-1 orNULL sentinel test.
+
+### global:language_infos
+
+PROVEN: Executable-resident descriptors selecting the five encoded RAY.LNG language blocks.
+
+Units: 12-byte archive descriptor array. DOS layout/address: 2:24e0.
+
+Five descriptors,60bytes, raw offset/size/key/checksum. No table header in RAY.LNG itself. Raw references near table end can be neighbouring signed16 widened loads, not archive accesses.
+
+### global:language_txt
+
+PROVEN: Pointers into the decoded mutable language block, separated in place.
+
+Units: char-pointer table. DOS layout/address: 2:32b48.
+
+LoadLanguageTxt produces237 entries per shipped block; declaration is incomplete array. A400-byte temporary is scanning scratch, not the backing storage. Delimiters becomeNUL, next start skips2bytes.
+
+### global:laserSourceSprNumInAnim
+
+STRONG: Space-Mama laser-source animation-layer selection, initialized to byte255.
+
+Units: animation layer or255. DOS layout/address: 2:3fa6d.
+
+obj_init writes-1 through itsu8 declaration. Existing binding metadata sayss8; preserve current unit ABI/declaration and describe the255 bit pattern, not signed widening.
+
+### global:last_plan1_palette
+
+PROVEN: LEV palette index used to select current_rvb from rvb.
+
+Units: palette index. DOS layout/address: 2:3fa83.
+
+One raw byte after2304 palette bytes. No bounds check; shipped values are documented by file evidence.
+
+### global:level_alw
+
+PROVEN: Index list for objects whose type flag has flags0 bit0 set.
+
+Units: object-index list. DOS layout/address: 2:3cde8.
+
+load_level allocates2*level.nb_objects bytes for ids; init_struct_level clears count, fills eligible entries. Packed pointer+signed16count view is6 bytes; load has an equivalent local typedef.
+
+### global:loaded_eta
+
+PROVEN: Runtime bank of main-state-to-substate-table pointers.
+
+Units: eta-bank pointer array. DOS layout/address: 2:3ce48.
+
+Fixed and world files build nested arrays from u8 counts. World appends after nb_fix_eta; BRAY overwrites prefix from0. Instance eta slot is an index before rebinding. Shared eta records can be mutated at init.
+
+### global:main_mem_fix
+
+PROVEN: Arena descriptor for fixed-resource metadata, state banks and deformation scratch.
+
+Units: allocator arena. DOS layout/address: 2:3d874.
+
+LOAD_ALL_FIX initializes capacity, then allocates eta pointers/records,sprite descriptors,animations and1200-byte scratch fromit. Fixed atlas pixels use main_mem_sprite instead.
+
+### global:main_mem_sprite
+
+PROVEN: Arena descriptor used for fixed sprite-atlas pixels and caller-supplied world sprite resources.
+
+Units: allocator arena. DOS layout/address: 2:3d860.
+
+LOAD_ALL_FIX initializes it and allocates atlas bytes; SpriteFixeOffset records its used offset. mem.align means used bytes, not alignment.
+
+### global:main_mem_world
+
+PROVEN: Arena descriptor initialized for world resource metadata and backgrounds.
+
+Units: allocator arena. DOS layout/address: 2:3d880.
+
+LOAD_ALL_FIX initializes it; DEPART_WORLD passes it toload_world. Allocator lifetime is managed by world transitions.
+
+### global:mama_pirate_obj_id
+
+PROVEN: Level-object index selected for type187 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f80c.
+
+Reset-1; type187 supplies loop index.
+
+### global:mapobj
+
+PROVEN: World-map object instances whose resources are bound from one fixed descriptor.
+
+Units: object array. DOS layout/address: 2:3d8cc.
+
+LOAD_ALL_FIX sets six resource/count members for indices0..23; declaration has25 entries, so index24 is not initialized by this loop. Other runtime members are initialized elsewhere.
+
+### global:moskitomama_droite_obj_id
+
+PROVEN: Level-object index selected for type231 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8d8.
+
+Reset-1; type231 is disabled initially. When type232 also exists, their signed16 link members store each other's indices.
+
+### global:moskitomama_gauche_obj_id
+
+PROVEN: Level-object index selected for type232 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8c8.
+
+Reset-1; type232 is disabled and flipped initially; linked with type231 if both found.
+
+### global:moskitosaxo_obj_id
+
+PROVEN: Level-object index selected for type218 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8d6.
+
+Reset-1; selected object hasparam0, alive0,is_active0.
+
+### global:mst_scroll_obj_id
+
+PROVEN: Selected type147 object with hit_points0.
+
+Units: object index. DOS layout/address: 2:3f878.
+
+Reset-1; initialization positions it relative to ray, selects state0:9, speed_x2, active1,flip1.
+
+### global:nb_blocks_plein
+
+PROVEN: ModeNormal count of full tile-pixel records read from LEV.
+
+Units: tile count. DOS layout/address: 2:3d054.
+
+Rawu32 after nb_total_blocks; construct_MAP uses full-count boundary for different block forms. Native format is already specified inTILE_CODE.md.
+
+### global:nb_cymbal_in_map
+
+PROVEN: Number of type81 entries appended to cymbal_obj_id by initialization.
+
+Units: count. DOS layout/address: 2:3fa81.
+
+Reset0; postincrement after each type81. Byte wrap is possible in malformed inputs; shipped domain is not an API capacity.
+
+### global:nb_des
+
+PROVEN: Live descriptor count/end index, including fixed resources after world append.
+
+Units: descriptor count. DOS layout/address: 2:251c.
+
+Signed16. LOAD_ALL_FIX countincludes reservedslot0. load_world first reads world-only count then addsnb_fix_des; BRAY uses oldcount as appendindex and increments. world_free restores fixedcount.
+
+### global:nb_fix_des
+
+PROVEN: Fixed descriptor count/end index preserved across world loads.
+
+Units: descriptor count. DOS layout/address: 2:251e.
+
+Signed16 copied from ALLFIX count. World descriptors begin at this index, not at0.
+
+### global:nb_fix_eta
+
+PROVEN: Fixed eta-bank prefix count.
+
+Units: bank count. DOS layout/address: 2:3fa9a.
+
+u8 captured fromALLFIX; world appends fromthis index. world_free restores nb_loaded_eta tothis count.
+
+### global:nb_loaded_eta
+
+PROVEN: Loaded eta-bank count with loader-specific update rules.
+
+Units: bank count. DOS layout/address: 2:3fa9b.
+
+u8. World readsworld count then addsfixedcount. BRAY reads its owncount and overwrites banksfrom0 without updating nb_fix_eta. Preserve byte arithmetic.
+
+### global:nb_total_blocks
+
+PROVEN: ModeNormal total tile-block count read from LEV.
+
+Units: tile count. DOS layout/address: 2:3d058.
+
+Rawu32 before nb_blocks_plein and texture_data_size. Does not size the fixed1200 lookup table.
+
+### global:nb_wiz
+
+PROVEN: Bonus-stage Ting object count accumulated during initialization.
+
+Units: Ting count. DOS layout/address: 2:3fa56.
+
+Reset0; increment once per type161 only when bonus_map. Byte storage; not the persistent status-bar total.
+
+### global:nb_wiz_save
+
+PROVEN: Saved status-bar Ting count at bonus-stage initialization.
+
+Units: Ting count. DOS layout/address: 2:3d8ac.
+
+When bonus_map, INIT_OBJECTS saves status_bar.num_wiz then sets that byte0. Signed32 save storage; score/bonus consumers are separate.
+
+### global:new_sprite_deform
+
+PROVEN: Runtime sprite-deformation scratch allocation.
+
+Units: byte-buffer pointer. DOS layout/address: 2:3d7bc.
+
+LOAD_ALL_FIX allocates0x4b0/1200bytes from fixedarena. Not read from file; consumed by AFFICHE_SPRITE_DEFORME.
+
+### global:no_fnd
+
+PROVEN: Signed8 selected world background slot.
+
+Units: world background slot. DOS layout/address: 2:3fa22.
+
+LEV static/scroll byte assigned according to video mode and ScrollDiffOn; LOAD_FND indexes Plan0NumPcx and then loads the resulting VIGNET resource. It is not itself a VIGNET resource ID.
+
+### global:path_has_changed
+
+PROVEN: Path-prefix switch for selected data loaders.
+
+Units: boolean-like unsigned16. DOS layout/address: 2:3f8f2.
+
+Nonzero prepends ..\ toWLD/LEV/ALLFIX/VIGNET paths. BRAY and RAY.LNG do not use this switch. Differential FileLayer rejects parent components and only models the installation-relative path.
+
+### global:plan0_height
+
+PROVEN: Published background height after decode/conversion.
+
+Units: pixels. DOS layout/address: 2:3f7e4.
+
+u16; assigned decoded/croppedheight. Allocation height can differ from final croppedheight.
+
+### global:plan0_width
+
+PROVEN: Published background width in the active representation.
+
+Units: pixels/storage columns. DOS layout/address: 2:3f7de.
+
+ModeX converter storesW; ModeNormal loader stores2*W. Do not assume it always equals the PCX visible width.
+
+### global:plan0bit_length
+
+PROVEN: Published total duplicated planar background byte span.
+
+Units: bytes. DOS layout/address: 2:3d808.
+
+PLAN0FND_to_bits_planes first computesW*H then doubles; final2*W*H. Extended top rows occupy extra8*W bytes beyondthis span.
+
+### global:plan0bit_nb_bytes
+
+PROVEN: Published planar background row-stride parameter.
+
+Units: bytes. DOS layout/address: 2:3d7f4.
+
+Converter startsW, uses W/2 rowstride and W/4 duplicateoffset, then storesW>>1. Name does not mean the number of bytes per individual plane row.
+
+### global:plan2_height
+
+PROVEN: Published presentation image height in signed16 storage.
+
+Units: pixels. DOS layout/address: 2:3f7e2.
+
+u16 decodedheight narrows into existings16global; shippedpositive heights fit. Do not silently widen the DOSABI.
+
+### global:plan2_width
+
+PROVEN: Published presentation image width.
+
+Units: pixels. DOS layout/address: 2:3d7ec.
+
+u32 assigned u16 decodedwidth; not quartered.
+
+### global:plan2bit_length
+
+PROVEN: Published presentation image pixel-area byte count.
+
+Units: bytes. DOS layout/address: 2:3d7f8.
+
+LoadPlan2InVignet storesW*H before quartering stride metadata.
+
+### global:plan2bit_nb_bytes
+
+PROVEN: Presentation display row-stride parameter set towidth/4.
+
+Units: bytes. DOS layout/address: 2:3d7fc.
+
+Metadata computed by integerdivision4; PLAN2BIT still aliases unconvertedPCX pixels at thispoint.
+
+### global:prise_branchee
+
+STRONG: Plug/power state used by the Joe sequence.
+
+Units: state. DOS layout/address: 2:3f796.
+
+obj_init type228 writes1 and switches state0:2 when finBosslevel.helped_joe_2. DoPrisePoingCollision corroborates; exact broader state domain not established here.
+
+### global:raylittle
+
+PROVEN: Small-Rayman object whose sprite resources are selected by the fourth ALLFIX tail index.
+
+Units: object template. DOS layout/address: 2:3e808.
+
+LOAD_ALL_FIX assigns sprites,img_buffer,nb_sprites only. INIT_LITTLE_RAY initializes its runtime members elsewhere.
+
+### global:rideau_obj_id
+
+PROVEN: Level-object index selected for type249 with initial substate2.
+
+Units: object index. DOS layout/address: 2:3f8cc.
+
+Reset-1; otherwise type249 does not assign this global.
+
+### global:rvb
+
+PROVEN: Three raw level palettes loaded from the LEV header.
+
+Units: RGB component bytes. DOS layout/address: 2:37f88.
+
+3*768bytes at fileoffset12; loader performs noXOR ordivide4 onthese records.
+
+### global:rvb_pres
+
+PROVEN: Palette copy preserved when a presentation image is loaded.
+
+Units: RGB6 component bytes. DOS layout/address: 2:37088.
+
+LoadPlan2InVignet copies current_rvb after VIGNET paletteconversion.
+
+### global:saveBossEncounter
+
+STRONG: Saved boss encounter selector with255 initialization sentinel.
+
+Units: selector. DOS layout/address: 2:3fa69.
+
+obj_init initializes255 for type50/227/213. Shared with action save/restore code;255 must remain distinguishable from phase0.
+
+### global:sbar_obj_id
+
+PROVEN: Level-object index selected for type11 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f87e.
+
+Only assigned on type11; not explicitly reset at function entry. Its name does not prove that it is a status-bar record.
+
+### global:sko_phase
+
+STRONG: Scorpion controller phase selector.
+
+Units: selector. DOS layout/address: 2:3f816.
+
+obj_init type150 sets0; DO_SKO dispatches phases0/1/2. Existing PS1/Android name corroborates, not a global gameplay-state enum.
+
+### global:stosko_obj_id
+
+PROVEN: Level-object index selected for type223 during INIT_OBJECTS.
+
+Units: object index. DOS layout/address: 2:3f8d0.
+
+Reset-1; selected object hasparam0,alive0,is_active0.
+
+### global:t_world_info
+
+STRONG: World-map stage records consulted for the current stage cage count.
+
+Units: stage record array. DOS layout/address: 2:4d5c.
+
+INIT_OBJECTS reads t_world_info[world_index].nb_cages; exactly6 suppresses type58 cages and calls take_bonus(id).20-byte DOS record,24 entries. Only directly used cage-count meaning is promoted here.
+
+### global:type_zdc
+
+PROVEN: Per-object-type packed collision-zone reference defaults.
+
+Units: packed collision-zone reference. DOS layout/address: 2:33ee.
+
+obj_init copies type_zdc[obj.type] toobj.zdc.262 unsigned16entries. Packed interpretation is owned by existing obj_t.zdc/collision registry; swap helpers may change the table.
+
+### global:wldobj
+
+PROVEN: Resource-holder records sharing obj_t layout, separate from the live level.objects allocation.
+
+Units: resource descriptor array. DOS layout/address: 2:50d18.
+
+Atlas byte length uses obj_t.x. Sprite/animation/atlas/eta pointers are allocated or rebound here; world descriptor zero-animation count aliases slot0 animations. Full132-byte copies initialize selected templates but do not make every member a valid live-instance state.
+
+### global:world_index
+
+PROVEN: Current world-map stage-record index.
+
+Units: stage index. DOS layout/address: 2:3fa60.
+
+INIT_OBJECTS indexes t_world_info with thisbyte. DOS byte storage differs from Android2-byte symbol; do not widen from Android size.
+
+## load.json
+
+Meaning confidence is independent of STRICT. DOS reads/writes/callers are primary; external names corroborate. Neutral/overloaded storage is not renamed. Source/displacement candidates are not typed proofs. Full serialized records do not make producer pointers runtime pointers.
+
+### function:load_world
+
+STRONG: Load world resource descriptors, state banks and background selections after the fixed resources.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:34de0.
+
+PCMAP\filename with optional ..\ prefix. Read u16 background dimensions, u8 background count/two uninterpreted bytes, background IDs XOR15, s16 descriptor count. Append descriptors at nb_fix_des, sprite pixels XOR8f plus encoded-byte sum check/retry, 12-byte sprite records, animations and eta banks after nb_fix_eta. Skip optional descriptor payloads when !always_used&&!ToutSpriteAutorise; zero animation count aliases slot0 animations even on skip. Add fixed counts; load first background unless FondAutorise==2. Includes original BIOS tick/debug-register/INT3 sequence. Complete format/boundaries in FILE_FORMATS.md.
+
+### function:load_level
+
+STRONG: Load map palettes, video-mode tile resources and serialized level instances; rebind indices to runtime pointers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:35688.
+
+Directory selected by num_world-1; second C parameter world_id is unused. Header has absolute event/normal-texture offsets, s16 W/H, 3*768 palettes and palette index; map is6*W*H bytes. ModeX consumes XOR7d pixels and XORf3 callbacks plus1200-entry tables, then seeks event_offset; Normal seeks texture_offset, consumes XORff bytes and construct_MAP, arriving at objects. Read s16 instance count, s16 link successors,132-byte instances, then per-instance u16 command/label counts and payloads. Pointer slots0/4/8/12 narrow to signed16 indices before rebinding; slots16/20 are replaced by allocations/NULL. FILE_FORMATS.md preserves sentinel/base rules.
+
+### function:load_big_ray
+
+STRONG: Append the big-Rayman sprite/animation descriptor and replace the loaded state-bank prefix.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:36078.
+
+PCMAP\bray.dat, without path_has_changed prefix. One descriptor at nb_des: signed32 atlas size, XOR8f bytes WITHOUT trailing checksum, s16 sprite count, u8 animation count, animation records. Read u8 eta-bank count starting at bank0, set descriptor eta=loaded_eta[0], copy132 bytes to bigray, increment nb_des. Does not set nb_fix_eta; not an instance-state initializer.
+
+### function:LOAD_ALL_FIX
+
+STRONG: Create the four arenas and load fixed resources, state banks and template bindings.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:364bc.
+
+Optional ..\PCMAP\ALLFIX.DAT. Eta banks first; nb_fix_eta=nb_loaded_eta. Read signed16 descriptor count; slot0 is reserved, loop1..count-1. Each descriptor has raw32 eta index (-1=>NULL), uninterpreted four-byte fields around XOR8f atlas+sum, s16 sprite count (explicit u16 cast here), animations. Save nb_fix_des; tail raw32 field and7 descriptor indices bind ray,alpha,alpha2,raylittle,mapobj0..23,clockobj,div_obj. Allocate1200-byte new_sprite_deform and record sprite arena offset. Does not initialize runtime object state.
+
+### function:LoadPcxInVignet
+
+STRONG: Read and XOR-decode a VIGNET PCX entry, then allocate and expand its indexed pixels.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:36d68.
+
+Descriptor table is executable data, not an archive header. Check sum of encoded128-byte header+remaining size-128 body, using per-entry XOR key. Width=max_x-min_x+1, height likewise; scanline loop uses bytes_per_line, writes with width pitch, ignores format/plane flags. C0..FF prefix means next byte repeated low6 bits times. Body includes terminal palette but pixel loop stops after height scanlines. Retry corruption path has original +128 destination stride for128 one-byte header reads (DOS1:36fd1..36fee), not a safe sequential retry.
+
+### function:LoadPcxPaletteInVignet
+
+PROVEN: Load the final768 bytes of a VIGNET entry as a VGA palette.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37280.
+
+Seek descriptor.offset+size-768, read768, XOR each byte with descriptor key, divide unsigned byte by4 (8-bit component to6-bit). No checksum validation and no palette-marker check in this function. Up to10 reopen attempts with sleep(1) after each retry attempt.
+
+### function:LoadPlan0InVignet
+
+STRONG: Decode a VIGNET background into PLAN0 or the existing screen/effect buffers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:373d0.
+
+FondAutorise0=>no work;2=>use EffetBufferNormal/DrawBufferNormal, cap compressed body at128000 and skip checksum failure handling if truncated. FondAutorise2 or P4861 crops to320x200, retaining bottom rows unless truncated; otherwise Normal duplicates each scanline horizontally and ModeX writes one copy then converts planes. Normal finally sets PLAN0=PLAN0BIT and width=2*decoded width. Corrupt retry header uses128-byte stride; this function also carries the nonzero checksum residual into retry (no reset). See DOS sites in quirk evidence.
+
+### function:allocate_PLAN0
+
+PROVEN: Obtain primary and duplicate/planar background buffers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37bb0.
+
+When FondAutorise2, returns DrawBufferNormal and sets PLAN0BIT=EffetBufferNormal. Otherwise allocates width*height bytes and2*width*height+8*width bytes from the supplied arena; PLAN0BIT is the second buffer and the first is returned. Does not fill either buffer or set dimension globals.
+
+### function:PLAN0FND_to_bits_planes
+
+STRONG: Rearrange indexed background pixels into duplicated four-plane storage with top-row extension.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37c10.
+
+Given W,H: L=W*H, offset=(x&3)*(L>>1)+(x>>2)+y*(W>>1); write pixel at offset and offset+(W>>2). For y<16 also write at4*(L>>1)+(x>>2)+y*(W>>1), and its W/4 duplicate. Set plan0_width=W,plan0_height=H; final plan0bit_nb_bytes=W>>1 and plan0bit_length=2*W*H. Buffer capacity allocated as2*W*H+8*W. Preserve shift/truncation order.
+
+### function:LoadPlan2InVignet
+
+PROVEN: Load a presentation image and palette, and publish its display geometry.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37d3c.
+
+LoadPcxInVignet allocates PLAN2, LoadPcxPaletteInVignet fills current_rvb, copy to rvb_pres. PLAN2BIT=PLAN2, plan2_width=W, plan2_height receives low16 H, plan2bit_length=W*H, plan2bit_nb_bytes=W/4. This routine does not convert the pixel data to four planes.
+
+### function:GetStringTxt
+
+PROVEN: Scan one comma-delimited language entry into scratch storage and return the following cursor.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37dd8.
+
+Copy only bytes>=space into out_buf until comma or *. Comma=>append NUL and return delimiter+1; *=>NULL without appending NUL. No bounds/NUL-input guard; caller input contract relies on a terminal *. The scratch copy is not used as language_txt storage.
+
+### function:LoadLanguageTxt
+
+STRONG: Decode one RAY.LNG block and build pointers into its mutable allocation.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:37e10.
+
+Read descriptor-selected block, subtract encoded bytes mod256 while XOR-decoding; retry resets checksum and reads sequential bytes. Allocate400-byte scratch used by GetStringTxt only. For each successful comma: language_txt[u16 index++]=current string start, replace comma byNUL, set next string start=returned cursor+2. Scan cursor itself remains just after comma, so it scans separator bytes; first string begins at block start. Stops on *; five shipped blocks yield237 pointers. No string table count or charset translation in stream.
+
+### function:LoadPcxOptions
+
+STRONG: Decode a VIGNET PCX entry into a caller-provided pixel buffer.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:38038.
+
+Same descriptor checksum/XOR/RLE/dimension rules as LoadPcxInVignet; no output allocation or supplied capacity. Does not retry fopen. Original header corruption retry writes128 one-byte reads at128-byte strides (DOS1:38248..38265); payload retry sequential. Returns the same buffer pointer.
+
 ## moteur.json
 
 Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN retains neutral names. Raw source/displacement/external token hits are candidates, not type proofs.
@@ -3358,6 +4218,66 @@ Units: pixels. DOS layout/address: 2:2ba2.
 
 in_action_zone adds60 to local margins for a previously active object; special_flags_init changes table entries by world/level.
 
+## objinit.json
+
+Meaning confidence is independent of STRICT. DOS reads/writes/callers are primary; external names corroborate. Neutral/overloaded storage is not renamed. Source/displacement candidates are not typed proofs. Full serialized records do not make producer pointers runtime pointers.
+
+### function:Prio
+
+PROVEN: Choose the object draw-order bucket from its type and a few level/object conditions.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:4e160.
+
+Returns u8 0..7. Default4; type147 depends on hit_points, type123 on world1/level14, type253 on bateau_obj_id!=-1. See object_defaults.json for every dispatch case. Priority is not an activation/liveness test.
+
+### function:first_obj_init
+
+PROVEN: Capture per-instance reset state once and establish type-specific detection defaults.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:4e640.
+
+If type flags bit0 is set, or type0/9 has negative x, replace x/y with -32000 before snapshotting low signed16 init_x/init_y. Save main/sub/hit_points, set scale0 and active_flag1. Default detect_zone40/link0; type113 writes param0/link0 and does not assign detect_zone. Types98/213 call findMereDenisWeapon and only clear link. Type tables retain all exceptions.
+
+### function:obj_init
+
+PROVEN: Restore an instance from its captured reset state, reset common runtime members, then apply type-specific defaults.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:4e9bc.
+
+Does not allocate resources or recapture initial state. Restores signed16 init_x/init_y into signed32 positions; type163 skips state restoration. Selects eta animation; zeros velocity/gravity phase/config/timer and five block samples; sets iframes_timer,follow_id,cmd_offset,cmd_context_depth=-1 at their respective points. GET_OBJ_CMD is called before cmd_context_depth becomes -1. Only explicitly written flags change. See per-type defaults, including type98 conversion to213 and shared eta mutations.
+
+### function:init_struct_level
+
+PROVEN: Build always-object and ordinary object-index lists after initialization.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:4f1e8.
+
+Clear both counts and all allocated index slots. Include objects when bonus_map is true, the collectible bit (flags1&2) is clear, or bonus_taken(id) is false. Classify by flags0&1. Entries are signed16 indices; lists are not copies of obj_t and do not filter on alive/is_active here.
+
+### function:INIT_OBJECTS
+
+STRONG: Initialize all level instances and discover special-object IDs and lists.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:4f2d4.
+
+Set id to signed16 array index, optionally call first_obj_init when first_init!=0, zero active_timer, restore type163 initial state, then obj_init. Apply type branches, collectible suppression and bonus Ting count; pair type231/232 link fields when both exist. Finally rebuild lists; on bonus_map save status_bar.num_wiz in nb_wiz_save and clear it. IDs reset to -1 except black_fist_obj_id, poing_obj_id, sbar_obj_id and star pointers are only written when their types occur. See defaults artifact for exact branches and ordering.
+
+### function:REINIT_OBJECT
+
+PROVEN: Reset an existing instance for reactivation without recreating its resources.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:50288.
+
+obj_init, alive1, active_flag2, calc_obj_pos; active_timer=0 when link_has_gendoor!=0 else120; is_active0. The 120 is an engine-call delay, not milliseconds; linked-group marker is not proof of an actual generating door.
+
+### function:special_flags_init
+
+PROVEN: Apply world/level exceptions to type-level activation/collision tables.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:502c4.
+
+For all262 type slots: zonediffx[0]=-120 if num_level==3 else0, independently of num_world. For types16,17,24 set flags1 bit3 in world1 and clear elsewhere. No other type flag bits are changed.
+
 ## ray.json
 
 DOS GOG1.21 operations/consumers are primary; STRICT is independent of semantic confidence. PROVEN locals identify observed dataflow, not recovered historical C names. NEAR computational contracts use STRONG unless separately proved. Cross-build names only corroborate. Neutral unused or multipurpose storage is not renamed.
@@ -3784,61 +4704,73 @@ Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN r
 
 ### field:obj_t.sprites
 
-PROVEN: Pointer to the object-specific sprites table.
+PROVEN: Runtime sprite-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits.
 
-Units: pointer. DOS layout/address: +0x0, 4 B.
+Units: sprite-table pointer. DOS layout/address: +0x0, 4 B.
 
 DOS pointers are32 bits; eta is a two-level main/substate table.
+
+Pass4: load_level takes low signed16 of raw32 slot+0x00, indexes wldobj and copies its sprites pointer. Sprite records are12-byte file records, not132-byte instances.
 
 Shipped initial sample: 11837 records, 34 values, 1..39. This does not bound runtime values.
 
 ### field:obj_t.animations
 
-PROVEN: Pointer to the object-specific animations table.
+PROVEN: Runtime animation-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits.
 
-Units: pointer. DOS layout/address: +0x4, 4 B.
+Units: animation-table pointer. DOS layout/address: +0x4, 4 B.
 
 DOS pointers are32 bits; eta is a two-level main/substate table.
+
+Pass4: load_level rebinds+0x04 independently of the sprites/img_buffer indices. WLD animation_count0 aliases wldobj[0] animations/count; ALLFIX count0 setsNULL instead.
 
 Shipped initial sample: 11837 records, 34 values, 1..39. This does not bound runtime values.
 
 ### field:obj_t.img_buffer
 
-STRONG: Object sprite pixel-atlas buffer.
+PROVEN: Runtime atlas pointer; serialized instance slot is a signed16 descriptor index carried in32bits.
 
-Units: pointer. DOS layout/address: +0x8, 4 B.
+Units: byte-buffer pointer. DOS layout/address: +0x8, 4 B.
 
 Pointer32 in DOS; sprite offset_in_atlas indexes the pixel buffer.
+
+Pass4: WLD/ALLFIX atlases XOR8f with encoded-byte sum; BRAY XOR8f without a trailing checksum. Excluded world descriptors setNULL. Atlas length lives in wldobj.x.
 
 Shipped initial sample: 11837 records, 34 values, 1..39. This does not bound runtime values.
 
 ### field:obj_t.eta
 
-PROVEN: Pointer to the object-specific eta table.
+PROVEN: Runtime main-state pointer table; serialized instance slot is a signed16 bank index carried in32bits.
 
-Units: pointer. DOS layout/address: +0xc, 4 B.
+Units: eta-bank pointer. DOS layout/address: +0xc, 4 B.
 
 DOS pointers are32 bits; eta is a two-level main/substate table.
+
+Pass4: LEV+0x0c narrows to signed16 and indexes loaded_eta with no-1 special case. ALLFIX descriptor header uses full32 eta index and handles-1=>NULL. BRAY forcesbank0. Shared eta tables are mutated by type217 and type9/165 initialization.
 
 Shipped initial sample: 11837 records, 33 values, 0..33. This does not bound runtime values.
 
 ### field:obj_t.cmds
 
-STRONG: Object script stream/context member cmds.
+PROVEN: Runtime object command byte stream, replacing an ignored serialized producer pointer.
 
-Units: script dependent. DOS layout/address: +0x10, 4 B.
+Units: command-byte pointer. DOS layout/address: +0x10, 4 B.
 
 Keep widths and stack-depth sentinels; exact per-opcode interpretation belongs in the script pilot.
+
+Pass4: After reading132-byte LEV records, loader reads u16 cmd_count and label_count for each object; cmd_count0=>NULL, otherwise allocate/read that many bytes. obj_init resets cmd_offset=-1 and calls GET_OBJ_CMD.
 
 Shipped initial sample: 11837 records, 8185 values, 0..9728522. This does not bound runtime values.
 
 ### field:obj_t.cmd_labels
 
-STRONG: Object script stream/context member cmd_labels.
+PROVEN: Runtime signed16 command-label offset table, replacing an ignored serialized producer pointer.
 
-Units: script dependent. DOS layout/address: +0x14, 4 B.
+Units: signed16 offset pointer. DOS layout/address: +0x14, 4 B.
 
 Keep widths and stack-depth sentinels; exact per-opcode interpretation belongs in the script pilot.
+
+Pass4: u16 label_count follows cmd_count;0=>NULL, otherwise2*countbytes. This field is not rebound by adding a base to the raw serialized pointer.
 
 Shipped initial sample: 11837 records, 2203 values, 0..9728146. This does not bound runtime values.
 
@@ -3854,21 +4786,25 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.field_1C
 
-PROVEN: Overloaded 32-bit scratch mark: set by make_active/make_active2 and tested to suppress repeat linked activation; also set during save restoration for gate types179/242 and tested by INIT_OBJECTS.
+PROVEN: Overloaded32-bit activation/restore scratch marker.
 
-Units: boolean mark. DOS layout/address: +0x1c, 4 B.
+Units: marker. DOS layout/address: +0x1c, 4 B.
 
 Cleared for all candidate objects at active-table rebuild and for all objects in INIT_MOTEUR. Not a permanent object property; retain the neutral name because restore and activation share storage.
+
+Pass4: All serialized initial values0. INIT_OBJECTS types179/242 suppress alive/is_active when marker0; save restoration supplies1 for those types. Existing make_active/make_active2 group-visit role remains; no narrow door-specific rename.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.link_has_gendoor
 
-STRONG: Marker enabling linked-group operations; normally set for eligible non-self successor groups, not a proof that a generating door exists.
+STRONG: Marker enabling linked-group operations, also selecting the reinitialization delay.
 
-Units: boolean marker. DOS layout/address: +0x20, 4 B.
+Units: boolean-like32-bit marker. DOS layout/address: +0x20, 4 B.
 
 correct_link sets it for nontrivial groups even without a door requirement. suppressFromLinkList clears removed/singleton markers; door detach/restore and save restoration maintain it. Keep existing spelling with this caveat.
+
+Pass4: REINIT_OBJECT nonzero=>delay0,zero=>120; correct_link/linked activation establish broader group behavior. Existing name is retained because an actual generating door is not implied.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -3884,13 +4820,15 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.x
 
-PROVEN: Signed32 world pixel x origin in live object movement; loader also reuses object records as descriptors.
+PROVEN: Signed32 live-instance world-pixel x; resource-holder wldobj records reuse the same member as atlas byte length.
 
-Units: pixels in live objects. DOS layout/address: +0x28, 4 B.
+Units: world pixels / atlas bytes. DOS layout/address: +0x28, 4 B.
 
 s32 storage; many consumers deliberately narrow to s16. switchOff writes -32000 sentinel. Loader wldobj descriptors reuse x as image byte length, so the type does not guarantee pixel units for every instance.
 
 Ordinary movement adds integer dx after any speed conversion. Screen x=x-xmap+8, narrowed to s16. Some camera helpers first narrow world x to s16; keep those boundaries.
+
+Pass4: WLD/ALLFIX/BRAY read4-byte atlas length at obj_t+0x28 and use it for allocation/read/skip; LEV reads the full instance including signed32 coordinate. Do not unify these meanings in a native descriptor type.
 
 Shipped initial sample: 11837 records, 3721 values, -32000..10244. This does not bound runtime values.
 
@@ -3960,21 +4898,25 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.init_x
 
-STRONG: Initial position component init_x used by reset and relative-displacement logic.
+PROVEN: Signed16 reset x captured from the low16bits of live x by first_obj_init.
 
-Units: pixels. DOS layout/address: +0x3c, 2 B.
+Units: world pixels. DOS layout/address: +0x3c, 2 B.
 
 DOS sinYspeed proves init_y reference position; initial-position naming also matches external object declarations.
+
+Pass4: Capture occurs only when INIT_OBJECTS first_init is nonzero; obj_init sign-extends back into signed32x. -32000 offscreen sentinel may be installed before capture.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.init_y
 
-STRONG: Initial position component init_y used by reset and relative-displacement logic.
+PROVEN: Signed16 reset y captured from the low16bits of live y by first_obj_init.
 
-Units: pixels. DOS layout/address: +0x3e, 2 B.
+Units: world pixels. DOS layout/address: +0x3e, 2 B.
 
 DOS sinYspeed proves init_y reference position; initial-position naming also matches external object declarations.
+
+Pass4: Capture occurs once on first_init; later per-type branches can change init_y deliberately. Serialized init_y is physically present but replaced on capture.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4004,11 +4946,13 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.nb_sprites
 
-PROVEN: Count bounding the object sprite-table search.
+PROVEN: Signed16 sprite count in obj_t, including resource holders.
 
-Units: sprites. DOS layout/address: +0x44, 2 B.
+Units: sprite count. DOS layout/address: +0x44, 2 B.
 
 s16 field read as u16 in this helper; its sign must not be silently propagated into the search bound.
+
+Pass4: File width2bytes. ALLFIX explicitly treats this count asu16 forallocation/read; WLD/BRAY use the signed member directly. LEV retains its serialized count while only its sprite pointer is rebound.
 
 Shipped initial sample: 11837 records, 51 values, 3..256. This does not bound runtime values.
 
@@ -4036,13 +4980,15 @@ Shipped initial sample: 11837 records, 17 values, 0..254. This does not bound ru
 
 ### field:obj_t.follow_id
 
-STRONG: Type-dependent support/object id or reused vertical command parameter.
+STRONG: Multipurpose signed16 slot: support/object ID in some actors, timing/command parameter in others.
 
-Units: object id / type-dependent speed. DOS layout/address: +0x4a, 2 B.
+Units: type dependent. DOS layout/address: +0x4a, 2 B.
 
 -1 means no followed object for Rayman; MITE writes0 for its own behaviour.
 
 Pass3 refinement: Rayman -1 means no support; rayMayLandOnAnObject acquires from active list, RAY_FOLLOW adds carrier motion, and jump/hit detach. Moving-platform GO_SPEED and flash motion interpret the same field as a vertical speed, so retain the shared spelling.
+
+Pass4: Common reset-1; platform types28/25 use100/15, types29/34/152/237/243 use1; type190 uses1, type217 and Blacktoon selector5 use0. These constants are not universal object references.
 
 Shipped initial sample: 11837 records, 14 values, -32..32. This does not bound runtime values.
 
@@ -4082,15 +5028,17 @@ Shipped initial sample: 11837 records, 3 values, 0..5. This does not bound runti
 
 ### field:obj_t.link
 
-UNKNOWN: Type-dependent signed16 scratch with proven Rayman fall, grapple-direction, door-id and initialization roles.
+UNKNOWN: Multipurpose signed16 scratch; initialization includes paired-object links and unrelated timers/parameters.
 
-Units: type-dependent pixels/state/id. DOS layout/address: +0x52, 2 B.
+Units: type dependent. DOS layout/address: +0x52, 2 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. 208 source member-token matches are retained for review, including possible other types.
 
 The live circular successor array is link_init, not obj.link. Do not rename this shared slot to next_link; the whole-source scan has many other type-specific writers/readers.
 
 Pass3 refinement: Rayman RAY_IN_THE_AIR sums speed_y while link!=-1, resets at apex, and compares>=200 on tile landing (>200 on object landing) for smoke. -1 suppresses accumulation. Grapple objects use+-1 swing direction; doors hold detached id; spike posts use one-time initialization0/1. A single universal name remains unsupported.
+
+Pass4: first_obj_init usually clears0; type26 sets20; type173 clears0 whileparam=-1; type231/232 get each other's ids after the scan. This is not the separate link_init successor array.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4108,13 +5056,15 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.iframes_timer
 
-STRONG: Type-dependent signed16 response timer or reused command/state storage; Rayman uses -1 for vulnerability.
+STRONG: Multipurpose signed16 timer/state slot, including invulnerability, platform delays and command parameters.
 
-Units: type-dependent calls/state/axis speed. DOS layout/address: +0x56, 2 B.
+Units: type dependent. DOS layout/address: +0x56, 2 B.
 
 -1 is a significant inactive sentinel; do not turn into an unsigned countdown.
 
 Pass3 refinement: Rayman dispatch accepts damage at-1; DO_COLLISIONS decrements nonnegative values after callbacks, including0->-1. RAY_HURT writes120 normally or60 under blocked crouch; hurt landing clamps to90. Moving commands and flashes reuse this field as horizontal speed; killing eyes use a firing delay. It is not universally an invulnerability timer.
+
+Pass4: Common obj_init reset-1 is overridden by many types: platform delays100/15/1, crumble vblToEOA-2 or20, killing-eyes40, guard0. Retain actor-specific contracts; do not impose a universal real-time unit.
 
 Shipped initial sample: 11837 records, 14 values, -128..32. This does not bound runtime values.
 
@@ -4152,11 +5102,13 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.active_timer
 
-PROVEN: Delay inhibiting reactivation, counted down while the living object is in its action zone.
+PROVEN: Object reactivation-delay counter.
 
-Units: activation calls. DOS layout/address: +0x5e, 2 B.
+Units: engine calls. DOS layout/address: +0x5e, 2 B.
 
 REINIT_OBJECT uses0 for a linked-group marker and120 otherwise. The u16 field is decremented only when its signed16 interpretation is >0; values>=32768 therefore do not count down here.
+
+Pass4: INIT_OBJECTS resets0. REINIT_OBJECT sets0 for nonzero linked-group marker else120; action-zone code decrements it. Do not treat120 as milliseconds.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4254,21 +5206,25 @@ Shipped initial sample: 11837 records, 11 values, 0..10. This does not bound run
 
 ### field:obj_t.init_sub_etat
 
-STRONG: Reset value for init_sub_etat.
+PROVEN: Substate reset byte captured by first_obj_init and modified by some type-specific defaults.
 
-Units: state index or hit points. DOS layout/address: +0x6e, 1 B.
+Units: substate index. DOS layout/address: +0x6e, 1 B.
 
 Initial fields are separate from current values; preserve byte widths.
+
+Pass4: Type228 progress can set2, type111/55 progress changes its initial substate, type94 uses poing.sub_etat. Not a globally immutable file field.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.init_main_etat
 
-STRONG: Reset value for init_main_etat.
+PROVEN: Main-state reset byte captured by first_obj_init.
 
-Units: state index or hit points. DOS layout/address: +0x6f, 1 B.
+Units: main-state index. DOS layout/address: +0x6f, 1 B.
 
 Initial fields are separate from current values; preserve byte widths.
+
+Pass4: obj_init restores except type163; INIT_OBJECTS explicitly restores type163 before calling obj_init. Caller ordering matters.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4284,9 +5240,9 @@ Shipped initial sample: 11837 records, 10 values, 0..30. This does not bound run
 
 ### field:obj_t.gravity_value_1
 
-STRONG: Type-dependent gravity phase byte.
+STRONG: First type-dependent gravity/control phase byte.
 
-Units: handler-call phase. DOS layout/address: +0x71, 1 B.
+Units: phase/control byte. DOS layout/address: +0x71, 1 B.
 
 Both cleared together; usages differ by state and object, so no stronger shared rename.
 
@@ -4294,19 +5250,23 @@ OBJ_IN_THE_AIR increments before applying gravity. Rebound helpers reset it to0.
 
 Pass3 refinement: Ordinary RAY_IN_THE_AIR advances0..2 before DO_PESANTEUR unless gravity high nibble10/11; mounted path advances0..3. Modes10/11 increment internally. Jump/hit/ledge reset0. Other object types use their existing gravity contract.
 
+Pass4: Common obj_init resets0. Earlier DO_PESANTEUR interpretation remains; this byte is not a physical acceleration constant.
+
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.gravity_value_2
 
-STRONG: Second type-dependent gravity phase byte or high-nibble10/11 period.
+STRONG: Second type-dependent gravity/control phase byte.
 
-Units: handler-call phase/period. DOS layout/address: +0x72, 1 B.
+Units: phase/control byte. DOS layout/address: +0x72, 1 B.
 
 Both cleared together; usages differ by state and object, so no stronger shared rename.
 
 Mode2 accelerates on its zero phase. Rebounds usually reset it, except modes10/11. A threshold of0 in mode10/11 causes an acceleration on every call after the byte increment.
 
 Pass3 refinement: Ordinary RAY_IN_THE_AIR advances0..3 unless modes10/11. Helicopter sets20 for the internally timed gravity modes. Jump resets0; type172 enemy jump seeds5.
+
+Pass4: Common reset0; type51/53 override5 and type52 overrides10. Prior high-nibble10/11 period interpretation remains actor/state-specific; no universal gravity constant is inferred.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4352,21 +5312,25 @@ Shipped initial sample: 11837 records, 17 values, 0..255. This does not bound ru
 
 ### field:obj_t.init_hit_points
 
-STRONG: Reset value for init_hit_points.
+PROVEN: Reset byte captured from hit_points by first_obj_init.
 
-Units: state index or hit points. DOS layout/address: +0x77, 1 B.
+Units: type-dependent initial parameter. DOS layout/address: +0x77, 1 B.
 
 Initial fields are separate from current values; preserve byte widths.
+
+Pass4: obj_init restores currenthit_points; type219 subsequently shifts it right2, several types use hit_points as frame/configuration selectors. It is not always health.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.init_flag
 
-UNKNOWN: Neutral obj_t.init_flag storage/view; its intended meaning is not established by this pilot.
+UNKNOWN: Serialized byte with initializer writes of7; no intended common meaning or typed reader is established.
 
 Units: unknown. DOS layout/address: +0x78, 1 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. 11 source member-token matches are retained for review, including possible other types.
+
+Pass4: 11,837 serialized instances span values0,1,2,3,4,5,7,9; many INIT_OBJECTS branches and cage collision write7. Whole-binary displacement candidates require typed-base proof. A draw priority/respawn-delay interpretation is not justified.
 
 Shipped initial sample: 11837 records, 8 values, 0..9. This does not bound runtime values.
 
@@ -4384,11 +5348,13 @@ Shipped initial sample: 11837 records, 6 values, 0..255. This does not bound run
 
 ### field:obj_t.detect_zone
 
-STRONG: Type-dependent size/range parameter used by the detection-zone computation.
+PROVEN: Type-dependent unsigned8 detection-range parameter with initialization defaults.
 
-Units: pixels or type-specific range. DOS layout/address: +0x7a, 1 B.
+Units: pixels/type parameter. DOS layout/address: +0x7a, 1 B.
 
 Do not equate this input parameter with detect_zone_flag, the computed classification.
+
+Pass4: first_obj_init default40; explicit values0,40,50,60,100,150,160,180,200,220,250. Type113 and98/213 do not assign a detection value in their first-init branches. obj_init may override e.g. Blacktoon selectors and guards.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -4434,9 +5400,9 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.timer
 
-UNKNOWN: Type-dependent byte countdown/state scratch with multiple independently established roles.
+UNKNOWN: Multipurpose byte countdown/state scratch with common reset0 and actor-specific defaults.
 
-Units: type-dependent handler calls/state. DOS layout/address: +0x7f, 1 B.
+Units: type dependent. DOS layout/address: +0x7f, 1 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. 159 source member-token matches are retained for review, including possible other types.
 
@@ -4444,15 +5410,19 @@ INIT_RAY clears it; DO_CLING_ANIMS uses a positive countdown before DO_ANIM. Thi
 
 Pass3 refinement: Rayman uses10 calls to suppress vine reattachment; grapple objects use5-call endpoint pauses. DO_RAY_POS_CMD uses255 disabled and decrements0 to255 after activation. Ship uses50 half-clock counts; other objects keep their own contracts. No universal timer unit/name is assigned.
 
+Pass4: obj_init resets0, bosses get100 or180; INIT_OBJECTS type99 state5 gets30. Earlier Rayman/collision roles remain valid; no universal timing or meaning rename.
+
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.anim_count
 
-STRONG: Number of animations in the object descriptor.
+PROVEN: Unsigned8 animation count loaded into resource-holder records.
 
-Units: animations. DOS layout/address: +0x80, 1 B.
+Units: animation count. DOS layout/address: +0x80, 1 B.
 
 Byte count copied from loaded descriptor; serialized level values are not a bound on every runtime state index.
+
+Pass4: WLD can substitute slot0 count when filecount0; ALLFIX count0 givesNULL animation pointer; BRAY allocates count*12. LEV instance count byte is read raw and is not refreshed from the descriptor during pointer rebinding.
 
 Shipped initial sample: 11837 records, 28 values, 0..135. This does not bound runtime values.
 
@@ -4696,11 +5666,13 @@ Shipped initial sample: 2639 records, 2 values, 0..1. This does not bound runtim
 
 ### field:sprite_t.offset_in_atlas
 
-STRONG: Pixel offset of this sprite in its object atlas buffer.
+PROVEN: Unsigned32 byte offset of sprite pixels relative to the atlas base.
 
-Units: bytes. DOS layout/address: +0x0, 4 B.
+Units: atlas bytes. DOS layout/address: +0x0, 4 B.
 
 32-bit offset; retain asset layout separately from native pointers.
+
+Pass4: 12-byte sprite record is read raw; loader does not add the atlas base to this field. MaskScrollDiffSprites adds img_buffer+offset_in_atlas at use time; SpriteFixeOffset only records arena used offset.
 
 Shipped initial sample: 5512 records, 2382 values, 0..117792. This does not bound runtime values.
 
@@ -4888,19 +5860,23 @@ Shipped initial sample: 5512 records, 31 values, 0..31. This does not bound runt
 
 ### field:anim_t.layers
 
-PROVEN: Pointer to frame-major animation layers.
+PROVEN: Runtime pointer to the allocated animation layer payload.
 
-Units: pointer. DOS layout/address: +0x0, 4 B.
+Units: byte/4-byte-layer pointer. DOS layout/address: +0x0, 4 B.
 
 Layer stride4; frame stride=(layers_per_frame&0x3fff)*4 bytes.
 
+Pass4: No serialized layers pointer is read. Loader reads u16 layer_payload_bytes, allocates it, reads whole payload. Indexed layers use4*(layers_per_frame&0x3fff)*frames_count; shipped payloads include4extra uninterpretedbytes.
+
 ### field:anim_t.frames
 
-PROVEN: Pointer to one bounding rectangle per animation frame.
+PROVEN: Runtime frame-rectangle pointer, with serialized32-bit-1 sentinel indicating no rectangle payload.
 
-Units: pointer. DOS layout/address: +0x4, 4 B.
+Units: frame-rectangle pointer or-1. DOS layout/address: +0x4, 4 B.
 
 Frame rectangle stride4 bytes.
+
+Pass4: Animation stream reads raw32 field after two16-bit words. Any value except-1 is discarded and replaced by frames_count*4-byte allocation. All1,629 shipped animation headers have non--1 values; the alternative remains DOS-supported, not observed in this corpus.
 
 ### field:anim_t.layers_per_frame
 
@@ -5288,11 +6264,13 @@ Independent of visual texture id;82 levels use26 distinct values0..31.
 
 ### field:map_tile_t.field_3
 
-UNKNOWN: Neutral map_tile_t.field_3 storage/view; its intended meaning is not established by this pilot.
+UNKNOWN: Raw serialized map byte+3 with no intended meaning assigned.
 
 Units: unknown. DOS layout/address: +0x3, 1 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. No direct named source member access found; whole-record loads/copies can still read/write this storage.
+
+Pass4: All6-byte map records include this byte. Loader reads it as part of the record, without decoding or assigning a semantic property.
 
 ### field:map_tile_t.transparency
 
@@ -5304,11 +6282,13 @@ Not a boolean alpha value. Runtime recomputes from pixels; texture0 has a forced
 
 ### field:map_tile_t.field_5
 
-UNKNOWN: Neutral map_tile_t.field_5 storage/view; its intended meaning is not established by this pilot.
+UNKNOWN: Raw serialized map byte+5 with no intended meaning assigned.
 
 Units: unknown. DOS layout/address: +0x5, 1 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. No direct named source member access found; whole-record loads/copies can still read/write this storage.
+
+Pass4: Included in raw6-byte LEV map records; no additional meaning inferred from neighboring transparency/type fields.
 
 ### field:block_flags_t.raw
 
@@ -6599,4 +7579,532 @@ PROVEN: Low8 bits of Rayman scale at the history sample.
 Units: scale modulo256. DOS layout/address: +0x11, 1 B.
 
 Writer narrows live u16 scale to byte; replay zero-extends it to live u16. Tiny scale256 therefore records0. Preserve this lossy history representation.
+
+### field:world_info_t.xpos
+
+UNKNOWN: Declared world_info_t.xpos storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x0, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.ypos
+
+UNKNOWN: Declared world_info_t.ypos storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x2, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.index_up
+
+UNKNOWN: Declared world_info_t.index_up storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x4, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.index_down
+
+UNKNOWN: Declared world_info_t.index_down storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x5, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.index_left
+
+UNKNOWN: Declared world_info_t.index_left storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x6, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.index_right
+
+UNKNOWN: Declared world_info_t.index_right storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x7, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.state
+
+UNKNOWN: Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.is_unlocked
+
+UNKNOWN: Declared world_info_t.is_unlocked storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.state_bit1
+
+UNKNOWN: Declared world_info_t.state_bit1 storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.is_unlocking
+
+UNKNOWN: Declared world_info_t.is_unlocking storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.state_rest
+
+UNKNOWN: Declared world_info_t.state_rest storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.nb_cages
+
+PROVEN: Collected-cage count of one world-map stage record.
+
+Units: cage count. DOS layout/address: +0x9, 1 B.
+
+INIT_OBJECTS tests exactly6 then disables type58 objects and calls take_bonus; DOS recordbyte+9, stride20. This is persistent stage progress, not object hit_points.
+
+### field:world_info_t.world
+
+UNKNOWN: Declared world_info_t.world storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xa, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.level
+
+UNKNOWN: Declared world_info_t.level storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xb, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.color
+
+UNKNOWN: Declared world_info_t.color storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xc, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.field_D
+
+UNKNOWN: Declared world_info_t.field_D storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xd, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.field_E
+
+UNKNOWN: Declared world_info_t.field_E storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xe, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.field_F
+
+UNKNOWN: Declared world_info_t.field_F storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xf, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:world_info_t.text
+
+UNKNOWN: Declared world_info_t.text storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x10, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:rgb_t.r
+
+STRONG: First component in each three-byte RGB palette entry.
+
+Units: component byte. DOS layout/address: +0x0, 1 B.
+
+VIGNET palette loading divides each decodedcomponent by4. LEV palettes are already read as raw bytes with no conversion.
+
+### field:rgb_t.g
+
+STRONG: Second component in each three-byte RGB palette entry.
+
+Units: component byte. DOS layout/address: +0x1, 1 B.
+
+Contiguous byte order is retained; native palette conversion must distinguish VIGNET8-bit input from LEV raw palette input.
+
+### field:rgb_t.b
+
+STRONG: Third component in each three-byte RGB palette entry.
+
+Units: component byte. DOS layout/address: +0x2, 1 B.
+
+Noalpha byte in DOS RGB records.
+
+### field:rgb_palette_t.colors
+
+PROVEN: 256 three-byte palette entries.
+
+Units: RGB records. DOS layout/address: +0x0, 768 B.
+
+768-byte palette; LEV reads3consecutive palettes, VIGNET palette reader reads768bytes at entry end.
+
+### field:archive_header_local_t.offset
+
+PROVEN: Absolute file byte offset of one encoded archive payload.
+
+Units: file bytes. DOS layout/address: +0x0, 4 B.
+
+Executable table field+0,signed32; fseek uses SEEK_SET.
+
+### field:archive_header_local_t.size
+
+PROVEN: Encoded payload byte length including PCX header/body/palette where applicable.
+
+Units: bytes. DOS layout/address: +0x4, 4 B.
+
+Executable table field+4,signed32. PCX readers subtract128 for body; palette reader usesoffset+size-768; language reader uses entire size.
+
+### field:archive_header_local_t.xor_byte
+
+PROVEN: Per-entry XOR decode byte.
+
+Units: key byte. DOS layout/address: +0x8, 1 B.
+
+Checksum subtracts encoded bytes before XOR. Same key decodes header,body andpalette or language bytes.
+
+### field:archive_header_local_t.checksum_byte
+
+PROVEN: Modulo256 sum of the encoded payload bytes.
+
+Units: mod256 byte sum. DOS layout/address: +0x9, 1 B.
+
+Not XOR-decoded; success means stored checksum minus each encoded byte wraps to0. Palette-only function does not validate it.
+
+### field:archive_header_local_t.reserved
+
+UNKNOWN: Two table bytes at+10 not read as archive fields by the scoped loaders.
+
+Units: unknown. DOS layout/address: +0xa, 2 B.
+
+Retain existing reserved spelling; no algorithm or new meaning inferred from value/adjacency.
+
+### field:pcx_header_local_t.header_byte
+
+UNKNOWN: Declared pcx_header_local_t.header_byte storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x0, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.software_version
+
+UNKNOWN: Declared pcx_header_local_t.software_version storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x1, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.encoding_method
+
+UNKNOWN: Declared pcx_header_local_t.encoding_method storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x2, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.bits_per_bitplane
+
+UNKNOWN: Declared pcx_header_local_t.bits_per_bitplane storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x3, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.min_x
+
+PROVEN: Decoded16-bit horizontal lower bound used in width computation.
+
+Units: pixels. DOS layout/address: +0x4, 2 B.
+
+width=max_x-min_x+1; loader does not validate ordering.
+
+### field:pcx_header_local_t.min_y
+
+PROVEN: Decoded16-bit vertical lower bound used in height computation.
+
+Units: pixels. DOS layout/address: +0x6, 2 B.
+
+height=max_y-min_y+1; loader does not validate ordering.
+
+### field:pcx_header_local_t.max_x
+
+PROVEN: Decoded16-bit horizontal upper bound used in width computation.
+
+Units: pixels. DOS layout/address: +0x8, 2 B.
+
+u16 field; computedwidth narrows to16bits.
+
+### field:pcx_header_local_t.max_y
+
+PROVEN: Decoded16-bit vertical upper bound used in height computation.
+
+Units: pixels. DOS layout/address: +0xa, 2 B.
+
+u16 field; computedheight narrows to16bits.
+
+### field:pcx_header_local_t.hor_dpi
+
+UNKNOWN: Declared pcx_header_local_t.hor_dpi storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xc, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.ver_dpi
+
+UNKNOWN: Declared pcx_header_local_t.ver_dpi storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xe, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.ega_palette
+
+UNKNOWN: Declared pcx_header_local_t.ega_palette storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x10, 48 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.reserved1
+
+UNKNOWN: Declared pcx_header_local_t.reserved1 storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x40, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.n_color_planes
+
+UNKNOWN: Declared pcx_header_local_t.n_color_planes storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x41, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.bytes_per_line
+
+PROVEN: Number of expanded bytes required by each RLE scanline loop.
+
+Units: decoded bytes per scanline. DOS layout/address: +0x42, 2 B.
+
+Destinationpitch is computedwidth; no general padding guard in LoadPcxInVignet/Options. All75 shipped headers havebytes_per_line==width,planes1,bits8; malformed/cross-format behavior is not implied safe.
+
+### field:pcx_header_local_t.palette_mode
+
+UNKNOWN: Declared pcx_header_local_t.palette_mode storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x44, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.source_hor_res
+
+UNKNOWN: Declared pcx_header_local_t.source_hor_res storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x46, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.source_ver_res
+
+UNKNOWN: Declared pcx_header_local_t.source_ver_res storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x48, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:pcx_header_local_t.reserved2
+
+UNKNOWN: Declared pcx_header_local_t.reserved2 storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x4a, 54 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:x_texture_local_t.pixels
+
+PROVEN: One256-byte ModeX tile-pixel record.
+
+Units: indexed pixels. DOS layout/address: +0x0, 256 B.
+
+load_level readsx_texture_count*256 XOR7dbytes; exact tile semantics are documented in docs/port/TILE_CODE.md.
+
+### field:level_local_t.objects
+
+PROVEN: Runtime pointer to132-byte live level-instance records.
+
+Units: obj_t pointer. DOS layout/address: +0x0, 4 B.
+
+Equivalent local view oflevel_t.objects; source declaration stays inload.c.
+
+### field:level_local_t.nb_objects
+
+PROVEN: Signed16 live level-instance count.
+
+Units: object count. DOS layout/address: +0x4, 2 B.
+
+LEV eventsection startswiththis count; loader allocates count*132 objects andtwo2*countindexlists.
+
+### field:level_obj_local_t.obj_ids
+
+PROVEN: Runtime pointer to a signed16 index list.
+
+Units: object-index pointer. DOS layout/address: +0x0, 4 B.
+
+Equivalent local view oflevel_obj_t.obj_ids; load_level allocates storage,init_struct_level fillslists.
+
+### field:level_obj_local_t.nb_objects
+
+PROVEN: Signed16 number of populated object-index list entries.
+
+Units: object count. DOS layout/address: +0x4, 2 B.
+
+Not loaded fromfile; initialization clears and appends. Local typedef stays inload.c.
+
+### field:display_map_local_t.x
+
+UNKNOWN: Declared display_map_local_t.x storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x0, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:display_map_local_t.y
+
+UNKNOWN: Declared display_map_local_t.y storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x2, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:display_map_local_t.width_in_tiles
+
+UNKNOWN: Declared display_map_local_t.width_in_tiles storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x4, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:display_map_local_t.height_in_tiles
+
+UNKNOWN: Declared display_map_local_t.height_in_tiles storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x5, 1 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:display_map_local_t.tile_index
+
+UNKNOWN: Declared display_map_local_t.tile_index storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x6, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.map
+
+UNKNOWN: Declared big_map_local_t.map storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x0, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.tile_texture_offsets
+
+UNKNOWN: Declared big_map_local_t.tile_texture_offsets storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x4, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.display_map
+
+UNKNOWN: Declared big_map_local_t.display_map storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x8, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.map_blocks
+
+UNKNOWN: Declared big_map_local_t.map_blocks storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0xc, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.field_10
+
+UNKNOWN: Declared big_map_local_t.field_10 storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x10, 4 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.field_14
+
+UNKNOWN: Declared big_map_local_t.field_14 storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x14, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.width
+
+UNKNOWN: Declared big_map_local_t.width storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x16, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.height
+
+UNKNOWN: Declared big_map_local_t.height storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x18, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.field_1A
+
+UNKNOWN: Declared big_map_local_t.field_1A storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x1a, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:big_map_local_t.field_1C
+
+UNKNOWN: Declared big_map_local_t.field_1C storage; no intended meaning is assigned from its spelling alone.
+
+Units: unknown. DOS layout/address: +0x1c, 2 B.
+
+Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
 

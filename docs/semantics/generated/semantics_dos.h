@@ -21,37 +21,37 @@
 #define DOS_POING_T_SIZE 20
 #define DOS_FONT_T_SIZE 10
 #define DOS_DISPLAY_ITEM_T_SIZE 216
-/* PROVEN: Pointer to the object-specific sprites table. */
+/* PROVEN: Runtime sprite-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits. */
 #define DOS_OBJ_T_SPRITES_OFFSET 0x0
 #define DOS_OBJ_T_SPRITES_SIZE 4
-/* PROVEN: Pointer to the object-specific animations table. */
+/* PROVEN: Runtime animation-table pointer; serialized instance slot is a signed16 descriptor index carried in32bits. */
 #define DOS_OBJ_T_ANIMATIONS_OFFSET 0x4
 #define DOS_OBJ_T_ANIMATIONS_SIZE 4
-/* STRONG: Object sprite pixel-atlas buffer. */
+/* PROVEN: Runtime atlas pointer; serialized instance slot is a signed16 descriptor index carried in32bits. */
 #define DOS_OBJ_T_IMG_BUFFER_OFFSET 0x8
 #define DOS_OBJ_T_IMG_BUFFER_SIZE 4
-/* PROVEN: Pointer to the object-specific eta table. */
+/* PROVEN: Runtime main-state pointer table; serialized instance slot is a signed16 bank index carried in32bits. */
 #define DOS_OBJ_T_ETA_OFFSET 0xc
 #define DOS_OBJ_T_ETA_SIZE 4
-/* STRONG: Object script stream/context member cmds. */
+/* PROVEN: Runtime object command byte stream, replacing an ignored serialized producer pointer. */
 #define DOS_OBJ_T_CMDS_OFFSET 0x10
 #define DOS_OBJ_T_CMDS_SIZE 4
-/* STRONG: Object script stream/context member cmd_labels. */
+/* PROVEN: Runtime signed16 command-label offset table, replacing an ignored serialized producer pointer. */
 #define DOS_OBJ_T_CMD_LABELS_OFFSET 0x14
 #define DOS_OBJ_T_CMD_LABELS_SIZE 4
 /* STRONG: Object script stream/context member cmd_contexts. */
 #define DOS_OBJ_T_CMD_CONTEXTS_OFFSET 0x18
 #define DOS_OBJ_T_CMD_CONTEXTS_SIZE 4
-/* PROVEN: Overloaded 32-bit scratch mark: set by make_active/make_active2 and tested to suppress repeat linked activation; also set during save restoration for gate types179/242 and tested by INIT_OBJECTS. */
+/* PROVEN: Overloaded32-bit activation/restore scratch marker. */
 #define DOS_OBJ_T_FIELD_1C_OFFSET 0x1c
 #define DOS_OBJ_T_FIELD_1C_SIZE 4
-/* STRONG: Marker enabling linked-group operations; normally set for eligible non-self successor groups, not a proof that a generating door exists. */
+/* STRONG: Marker enabling linked-group operations, also selecting the reinitialization delay. */
 #define DOS_OBJ_T_LINK_HAS_GENDOOR_OFFSET 0x20
 #define DOS_OBJ_T_LINK_HAS_GENDOOR_SIZE 4
 /* PROVEN: Object participation flag saved as the high bit of each two-bit snapshot entry. */
 #define DOS_OBJ_T_IS_ACTIVE_OFFSET 0x24
 #define DOS_OBJ_T_IS_ACTIVE_SIZE 4
-/* PROVEN: Signed32 world pixel x origin in live object movement; loader also reuses object records as descriptors. */
+/* PROVEN: Signed32 live-instance world-pixel x; resource-holder wldobj records reuse the same member as atlas byte length. */
 #define DOS_OBJ_T_X_OFFSET 0x28
 #define DOS_OBJ_T_X_SIZE 4
 /* PROVEN: Signed32 world pixel y origin in live object movement. */
@@ -72,10 +72,10 @@
 /* UNKNOWN: Type-dependent signed16 scratch used for a water-motion residual and another type's horizontal distance. */
 #define DOS_OBJ_T_SUB_SPEED_OFFSET 0x3a
 #define DOS_OBJ_T_SUB_SPEED_SIZE 2
-/* STRONG: Initial position component init_x used by reset and relative-displacement logic. */
+/* PROVEN: Signed16 reset x captured from the low16bits of live x by first_obj_init. */
 #define DOS_OBJ_T_INIT_X_OFFSET 0x3c
 #define DOS_OBJ_T_INIT_X_SIZE 2
-/* STRONG: Initial position component init_y used by reset and relative-displacement logic. */
+/* PROVEN: Signed16 reset y captured from the low16bits of live y by first_obj_init. */
 #define DOS_OBJ_T_INIT_Y_OFFSET 0x3e
 #define DOS_OBJ_T_INIT_Y_SIZE 2
 /* PROVEN: Signed16 horizontal speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. */
@@ -84,7 +84,7 @@
 /* PROVEN: Signed16 vertical speed, interpreted per type axis flag as integer pixels/call or sixteenths of a pixel/call. */
 #define DOS_OBJ_T_SPEED_Y_OFFSET 0x42
 #define DOS_OBJ_T_SPEED_Y_SIZE 2
-/* PROVEN: Count bounding the object sprite-table search. */
+/* PROVEN: Signed16 sprite count in obj_t, including resource holders. */
 #define DOS_OBJ_T_NB_SPRITES_OFFSET 0x44
 #define DOS_OBJ_T_NB_SPRITES_SIZE 2
 /* STRONG: Object script stream/context member cmd_offset. */
@@ -93,7 +93,7 @@
 /* STRONG: Type-dependent script count or Rayman airborne-inertia selector. */
 #define DOS_OBJ_T_NB_CMD_OFFSET 0x48
 #define DOS_OBJ_T_NB_CMD_SIZE 2
-/* STRONG: Type-dependent support/object id or reused vertical command parameter. */
+/* STRONG: Multipurpose signed16 slot: support/object ID in some actors, timing/command parameter in others. */
 #define DOS_OBJ_T_FOLLOW_ID_OFFSET 0x4a
 #define DOS_OBJ_T_FOLLOW_ID_SIZE 2
 /* STRONG: Type-dependent vertical follower displacement or grapple radius. */
@@ -105,13 +105,13 @@
 /* PROVEN: Type-specific signed scratch parameter, including Rayman edge classification in calc_btyp. */
 #define DOS_OBJ_T_PARAM_OFFSET 0x50
 #define DOS_OBJ_T_PARAM_SIZE 2
-/* UNKNOWN: Type-dependent signed16 scratch with proven Rayman fall, grapple-direction, door-id and initialization roles. */
+/* UNKNOWN: Multipurpose signed16 scratch; initialization includes paired-object links and unrelated timers/parameters. */
 #define DOS_OBJ_T_LINK_OFFSET 0x52
 #define DOS_OBJ_T_LINK_SIZE 2
 /* STRONG: Type-dependent Rayman tile index or support-distance code with several geometric conventions. */
 #define DOS_OBJ_T_RAY_DIST_OFFSET 0x54
 #define DOS_OBJ_T_RAY_DIST_SIZE 2
-/* STRONG: Type-dependent signed16 response timer or reused command/state storage; Rayman uses -1 for vulnerability. */
+/* STRONG: Multipurpose signed16 timer/state slot, including invulnerability, platform delays and command parameters. */
 #define DOS_OBJ_T_IFRAMES_TIMER_OFFSET 0x56
 #define DOS_OBJ_T_IFRAMES_TIMER_SIZE 2
 /* PROVEN: Last row-major map tile index used by the changed-block test. */
@@ -123,7 +123,7 @@
 /* PROVEN: Packed reference to an object collision-zone run. */
 #define DOS_OBJ_T_ZDC_OFFSET 0x5c
 #define DOS_OBJ_T_ZDC_SIZE 2
-/* PROVEN: Delay inhibiting reactivation, counted down while the living object is in its action zone. */
+/* PROVEN: Object reactivation-delay counter. */
 #define DOS_OBJ_T_ACTIVE_TIMER_OFFSET 0x5e
 #define DOS_OBJ_T_ACTIVE_TIMER_SIZE 2
 /* PROVEN: Unsigned object type discriminator indexing flags and selecting behaviour. */
@@ -153,19 +153,19 @@
 /* PROVEN: Object-type-specific main state-table index; Rayman's controller dispatches eight observed state families. */
 #define DOS_OBJ_T_MAIN_ETAT_OFFSET 0x6d
 #define DOS_OBJ_T_MAIN_ETAT_SIZE 1
-/* STRONG: Reset value for init_sub_etat. */
+/* PROVEN: Substate reset byte captured by first_obj_init and modified by some type-specific defaults. */
 #define DOS_OBJ_T_INIT_SUB_ETAT_OFFSET 0x6e
 #define DOS_OBJ_T_INIT_SUB_ETAT_SIZE 1
-/* STRONG: Reset value for init_main_etat. */
+/* PROVEN: Main-state reset byte captured by first_obj_init. */
 #define DOS_OBJ_T_INIT_MAIN_ETAT_OFFSET 0x6f
 #define DOS_OBJ_T_INIT_MAIN_ETAT_SIZE 1
 /* STRONG: Current script command discriminator. */
 #define DOS_OBJ_T_CMD_OFFSET 0x70
 #define DOS_OBJ_T_CMD_SIZE 1
-/* STRONG: Type-dependent gravity phase byte. */
+/* STRONG: First type-dependent gravity/control phase byte. */
 #define DOS_OBJ_T_GRAVITY_VALUE_1_OFFSET 0x71
 #define DOS_OBJ_T_GRAVITY_VALUE_1_SIZE 1
-/* STRONG: Second type-dependent gravity phase byte or high-nibble10/11 period. */
+/* STRONG: Second type-dependent gravity/control phase byte. */
 #define DOS_OBJ_T_GRAVITY_VALUE_2_OFFSET 0x72
 #define DOS_OBJ_T_GRAVITY_VALUE_2_SIZE 1
 /* PROVEN: Animation transition mode set to1 by the state setters. */
@@ -180,16 +180,16 @@
 /* PROVEN: Unsigned hit-point byte in obj_hurt, with type-specific reuse including signed deformation angle input. */
 #define DOS_OBJ_T_HIT_POINTS_OFFSET 0x76
 #define DOS_OBJ_T_HIT_POINTS_SIZE 1
-/* STRONG: Reset value for init_hit_points. */
+/* PROVEN: Reset byte captured from hit_points by first_obj_init. */
 #define DOS_OBJ_T_INIT_HIT_POINTS_OFFSET 0x77
 #define DOS_OBJ_T_INIT_HIT_POINTS_SIZE 1
-/* UNKNOWN: Neutral obj_t.init_flag storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Serialized byte with initializer writes of7; no intended common meaning or typed reader is established. */
 #define DOS_OBJ_T_INIT_FLAG_OFFSET 0x78
 #define DOS_OBJ_T_INIT_FLAG_SIZE 1
 /* PROVEN: Collision layer selector with three special dispatch codes. */
 #define DOS_OBJ_T_HIT_SPRITE_OFFSET 0x79
 #define DOS_OBJ_T_HIT_SPRITE_SIZE 1
-/* STRONG: Type-dependent size/range parameter used by the detection-zone computation. */
+/* PROVEN: Type-dependent unsigned8 detection-range parameter with initialization defaults. */
 #define DOS_OBJ_T_DETECT_ZONE_OFFSET 0x7a
 #define DOS_OBJ_T_DETECT_ZONE_SIZE 1
 /* PROVEN: Detection-zone classification tested by OBJ_IN_ZONE. */
@@ -204,10 +204,10 @@
 /* STRONG: Object drawing-order bucket selector. */
 #define DOS_OBJ_T_DISPLAY_PRIO_OFFSET 0x7e
 #define DOS_OBJ_T_DISPLAY_PRIO_SIZE 1
-/* UNKNOWN: Type-dependent byte countdown/state scratch with multiple independently established roles. */
+/* UNKNOWN: Multipurpose byte countdown/state scratch with common reset0 and actor-specific defaults. */
 #define DOS_OBJ_T_TIMER_OFFSET 0x7f
 #define DOS_OBJ_T_TIMER_SIZE 1
-/* STRONG: Number of animations in the object descriptor. */
+/* PROVEN: Unsigned8 animation count loaded into resource-holder records. */
 #define DOS_OBJ_T_ANIM_COUNT_OFFSET 0x80
 #define DOS_OBJ_T_ANIM_COUNT_SIZE 1
 /* PROVEN: Packed two-byte per-object flag record. */
@@ -286,7 +286,7 @@
 #define DOS_ETA_T_FLAGS_BITS_BIT7_OFFSET 0x7
 #define DOS_ETA_T_FLAGS_BITS_BIT7_SIZE 1
 #define DOS_ETA_T_FLAGS_BITS_BIT7_MASK 0x80
-/* STRONG: Pixel offset of this sprite in its object atlas buffer. */
+/* PROVEN: Unsigned32 byte offset of sprite pixels relative to the atlas base. */
 #define DOS_SPRITE_T_OFFSET_IN_ATLAS_OFFSET 0x0
 #define DOS_SPRITE_T_OFFSET_IN_ATLAS_SIZE 4
 /* PROVEN: Sprite reference id, with0 treated as an absent sprite in GET_SPRITE_POS. */
@@ -353,10 +353,10 @@
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED3_OFFSET 0xb
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED3_SIZE 1
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED3_MASK 0xf8
-/* PROVEN: Pointer to frame-major animation layers. */
+/* PROVEN: Runtime pointer to the allocated animation layer payload. */
 #define DOS_ANIM_T_LAYERS_OFFSET 0x0
 #define DOS_ANIM_T_LAYERS_SIZE 4
-/* PROVEN: Pointer to one bounding rectangle per animation frame. */
+/* PROVEN: Runtime frame-rectangle pointer, with serialized32-bit-1 sentinel indicating no rectangle payload. */
 #define DOS_ANIM_T_FRAMES_OFFSET 0x4
 #define DOS_ANIM_T_FRAMES_SIZE 4
 /* PROVEN: Packed animation header: low14 bits are layer count per frame, top2 bits encode the horizontal-speed clock period minus one. */
@@ -498,13 +498,13 @@
 /* PROVEN: Collision/behaviour type byte returned by BTYP. */
 #define DOS_MAP_TILE_T_TILE_TYPE_OFFSET 0x2
 #define DOS_MAP_TILE_T_TILE_TYPE_SIZE 1
-/* UNKNOWN: Neutral map_tile_t.field_3 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Raw serialized map byte+3 with no intended meaning assigned. */
 #define DOS_MAP_TILE_T_FIELD_3_OFFSET 0x3
 #define DOS_MAP_TILE_T_FIELD_3_SIZE 1
 /* PROVEN: Computed texture coverage classification:0 opaque,1 empty,2 mixed. */
 #define DOS_MAP_TILE_T_TRANSPARENCY_OFFSET 0x4
 #define DOS_MAP_TILE_T_TRANSPARENCY_SIZE 1
-/* UNKNOWN: Neutral map_tile_t.field_5 storage/view; its intended meaning is not established by this pilot. */
+/* UNKNOWN: Raw serialized map byte+5 with no intended meaning assigned. */
 #define DOS_MAP_TILE_T_FIELD_5_OFFSET 0x5
 #define DOS_MAP_TILE_T_FIELD_5_SIZE 1
 /* PROVEN: Byte/bitfield views of block-type behaviour flags. */
@@ -1029,5 +1029,217 @@
 /* PROVEN: Low8 bits of Rayman scale at the history sample. */
 #define DOS_RAY_STACK_T_SCALE_OFFSET 0x11
 #define DOS_RAY_STACK_T_SCALE_SIZE 1
+#define DOS_WORLD_INFO_T_SIZE 20
+#define DOS_RGB_T_SIZE 3
+#define DOS_RGB_PALETTE_T_SIZE 768
+#define DOS_ARCHIVE_HEADER_LOCAL_T_SIZE 12
+#define DOS_PCX_HEADER_LOCAL_T_SIZE 128
+#define DOS_X_TEXTURE_LOCAL_T_SIZE 256
+#define DOS_LEVEL_LOCAL_T_SIZE 6
+#define DOS_LEVEL_OBJ_LOCAL_T_SIZE 6
+#define DOS_DISPLAY_MAP_LOCAL_T_SIZE 8
+#define DOS_BIG_MAP_LOCAL_T_SIZE 30
+/* UNKNOWN: Declared world_info_t.xpos storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_XPOS_OFFSET 0x0
+#define DOS_WORLD_INFO_T_XPOS_SIZE 2
+/* UNKNOWN: Declared world_info_t.ypos storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_YPOS_OFFSET 0x2
+#define DOS_WORLD_INFO_T_YPOS_SIZE 2
+/* UNKNOWN: Declared world_info_t.index_up storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_INDEX_UP_OFFSET 0x4
+#define DOS_WORLD_INFO_T_INDEX_UP_SIZE 1
+/* UNKNOWN: Declared world_info_t.index_down storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_INDEX_DOWN_OFFSET 0x5
+#define DOS_WORLD_INFO_T_INDEX_DOWN_SIZE 1
+/* UNKNOWN: Declared world_info_t.index_left storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_INDEX_LEFT_OFFSET 0x6
+#define DOS_WORLD_INFO_T_INDEX_LEFT_SIZE 1
+/* UNKNOWN: Declared world_info_t.index_right storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_INDEX_RIGHT_OFFSET 0x7
+#define DOS_WORLD_INFO_T_INDEX_RIGHT_SIZE 1
+/* UNKNOWN: Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_STATE_OFFSET 0x8
+#define DOS_WORLD_INFO_T_STATE_SIZE 1
+/* UNKNOWN: Declared world_info_t.is_unlocked storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_IS_UNLOCKED_OFFSET 0x8
+#define DOS_WORLD_INFO_T_IS_UNLOCKED_SIZE 1
+#define DOS_WORLD_INFO_T_IS_UNLOCKED_MASK 0x01
+/* UNKNOWN: Declared world_info_t.state_bit1 storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_STATE_BIT1_OFFSET 0x8
+#define DOS_WORLD_INFO_T_STATE_BIT1_SIZE 1
+#define DOS_WORLD_INFO_T_STATE_BIT1_MASK 0x02
+/* UNKNOWN: Declared world_info_t.is_unlocking storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_IS_UNLOCKING_OFFSET 0x8
+#define DOS_WORLD_INFO_T_IS_UNLOCKING_SIZE 1
+#define DOS_WORLD_INFO_T_IS_UNLOCKING_MASK 0x04
+/* UNKNOWN: Declared world_info_t.state_rest storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_STATE_REST_OFFSET 0x8
+#define DOS_WORLD_INFO_T_STATE_REST_SIZE 1
+#define DOS_WORLD_INFO_T_STATE_REST_MASK 0xf8
+/* PROVEN: Collected-cage count of one world-map stage record. */
+#define DOS_WORLD_INFO_T_NB_CAGES_OFFSET 0x9
+#define DOS_WORLD_INFO_T_NB_CAGES_SIZE 1
+/* UNKNOWN: Declared world_info_t.world storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_WORLD_OFFSET 0xa
+#define DOS_WORLD_INFO_T_WORLD_SIZE 1
+/* UNKNOWN: Declared world_info_t.level storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_LEVEL_OFFSET 0xb
+#define DOS_WORLD_INFO_T_LEVEL_SIZE 1
+/* UNKNOWN: Declared world_info_t.color storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_COLOR_OFFSET 0xc
+#define DOS_WORLD_INFO_T_COLOR_SIZE 1
+/* UNKNOWN: Declared world_info_t.field_D storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_FIELD_D_OFFSET 0xd
+#define DOS_WORLD_INFO_T_FIELD_D_SIZE 1
+/* UNKNOWN: Declared world_info_t.field_E storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_FIELD_E_OFFSET 0xe
+#define DOS_WORLD_INFO_T_FIELD_E_SIZE 1
+/* UNKNOWN: Declared world_info_t.field_F storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_FIELD_F_OFFSET 0xf
+#define DOS_WORLD_INFO_T_FIELD_F_SIZE 1
+/* UNKNOWN: Declared world_info_t.text storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_WORLD_INFO_T_TEXT_OFFSET 0x10
+#define DOS_WORLD_INFO_T_TEXT_SIZE 4
+/* STRONG: First component in each three-byte RGB palette entry. */
+#define DOS_RGB_T_R_OFFSET 0x0
+#define DOS_RGB_T_R_SIZE 1
+/* STRONG: Second component in each three-byte RGB palette entry. */
+#define DOS_RGB_T_G_OFFSET 0x1
+#define DOS_RGB_T_G_SIZE 1
+/* STRONG: Third component in each three-byte RGB palette entry. */
+#define DOS_RGB_T_B_OFFSET 0x2
+#define DOS_RGB_T_B_SIZE 1
+/* PROVEN: 256 three-byte palette entries. */
+#define DOS_RGB_PALETTE_T_COLORS_OFFSET 0x0
+#define DOS_RGB_PALETTE_T_COLORS_SIZE 768
+/* PROVEN: Absolute file byte offset of one encoded archive payload. */
+#define DOS_ARCHIVE_HEADER_LOCAL_T_OFFSET_OFFSET 0x0
+#define DOS_ARCHIVE_HEADER_LOCAL_T_OFFSET_SIZE 4
+/* PROVEN: Encoded payload byte length including PCX header/body/palette where applicable. */
+#define DOS_ARCHIVE_HEADER_LOCAL_T_SIZE_OFFSET 0x4
+#define DOS_ARCHIVE_HEADER_LOCAL_T_SIZE_SIZE 4
+/* PROVEN: Per-entry XOR decode byte. */
+#define DOS_ARCHIVE_HEADER_LOCAL_T_XOR_BYTE_OFFSET 0x8
+#define DOS_ARCHIVE_HEADER_LOCAL_T_XOR_BYTE_SIZE 1
+/* PROVEN: Modulo256 sum of the encoded payload bytes. */
+#define DOS_ARCHIVE_HEADER_LOCAL_T_CHECKSUM_BYTE_OFFSET 0x9
+#define DOS_ARCHIVE_HEADER_LOCAL_T_CHECKSUM_BYTE_SIZE 1
+/* UNKNOWN: Two table bytes at+10 not read as archive fields by the scoped loaders. */
+#define DOS_ARCHIVE_HEADER_LOCAL_T_RESERVED_OFFSET 0xa
+#define DOS_ARCHIVE_HEADER_LOCAL_T_RESERVED_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.header_byte storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_HEADER_BYTE_OFFSET 0x0
+#define DOS_PCX_HEADER_LOCAL_T_HEADER_BYTE_SIZE 1
+/* UNKNOWN: Declared pcx_header_local_t.software_version storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_SOFTWARE_VERSION_OFFSET 0x1
+#define DOS_PCX_HEADER_LOCAL_T_SOFTWARE_VERSION_SIZE 1
+/* UNKNOWN: Declared pcx_header_local_t.encoding_method storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_ENCODING_METHOD_OFFSET 0x2
+#define DOS_PCX_HEADER_LOCAL_T_ENCODING_METHOD_SIZE 1
+/* UNKNOWN: Declared pcx_header_local_t.bits_per_bitplane storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_BITS_PER_BITPLANE_OFFSET 0x3
+#define DOS_PCX_HEADER_LOCAL_T_BITS_PER_BITPLANE_SIZE 1
+/* PROVEN: Decoded16-bit horizontal lower bound used in width computation. */
+#define DOS_PCX_HEADER_LOCAL_T_MIN_X_OFFSET 0x4
+#define DOS_PCX_HEADER_LOCAL_T_MIN_X_SIZE 2
+/* PROVEN: Decoded16-bit vertical lower bound used in height computation. */
+#define DOS_PCX_HEADER_LOCAL_T_MIN_Y_OFFSET 0x6
+#define DOS_PCX_HEADER_LOCAL_T_MIN_Y_SIZE 2
+/* PROVEN: Decoded16-bit horizontal upper bound used in width computation. */
+#define DOS_PCX_HEADER_LOCAL_T_MAX_X_OFFSET 0x8
+#define DOS_PCX_HEADER_LOCAL_T_MAX_X_SIZE 2
+/* PROVEN: Decoded16-bit vertical upper bound used in height computation. */
+#define DOS_PCX_HEADER_LOCAL_T_MAX_Y_OFFSET 0xa
+#define DOS_PCX_HEADER_LOCAL_T_MAX_Y_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.hor_dpi storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_HOR_DPI_OFFSET 0xc
+#define DOS_PCX_HEADER_LOCAL_T_HOR_DPI_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.ver_dpi storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_VER_DPI_OFFSET 0xe
+#define DOS_PCX_HEADER_LOCAL_T_VER_DPI_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.ega_palette storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_EGA_PALETTE_OFFSET 0x10
+#define DOS_PCX_HEADER_LOCAL_T_EGA_PALETTE_SIZE 48
+/* UNKNOWN: Declared pcx_header_local_t.reserved1 storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_RESERVED1_OFFSET 0x40
+#define DOS_PCX_HEADER_LOCAL_T_RESERVED1_SIZE 1
+/* UNKNOWN: Declared pcx_header_local_t.n_color_planes storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_N_COLOR_PLANES_OFFSET 0x41
+#define DOS_PCX_HEADER_LOCAL_T_N_COLOR_PLANES_SIZE 1
+/* PROVEN: Number of expanded bytes required by each RLE scanline loop. */
+#define DOS_PCX_HEADER_LOCAL_T_BYTES_PER_LINE_OFFSET 0x42
+#define DOS_PCX_HEADER_LOCAL_T_BYTES_PER_LINE_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.palette_mode storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_PALETTE_MODE_OFFSET 0x44
+#define DOS_PCX_HEADER_LOCAL_T_PALETTE_MODE_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.source_hor_res storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_SOURCE_HOR_RES_OFFSET 0x46
+#define DOS_PCX_HEADER_LOCAL_T_SOURCE_HOR_RES_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.source_ver_res storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_SOURCE_VER_RES_OFFSET 0x48
+#define DOS_PCX_HEADER_LOCAL_T_SOURCE_VER_RES_SIZE 2
+/* UNKNOWN: Declared pcx_header_local_t.reserved2 storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_PCX_HEADER_LOCAL_T_RESERVED2_OFFSET 0x4a
+#define DOS_PCX_HEADER_LOCAL_T_RESERVED2_SIZE 54
+/* PROVEN: One256-byte ModeX tile-pixel record. */
+#define DOS_X_TEXTURE_LOCAL_T_PIXELS_OFFSET 0x0
+#define DOS_X_TEXTURE_LOCAL_T_PIXELS_SIZE 256
+/* PROVEN: Runtime pointer to132-byte live level-instance records. */
+#define DOS_LEVEL_LOCAL_T_OBJECTS_OFFSET 0x0
+#define DOS_LEVEL_LOCAL_T_OBJECTS_SIZE 4
+/* PROVEN: Signed16 live level-instance count. */
+#define DOS_LEVEL_LOCAL_T_NB_OBJECTS_OFFSET 0x4
+#define DOS_LEVEL_LOCAL_T_NB_OBJECTS_SIZE 2
+/* PROVEN: Runtime pointer to a signed16 index list. */
+#define DOS_LEVEL_OBJ_LOCAL_T_OBJ_IDS_OFFSET 0x0
+#define DOS_LEVEL_OBJ_LOCAL_T_OBJ_IDS_SIZE 4
+/* PROVEN: Signed16 number of populated object-index list entries. */
+#define DOS_LEVEL_OBJ_LOCAL_T_NB_OBJECTS_OFFSET 0x4
+#define DOS_LEVEL_OBJ_LOCAL_T_NB_OBJECTS_SIZE 2
+/* UNKNOWN: Declared display_map_local_t.x storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_DISPLAY_MAP_LOCAL_T_X_OFFSET 0x0
+#define DOS_DISPLAY_MAP_LOCAL_T_X_SIZE 2
+/* UNKNOWN: Declared display_map_local_t.y storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_DISPLAY_MAP_LOCAL_T_Y_OFFSET 0x2
+#define DOS_DISPLAY_MAP_LOCAL_T_Y_SIZE 2
+/* UNKNOWN: Declared display_map_local_t.width_in_tiles storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_DISPLAY_MAP_LOCAL_T_WIDTH_IN_TILES_OFFSET 0x4
+#define DOS_DISPLAY_MAP_LOCAL_T_WIDTH_IN_TILES_SIZE 1
+/* UNKNOWN: Declared display_map_local_t.height_in_tiles storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_DISPLAY_MAP_LOCAL_T_HEIGHT_IN_TILES_OFFSET 0x5
+#define DOS_DISPLAY_MAP_LOCAL_T_HEIGHT_IN_TILES_SIZE 1
+/* UNKNOWN: Declared display_map_local_t.tile_index storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_DISPLAY_MAP_LOCAL_T_TILE_INDEX_OFFSET 0x6
+#define DOS_DISPLAY_MAP_LOCAL_T_TILE_INDEX_SIZE 2
+/* UNKNOWN: Declared big_map_local_t.map storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_MAP_OFFSET 0x0
+#define DOS_BIG_MAP_LOCAL_T_MAP_SIZE 4
+/* UNKNOWN: Declared big_map_local_t.tile_texture_offsets storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_TILE_TEXTURE_OFFSETS_OFFSET 0x4
+#define DOS_BIG_MAP_LOCAL_T_TILE_TEXTURE_OFFSETS_SIZE 4
+/* UNKNOWN: Declared big_map_local_t.display_map storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_DISPLAY_MAP_OFFSET 0x8
+#define DOS_BIG_MAP_LOCAL_T_DISPLAY_MAP_SIZE 4
+/* UNKNOWN: Declared big_map_local_t.map_blocks storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_MAP_BLOCKS_OFFSET 0xc
+#define DOS_BIG_MAP_LOCAL_T_MAP_BLOCKS_SIZE 4
+/* UNKNOWN: Declared big_map_local_t.field_10 storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_FIELD_10_OFFSET 0x10
+#define DOS_BIG_MAP_LOCAL_T_FIELD_10_SIZE 4
+/* UNKNOWN: Declared big_map_local_t.field_14 storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_FIELD_14_OFFSET 0x14
+#define DOS_BIG_MAP_LOCAL_T_FIELD_14_SIZE 2
+/* UNKNOWN: Declared big_map_local_t.width storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_WIDTH_OFFSET 0x16
+#define DOS_BIG_MAP_LOCAL_T_WIDTH_SIZE 2
+/* UNKNOWN: Declared big_map_local_t.height storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_HEIGHT_OFFSET 0x18
+#define DOS_BIG_MAP_LOCAL_T_HEIGHT_SIZE 2
+/* UNKNOWN: Declared big_map_local_t.field_1A storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_FIELD_1A_OFFSET 0x1a
+#define DOS_BIG_MAP_LOCAL_T_FIELD_1A_SIZE 2
+/* UNKNOWN: Declared big_map_local_t.field_1C storage; no intended meaning is assigned from its spelling alone. */
+#define DOS_BIG_MAP_LOCAL_T_FIELD_1C_OFFSET 0x1c
+#define DOS_BIG_MAP_LOCAL_T_FIELD_1C_SIZE 2
 #endif
 

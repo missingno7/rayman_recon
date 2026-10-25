@@ -30,6 +30,58 @@ def all_entities(regs):
     return [e for r in regs.values() for e in r['entities']]
 
 class SemanticRegistry(unittest.TestCase):
+    def test_missing_scope_kind_reports_schema_error(self):
+        reg=copy.deepcopy(registries()['types.json'])
+        del reg['scope']['kind']
+        self.assertIn('invalid scope kind',semantics.validate_schema(reg))
+
+    def test_loader_typedef_macro_drift_is_rejected(self):
+        regs=registries()
+        if 'load.json' not in regs:self.skipTest('Loader registry not selected')
+        scope=regs['load.json']['scope']
+        text=semantics.source_path(SOURCE_ROOT,'load.c').read_text(encoding='latin-1')
+        changed=text.replace('#define archive_header_t archive_header_local_t',
+                             '#define archive_header_t pcx_header_local_t')
+        self.assertNotEqual(text,changed)
+        WORK.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=WORK) as d:
+            (Path(d)/'load.c').write_text(changed,encoding='latin-1')
+            with self.assertRaisesRegex(ValueError,'scoped typedef macro drift'):
+                semantics.parse_source(Path(d),scope)
+
+    def test_loader_local_header_offset_is_enforced(self):
+        reg=copy.deepcopy(registries()['types.json'])
+        fields=[e for e in reg['entities'] if e['kind']=='field' and e['struct']=='pcx_header_local_t' and e['current_name']=='bytes_per_line']
+        if not fields:self.skipTest('Loader types not selected')
+        fields[0]['offset']+=1
+        self.assertTrue(semantics.check_layout(reg,WORK/'negative_loader_header_offset',SOURCE_ROOT))
+
+    def test_shared_global_checked_in_loader_despite_earlier_owner(self):
+        regs=registries()
+        if 'load.json' not in regs:self.skipTest('Loader registry not selected')
+        e=next(e for r in regs.values() for e in r['entities'] if e['id']=='global:level')
+        e['context_declarators']['load.c']='obj_t *$'
+        errors=semantics.check_collection(regs,SOURCE_ROOT)
+        self.assertTrue(any('load.json: shared global declaration drift: level' in s for s in errors))
+
+    def test_context_declarator_cannot_name_an_unscoped_unit(self):
+        regs=registries()
+        e=next(e for r in regs.values() for e in r['entities'] if e['id']=='global:level')
+        e.setdefault('context_declarators',{})['missing_test_unit.c']='level_t $'
+        self.assertTrue(any('contextual declarator has no scoped unit' in s for s in semantics.check_collection(regs,SOURCE_ROOT)))
+
+    def test_loader_xor_change_requires_new_evidence(self):
+        regs=registries()
+        if 'load.json' not in regs:self.skipTest('Loader registry not selected')
+        text=semantics.source_path(SOURCE_ROOT,'load.c').read_text(encoding='latin-1')
+        changed=text.replace('^= 0x8F;', '^= 0x8E;',1)
+        self.assertNotEqual(text,changed)
+        WORK.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=WORK) as d:
+            (Path(d)/'load.c').write_text(changed,encoding='latin-1')
+            errors=semantics.check_source(regs['load.json'],Path(d),shared_entities=all_entities(regs))
+        self.assertTrue(any('function:load_world: function body drift' in s for s in errors))
+
     def test_registries_match_code(self):
         regs = registries()
         self.assertTrue(regs)

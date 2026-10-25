@@ -537,6 +537,8 @@ void first_obj_init(obj_t* obj) {
     }
 }
 
+/* Pass4 local names (INVENTED): 1:4e9bc; Restore an instance from its captured reset state, reset common runtime members, then apply type-specific defaults.
+   Evidence/widths: docs/semantics/objinit.json; defaults docs/port/OBJECT_DEFAULTS.md. */
 void obj_init(obj_t* obj) {
     s16 unk_1;
 
@@ -721,9 +723,9 @@ void obj_init(obj_t* obj) {
             break;
         case TYPE_26_CRUMBLE_PLAT:
             if (num_world != 1) {
-                s16 unk_2 = (s16)(vblToEOA(obj, 1) - 2);
-                obj->param = unk_2;
-                obj->iframes_timer = unk_2;
+                s16 animation_end_delay = (s16)(vblToEOA(obj, 1) - 2);
+                obj->param = animation_end_delay;
+                obj->iframes_timer = animation_end_delay;
             } else {
                 obj->param = 40;
                 obj->iframes_timer = 20;
@@ -794,10 +796,12 @@ void obj_init(obj_t* obj) {
     }
 }
 
+/* Pass4 local names (INVENTED): 1:4f1e8; Build always-object and ordinary object-index lists after initialization.
+   Evidence/widths: docs/semantics/objinit.json; defaults docs/port/OBJECT_DEFAULTS.md. */
 void init_struct_level(void) {
     s16 i;
     obj_t *obj;
-    s16 nb_objs;
+    s16 object_count;
     level_alw.nb_objects = 0;
     level_obj.nb_objects = 0;
     for (i = 0; i < level.nb_objects; ++i) {
@@ -806,8 +810,8 @@ void init_struct_level(void) {
     }
     i = 0;
     obj = &level.objects[i];
-    nb_objs = level.nb_objects;
-    while (i < nb_objs) {
+    object_count = level.nb_objects;
+    while (i < object_count) {
         if (bonus_map || (flags[obj->type].flags1 & 2) == 0 || !bonus_taken(obj->id)) {
             if (flags[obj->type].flags0 & 1) {
                 level_alw.obj_ids[level_alw.nb_objects++] = i;
@@ -820,12 +824,14 @@ void init_struct_level(void) {
     }
 }
 
-void INIT_OBJECTS(u8 a1) {
+/* Pass4 local names (INVENTED): 1:4f2d4; Initialize all level instances and discover special-object IDs and lists.
+   Evidence/widths: docs/semantics/objinit.json; defaults docs/port/OBJECT_DEFAULTS.md. */
+void INIT_OBJECTS(u8 first_init) {
     s16 found_bbf2_droite;
     s16 found_bbf2_gauche;
     s16 i;
     obj_t *obj;
-    s16 nb_objs;
+    s16 object_count;
     found_bbf2_droite = -1;
     found_bbf2_gauche = -1;
     ray_on_poelle = 0;
@@ -855,10 +861,10 @@ void INIT_OBJECTS(u8 a1) {
 
     i = 0;
     obj = &level.objects[i];
-    nb_objs = level.nb_objects;
-    while (i < nb_objs) {
+    object_count = level.nb_objects;
+    while (i < object_count) {
         obj->id = i;
-        if (a1) {
+        if (first_init) {
             first_obj_init(obj);
         }
         obj->active_timer = 0;
