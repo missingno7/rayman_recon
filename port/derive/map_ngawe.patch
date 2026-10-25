@@ -1,0 +1,21 @@
+--- a/src/map_ngawe.c
++++ b/src/map_ngawe.c
+@@ -38,6 +38,7 @@
+ extern island_copy_t *Copy_Plan0_To_Buf;
+ extern u8 *MAP_BLOCKS;
+ extern void Copy_Plan0Diff_To_Buf(u8 *, u8 *, s32, s32, s32);
++extern island_copy_t port_island_copy_plan0diff;  /* PORT */
+ extern void clear_memory(u8 *buffer, s32 color, s32 length);
+ u8 BTYP(s16 tile_x, s16 tile_y);
+ void CALC_MOV_ON_BLOC(obj_t* obj);
+@@ -155,7 +156,9 @@
+ {
+     sprite_clipping(Bloc_lim_W1, Bloc_lim_W2, Bloc_lim_H1, Bloc_lim_H2);
+     DrawBufferNormalIni = DrawBufferNormal;
+-    Copy_Plan0_To_Buf = (island_copy_t *)(Copy_Plan0Diff_To_Buf);
++    /* PORT: the register ABI let one assembly routine be seen through two C prototypes with different argument
++       orders; natively the island view needs its adapter (video/lowlevel_adapters.c). */
++    Copy_Plan0_To_Buf = port_island_copy_plan0diff;
+     DrawBufferNormal += 4;
+     init_build_map(&BIG_MAP, MAP_BLOCKS);
+     clear_memory(DisplayBufferNormal, 0, 64000);

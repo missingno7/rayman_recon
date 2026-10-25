@@ -24,7 +24,7 @@ extern s16 p1[70][300];
 extern rgb_palette_t rvb[3];
 extern rgb_palette_t MenuPalette;
 extern rgb_t PalPlasma[16];
-extern rgb_t pal[16];
+extern rgb_t PalFire[16];
 extern u8 plasma_palette_color_index;
 extern u8 menuEtape;
 extern u8 ModeVideoActuel;
@@ -173,9 +173,9 @@ void InitFire(void)
     else
         plasma_palette_color_index = 112;
     for (i = 0; i < 16; ++i) {
-        rvb[0].colors[plasma_palette_color_index + i].r = pal[i].r >> 2;
-        rvb[0].colors[plasma_palette_color_index + i].g = pal[i].b >> 2;
-        rvb[0].colors[plasma_palette_color_index + i].b = pal[i].g >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].r = PalFire[i].r >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].g = PalFire[i].b >> 2;
+        rvb[0].colors[plasma_palette_color_index + i].b = PalFire[i].g >> 2;
     }
     BOX_SET_PALETTE(plasma_palette_color_index, plasma_palette_color_index + 15);
     for (i = 0; i < 70; ++i) {

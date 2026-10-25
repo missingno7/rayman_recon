@@ -1,0 +1,13 @@
+--- a/src/frame.c
++++ b/src/frame.c
+@@ -276,7 +276,9 @@
+         draw_buffer = DrawBufferNormal;
+         display_buffer = DisplayBufferNormal;
+         if (is_joypad_mode == 1 && Main_Control)
+-            Swap_And_Test_Joystick(display_buffer, DrawBufferNormal, 320, 200);
++            /* PORT: frame.c's swap_func_t view lists EDI (destination) first; the native routine takes
++               (source, destination) like pcmain.c's view of the same pointer. */
++            Swap_And_Test_Joystick(DrawBufferNormal, display_buffer, 320, 200);
+         else
+             DisplayBufferModeNormal(DrawBufferNormal, display_buffer);
+     }

@@ -1,0 +1,144 @@
+/*
+ * Process entry of the native port: options, platform start-up, then one of the game entries (port_main.h).
+ *
+ *   rayman [--data DIR] [--save DIR] [--demo N | --menus | --dos-main] [--headless] [--deterministic]
+ *          [--frames N] [--frame-log FILE] [--dump-frames DIR --dump-every N] [--scale N] [--fullscreen]
+ *
+ * --frames/--frame-log exist for regression runs: stop after N presented images, log one hash per image.
+ */
+#include "game/port_main.h"
+#include "platform/clock.h"
+#include "platform/files.h"
+#include "platform/host.h"
+#include "video/vga.h"
+
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static long frame_limit = -1;
+static long frame_count;
+static FILE *frame_log;
+static const char *dump_dir;
+static long dump_every = 0;
+
+/* 320x200 8-bit BMP with the DAC palette (6-bit components scaled like the host presentation). */
+static void dump_frame(const uint8_t *pixels, const uint8_t *dac)
+{
+    char path[1024];
+    uint8_t header[54 + 1024];
+    FILE *f;
+    int i, y;
+    uint32_t size = 54 + 1024 + 64000;
+    snprintf(path, sizeof path, "%s/frame_%06ld.bmp", dump_dir, frame_count);
+    if (!(f = fopen(path, "wb")))
+        return;
+    memset(header, 0, sizeof header);
+    header[0] = 'B'; header[1] = 'M';
+    memcpy(header + 2, &size, 4);
+    header[10] = 54; header[11] = 4;                     /* pixel data offset 54 + 1024 */
+    header[14] = 40;
+    header[18] = 320 & 255; header[19] = 320 >> 8;
+    header[22] = 200;
+    header[26] = 1; header[28] = 8;
+    for (i = 0; i < 256; i++) {
+        uint8_t r = dac[3 * i] & 63, g = dac[3 * i + 1] & 63, b = dac[3 * i + 2] & 63;
+        header[54 + 4 * i] = (uint8_t)(b << 2 | b >> 4);
+        header[54 + 4 * i + 1] = (uint8_t)(g << 2 | g >> 4);
+        header[54 + 4 * i + 2] = (uint8_t)(r << 2 | r >> 4);
+    }
+    fwrite(header, 1, sizeof header, f);
+    for (y = 199; y >= 0; y--)
+        fwrite(pixels + y * 320, 1, 320, f);
+    fclose(f);
+}
+
+/* FNV-1a over the 64000 visible pixels and the 768 DAC bytes. */
+static void on_frame(const uint8_t *pixels, const uint8_t *dac, void *user)
+{
+    (void)user;
+    if (frame_log) {
+        uint64_t h = 1469598103934665603ULL;
+        int i;
+        for (i = 0; i < 64000; i++)
+            h = (h ^ pixels[i]) * 1099511628211ULL;
+        for (i = 0; i < 768; i++)
+            h = (h ^ dac[i]) * 1099511628211ULL;
+        fprintf(frame_log, "%ld %llu %016llx\n", frame_count, (unsigned long long)port_clock_ns(),
+                (unsigned long long)h);
+    }
+    if (dump_dir && dump_every > 0 && frame_count % dump_every == 0)
+        dump_frame(pixels, dac);
+    frame_count++;
+    if (frame_limit >= 0 && frame_count >= frame_limit) {
+        if (frame_log)
+            fclose(frame_log);
+        frame_log = NULL;
+        fflush(stdout);
+        exit(0);
+    }
+    if (port_host_quit_requested())
+        exit(0);
+}
+
+static void at_exit(void)
+{
+    port_host_shutdown();
+}
+
+int main(int argc, char **argv)
+{
+    const char *data = getenv("RAYMAN_DATA");
+    const char *save = NULL;
+    char default_save[1024];
+    port_host_options host = {0, 0, 0};
+    int deterministic = 0, demo = -1, dos_main = 0, i;
+
+    for (i = 1; i < argc; i++) {
+        const char *a = argv[i];
+        const char *v = i + 1 < argc ? argv[i + 1] : NULL;
+        if (!strcmp(a, "--data") && v) data = argv[++i];
+        else if (!strcmp(a, "--save") && v) save = argv[++i];
+        else if (!strcmp(a, "--demo") && v) demo = atoi(argv[++i]);
+        else if (!strcmp(a, "--menus")) demo = -1;
+        else if (!strcmp(a, "--dos-main")) dos_main = 1;
+        else if (!strcmp(a, "--headless")) host.headless = 1;
+        else if (!strcmp(a, "--deterministic")) deterministic = 1;
+        else if (!strcmp(a, "--frames") && v) frame_limit = atol(argv[++i]);
+        else if (!strcmp(a, "--frame-log") && v) frame_log = fopen(argv[++i], "w");
+        else if (!strcmp(a, "--dump-frames") && v) dump_dir = argv[++i];
+        else if (!strcmp(a, "--dump-every") && v) dump_every = atol(argv[++i]);
+        else if (!strcmp(a, "--scale") && v) host.scale = atoi(argv[++i]);
+        else if (!strcmp(a, "--fullscreen")) host.fullscreen = 1;
+        else {
+            fprintf(stderr, "unknown option %s\n", a);
+            return 2;
+        }
+    }
+    if (!data) {
+        fprintf(stderr, "rayman: give the original game directory with --data DIR (or RAYMAN_DATA)\n");
+        return 2;
+    }
+    if (!save) {
+        char *pref = SDL_GetPrefPath("Ubisoft", "Rayman (native port)");
+        snprintf(default_save, sizeof default_save, "%s", pref ? pref : "rayman-save");
+        SDL_free(pref);
+        save = default_save;
+    }
+    if (!port_files_init(data, save)) {
+        fprintf(stderr, "rayman: data directory %s or save directory %s is not usable\n", data, save);
+        return 2;
+    }
+    port_clock_init(deterministic ? PORT_CLOCK_DETERMINISTIC : PORT_CLOCK_REALTIME);
+    if (!port_host_init(&host))
+        return 1;
+    atexit(at_exit);
+    port_vga_set_frame_hook(on_frame, NULL);
+    if (dos_main)
+        return port_run_dos_main(argc, argv);
+    if (demo >= 0)
+        return port_run_demo(demo);
+    return port_run_menus();
+}

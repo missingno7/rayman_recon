@@ -1,0 +1,17 @@
+{
+ "note": "How the native port treats every historical unit of config/units.json. Default: a 'game' profile unit is compiled natively UNCHANGED from ../src (with compat/include/port_watcom.h pre-included and, when present, game/protos/<unit>.h). Units with a patch in derive/provenance.json are compiled from their derivative. Checked by tests/test_port_units.py.",
+ "replaced_profiles": {
+  "asm": "Hand-written low-level assembly (src/lowlevel_*.asm). Native C implementations of each entry's proven contract (docs/port/ASM_SPEC.md) live in video/ and compat/.",
+  "hmi": "Third-party HMI SOS sound library. Replaced by the port's audio service (platform/), behind the same sos* entry points the game calls.",
+  "hmi_tasm": "Assembly part of the HMI library (timer/DPMI). Replaced together with the library."
+ },
+ "replaced_units": {
+  "src/dosmem.c": "DPMI wrappers (allocate/free conventional memory, real-mode interrupt) that pass 32-bit linear addresses to INT 31h; implemented by compat/src/dos_services.c with the same contracts."
+ },
+ "unit_defines": {
+  "src/pcmain.c": ["main=rayman_dos_main"]
+ },
+ "unit_defines_reason": {
+  "src/pcmain.c": "The DOS program's `void main(int, char**)` becomes the ordinary function rayman_dos_main; the SDL3 host owns the process entry point and calls it."
+ }
+}

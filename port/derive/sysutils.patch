@@ -1,0 +1,41 @@
+--- a/src/sysutils.c
++++ b/src/sysutils.c
+@@ -11,6 +11,7 @@
+ #include <i86.h>
+ #include "sysutils_local.h"
+ #include "inline_helpers.h"
++#include "port_derived.h"
+ 
+ struct mem_peak_t {
+     u32 used;
+@@ -56,16 +57,12 @@
+ void world_free(void);
+ void fix_free(void);
+ 
++/* PORT: DPMI 0500h (free memory information) answered by the port's machine: 16 MiB of free extended memory,
++   the configuration the game's full-feature branch of InitMemoryVariable was written for. */
+ u32 get_avail_memory(void)
+ {
+-    union REGS regs;
+-    struct SREGS segments;
+-    clear_memory(&regs, 0, sizeof(regs));
+-    clear_memory(&segments, 0, sizeof(segments));
+-    regs.x.eax = 0x500;
+-    segments.es = FP_SEG((void __far *)&mem_32190);
+-    regs.x.edi = (u32)&mem_32190;
+-    int386x(0x31, &regs, &regs, &segments);
++    clear_memory(&mem_32190, 0, sizeof(mem_32190));
++    mem_32190.largest_free_block = PORT_FREE_MEMORY;
+     return mem_32190.largest_free_block;
+ }
+ 
+@@ -174,6 +171,9 @@
+     u8 *data;
+ 
+     capacity += capacity & 3;
++    /* PORT: native records that hold pointers are larger than their 32-bit DOS layout (obj_t 132 bytes on DOS);
++       the arenas are scaled so that no shipped level reaches the original out-of-memory error. */
++    capacity *= PORT_ARENA_SCALE;
+     mem->data = (u8 *)malloc(capacity);
+     if (mem->data == 0) {
+         message = (char *)temp_malloc(100);

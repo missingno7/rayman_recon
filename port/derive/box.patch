@@ -1,0 +1,37 @@
+--- a/src/box.c
++++ b/src/box.c
+@@ -186,7 +186,7 @@
+ 
+ void Fire(s16 x, s16 y, s16 width, s16 height)
+ {
+-    u8 *pos = (u8 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);
++    u8 *pos = draw_buffer + x + SCREEN_WIDTH * y;  /* PORT: pointer arithmetic, no u32 round trip */
+     s16 color = plasma_palette_color_index;
+     s16 i;
+     MakeMyRand(0);
+@@ -327,7 +327,7 @@
+     w += 4 - (w & 3);
+     skip = (320 - w) >> 2;
+     /* Integer address arithmetic: DOS 1:14ad9..14b0d. */
+-    pos = (u32 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);
++    pos = (u32 *)(draw_buffer + x + SCREEN_WIDTH * y);  /* PORT: pointer arithmetic, no u32 round trip */
+     old_w = w;
+     w >>= 2;
+     for (j = 0; j < h; ++j) {
+@@ -408,14 +408,14 @@
+ void ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
+ {
+     /* Integer screen addresses: DOS 1:14ddf..14e3d. */
+-    u8 *pos = (u8 *)((u32)draw_buffer + lim_H1 * SCREEN_WIDTH);
++    u8 *pos = draw_buffer + lim_H1 * SCREEN_WIDTH;  /* PORT: pointer arithmetic, no u32 round trip */
+     s16 y;
+     s32 bottom_count;
+     u8 *bottom;
+     memset(draw_buffer, 0, lim_H1 * SCREEN_WIDTH);
+     /* DOS 1:14e0b..14e3d computes the bottom count and a separate pointer. */
+     bottom_count = (SCREEN_HEIGHT - lim_H2) * SCREEN_WIDTH;
+-    bottom = (u8 *)((u32)draw_buffer + lim_H2 * SCREEN_WIDTH);
++    bottom = draw_buffer + lim_H2 * SCREEN_WIDTH;  /* PORT: pointer arithmetic, no u32 round trip */
+     memset(bottom, 0, bottom_count);
+     for (y = lim_H1; y < lim_H2; ++y) {
+         s16 x;

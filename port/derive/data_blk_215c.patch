@@ -1,0 +1,13 @@
+--- a/src/data/blk_215c.c
++++ b/src/data/blk_215c.c
+@@ -1236,7 +1236,9 @@
+ 
+ 
+ /* Physical VGA aperture; oracle contains 0x000a0000 with NO fixup. */
+-u8 *DisplayBufferNormal = (u8 *)0x000a0000UL;
++/* PORT: the VGA window at linear address A0000h is the port's display aperture (video/vga.h). */
++extern u8 port_vga_aperture[];
++u8 *DisplayBufferNormal = port_vga_aperture;
+ 
+ /* data_5e2c, 2:05e2c. */
+ /* Part of the central data TU (GOG v1.21 obj2 _DATA). Block file and split INVENTED; values verified against the

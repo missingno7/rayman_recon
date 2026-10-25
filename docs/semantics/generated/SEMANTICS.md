@@ -3957,7 +3957,7 @@ Confidence describes the stated meaning, separately from STRICT matching.
 | globals.json / global:joy_buttonB1 | PROVEN | Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear. | button state | 2:3f7f2 |
 | globals.json / global:joy_buttonB2 | PROVEN | Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear. | button state | 2:3f7f4 |
 | globals.json / global:JumelleEffetAutorise | PROVEN | Allocation/capability gate for lens deformation;failed table allocation clears it. | boolean | 2:3fa32 |
-| globals.json / global:pal | PROVEN | 16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales. | RGB palette entries | 2:5fb2 |
+| globals.json / global:PalFire | PROVEN | 16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales. | RGB palette entries | 2:5fb2 |
 | globals.json / global:During_The_Menu | PROVEN | Set0 immediately around gameplay frame loop and1 afterward;name alone is not a universal UI-active predicate. | state / selector | 2:5eb4 |
 | globals.json / global:SonLimite | PROVEN | Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively. | capability / bytes | 2:3fa13 |
 | globals.json / global:TheProcesseur | PROVEN | DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source. | detector codes | 2:3fa26 |

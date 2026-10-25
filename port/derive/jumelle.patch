@@ -1,0 +1,41 @@
+--- a/src/jumelle.c
++++ b/src/jumelle.c
+@@ -561,6 +561,8 @@
+     margin = (3 * (64 - RayonJumelle)) >> 2;
+     left = JumelleZoomDef + 14400 + margin;
+     right = JumelleZoomDef + 14272 + 223 - margin;
++    /* PORT: the u32 index expressions wrap to negative offsets in 32-bit arithmetic; (s32) keeps that offset
++       on 64-bit hosts (port/derive/provenance.json). */
+     if (JumelleEffetAutorise) {
+         ParamZoomChange = 0;
+         memset(JumelleZoomDef, 0, 29025 * sizeof(s32));
+@@ -572,21 +574,21 @@
+                     dx = (x * factor + 0x8000) >> 16;
+                     dy = 320 * ((y * factor + 0x8000) >> 16);
+                     if (x) {
+-                        left[x - y * 224] += dy - dx;
+-                        right[y * 224 - x] += dx - dy;
++                        left[(s32)(x - y * 224)] += dy - dx;
++                        right[(s32)(y * 224 - x)] += dx - dy;
+                     }
+                     if (y) {
+-                        left[y * 224 + x] += -dx - dy;
+-                        right[-y * 224 - x] += dx + dy;
++                        left[(s32)(y * 224 + x)] += -dx - dy;
++                        right[(s32)(-y * 224 - x)] += dx + dy;
+                     }
+                     if (x <= (u32)RayonJumelle) {
+                         if (y) {
+-                            left[-y * 224 - x] += dx + dy;
+-                            right[y * 224 + x] += -dx - dy;
++                            left[(s32)(-y * 224 - x)] += dx + dy;
++                            right[(s32)(y * 224 + x)] += -dx - dy;
+                         }
+                         if (x) {
+-                            left[y * 224 - x] += dx - dy;
+-                            right[-y * 224 + x] += dy - dx;
++                            left[(s32)(y * 224 - x)] += dx - dy;
++                            right[(s32)(-y * 224 + x)] += dy - dx;
+                         }
+                     }
+                 }

@@ -12007,7 +12007,7 @@ Units: boolean. DOS layout/address: 2:3fa32.
 
 Allocation/capability gate for lens deformation;failed table allocation clears it.
 
-### global:pal
+### global:PalFire
 
 PROVEN: 16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales.
 

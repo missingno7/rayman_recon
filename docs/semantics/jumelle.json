@@ -8779,7 +8779,7 @@
  },
  "proposal_fingerprints": {
   "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
-  "box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "box.c": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb",
   "cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
   "cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
   "cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
@@ -8811,7 +8811,7 @@
   "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
   "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
   "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
-  "src/box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "src/box.c": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb",
   "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
   "src/bss/bss_3d0ac.c": "e8d6fabb36662c355c999242851dd3a751a489dcf68c16f40db262cfd87c75ee",
   "src/bss/bss_3d0bc.c": "ad5f0230a2debcf5605317ebcf047862f2de70af79fdffef650cc7d1eaf2f2d7",

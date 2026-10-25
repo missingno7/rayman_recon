@@ -1,0 +1,530 @@
+{
+ "note": "Reviewed 64-bit ABI-sensitive sites of the historical units as compiled by the port (port/tools/abi_audit.py). Verdicts: HARMLESS (exact on 64-bit), DERIVED (fixed by a reviewed derivative), NOT_ON_PORT_PATH (code the port does not run yet; it stops at its boundary), OPEN (must be handled before that code runs natively).",
+ "sites": [
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_hor;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_left1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_left2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_left_45;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_liane;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_right1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_right2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc1[i] = blocs1_right_45;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc2[i] = blocs1_left1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc2[i] = blocs1_left2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc2[i] = blocs1_right1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcbloc2[i] = blocs1_right2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocfloor[i] = blocs1_left1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocfloor[i] = blocs1_left2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocfloor[i] = blocs1_right1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocfloor[i] = blocs1_right2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocrecal[i] = blocs1_left1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocrecal[i] = blocs1_left2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocrecal[i] = blocs1_right1_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blocs.c",
+   "code": "calcblocrecal[i] = blocs1_right2_30;",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "slope functions return s32 (some take s16 x) and are stored in calcbloc*_func_t (s16 (*)(s32, s32)); callers use the low 16 bits of the result and callees read the low half of x, exactly as the Watcom code did"
+  },
+  {
+   "unit": "src/blood.c",
+   "code": "if ((s32)(*line + row_start) < (s32)dst)",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "OPEN",
+   "reason": "end-of-game blood effect compares truncated addresses; needs a derivative before it runs natively"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "bottom = (u8 *)((u32)draw_buffer + lim_H2 * SCREEN_WIDTH);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "bottom = (u8 *)((u32)draw_buffer + lim_H2 * SCREEN_WIDTH);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "pos = (u32 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "pos = (u32 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "u8 *pos = (u8 *)((u32)draw_buffer + lim_H1 * SCREEN_WIDTH);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "u8 *pos = (u8 *)((u32)draw_buffer + lim_H1 * SCREEN_WIDTH);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "u8 *pos = (u8 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/box.c",
+   "code": "u8 *pos = (u8 *)((u32)draw_buffer + x + SCREEN_WIDTH * y);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "DERIVED",
+   "reason": "port/derive/box.patch replaces the u32 round trip by pointer arithmetic"
+  },
+  {
+   "unit": "src/cdaudio.c",
+   "code": "sub_193f0((s32)&cd_request_regs);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "MSCDEX request block address; the CD service replaces cdaudio (not ported yet)"
+  },
+  {
+   "unit": "src/cheat.c",
+   "code": "temp_free(intervals);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "typed pointer passed to temp_free(void *)"
+  },
+  {
+   "unit": "src/cheat.c",
+   "code": "temp_free(times);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "typed pointer passed to temp_free(void *)"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "SYNCHRO_LOOP(WORLD_CHOICE);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "display.c declares SYNCHRO_LOOP with an s32 callback; the definition calls through scene_func_t returning s16, which every callback returns"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "SYNCHRO_LOOP(display_vignet_prg);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "display.c declares SYNCHRO_LOOP with an s32 callback; the definition calls through scene_func_t returning s16, which every callback returns"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "SYNCHRO_LOOP(saisie_nom_prg);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "display.c declares SYNCHRO_LOOP with an s32 callback; the definition calls through scene_func_t returning s16, which every callback returns"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "SYNCHRO_LOOP(select_level_prg);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "display.c declares SYNCHRO_LOOP with an s32 callback; the definition calls through scene_func_t returning s16, which every callback returns"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "SYNCHRO_LOOP(selection_save_option_prg);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "HARMLESS",
+   "reason": "display.c declares SYNCHRO_LOOP with an s32 callback; the definition calls through scene_func_t returning s16, which every callback returns"
+  },
+  {
+   "unit": "src/display.c",
+   "code": "playVideo(&demo_video_mem, \"conclu.dat\", 21);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/effect6ec80.c",
+   "code": "surface = (u32)state->surface_a;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "OPEN",
+   "reason": "effect vertex keeps a surface pointer in a u32 field read by draw_effect_segment; pause/transition effects need a derivative before they run natively"
+  },
+  {
+   "unit": "src/effect6ec80.c",
+   "code": "surface = (u32)state->surface_b;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "OPEN",
+   "reason": "effect vertex keeps a surface pointer in a u32 field read by draw_effect_segment; pause/transition effects need a derivative before they run natively"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "PLAN1_BUFFER_START_POINTER = (u32)buffer;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "PLAN1_BUFFER_START_POINTER = (u32)current;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "block_copy((u8*)gros_patai_src[texture_id] + plane * 64, dest);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "block_copy((u8*)gros_patai_src[texture_id] + plane, dest);",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "column = (PLAN1_BUFFER_START_POINTER - (u32)PLAN1_BUFFER) % 80;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "context.source_end = (u32) PLAN1_BUFFER;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "context[1] = (u32)PLAN0BIT + plan0bit_length;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "position = ((u32)buffer - (u32)PLAN1_BUFFER) / 80;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "previous = (u8*)PLAN1_BUFFER_START_POINTER;",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "row = (PLAN1_BUFFER_START_POINTER - (u32)PLAN1_BUFFER) / 80;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "s32 position = ((u32)base - (u32)PLAN1_BUFFER) % 80;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "u8 *buffer_start = (u8 *) PLAN1_BUFFER_START_POINTER;",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "u8 *dest = (u8 *) init_data_state.draw_origin;",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "u8 *origin = (u8 *) init_data_state.draw_origin;",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/frame.c",
+   "code": "u8 *source = (u8 *) init_data_state.source_origin;",
+   "warning": "-Wint-to-pointer-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/hifi.c",
+   "code": "*(u32 *)bytes += (u32)new_data;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "sound bank pointer relocation; sound driver absent, audio backend not ported yet"
+  },
+  {
+   "unit": "src/hybrid.c",
+   "code": "boss_obj->flags.alive = 1 | FLG(OBJ_ACTIVE);",
+   "warning": "-Woverflow",
+   "verdict": "HARMLESS",
+   "reason": "constant narrowed into a bit-field/16-bit value exactly as Watcom does"
+  },
+  {
+   "unit": "src/hybrid.c",
+   "code": "cur_obj->flags.alive = 1 | FLG(OBJ_ACTIVE);",
+   "warning": "-Woverflow",
+   "verdict": "HARMLESS",
+   "reason": "constant narrowed into a bit-field/16-bit value exactly as Watcom does"
+  },
+  {
+   "unit": "src/hybrid.c",
+   "code": "obj->flags.alive = 1 | FLG(OBJ_ACTIVE);",
+   "warning": "-Woverflow",
+   "verdict": "HARMLESS",
+   "reason": "constant narrowed into a bit-field/16-bit value exactly as Watcom does"
+  },
+  {
+   "unit": "src/load.c",
+   "code": "ScrollDiffSprites = &wldobj[(s32)ScrollDiffSprites];",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "HARMLESS",
+   "reason": "narrows a 32-bit file word stored by port_fread_pointer_word (load.patch); exact"
+  },
+  {
+   "unit": "src/load.c",
+   "code": "else wldobj[descriptor_index].eta = loaded_eta[(s32)wldobj[descriptor_index].eta];",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "HARMLESS",
+   "reason": "narrows a 32-bit file word stored by port_fread_pointer_word (load.patch); exact"
+  },
+  {
+   "unit": "src/load.c",
+   "code": "for (i = 0; i < 1200; i++) gros_patai_src[i] = (u32)gros_patai_block + gros_patai_src[i];",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X tile tables (gros_patai_src, block_add callbacks); normal mode keeps block_add as raw offsets"
+  },
+  {
+   "unit": "src/load.c",
+   "code": "if (block_add[i] != -1) block_add[i] = (s32)blocks_code + block_add[i];",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X tile tables (gros_patai_src, block_add callbacks); normal mode keeps block_add as raw offsets"
+  },
+  {
+   "unit": "src/map.c",
+   "code": "width &= 0x10000;",
+   "warning": "-Woverflow",
+   "verdict": "HARMLESS",
+   "reason": "constant narrowed into a bit-field/16-bit value exactly as Watcom does"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "status = sub_3AA70(local.work, local.path);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "status = sub_3B014(local.work, local.info);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "status = sub_3B138(local.work, local.info);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "sub_3AA4C(work);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "sub_3AFB4(local.work, local.info);",
+   "warning": "-Wincompatible-pointer-types",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/movie.c",
+   "code": "writer((u32)surface, index, src, run);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "FLC movie player; not ported yet"
+  },
+  {
+   "unit": "src/pcmain.c",
+   "code": "init_data_state.source_origin = (s32)PLAN0BIT + init_data_state.scroll_x / 4 +",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/pcmain.c",
+   "code": "offset = (s32)draw_buffer - init_data_state.x / 4 -",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "NOT_ON_PORT_PATH",
+   "reason": "Mode X background/tile ring state (InitData origins, PLAN1 ring); the port presents normal mode only"
+  },
+  {
+   "unit": "src/sysutils.c",
+   "code": "OffsetSpriteFixe = mem->align + (((u32)(mem->data + mem->align)) & 3);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "HARMLESS",
+   "reason": "only the low 2 alignment bits of the pointer are used"
+  },
+  {
+   "unit": "src/sysutils.c",
+   "code": "OffsetSpriteWorld = mem->align + (((u32)(mem->data + mem->align)) & 3);",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "HARMLESS",
+   "reason": "only the low 2 alignment bits of the pointer are used"
+  },
+  {
+   "unit": "src/sysutils.c",
+   "code": "mem->align = (u32)mem->data & 3;",
+   "warning": "-Wpointer-to-int-cast",
+   "verdict": "HARMLESS",
+   "reason": "only the low 2 alignment bits of the pointer are used"
+  }
+ ]
+}

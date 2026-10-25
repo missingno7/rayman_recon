@@ -1,0 +1,64 @@
+{
+ "schema": 1,
+ "units": {
+  "sysutils.c": {
+   "patch": "sysutils.patch",
+   "reason": "get_avail_memory issues DPMI 0500h with a 32-bit linear buffer address; the block arenas hold native records that carry 8-byte pointers.",
+   "divergences": [
+    "get_avail_memory reports PORT_FREE_MEMORY (16 MiB) instead of querying DPMI; InitMemoryVariable therefore always takes its >= 3 MiB branch (normal mode, all sprites, backgrounds).",
+    "init_memory allocates PORT_ARENA_SCALE (2 on 64-bit hosts) times the requested capacity; block_malloc semantics are unchanged, only the out-of-memory threshold moves."
+   ],
+   "base_sha256": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a"
+  },
+  "load.c": {
+   "patch": "load.patch",
+   "reason": "Level/world loading reads 32-bit file words into pointer-typed fields and reads 132-byte DOS object images directly into obj_t; both depend on the 32-bit DOS layout.",
+   "divergences": [
+    "Pointer-typed fields that receive a 32-bit file word (animations[].frames x3, ScrollDiffSprites, wldobj[].eta) are filled by port_fread_pointer_word (sign-extended word); the original sentinel tests and (s32) narrowing are unchanged.",
+    "Object instance records are decoded field by field from their DOS offsets (game/dos_records.c, offsets from docs/semantics/generated/semantics_dos.h); the four index words are rebound with the original (s16) narrowing. A malloc scratch array holds the index words; the game allocators are not touched.",
+    "load_world reads the BIOS tick byte at linear 0x46C four times while waiting for two tick edges (with the debug-register watch around it); the reads use port_bios_tick_byte(), the tick derived from the port clock. The watch itself is omitted (docs/port/PLATFORM_OPEN.md)."
+   ],
+   "base_sha256": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4"
+  },
+  "data/blk_215c.c": {
+   "patch": "data_blk_215c.patch",
+   "reason": "DisplayBufferNormal is initialised with the VGA linear address 0xA0000.",
+   "divergences": [
+    "DisplayBufferNormal points to the port display aperture (video/vga.c port_vga_aperture), the device that replaces VGA memory."
+   ],
+   "base_sha256": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119"
+  },
+  "box.c": {
+   "patch": "box.patch",
+   "reason": "Fire, CadreTrans and ClearBorder form draw-buffer addresses through a u32 round trip ((u8 *)((u32)draw_buffer + n)), which truncates a 64-bit pointer.",
+   "divergences": [
+    "The four address computations use pointer arithmetic draw_buffer + n; for every in-range offset this is the same address the 32-bit u32 arithmetic produced. No other change."
+   ],
+   "base_sha256": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb"
+  },
+  "map_ngawe.c": {
+   "patch": "map_ngawe.patch",
+   "reason": "INIT_GAME_MODE_NORMAL installs Copy_Plan0Diff_To_Buf behind island_copy_t, whose C parameter order (source, dest, pitch, height, width) differs from the routine's direct prototype (source, dest, width, height, pitch); the DOS register ABI made both views the same.",
+   "divergences": [
+    "Copy_Plan0_To_Buf receives the adapter port_island_copy_plan0diff (video/lowlevel_adapters.c), which reorders the arguments for the same routine. Same pixels."
+   ],
+   "base_sha256": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e"
+  },
+  "frame.c": {
+   "patch": "frame.patch",
+   "reason": "SWAP_BUFFERS calls Swap_And_Test_Joystick through frame.c's swap_func_t view, which lists EDI (destination) first; pcmain.c's view of the same pointer and the native routine take (source, destination).",
+   "divergences": [
+    "The normal-mode joystick swap call passes (DrawBufferNormal, display_buffer): the same registers the DOS call loaded (ESI source, EDI destination)."
+   ],
+   "base_sha256": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301"
+  },
+  "jumelle.c": {
+   "patch": "jumelle.patch",
+   "reason": "PrepareJumelleZoom indexes its zoom table with u32 expressions (x - y*224, -y*224 - x, ...) that wrap to negative offsets in 32-bit arithmetic; on a 64-bit host the wrapped value is a +4 GiB offset.",
+   "divergences": [
+    "The eight left[]/right[] index expressions are cast to s32: the same offsets the 32-bit program used. Found by the first native run (segmentation fault); this class is caught systematically by the i686 reference build (port/docs/ARCHITECTURE.md)."
+   ],
+   "base_sha256": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1"
+  }
+ }
+}

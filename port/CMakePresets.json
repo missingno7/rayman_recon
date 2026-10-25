@@ -1,0 +1,29 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "mingw-x64",
+      "displayName": "Windows x86_64, MinGW-w64 GCC, SDL3 from $env{SDL3_DIR}",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/../build/port",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_PREFIX_PATH": "$env{SDL3_DIR}",
+        "RAY_DATA": "$env{RAYMAN_DATA}"
+      }
+    },
+    {
+      "name": "mingw-i686",
+      "displayName": "Windows i686 reference build (DOS pointer width), MinGW-w64 GCC, SDL3 from $env{SDL3_DIR_I686}",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/../build/port-i686",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_COMPILER": "C:/msys64/mingw32/bin/gcc.exe",
+        "CMAKE_PREFIX_PATH": "$env{SDL3_DIR_I686}",
+        "RAY_DATA": "$env{RAYMAN_DATA}"
+      }
+    }
+  ]
+}

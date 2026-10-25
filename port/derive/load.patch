@@ -1,0 +1,123 @@
+--- a/src/load.c
++++ b/src/load.c
+@@ -8,6 +8,8 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <io.h>
++#include "port_derived.h"
++#include "game/dos_records.h"
+ 
+ /* DOS archive/PCX layouts; field names inherited from the Rayverse baseline. */
+ typedef struct archive_header_local_t { s32 offset; s32 size; u8 xor_byte; u8 checksum_byte; u8 reserved[2]; } archive_header_local_t;
+@@ -150,6 +152,7 @@
+   stop_cd();
+   sub_5BB78();
+   sub_5BB94();
++  /* PORT: the BIOS tick byte at linear 0x46C is read through port_bios_tick_byte() (port clock). */
+   load_watch_address(0x46c);
+   load_set_watch_control(load_watch_control() | 0x30003);
+   {
+@@ -159,16 +162,16 @@
+       u8 perm_value_3;
+       u8 *perm_address_2;
+       perm_address_2 = &perm_value_3;
+-      *perm_address_2 = *((volatile u8 *) 0x46c);
++      *perm_address_2 = port_bios_tick_byte();
+       tick = perm_value_3;
+     }
+-    while (tick == (*((volatile u8 *) 0x46c)))
++    while (tick == (port_bios_tick_byte()))
+     {
+     }
+ 
+     load_enable_interrupts();
+-    tick = *((volatile u8 *) 0x46c);
+-    while (tick == (*((volatile u8 *) 0x46c)))
++    tick = port_bios_tick_byte();
++    while (tick == (port_bios_tick_byte()))
+     {
+     }
+ 
+@@ -290,7 +293,7 @@
+           {
+             fread(&wldobj[des_index].animations[i].layers_per_frame, 2, 1, fp);
+             fread(&wldobj[des_index].animations[i].frames_count, 2, 1, fp);
+-            fread(&wldobj[des_index].animations[i].frames, 4, 1, fp);
++            port_fread_pointer_word(&wldobj[des_index].animations[i].frames, fp);  /* PORT: 32-bit file word into a pointer field */
+             fread(&layer_payload_bytes, 2, 1, fp);
+             wldobj[des_index].animations[i].layers = (anim_layer_t *) block_malloc(mem_world, layer_payload_bytes);
+             fread(wldobj[des_index].animations[i].layers, 1, layer_payload_bytes, fp);
+@@ -398,6 +401,7 @@
+     char *full_filename, *error_buffer;
+     FILE *fp;
+     s32 event_offset, texture_data_size;
++    port_obj_words_t *port_obj_words;  /* PORT */
+     u32 x_texture_count, x_code_size;
+     s32 texture_offset, image_offset;
+     s32 i;
+@@ -441,7 +445,7 @@
+         fread(mp.map, sizeof(map_tile_t), mp.length, fp);
+         fread(&static_background_slot, 1, 1, fp);
+         fread(&scroll_background_slot, 1, 1, fp);
+-        fread(&ScrollDiffSprites, 4, 1, fp);
++        port_fread_pointer_word(&ScrollDiffSprites, fp);  /* PORT: 32-bit file word into a pointer field */
+         if (ScrollDiffSprites == (obj_t *)-1) ScrollDiffSprites = NULL;
+         else {
+             ScrollDiffSprites = &wldobj[(s32)ScrollDiffSprites];
+@@ -547,13 +551,16 @@
+         (memset)(level.objects, 0, sizeof(obj_t) * level.nb_objects);
+         link_init = (s16 *)block_malloc(mem_level, 2 * level.nb_objects + 1);
+         fread(link_init, 2, level.nb_objects, fp);
+-        fread(level.objects, sizeof(obj_t), level.nb_objects, fp);
++        /* PORT: the 132-byte DOS instance records are decoded into native obj_t (game/dos_records.c); their four
++           pointer-shaped index words are rebound below exactly as DOS did. */
++        port_obj_words = (port_obj_words_t *)malloc(sizeof(port_obj_words_t) * level.nb_objects);  /* port scratch, not the game pool */
++        port_read_obj_records(level.objects, level.nb_objects, port_obj_words, fp);
+         for (i = 0; i < level.nb_objects; i++) {
+             load_break_level_object();
+-            level.objects[i].sprites = wldobj[(s16)(s32)level.objects[i].sprites].sprites;
+-            level.objects[i].animations = wldobj[(s16)(s32)level.objects[i].animations].animations;
+-            level.objects[i].img_buffer = wldobj[(s16)(s32)level.objects[i].img_buffer].img_buffer;
+-            level.objects[i].eta = loaded_eta[(s16)(s32)level.objects[i].eta];
++            level.objects[i].sprites = wldobj[(s16)port_obj_words[i].sprites].sprites;
++            level.objects[i].animations = wldobj[(s16)port_obj_words[i].animations].animations;
++            level.objects[i].img_buffer = wldobj[(s16)port_obj_words[i].img_buffer].img_buffer;
++            level.objects[i].eta = loaded_eta[(s16)port_obj_words[i].eta];
+             fread(&cmd_count, 2, 1, fp);
+             fread(&label_count, 2, 1, fp);
+             if (cmd_count != 0) {
+@@ -565,6 +572,7 @@
+                 fread(level.objects[i].cmd_labels, 2, label_count, fp);
+             } else level.objects[i].cmd_labels = NULL;
+         }
++        free(port_obj_words);  /* PORT */
+         load_break_level_close();
+         fclose(fp);
+     }
+@@ -626,7 +634,7 @@
+       load_break_big_ray_animation();
+       fread(&wldobj[descriptor_index].animations[anim_index].layers_per_frame, 2, 1, fp);
+       fread(&wldobj[descriptor_index].animations[anim_index].frames_count, 2, 1, fp);
+-      fread(&wldobj[descriptor_index].animations[anim_index].frames, 4, 1, fp);
++      port_fread_pointer_word(&wldobj[descriptor_index].animations[anim_index].frames, fp);  /* PORT: 32-bit file word into a pointer field */
+       fread(&layer_payload_bytes, 2, 1, fp);
+       wldobj[descriptor_index].animations[anim_index].layers = (anim_layer_t *) block_malloc(mem_big_ray, layer_payload_bytes);
+       fread(wldobj[descriptor_index].animations[anim_index].layers, 1, layer_payload_bytes, fp);
+@@ -715,7 +723,7 @@
+         nb_fix_des = nb_des;
+         for (descriptor_index = 1; descriptor_index < nb_des; descriptor_index++) {
+             u8 atlas_encoded_checksum;
+-            fread(&wldobj[descriptor_index].eta, 4, 1, fp);
++            port_fread_pointer_word(&wldobj[descriptor_index].eta, fp);  /* PORT: 32-bit file word into a pointer field */
+             if (wldobj[descriptor_index].eta == (eta_t **)-1) wldobj[descriptor_index].eta = NULL;
+             else wldobj[descriptor_index].eta = loaded_eta[(s32)wldobj[descriptor_index].eta];
+             fread(&RaymanExeSize, 4, 1, fp);
+@@ -757,7 +765,7 @@
+                     u16 layer_payload_bytes;
+                     fread(&wldobj[descriptor_index].animations[i].layers_per_frame, 2, 1, fp);
+                     fread(&wldobj[descriptor_index].animations[i].frames_count, 2, 1, fp);
+-                    fread(&wldobj[descriptor_index].animations[i].frames, 4, 1, fp);
++                    port_fread_pointer_word(&wldobj[descriptor_index].animations[i].frames, fp);  /* PORT: 32-bit file word into a pointer field */
+                     fread(&layer_payload_bytes, 2, 1, fp);
+                     wldobj[descriptor_index].animations[i].layers = (anim_layer_t *)block_malloc(&main_mem_fix, layer_payload_bytes);
+                     fread(wldobj[descriptor_index].animations[i].layers, 1, layer_payload_bytes, fp);

@@ -28,7 +28,7 @@
    "global:draw_buffer",
    "global:menuEtape",
    "global:p1",
-   "global:pal",
+   "global:PalFire",
    "global:plasma_palette_color_index",
    "global:rvb",
    "global:word_95FA0",
@@ -1769,13 +1769,13 @@
    "name_provenance": "Android original symbol",
    "oracle_address": "1:143e0",
    "source_file": "src/box.c",
-   "source_body_sha256": "065ab68eed8a8d11f466c21a58edee77a2573c3fd35646a80673d5397971cd4e",
+   "source_body_sha256": "ebbec4812c9cd0a8d696035d595eaf0f44d502c29aa7a8a9928c341441354274",
    "baseline_parser_body_sha256": "065ab68eed8a8d11f466c21a58edee77a2573c3fd35646a80673d5397971cd4e",
    "readers_writers": {
     "globals": [
      "menuEtape",
      "p1",
-     "pal",
+     "PalFire",
      "plasma_palette_color_index",
      "rvb"
     ],
@@ -6635,7 +6635,7 @@
  ],
  "unit_local_type_aliases": [],
  "source_fingerprints": {
-  "src/box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "src/box.c": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb",
   "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
   "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
   "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
@@ -6646,7 +6646,7 @@
  },
  "proposal_fingerprints": {
   "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
-  "box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "box.c": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb",
   "cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
   "cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
   "cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",

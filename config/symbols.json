@@ -10009,12 +10009,6 @@
     "name": "ANDROID",
     "evidence": "Android x86 .data/.rodata object 'PalPlasma' (48 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
    },
-   "pal": {
-    "addr": "2:5fb2",
-    "size": 48,
-    "name": "ANDROID",
-    "evidence": "Android x86 .data/.rodata object 'pal' (48 bytes) found once in DOS initialised data by content (tools/androiddata.py)"
-   },
    "CBdata": {
     "addr": "2:6018",
     "size": 646,
@@ -18232,6 +18226,15 @@
     "name": "INVENTED",
     "evidence": "DOS cdaudio passes 2:4e8a2 to sub_564f8 (dos_regs_t* parameter: ax +0, bx +2, cx +4, ..., es +18, ss +20) at every INT 2Fh call; the former bindings cd_packet_command_word/argument_low/argument_high/segment were its ax/bx/cx/es fields. Natural-link runtime 2026-10-23 proved the split broke ES:BX.",
     "size": 22
+   },
+   "PalFire": {
+    "addr": "2:5fb2",
+    "size": 48,
+    "name": "ANDROID",
+    "evidence": "Android x86 .data/.rodata object 'pal' (48 bytes) found once in DOS initialised data by content (tools/androiddata.py); defined as PalFire by src/data/blk_5fa0.c (one address = one symbol: box.c InitFire uses that name)",
+    "aliases": [
+     "pal"
+    ]
    }
   }
  },
