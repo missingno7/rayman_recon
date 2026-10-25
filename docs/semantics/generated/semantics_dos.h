@@ -1885,5 +1885,964 @@
 /* PROVEN: Historical diagnostic high-water value;fallback updates compare pool capacity+single request,not sum of all live heap fallbacks. */
 #define DOS_MEM_USAGE_STATS_T_TEMP_PEAK_OFFSET 0x24
 #define DOS_MEM_USAGE_STATS_T_TEMP_PEAK_SIZE 4
+#define DOS_DOS_REGS_T_SIZE 22
+/* PROVEN: Low16 AX input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_AX_OFFSET 0x0
+#define DOS_DOS_REGS_T_AX_SIZE 2
+/* PROVEN: Low16 BX input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_BX_OFFSET 0x2
+#define DOS_DOS_REGS_T_BX_SIZE 2
+/* PROVEN: Low16 CX input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_CX_OFFSET 0x4
+#define DOS_DOS_REGS_T_CX_SIZE 2
+/* PROVEN: Low16 DX input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_DX_OFFSET 0x6
+#define DOS_DOS_REGS_T_DX_SIZE 2
+/* PROVEN: Low16 SI input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_SI_OFFSET 0x8
+#define DOS_DOS_REGS_T_SI_SIZE 2
+/* PROVEN: Low16 DI input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_DI_OFFSET 0xa
+#define DOS_DOS_REGS_T_DI_SIZE 2
+/* PROVEN: Low16 FLAGS input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_FLAGS_OFFSET 0xc
+#define DOS_DOS_REGS_T_FLAGS_SIZE 2
+/* PROVEN: Low16 CS input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_CS_OFFSET 0xe
+#define DOS_DOS_REGS_T_CS_SIZE 2
+/* PROVEN: Low16 DS input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_DS_OFFSET 0x10
+#define DOS_DOS_REGS_T_DS_SIZE 2
+/* PROVEN: Low16 ES input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_ES_OFFSET 0x12
+#define DOS_DOS_REGS_T_ES_SIZE 2
+/* PROVEN: Low16 SS input/output copied to/from DPMI real-mode register frame. */
+#define DOS_DOS_REGS_T_SS_OFFSET 0x14
+#define DOS_DOS_REGS_T_SS_SIZE 2
+#define DOS_DOS_CD_DISC_INFO_T_SIZE 1311
+/* PROVEN: Last track+1-first track narrowed to byte. */
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_COUNT_OFFSET 0x0
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_COUNT_SIZE 1
+/* PROVEN: First track number from IOCTL0Ah. */
+#define DOS_DOS_CD_DISC_INFO_T_FIRST_TRACK_OFFSET 0x1
+#define DOS_DOS_CD_DISC_INFO_T_FIRST_TRACK_SIZE 1
+/* PROVEN: Last track number from IOCTL0Ah. */
+#define DOS_DOS_CD_DISC_INFO_T_LAST_TRACK_OFFSET 0x2
+#define DOS_DOS_CD_DISC_INFO_T_LAST_TRACK_SIZE 1
+/* PROVEN: Raw packed MSF lead-out address returned by IOCTL0Ah; inherited lba name is misleading. */
+#define DOS_DOS_CD_DISC_INFO_T_LEADOUT_LBA_OFFSET 0x3
+#define DOS_DOS_CD_DISC_INFO_T_LEADOUT_LBA_SIZE 4
+/* PROVEN: Packed MSF track starts indexed by track number; temporary last+1 slot is used during duration computation then zeroed. */
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_START_OFFSET 0x7
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_START_SIZE 400
+/* PROVEN: Packed MSF total disc duration after subtracting converted first-track start from lead-out; no lead-in added by re-packer. */
+#define DOS_DOS_CD_DISC_INFO_T_LEADOUT_OFFSET 0x197
+#define DOS_DOS_CD_DISC_INFO_T_LEADOUT_SIZE 4
+/* PROVEN: Sector duration computed from adjacent converted starts, same as track_length; used as playback byte18 length. */
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_END_OFFSET 0x19b
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_END_SIZE 400
+/* PROVEN: Sector duration computed from adjacent starts, used for partial-track remaining length. */
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_LENGTH_OFFSET 0x32b
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_LENGTH_SIZE 400
+/* PROVEN: Per-track control byte from IOCTL0Bh; bit40h distinguishes data from audio. */
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_FLAGS_OFFSET 0x4bb
+#define DOS_DOS_CD_DISC_INFO_T_TRACK_FLAGS_SIZE 100
+#define DOS_CD_FAR_PARTS_T_SIZE 6
+/* PROVEN: Offset32 part of the six-byte protected far pointer. CD_OFFSET macro stores allocation-relative request offsets through this exact member. */
+#define DOS_CD_FAR_PARTS_T_OFFSET_OFFSET 0x0
+#define DOS_CD_FAR_PARTS_T_OFFSET_SIZE 4
+/* PROVEN: Selector16 part of protected far pointer, filled from DPMI allocation DX by CD_SELECTOR macro. */
+#define DOS_CD_FAR_PARTS_T_SELECTOR_OFFSET 0x4
+#define DOS_CD_FAR_PARTS_T_SELECTOR_SIZE 2
+#define DOS_CD_STATUS_WORD_PTR_T_SIZE 6
+#define DOS_VOICE_T_SIZE 12
+/* PROVEN: Game owner id; -1 is Rayman, -2 detached/free/unowned. */
+#define DOS_VOICE_T_OBJ_OFFSET 0x0
+#define DOS_VOICE_T_OBJ_SIZE 2
+/* PROVEN: Most recent distance attenuation value before master/cue gain scaling. */
+#define DOS_VOICE_T_VOL_OFFSET 0x2
+#define DOS_VOICE_T_VOL_SIZE 2
+/* PROVEN: Most recent position-derived pan; applied by a later KeyVol update. */
+#define DOS_VOICE_T_PAN_OFFSET 0x4
+#define DOS_VOICE_T_PAN_SIZE 2
+/* PROVEN: Numeric cue id assigned for owned PlaySnd voices; -1 marks detached sound. PlaySnd_old does not populate this word. */
+#define DOS_VOICE_T_SND_OFFSET 0x6
+#define DOS_VOICE_T_SND_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_VOICE_T_FIELD_8_OFFSET 0x8
+#define DOS_VOICE_T_FIELD_8_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_VOICE_T_FIELD_A_OFFSET 0xa
+#define DOS_VOICE_T_FIELD_A_SIZE 2
+#define DOS_PILE_SND_T_SIZE 24
+/* PROVEN: Delayed cue owner id, using the same Rayman/free conventions as live voices. */
+#define DOS_PILE_SND_T_OBJ_OFFSET 0x0
+#define DOS_PILE_SND_T_OBJ_SIZE 2
+/* PROVEN: Numeric cue id, replaced once by snd_bis when followup latch is set. */
+#define DOS_PILE_SND_T_SND_OFFSET 0x2
+#define DOS_PILE_SND_T_SND_SIZE 2
+/* PROVEN: Resolved sample program saved before delay. */
+#define DOS_PILE_SND_T_PROG_OFFSET 0x4
+#define DOS_PILE_SND_T_PROG_SIZE 2
+/* PROVEN: Table tone byte widened to word and forwarded to unused KeyOn tone parameter. */
+#define DOS_PILE_SND_T_TONE_OFFSET 0x6
+#define DOS_PILE_SND_T_TONE_SIZE 2
+/* PROVEN: Resolved pitch-table index saved before delay. */
+#define DOS_PILE_SND_T_NOTE_OFFSET 0x8
+#define DOS_PILE_SND_T_NOTE_SIZE 2
+/* PROVEN: Per-cue relative gain saved from hard_sound_table. */
+#define DOS_PILE_SND_T_VOL_OFFSET 0xa
+#define DOS_PILE_SND_T_VOL_SIZE 2
+/* PROVEN: Current distance attenuation0..127 copied when queued and refreshed by setvol. */
+#define DOS_PILE_SND_T_FIELD_C_OFFSET 0xc
+#define DOS_PILE_SND_T_FIELD_C_SIZE 2
+/* PROVEN: Queued spatial pan, refreshed by setpan before deferred KeyOn. */
+#define DOS_PILE_SND_T_PAN_OFFSET 0xe
+#define DOS_PILE_SND_T_PAN_SIZE 2
+/* PROVEN: Due map_time value; exact equality starts sample and unsigned strict-less cleanup discards expired entry. */
+#define DOS_PILE_SND_T_END_TIME_OFFSET 0x10
+#define DOS_PILE_SND_T_END_TIME_SIZE 4
+/* PROVEN: One-followup latch from snd_bis!=0; clear after scheduling followup. */
+#define DOS_PILE_SND_T_FIELD_14_OFFSET 0x14
+#define DOS_PILE_SND_T_FIELD_14_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_PILE_SND_T_FIELD_16_OFFSET 0x16
+#define DOS_PILE_SND_T_FIELD_16_SIZE 2
+#define DOS_SOUND_TABLE_ENTRY_T_SIZE 4
+/* PROVEN: Index into pitchTab; cue-specific paths can add note offsets. */
+#define DOS_SOUND_TABLE_ENTRY_T_NOTE_OFFSET 0x0
+#define DOS_SOUND_TABLE_ENTRY_T_NOTE_SIZE 1
+/* PROVEN: Sample program in128-entry bank;255 means disabled. */
+#define DOS_SOUND_TABLE_ENTRY_T_PROG_OFFSET 0x1
+#define DOS_SOUND_TABLE_ENTRY_T_PROG_SIZE 1
+/* PROVEN: Argument forwarded through sound routing; DOS KeyOn ignores it. */
+#define DOS_SOUND_TABLE_ENTRY_T_TONE_OFFSET 0x2
+#define DOS_SOUND_TABLE_ENTRY_T_TONE_SIZE 1
+/* PROVEN: Cue gain multiplied by master and distance gain before >>14 or master-only >>7. */
+#define DOS_SOUND_TABLE_ENTRY_T_VOLUME_OFFSET 0x3
+#define DOS_SOUND_TABLE_ENTRY_T_VOLUME_SIZE 1
+#define DOS_BOOL_SIZE 1
+#define DOS_ARCHIVE_HEADER_T_SIZE 12
+/* PROVEN: Archive file offset passed to fseek. */
+#define DOS_ARCHIVE_HEADER_T_OFFSET_OFFSET 0x0
+#define DOS_ARCHIVE_HEADER_T_OFFSET_SIZE 4
+/* PROVEN: Encoded payload byte length. */
+#define DOS_ARCHIVE_HEADER_T_SIZE_OFFSET 0x4
+#define DOS_ARCHIVE_HEADER_T_SIZE_SIZE 4
+/* PROVEN: XOR key applied to every encoded byte after subtracting that encoded byte from checksum residual. */
+#define DOS_ARCHIVE_HEADER_T_XOR_BYTE_OFFSET 0x8
+#define DOS_ARCHIVE_HEADER_T_XOR_BYTE_SIZE 1
+/* PROVEN: Initial8-bit residual, sum(encoded bytes) modulo256; valid decode finishes at0. */
+#define DOS_ARCHIVE_HEADER_T_CHECKSUM_BYTE_OFFSET 0x9
+#define DOS_ARCHIVE_HEADER_T_CHECKSUM_BYTE_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_ARCHIVE_HEADER_T_PAD_OFFSET 0xa
+#define DOS_ARCHIVE_HEADER_T_PAD_SIZE 2
+#define DOS_BNK_HEADER_T_SIZE 16
+/* PROVEN: Relocated sample data pointer after bank load; serialized value is byte offset within decoded data bank. */
+#define DOS_BNK_HEADER_T_OFFSET_OFFSET 0x0
+#define DOS_BNK_HEADER_T_OFFSET_SIZE 4
+/* PROVEN: Sample byte length; effects are U8 mono. */
+#define DOS_BNK_HEADER_T_SIZE_OFFSET 0x4
+#define DOS_BNK_HEADER_T_SIZE_SIZE 4
+/* PROVEN: Loop byte start within sample, copied to request+30h. */
+#define DOS_BNK_HEADER_T_FIELD_8_OFFSET 0x8
+#define DOS_BNK_HEADER_T_FIELD_8_SIZE 4
+/* PROVEN: Loop byte length, not absolute end; zero disables looping. */
+#define DOS_BNK_HEADER_T_FIELD_C_OFFSET 0xc
+#define DOS_BNK_HEADER_T_FIELD_C_SIZE 4
+#define DOS_DOS_SOUND_CONFIG_T_SIZE 36
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_CONFIG_T_RESERVED_00_OFFSET 0x0
+#define DOS_DOS_SOUND_CONFIG_T_RESERVED_00_SIZE 16
+/* PROVEN: SDK wSampleRate at+10h, written10000 before driver init. */
+#define DOS_DOS_SOUND_CONFIG_T_TIMEOUT_OFFSET 0x10
+#define DOS_DOS_SOUND_CONFIG_T_TIMEOUT_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_CONFIG_T_RESERVED_14_OFFSET 0x14
+#define DOS_DOS_SOUND_CONFIG_T_RESERVED_14_SIZE 8
+/* PROVEN: Mixer fill callback pointer returned/populated through driver initialization, registered with timer. */
+#define DOS_DOS_SOUND_CONFIG_T_CALLBACK_OFFSET 0x1c
+#define DOS_DOS_SOUND_CONFIG_T_CALLBACK_SIZE 6
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_CONFIG_T_PAD_22_OFFSET 0x22
+#define DOS_DOS_SOUND_CONFIG_T_PAD_22_SIZE 2
+#define DOS_DOS_SOUND_REQUEST_T_SIZE 116
+/* PROVEN: Far pointer to mono PCM source bytes. */
+#define DOS_DOS_SOUND_REQUEST_T_DATA_OFFSET 0x0
+#define DOS_DOS_SOUND_REQUEST_T_DATA_SIZE 6
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_REQUEST_T_POINTER_PAD_OFFSET 0x6
+#define DOS_DOS_SOUND_REQUEST_T_POINTER_PAD_SIZE 2
+/* PROVEN: PCM source byte length, not frames. */
+#define DOS_DOS_SOUND_REQUEST_T_SIZE_OFFSET 0x8
+#define DOS_DOS_SOUND_REQUEST_T_SIZE_SIZE 4
+/* PROVEN: SDK loop count: -1 for infinite staged loop. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_0C_OFFSET 0xc
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_0C_SIZE 4
+/* PROVEN: SDK channel selection; initialized2, center/mono source channel. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_10_OFFSET 0x10
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_10_SIZE 4
+/* PROVEN: SDK linear volume scaled signed input*32767/127. */
+#define DOS_DOS_SOUND_REQUEST_T_VOLUME_OFFSET 0x14
+#define DOS_DOS_SOUND_REQUEST_T_VOLUME_SIZE 4
+/* PROVEN: SDK sample-ID/callback/port ABI area: first dword initialized1 effects or2 speech; remaining slots retained from initializer. Not a numeric sound priority. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_18_OFFSET 0x18
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_18_SIZE 16
+/* PROVEN: SDK sample flags: effects0720h, speech0180h; looping OR4760h. */
+#define DOS_DOS_SOUND_REQUEST_T_FLAGS_OFFSET 0x28
+#define DOS_DOS_SOUND_REQUEST_T_FLAGS_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_2C_OFFSET 0x2c
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_2C_SIZE 4
+/* PROVEN: Loop byte start; source loop interval is[start,start+length). */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_30_OFFSET 0x30
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_30_SIZE 4
+/* PROVEN: Loop byte length, not inclusive endpoint. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_34_OFFSET 0x34
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_34_SIZE 4
+/* PROVEN: SDK dwSamplePitchAdd, Q16 source step pitchTab[note]<<8. Inherited sample_rate is not Hz. */
+#define DOS_DOS_SOUND_REQUEST_T_SAMPLE_RATE_OFFSET 0x38
+#define DOS_DOS_SOUND_REQUEST_T_SAMPLE_RATE_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_3C_OFFSET 0x3c
+#define DOS_DOS_SOUND_REQUEST_T_FIELD_3C_SIZE 4
+/* PROVEN: SDK pan location scaled pan*65535/127. */
+#define DOS_DOS_SOUND_REQUEST_T_PAN_OFFSET 0x40
+#define DOS_DOS_SOUND_REQUEST_T_PAN_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_DOS_SOUND_REQUEST_T_RESERVED_OFFSET 0x44
+#define DOS_DOS_SOUND_REQUEST_T_RESERVED_SIZE 48
+#define DOS_MOVIE_SURFACE_T_SIZE 12
+/* PROVEN: Borrowed indexed-color draw-surface base. */
+#define DOS_MOVIE_SURFACE_T_PIXELS_OFFSET 0x0
+#define DOS_MOVIE_SURFACE_T_PIXELS_SIZE 4
+/* PROVEN: Surface width, initialized320; single-pixel helper uses it as stride. */
+#define DOS_MOVIE_SURFACE_T_WIDTH_OFFSET 0x4
+#define DOS_MOVIE_SURFACE_T_WIDTH_SIZE 4
+/* PROVEN: Surface height, initialized200 and used for centering. */
+#define DOS_MOVIE_SURFACE_T_HEIGHT_OFFSET 0x8
+#define DOS_MOVIE_SURFACE_T_HEIGHT_SIZE 4
+#define DOS_MOVIE_WORK_T_SIZE 153
+/* PROVEN: Header size word:12 is the compact12-byte-header discriminator; not the actual full file byte length for shipped compact movies. */
+#define DOS_MOVIE_WORK_T_FILE_SIZE_OFFSET 0x0
+#define DOS_MOVIE_WORK_T_FILE_SIZE_SIZE 4
+/* PROVEN: AF12h FLC or AF11h FLI discriminator, rejected otherwise. */
+#define DOS_MOVIE_WORK_T_FILE_MAGIC_OFFSET 0x4
+#define DOS_MOVIE_WORK_T_FILE_MAGIC_SIZE 2
+/* PROVEN: Header frame count used by once/loop decode loops; not inferred from EOF. */
+#define DOS_MOVIE_WORK_T_FRAME_COUNT_OFFSET 0x6
+#define DOS_MOVIE_WORK_T_FRAME_COUNT_SIZE 2
+/* PROVEN: Movie row width; accepted only<=320 and used for decoder/copy row length. */
+#define DOS_MOVIE_WORK_T_WIDTH_OFFSET 0x8
+#define DOS_MOVIE_WORK_T_WIDTH_SIZE 2
+/* PROVEN: Movie height; accepted only<=200. */
+#define DOS_MOVIE_WORK_T_HEIGHT_OFFSET 0xa
+#define DOS_MOVIE_WORK_T_HEIGHT_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_WORK_T_DEPTH_OFFSET 0xc
+#define DOS_MOVIE_WORK_T_DEPTH_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_WORK_T_FLAGS_OFFSET 0xe
+#define DOS_MOVIE_WORK_T_FLAGS_SIZE 2
+/* PROVEN: Header frame delay normalized to milliseconds for FLI or30 for compact FLC; playback pacing code does not read it. */
+#define DOS_MOVIE_WORK_T_SPEED_OFFSET 0x10
+#define DOS_MOVIE_WORK_T_SPEED_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_WORK_T_RESERVED14_OFFSET 0x14
+#define DOS_MOVIE_WORK_T_RESERVED14_SIZE 60
+/* PROVEN: First frame file position: compact12, standard FLI128, standard FLC header+50h. */
+#define DOS_MOVIE_WORK_T_DATA_OFFSET_OFFSET 0x50
+#define DOS_MOVIE_WORK_T_DATA_OFFSET_SIZE 4
+/* PROVEN: Second-frame offset cached for looping after decoding the first frame once. */
+#define DOS_MOVIE_WORK_T_CURRENT_OFFSET_OFFSET 0x54
+#define DOS_MOVIE_WORK_T_CURRENT_OFFSET_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_WORK_T_RESERVED58_OFFSET 0x58
+#define DOS_MOVIE_WORK_T_RESERVED58_SIZE 40
+/* PROVEN: Open binary-read file descriptor, closed before clearing work. */
+#define DOS_MOVIE_WORK_T_FD_OFFSET 0x80
+#define DOS_MOVIE_WORK_T_FD_SIZE 4
+/* PROVEN: One-based decoded frame index after preincrement; looping resets1 before reading second frame. */
+#define DOS_MOVIE_WORK_T_FRAME_INDEX_OFFSET 0x84
+#define DOS_MOVIE_WORK_T_FRAME_INDEX_SIZE 4
+/* PROVEN: Borrowed pointer to resolved local.path string. */
+#define DOS_MOVIE_WORK_T_PATH_OFFSET 0x88
+#define DOS_MOVIE_WORK_T_PATH_SIZE 4
+/* PROVEN: Centered left coordinate (surface.width-movie.width)/2. */
+#define DOS_MOVIE_WORK_T_X_OFFSET_OFFSET 0x8c
+#define DOS_MOVIE_WORK_T_X_OFFSET_SIZE 4
+/* PROVEN: Centered top coordinate (surface.height-movie.height)/2. */
+#define DOS_MOVIE_WORK_T_Y_OFFSET_OFFSET 0x90
+#define DOS_MOVIE_WORK_T_Y_OFFSET_SIZE 4
+/* PROVEN: Centered movie origin x_offset+320*y_offset. */
+#define DOS_MOVIE_WORK_T_SURFACE_OFFSET_OFFSET 0x94
+#define DOS_MOVIE_WORK_T_SURFACE_OFFSET_SIZE 4
+/* PROVEN: Requested CD audio track number supplied by playVideo2 (intro20/conclusion21), zero disables CD accompaniment. */
+#define DOS_MOVIE_WORK_T_SOUND_MODE_OFFSET 0x98
+#define DOS_MOVIE_WORK_T_SOUND_MODE_SIZE 1
+#define DOS_MOVIE_FRAME_HEADER_T_SIZE 16
+/* PROVEN: Total frame bytes including16-byte header. */
+#define DOS_MOVIE_FRAME_HEADER_T_SIZE_OFFSET 0x0
+#define DOS_MOVIE_FRAME_HEADER_T_SIZE_SIZE 4
+/* PROVEN: Frame signatureF1FAh. */
+#define DOS_MOVIE_FRAME_HEADER_T_MAGIC_OFFSET 0x4
+#define DOS_MOVIE_FRAME_HEADER_T_MAGIC_SIZE 2
+/* PROVEN: Signed16 number of chunk records iterated by dispatcher. */
+#define DOS_MOVIE_FRAME_HEADER_T_CHUNKS_OFFSET 0x6
+#define DOS_MOVIE_FRAME_HEADER_T_CHUNKS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_FRAME_HEADER_T_RESERVED_OFFSET 0x8
+#define DOS_MOVIE_FRAME_HEADER_T_RESERVED_SIZE 8
+#define DOS_MOVIE_CHUNK_T_SIZE 6
+/* PROVEN: Total chunk bytes including six-byte prefix; determines next chunk pointer. */
+#define DOS_MOVIE_CHUNK_T_SIZE_OFFSET 0x0
+#define DOS_MOVIE_CHUNK_T_SIZE_SIZE 4
+/* PROVEN: Chunk discriminator; supported4/7/11/12/13/15/16, unknown types skipped. */
+#define DOS_MOVIE_CHUNK_T_TYPE_OFFSET 0x4
+#define DOS_MOVIE_CHUNK_T_TYPE_SIZE 2
+#define DOS_MOVIE_PALETTE_WRITER_T_SIZE 4
+#define DOS_MOVIE_LOCAL_T_SIZE 308
+/* PROVEN: First152 bytes of153-byte packed movie work descriptor; next sound_mode byte completes it. */
+#define DOS_MOVIE_LOCAL_T_WORK_OFFSET 0x0
+#define DOS_MOVIE_LOCAL_T_WORK_SIZE 152
+/* PROVEN: Byte completing movie_work_t at+98h; requested CD audio track. */
+#define DOS_MOVIE_LOCAL_T_SOUND_MODE_OFFSET 0x98
+#define DOS_MOVIE_LOCAL_T_SOUND_MODE_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_MOVIE_LOCAL_T_PAD_OFFSET 0x99
+#define DOS_MOVIE_LOCAL_T_PAD_SIZE 3
+/* PROVEN: Resolved filename passed to probe/open and borrowed by work.path. */
+#define DOS_MOVIE_LOCAL_T_PATH_OFFSET 0x9c
+#define DOS_MOVIE_LOCAL_T_PATH_SIZE 128
+/* PROVEN: 24-byte surface/timer context:12-byte surface prefix and timer scale at byte17. */
+#define DOS_MOVIE_LOCAL_T_INFO_OFFSET 0x11c
+#define DOS_MOVIE_LOCAL_T_INFO_SIZE 24
+#define DOS_VGA_REGISTER_T_SIZE 2
+/* PROVEN: Combined16-bit OUT DX,AX value with low index byte and high data byte. */
+#define DOS_VGA_REGISTER_T_WORD_OFFSET 0x0
+#define DOS_VGA_REGISTER_T_WORD_SIZE 2
+/* PROVEN: Two-byte index/data view over the OUT word. */
+#define DOS_VGA_REGISTER_T_BYTE_OFFSET 0x0
+#define DOS_VGA_REGISTER_T_BYTE_SIZE 2
+/* PROVEN: Low output byte: VGA read-map index4 or sequencer map-mask index2. */
+#define DOS_VGA_REGISTER_T_BYTE_INDEX_OFFSET 0x0
+#define DOS_VGA_REGISTER_T_BYTE_INDEX_SIZE 1
+/* PROVEN: High output byte: read-plane0..3 or write-plane bit mask1/2/4/8. */
+#define DOS_VGA_REGISTER_T_BYTE_VALUE_OFFSET 0x1
+#define DOS_VGA_REGISTER_T_BYTE_VALUE_SIZE 1
+#define DOS_EFFECT_ITEM_T_SIZE 108
+/* PROVEN: Unprojected corner0 x coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_X0_OFFSET 0x0
+#define DOS_EFFECT_ITEM_T_X0_SIZE 4
+/* PROVEN: Unprojected corner0 y coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_Y0_OFFSET 0x4
+#define DOS_EFFECT_ITEM_T_Y0_SIZE 4
+/* PROVEN: Corner0 depth coordinate initialized512 and incremented by sort_key, despite inherited width name. */
+#define DOS_EFFECT_ITEM_T_WIDTH0_OFFSET 0x8
+#define DOS_EFFECT_ITEM_T_WIDTH0_SIZE 4
+/* PROVEN: Unprojected corner1 x coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_X1_OFFSET 0xc
+#define DOS_EFFECT_ITEM_T_X1_SIZE 4
+/* PROVEN: Unprojected corner1 y coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_Y1_OFFSET 0x10
+#define DOS_EFFECT_ITEM_T_Y1_SIZE 4
+/* PROVEN: Corner1 depth coordinate, same update/projection convention as corner0. */
+#define DOS_EFFECT_ITEM_T_WIDTH1_OFFSET 0x14
+#define DOS_EFFECT_ITEM_T_WIDTH1_SIZE 4
+/* PROVEN: Unprojected corner2 x coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_X2_OFFSET 0x18
+#define DOS_EFFECT_ITEM_T_X2_SIZE 4
+/* PROVEN: Unprojected corner2 y coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_Y2_OFFSET 0x1c
+#define DOS_EFFECT_ITEM_T_Y2_SIZE 4
+/* PROVEN: Corner2 depth coordinate, same update/projection convention as corner0. */
+#define DOS_EFFECT_ITEM_T_WIDTH2_OFFSET 0x20
+#define DOS_EFFECT_ITEM_T_WIDTH2_SIZE 4
+/* PROVEN: Unprojected corner3 x coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_X3_OFFSET 0x24
+#define DOS_EFFECT_ITEM_T_X3_SIZE 4
+/* PROVEN: Unprojected corner3 y coordinate, translated and rotated around fragment center. */
+#define DOS_EFFECT_ITEM_T_Y3_OFFSET 0x28
+#define DOS_EFFECT_ITEM_T_Y3_SIZE 4
+/* PROVEN: Corner3 depth coordinate, same update/projection convention as corner0. */
+#define DOS_EFFECT_ITEM_T_WIDTH3_OFFSET 0x2c
+#define DOS_EFFECT_ITEM_T_WIDTH3_SIZE 4
+/* PROVEN: Per-substep horizontal translation: rand()%3 or rand()%3-2 selected by item index%10. */
+#define DOS_EFFECT_ITEM_T_RANDOM_X_OFFSET 0x30
+#define DOS_EFFECT_ITEM_T_RANDOM_X_SIZE 2
+/* PROVEN: Per-substep vertical translation initialized rand()%8-6; gravity adds step every fifth frame after20. */
+#define DOS_EFFECT_ITEM_T_RANDOM_Y_OFFSET 0x32
+#define DOS_EFFECT_ITEM_T_RANDOM_Y_SIZE 2
+/* PROVEN: Signed16 depth step shared by four corners and initial descending draw-order sort; reset0 if a pre-update depth<50. */
+#define DOS_EFFECT_ITEM_T_SORT_KEY_OFFSET 0x34
+#define DOS_EFFECT_ITEM_T_SORT_KEY_SIZE 2
+/* PROVEN: Wrapping byte X-axis angle accumulator, doubled before sinus_cosinus; not a palette color. */
+#define DOS_EFFECT_ITEM_T_COLOR_R_OFFSET 0x36
+#define DOS_EFFECT_ITEM_T_COLOR_R_SIZE 1
+/* PROVEN: Wrapping byte Y-axis angle accumulator, doubled before sinus_cosinus. */
+#define DOS_EFFECT_ITEM_T_COLOR_G_OFFSET 0x37
+#define DOS_EFFECT_ITEM_T_COLOR_G_SIZE 1
+/* PROVEN: Wrapping byte Z-axis angle accumulator, doubled before sinus_cosinus. */
+#define DOS_EFFECT_ITEM_T_COLOR_B_OFFSET 0x38
+#define DOS_EFFECT_ITEM_T_COLOR_B_SIZE 1
+/* PROVEN: Wrapping X-angle byte increment factor, sampled rand()%5+2. */
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_R_OFFSET 0x39
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_R_SIZE 1
+/* PROVEN: Wrapping Y-angle byte increment factor. */
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_G_OFFSET 0x3a
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_G_SIZE 1
+/* PROVEN: Wrapping Z-angle byte increment factor. */
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_B_OFFSET 0x3b
+#define DOS_EFFECT_ITEM_T_COLOR_STEP_B_SIZE 1
+/* PROVEN: 256-pitch texture base for left/right half-screen. */
+#define DOS_EFFECT_ITEM_T_SCREEN_OFFSET 0x3c
+#define DOS_EFFECT_ITEM_T_SCREEN_SIZE 4
+/* PROVEN: Four projected signed32(x,y) pairs in rasterizer corner order. */
+#define DOS_EFFECT_ITEM_T_VERTICES_OFFSET 0x40
+#define DOS_EFFECT_ITEM_T_VERTICES_SIZE 32
+/* PROVEN: Four byte(u,v) texture corners, local to selected half-screen. */
+#define DOS_EFFECT_ITEM_T_RECTANGLE_OFFSET 0x60
+#define DOS_EFFECT_ITEM_T_RECTANGLE_SIZE 8
+/* PROVEN: Index into original fragment array; only these indices are swapped by sort. */
+#define DOS_EFFECT_ITEM_T_DRAW_ORDER_OFFSET 0x68
+#define DOS_EFFECT_ITEM_T_DRAW_ORDER_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_ITEM_T_RESERVED_6A_OFFSET 0x6a
+#define DOS_EFFECT_ITEM_T_RESERVED_6A_SIZE 2
+#define DOS_EFFECT_TILE_STATE_T_SIZE 32
+/* PROVEN: Stored byte grid column count, clamped to at least2 before narrowing. */
+#define DOS_EFFECT_TILE_STATE_T_COLUMNS_OFFSET 0x0
+#define DOS_EFFECT_TILE_STATE_T_COLUMNS_SIZE 1
+/* PROVEN: Stored byte grid row count, clamped to at least1 before narrowing. */
+#define DOS_EFFECT_TILE_STATE_T_ROWS_OFFSET 0x1
+#define DOS_EFFECT_TILE_STATE_T_ROWS_SIZE 1
+/* PROVEN: Number of cell/fragment records used by iteration/allocation. */
+#define DOS_EFFECT_TILE_STATE_T_COUNT_OFFSET 0x2
+#define DOS_EFFECT_TILE_STATE_T_COUNT_SIZE 2
+/* PROVEN: Unsigned16 progress advanced by absolute signed speed. */
+#define DOS_EFFECT_TILE_STATE_T_FRAME_OFFSET 0x4
+#define DOS_EFFECT_TILE_STATE_T_FRAME_SIZE 2
+/* PROVEN: Unsigned16 progress limit; reset0 when progress>limit. */
+#define DOS_EFFECT_TILE_STATE_T_FRAME_LIMIT_OFFSET 0x6
+#define DOS_EFFECT_TILE_STATE_T_FRAME_LIMIT_SIZE 2
+/* PROVEN: Normalized nonzero signed16 effect rate/direction; per-unit contract defines sign use. */
+#define DOS_EFFECT_TILE_STATE_T_SPEED_OFFSET 0x8
+#define DOS_EFFECT_TILE_STATE_T_SPEED_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_TILE_STATE_T_RESERVED_0A_OFFSET 0xa
+#define DOS_EFFECT_TILE_STATE_T_RESERVED_0A_SIZE 2
+/* PROVEN: Borrowed source320-pitch snapshot input. */
+#define DOS_EFFECT_TILE_STATE_T_SOURCE_OFFSET 0xc
+#define DOS_EFFECT_TILE_STATE_T_SOURCE_SIZE 4
+/* PROVEN: Borrowed320-pitch draw destination. */
+#define DOS_EFFECT_TILE_STATE_T_DESTINATION_OFFSET 0x10
+#define DOS_EFFECT_TILE_STATE_T_DESTINATION_SIZE 4
+/* PROVEN: Packed256-pitch first/cropped texture in EffetBufferNormal. */
+#define DOS_EFFECT_TILE_STATE_T_SCREEN_A_OFFSET 0x14
+#define DOS_EFFECT_TILE_STATE_T_SCREEN_A_SIZE 4
+/* PROVEN: Packed256-pitch second texture at+C800h, or0 for256-wide sphere crop. */
+#define DOS_EFFECT_TILE_STATE_T_SCREEN_B_OFFSET 0x18
+#define DOS_EFFECT_TILE_STATE_T_SCREEN_B_SIZE 4
+/* PROVEN: Owned cell/fragment records; record size specified by unit-local type. */
+#define DOS_EFFECT_TILE_STATE_T_ITEMS_OFFSET 0x1c
+#define DOS_EFFECT_TILE_STATE_T_ITEMS_SIZE 4
+#define DOS_EFFECT5_POINT_T_SIZE 10
+/* PROVEN: Sphere-space x coordinate truncated from setup sin/cos into signed16. */
+#define DOS_EFFECT5_POINT_T_X_OFFSET 0x0
+#define DOS_EFFECT5_POINT_T_X_SIZE 2
+/* PROVEN: Sphere-space y coordinate truncated from setup sin/cos into signed16. */
+#define DOS_EFFECT5_POINT_T_Y_OFFSET 0x2
+#define DOS_EFFECT5_POINT_T_Y_SIZE 2
+/* PROVEN: Sphere-space z coordinate truncated from setup sin/cos into signed16. */
+#define DOS_EFFECT5_POINT_T_Z_OFFSET 0x4
+#define DOS_EFFECT5_POINT_T_Z_SIZE 2
+/* PROVEN: Projected u coordinate narrowed to signed16 for drawing. */
+#define DOS_EFFECT5_POINT_T_U_OFFSET 0x6
+#define DOS_EFFECT5_POINT_T_U_SIZE 2
+/* PROVEN: Projected v coordinate narrowed to signed16 for drawing. */
+#define DOS_EFFECT5_POINT_T_V_OFFSET 0x8
+#define DOS_EFFECT5_POINT_T_V_SIZE 2
+#define DOS_EFFECT5_ITEM_T_SIZE 52
+/* PROVEN: Four indices into shared grid point array. */
+#define DOS_EFFECT5_ITEM_T_POINT_OFFSET 0x0
+#define DOS_EFFECT5_ITEM_T_POINT_SIZE 8
+/* PROVEN: 256-pitch crop/half texture base. */
+#define DOS_EFFECT5_ITEM_T_SCREEN_OFFSET 0x8
+#define DOS_EFFECT5_ITEM_T_SCREEN_SIZE 4
+/* PROVEN: Four signed32(x,y) pairs populated after backface test. */
+#define DOS_EFFECT5_ITEM_T_PROJECTED_OFFSET 0xc
+#define DOS_EFFECT5_ITEM_T_PROJECTED_SIZE 32
+/* PROVEN: Four byte(u,v) texture corners. */
+#define DOS_EFFECT5_ITEM_T_RECTANGLE_OFFSET 0x2c
+#define DOS_EFFECT5_ITEM_T_RECTANGLE_SIZE 8
+#define DOS_EFFECT5_STATE_T_SIZE 60
+/* PROVEN: Stored byte grid column count, clamped to at least2 before narrowing. */
+#define DOS_EFFECT5_STATE_T_COLUMNS_OFFSET 0x0
+#define DOS_EFFECT5_STATE_T_COLUMNS_SIZE 1
+/* PROVEN: Stored byte grid row count, clamped to at least1 before narrowing. */
+#define DOS_EFFECT5_STATE_T_ROWS_OFFSET 0x1
+#define DOS_EFFECT5_STATE_T_ROWS_SIZE 1
+/* PROVEN: Number of cell/fragment records used by iteration/allocation. */
+#define DOS_EFFECT5_STATE_T_COUNT_OFFSET 0x2
+#define DOS_EFFECT5_STATE_T_COUNT_SIZE 2
+/* PROVEN: Stored(columns+1)*(rows+1), calculated from original parameters before allocation. */
+#define DOS_EFFECT5_STATE_T_POINT_COUNT_OFFSET 0x4
+#define DOS_EFFECT5_STATE_T_POINT_COUNT_SIZE 2
+/* PROVEN: Unsigned16 progress advanced by absolute signed speed. */
+#define DOS_EFFECT5_STATE_T_FRAME_OFFSET 0x6
+#define DOS_EFFECT5_STATE_T_FRAME_SIZE 2
+/* PROVEN: Unsigned16 progress limit; reset0 when progress>limit. */
+#define DOS_EFFECT5_STATE_T_FRAME_LIMIT_OFFSET 0x8
+#define DOS_EFFECT5_STATE_T_FRAME_LIMIT_SIZE 2
+/* PROVEN: Normalized nonzero signed16 effect rate/direction; per-unit contract defines sign use. */
+#define DOS_EFFECT5_STATE_T_SPEED_OFFSET 0xa
+#define DOS_EFFECT5_STATE_T_SPEED_SIZE 2
+/* PROVEN: Byte sphere radius clamped40..70. */
+#define DOS_EFFECT5_STATE_T_RADIUS_OFFSET 0xc
+#define DOS_EFFECT5_STATE_T_RADIUS_SIZE 1
+/* PROVEN: 1 interpolation;2 initializes bounce state on next call;0 bouncing/rotating phase. */
+#define DOS_EFFECT5_STATE_T_MODE_OFFSET 0xd
+#define DOS_EFFECT5_STATE_T_MODE_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT5_STATE_T_RESERVED_0E_OFFSET 0xe
+#define DOS_EFFECT5_STATE_T_RESERVED_0E_SIZE 2
+/* PROVEN: Borrowed source320-pitch snapshot input. */
+#define DOS_EFFECT5_STATE_T_SOURCE_OFFSET 0x10
+#define DOS_EFFECT5_STATE_T_SOURCE_SIZE 4
+/* PROVEN: Borrowed320-pitch draw destination. */
+#define DOS_EFFECT5_STATE_T_DESTINATION_OFFSET 0x14
+#define DOS_EFFECT5_STATE_T_DESTINATION_SIZE 4
+/* PROVEN: Packed256-pitch first/cropped texture in EffetBufferNormal. */
+#define DOS_EFFECT5_STATE_T_SCREEN_A_OFFSET 0x18
+#define DOS_EFFECT5_STATE_T_SCREEN_A_SIZE 4
+/* PROVEN: Packed256-pitch second texture at+C800h, or0 for256-wide sphere crop. */
+#define DOS_EFFECT5_STATE_T_SCREEN_B_OFFSET 0x1c
+#define DOS_EFFECT5_STATE_T_SCREEN_B_SIZE 4
+/* PROVEN: Owned ten-byte sphere vertex array. */
+#define DOS_EFFECT5_STATE_T_POINTS_OFFSET 0x20
+#define DOS_EFFECT5_STATE_T_POINTS_SIZE 4
+/* PROVEN: Owned cell/fragment records; record size specified by unit-local type. */
+#define DOS_EFFECT5_STATE_T_ITEMS_OFFSET 0x24
+#define DOS_EFFECT5_STATE_T_ITEMS_SIZE 4
+/* PROVEN: Unsigned16 projection/bounce center x. */
+#define DOS_EFFECT5_STATE_T_CENTER_X_OFFSET 0x28
+#define DOS_EFFECT5_STATE_T_CENTER_X_SIZE 2
+/* PROVEN: Unsigned16 projection/bounce center y. */
+#define DOS_EFFECT5_STATE_T_CENTER_Y_OFFSET 0x2a
+#define DOS_EFFECT5_STATE_T_CENTER_Y_SIZE 2
+/* PROVEN: Signed16 horizontal bounce velocity, /4 then*abs(speed) for motion. */
+#define DOS_EFFECT5_STATE_T_VELOCITY_X_OFFSET 0x2c
+#define DOS_EFFECT5_STATE_T_VELOCITY_X_SIZE 2
+/* PROVEN: Signed16 vertical velocity; gravity+1 each bounce call before /4 motion. */
+#define DOS_EFFECT5_STATE_T_VELOCITY_Y_OFFSET 0x2e
+#define DOS_EFFECT5_STATE_T_VELOCITY_Y_SIZE 2
+/* PROVEN: Signed16 Q9-trig angle advanced2*abs(speed). */
+#define DOS_EFFECT5_STATE_T_ANGLE_X_OFFSET 0x30
+#define DOS_EFFECT5_STATE_T_ANGLE_X_SIZE 2
+/* PROVEN: Signed16 Q9-trig angle advanced4*abs(speed) once rotation latch set. */
+#define DOS_EFFECT5_STATE_T_ANGLE_Y_OFFSET 0x32
+#define DOS_EFFECT5_STATE_T_ANGLE_Y_SIZE 2
+/* PROVEN: Bottom-contact latch suppressing repeated vertical reflection. */
+#define DOS_EFFECT5_STATE_T_PHASE_X_OFFSET 0x34
+#define DOS_EFFECT5_STATE_T_PHASE_X_SIZE 1
+/* PROVEN: Side-contact latch suppressing repeated horizontal reflection. */
+#define DOS_EFFECT5_STATE_T_PHASE_Y_OFFSET 0x35
+#define DOS_EFFECT5_STATE_T_PHASE_Y_SIZE 1
+/* PROVEN: Latch enabling extra angle_y rotation after first bottom bounce. */
+#define DOS_EFFECT5_STATE_T_FLAGS_36_OFFSET 0x36
+#define DOS_EFFECT5_STATE_T_FLAGS_36_SIZE 1
+/* PROVEN: Latch disabling bottom bounce after subsequent right-edge contact, allowing sphere to fall offscreen. */
+#define DOS_EFFECT5_STATE_T_FLAGS_37_OFFSET 0x37
+#define DOS_EFFECT5_STATE_T_FLAGS_37_SIZE 1
+/* PROVEN: Records first right-edge contact; subsequent right-edge contact sets flags_37. */
+#define DOS_EFFECT5_STATE_T_FLAGS_38_OFFSET 0x38
+#define DOS_EFFECT5_STATE_T_FLAGS_38_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT5_STATE_T_RESERVED_39_OFFSET 0x39
+#define DOS_EFFECT5_STATE_T_RESERVED_39_SIZE 3
+#define DOS_EFFECT_SPAN_T_SIZE 10
+/* PROVEN: Signed16 source column before independent clipping. */
+#define DOS_EFFECT_SPAN_T_SOURCE_X_OFFSET 0x0
+#define DOS_EFFECT_SPAN_T_SOURCE_X_SIZE 2
+/* PROVEN: Signed16 source row, valid0..199. */
+#define DOS_EFFECT_SPAN_T_SOURCE_Y_OFFSET 0x2
+#define DOS_EFFECT_SPAN_T_SOURCE_Y_SIZE 2
+/* PROVEN: Signed16 destination column before independent clipping. */
+#define DOS_EFFECT_SPAN_T_DESTINATION_X_OFFSET 0x4
+#define DOS_EFFECT_SPAN_T_DESTINATION_X_SIZE 2
+/* PROVEN: Signed16 destination row, valid0..199. */
+#define DOS_EFFECT_SPAN_T_DESTINATION_Y_OFFSET 0x6
+#define DOS_EFFECT_SPAN_T_DESTINATION_Y_SIZE 2
+/* PROVEN: Signed16 byte copy length, nonpositive spans skipped. */
+#define DOS_EFFECT_SPAN_T_WIDTH_OFFSET 0x8
+#define DOS_EFFECT_SPAN_T_WIDTH_SIZE 2
+#define DOS_EFFECT_ROWS_T_SIZE 24
+/* PROVEN: Byte row-span count, set200. */
+#define DOS_EFFECT_ROWS_T_COUNT_OFFSET 0x0
+#define DOS_EFFECT_ROWS_T_COUNT_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_ROWS_T_RESERVED_01_OFFSET 0x1
+#define DOS_EFFECT_ROWS_T_RESERVED_01_SIZE 1
+/* PROVEN: Unsigned16 transition progress. */
+#define DOS_EFFECT_ROWS_T_POSITION_OFFSET 0x2
+#define DOS_EFFECT_ROWS_T_POSITION_SIZE 2
+/* PROVEN: Limit320/200/100 depending on mode. */
+#define DOS_EFFECT_ROWS_T_POSITION_LIMIT_OFFSET 0x4
+#define DOS_EFFECT_ROWS_T_POSITION_LIMIT_SIZE 2
+/* PROVEN: Normalized signed16 rate/sign; position advancesabs(direction). */
+#define DOS_EFFECT_ROWS_T_DIRECTION_OFFSET 0x6
+#define DOS_EFFECT_ROWS_T_DIRECTION_SIZE 2
+/* PROVEN: Clamped1..12 row-span transformation selector. */
+#define DOS_EFFECT_ROWS_T_MODE_OFFSET 0x8
+#define DOS_EFFECT_ROWS_T_MODE_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_ROWS_T_RESERVED_09_OFFSET 0x9
+#define DOS_EFFECT_ROWS_T_RESERVED_09_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_ROWS_T_RESERVED_0A_OFFSET 0xa
+#define DOS_EFFECT_ROWS_T_RESERVED_0A_SIZE 2
+/* PROVEN: Owned200 ten-byte spans. */
+#define DOS_EFFECT_ROWS_T_ENTRIES_OFFSET 0xc
+#define DOS_EFFECT_ROWS_T_ENTRIES_SIZE 4
+/* PROVEN: Full64000-byte source snapshot at EffetBufferNormal. */
+#define DOS_EFFECT_ROWS_T_SCREEN_OFFSET 0x10
+#define DOS_EFFECT_ROWS_T_SCREEN_SIZE 4
+/* PROVEN: Borrowed320-pitch output. */
+#define DOS_EFFECT_ROWS_T_DESTINATION_OFFSET 0x14
+#define DOS_EFFECT_ROWS_T_DESTINATION_SIZE 4
+#define DOS_EFFECT3D_POINT_T_SIZE 20
+/* PROVEN: Panel-space x coordinate from initialization; x/y measured relative to pivot during rotations. */
+#define DOS_EFFECT3D_POINT_T_X_OFFSET 0x0
+#define DOS_EFFECT3D_POINT_T_X_SIZE 4
+/* PROVEN: Panel-space y coordinate from initialization; x/y measured relative to pivot during rotations. */
+#define DOS_EFFECT3D_POINT_T_Y_OFFSET 0x4
+#define DOS_EFFECT3D_POINT_T_Y_SIZE 4
+/* PROVEN: Panel-space z coordinate from initialization; x/y measured relative to pivot during rotations. */
+#define DOS_EFFECT3D_POINT_T_Z_OFFSET 0x8
+#define DOS_EFFECT3D_POINT_T_Z_SIZE 4
+/* PROVEN: Projected signed32 screen_x output. */
+#define DOS_EFFECT3D_POINT_T_SCREEN_X_OFFSET 0xc
+#define DOS_EFFECT3D_POINT_T_SCREEN_X_SIZE 4
+/* PROVEN: Projected signed32 screen_y output. */
+#define DOS_EFFECT3D_POINT_T_SCREEN_Y_OFFSET 0x10
+#define DOS_EFFECT3D_POINT_T_SCREEN_Y_SIZE 4
+#define DOS_EFFECT_SEGMENT_T_SIZE 44
+/* PROVEN: 256-pitch half-screen texture pointer. */
+#define DOS_EFFECT_SEGMENT_T_SCREEN_OFFSET 0x0
+#define DOS_EFFECT_SEGMENT_T_SCREEN_SIZE 4
+/* PROVEN: Four signed32(x,y) projected corner pairs. */
+#define DOS_EFFECT_SEGMENT_T_POINTS_OFFSET 0x4
+#define DOS_EFFECT_SEGMENT_T_POINTS_SIZE 32
+/* PROVEN: Four byte(u,v) texture corners; each half uses0..159 by0..199. */
+#define DOS_EFFECT_SEGMENT_T_RECTANGLE_OFFSET 0x24
+#define DOS_EFFECT_SEGMENT_T_RECTANGLE_SIZE 8
+#define DOS_EFFECT3D_T_SIZE 56
+/* PROVEN: Unsigned16 transform progress advancedabs(speed). */
+#define DOS_EFFECT3D_T_POSITION_OFFSET 0x0
+#define DOS_EFFECT3D_T_POSITION_SIZE 2
+/* PROVEN: 512 for centered rotation/depth modes orabs(speed)+128 for hinges. */
+#define DOS_EFFECT3D_T_POSITION_LIMIT_OFFSET 0x2
+#define DOS_EFFECT3D_T_POSITION_LIMIT_SIZE 2
+/* PROVEN: Normalized input with reversed sign; also controls depth-progress direction. */
+#define DOS_EFFECT3D_T_SPEED_OFFSET 0x4
+#define DOS_EFFECT3D_T_SPEED_SIZE 2
+/* PROVEN: Signed16 X-axis trig angle. */
+#define DOS_EFFECT3D_T_ANGLE_X_OFFSET 0x6
+#define DOS_EFFECT3D_T_ANGLE_X_SIZE 2
+/* PROVEN: Signed16 Y-axis trig angle. */
+#define DOS_EFFECT3D_T_ANGLE_Y_OFFSET 0x8
+#define DOS_EFFECT3D_T_ANGLE_Y_SIZE 2
+/* PROVEN: Signed16 Z-axis trig angle. */
+#define DOS_EFFECT3D_T_ANGLE_Z_OFFSET 0xa
+#define DOS_EFFECT3D_T_ANGLE_Z_SIZE 2
+/* UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role. */
+#define DOS_EFFECT3D_T_FIELD_0C_OFFSET 0xc
+#define DOS_EFFECT3D_T_FIELD_0C_SIZE 2
+/* UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role. */
+#define DOS_EFFECT3D_T_FIELD_0E_OFFSET 0xe
+#define DOS_EFFECT3D_T_FIELD_0E_SIZE 2
+/* UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role. */
+#define DOS_EFFECT3D_T_FIELD_10_OFFSET 0x10
+#define DOS_EFFECT3D_T_FIELD_10_SIZE 2
+/* PROVEN: Signed16 angle_x increment/callback. */
+#define DOS_EFFECT3D_T_STEP_X_OFFSET 0x12
+#define DOS_EFFECT3D_T_STEP_X_SIZE 2
+/* PROVEN: Signed16 angle_y increment/callback. */
+#define DOS_EFFECT3D_T_STEP_Y_OFFSET 0x14
+#define DOS_EFFECT3D_T_STEP_Y_SIZE 2
+/* PROVEN: Signed16 angle_z increment/callback. */
+#define DOS_EFFECT3D_T_STEP_Z_OFFSET 0x16
+#define DOS_EFFECT3D_T_STEP_Z_SIZE 2
+/* PROVEN: Projection/rotation pivot x, set160 normally or-2/321 for vertical edge hinges. */
+#define DOS_EFFECT3D_T_FIELD_18_OFFSET 0x18
+#define DOS_EFFECT3D_T_FIELD_18_SIZE 2
+/* PROVEN: Projection/rotation pivot y, set100 normally or-2/201 for horizontal edge hinges. */
+#define DOS_EFFECT3D_T_FIELD_1A_OFFSET 0x1a
+#define DOS_EFFECT3D_T_FIELD_1A_SIZE 2
+/* PROVEN: Edge-hinge mode latch;1 fixes projection depth512 and uses position limitabs(speed)+128,0 animates depth. */
+#define DOS_EFFECT3D_T_FIELD_1C_OFFSET 0x1c
+#define DOS_EFFECT3D_T_FIELD_1C_SIZE 1
+/* PROVEN: Clamped1..15 panel transform selector. */
+#define DOS_EFFECT3D_T_MODE_OFFSET 0x1d
+#define DOS_EFFECT3D_T_MODE_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT3D_T_RESERVED_1E_OFFSET 0x1e
+#define DOS_EFFECT3D_T_RESERVED_1E_SIZE 2
+/* PROVEN: Borrowed320-pitch source. */
+#define DOS_EFFECT3D_T_SOURCE_OFFSET 0x20
+#define DOS_EFFECT3D_T_SOURCE_SIZE 4
+/* PROVEN: Borrowed320-pitch output. */
+#define DOS_EFFECT3D_T_DESTINATION_OFFSET 0x24
+#define DOS_EFFECT3D_T_DESTINATION_SIZE 4
+/* PROVEN: Left160-wide256-pitch texture. */
+#define DOS_EFFECT3D_T_SCREEN_A_OFFSET 0x28
+#define DOS_EFFECT3D_T_SCREEN_A_SIZE 4
+/* PROVEN: Right160-wide256-pitch texture. */
+#define DOS_EFFECT3D_T_SCREEN_B_OFFSET 0x2c
+#define DOS_EFFECT3D_T_SCREEN_B_SIZE 4
+/* PROVEN: Owned two44-byte quad draw records. */
+#define DOS_EFFECT3D_T_VERTICES_OFFSET 0x30
+#define DOS_EFFECT3D_T_VERTICES_SIZE 4
+/* PROVEN: Owned six20-byte panel vertex records. */
+#define DOS_EFFECT3D_T_TRANSFORMED_OFFSET 0x34
+#define DOS_EFFECT3D_T_TRANSFORMED_SIZE 4
+#define DOS_EFFECT_VERTEX_6E_T_SIZE 52
+/* PROVEN: Original unsigned16 grid vertex x, including right boundary320. */
+#define DOS_EFFECT_VERTEX_6E_T_X_OFFSET 0x0
+#define DOS_EFFECT_VERTEX_6E_T_X_SIZE 2
+/* PROVEN: Original byte grid y, including bottom boundary200. */
+#define DOS_EFFECT_VERTEX_6E_T_Y_OFFSET 0x2
+#define DOS_EFFECT_VERTEX_6E_T_Y_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_VERTEX_6E_T_FIELD_3_OFFSET 0x3
+#define DOS_EFFECT_VERTEX_6E_T_FIELD_3_SIZE 1
+/* PROVEN: Unsigned16 projected x updated for interior vertices only. */
+#define DOS_EFFECT_VERTEX_6E_T_NEXT_X_OFFSET 0x4
+#define DOS_EFFECT_VERTEX_6E_T_NEXT_X_SIZE 2
+/* PROVEN: Byte projected y updated for interior vertices only. */
+#define DOS_EFFECT_VERTEX_6E_T_NEXT_Y_OFFSET 0x6
+#define DOS_EFFECT_VERTEX_6E_T_NEXT_Y_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_VERTEX_6E_T_FIELD_7_OFFSET 0x7
+#define DOS_EFFECT_VERTEX_6E_T_FIELD_7_SIZE 1
+/* PROVEN: Pointer-shaped dword for selected256-pitch half texture. */
+#define DOS_EFFECT_VERTEX_6E_T_SURFACE_OFFSET 0x8
+#define DOS_EFFECT_VERTEX_6E_T_SURFACE_SIZE 4
+/* PROVEN: Four signed32 projected corner pairs for current cell draw. */
+#define DOS_EFFECT_VERTEX_6E_T_PROJECTED_OFFSET 0xc
+#define DOS_EFFECT_VERTEX_6E_T_PROJECTED_SIZE 32
+/* PROVEN: Four byte(u,v) texture corners. */
+#define DOS_EFFECT_VERTEX_6E_T_RECTANGLE_OFFSET 0x2c
+#define DOS_EFFECT_VERTEX_6E_T_RECTANGLE_SIZE 8
+#define DOS_EFFECT_STATE_6E_T_SIZE 188
+/* PROVEN: Stored byte grid column count, clamped to at least2 before narrowing. */
+#define DOS_EFFECT_STATE_6E_T_COLUMNS_OFFSET 0x0
+#define DOS_EFFECT_STATE_6E_T_COLUMNS_SIZE 1
+/* PROVEN: Stored byte grid row count, clamped to at least1 before narrowing. */
+#define DOS_EFFECT_STATE_6E_T_ROWS_OFFSET 0x1
+#define DOS_EFFECT_STATE_6E_T_ROWS_SIZE 1
+/* PROVEN: Original(columns+1)*(rows+1) product narrowed to u16 for52-byte vertex allocation. */
+#define DOS_EFFECT_STATE_6E_T_VERTEX_COUNT_OFFSET 0x2
+#define DOS_EFFECT_STATE_6E_T_VERTEX_COUNT_SIZE 2
+/* PROVEN: Unsigned16 progress counter. */
+#define DOS_EFFECT_STATE_6E_T_CURRENT_OFFSET 0x4
+#define DOS_EFFECT_STATE_6E_T_CURRENT_SIZE 2
+/* PROVEN: Unsigned16 frame/progress limit>=1; inherited fraction spelling does not mean fixed-point scale. */
+#define DOS_EFFECT_STATE_6E_T_SPEED_FRACTION_OFFSET 0x6
+#define DOS_EFFECT_STATE_6E_T_SPEED_FRACTION_SIZE 2
+/* PROVEN: Normalized signed16 rate, absolute value controls repeated history substeps. */
+#define DOS_EFFECT_STATE_6E_T_SPEED_OFFSET 0x8
+#define DOS_EFFECT_STATE_6E_T_SPEED_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_STATE_6E_T_FIELD_A_OFFSET 0xa
+#define DOS_EFFECT_STATE_6E_T_FIELD_A_SIZE 2
+/* PROVEN: Borrowed320-pitch source. */
+#define DOS_EFFECT_STATE_6E_T_SOURCE_OFFSET 0xc
+#define DOS_EFFECT_STATE_6E_T_SOURCE_SIZE 4
+/* PROVEN: Borrowed destination for quad rasterizer. */
+#define DOS_EFFECT_STATE_6E_T_SPRITE_OFFSET 0x10
+#define DOS_EFFECT_STATE_6E_T_SPRITE_SIZE 4
+/* PROVEN: Left160-wide256-pitch texture. */
+#define DOS_EFFECT_STATE_6E_T_SURFACE_A_OFFSET 0x14
+#define DOS_EFFECT_STATE_6E_T_SURFACE_A_SIZE 4
+/* PROVEN: Right160-wide256-pitch texture. */
+#define DOS_EFFECT_STATE_6E_T_SURFACE_B_OFFSET 0x18
+#define DOS_EFFECT_STATE_6E_T_SURFACE_B_SIZE 4
+/* PROVEN: Owned52-byte wave vertex/draw records. */
+#define DOS_EFFECT_STATE_6E_T_VERTICES_OFFSET 0x1c
+#define DOS_EFFECT_STATE_6E_T_VERTICES_SIZE 4
+/* PROVEN: 75-byte shift register, read as signed8 displacement in512-based divisor. */
+#define DOS_EFFECT_STATE_6E_T_HISTORY_OFFSET 0x20
+#define DOS_EFFECT_STATE_6E_T_HISTORY_SIZE 75
+/* PROVEN: 75-byte precomputed sinus-derived displacement sequence, consumed in reverse index order. */
+#define DOS_EFFECT_STATE_6E_T_RAMP_OFFSET 0x6b
+#define DOS_EFFECT_STATE_6E_T_RAMP_SIZE 75
+/* PROVEN: Unsigned16 substep counter advanced2 each iteration;>600 can suppress feed when head0. */
+#define DOS_EFFECT_STATE_6E_T_HISTORY_POSITION_OFFSET 0xb6
+#define DOS_EFFECT_STATE_6E_T_HISTORY_POSITION_SIZE 2
+/* PROVEN: Byte number of unconsumed ramp entries, initially75. */
+#define DOS_EFFECT_STATE_6E_T_HISTORY_LENGTH_OFFSET 0xb8
+#define DOS_EFFECT_STATE_6E_T_HISTORY_LENGTH_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_STATE_6E_T_TAIL_OFFSET 0xb9
+#define DOS_EFFECT_STATE_6E_T_TAIL_SIZE 3
+#define DOS_EFFECT_COLUMN_STATE_T_SIZE 48
+/* PROVEN: Signed16 completion/progress return counter; geometric center is field_14. */
+#define DOS_EFFECT_COLUMN_STATE_T_POS_X_OFFSET 0x0
+#define DOS_EFFECT_COLUMN_STATE_T_POS_X_SIZE 2
+/* PROVEN: Signed16 column step with sign inverted from input. */
+#define DOS_EFFECT_COLUMN_STATE_T_DELTA_OFFSET 0x2
+#define DOS_EFFECT_COLUMN_STATE_T_DELTA_SIZE 2
+/* PROVEN: Phase upper/right comparison boundary and sine/cosine origin established when initialized0. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_04_OFFSET 0x4
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_04_SIZE 4
+/* PROVEN: Phase lower/left comparison boundary; positive delta changes mode when center falls below it. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_08_OFFSET 0x8
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_08_SIZE 4
+/* PROVEN: Current sine/cosine edge offset delimiting remapped columns in rendering. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_0C_OFFSET 0xc
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_0C_SIZE 4
+/* PROVEN: Source-remap base column added to acos table entries. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_10_OFFSET 0x10
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_10_SIZE 4
+/* PROVEN: Current destination/remap center column; render subtracts signed delta after drawing. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_14_OFFSET 0x14
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_14_SIZE 4
+/* PROVEN: Byte phase0/1/2 remap,3 clear,4 forward done,FFh reverse done. */
+#define DOS_EFFECT_COLUMN_STATE_T_MODE_OFFSET 0x18
+#define DOS_EFFECT_COLUMN_STATE_T_MODE_SIZE 1
+/* PROVEN: Phase latch0=needs setup,1=setup done,2=forward mode0 full snapshot already copied. */
+#define DOS_EFFECT_COLUMN_STATE_T_INITIALIZED_OFFSET 0x19
+#define DOS_EFFECT_COLUMN_STATE_T_INITIALIZED_SIZE 1
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_1A_OFFSET 0x1a
+#define DOS_EFFECT_COLUMN_STATE_T_FIELD_1A_SIZE 2
+/* PROVEN: Clamped8..40 half-span used by acos/sine/cosine geometry. */
+#define DOS_EFFECT_COLUMN_STATE_T_WIDTH_OFFSET 0x1c
+#define DOS_EFFECT_COLUMN_STATE_T_WIDTH_SIZE 2
+/* PROVEN: 2*width table entries. */
+#define DOS_EFFECT_COLUMN_STATE_T_SPAN_OFFSET 0x1e
+#define DOS_EFFECT_COLUMN_STATE_T_SPAN_SIZE 2
+/* PROVEN: Truncated width*pi. */
+#define DOS_EFFECT_COLUMN_STATE_T_PERIOD1_OFFSET 0x20
+#define DOS_EFFECT_COLUMN_STATE_T_PERIOD1_SIZE 2
+/* PROVEN: Truncated width*pi/2. */
+#define DOS_EFFECT_COLUMN_STATE_T_PERIOD2_OFFSET 0x22
+#define DOS_EFFECT_COLUMN_STATE_T_PERIOD2_SIZE 2
+/* PROVEN: Owned2*width signed32 acos remap entries. */
+#define DOS_EFFECT_COLUMN_STATE_T_TABLE_OFFSET 0x24
+#define DOS_EFFECT_COLUMN_STATE_T_TABLE_SIZE 4
+/* PROVEN: Full snapshot in EffetBufferNormal. */
+#define DOS_EFFECT_COLUMN_STATE_T_SOURCE_OFFSET 0x28
+#define DOS_EFFECT_COLUMN_STATE_T_SOURCE_SIZE 4
+/* PROVEN: Borrowed320-pitch output. */
+#define DOS_EFFECT_COLUMN_STATE_T_DESTINATION_OFFSET 0x2c
+#define DOS_EFFECT_COLUMN_STATE_T_DESTINATION_SIZE 4
+#define DOS_EFFECT_STATE_6C_T_SIZE 32
+/* PROVEN: Unsigned16 progress counter. */
+#define DOS_EFFECT_STATE_6C_T_FRAME_OFFSET 0x0
+#define DOS_EFFECT_STATE_6C_T_FRAME_SIZE 2
+/* PROVEN: Unsigned16 progress limit>=1. */
+#define DOS_EFFECT_STATE_6C_T_STEP_OFFSET 0x2
+#define DOS_EFFECT_STATE_6C_T_STEP_SIZE 2
+/* PROVEN: Signed16 radial-region center x. */
+#define DOS_EFFECT_STATE_6C_T_X_OFFSET 0x4
+#define DOS_EFFECT_STATE_6C_T_X_SIZE 2
+/* PROVEN: Signed16 radial-region center y. */
+#define DOS_EFFECT_STATE_6C_T_Y_OFFSET 0x6
+#define DOS_EFFECT_STATE_6C_T_Y_SIZE 2
+/* PROVEN: Signed16 center x increment, sign reflects on side collision. */
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_X_OFFSET 0x8
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_X_SIZE 2
+/* PROVEN: Signed16 center y increment, sign reflects on top/bottom collision. */
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_Y_OFFSET 0xa
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_Y_SIZE 2
+/* PROVEN: Normalized signed16 base rate; abs controls progress. */
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_OFFSET 0xc
+#define DOS_EFFECT_STATE_6C_T_VELOCITY_SIZE 2
+/* PROVEN: Clamped8..48 radial-region half-size. */
+#define DOS_EFFECT_STATE_6C_T_RADIUS_OFFSET 0xe
+#define DOS_EFFECT_STATE_6C_T_RADIUS_SIZE 2
+/* PROVEN: 2*radius+1. */
+#define DOS_EFFECT_STATE_6C_T_WIDTH_OFFSET 0x10
+#define DOS_EFFECT_STATE_6C_T_WIDTH_SIZE 2
+/* PROVEN: 2*radius+1. */
+#define DOS_EFFECT_STATE_6C_T_HEIGHT_OFFSET 0x12
+#define DOS_EFFECT_STATE_6C_T_HEIGHT_SIZE 2
+/* PROVEN: Owned interleaved(dx,dy) bytes read as signed8. */
+#define DOS_EFFECT_STATE_6C_T_MAP_OFFSET 0x14
+#define DOS_EFFECT_STATE_6C_T_MAP_SIZE 4
+/* PROVEN: Full64000-byte snapshot in EffetBufferNormal. */
+#define DOS_EFFECT_STATE_6C_T_SCREEN_OFFSET 0x18
+#define DOS_EFFECT_STATE_6C_T_SCREEN_SIZE 4
+/* PROVEN: Borrowed320-pitch output. */
+#define DOS_EFFECT_STATE_6C_T_OUTPUT_OFFSET 0x1c
+#define DOS_EFFECT_STATE_6C_T_OUTPUT_SIZE 4
+#define DOS_REAL_MODE_REGS_T_SIZE 52
+/* STRONG: Field real_mode_regs_t.edi participates in sub_564f8: dpmi_workspace.real.edi. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_EDI_OFFSET 0x0
+#define DOS_REAL_MODE_REGS_T_EDI_SIZE 4
+/* STRONG: Field real_mode_regs_t.esi participates in sub_564f8: dpmi_workspace.real.esi. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_ESI_OFFSET 0x4
+#define DOS_REAL_MODE_REGS_T_ESI_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_EBP_OFFSET 0x8
+#define DOS_REAL_MODE_REGS_T_EBP_SIZE 4
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_RESERVED_OFFSET 0xc
+#define DOS_REAL_MODE_REGS_T_RESERVED_SIZE 4
+/* STRONG: Field real_mode_regs_t.ebx participates in sub_564f8: dpmi_workspace.real.ebx. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_EBX_OFFSET 0x10
+#define DOS_REAL_MODE_REGS_T_EBX_SIZE 4
+/* STRONG: Field real_mode_regs_t.edx participates in sub_564f8: dpmi_workspace.real.edx. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_EDX_OFFSET 0x14
+#define DOS_REAL_MODE_REGS_T_EDX_SIZE 4
+/* STRONG: Field real_mode_regs_t.ecx participates in sub_564f8: dpmi_workspace.real.ecx. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_ECX_OFFSET 0x18
+#define DOS_REAL_MODE_REGS_T_ECX_SIZE 4
+/* STRONG: Field real_mode_regs_t.eax participates in sub_564f8: dpmi_workspace.real.eax. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_EAX_OFFSET 0x1c
+#define DOS_REAL_MODE_REGS_T_EAX_SIZE 4
+/* STRONG: Field real_mode_regs_t.flags participates in sub_564f8: dpmi_workspace.real.flags. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_FLAGS_OFFSET 0x20
+#define DOS_REAL_MODE_REGS_T_FLAGS_SIZE 2
+/* STRONG: Field real_mode_regs_t.es participates in sub_564f8: dpmi_workspace.real.es. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_ES_OFFSET 0x22
+#define DOS_REAL_MODE_REGS_T_ES_SIZE 2
+/* STRONG: Field real_mode_regs_t.ds participates in sub_564f8: dpmi_workspace.real.ds. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_DS_OFFSET 0x24
+#define DOS_REAL_MODE_REGS_T_DS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_FS_OFFSET 0x26
+#define DOS_REAL_MODE_REGS_T_FS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_GS_OFFSET 0x28
+#define DOS_REAL_MODE_REGS_T_GS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_IP_OFFSET 0x2a
+#define DOS_REAL_MODE_REGS_T_IP_SIZE 2
+/* STRONG: Field real_mode_regs_t.cs participates in sub_564f8: dpmi_workspace.real.cs. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_CS_OFFSET 0x2c
+#define DOS_REAL_MODE_REGS_T_CS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_SP_OFFSET 0x2e
+#define DOS_REAL_MODE_REGS_T_SP_SIZE 2
+/* STRONG: Field real_mode_regs_t.ss participates in sub_564f8: dpmi_workspace.real.ss. Function contracts and attached computations define this scoped use; no broader enum is inferred. */
+#define DOS_REAL_MODE_REGS_T_SS_OFFSET 0x30
+#define DOS_REAL_MODE_REGS_T_SS_SIZE 2
+/* UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning. */
+#define DOS_REAL_MODE_REGS_T_PADDING_OFFSET 0x32
+#define DOS_REAL_MODE_REGS_T_PADDING_SIZE 2
+#define DOS_DPMI_SCRATCH_T_SIZE 92
+/* PROVEN: Host INT31h register union used by int386/int386x. */
+#define DOS_DPMI_SCRATCH_T_REGS_OFFSET 0x0
+#define DOS_DPMI_SCRATCH_T_REGS_SIZE 28
+/* PROVEN: Real-mode interrupt0300 register frame. */
+#define DOS_DPMI_SCRATCH_T_REAL_OFFSET 0x1c
+#define DOS_DPMI_SCRATCH_T_REAL_SIZE 52
+/* PROVEN: Host segment-register block; ES selects the real-mode frame pointer. */
+#define DOS_DPMI_SCRATCH_T_SEGMENTS_OFFSET 0x50
+#define DOS_DPMI_SCRATCH_T_SEGMENTS_SIZE 12
 #endif
 

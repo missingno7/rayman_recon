@@ -1,0 +1,728 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "effect6e380.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/inline_helpers.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [],
+  "types": []
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:effect_copy_band",
+   "kind": "function",
+   "current_name": "effect_copy_band",
+   "proposed_name": null,
+   "c_type": "void effect_copy_band(u8 *source, u8 *destination, u32 width)",
+   "meaning": "Copy200 rows source stride320 to destination stride256, width bytes each; destination advances totalC800h. Used for160-wide halves and256-wide cropped texture.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "row_source = source",
+     "row_destination = destination",
+     "end = destination + 0xc800",
+     "do ... while (row_destination != end)",
+     "row_source += 320",
+     "row_destination += 256"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_copy_band"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_copy_band"
+    }
+   ],
+   "port_notes": [
+    "Copy200 rows source stride320 to destination stride256, width bytes each; destination advances totalC800h. Used for160-wide halves and256-wide cropped texture.",
+    "Keep200-row width-limited copies and320/256 pitch conversion; native textures may replace physical packed buffers."
+   ],
+   "oracle_address": "1:6e380",
+   "source_file": "src/effect6e380.c",
+   "source_body_sha256": "ed22f52b4a0e2f6c12b2e6da94641724857192914c4a80ac559b325d9f3653f9",
+   "baseline_parser_body_sha256": "ed22f52b4a0e2f6c12b2e6da94641724857192914c4a80ac559b325d9f3653f9",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "copy"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:effect_copy_band:end:1",
+   "kind": "local",
+   "current_name": "end",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_band: u8 *end; end = destination + 0xc800; row_destination != end.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *end",
+     "end = destination + 0xc800",
+     "row_destination != end"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 1,
+     "uses": [
+      "u8 *end",
+      "end = destination + 0xc800",
+      "row_destination != end"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_band:row_source:2",
+   "kind": "local",
+   "current_name": "row_source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_band: u8 *row_source; row_source = source; copy(row_source, row_destination, width); row_source += 320.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *row_source",
+     "row_source = source",
+     "copy(row_source, row_destination, width)",
+     "row_source += 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 2,
+     "uses": [
+      "u8 *row_source",
+      "row_source = source",
+      "copy(row_source, row_destination, width)",
+      "row_source += 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_band:row_destination:3",
+   "kind": "local",
+   "current_name": "row_destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_band: u8 *row_destination; row_destination = destination; row_destination != end; copy(row_source, row_destination, width); row_destination += 256.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *row_destination",
+     "row_destination = destination",
+     "row_destination != end",
+     "copy(row_source, row_destination, width)",
+     "row_destination += 256"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 3,
+     "uses": [
+      "u8 *row_destination",
+      "row_destination = destination",
+      "row_destination != end",
+      "copy(row_source, row_destination, width)",
+      "row_destination += 256"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_band:source:4",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_copy_band: row_source = source.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "row_source = source"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 4,
+     "uses": [
+      "row_source = source"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_band:destination:5",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_copy_band: row_destination = destination; end = destination + 0xc800.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "row_destination = destination",
+     "end = destination + 0xc800"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 5,
+     "uses": [
+      "row_destination = destination",
+      "end = destination + 0xc800"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_band:width:6",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Parameter in effect_copy_band: copy(row_source, row_destination, width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "copy(row_source, row_destination, width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_band",
+     "address": "1:6e380",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_band",
+     "ordinal": 6,
+     "uses": [
+      "copy(row_source, row_destination, width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_band",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u32 $",
+   "source_file": "src/effect6e380.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_copy_pause_band",
+   "kind": "function",
+   "current_name": "effect_copy_pause_band",
+   "proposed_name": null,
+   "c_type": "void effect_copy_pause_band(u8 *source, u8 *destination, u32 width)",
+   "meaning": "Copy200 rows source stride256 to destination stride320, width bytes each; source advances totalC800h.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "row_source = source",
+     "row_destination = destination",
+     "end = source + 0xc800",
+     "do ... while (row_source != end)",
+     "row_source += 256",
+     "row_destination += 320"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_copy_pause_band"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_copy_pause_band"
+    }
+   ],
+   "port_notes": [
+    "Copy200 rows source stride256 to destination stride320, width bytes each; source advances totalC800h.",
+    "Keep200-row width-limited copies and320/256 pitch conversion; native textures may replace physical packed buffers."
+   ],
+   "oracle_address": "1:6e3cc",
+   "source_file": "src/effect6e380.c",
+   "source_body_sha256": "a82b4cf51d873e9c5218b7a5574439f8e827a5400f763f56a2a8a71bd200f333",
+   "baseline_parser_body_sha256": "a82b4cf51d873e9c5218b7a5574439f8e827a5400f763f56a2a8a71bd200f333",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "copy"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:effect_copy_pause_band:end:1",
+   "kind": "local",
+   "current_name": "end",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_pause_band: u8 *end; end = source + 0xc800; row_source != end.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *end",
+     "end = source + 0xc800",
+     "row_source != end"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 1,
+     "uses": [
+      "u8 *end",
+      "end = source + 0xc800",
+      "row_source != end"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_pause_band:row_source:2",
+   "kind": "local",
+   "current_name": "row_source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_pause_band: u8 *row_source; row_source = source; row_source != end; copy(row_source, row_destination, width); row_source += 256.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *row_source",
+     "row_source = source",
+     "row_source != end",
+     "copy(row_source, row_destination, width)",
+     "row_source += 256"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 2,
+     "uses": [
+      "u8 *row_source",
+      "row_source = source",
+      "row_source != end",
+      "copy(row_source, row_destination, width)",
+      "row_source += 256"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_pause_band:row_destination:3",
+   "kind": "local",
+   "current_name": "row_destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_copy_pause_band: u8 *row_destination; row_destination = destination; copy(row_source, row_destination, width); row_destination += 320.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *row_destination",
+     "row_destination = destination",
+     "copy(row_source, row_destination, width)",
+     "row_destination += 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 3,
+     "uses": [
+      "u8 *row_destination",
+      "row_destination = destination",
+      "copy(row_source, row_destination, width)",
+      "row_destination += 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_pause_band:source:4",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_copy_pause_band: row_source = source; end = source + 0xc800.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "row_source = source",
+     "end = source + 0xc800"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 4,
+     "uses": [
+      "row_source = source",
+      "end = source + 0xc800"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_pause_band:destination:5",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_copy_pause_band: row_destination = destination.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "row_destination = destination"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 5,
+     "uses": [
+      "row_destination = destination"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6e380.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_copy_pause_band:width:6",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Parameter in effect_copy_pause_band: copy(row_source, row_destination, width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "copy(row_source, row_destination, width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6e380.dos.txt",
+     "function": "effect_copy_pause_band",
+     "address": "1:6e3cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6e380.json",
+     "function": "effect_copy_pause_band",
+     "ordinal": 6,
+     "uses": [
+      "copy(row_source, row_destination, width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_copy_pause_band",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u32 $",
+   "source_file": "src/effect6e380.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  }
+ ],
+ "source_fingerprints": {
+  "src/effect6e380.c": "8de97e777c7d3eb27e6d903a26d1ff5bcb8154f7735c6b5690f6bc44f96cda3c"
+ },
+ "proposal_fingerprints": {
+  "effect6e380.c": "8de97e777c7d3eb27e6d903a26d1ff5bcb8154f7735c6b5690f6bc44f96cda3c"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/effect6e380.dos.txt": null,
+  "evidence/inventory_effect6e380.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

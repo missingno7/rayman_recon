@@ -33,7 +33,7 @@ typedef struct effect_item {
     u8 reserved_6a[2];
 } effect_item_t;
 
-typedef struct effect_state {
+typedef struct effect_tile_state {
     u8 columns;
     u8 rows;
     u16 count;
@@ -46,9 +46,9 @@ typedef struct effect_state {
     u8 *screen_a;
     u8 *screen_b;
     effect_item_t *items;
-} effect_state_t;
+} effect_tile_state_t;
 
-extern effect_state_t *effect_data;
+extern effect_tile_state_t *effect_data;
 extern void *sub_6FBB4(u32 size);
 extern void JumelleFreeArray(void **p);
 /* 1:00045 pushad/popad; input EAX destination, ESI projected item. */
@@ -62,9 +62,10 @@ extern void effect_copy_band(u8 *source, u8 *destination, u32 width);
 extern void sinus_cosinus(s16 angle, s16 *sinus_result, s16 *cosinus_result);
 extern u8 *EffetBufferNormal;
 extern void sub_38B58(s16 horizontal_offset, u16 vertical_speed);
+/* effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
 void sub_38A30(void)
 {
-    effect_state_t *state;
+    effect_tile_state_t *state;
     effect_item_t *items;
     s16 *order;
     s16 current_key;
@@ -105,9 +106,10 @@ void sub_38A30(void)
     }
 }
 
-void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
+/* horizontal_offset -> speed_step; vertical_speed -> progress_limit, effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
+void sub_38B58(s16 speed_step, u16 progress_limit)
 {
-    effect_state_t *state = effect_data;
+    effect_tile_state_t *state = effect_data;
     effect_item_t *item;
     u8 y_step;
     u8 x_step;
@@ -119,11 +121,11 @@ void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
     y_step = (u8)(200 / state->rows);
     effect_reset_geometry();
     state->frame = 0;
-    state->frame_limit = max32(1, vertical_speed);
-    if (horizontal_offset >= 0)
-        speed = max32(1, horizontal_offset);
+    state->frame_limit = max32(1, progress_limit);
+    if (speed_step >= 0)
+        speed = max32(1, speed_step);
     else
-        speed = -max32(1, -horizontal_offset);
+        speed = -max32(1, -speed_step);
     state->speed = speed;
 
     for (i = 0; i < state->count; ++i) {
@@ -167,23 +169,25 @@ void sub_38B58(s16 horizontal_offset, u16 vertical_speed)
     sub_38A30();
 }
 
+/* effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
 void sub_38DA0(void)
 {
-    effect_state_t *state = effect_data;
+    effect_tile_state_t *state = effect_data;
     if (state != 0) {
         if (state->items != 0) JumelleFreeArray((void **)&state->items);
         if (effect_data != 0) JumelleFreeArray((void **)&effect_data);
     }
 }
 
-u8 sub_38DCC(u16 columns, u16 rows, s16 horizontal_offset, u16 vertical_speed,
+/* horizontal_offset -> speed_step; vertical_speed -> progress_limit, effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
+u8 sub_38DCC(u16 columns, u16 rows, s16 speed_step, u16 progress_limit,
              u8 *source, u8 *destination)
 {
-  effect_state_t *state;
+  effect_tile_state_t *state;
   u8 success = 0;
   if ((source != 0) && (destination != 0))
   {
-    effect_data = (effect_state_t *) sub_6FBB4(sizeof(effect_state_t));
+    effect_data = (effect_tile_state_t *) sub_6FBB4(sizeof(effect_tile_state_t));
     state = effect_data;
     if (state)
     {
@@ -223,7 +227,7 @@ u8 sub_38DCC(u16 columns, u16 rows, s16 horizontal_offset, u16 vertical_speed,
   {
     effect_copy_band(state->source, state->screen_a, 0xa0);
     effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0);
-    sub_38B58(horizontal_offset, vertical_speed);
+    sub_38B58(speed_step, progress_limit);
   }
   else
   {
@@ -232,9 +236,10 @@ u8 sub_38DCC(u16 columns, u16 rows, s16 horizontal_offset, u16 vertical_speed,
   return success;
 }
 
+/* effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
 s16 sub_38ED4(void)
 {
-    effect_state_t *state = effect_data;
+    effect_tile_state_t *state = effect_data;
     effect_item_t *item = state->items;
     u16 item_index;
     s32 amount = state->speed;
@@ -300,9 +305,10 @@ s16 sub_38ED4(void)
     return state->frame;
 }
 
+/* effect_state_t -> effect_tile_state_t. See docs/semantics/effect2.json. */
 void sub_391C0(void)
 {
-    effect_state_t *state = effect_data;
+    effect_tile_state_t *state = effect_data;
     effect_item_t *items = state->items;
     effect_item_t *item = items;
     s32 i;

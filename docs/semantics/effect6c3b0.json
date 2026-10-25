@@ -1,0 +1,3249 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "effect6c3b0.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/inline_helpers.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:EffetBufferNormal",
+   "global:effect_state_6c"
+  ],
+  "types": [
+   "type:effect_state_6c_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:effect_helper_6c3b0",
+   "kind": "function",
+   "current_name": "effect_helper_6c3b0",
+   "proposed_name": null,
+   "c_type": "void effect_helper_6c3b0(s16 x, s16 y, s16 velocity, u16 step)",
+   "meaning": "Reset frame/limit, normalize velocity, optionally retain center for x/y=-1, clamp center by radius and randomize velocity signs. With both coordinates supplied build signed-byte displacement pairs: d=sqrt(x*x+y*y), a=d*exp(-(2/r)^2*d*d), transformed=(d*cos(theta)-a*sin(theta),d*sin(theta)+a*cos(theta)); truncate delta to s32 then store byte. Sentinel calls return before rebuilding map.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state = effect_state_6c",
+     "map = state->map",
+     "state->frame = 0",
+     "state->step = max32(1, step)",
+     "if (velocity >= 0)",
+     "adjusted = max32(1, velocity)",
+     "adjusted = -max32(1, -velocity)",
+     "state->velocity = adjusted",
+     "if (x != (-1))",
+     "state->x = x",
+     "if (y != (-1))",
+     "state->y = y",
+     "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+     "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+     "perm_address_0 = &perm_value_0",
+     "*perm_address_0 = rand() & 7",
+     "random_value = perm_value_0",
+     "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "perm_address_1 = &perm_value_1",
+     "*perm_address_1 = rand() & 7",
+     "random_value = perm_value_1",
+     "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "if ((x == (-1)) || (y == (-1)))",
+     "return;",
+     "perm_value_2 = state->radius",
+     "radius = perm_value_2",
+     "scale = factor * factor",
+     "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+     "coordinate_y = -radius",
+     "coordinate_y += 1.0",
+     "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+     "coordinate_x = -state->radius",
+     "coordinate_x += 1.0",
+     "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+     "amplitude = distance * exp(((-scale) * distance) * distance)",
+     "if ((coordinate_x == 0.0) && (coordinate_y == 0.0))",
+     "transformed_x = coordinate_x",
+     "transformed_y = coordinate_y",
+     "angle = atan2(coordinate_y, coordinate_x)",
+     "cosine = cos(angle)",
+     "sine = sin(angle)",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "transformed_y = (distance * sine) + (amplitude * cosine)",
+     "map[0] = (s32) (transformed_x - coordinate_x)",
+     "map[1] = (s32) (transformed_y - coordinate_y)",
+     "map += 2"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_6c3b0"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_6c3b0"
+    }
+   ],
+   "port_notes": [
+    "Reset frame/limit, normalize velocity, optionally retain center for x/y=-1, clamp center by radius and randomize velocity signs. With both coordinates supplied build signed-byte displacement pairs: d=sqrt(x*x+y*y), a=d*exp(-(2/r)^2*d*d), transformed=(d*cos(theta)-a*sin(theta),d*sin(theta)+a*cos(theta)); truncate delta to s32 then store byte. Sentinel calls return before rebuilding map.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "oracle_address": "1:6c3b0",
+   "source_file": "src/effect6c3b0.c",
+   "source_body_sha256": "15390200ef9c18b5c549a0bc6965d738077d932225eae1d204620fcb9835202d",
+   "baseline_parser_body_sha256": "15390200ef9c18b5c549a0bc6965d738077d932225eae1d204620fcb9835202d",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_6c"
+    ],
+    "calls": [
+     "atan2",
+     "cos",
+     "exp",
+     "max32",
+     "min32",
+     "rand",
+     "sin",
+     "sqrt"
+    ],
+    "members": [
+     "frame",
+     "map",
+     "radius",
+     "step",
+     "velocity",
+     "velocity_x",
+     "velocity_y",
+     "x",
+     "y"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_6c3b0:random_value:1",
+   "kind": "local",
+   "current_name": "random_value",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c3b0: s32 random_value; random_value = perm_value_0; state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity)); random_value = perm_value_1; state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity)).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 random_value",
+     "random_value = perm_value_0",
+     "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "random_value = perm_value_1",
+     "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 1,
+     "uses": [
+      "s32 random_value",
+      "random_value = perm_value_0",
+      "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+      "random_value = perm_value_1",
+      "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:cosine:2",
+   "kind": "local",
+   "current_name": "cosine",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double cosine; cosine = cos(angle); transformed_x = (distance * cosine) - (amplitude * sine); transformed_y = (distance * sine) + (amplitude * cosine).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double cosine",
+     "cosine = cos(angle)",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "transformed_y = (distance * sine) + (amplitude * cosine)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 2,
+     "uses": [
+      "double cosine",
+      "cosine = cos(angle)",
+      "transformed_x = (distance * cosine) - (amplitude * sine)",
+      "transformed_y = (distance * sine) + (amplitude * cosine)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:coordinate_x:3",
+   "kind": "local",
+   "current_name": "coordinate_x",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double coordinate_x; for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0); coordinate_x = -state->radius; coordinate_x += 1.0; distance = sqrt((coordinate_x * coordinate_x) + square_y).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double coordinate_x",
+     "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+     "coordinate_x = -state->radius",
+     "coordinate_x += 1.0",
+     "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+     "sqrt((coordinate_x * coordinate_x) + square_y)",
+     "(coordinate_x == 0.0) && (coordinate_y == 0.0)",
+     "transformed_x = coordinate_x",
+     "angle = atan2(coordinate_y, coordinate_x)",
+     "atan2(coordinate_y, coordinate_x)",
+     "map[0] = (s32) (transformed_x - coordinate_x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 3,
+     "uses": [
+      "double coordinate_x",
+      "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+      "coordinate_x = -state->radius",
+      "coordinate_x += 1.0",
+      "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+      "sqrt((coordinate_x * coordinate_x) + square_y)",
+      "(coordinate_x == 0.0) && (coordinate_y == 0.0)",
+      "transformed_x = coordinate_x",
+      "angle = atan2(coordinate_y, coordinate_x)",
+      "atan2(coordinate_y, coordinate_x)",
+      "map[0] = (s32) (transformed_x - coordinate_x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:amplitude:4",
+   "kind": "local",
+   "current_name": "amplitude",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double amplitude; amplitude = distance * exp(((-scale) * distance) * distance); transformed_x = (distance * cosine) - (amplitude * sine); transformed_y = (distance * sine) + (amplitude * cosine).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double amplitude",
+     "amplitude = distance * exp(((-scale) * distance) * distance)",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "transformed_y = (distance * sine) + (amplitude * cosine)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 4,
+     "uses": [
+      "double amplitude",
+      "amplitude = distance * exp(((-scale) * distance) * distance)",
+      "transformed_x = (distance * cosine) - (amplitude * sine)",
+      "transformed_y = (distance * sine) + (amplitude * cosine)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:sine:5",
+   "kind": "local",
+   "current_name": "sine",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double sine; sine = sin(angle); transformed_x = (distance * cosine) - (amplitude * sine); transformed_y = (distance * sine) + (amplitude * cosine).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double sine",
+     "sine = sin(angle)",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "transformed_y = (distance * sine) + (amplitude * cosine)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 5,
+     "uses": [
+      "double sine",
+      "sine = sin(angle)",
+      "transformed_x = (distance * cosine) - (amplitude * sine)",
+      "transformed_y = (distance * sine) + (amplitude * cosine)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:transformed_y:6",
+   "kind": "local",
+   "current_name": "transformed_y",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double transformed_y; transformed_y = coordinate_y; transformed_y = (distance * sine) + (amplitude * cosine); map[1] = (s32) (transformed_y - coordinate_y).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double transformed_y",
+     "transformed_y = coordinate_y",
+     "transformed_y = (distance * sine) + (amplitude * cosine)",
+     "map[1] = (s32) (transformed_y - coordinate_y)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 6,
+     "uses": [
+      "double transformed_y",
+      "transformed_y = coordinate_y",
+      "transformed_y = (distance * sine) + (amplitude * cosine)",
+      "map[1] = (s32) (transformed_y - coordinate_y)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:angle:7",
+   "kind": "local",
+   "current_name": "angle",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double angle; angle = atan2(coordinate_y, coordinate_x); cosine = cos(angle); cos(angle); sine = sin(angle).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double angle",
+     "angle = atan2(coordinate_y, coordinate_x)",
+     "cosine = cos(angle)",
+     "cos(angle)",
+     "sine = sin(angle)",
+     "sin(angle)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 7,
+     "uses": [
+      "double angle",
+      "angle = atan2(coordinate_y, coordinate_x)",
+      "cosine = cos(angle)",
+      "cos(angle)",
+      "sine = sin(angle)",
+      "sin(angle)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:coordinate_y:8",
+   "kind": "local",
+   "current_name": "coordinate_y",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double coordinate_y; for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0); coordinate_y = -radius; coordinate_y += 1.0; double square_y = coordinate_y * coordinate_y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double coordinate_y",
+     "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+     "coordinate_y = -radius",
+     "coordinate_y += 1.0",
+     "double square_y = coordinate_y * coordinate_y",
+     "(coordinate_x == 0.0) && (coordinate_y == 0.0)",
+     "transformed_y = coordinate_y",
+     "angle = atan2(coordinate_y, coordinate_x)",
+     "atan2(coordinate_y, coordinate_x)",
+     "map[1] = (s32) (transformed_y - coordinate_y)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 8,
+     "uses": [
+      "double coordinate_y",
+      "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+      "coordinate_y = -radius",
+      "coordinate_y += 1.0",
+      "double square_y = coordinate_y * coordinate_y",
+      "(coordinate_x == 0.0) && (coordinate_y == 0.0)",
+      "transformed_y = coordinate_y",
+      "angle = atan2(coordinate_y, coordinate_x)",
+      "atan2(coordinate_y, coordinate_x)",
+      "map[1] = (s32) (transformed_y - coordinate_y)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:transformed_x:9",
+   "kind": "local",
+   "current_name": "transformed_x",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double transformed_x; transformed_x = coordinate_x; transformed_x = (distance * cosine) - (amplitude * sine); map[0] = (s32) (transformed_x - coordinate_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double transformed_x",
+     "transformed_x = coordinate_x",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "map[0] = (s32) (transformed_x - coordinate_x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 9,
+     "uses": [
+      "double transformed_x",
+      "transformed_x = coordinate_x",
+      "transformed_x = (distance * cosine) - (amplitude * sine)",
+      "map[0] = (s32) (transformed_x - coordinate_x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:distance:10",
+   "kind": "local",
+   "current_name": "distance",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double distance; distance = sqrt((coordinate_x * coordinate_x) + square_y); amplitude = distance * exp(((-scale) * distance) * distance); exp(((-scale) * distance) * distance); transformed_x = (distance * cosine) - (amplitude * sine).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double distance",
+     "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+     "amplitude = distance * exp(((-scale) * distance) * distance)",
+     "exp(((-scale) * distance) * distance)",
+     "transformed_x = (distance * cosine) - (amplitude * sine)",
+     "transformed_y = (distance * sine) + (amplitude * cosine)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 10,
+     "uses": [
+      "double distance",
+      "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+      "amplitude = distance * exp(((-scale) * distance) * distance)",
+      "exp(((-scale) * distance) * distance)",
+      "transformed_x = (distance * cosine) - (amplitude * sine)",
+      "transformed_y = (distance * sine) + (amplitude * cosine)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:state:11",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t *",
+   "meaning": "Local value in effect_helper_6c3b0: effect_state_6c_t *state; state = effect_state_6c; map = state->map; state->frame = 0; state->step = max32(1, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_6c_t *state",
+     "state = effect_state_6c",
+     "map = state->map",
+     "state->frame = 0",
+     "state->step = max32(1, step)",
+     "state->velocity = adjusted",
+     "state->x = x",
+     "state->y = y",
+     "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+     "max32(state->radius, min32(state->x, 319 - state->radius))",
+     "min32(state->x, 319 - state->radius)",
+     "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+     "max32(state->radius, min32(state->y, 199 - state->radius))",
+     "min32(state->y, 199 - state->radius)",
+     "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "-state->velocity",
+     "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "perm_value_2 = state->radius",
+     "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+     "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+     "coordinate_x = -state->radius",
+     "-state->radius"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 11,
+     "uses": [
+      "effect_state_6c_t *state",
+      "state = effect_state_6c",
+      "map = state->map",
+      "state->frame = 0",
+      "state->step = max32(1, step)",
+      "state->velocity = adjusted",
+      "state->x = x",
+      "state->y = y",
+      "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+      "max32(state->radius, min32(state->x, 319 - state->radius))",
+      "min32(state->x, 319 - state->radius)",
+      "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+      "max32(state->radius, min32(state->y, 199 - state->radius))",
+      "min32(state->y, 199 - state->radius)",
+      "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+      "-state->velocity",
+      "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+      "perm_value_2 = state->radius",
+      "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+      "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+      "coordinate_x = -state->radius",
+      "-state->radius"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 11,
+   "declarator": "effect_state_6c_t *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:radius:12",
+   "kind": "local",
+   "current_name": "radius",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c3b0: s32 radius; state->x = max32(state->radius, min32(state->x, 319 - state->radius)); max32(state->radius, min32(state->x, 319 - state->radius)); min32(state->x, 319 - state->radius); state->y = max32(state->radius, min32(state->y, 199 - state->radius)).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 radius",
+     "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+     "max32(state->radius, min32(state->x, 319 - state->radius))",
+     "min32(state->x, 319 - state->radius)",
+     "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+     "max32(state->radius, min32(state->y, 199 - state->radius))",
+     "min32(state->y, 199 - state->radius)",
+     "perm_value_2 = state->radius",
+     "radius = perm_value_2",
+     "double factor = 100.0 / (radius * 50)",
+     "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+     "coordinate_y = -radius",
+     "-radius",
+     "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+     "coordinate_x = -state->radius",
+     "-state->radius"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 12,
+     "uses": [
+      "s32 radius",
+      "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+      "max32(state->radius, min32(state->x, 319 - state->radius))",
+      "min32(state->x, 319 - state->radius)",
+      "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+      "max32(state->radius, min32(state->y, 199 - state->radius))",
+      "min32(state->y, 199 - state->radius)",
+      "perm_value_2 = state->radius",
+      "radius = perm_value_2",
+      "double factor = 100.0 / (radius * 50)",
+      "for (coordinate_y = -radius; coordinate_y <= state->radius; coordinate_y += 1.0)",
+      "coordinate_y = -radius",
+      "-radius",
+      "for (coordinate_x = -state->radius; coordinate_x <= state->radius; coordinate_x += 1.0)",
+      "coordinate_x = -state->radius",
+      "-state->radius"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 12,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:scale:13",
+   "kind": "local",
+   "current_name": "scale",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_6c3b0: double scale; scale = factor * factor; amplitude = distance * exp(((-scale) * distance) * distance); exp(((-scale) * distance) * distance); -scale.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double scale",
+     "scale = factor * factor",
+     "amplitude = distance * exp(((-scale) * distance) * distance)",
+     "exp(((-scale) * distance) * distance)",
+     "-scale"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 13,
+     "uses": [
+      "double scale",
+      "scale = factor * factor",
+      "amplitude = distance * exp(((-scale) * distance) * distance)",
+      "exp(((-scale) * distance) * distance)",
+      "-scale"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 13,
+   "declarator": "double $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:map:14",
+   "kind": "local",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_helper_6c3b0: u8 *map; map = state->map; map[0] = (s32) (transformed_x - coordinate_x); map[1] = (s32) (transformed_y - coordinate_y); map += 2.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *map",
+     "map = state->map",
+     "map[0] = (s32) (transformed_x - coordinate_x)",
+     "map[1] = (s32) (transformed_y - coordinate_y)",
+     "map += 2"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 14,
+     "uses": [
+      "u8 *map",
+      "map = state->map",
+      "map[0] = (s32) (transformed_x - coordinate_x)",
+      "map[1] = (s32) (transformed_y - coordinate_y)",
+      "map += 2"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 14,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:adjusted:15",
+   "kind": "local",
+   "current_name": "adjusted",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_6c3b0: s16 adjusted; adjusted = max32(1, velocity); adjusted = -max32(1, -velocity); state->velocity = adjusted.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 adjusted",
+     "adjusted = max32(1, velocity)",
+     "adjusted = -max32(1, -velocity)",
+     "state->velocity = adjusted"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 15,
+     "uses": [
+      "s16 adjusted",
+      "adjusted = max32(1, velocity)",
+      "adjusted = -max32(1, -velocity)",
+      "state->velocity = adjusted"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 15,
+   "declarator": "s16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:perm_value_0:16",
+   "kind": "local",
+   "current_name": "perm_value_0",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Compiler-steering temporary/address in effect_helper_6c3b0; s32 perm_value_0; perm_address_0 = &perm_value_0; &perm_value_0; random_value = perm_value_0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 perm_value_0",
+     "perm_address_0 = &perm_value_0",
+     "&perm_value_0",
+     "random_value = perm_value_0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 16,
+     "uses": [
+      "s32 perm_value_0",
+      "perm_address_0 = &perm_value_0",
+      "&perm_value_0",
+      "random_value = perm_value_0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 16,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:perm_address_0:17",
+   "kind": "local",
+   "current_name": "perm_address_0",
+   "proposed_name": null,
+   "c_type": "s32 *",
+   "meaning": "Compiler-steering temporary/address in effect_helper_6c3b0; s32 *perm_address_0; perm_address_0 = &perm_value_0; *perm_address_0 = rand() & 7; *perm_address_0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 *perm_address_0",
+     "perm_address_0 = &perm_value_0",
+     "*perm_address_0 = rand() & 7",
+     "*perm_address_0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 17,
+     "uses": [
+      "s32 *perm_address_0",
+      "perm_address_0 = &perm_value_0",
+      "*perm_address_0 = rand() & 7",
+      "*perm_address_0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 17,
+   "declarator": "s32 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:perm_value_1:18",
+   "kind": "local",
+   "current_name": "perm_value_1",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Compiler-steering temporary/address in effect_helper_6c3b0; s32 perm_value_1; perm_address_1 = &perm_value_1; &perm_value_1; random_value = perm_value_1.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 perm_value_1",
+     "perm_address_1 = &perm_value_1",
+     "&perm_value_1",
+     "random_value = perm_value_1"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 18,
+     "uses": [
+      "s32 perm_value_1",
+      "perm_address_1 = &perm_value_1",
+      "&perm_value_1",
+      "random_value = perm_value_1"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 18,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:perm_address_1:19",
+   "kind": "local",
+   "current_name": "perm_address_1",
+   "proposed_name": null,
+   "c_type": "s32 *",
+   "meaning": "Compiler-steering temporary/address in effect_helper_6c3b0; s32 *perm_address_1; perm_address_1 = &perm_value_1; *perm_address_1 = rand() & 7; *perm_address_1.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 *perm_address_1",
+     "perm_address_1 = &perm_value_1",
+     "*perm_address_1 = rand() & 7",
+     "*perm_address_1"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 19,
+     "uses": [
+      "s32 *perm_address_1",
+      "perm_address_1 = &perm_value_1",
+      "*perm_address_1 = rand() & 7",
+      "*perm_address_1"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 19,
+   "declarator": "s32 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:perm_value_2:20",
+   "kind": "local",
+   "current_name": "perm_value_2",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Compiler-steering temporary/address in effect_helper_6c3b0; s32 perm_value_2; perm_value_2 = state->radius; radius = perm_value_2.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 perm_value_2",
+     "perm_value_2 = state->radius",
+     "radius = perm_value_2"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 20,
+     "uses": [
+      "s32 perm_value_2",
+      "perm_value_2 = state->radius",
+      "radius = perm_value_2"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 20,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:factor:21",
+   "kind": "local",
+   "current_name": "factor",
+   "proposed_name": null,
+   "c_type": "double = 100.0 / (radius * 50)",
+   "meaning": "Local value in effect_helper_6c3b0: double factor = 100.0 / (radius * 50); scale = factor * factor.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double factor = 100.0 / (radius * 50)",
+     "scale = factor * factor"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 21,
+     "uses": [
+      "double factor = 100.0 / (radius * 50)",
+      "scale = factor * factor"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 21,
+   "declarator": "double $ = 100.0 / (radius * 50)",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:square_y:22",
+   "kind": "local",
+   "current_name": "square_y",
+   "proposed_name": null,
+   "c_type": "double = coordinate_y * coordinate_y",
+   "meaning": "Local value in effect_helper_6c3b0: double square_y = coordinate_y * coordinate_y; distance = sqrt((coordinate_x * coordinate_x) + square_y); sqrt((coordinate_x * coordinate_x) + square_y).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double square_y = coordinate_y * coordinate_y",
+     "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+     "sqrt((coordinate_x * coordinate_x) + square_y)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 22,
+     "uses": [
+      "double square_y = coordinate_y * coordinate_y",
+      "distance = sqrt((coordinate_x * coordinate_x) + square_y)",
+      "sqrt((coordinate_x * coordinate_x) + square_y)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "local",
+   "declaration_ordinal": 22,
+   "declarator": "double $ = coordinate_y * coordinate_y",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:x:23",
+   "kind": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_6c3b0: x != (-1); state->x = x; state->x = max32(state->radius, min32(state->x, 319 - state->radius)); max32(state->radius, min32(state->x, 319 - state->radius)); min32(state->x, 319 - state->radius).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "x != (-1)",
+     "state->x = x",
+     "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+     "max32(state->radius, min32(state->x, 319 - state->radius))",
+     "min32(state->x, 319 - state->radius)",
+     "(x == (-1)) || (y == (-1))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 23,
+     "uses": [
+      "x != (-1)",
+      "state->x = x",
+      "state->x = max32(state->radius, min32(state->x, 319 - state->radius))",
+      "max32(state->radius, min32(state->x, 319 - state->radius))",
+      "min32(state->x, 319 - state->radius)",
+      "(x == (-1)) || (y == (-1))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "parameter",
+   "declaration_ordinal": 23,
+   "declarator": "s16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:y:24",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_6c3b0: y != (-1); state->y = y; state->y = max32(state->radius, min32(state->y, 199 - state->radius)); max32(state->radius, min32(state->y, 199 - state->radius)); min32(state->y, 199 - state->radius).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "y != (-1)",
+     "state->y = y",
+     "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+     "max32(state->radius, min32(state->y, 199 - state->radius))",
+     "min32(state->y, 199 - state->radius)",
+     "(x == (-1)) || (y == (-1))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 24,
+     "uses": [
+      "y != (-1)",
+      "state->y = y",
+      "state->y = max32(state->radius, min32(state->y, 199 - state->radius))",
+      "max32(state->radius, min32(state->y, 199 - state->radius))",
+      "min32(state->y, 199 - state->radius)",
+      "(x == (-1)) || (y == (-1))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "parameter",
+   "declaration_ordinal": 24,
+   "declarator": "s16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:velocity:25",
+   "kind": "local",
+   "current_name": "velocity",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_6c3b0: velocity >= 0; adjusted = max32(1, velocity); max32(1, velocity); adjusted = -max32(1, -velocity); -max32(1, -velocity).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "velocity >= 0",
+     "adjusted = max32(1, velocity)",
+     "max32(1, velocity)",
+     "adjusted = -max32(1, -velocity)",
+     "-max32(1, -velocity)",
+     "max32(1, -velocity)",
+     "-velocity",
+     "state->velocity = adjusted",
+     "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+     "-state->velocity",
+     "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 25,
+     "uses": [
+      "velocity >= 0",
+      "adjusted = max32(1, velocity)",
+      "max32(1, velocity)",
+      "adjusted = -max32(1, -velocity)",
+      "-max32(1, -velocity)",
+      "max32(1, -velocity)",
+      "-velocity",
+      "state->velocity = adjusted",
+      "state->velocity_x = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))",
+      "-state->velocity",
+      "state->velocity_y = (random_value < 4) ? (state->velocity) : ((s16) (-state->velocity))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "parameter",
+   "declaration_ordinal": 25,
+   "declarator": "s16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c3b0:step:26",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_6c3b0: state->step = max32(1, step); max32(1, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->step = max32(1, step)",
+     "max32(1, step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c3b0",
+     "address": "1:6c3b0",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c3b0",
+     "ordinal": 26,
+     "uses": [
+      "state->step = max32(1, step)",
+      "max32(1, step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c3b0",
+   "role": "parameter",
+   "declaration_ordinal": 26,
+   "declarator": "u16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_cleanup_6c7a0",
+   "kind": "function",
+   "current_name": "effect_cleanup_6c7a0",
+   "proposed_name": null,
+   "c_type": "void effect_cleanup_6c7a0(void)",
+   "meaning": "Free radial displacement map then state.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state != 0)",
+     "if (state->map != 0)",
+     "if (effect_state_6c != 0)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_cleanup_6c7a0",
+     "address": "1:6c7a0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_cleanup_6c7a0"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_cleanup_6c7a0"
+    }
+   ],
+   "port_notes": [
+    "Free radial displacement map then state.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "oracle_address": "1:6c7a0",
+   "source_file": "src/effect6c3b0.c",
+   "source_body_sha256": "2ad8b49417aedd5f49eeb8953369a3d50e27cf23da31c6965ecfbc5385b24d16",
+   "baseline_parser_body_sha256": "2ad8b49417aedd5f49eeb8953369a3d50e27cf23da31c6965ecfbc5385b24d16",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_6c"
+    ],
+    "calls": [
+     "JumelleFreeArray"
+    ],
+    "members": [
+     "map"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_cleanup_6c7a0:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t * = effect_state_6c",
+   "meaning": "Local value in effect_cleanup_6c7a0: effect_state_6c_t *state = effect_state_6c; state != 0; state->map != 0; JumelleFreeArray((void **) (&state->map)); &state->map.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_6c_t *state = effect_state_6c",
+     "state != 0",
+     "state->map != 0",
+     "JumelleFreeArray((void **) (&state->map))",
+     "&state->map"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_cleanup_6c7a0",
+     "address": "1:6c7a0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_cleanup_6c7a0",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_6c_t *state = effect_state_6c",
+      "state != 0",
+      "state->map != 0",
+      "JumelleFreeArray((void **) (&state->map))",
+      "&state->map"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_cleanup_6c7a0",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_state_6c_t *$ = effect_state_6c",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_6c7cc",
+   "kind": "function",
+   "current_name": "effect_helper_6c7cc",
+   "proposed_name": null,
+   "c_type": "u8 effect_helper_6c7cc(u16 x, u16 y, u16 radius, s16 speed, u16 step, u8 *screen, u8 *output)",
+   "meaning": "Clamp radius8..48, dimensions2r+1 square, snapshot64000 source bytes and allocate2*width*height displacement bytes in32-byte state; initialize center/speed/limit or cleanup on failure.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "success = 0",
+     "if ((screen != 0) && (output != 0))",
+     "state = (effect_state_6c_t *) sub_6FBB4(0x20)",
+     "effect_state_6c = state",
+     "if (state != 0)",
+     "state->radius = max32(8, min32(radius, 48))",
+     "state->width = (u16) ((state->radius * 2) + 1)",
+     "state->height = (u16) ((state->radius * 2) + 1)",
+     "state->screen = EffetBufferNormal",
+     "state->output = output",
+     "bytes = (((s32) state->height) * state->width) * 2",
+     "state->map = (u8 *) sub_6FBB4(bytes)",
+     "if (state->map != 0)",
+     "success = 1",
+     "if (success)",
+     "return success;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_6c7cc"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_6c7cc"
+    }
+   ],
+   "port_notes": [
+    "Clamp radius8..48, dimensions2r+1 square, snapshot64000 source bytes and allocate2*width*height displacement bytes in32-byte state; initialize center/speed/limit or cleanup on failure.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "oracle_address": "1:6c7cc",
+   "source_file": "src/effect6c3b0.c",
+   "source_body_sha256": "88d45cc432c4c670f7867ac6435623d5a0d61c8e1795455bd33aeb5b85cb8ca3",
+   "baseline_parser_body_sha256": "88d45cc432c4c670f7867ac6435623d5a0d61c8e1795455bd33aeb5b85cb8ca3",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "EffetBufferNormal",
+     "effect_state_6c"
+    ],
+    "calls": [
+     "copy_guarded",
+     "effect_cleanup_6c7a0",
+     "effect_helper_6c3b0",
+     "max32",
+     "min32",
+     "sub_6FBB4"
+    ],
+    "members": [
+     "height",
+     "map",
+     "output",
+     "radius",
+     "screen",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_6c7cc:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t *",
+   "meaning": "Local value in effect_helper_6c7cc: effect_state_6c_t *state; state = (effect_state_6c_t *) sub_6FBB4(0x20); effect_state_6c = state; state != 0; state->radius = max32(8, min32(radius, 48)).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_6c_t *state",
+     "state = (effect_state_6c_t *) sub_6FBB4(0x20)",
+     "effect_state_6c = state",
+     "state != 0",
+     "state->radius = max32(8, min32(radius, 48))",
+     "state->width = (u16) ((state->radius * 2) + 1)",
+     "state->height = (u16) ((state->radius * 2) + 1)",
+     "state->screen = EffetBufferNormal",
+     "state->output = output",
+     "bytes = (((s32) state->height) * state->width) * 2",
+     "state->map = (u8 *) sub_6FBB4(bytes)",
+     "state->map != 0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_6c_t *state",
+      "state = (effect_state_6c_t *) sub_6FBB4(0x20)",
+      "effect_state_6c = state",
+      "state != 0",
+      "state->radius = max32(8, min32(radius, 48))",
+      "state->width = (u16) ((state->radius * 2) + 1)",
+      "state->height = (u16) ((state->radius * 2) + 1)",
+      "state->screen = EffetBufferNormal",
+      "state->output = output",
+      "bytes = (((s32) state->height) * state->width) * 2",
+      "state->map = (u8 *) sub_6FBB4(bytes)",
+      "state->map != 0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_state_6c_t *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:success:2",
+   "kind": "local",
+   "current_name": "success",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in effect_helper_6c7cc: u8 success; success = 0; success = 1; success; return success;.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 success",
+     "success = 0",
+     "success = 1",
+     "success",
+     "return success;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 2,
+     "uses": [
+      "u8 success",
+      "success = 0",
+      "success = 1",
+      "success",
+      "return success;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:bytes:3",
+   "kind": "local",
+   "current_name": "bytes",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c7cc: s32 bytes; bytes = (((s32) state->height) * state->width) * 2; state->map = (u8 *) sub_6FBB4(bytes); sub_6FBB4(bytes).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 bytes",
+     "bytes = (((s32) state->height) * state->width) * 2",
+     "state->map = (u8 *) sub_6FBB4(bytes)",
+     "sub_6FBB4(bytes)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 3,
+     "uses": [
+      "s32 bytes",
+      "bytes = (((s32) state->height) * state->width) * 2",
+      "state->map = (u8 *) sub_6FBB4(bytes)",
+      "sub_6FBB4(bytes)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:x:4",
+   "kind": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_6c7cc: effect_helper_6c3b0(x, y, speed, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_helper_6c3b0(x, y, speed, step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 4,
+     "uses": [
+      "effect_helper_6c3b0(x, y, speed, step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "u16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:y:5",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_6c7cc: effect_helper_6c3b0(x, y, speed, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_helper_6c3b0(x, y, speed, step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 5,
+     "uses": [
+      "effect_helper_6c3b0(x, y, speed, step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:radius:6",
+   "kind": "local",
+   "current_name": "radius",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_6c7cc: state->radius = max32(8, min32(radius, 48)); max32(8, min32(radius, 48)); min32(radius, 48); state->width = (u16) ((state->radius * 2) + 1); state->height = (u16) ((state->radius * 2) + 1).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->radius = max32(8, min32(radius, 48))",
+     "max32(8, min32(radius, 48))",
+     "min32(radius, 48)",
+     "state->width = (u16) ((state->radius * 2) + 1)",
+     "state->height = (u16) ((state->radius * 2) + 1)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 6,
+     "uses": [
+      "state->radius = max32(8, min32(radius, 48))",
+      "max32(8, min32(radius, 48))",
+      "min32(radius, 48)",
+      "state->width = (u16) ((state->radius * 2) + 1)",
+      "state->height = (u16) ((state->radius * 2) + 1)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:speed:7",
+   "kind": "local",
+   "current_name": "speed",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_6c7cc: effect_helper_6c3b0(x, y, speed, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_helper_6c3b0(x, y, speed, step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 7,
+     "uses": [
+      "effect_helper_6c3b0(x, y, speed, step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 7,
+   "declarator": "s16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:step:8",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_6c7cc: effect_helper_6c3b0(x, y, speed, step).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_helper_6c3b0(x, y, speed, step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 8,
+     "uses": [
+      "effect_helper_6c3b0(x, y, speed, step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 8,
+   "declarator": "u16 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:screen:9",
+   "kind": "local",
+   "current_name": "screen",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_6c7cc: (screen != 0) && (output != 0); copy_guarded(screen, EffetBufferNormal, 0xfa00); state->screen = EffetBufferNormal.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(screen != 0) && (output != 0)",
+     "copy_guarded(screen, EffetBufferNormal, 0xfa00)",
+     "state->screen = EffetBufferNormal"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 9,
+     "uses": [
+      "(screen != 0) && (output != 0)",
+      "copy_guarded(screen, EffetBufferNormal, 0xfa00)",
+      "state->screen = EffetBufferNormal"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 9,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c7cc:output:10",
+   "kind": "local",
+   "current_name": "output",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_6c7cc: (screen != 0) && (output != 0); state->output = output.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(screen != 0) && (output != 0)",
+     "state->output = output"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c7cc",
+     "address": "1:6c7cc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c7cc",
+     "ordinal": 10,
+     "uses": [
+      "(screen != 0) && (output != 0)",
+      "state->output = output"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c7cc",
+   "role": "parameter",
+   "declaration_ordinal": 10,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_6c8d4",
+   "kind": "function",
+   "current_name": "effect_helper_6c8d4",
+   "proposed_name": null,
+   "c_type": "s16 effect_helper_6c8d4(void)",
+   "meaning": "Move signed16 center by signed16 velocities, clamp and reflect at0..319/0..199 radius boundaries; advance u16 frame byabs(base velocity), wrap0 when>step.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state->x = state->velocity_x + state->x",
+     "state->y = state->velocity_y + state->y",
+     "if ((state->x + state->radius) >= 320)",
+     "state->x = 319 - state->radius",
+     "state->velocity_x = -state->velocity_x",
+     "if ((state->x - state->radius) < 0)",
+     "state->x = state->radius",
+     "if ((state->y + state->radius) >= 200)",
+     "state->y = 199 - state->radius",
+     "state->velocity_y = -state->velocity_y",
+     "if ((state->y - state->radius) < 0)",
+     "state->y = state->radius",
+     "delta = state->velocity",
+     "delta = (delta >= 0) ? (delta) : (-delta)",
+     "state->frame += delta",
+     "if (state->frame > state->step)",
+     "state->frame = 0",
+     "return state->frame;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c8d4",
+     "address": "1:6c8d4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_6c8d4"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_6c8d4"
+    }
+   ],
+   "port_notes": [
+    "Move signed16 center by signed16 velocities, clamp and reflect at0..319/0..199 radius boundaries; advance u16 frame byabs(base velocity), wrap0 when>step.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "oracle_address": "1:6c8d4",
+   "source_file": "src/effect6c3b0.c",
+   "source_body_sha256": "2ab69ad82a545dff8b8511c9251ae1e53e762d30fd373dd71b476dcd4c74a029",
+   "baseline_parser_body_sha256": "2ab69ad82a545dff8b8511c9251ae1e53e762d30fd373dd71b476dcd4c74a029",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_6c"
+    ],
+    "calls": [],
+    "members": [
+     "frame",
+     "radius",
+     "step",
+     "velocity",
+     "velocity_x",
+     "velocity_y",
+     "x",
+     "y"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_6c8d4:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t * = effect_state_6c",
+   "meaning": "Local value in effect_helper_6c8d4: effect_state_6c_t *state = effect_state_6c; state->x = state->velocity_x + state->x; state->y = state->velocity_y + state->y; (state->x + state->radius) >= 320; state->x = 319 - state->radius.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_6c_t *state = effect_state_6c",
+     "state->x = state->velocity_x + state->x",
+     "state->y = state->velocity_y + state->y",
+     "(state->x + state->radius) >= 320",
+     "state->x = 319 - state->radius",
+     "state->velocity_x = -state->velocity_x",
+     "-state->velocity_x",
+     "(state->x - state->radius) < 0",
+     "state->x = state->radius",
+     "(state->y + state->radius) >= 200",
+     "state->y = 199 - state->radius",
+     "state->velocity_y = -state->velocity_y",
+     "-state->velocity_y",
+     "(state->y - state->radius) < 0",
+     "state->y = state->radius",
+     "delta = state->velocity",
+     "state->frame += delta",
+     "state->frame > state->step",
+     "state->frame = 0",
+     "return state->frame;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c8d4",
+     "address": "1:6c8d4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c8d4",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_6c_t *state = effect_state_6c",
+      "state->x = state->velocity_x + state->x",
+      "state->y = state->velocity_y + state->y",
+      "(state->x + state->radius) >= 320",
+      "state->x = 319 - state->radius",
+      "state->velocity_x = -state->velocity_x",
+      "-state->velocity_x",
+      "(state->x - state->radius) < 0",
+      "state->x = state->radius",
+      "(state->y + state->radius) >= 200",
+      "state->y = 199 - state->radius",
+      "state->velocity_y = -state->velocity_y",
+      "-state->velocity_y",
+      "(state->y - state->radius) < 0",
+      "state->y = state->radius",
+      "delta = state->velocity",
+      "state->frame += delta",
+      "state->frame > state->step",
+      "state->frame = 0",
+      "return state->frame;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c8d4",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_state_6c_t *$ = effect_state_6c",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c8d4:delta:2",
+   "kind": "local",
+   "current_name": "delta",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c8d4: s32 delta; delta = state->velocity; delta = (delta >= 0) ? (delta) : (-delta); -delta; state->frame += delta.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 delta",
+     "delta = state->velocity",
+     "delta = (delta >= 0) ? (delta) : (-delta)",
+     "-delta",
+     "state->frame += delta"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c8d4",
+     "address": "1:6c8d4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c8d4",
+     "ordinal": 2,
+     "uses": [
+      "s32 delta",
+      "delta = state->velocity",
+      "delta = (delta >= 0) ? (delta) : (-delta)",
+      "-delta",
+      "state->frame += delta"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c8d4",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_6c9bc",
+   "kind": "function",
+   "current_name": "effect_helper_6c9bc",
+   "proposed_name": null,
+   "c_type": "void effect_helper_6c9bc(void)",
+   "meaning": "Copy full source snapshot to output, then replace square(2r+1)^2 around center using signed8(dx,dy) map offsets dx+320*dy and fixed320 pitch; displacement sampling is not separately clipped.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "x = state->x - state->radius",
+     "y = state->y - state->radius",
+     "x = (x + (y * 64)) + (y * 256)",
+     "source = state->screen + x",
+     "destination = state->output + x",
+     "stride = 320 - state->width",
+     "for (y = 0; y < state->height; ++y)",
+     "y = 0",
+     "for (x = 0; x < state->width; ++x)",
+     "x = 0",
+     "*(destination++) = source[offset]",
+     "map += 2",
+     "source += stride",
+     "destination += stride"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_6c9bc"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_6c9bc"
+    }
+   ],
+   "port_notes": [
+    "Copy full source snapshot to output, then replace square(2r+1)^2 around center using signed8(dx,dy) map offsets dx+320*dy and fixed320 pitch; displacement sampling is not separately clipped.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "oracle_address": "1:6c9bc",
+   "source_file": "src/effect6c3b0.c",
+   "source_body_sha256": "2f545a93dabf4fc33d35967db01dd37400b0e211090b9b8cf1f897cb1f2b97b3",
+   "baseline_parser_body_sha256": "2f545a93dabf4fc33d35967db01dd37400b0e211090b9b8cf1f897cb1f2b97b3",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_6c"
+    ],
+    "calls": [
+     "copy_guarded"
+    ],
+    "members": [
+     "height",
+     "map",
+     "output",
+     "radius",
+     "screen",
+     "width",
+     "x",
+     "y"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_6c9bc:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t * = effect_state_6c",
+   "meaning": "Local value in effect_helper_6c9bc: effect_state_6c_t *state = effect_state_6c; u8 *map = state->map; copy_guarded(state->screen, state->output, 0xfa00); x = state->x - state->radius; y = state->y - state->radius.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_6c_t *state = effect_state_6c",
+     "u8 *map = state->map",
+     "copy_guarded(state->screen, state->output, 0xfa00)",
+     "x = state->x - state->radius",
+     "y = state->y - state->radius",
+     "source = state->screen + x",
+     "destination = state->output + x",
+     "stride = 320 - state->width",
+     "for (y = 0; y < state->height; ++y)",
+     "for (x = 0; x < state->width; ++x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_6c_t *state = effect_state_6c",
+      "u8 *map = state->map",
+      "copy_guarded(state->screen, state->output, 0xfa00)",
+      "x = state->x - state->radius",
+      "y = state->y - state->radius",
+      "source = state->screen + x",
+      "destination = state->output + x",
+      "stride = 320 - state->width",
+      "for (y = 0; y < state->height; ++y)",
+      "for (x = 0; x < state->width; ++x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_state_6c_t *$ = effect_state_6c",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:source:2",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_helper_6c9bc: u8 *source; source = state->screen + x; *(destination++) = source[offset]; source++; source += stride.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *source",
+     "source = state->screen + x",
+     "*(destination++) = source[offset]",
+     "source++",
+     "source += stride"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 2,
+     "uses": [
+      "u8 *source",
+      "source = state->screen + x",
+      "*(destination++) = source[offset]",
+      "source++",
+      "source += stride"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:destination:3",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_helper_6c9bc: u8 *destination; destination = state->output + x; *(destination++) = source[offset]; *(destination++); destination++.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *destination",
+     "destination = state->output + x",
+     "*(destination++) = source[offset]",
+     "*(destination++)",
+     "destination++",
+     "destination += stride"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 3,
+     "uses": [
+      "u8 *destination",
+      "destination = state->output + x",
+      "*(destination++) = source[offset]",
+      "*(destination++)",
+      "destination++",
+      "destination += stride"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:map:4",
+   "kind": "local",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "u8 * = state->map",
+   "meaning": "Local value in effect_helper_6c9bc: u8 *map = state->map; s32 dy = (s8) map[1]; s32 dx = (s8) map[0]; map += 2.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *map = state->map",
+     "s32 dy = (s8) map[1]",
+     "s32 dx = (s8) map[0]",
+     "map += 2"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 4,
+     "uses": [
+      "u8 *map = state->map",
+      "s32 dy = (s8) map[1]",
+      "s32 dx = (s8) map[0]",
+      "map += 2"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "u8 *$ = state->map",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:x:5",
+   "kind": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c9bc: s32 x; x = state->x - state->radius; x = (x + (y * 64)) + (y * 256); source = state->screen + x; destination = state->output + x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 x",
+     "x = state->x - state->radius",
+     "x = (x + (y * 64)) + (y * 256)",
+     "source = state->screen + x",
+     "destination = state->output + x",
+     "for (x = 0; x < state->width; ++x)",
+     "x = 0",
+     "++x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 5,
+     "uses": [
+      "s32 x",
+      "x = state->x - state->radius",
+      "x = (x + (y * 64)) + (y * 256)",
+      "source = state->screen + x",
+      "destination = state->output + x",
+      "for (x = 0; x < state->width; ++x)",
+      "x = 0",
+      "++x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:y:6",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c9bc: s32 y; y = state->y - state->radius; x = (x + (y * 64)) + (y * 256); for (y = 0; y < state->height; ++y); y = 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 y",
+     "y = state->y - state->radius",
+     "x = (x + (y * 64)) + (y * 256)",
+     "for (y = 0; y < state->height; ++y)",
+     "y = 0",
+     "++y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 6,
+     "uses": [
+      "s32 y",
+      "y = state->y - state->radius",
+      "x = (x + (y * 64)) + (y * 256)",
+      "for (y = 0; y < state->height; ++y)",
+      "y = 0",
+      "++y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:stride:7",
+   "kind": "local",
+   "current_name": "stride",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_6c9bc: s32 stride; stride = 320 - state->width; source += stride; destination += stride.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 stride",
+     "stride = 320 - state->width",
+     "source += stride",
+     "destination += stride"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 7,
+     "uses": [
+      "s32 stride",
+      "stride = 320 - state->width",
+      "source += stride",
+      "destination += stride"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "s32 $",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:dy:8",
+   "kind": "local",
+   "current_name": "dy",
+   "proposed_name": null,
+   "c_type": "s32 = (s8) map[1]",
+   "meaning": "Local value in effect_helper_6c9bc: s32 dy = (s8) map[1]; s32 offset = dx + (dy * 320).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 dy = (s8) map[1]",
+     "s32 offset = dx + (dy * 320)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 8,
+     "uses": [
+      "s32 dy = (s8) map[1]",
+      "s32 offset = dx + (dy * 320)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "s32 $ = (s8) map[1]",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:dx:9",
+   "kind": "local",
+   "current_name": "dx",
+   "proposed_name": null,
+   "c_type": "s32 = (s8) map[0]",
+   "meaning": "Local value in effect_helper_6c9bc: s32 dx = (s8) map[0]; s32 offset = dx + (dy * 320).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 dx = (s8) map[0]",
+     "s32 offset = dx + (dy * 320)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 9,
+     "uses": [
+      "s32 dx = (s8) map[0]",
+      "s32 offset = dx + (dy * 320)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "s32 $ = (s8) map[0]",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_6c9bc:offset:10",
+   "kind": "local",
+   "current_name": "offset",
+   "proposed_name": null,
+   "c_type": "s32 = dx + (dy * 320)",
+   "meaning": "Local value in effect_helper_6c9bc: s32 offset = dx + (dy * 320); *(destination++) = source[offset].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 offset = dx + (dy * 320)",
+     "*(destination++) = source[offset]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect6c3b0.dos.txt",
+     "function": "effect_helper_6c9bc",
+     "address": "1:6c9bc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect6c3b0.json",
+     "function": "effect_helper_6c9bc",
+     "ordinal": 10,
+     "uses": [
+      "s32 offset = dx + (dy * 320)",
+      "*(destination++) = source[offset]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_6c9bc",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "s32 $ = dx + (dy * 320)",
+   "source_file": "src/effect6c3b0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "global:effect_state_6c",
+   "kind": "global",
+   "current_name": "effect_state_6c",
+   "proposed_name": null,
+   "c_type": "effect_state_6c_t *",
+   "meaning": "Owning pointer to moving radial signed-byte displacement effect.",
+   "unit": "presentation state ownership",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "effect6c3b0"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_state_6c"
+    }
+   ],
+   "port_notes": [
+    "Owning pointer to moving radial signed-byte displacement effect.",
+    "Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:57460",
+   "source_file": "src/effect6c3b0.c",
+   "name_provenance": "INVENTED",
+   "declarator": "effect_state_6c_t *$",
+   "context_declarators": {
+    "effect6c3b0.c": "effect_state_6c_t *$"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:6c3bd",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c3bc",
+      "containing_bound_function": "effect_helper_6c3b0",
+      "instruction": "mov eax, dword ptr [0x57460]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6c7a1",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c7a0",
+      "containing_bound_function": "effect_cleanup_6c7a0",
+      "instruction": "mov eax, dword ptr [0x57460]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6c7b9",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c7b7",
+      "containing_bound_function": "effect_cleanup_6c7a0",
+      "instruction": "cmp dword ptr [0x57460], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6c7c1",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c7c0",
+      "containing_bound_function": "effect_cleanup_6c7a0",
+      "instruction": "mov eax, 0x57460",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:6c809",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c808",
+      "containing_bound_function": "effect_helper_6c7cc",
+      "instruction": "mov dword ptr [0x57460], eax",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6c8db",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c8d9",
+      "containing_bound_function": "effect_helper_6c8d4",
+      "instruction": "mov edx, dword ptr [0x57460]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6c9c7",
+      "target": "2:57460",
+      "kind": 7,
+      "instruction_address": "1:6c9c5",
+      "containing_bound_function": "effect_helper_6c9bc",
+      "instruction": "mov ebp, dword ptr [0x57460]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [],
+    "source_references": [
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 26,
+      "text": "extern effect_state_6c_t *effect_state_6c;"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 49,
+      "text": "state = effect_state_6c;"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 135,
+      "text": "effect_state_6c_t *state = effect_state_6c;"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 139,
+      "text": "if (effect_state_6c != 0)"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 140,
+      "text": "JumelleFreeArray((void **)&effect_state_6c);"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 154,
+      "text": "effect_state_6c = state;"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 178,
+      "text": "effect_state_6c_t *state = effect_state_6c;"
+     },
+     {
+      "source": "src/effect6c3b0.c",
+      "line": 207,
+      "text": "effect_state_6c_t *state = effect_state_6c;"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/effect6c3b0.c": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
+ },
+ "proposal_fingerprints": {
+  "effect6c3b0.c": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/effect6c3b0.dos.txt": null,
+  "evidence/inventory_effect6c3b0.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

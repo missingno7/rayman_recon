@@ -228,6 +228,13 @@ class SemanticRegistry(unittest.TestCase):
         drift=semantics.check_evidence(reg,SOURCE_ROOT)
         self.assertTrue(any(path in s for s in drift))
 
+    def test_pruned_artifact_is_not_drift_but_a_missing_hashed_one_is(self):
+        reg=copy.deepcopy(registries()['moteur.json'])
+        reg['evidence_artifact_fingerprints']={'pruned.json':None,'vanished.json':'0'*64}
+        drift=semantics.check_evidence(reg,SOURCE_ROOT,artifact_root=WORK/'no_such_artifacts')
+        self.assertFalse(any('pruned.json' in s for s in drift))
+        self.assertTrue(any('vanished.json' in s for s in drift))
+
     def test_cli_evidence_drift_does_not_fail_enforcement(self):
         regs=registries();WORK.mkdir(parents=True,exist_ok=True)
         reg=regs['moteur.json'];path=next(iter(reg['evidence_source_fingerprints']))

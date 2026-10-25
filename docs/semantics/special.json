@@ -6738,9 +6738,9 @@
   "external/rayverse/src/special.c": "b5fe364c505c54a0801714824d483e16abae07b99fbc887677d270fc4a48422b"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/special.dos.txt": "c65e99eab309ceedc2a5c171f06a1b1ead946b0947807729ef81f3b5e203e392",
-  "evidence/special_operations.json": "68329b5399748192419a78b8831f7d4b51f0ad24310024a587a7560ccf4baa26",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/special.dos.txt": null,
+  "evidence/special_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
@@ -6821,7 +6821,7 @@
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
-  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
   "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",

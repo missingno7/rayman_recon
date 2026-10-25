@@ -1030,7 +1030,8 @@ void display_movie_frames(void)
     }
 }
 
-s32 playVideo2(const char *path, const char *filename, u8 a3, u8 a4)
+/* a3 -> audio_track; a4 -> loop_playback. See docs/semantics/movie.json. */
+s32 playVideo2(const char *path, const char *filename, u8 audio_track, u8 loop_playback)
 {
     movie_local_t local;
     FILE *file;
@@ -1056,16 +1057,16 @@ s32 playVideo2(const char *path, const char *filename, u8 a3, u8 a4)
     if (MusicCdActive)
         sub_1a5b8(AudioStatusByte());
     else
-        a3 = 0;
+        audio_track = 0;
 
     sub_3B260();
     status = sub_3A5B4(local.info);
     if (status >= 0) {
         status = sub_3AA70(local.work, local.path);
         if (status >= 0) {
-            local.sound_mode = a3;
+            local.sound_mode = audio_track;
             sub_3AFB4(local.work, local.info);
-            if (a4)
+            if (loop_playback)
                 status = sub_3B138(local.work, local.info);
             else
                 status = sub_3B014(local.work, local.info);
@@ -1078,10 +1079,12 @@ s32 playVideo2(const char *path, const char *filename, u8 a3, u8 a4)
     return status;
 }
 
-s32 playVideo(const char* path, const char* filename, u8 a2) {
-    return playVideo2(path, filename, a2, 0);
+/* a2 -> audio_track. See docs/semantics/movie.json. */
+s32 playVideo(const char* path, const char* filename, u8 audio_track) {
+    return playVideo2(path, filename, audio_track, 0);
 }
 
-s32 playVideo_alt(const char* path, const char* filename, u8 a2) {
-    return playVideo2(path, filename, a2, 1);
+/* a2 -> audio_track. See docs/semantics/movie.json. */
+s32 playVideo_alt(const char* path, const char* filename, u8 audio_track) {
+    return playVideo2(path, filename, audio_track, 1);
 }

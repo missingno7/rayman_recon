@@ -11,6 +11,8 @@ entries keep neutral names. Renames are applied only for PROVEN/STRONG meanings 
   bodies, and the struct layout compiled by the pinned compiler (offsetof/sizeof, bitfield masks).
 - `python -B tools/semantics.py check --evidence` - also reports drift of evidence sources (other units' readers and
   writers, assets); the integration script runs it after every integration. Drift means "re-review", not "wrong".
+  Worker evidence artifacts (`artifact_root` under build/workers) are derived and untracked; once pruned, `refresh`
+  records them as absent (null) and they are no longer drift. The facts they supported are in the entity evidence text.
 - `python -B tools/semantics.py refresh` - after a reviewed change, re-hash and list what changed.
 - `python -B tools/semantics.py generate --out docs/semantics/generated` - port-facing views: `semantics_dos.h` (DOS
   layout facts), `SEMANTICS.md` (entity index), `PORT_CONTRACTS.md` (what the native port must preserve).

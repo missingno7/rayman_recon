@@ -1,0 +1,3252 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "effect50350.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/inline_helpers.h"
+  ],
+  "local_headers": [
+   "effect_types.h"
+  ],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:EffetBufferNormal",
+   "global:dword_E4DA8"
+  ],
+  "types": [
+   "type:effect_span_t",
+   "type:effect_rows_t",
+   "type:effect3d_point_t",
+   "type:effect_segment_t",
+   "type:effect3d_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:effect_activate",
+   "kind": "function",
+   "current_name": "effect_activate",
+   "proposed_name": null,
+   "c_type": "void effect_activate(u8 mode, s16 speed)",
+   "meaning": "Initialize two textured panels (six3D points) and signed speed inverted from input. Clamp mode1..15, set depth progress512 and center160,100. Modes1..7 select axis increments;8..15 select edge hinges at x=-2/321 or y=-2/201 with explicit initial angles128/384/512 and limitabs(speed)+128. Exact mode table attached.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "matrix_bytes = (u8 *) state->transformed",
+     "state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed))",
+     "state->mode = (u8) min32(max32(1, mode), 15)",
+     "*((u32 *) (matrix_bytes + 0x14)) = 0",
+     "*((u32 *) (matrix_bytes + 0x54)) = 0",
+     "*((u32 *) (matrix_bytes + 0x3c)) = 0x13f",
+     "*((u32 *) (matrix_bytes + 0x68)) = 0xc7",
+     "*((u32 *) (matrix_bytes + 0x64)) = 0xa0",
+     "*((u32 *) (matrix_bytes + 0x6c)) = 0",
+     "*((u32 *) (matrix_bytes + 0x00)) = *((u32 *) (matrix_bytes + 0x14))",
+     "*((u32 *) (matrix_bytes + 0x40)) = *((u32 *) (matrix_bytes + 0x54))",
+     "*((u32 *) (matrix_bytes + 0x04)) = *((u32 *) (matrix_bytes + 0x54))",
+     "*((u32 *) (matrix_bytes + 0x28)) = *((u32 *) (matrix_bytes + 0x3c))",
+     "*((u32 *) (matrix_bytes + 0x2c)) = *((u32 *) (matrix_bytes + 0x68))",
+     "*((u32 *) (matrix_bytes + 0x18)) = *((u32 *) (matrix_bytes + 0x68))",
+     "*((u32 *) (matrix_bytes + 0x50)) = *((u32 *) (matrix_bytes + 0x64))",
+     "*((u32 *) (matrix_bytes + 0x58)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x44)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x30)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x1c)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x08)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "segment = state->vertices",
+     "segment->rectangle[2] = 0",
+     "segment->rectangle[6] = 0x9f",
+     "segment->rectangle[7] = 0",
+     "segment->rectangle[5] = 0xc7",
+     "segment->screen = state->screen_a",
+     "segment->rectangle[0] = segment->rectangle[2]",
+     "segment->rectangle[4] = segment->rectangle[6]",
+     "segment->rectangle[1] = segment->rectangle[7]",
+     "segment->rectangle[3] = segment->rectangle[5]",
+     "segment = state->vertices + 1",
+     "segment->screen = state->screen_b",
+     "state->position = 0",
+     "state->position_limit = 0x200",
+     "state->angle_z = 0",
+     "state->field_10 = 0",
+     "state->step_z = 0",
+     "state->field_18 = 0xa0",
+     "state->angle_y = state->angle_z",
+     "state->angle_x = state->angle_z",
+     "state->field_0e = state->field_10",
+     "state->field_0c = state->field_10",
+     "state->step_y = state->step_z",
+     "state->step_x = state->step_z",
+     "state->field_1a = 100",
+     "state->field_1c = 0",
+     "magnitude = (s32) state->speed",
+     "if (magnitude < 0)",
+     "magnitude = -magnitude",
+     "step = magnitude",
+     "state->step_z = (s16) step",
+     "state->step_y = (s16) step",
+     "step *= 2",
+     "state->step_x = (s16) step",
+     "state->step_y = (s16) (3 * step)",
+     "state->angle_x = 0x200",
+     "state->field_1a = 201",
+     "state->field_1c = 1",
+     "state->step_x = state->speed",
+     "state->step_x = -state->step_x",
+     "if (state->speed <= 0)",
+     "state->angle_x = 0x180",
+     "state->angle_x = 0x80",
+     "state->field_1a = (s16) (-2)",
+     "state->field_18 = (s16) (-2)",
+     "state->step_y = state->speed",
+     "state->angle_y = 0x80",
+     "state->angle_y = 0x200",
+     "state->step_y = -state->step_y",
+     "state->angle_y = 0x180",
+     "state->field_18 = 0x141",
+     "if (state->field_1c == 1)",
+     "state->position_limit = magnitude + 0x80"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_activate"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_activate"
+    }
+   ],
+   "port_notes": [
+    "Initialize two textured panels (six3D points) and signed speed inverted from input. Clamp mode1..15, set depth progress512 and center160,100. Modes1..7 select axis increments;8..15 select edge hinges at x=-2/321 or y=-2/201 with explicit initial angles128/384/512 and limitabs(speed)+128. Exact mode table attached.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "oracle_address": "1:5038c",
+   "source_file": "src/effect50350.c",
+   "source_body_sha256": "66f1e16a55cfebdee27e76dd9ee78959dd47bd5e06f16f8d2af07a269a74dd97",
+   "baseline_parser_body_sha256": "66f1e16a55cfebdee27e76dd9ee78959dd47bd5e06f16f8d2af07a269a74dd97",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "effect_data",
+     "effect_reset_geometry",
+     "max32",
+     "min32"
+    ],
+    "members": [
+     "angle_x",
+     "angle_y",
+     "angle_z",
+     "field_0c",
+     "field_0e",
+     "field_10",
+     "field_18",
+     "field_1a",
+     "field_1c",
+     "mode",
+     "position",
+     "position_limit",
+     "rectangle",
+     "screen",
+     "screen_a",
+     "screen_b",
+     "speed",
+     "step_x",
+     "step_y",
+     "step_z",
+     "transformed",
+     "vertices"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_activate:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect3d_t * = effect_data()",
+   "meaning": "Local value in effect_activate: effect3d_t *state = effect_data(); matrix_bytes = (u8 *) state->transformed; state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed)); state->mode = (u8) min32(max32(1, mode), 15); segment = state->vertices.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_t *state = effect_data()",
+     "matrix_bytes = (u8 *) state->transformed",
+     "state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed))",
+     "state->mode = (u8) min32(max32(1, mode), 15)",
+     "segment = state->vertices",
+     "segment->screen = state->screen_a",
+     "segment = state->vertices + 1",
+     "segment->screen = state->screen_b",
+     "state->position = 0",
+     "state->position_limit = 0x200",
+     "state->angle_z = 0",
+     "state->field_10 = 0",
+     "state->step_z = 0",
+     "state->field_18 = 0xa0",
+     "state->angle_y = state->angle_z",
+     "state->angle_x = state->angle_z",
+     "state->field_0e = state->field_10",
+     "state->field_0c = state->field_10",
+     "state->step_y = state->step_z",
+     "state->step_x = state->step_z",
+     "state->field_1a = 100",
+     "state->field_1c = 0",
+     "magnitude = (s32) state->speed",
+     "state->step_z = (s16) step",
+     "state->step_y = (s16) step",
+     "state->step_x = (s16) step",
+     "state->step_y = (s16) (3 * step)",
+     "state->angle_x = 0x200",
+     "state->field_1a = 201",
+     "state->field_1c = 1",
+     "state->step_x = state->speed",
+     "state->step_x = -state->step_x",
+     "-state->step_x",
+     "state->speed <= 0",
+     "state->angle_x = 0x180",
+     "state->angle_x = 0x80",
+     "state->field_1a = (s16) (-2)",
+     "state->field_18 = (s16) (-2)",
+     "state->step_y = state->speed",
+     "state->angle_y = 0x80",
+     "state->angle_y = 0x200",
+     "state->step_y = -state->step_y",
+     "-state->step_y",
+     "state->angle_y = 0x180",
+     "state->field_18 = 0x141",
+     "state->field_1c == 1",
+     "state->position_limit = magnitude + 0x80"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 1,
+     "uses": [
+      "effect3d_t *state = effect_data()",
+      "matrix_bytes = (u8 *) state->transformed",
+      "state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed))",
+      "state->mode = (u8) min32(max32(1, mode), 15)",
+      "segment = state->vertices",
+      "segment->screen = state->screen_a",
+      "segment = state->vertices + 1",
+      "segment->screen = state->screen_b",
+      "state->position = 0",
+      "state->position_limit = 0x200",
+      "state->angle_z = 0",
+      "state->field_10 = 0",
+      "state->step_z = 0",
+      "state->field_18 = 0xa0",
+      "state->angle_y = state->angle_z",
+      "state->angle_x = state->angle_z",
+      "state->field_0e = state->field_10",
+      "state->field_0c = state->field_10",
+      "state->step_y = state->step_z",
+      "state->step_x = state->step_z",
+      "state->field_1a = 100",
+      "state->field_1c = 0",
+      "magnitude = (s32) state->speed",
+      "state->step_z = (s16) step",
+      "state->step_y = (s16) step",
+      "state->step_x = (s16) step",
+      "state->step_y = (s16) (3 * step)",
+      "state->angle_x = 0x200",
+      "state->field_1a = 201",
+      "state->field_1c = 1",
+      "state->step_x = state->speed",
+      "state->step_x = -state->step_x",
+      "-state->step_x",
+      "state->speed <= 0",
+      "state->angle_x = 0x180",
+      "state->angle_x = 0x80",
+      "state->field_1a = (s16) (-2)",
+      "state->field_18 = (s16) (-2)",
+      "state->step_y = state->speed",
+      "state->angle_y = 0x80",
+      "state->angle_y = 0x200",
+      "state->step_y = -state->step_y",
+      "-state->step_y",
+      "state->angle_y = 0x180",
+      "state->field_18 = 0x141",
+      "state->field_1c == 1",
+      "state->position_limit = magnitude + 0x80"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect3d_t *$ = effect_data()",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:magnitude:2",
+   "kind": "local",
+   "current_name": "magnitude",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_activate: s32 magnitude; magnitude = (s32) state->speed; magnitude < 0; magnitude = -magnitude; -magnitude.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 magnitude",
+     "magnitude = (s32) state->speed",
+     "magnitude < 0",
+     "magnitude = -magnitude",
+     "-magnitude",
+     "step = magnitude",
+     "state->position_limit = magnitude + 0x80"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 2,
+     "uses": [
+      "s32 magnitude",
+      "magnitude = (s32) state->speed",
+      "magnitude < 0",
+      "magnitude = -magnitude",
+      "-magnitude",
+      "step = magnitude",
+      "state->position_limit = magnitude + 0x80"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:step:3",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_activate: s32 step; step = magnitude; state->step_z = (s16) step; state->step_y = (s16) step; step *= 2.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 step",
+     "step = magnitude",
+     "state->step_z = (s16) step",
+     "state->step_y = (s16) step",
+     "step *= 2",
+     "state->step_x = (s16) step",
+     "state->step_y = (s16) (3 * step)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 3,
+     "uses": [
+      "s32 step",
+      "step = magnitude",
+      "state->step_z = (s16) step",
+      "state->step_y = (s16) step",
+      "step *= 2",
+      "state->step_x = (s16) step",
+      "state->step_y = (s16) (3 * step)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:segment:4",
+   "kind": "local",
+   "current_name": "segment",
+   "proposed_name": null,
+   "c_type": "effect_segment_t *",
+   "meaning": "Local value in effect_activate: effect_segment_t *segment; segment = state->vertices; segment->rectangle[2] = 0; segment->rectangle[6] = 0x9f; segment->rectangle[7] = 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_segment_t *segment",
+     "segment = state->vertices",
+     "segment->rectangle[2] = 0",
+     "segment->rectangle[6] = 0x9f",
+     "segment->rectangle[7] = 0",
+     "segment->rectangle[5] = 0xc7",
+     "segment->screen = state->screen_a",
+     "segment->rectangle[0] = segment->rectangle[2]",
+     "segment->rectangle[4] = segment->rectangle[6]",
+     "segment->rectangle[1] = segment->rectangle[7]",
+     "segment->rectangle[3] = segment->rectangle[5]",
+     "segment = state->vertices + 1",
+     "segment->screen = state->screen_b"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 4,
+     "uses": [
+      "effect_segment_t *segment",
+      "segment = state->vertices",
+      "segment->rectangle[2] = 0",
+      "segment->rectangle[6] = 0x9f",
+      "segment->rectangle[7] = 0",
+      "segment->rectangle[5] = 0xc7",
+      "segment->screen = state->screen_a",
+      "segment->rectangle[0] = segment->rectangle[2]",
+      "segment->rectangle[4] = segment->rectangle[6]",
+      "segment->rectangle[1] = segment->rectangle[7]",
+      "segment->rectangle[3] = segment->rectangle[5]",
+      "segment = state->vertices + 1",
+      "segment->screen = state->screen_b"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "effect_segment_t *$",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:matrix_bytes:5",
+   "kind": "local",
+   "current_name": "matrix_bytes",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_activate: u8 *matrix_bytes; matrix_bytes = (u8 *) state->transformed; *((u32 *) (matrix_bytes + 0x14)) = 0; *((u32 *) (matrix_bytes + 0x14)); *((u32 *) (matrix_bytes + 0x54)) = 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *matrix_bytes",
+     "matrix_bytes = (u8 *) state->transformed",
+     "*((u32 *) (matrix_bytes + 0x14)) = 0",
+     "*((u32 *) (matrix_bytes + 0x14))",
+     "*((u32 *) (matrix_bytes + 0x54)) = 0",
+     "*((u32 *) (matrix_bytes + 0x54))",
+     "*((u32 *) (matrix_bytes + 0x3c)) = 0x13f",
+     "*((u32 *) (matrix_bytes + 0x3c))",
+     "*((u32 *) (matrix_bytes + 0x68)) = 0xc7",
+     "*((u32 *) (matrix_bytes + 0x68))",
+     "*((u32 *) (matrix_bytes + 0x64)) = 0xa0",
+     "*((u32 *) (matrix_bytes + 0x64))",
+     "*((u32 *) (matrix_bytes + 0x6c)) = 0",
+     "*((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x00)) = *((u32 *) (matrix_bytes + 0x14))",
+     "*((u32 *) (matrix_bytes + 0x00))",
+     "*((u32 *) (matrix_bytes + 0x40)) = *((u32 *) (matrix_bytes + 0x54))",
+     "*((u32 *) (matrix_bytes + 0x40))",
+     "*((u32 *) (matrix_bytes + 0x04)) = *((u32 *) (matrix_bytes + 0x54))",
+     "*((u32 *) (matrix_bytes + 0x04))",
+     "*((u32 *) (matrix_bytes + 0x28)) = *((u32 *) (matrix_bytes + 0x3c))",
+     "*((u32 *) (matrix_bytes + 0x28))",
+     "*((u32 *) (matrix_bytes + 0x2c)) = *((u32 *) (matrix_bytes + 0x68))",
+     "*((u32 *) (matrix_bytes + 0x2c))",
+     "*((u32 *) (matrix_bytes + 0x18)) = *((u32 *) (matrix_bytes + 0x68))",
+     "*((u32 *) (matrix_bytes + 0x18))",
+     "*((u32 *) (matrix_bytes + 0x50)) = *((u32 *) (matrix_bytes + 0x64))",
+     "*((u32 *) (matrix_bytes + 0x50))",
+     "*((u32 *) (matrix_bytes + 0x58)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x58))",
+     "*((u32 *) (matrix_bytes + 0x44)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x44))",
+     "*((u32 *) (matrix_bytes + 0x30)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x30))",
+     "*((u32 *) (matrix_bytes + 0x1c)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x1c))",
+     "*((u32 *) (matrix_bytes + 0x08)) = *((u32 *) (matrix_bytes + 0x6c))",
+     "*((u32 *) (matrix_bytes + 0x08))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 5,
+     "uses": [
+      "u8 *matrix_bytes",
+      "matrix_bytes = (u8 *) state->transformed",
+      "*((u32 *) (matrix_bytes + 0x14)) = 0",
+      "*((u32 *) (matrix_bytes + 0x14))",
+      "*((u32 *) (matrix_bytes + 0x54)) = 0",
+      "*((u32 *) (matrix_bytes + 0x54))",
+      "*((u32 *) (matrix_bytes + 0x3c)) = 0x13f",
+      "*((u32 *) (matrix_bytes + 0x3c))",
+      "*((u32 *) (matrix_bytes + 0x68)) = 0xc7",
+      "*((u32 *) (matrix_bytes + 0x68))",
+      "*((u32 *) (matrix_bytes + 0x64)) = 0xa0",
+      "*((u32 *) (matrix_bytes + 0x64))",
+      "*((u32 *) (matrix_bytes + 0x6c)) = 0",
+      "*((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x00)) = *((u32 *) (matrix_bytes + 0x14))",
+      "*((u32 *) (matrix_bytes + 0x00))",
+      "*((u32 *) (matrix_bytes + 0x40)) = *((u32 *) (matrix_bytes + 0x54))",
+      "*((u32 *) (matrix_bytes + 0x40))",
+      "*((u32 *) (matrix_bytes + 0x04)) = *((u32 *) (matrix_bytes + 0x54))",
+      "*((u32 *) (matrix_bytes + 0x04))",
+      "*((u32 *) (matrix_bytes + 0x28)) = *((u32 *) (matrix_bytes + 0x3c))",
+      "*((u32 *) (matrix_bytes + 0x28))",
+      "*((u32 *) (matrix_bytes + 0x2c)) = *((u32 *) (matrix_bytes + 0x68))",
+      "*((u32 *) (matrix_bytes + 0x2c))",
+      "*((u32 *) (matrix_bytes + 0x18)) = *((u32 *) (matrix_bytes + 0x68))",
+      "*((u32 *) (matrix_bytes + 0x18))",
+      "*((u32 *) (matrix_bytes + 0x50)) = *((u32 *) (matrix_bytes + 0x64))",
+      "*((u32 *) (matrix_bytes + 0x50))",
+      "*((u32 *) (matrix_bytes + 0x58)) = *((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x58))",
+      "*((u32 *) (matrix_bytes + 0x44)) = *((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x44))",
+      "*((u32 *) (matrix_bytes + 0x30)) = *((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x30))",
+      "*((u32 *) (matrix_bytes + 0x1c)) = *((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x1c))",
+      "*((u32 *) (matrix_bytes + 0x08)) = *((u32 *) (matrix_bytes + 0x6c))",
+      "*((u32 *) (matrix_bytes + 0x08))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:mode:6",
+   "kind": "local",
+   "current_name": "mode",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Parameter in effect_activate: state->mode = (u8) min32(max32(1, mode), 15); min32(max32(1, mode), 15); max32(1, mode).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->mode = (u8) min32(max32(1, mode), 15)",
+     "min32(max32(1, mode), 15)",
+     "max32(1, mode)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 6,
+     "uses": [
+      "state->mode = (u8) min32(max32(1, mode), 15)",
+      "min32(max32(1, mode), 15)",
+      "max32(1, mode)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u8 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_activate:speed:7",
+   "kind": "local",
+   "current_name": "speed",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_activate: state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed)); -max32(1, speed); max32(1, speed); max32(1, -speed); -speed.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed))",
+     "-max32(1, speed)",
+     "max32(1, speed)",
+     "max32(1, -speed)",
+     "-speed",
+     "magnitude = (s32) state->speed",
+     "state->step_x = state->speed",
+     "state->speed <= 0",
+     "state->step_y = state->speed"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_activate",
+     "address": "1:5038c",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_activate",
+     "ordinal": 7,
+     "uses": [
+      "state->speed = (speed >= 0) ? (-max32(1, speed)) : (max32(1, -speed))",
+      "-max32(1, speed)",
+      "max32(1, speed)",
+      "max32(1, -speed)",
+      "-speed",
+      "magnitude = (s32) state->speed",
+      "state->step_x = state->speed",
+      "state->speed <= 0",
+      "state->step_y = state->speed"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_activate",
+   "role": "parameter",
+   "declaration_ordinal": 7,
+   "declarator": "s16 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_cleanup_506fc",
+   "kind": "function",
+   "current_name": "effect_cleanup_506fc",
+   "proposed_name": null,
+   "c_type": "void effect_cleanup_506fc(void)",
+   "meaning": "Free two panel draw descriptors, six transformed points and panel state.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state == 0)",
+     "return;",
+     "if (state->vertices != 0)",
+     "if (state->transformed != 0)",
+     "if (dword_E4DA8 != 0)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_cleanup_506fc",
+     "address": "1:506fc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_cleanup_506fc"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_cleanup_506fc"
+    }
+   ],
+   "port_notes": [
+    "Free two panel draw descriptors, six transformed points and panel state.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "oracle_address": "1:506fc",
+   "source_file": "src/effect50350.c",
+   "source_body_sha256": "267872550d6c766590de96ae011cf95afe4d6ec780dfc0df2f1c5b72b77e7cde",
+   "baseline_parser_body_sha256": "267872550d6c766590de96ae011cf95afe4d6ec780dfc0df2f1c5b72b77e7cde",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dword_E4DA8"
+    ],
+    "calls": [
+     "JumelleFreeArray",
+     "effect_data"
+    ],
+    "members": [
+     "transformed",
+     "vertices"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_cleanup_506fc:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect3d_t * = effect_data()",
+   "meaning": "Local value in effect_cleanup_506fc: effect3d_t *state = effect_data(); state == 0; state->vertices != 0; JumelleFreeArray((void **) (&state->vertices)); &state->vertices.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_t *state = effect_data()",
+     "state == 0",
+     "state->vertices != 0",
+     "JumelleFreeArray((void **) (&state->vertices))",
+     "&state->vertices",
+     "state->transformed != 0",
+     "JumelleFreeArray((void **) (&state->transformed))",
+     "&state->transformed"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_cleanup_506fc",
+     "address": "1:506fc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_cleanup_506fc",
+     "ordinal": 1,
+     "uses": [
+      "effect3d_t *state = effect_data()",
+      "state == 0",
+      "state->vertices != 0",
+      "JumelleFreeArray((void **) (&state->vertices))",
+      "&state->vertices",
+      "state->transformed != 0",
+      "JumelleFreeArray((void **) (&state->transformed))",
+      "&state->transformed"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_cleanup_506fc",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect3d_t *$ = effect_data()",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_50738",
+   "kind": "function",
+   "current_name": "effect_helper_50738",
+   "proposed_name": null,
+   "c_type": "u8 effect_helper_50738(u8 mode, s16 speed, u8 *source, u8 *destination)",
+   "meaning": "Allocate panel state,88-byte draw records,120-byte point array; copy two160x200 half-screen textures to256 pitch, then initialize mode/speed. Cleanup on failure.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if ((source != 0) && (destination != 0))",
+     "dword_E4DA8 = (effect3d_t *) sub_6FBB4(sizeof(effect3d_t))",
+     "if (effect_data() != 0)",
+     "state = effect_data()",
+     "state->source = source",
+     "state->destination = destination",
+     "state->vertices = (effect_segment_t *) sub_6FBB4(0x58)",
+     "if (state->vertices != 0)",
+     "state->transformed = (effect3d_point_t *) sub_6FBB4(0x78)",
+     "if (state->transformed != 0)",
+     "state->screen_a = EffetBufferNormal",
+     "state->screen_b = second_screen",
+     "okay = 1",
+     "if (okay != 0)",
+     "return okay;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_50738"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_50738"
+    }
+   ],
+   "port_notes": [
+    "Allocate panel state,88-byte draw records,120-byte point array; copy two160x200 half-screen textures to256 pitch, then initialize mode/speed. Cleanup on failure.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "oracle_address": "1:50738",
+   "source_file": "src/effect50350.c",
+   "source_body_sha256": "34751a598595966e37404608d5357c7cdd354db0e40d6a18205eed04fb9420ce",
+   "baseline_parser_body_sha256": "34751a598595966e37404608d5357c7cdd354db0e40d6a18205eed04fb9420ce",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "EffetBufferNormal",
+     "dword_E4DA8"
+    ],
+    "calls": [
+     "effect_activate",
+     "effect_cleanup_506fc",
+     "effect_copy_band",
+     "effect_data",
+     "sub_6FBB4"
+    ],
+    "members": [
+     "destination",
+     "screen_a",
+     "screen_b",
+     "source",
+     "transformed",
+     "vertices"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_50738:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect3d_t *",
+   "meaning": "Local value in effect_helper_50738: effect3d_t *state; state = effect_data(); state->source = source; state->destination = destination; state->vertices = (effect_segment_t *) sub_6FBB4(0x58).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_t *state",
+     "state = effect_data()",
+     "state->source = source",
+     "state->destination = destination",
+     "state->vertices = (effect_segment_t *) sub_6FBB4(0x58)",
+     "state->vertices != 0",
+     "state->transformed = (effect3d_point_t *) sub_6FBB4(0x78)",
+     "state->transformed != 0",
+     "state->screen_a = EffetBufferNormal",
+     "state->screen_b = second_screen",
+     "effect_copy_band(state->source, state->screen_a, 0xa0)",
+     "effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 1,
+     "uses": [
+      "effect3d_t *state",
+      "state = effect_data()",
+      "state->source = source",
+      "state->destination = destination",
+      "state->vertices = (effect_segment_t *) sub_6FBB4(0x58)",
+      "state->vertices != 0",
+      "state->transformed = (effect3d_point_t *) sub_6FBB4(0x78)",
+      "state->transformed != 0",
+      "state->screen_a = EffetBufferNormal",
+      "state->screen_b = second_screen",
+      "effect_copy_band(state->source, state->screen_a, 0xa0)",
+      "effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect3d_t *$",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:okay:2",
+   "kind": "local",
+   "current_name": "okay",
+   "proposed_name": null,
+   "c_type": "u8 = 0",
+   "meaning": "Local value in effect_helper_50738: u8 okay = 0; okay = 1; okay != 0; return okay;.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 okay = 0",
+     "okay = 1",
+     "okay != 0",
+     "return okay;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 2,
+     "uses": [
+      "u8 okay = 0",
+      "okay = 1",
+      "okay != 0",
+      "return okay;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 $ = 0",
+   "source_file": "src/effect50350.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:second_screen:3",
+   "kind": "local",
+   "current_name": "second_screen",
+   "proposed_name": null,
+   "c_type": "u8 * = EffetBufferNormal + 0xc800",
+   "meaning": "Local value in effect_helper_50738: u8 *second_screen = EffetBufferNormal + 0xc800; state->screen_b = second_screen.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *second_screen = EffetBufferNormal + 0xc800",
+     "state->screen_b = second_screen"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 3,
+     "uses": [
+      "u8 *second_screen = EffetBufferNormal + 0xc800",
+      "state->screen_b = second_screen"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$ = EffetBufferNormal + 0xc800",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:mode:4",
+   "kind": "local",
+   "current_name": "mode",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Parameter in effect_helper_50738: effect_activate(mode, speed).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_activate(mode, speed)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 4,
+     "uses": [
+      "effect_activate(mode, speed)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "u8 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:speed:5",
+   "kind": "local",
+   "current_name": "speed",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_50738: effect_activate(mode, speed).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_activate(mode, speed)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 5,
+     "uses": [
+      "effect_activate(mode, speed)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "s16 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:source:6",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_50738: (source != 0) && (destination != 0); state->source = source; effect_copy_band(state->source, state->screen_a, 0xa0); effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(source != 0) && (destination != 0)",
+     "state->source = source",
+     "effect_copy_band(state->source, state->screen_a, 0xa0)",
+     "effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 6,
+     "uses": [
+      "(source != 0) && (destination != 0)",
+      "state->source = source",
+      "effect_copy_band(state->source, state->screen_a, 0xa0)",
+      "effect_copy_band(state->source + 0xa0, state->screen_b, 0xa0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u8 *$",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50738:destination:7",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_50738: (source != 0) && (destination != 0); state->destination = destination.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(source != 0) && (destination != 0)",
+     "state->destination = destination"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50738",
+     "address": "1:50738",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50738",
+     "ordinal": 7,
+     "uses": [
+      "(source != 0) && (destination != 0)",
+      "state->destination = destination"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50738",
+   "role": "parameter",
+   "declaration_ordinal": 7,
+   "declarator": "u8 *$",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_507f0",
+   "kind": "function",
+   "current_name": "effect_helper_507f0",
+   "proposed_name": null,
+   "c_type": "u16 effect_helper_507f0(void)",
+   "meaning": "Rotate six points in Z,Y,X order with Q9 coefficients and arithmetic shifts after each axis; add depth512 or512+4*directed_progress, project (x<<9)/depth around stored pivot. Populate two quad descriptors sharing center edge, advance signed16 angles and u16 position byabs(speed), wrap0 when>limit.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state->field_1c == 0)",
+     "if (state->speed >= 0)",
+     "extent = state->position",
+     "extent = state->position_limit - state->position",
+     "extent = (extent << 2) + 0x200",
+     "extent = 0x200",
+     "first_x = first_result",
+     "cofirst_x = second_result",
+     "first_y = first_result",
+     "cofirst_y = second_result",
+     "first_z = first_result",
+     "cofirst_z = second_result",
+     "for (index = 0; index < 6; ++index, ++point)",
+     "index = 0",
+     "if (state->angle_z != 0)",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "y = ((x * first_z) + (y * cofirst_z)) >> 9",
+     "x = temp >> 9",
+     "if (state->angle_y != 0)",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "z = ((z * cofirst_y) - (x * first_y)) >> 9",
+     "if (state->angle_x != 0)",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "z = (z * cofirst_x) - (y * first_x)",
+     "y = temp >> 9",
+     "z >>= 9",
+     "z += extent",
+     "point->screen_x = state->field_18 + ((x << 9) / z)",
+     "point->screen_y = ((y << 9) / z) + state->field_1a",
+     "state->angle_x += state->step_x",
+     "state->angle_y += state->step_y",
+     "state->angle_z += state->step_z",
+     "segment->points[0] = output[0].screen_x",
+     "segment->points[1] = output[0].screen_y",
+     "segment->points[2] = output[1].screen_x",
+     "segment->points[3] = output[1].screen_y",
+     "segment->points[4] = output[5].screen_x",
+     "segment->points[5] = output[5].screen_y",
+     "segment->points[6] = output[4].screen_x",
+     "segment->points[7] = output[4].screen_y",
+     "segment = state->vertices + 1",
+     "segment->points[0] = output[4].screen_x",
+     "segment->points[1] = output[4].screen_y",
+     "segment->points[2] = output[5].screen_x",
+     "segment->points[3] = output[5].screen_y",
+     "segment->points[4] = output[2].screen_x",
+     "segment->points[5] = output[2].screen_y",
+     "segment->points[6] = output[3].screen_x",
+     "segment->points[7] = output[3].screen_y",
+     "if (step < 0)",
+     "step = -step",
+     "state->position += step",
+     "if (state->position > state->position_limit)",
+     "state->position = 0",
+     "return state->position;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_507f0"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_507f0"
+    }
+   ],
+   "port_notes": [
+    "Rotate six points in Z,Y,X order with Q9 coefficients and arithmetic shifts after each axis; add depth512 or512+4*directed_progress, project (x<<9)/depth around stored pivot. Populate two quad descriptors sharing center edge, advance signed16 angles and u16 position byabs(speed), wrap0 when>limit.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "oracle_address": "1:507f0",
+   "source_file": "src/effect50350.c",
+   "source_body_sha256": "753c7d82bca4a75090fb152f0b9cd1a1ebac3577f22ef13b084ed9b40e36b5f3",
+   "baseline_parser_body_sha256": "753c7d82bca4a75090fb152f0b9cd1a1ebac3577f22ef13b084ed9b40e36b5f3",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "effect_data",
+     "sinus_cosinus"
+    ],
+    "members": [
+     "angle_x",
+     "angle_y",
+     "angle_z",
+     "field_18",
+     "field_1a",
+     "field_1c",
+     "points",
+     "position",
+     "position_limit",
+     "screen_x",
+     "screen_y",
+     "speed",
+     "step_x",
+     "step_y",
+     "step_z",
+     "transformed",
+     "vertices",
+     "x",
+     "y",
+     "z"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_507f0:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect3d_t * = effect_data()",
+   "meaning": "Local value in effect_helper_507f0: effect3d_t *state = effect_data(); effect3d_point_t *point = state->transformed; state->field_1c == 0; state->speed >= 0; extent = state->position.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_t *state = effect_data()",
+     "effect3d_point_t *point = state->transformed",
+     "state->field_1c == 0",
+     "state->speed >= 0",
+     "extent = state->position",
+     "extent = state->position_limit - state->position",
+     "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+     "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+     "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+     "s32 x = point->x - state->field_18",
+     "s32 y = point->y - state->field_1a",
+     "state->angle_z != 0",
+     "state->angle_y != 0",
+     "state->angle_x != 0",
+     "point->screen_x = state->field_18 + ((x << 9) / z)",
+     "point->screen_y = ((y << 9) / z) + state->field_1a",
+     "state->angle_x += state->step_x",
+     "state->angle_y += state->step_y",
+     "state->angle_z += state->step_z",
+     "effect3d_point_t *output = state->transformed",
+     "effect_segment_t *segment = state->vertices",
+     "segment = state->vertices + 1",
+     "s32 step = state->speed",
+     "state->position += step",
+     "state->position > state->position_limit",
+     "state->position = 0",
+     "return state->position;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 1,
+     "uses": [
+      "effect3d_t *state = effect_data()",
+      "effect3d_point_t *point = state->transformed",
+      "state->field_1c == 0",
+      "state->speed >= 0",
+      "extent = state->position",
+      "extent = state->position_limit - state->position",
+      "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+      "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+      "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+      "s32 x = point->x - state->field_18",
+      "s32 y = point->y - state->field_1a",
+      "state->angle_z != 0",
+      "state->angle_y != 0",
+      "state->angle_x != 0",
+      "point->screen_x = state->field_18 + ((x << 9) / z)",
+      "point->screen_y = ((y << 9) / z) + state->field_1a",
+      "state->angle_x += state->step_x",
+      "state->angle_y += state->step_y",
+      "state->angle_z += state->step_z",
+      "effect3d_point_t *output = state->transformed",
+      "effect_segment_t *segment = state->vertices",
+      "segment = state->vertices + 1",
+      "s32 step = state->speed",
+      "state->position += step",
+      "state->position > state->position_limit",
+      "state->position = 0",
+      "return state->position;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect3d_t *$ = effect_data()",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:point:2",
+   "kind": "local",
+   "current_name": "point",
+   "proposed_name": null,
+   "c_type": "effect3d_point_t * = state->transformed",
+   "meaning": "Local value in effect_helper_507f0: effect3d_point_t *point = state->transformed; for (index = 0; index < 6; ++index, ++point); ++point; s32 x = point->x - state->field_18; s32 y = point->y - state->field_1a.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_point_t *point = state->transformed",
+     "for (index = 0; index < 6; ++index, ++point)",
+     "++point",
+     "s32 x = point->x - state->field_18",
+     "s32 y = point->y - state->field_1a",
+     "s32 z = point->z",
+     "point->screen_x = state->field_18 + ((x << 9) / z)",
+     "point->screen_y = ((y << 9) / z) + state->field_1a"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 2,
+     "uses": [
+      "effect3d_point_t *point = state->transformed",
+      "for (index = 0; index < 6; ++index, ++point)",
+      "++point",
+      "s32 x = point->x - state->field_18",
+      "s32 y = point->y - state->field_1a",
+      "s32 z = point->z",
+      "point->screen_x = state->field_18 + ((x << 9) / z)",
+      "point->screen_y = ((y << 9) / z) + state->field_1a"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "effect3d_point_t *$ = state->transformed",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:second_result:3",
+   "kind": "local",
+   "current_name": "second_result",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_507f0: s16 second_result; sinus_cosinus(state->angle_x, &first_result, &second_result); &second_result; cofirst_x = second_result; sinus_cosinus(state->angle_y, &first_result, &second_result).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 second_result",
+     "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+     "&second_result",
+     "cofirst_x = second_result",
+     "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+     "cofirst_y = second_result",
+     "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+     "cofirst_z = second_result"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 3,
+     "uses": [
+      "s16 second_result",
+      "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+      "&second_result",
+      "cofirst_x = second_result",
+      "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+      "cofirst_y = second_result",
+      "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+      "cofirst_z = second_result"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s16 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:first_result:4",
+   "kind": "local",
+   "current_name": "first_result",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_507f0: s16 first_result; sinus_cosinus(state->angle_x, &first_result, &second_result); &first_result; first_x = first_result; sinus_cosinus(state->angle_y, &first_result, &second_result).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 first_result",
+     "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+     "&first_result",
+     "first_x = first_result",
+     "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+     "first_y = first_result",
+     "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+     "first_z = first_result"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 4,
+     "uses": [
+      "s16 first_result",
+      "sinus_cosinus(state->angle_x, &first_result, &second_result)",
+      "&first_result",
+      "first_x = first_result",
+      "sinus_cosinus(state->angle_y, &first_result, &second_result)",
+      "first_y = first_result",
+      "sinus_cosinus(state->angle_z, &first_result, &second_result)",
+      "first_z = first_result"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "s16 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:extent:5",
+   "kind": "local",
+   "current_name": "extent",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_507f0: s16 extent; extent = state->position; extent = state->position_limit - state->position; extent = (extent << 2) + 0x200; extent = 0x200.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 extent",
+     "extent = state->position",
+     "extent = state->position_limit - state->position",
+     "extent = (extent << 2) + 0x200",
+     "extent = 0x200",
+     "z += extent"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 5,
+     "uses": [
+      "s16 extent",
+      "extent = state->position",
+      "extent = state->position_limit - state->position",
+      "extent = (extent << 2) + 0x200",
+      "extent = 0x200",
+      "z += extent"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "s16 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:first_z:6",
+   "kind": "local",
+   "current_name": "first_z",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 first_z; first_z = first_result; temp = (cofirst_z * x) - (first_z * y); y = ((x * first_z) + (y * cofirst_z)) >> 9.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 first_z",
+     "first_z = first_result",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "y = ((x * first_z) + (y * cofirst_z)) >> 9"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 6,
+     "uses": [
+      "s32 first_z",
+      "first_z = first_result",
+      "temp = (cofirst_z * x) - (first_z * y)",
+      "y = ((x * first_z) + (y * cofirst_z)) >> 9"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:cofirst_x:7",
+   "kind": "local",
+   "current_name": "cofirst_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 cofirst_x; cofirst_x = second_result; temp = (first_x * z) + (y * cofirst_x); z = (z * cofirst_x) - (y * first_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 cofirst_x",
+     "cofirst_x = second_result",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "z = (z * cofirst_x) - (y * first_x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 7,
+     "uses": [
+      "s32 cofirst_x",
+      "cofirst_x = second_result",
+      "temp = (first_x * z) + (y * cofirst_x)",
+      "z = (z * cofirst_x) - (y * first_x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:cofirst_z:8",
+   "kind": "local",
+   "current_name": "cofirst_z",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 cofirst_z; cofirst_z = second_result; temp = (cofirst_z * x) - (first_z * y); y = ((x * first_z) + (y * cofirst_z)) >> 9.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 cofirst_z",
+     "cofirst_z = second_result",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "y = ((x * first_z) + (y * cofirst_z)) >> 9"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 8,
+     "uses": [
+      "s32 cofirst_z",
+      "cofirst_z = second_result",
+      "temp = (cofirst_z * x) - (first_z * y)",
+      "y = ((x * first_z) + (y * cofirst_z)) >> 9"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:first_x:9",
+   "kind": "local",
+   "current_name": "first_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 first_x; first_x = first_result; temp = (first_x * z) + (y * cofirst_x); z = (z * cofirst_x) - (y * first_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 first_x",
+     "first_x = first_result",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "z = (z * cofirst_x) - (y * first_x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 9,
+     "uses": [
+      "s32 first_x",
+      "first_x = first_result",
+      "temp = (first_x * z) + (y * cofirst_x)",
+      "z = (z * cofirst_x) - (y * first_x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:cofirst_y:10",
+   "kind": "local",
+   "current_name": "cofirst_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 cofirst_y; cofirst_y = second_result; temp = (first_y * z) + (cofirst_y * x); z = ((z * cofirst_y) - (x * first_y)) >> 9.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 cofirst_y",
+     "cofirst_y = second_result",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "z = ((z * cofirst_y) - (x * first_y)) >> 9"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 10,
+     "uses": [
+      "s32 cofirst_y",
+      "cofirst_y = second_result",
+      "temp = (first_y * z) + (cofirst_y * x)",
+      "z = ((z * cofirst_y) - (x * first_y)) >> 9"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:first_y:11",
+   "kind": "local",
+   "current_name": "first_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 first_y; first_y = first_result; temp = (first_y * z) + (cofirst_y * x); z = ((z * cofirst_y) - (x * first_y)) >> 9.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 first_y",
+     "first_y = first_result",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "z = ((z * cofirst_y) - (x * first_y)) >> 9"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 11,
+     "uses": [
+      "s32 first_y",
+      "first_y = first_result",
+      "temp = (first_y * z) + (cofirst_y * x)",
+      "z = ((z * cofirst_y) - (x * first_y)) >> 9"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 11,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:index:12",
+   "kind": "local",
+   "current_name": "index",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in effect_helper_507f0: u8 index; for (index = 0; index < 6; ++index, ++point); index = 0; ++index.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 index",
+     "for (index = 0; index < 6; ++index, ++point)",
+     "index = 0",
+     "++index"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 12,
+     "uses": [
+      "u8 index",
+      "for (index = 0; index < 6; ++index, ++point)",
+      "index = 0",
+      "++index"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 12,
+   "declarator": "u8 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:x:13",
+   "kind": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32 = point->x - state->field_18",
+   "meaning": "Local value in effect_helper_507f0: s32 x = point->x - state->field_18; temp = (cofirst_z * x) - (first_z * y); y = ((x * first_z) + (y * cofirst_z)) >> 9; x = temp >> 9; temp = (first_y * z) + (cofirst_y * x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 x = point->x - state->field_18",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "y = ((x * first_z) + (y * cofirst_z)) >> 9",
+     "x = temp >> 9",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "z = ((z * cofirst_y) - (x * first_y)) >> 9",
+     "point->screen_x = state->field_18 + ((x << 9) / z)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 13,
+     "uses": [
+      "s32 x = point->x - state->field_18",
+      "temp = (cofirst_z * x) - (first_z * y)",
+      "y = ((x * first_z) + (y * cofirst_z)) >> 9",
+      "x = temp >> 9",
+      "temp = (first_y * z) + (cofirst_y * x)",
+      "z = ((z * cofirst_y) - (x * first_y)) >> 9",
+      "point->screen_x = state->field_18 + ((x << 9) / z)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 13,
+   "declarator": "s32 $ = point->x - state->field_18",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:y:14",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32 = point->y - state->field_1a",
+   "meaning": "Local value in effect_helper_507f0: s32 y = point->y - state->field_1a; temp = (cofirst_z * x) - (first_z * y); y = ((x * first_z) + (y * cofirst_z)) >> 9; temp = (first_x * z) + (y * cofirst_x); z = (z * cofirst_x) - (y * first_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 y = point->y - state->field_1a",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "y = ((x * first_z) + (y * cofirst_z)) >> 9",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "z = (z * cofirst_x) - (y * first_x)",
+     "y = temp >> 9",
+     "point->screen_y = ((y << 9) / z) + state->field_1a"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 14,
+     "uses": [
+      "s32 y = point->y - state->field_1a",
+      "temp = (cofirst_z * x) - (first_z * y)",
+      "y = ((x * first_z) + (y * cofirst_z)) >> 9",
+      "temp = (first_x * z) + (y * cofirst_x)",
+      "z = (z * cofirst_x) - (y * first_x)",
+      "y = temp >> 9",
+      "point->screen_y = ((y << 9) / z) + state->field_1a"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 14,
+   "declarator": "s32 $ = point->y - state->field_1a",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:z:15",
+   "kind": "local",
+   "current_name": "z",
+   "proposed_name": null,
+   "c_type": "s32 = point->z",
+   "meaning": "Local value in effect_helper_507f0: s32 z = point->z; temp = (first_y * z) + (cofirst_y * x); z = ((z * cofirst_y) - (x * first_y)) >> 9; temp = (first_x * z) + (y * cofirst_x); z = (z * cofirst_x) - (y * first_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 z = point->z",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "z = ((z * cofirst_y) - (x * first_y)) >> 9",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "z = (z * cofirst_x) - (y * first_x)",
+     "z >>= 9",
+     "z += extent",
+     "point->screen_x = state->field_18 + ((x << 9) / z)",
+     "point->screen_y = ((y << 9) / z) + state->field_1a"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 15,
+     "uses": [
+      "s32 z = point->z",
+      "temp = (first_y * z) + (cofirst_y * x)",
+      "z = ((z * cofirst_y) - (x * first_y)) >> 9",
+      "temp = (first_x * z) + (y * cofirst_x)",
+      "z = (z * cofirst_x) - (y * first_x)",
+      "z >>= 9",
+      "z += extent",
+      "point->screen_x = state->field_18 + ((x << 9) / z)",
+      "point->screen_y = ((y << 9) / z) + state->field_1a"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 15,
+   "declarator": "s32 $ = point->z",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:temp:16",
+   "kind": "local",
+   "current_name": "temp",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_507f0: s32 temp; temp = (cofirst_z * x) - (first_z * y); x = temp >> 9; temp = (first_y * z) + (cofirst_y * x); temp = (first_x * z) + (y * cofirst_x).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 temp",
+     "temp = (cofirst_z * x) - (first_z * y)",
+     "x = temp >> 9",
+     "temp = (first_y * z) + (cofirst_y * x)",
+     "temp = (first_x * z) + (y * cofirst_x)",
+     "y = temp >> 9"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 16,
+     "uses": [
+      "s32 temp",
+      "temp = (cofirst_z * x) - (first_z * y)",
+      "x = temp >> 9",
+      "temp = (first_y * z) + (cofirst_y * x)",
+      "temp = (first_x * z) + (y * cofirst_x)",
+      "y = temp >> 9"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 16,
+   "declarator": "s32 $",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:output:17",
+   "kind": "local",
+   "current_name": "output",
+   "proposed_name": null,
+   "c_type": "effect3d_point_t * = state->transformed",
+   "meaning": "Local value in effect_helper_507f0: effect3d_point_t *output = state->transformed; segment->points[0] = output[0].screen_x; segment->points[1] = output[0].screen_y; segment->points[2] = output[1].screen_x; segment->points[3] = output[1].screen_y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_point_t *output = state->transformed",
+     "segment->points[0] = output[0].screen_x",
+     "segment->points[1] = output[0].screen_y",
+     "segment->points[2] = output[1].screen_x",
+     "segment->points[3] = output[1].screen_y",
+     "segment->points[4] = output[5].screen_x",
+     "segment->points[5] = output[5].screen_y",
+     "segment->points[6] = output[4].screen_x",
+     "segment->points[7] = output[4].screen_y",
+     "segment->points[0] = output[4].screen_x",
+     "segment->points[1] = output[4].screen_y",
+     "segment->points[2] = output[5].screen_x",
+     "segment->points[3] = output[5].screen_y",
+     "segment->points[4] = output[2].screen_x",
+     "segment->points[5] = output[2].screen_y",
+     "segment->points[6] = output[3].screen_x",
+     "segment->points[7] = output[3].screen_y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 17,
+     "uses": [
+      "effect3d_point_t *output = state->transformed",
+      "segment->points[0] = output[0].screen_x",
+      "segment->points[1] = output[0].screen_y",
+      "segment->points[2] = output[1].screen_x",
+      "segment->points[3] = output[1].screen_y",
+      "segment->points[4] = output[5].screen_x",
+      "segment->points[5] = output[5].screen_y",
+      "segment->points[6] = output[4].screen_x",
+      "segment->points[7] = output[4].screen_y",
+      "segment->points[0] = output[4].screen_x",
+      "segment->points[1] = output[4].screen_y",
+      "segment->points[2] = output[5].screen_x",
+      "segment->points[3] = output[5].screen_y",
+      "segment->points[4] = output[2].screen_x",
+      "segment->points[5] = output[2].screen_y",
+      "segment->points[6] = output[3].screen_x",
+      "segment->points[7] = output[3].screen_y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 17,
+   "declarator": "effect3d_point_t *$ = state->transformed",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:segment:18",
+   "kind": "local",
+   "current_name": "segment",
+   "proposed_name": null,
+   "c_type": "effect_segment_t * = state->vertices",
+   "meaning": "Local value in effect_helper_507f0: effect_segment_t *segment = state->vertices; segment->points[0] = output[0].screen_x; segment->points[1] = output[0].screen_y; segment->points[2] = output[1].screen_x; segment->points[3] = output[1].screen_y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_segment_t *segment = state->vertices",
+     "segment->points[0] = output[0].screen_x",
+     "segment->points[1] = output[0].screen_y",
+     "segment->points[2] = output[1].screen_x",
+     "segment->points[3] = output[1].screen_y",
+     "segment->points[4] = output[5].screen_x",
+     "segment->points[5] = output[5].screen_y",
+     "segment->points[6] = output[4].screen_x",
+     "segment->points[7] = output[4].screen_y",
+     "segment = state->vertices + 1",
+     "segment->points[0] = output[4].screen_x",
+     "segment->points[1] = output[4].screen_y",
+     "segment->points[2] = output[5].screen_x",
+     "segment->points[3] = output[5].screen_y",
+     "segment->points[4] = output[2].screen_x",
+     "segment->points[5] = output[2].screen_y",
+     "segment->points[6] = output[3].screen_x",
+     "segment->points[7] = output[3].screen_y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 18,
+     "uses": [
+      "effect_segment_t *segment = state->vertices",
+      "segment->points[0] = output[0].screen_x",
+      "segment->points[1] = output[0].screen_y",
+      "segment->points[2] = output[1].screen_x",
+      "segment->points[3] = output[1].screen_y",
+      "segment->points[4] = output[5].screen_x",
+      "segment->points[5] = output[5].screen_y",
+      "segment->points[6] = output[4].screen_x",
+      "segment->points[7] = output[4].screen_y",
+      "segment = state->vertices + 1",
+      "segment->points[0] = output[4].screen_x",
+      "segment->points[1] = output[4].screen_y",
+      "segment->points[2] = output[5].screen_x",
+      "segment->points[3] = output[5].screen_y",
+      "segment->points[4] = output[2].screen_x",
+      "segment->points[5] = output[2].screen_y",
+      "segment->points[6] = output[3].screen_x",
+      "segment->points[7] = output[3].screen_y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 18,
+   "declarator": "effect_segment_t *$ = state->vertices",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_507f0:step:19",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "s32 = state->speed",
+   "meaning": "Local value in effect_helper_507f0: s32 step = state->speed; step < 0; step = -step; -step; state->position += step.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 step = state->speed",
+     "step < 0",
+     "step = -step",
+     "-step",
+     "state->position += step"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_507f0",
+     "address": "1:507f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_507f0",
+     "ordinal": 19,
+     "uses": [
+      "s32 step = state->speed",
+      "step < 0",
+      "step = -step",
+      "-step",
+      "state->position += step"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_507f0",
+   "role": "local",
+   "declaration_ordinal": 19,
+   "declarator": "s32 $ = state->speed",
+   "source_file": "src/effect50350.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_50aa8",
+   "kind": "function",
+   "current_name": "effect_helper_50aa8",
+   "proposed_name": null,
+   "c_type": "void effect_helper_50aa8(void)",
+   "meaning": "Draw exactly two panel descriptors through shared draw_effect_segment.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": []
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50aa8",
+     "address": "1:50aa8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_50aa8"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_50aa8"
+    }
+   ],
+   "port_notes": [
+    "Draw exactly two panel descriptors through shared draw_effect_segment.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "oracle_address": "1:50aa8",
+   "source_file": "src/effect50350.c",
+   "source_body_sha256": "08c0c2676a2c9529734d69e293db8e715364eef5f3661c49dcda826c3d38f659",
+   "baseline_parser_body_sha256": "08c0c2676a2c9529734d69e293db8e715364eef5f3661c49dcda826c3d38f659",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "draw_effect_segment",
+     "effect_data"
+    ],
+    "members": [
+     "destination",
+     "vertices"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_50aa8:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect3d_t * = effect_data()",
+   "meaning": "Local value in effect_helper_50aa8: effect3d_t *state = effect_data(); effect_segment_t *points = state->vertices; draw_effect_segment(state->destination, (u8 *) points).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect3d_t *state = effect_data()",
+     "effect_segment_t *points = state->vertices",
+     "draw_effect_segment(state->destination, (u8 *) points)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50aa8",
+     "address": "1:50aa8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50aa8",
+     "ordinal": 1,
+     "uses": [
+      "effect3d_t *state = effect_data()",
+      "effect_segment_t *points = state->vertices",
+      "draw_effect_segment(state->destination, (u8 *) points)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50aa8",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect3d_t *$ = effect_data()",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_50aa8:points:2",
+   "kind": "local",
+   "current_name": "points",
+   "proposed_name": null,
+   "c_type": "effect_segment_t * = state->vertices",
+   "meaning": "Local value in effect_helper_50aa8: effect_segment_t *points = state->vertices; draw_effect_segment(state->destination, (u8 *) points); ++points.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_segment_t *points = state->vertices",
+     "draw_effect_segment(state->destination, (u8 *) points)",
+     "++points"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect50350.dos.txt",
+     "function": "effect_helper_50aa8",
+     "address": "1:50aa8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect50350.json",
+     "function": "effect_helper_50aa8",
+     "ordinal": 2,
+     "uses": [
+      "effect_segment_t *points = state->vertices",
+      "draw_effect_segment(state->destination, (u8 *) points)",
+      "++points"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_50aa8",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "effect_segment_t *$ = state->vertices",
+   "source_file": "src/effect50350.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "global:dword_E4DA8",
+   "kind": "global",
+   "current_name": "dword_E4DA8",
+   "proposed_name": null,
+   "c_type": "effect3d_t *",
+   "meaning": "Owning pointer to two-panel3D transition state, six points and two draw records.",
+   "unit": "presentation state ownership",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "effect50350"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "dword_E4DA8"
+    }
+   ],
+   "port_notes": [
+    "Owning pointer to two-panel3D transition state, six points and two draw records.",
+    "Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:54da8",
+   "source_file": "src/effect50350.c",
+   "name_provenance": "RAYVERSE",
+   "declarator": "effect3d_t *$",
+   "context_declarators": {
+    "effect50350.c": "effect3d_t *$"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:5039a",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:50398",
+      "containing_bound_function": "effect_activate",
+      "instruction": "mov edx, dword ptr [0x54da8]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:506ff",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:506fd",
+      "containing_bound_function": "effect_cleanup_506fc",
+      "instruction": "mov edx, dword ptr [0x54da8]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:50725",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:50723",
+      "containing_bound_function": "effect_cleanup_506fc",
+      "instruction": "cmp dword ptr [0x54da8], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:5072d",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:5072c",
+      "containing_bound_function": "effect_cleanup_506fc",
+      "instruction": "mov eax, 0x54da8",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:5075e",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:5075d",
+      "containing_bound_function": "effect_helper_50738",
+      "instruction": "mov dword ptr [0x54da8], eax",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:507fb",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:507f9",
+      "containing_bound_function": "effect_helper_507f0",
+      "instruction": "mov ecx, dword ptr [0x54da8]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:50aad",
+      "target": "2:54da8",
+      "kind": 7,
+      "instruction_address": "1:50aab",
+      "containing_bound_function": "effect_helper_50aa8",
+      "instruction": "mov ebx, dword ptr [0x54da8]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [
+     {
+      "site": "1:45ffb",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:45ff8",
+      "containing_bound_function": "in_action_zone",
+      "instruction": "mov dx, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4604d",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:4604b",
+      "containing_bound_function": "in_action_zone",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:462bb",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:462b9",
+      "containing_bound_function": "in_action_zone",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:46348",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:46345",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov word ptr [0x54da4], bx",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:46390",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:4638e",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:463c2",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:463c0",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:463e5",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:463e3",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:46494",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:46491",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov dx, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:464df",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:464dd",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:46506",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:46503",
+      "containing_bound_function": "SET_ACTIVE_FLAG",
+      "instruction": "mov dx, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4883e",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:4883c",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "mov word ptr [0x54da4], ax",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:48846",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48844",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:48863",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48860",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "cmp word ptr [0x54da4], 0x53",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:48873",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48870",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "cmp word ptr [0x54da4], 0x21",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4888a",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48887",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "cmp word ptr [0x54da4], 0xa1",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:488a3",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:488a1",
+      "containing_bound_function": "DO_OBJECTS",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:482a8",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:482a6",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:482c1",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:482bf",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:482da",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:482d8",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:482f3",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:482f1",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:48313",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48310",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov bx, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:48354",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:48352",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4836d",
+      "target": "2:54da4",
+      "kind": 7,
+      "instruction_address": "1:4836b",
+      "containing_bound_function": "DO_ONE_OBJECT",
+      "instruction": "mov ax, word ptr [0x54da4]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4af33",
+      "target": "2:54da6",
+      "kind": 7,
+      "instruction_address": "1:4af31",
+      "containing_bound_function": "DO_MOTEUR2",
+      "instruction": "mov byte ptr [0x54da6], dl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:4ac1a",
+      "target": "2:54da6",
+      "kind": 7,
+      "instruction_address": "1:4ac18",
+      "containing_bound_function": "DO_MOTEUR",
+      "instruction": "mov dl, byte ptr [0x54da6]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "source_references": [
+     {
+      "source": "src/effect50350.c",
+      "line": 6,
+      "text": "extern effect3d_t *dword_E4DA8;"
+     },
+     {
+      "source": "src/effect50350.c",
+      "line": 16,
+      "text": "#define effect_data() (dword_E4DA8)"
+     },
+     {
+      "source": "src/effect50350.c",
+      "line": 137,
+      "text": "if (dword_E4DA8 != 0)"
+     },
+     {
+      "source": "src/effect50350.c",
+      "line": 138,
+      "text": "JumelleFreeArray((void **)&dword_E4DA8);"
+     },
+     {
+      "source": "src/effect50350.c",
+      "line": 147,
+      "text": "dword_E4DA8 = (effect3d_t *)sub_6FBB4(sizeof(effect3d_t));"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/effect50350.c": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45",
+  "src/effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
+ },
+ "proposal_fingerprints": {
+  "effect50350.c": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45",
+  "effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/effect50350.dos.txt": null,
+  "evidence/inventory_effect50350.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

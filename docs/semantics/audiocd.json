@@ -1,0 +1,976 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "audiocd.c",
+  "headers": [],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:CarteSonAutorisee",
+   "global:CompteurTrameAudio",
+   "global:JeuCracker",
+   "global:MusicCdActive",
+   "global:cdTime"
+  ],
+  "types": []
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:SetCompteurTrameAudio",
+   "kind": "function",
+   "current_name": "SetCompteurTrameAudio",
+   "proposed_name": null,
+   "c_type": "void SetCompteurTrameAudio(void)",
+   "meaning": "Reset CD polling callback counter to0.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "CompteurTrameAudio = 0"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "SetCompteurTrameAudio",
+     "address": "1:0cee0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "SetCompteurTrameAudio"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "SetCompteurTrameAudio"
+    }
+   ],
+   "port_notes": [
+    "Reset CD polling callback counter to0.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cee0",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "1cfd3b7668b8c11f3769848e7dac3d680bd2cfb0220de53c5d51b8776b9b41b0",
+   "baseline_parser_body_sha256": "1cfd3b7668b8c11f3769848e7dac3d680bd2cfb0220de53c5d51b8776b9b41b0",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "CompteurTrameAudio"
+    ],
+    "calls": [],
+    "members": []
+   }
+  },
+  {
+   "id": "function:DoCdCredits",
+   "kind": "function",
+   "current_name": "DoCdCredits",
+   "proposed_name": null,
+   "c_type": "void DoCdCredits(void)",
+   "meaning": "Wrap the signed callback counter when >180; on counter0 and CD enabled, restart credits track18 if the playing query is false; then increment counter. These are callback invocations, not seconds.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (CompteurTrameAudio > 180)",
+     "CompteurTrameAudio = 0",
+     "if (MusicCdActive && (CompteurTrameAudio == 0))",
+     "if (!cd_playing())"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "DoCdCredits",
+     "address": "1:0ceec",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "DoCdCredits"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "DoCdCredits"
+    }
+   ],
+   "port_notes": [
+    "Wrap the signed callback counter when >180; on counter0 and CD enabled, restart credits track18 if the playing query is false; then increment counter. These are callback invocations, not seconds.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0ceec",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "2ea13e91337e8b050c3f0b8a7eea435d6563518aab16cb8d4eb002e84c932f55",
+   "baseline_parser_body_sha256": "2ea13e91337e8b050c3f0b8a7eea435d6563518aab16cb8d4eb002e84c932f55",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "CompteurTrameAudio",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "cd_playing",
+     "start_cd_credits"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_credits",
+   "kind": "function",
+   "current_name": "start_cd_credits",
+   "proposed_name": null,
+   "c_type": "void start_cd_credits(void)",
+   "meaning": "If JeuCracker is set disable MusicCdActive, then request CD track18 only when enabled.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (JeuCracker)",
+     "MusicCdActive = 0",
+     "if (MusicCdActive)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_credits",
+     "address": "1:0cf2c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_credits"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_credits"
+    }
+   ],
+   "port_notes": [
+    "If JeuCracker is set disable MusicCdActive, then request CD track18 only when enabled.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cf2c",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "eb09752034a81a2f237d46d422a19fc83287e0aab6b48e55e15f257c524fe7e3",
+   "baseline_parser_body_sha256": "eb09752034a81a2f237d46d422a19fc83287e0aab6b48e55e15f257c524fe7e3",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "JeuCracker",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "AudioTrackCommand"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_ubi_soft",
+   "kind": "function",
+   "current_name": "start_cd_ubi_soft",
+   "proposed_name": null,
+   "c_type": "void start_cd_ubi_soft(void)",
+   "meaning": "If JeuCracker is set disable MusicCdActive, then request CD track12 only when enabled.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (JeuCracker)",
+     "MusicCdActive = 0",
+     "if (MusicCdActive)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_ubi_soft",
+     "address": "1:0cf54",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_ubi_soft"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_ubi_soft"
+    }
+   ],
+   "port_notes": [
+    "If JeuCracker is set disable MusicCdActive, then request CD track12 only when enabled.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cf54",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "238fd3e691bad3b8f0c88ae2cf6fe0a73eea24d0ce02e5c29db9a8ea46f03883",
+   "baseline_parser_body_sha256": "238fd3e691bad3b8f0c88ae2cf6fe0a73eea24d0ce02e5c29db9a8ea46f03883",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "JeuCracker",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "AudioTrackCommand"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_gros_rayman",
+   "kind": "function",
+   "current_name": "start_cd_gros_rayman",
+   "proposed_name": null,
+   "c_type": "void start_cd_gros_rayman(void)",
+   "meaning": "Empty DOS entry; returns without requesting audio.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": []
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_gros_rayman",
+     "address": "1:0cf7c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_gros_rayman"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_gros_rayman"
+    }
+   ],
+   "port_notes": [
+    "Empty DOS entry; returns without requesting audio.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cf7c",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "baseline_parser_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [],
+    "calls": [],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_perdu",
+   "kind": "function",
+   "current_name": "start_cd_perdu",
+   "proposed_name": null,
+   "c_type": "void start_cd_perdu(void)",
+   "meaning": "If sound-card audio is permitted request speech vignette8; otherwise call the empty start_cd_gros_rayman entry.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (CarteSonAutorisee)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_perdu",
+     "address": "1:0cf80",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_perdu"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_perdu"
+    }
+   ],
+   "port_notes": [
+    "If sound-card audio is permitted request speech vignette8; otherwise call the empty start_cd_gros_rayman entry.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cf80",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "963c555cce8d3050c00921bd91276e3c86b3dff5c19dc5811e113a0bdaddd99b",
+   "baseline_parser_body_sha256": "963c555cce8d3050c00921bd91276e3c86b3dff5c19dc5811e113a0bdaddd99b",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "CarteSonAutorisee"
+    ],
+    "calls": [
+     "PlayTchatchVignette",
+     "start_cd_gros_rayman"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:DoCdRap",
+   "kind": "function",
+   "current_name": "DoCdRap",
+   "proposed_name": null,
+   "c_type": "void DoCdRap(void)",
+   "meaning": "Same >180 callback poll cadence as credits; restart track19 via start_cd_bbdead when enabled and not playing.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (CompteurTrameAudio > 180)",
+     "CompteurTrameAudio = 0",
+     "if (MusicCdActive && (CompteurTrameAudio == 0))",
+     "if (!cd_playing())"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "DoCdRap",
+     "address": "1:0cf94",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "DoCdRap"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "DoCdRap"
+    }
+   ],
+   "port_notes": [
+    "Same >180 callback poll cadence as credits; restart track19 via start_cd_bbdead when enabled and not playing.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cf94",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "9c1646726aac26d031255ed6f4297233aadd4c0f781fc0dd0335ba2e44e4867d",
+   "baseline_parser_body_sha256": "9c1646726aac26d031255ed6f4297233aadd4c0f781fc0dd0335ba2e44e4867d",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "CompteurTrameAudio",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "cd_playing",
+     "start_cd_bbdead"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_bbdead",
+   "kind": "function",
+   "current_name": "start_cd_bbdead",
+   "proposed_name": null,
+   "c_type": "void start_cd_bbdead(void)",
+   "meaning": "If JeuCracker is set disable MusicCdActive, then request CD track19 only when enabled; also reached from death cue handling.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (JeuCracker)",
+     "MusicCdActive = 0",
+     "if (MusicCdActive)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_bbdead",
+     "address": "1:0cfd4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_bbdead"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_bbdead"
+    }
+   ],
+   "port_notes": [
+    "If JeuCracker is set disable MusicCdActive, then request CD track19 only when enabled; also reached from death cue handling.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cfd4",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "c3659c5948fac3af489d2bd801704bdfff11d2c61d957bf62e0827b0ee46852d",
+   "baseline_parser_body_sha256": "c3659c5948fac3af489d2bd801704bdfff11d2c61d957bf62e0827b0ee46852d",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "JeuCracker",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "AudioTrackCommand"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_gameover",
+   "kind": "function",
+   "current_name": "start_cd_gameover",
+   "proposed_name": null,
+   "c_type": "void start_cd_gameover(void)",
+   "meaning": "If JeuCracker is set disable MusicCdActive, then request CD track10 only when enabled.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (JeuCracker)",
+     "MusicCdActive = 0",
+     "if (MusicCdActive)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_gameover",
+     "address": "1:0cffc",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_gameover"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_gameover"
+    }
+   ],
+   "port_notes": [
+    "If JeuCracker is set disable MusicCdActive, then request CD track10 only when enabled.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0cffc",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "56f74013ffed2e2dad5d47774940dda433a068e954e9dc4b160e87b9e84912ad",
+   "baseline_parser_body_sha256": "56f74013ffed2e2dad5d47774940dda433a068e954e9dc4b160e87b9e84912ad",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "JeuCracker",
+     "MusicCdActive"
+    ],
+    "calls": [
+     "AudioTrackCommand"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:start_cd_continue",
+   "kind": "function",
+   "current_name": "start_cd_continue",
+   "proposed_name": null,
+   "c_type": "void start_cd_continue(void)",
+   "meaning": "Empty DOS entry, called by the continue scene; no inferred continue audio is added.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": []
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "start_cd_continue",
+     "address": "1:0d024",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "start_cd_continue"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "start_cd_continue"
+    }
+   ],
+   "port_notes": [
+    "Empty DOS entry, called by the continue scene; no inferred continue audio is added.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0d024",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "baseline_parser_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [],
+    "calls": [],
+    "members": []
+   }
+  },
+  {
+   "id": "function:stop_cd",
+   "kind": "function",
+   "current_name": "stop_cd",
+   "proposed_name": null,
+   "c_type": "void stop_cd(void)",
+   "meaning": "When CD enabled call selected-drive stop/poll wrapper; always reset cdTime and polling callback counter0.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (MusicCdActive)",
+     "cdTime = 0"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "stop_cd",
+     "address": "1:0d028",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "stop_cd"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "stop_cd"
+    }
+   ],
+   "port_notes": [
+    "When CD enabled call selected-drive stop/poll wrapper; always reset cdTime and polling callback counter0.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0d028",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "b4c14bdb301b66522307c32bdac3bc0e63eba10b1bf9a043582d305777b721c2",
+   "baseline_parser_body_sha256": "b4c14bdb301b66522307c32bdac3bc0e63eba10b1bf9a043582d305777b721c2",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "MusicCdActive",
+     "cdTime"
+    ],
+    "calls": [
+     "AudioStatusByte",
+     "AudioStopCommand",
+     "SetCompteurTrameAudio"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:cd_playing",
+   "kind": "function",
+   "current_name": "cd_playing",
+   "proposed_name": null,
+   "c_type": "unsigned char cd_playing(void)",
+   "meaning": "Return selected-drive request-status busy/playing bit when CD enabled, else0.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (MusicCdActive)",
+     "return AudioStatusCheck(AudioStatusByte());",
+     "return 0;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/audiocd.dos.txt",
+     "function": "cd_playing",
+     "address": "1:0d050",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "cd_playing"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "cd_playing"
+    }
+   ],
+   "port_notes": [
+    "Return selected-drive request-status busy/playing bit when CD enabled, else0.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "oracle_address": "1:0d050",
+   "source_file": "src/audiocd.c",
+   "source_body_sha256": "214574931eeb3ad8e9ad0639587c2c2da2bf300feff0048bf82581b1eabd065c",
+   "baseline_parser_body_sha256": "214574931eeb3ad8e9ad0639587c2c2da2bf300feff0048bf82581b1eabd065c",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "MusicCdActive"
+    ],
+    "calls": [
+     "AudioStatusByte",
+     "AudioStatusCheck"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "global:CompteurTrameAudio",
+   "kind": "global",
+   "current_name": "CompteurTrameAudio",
+   "proposed_name": null,
+   "c_type": "int",
+   "meaning": "Credits/rap CD poll callback counter, reset when>180 and queried on0.",
+   "unit": "callback count",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "audiocd"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "CompteurTrameAudio"
+    }
+   ],
+   "port_notes": [
+    "Credits/rap CD poll callback counter, reset when>180 and queried on0.",
+    "Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:3faa0",
+   "source_file": "src/audiocd.c",
+   "name_provenance": "RAYVERSE",
+   "declarator": "int $",
+   "context_declarators": {
+    "audiocd.c": "int $"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:0cee5",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cee3",
+      "containing_bound_function": "SetCompteurTrameAudio",
+      "instruction": "mov dword ptr [0x3faa0], edx",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0ceef",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0ceed",
+      "containing_bound_function": "DoCdCredits",
+      "instruction": "cmp dword ptr [0x3faa0], 0xb4",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cefd",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cefb",
+      "containing_bound_function": "DoCdCredits",
+      "instruction": "mov dword ptr [0x3faa0], ebx",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cf0c",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cf0a",
+      "containing_bound_function": "DoCdCredits",
+      "instruction": "cmp dword ptr [0x3faa0], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cf23",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cf21",
+      "containing_bound_function": "DoCdCredits",
+      "instruction": "inc dword ptr [0x3faa0]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cf97",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cf95",
+      "containing_bound_function": "DoCdRap",
+      "instruction": "cmp dword ptr [0x3faa0], 0xb4",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cfa5",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cfa3",
+      "containing_bound_function": "DoCdRap",
+      "instruction": "mov dword ptr [0x3faa0], ebx",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cfb4",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cfb2",
+      "containing_bound_function": "DoCdRap",
+      "instruction": "cmp dword ptr [0x3faa0], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0cfcb",
+      "target": "2:3faa0",
+      "kind": 7,
+      "instruction_address": "1:0cfc9",
+      "containing_bound_function": "DoCdRap",
+      "instruction": "inc dword ptr [0x3faa0]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [
+     {
+      "site": "1:0c521",
+      "target": "2:3fa9c",
+      "kind": 7,
+      "instruction_address": "1:0c520",
+      "containing_bound_function": "DO_SPIDER_PLAFOND",
+      "instruction": "mov byte ptr [0x3fa9c], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:0c790",
+      "target": "2:3fa9c",
+      "kind": 7,
+      "instruction_address": "1:0c78e",
+      "containing_bound_function": "DO_DARD_PLAFOND_ALWAYS",
+      "instruction": "mov bl, byte ptr [0x3fa9c]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "source_references": [
+     {
+      "source": "src/audiocd.c",
+      "line": 8,
+      "text": "extern int CompteurTrameAudio;"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 26,
+      "text": "CompteurTrameAudio = 0;"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 31,
+      "text": "if (CompteurTrameAudio > 180)"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 32,
+      "text": "CompteurTrameAudio = 0;"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 33,
+      "text": "if (MusicCdActive && CompteurTrameAudio == 0) {"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 37,
+      "text": "CompteurTrameAudio++;"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 70,
+      "text": "if (CompteurTrameAudio > 180)"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 71,
+      "text": "CompteurTrameAudio = 0;"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 72,
+      "text": "if (MusicCdActive && CompteurTrameAudio == 0) {"
+     },
+     {
+      "source": "src/audiocd.c",
+      "line": 76,
+      "text": "CompteurTrameAudio++;"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/audiocd.c": "0db68f333d9002e5c8afe8e2b71d045eac46fee1caf38505563f19ebddc124a3"
+ },
+ "proposal_fingerprints": {
+  "audiocd.c": "0db68f333d9002e5c8afe8e2b71d045eac46fee1caf38505563f19ebddc124a3"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/audiocd.dos.txt": null,
+  "evidence/inventory_audiocd.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null,
+  "evidence/audio_tables.json": null,
+  "evidence/eta_sound_domains.json": null,
+  "evidence/event_calls.json": null,
+  "evidence/movie_files.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

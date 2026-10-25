@@ -9,7 +9,7 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #include "rtypes.h"
 
-typedef struct effect_state {
+typedef struct effect_column_state {
     s16 pos_x;
     s16 delta;
     s32 field_04;
@@ -27,18 +27,19 @@ typedef struct effect_state {
     s32 *table;
     u8 *source;
     u8 *destination;
-} effect_state_t;
+} effect_column_state_t;
 
-extern effect_state_t *effect_state_55760;
+extern effect_column_state_t *effect_state_55760;
 extern u8 *EffetBufferNormal;
 extern void *sub_6FBB4(s32 size);
 extern void JumelleFreeArray(void **array);
 /* 1:75b4a implements acos; retain the existing INVENTED binding name. */
 extern double effect_math_curve(double value);
 
+/* effect_state_t -> effect_column_state_t. See docs/semantics/effect633e0.json. */
 void effect_update_table_633e0(s16 amount)
 {
-    effect_state_t *state;
+    effect_column_state_t *state;
     s32 width;
     s16 y;
 
@@ -63,9 +64,10 @@ void effect_update_table_633e0(s16 amount)
     }
 }
 
+/* effect_state_t -> effect_column_state_t. See docs/semantics/effect633e0.json. */
 void effect_cleanup_634c4(void)
 {
-    effect_state_t *state = effect_state_55760;
+    effect_column_state_t *state = effect_state_55760;
     if (state != 0) {
         if (state->table != 0)
             JumelleFreeArray((void **)&state->table);
@@ -74,14 +76,15 @@ void effect_cleanup_634c4(void)
     }
 }
 
+/* effect_state_t -> effect_column_state_t. See docs/semantics/effect633e0.json. */
 u8 effect_helper_634f0(u16 width, s16 amount, u8 *source, u8 *destination)
 {
-    effect_state_t *state;
+    effect_column_state_t *state;
     u8 success;
 
     success = 0;
     if (source != 0 && destination != 0) {
-        state = (effect_state_t *)sub_6FBB4(0x30);
+        state = (effect_column_state_t *)sub_6FBB4(0x30);
         effect_state_55760 = state;
         if (state != 0) {
             state->width = max32(8, min32(width, 40));
@@ -104,9 +107,10 @@ u8 effect_helper_634f0(u16 width, s16 amount, u8 *source, u8 *destination)
     return success;
 }
 
+/* effect_state_t -> effect_column_state_t. See docs/semantics/effect633e0.json. */
 s16 effect_helper_63614(void)
 {
-    effect_state_t *state;
+    effect_column_state_t *state;
 
     state = effect_state_55760;
     switch (state->mode) {
@@ -184,9 +188,10 @@ s16 effect_helper_63614(void)
     return state->pos_x;
 }
 
+/* effect_state_t -> effect_column_state_t. See docs/semantics/effect633e0.json. */
 void effect_helper_63838(void)
 {
-    effect_state_t *state;
+    effect_column_state_t *state;
     u8 *source_row;
     u8 *destination_row;
     s32 x;

@@ -468,6 +468,8 @@ def check_evidence(reg, source_root=None, artifact_root=None):
             p = artifact_base / path if key == 'evidence_artifact_fingerprints' else dependency_path(path,base,artifact_base)
             if path.startswith('src/') and base != ROOT/'src' and (base/path[4:]).exists():
                 want = reg.get('proposal_fingerprints',{}).get(path[4:],want)
+            # Worker artifacts are derived, untracked and pruned; refresh records a pruned one as None.
+            if key == 'evidence_artifact_fingerprints' and want is None and not p.exists(): continue
             if not p.is_file() or file_sha(p) != want: drift.append(path + ': ' + key + ' drift (re-review evidence)')
     return drift
 

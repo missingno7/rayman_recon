@@ -4615,9 +4615,9 @@
   "external/rayverse/src/objupdate.c": "5a73e1fb25b960628970dace2cabe939fad970396e75f2d4186e20c99afedac8"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/objupdate1.dos.txt": "b1afdf271811aec48b43559a565312eec3573492222f109b7f37343e858f2833",
-  "evidence/objupdate1_operations.json": "4224509513da89d80ba3bce534fc573e428d4000ed9b76cbf89c4a29d91865e3",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/objupdate1.dos.txt": null,
+  "evidence/objupdate1_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",

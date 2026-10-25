@@ -1900,9 +1900,9 @@
   "external/rayverse/src/poing.c": "13393090424532e54d1a5c4e9a84b53d990e9a1975cc6183f4eaeb984613c6b3"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/poing.dos.txt": "5997e625483b7a0099b776bb14e00f498b35ca6831425da653118a07482a35ce",
-  "evidence/poing_operations.json": "da3cd7e03293d59e7995b6f5b6a0111450f0f667eaa43be32f9f6c8ab20a15ab",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/poing.dos.txt": null,
+  "evidence/poing_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
@@ -1969,7 +1969,7 @@
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
-  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
   "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
   "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",

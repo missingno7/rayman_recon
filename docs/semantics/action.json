@@ -1127,9 +1127,9 @@
   "external/rayverse/src/action.c": "d2828f917e471a7e309df95929875de8bcbb8cb02f294389e67703b07ce1e578"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/action.dos.txt": "909f9133d64933a2250a2b2c53c594e10717fd14022ec626666b617568769e75",
-  "evidence/action_operations.json": "d0b4d8c20b9410707fd14afd020a6ba8f9a46fe20fa4987a2c8346fdc58cd34b",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/action.dos.txt": null,
+  "evidence/action_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
@@ -1158,7 +1158,7 @@
   "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
   "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
-  "src/effect1.c": "6aa0b532fa19c31f02b1dbb885dce33d0f3ce31c75553ac390c996873b5bf2d7",
+  "src/effect1.c": "09f74494dfa7481564b8ef8db372fc8e4a54a2c626e139515effb54ac8872cfd",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
   "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",

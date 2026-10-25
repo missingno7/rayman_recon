@@ -63,21 +63,22 @@ normal_result:
     return 0x83;
 }
 
-u8 detect_dos_version(u8 *first_result, u8 *second_result)
+/* first_result -> major_version; second_result -> minor_version. See docs/semantics/dosprobe.json. */
+u8 detect_dos_version(u8 *major_version, u8 *minor_version)
 {
     u8 input_registers[0x1c];
     u8 output_registers[0x1c];
 
-    *first_result = 0;
-    *second_result = 0;
+    *major_version = 0;
+    *minor_version = 0;
     clear_memory(input_registers, 0, 0x1c);
     clear_memory(output_registers, 0, 0x1c);
     *(u32 *)input_registers = 0x3000;
     int386(0x21, input_registers, output_registers);
 
-    *first_result = output_registers[0];
-    *second_result = output_registers[1];
-    if (*first_result == 10 || *first_result == 20)
+    *major_version = output_registers[0];
+    *minor_version = output_registers[1];
+    if (*major_version == 10 || *major_version == 20)
         byte_CFA14 = 1;
     else
         byte_CFA14 = 0;

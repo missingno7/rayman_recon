@@ -452,6 +452,140 @@ Turn a walking Spider toward Rayman and stack its attack script when link is zer
 
 Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
 
+## audiocd.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:SetCompteurTrameAudio
+
+PROVEN: Reset CD polling callback counter to0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cee0.
+
+Reset CD polling callback counter to0.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:DoCdCredits
+
+PROVEN: Wrap the signed callback counter when >180; on counter0 and CD enabled, restart credits track18 if the playing query is false; then increment counter. These are callback invocations, not seconds.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0ceec.
+
+Wrap the signed callback counter when >180; on counter0 and CD enabled, restart credits track18 if the playing query is false; then increment counter. These are callback invocations, not seconds.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_credits
+
+PROVEN: If JeuCracker is set disable MusicCdActive, then request CD track18 only when enabled.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cf2c.
+
+If JeuCracker is set disable MusicCdActive, then request CD track18 only when enabled.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_ubi_soft
+
+PROVEN: If JeuCracker is set disable MusicCdActive, then request CD track12 only when enabled.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cf54.
+
+If JeuCracker is set disable MusicCdActive, then request CD track12 only when enabled.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_gros_rayman
+
+PROVEN: Empty DOS entry; returns without requesting audio.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cf7c.
+
+Empty DOS entry; returns without requesting audio.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_perdu
+
+PROVEN: If sound-card audio is permitted request speech vignette8; otherwise call the empty start_cd_gros_rayman entry.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cf80.
+
+If sound-card audio is permitted request speech vignette8; otherwise call the empty start_cd_gros_rayman entry.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:DoCdRap
+
+PROVEN: Same >180 callback poll cadence as credits; restart track19 via start_cd_bbdead when enabled and not playing.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cf94.
+
+Same >180 callback poll cadence as credits; restart track19 via start_cd_bbdead when enabled and not playing.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_bbdead
+
+PROVEN: If JeuCracker is set disable MusicCdActive, then request CD track19 only when enabled; also reached from death cue handling.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cfd4.
+
+If JeuCracker is set disable MusicCdActive, then request CD track19 only when enabled; also reached from death cue handling.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_gameover
+
+PROVEN: If JeuCracker is set disable MusicCdActive, then request CD track10 only when enabled.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0cffc.
+
+If JeuCracker is set disable MusicCdActive, then request CD track10 only when enabled.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:start_cd_continue
+
+PROVEN: Empty DOS entry, called by the continue scene; no inferred continue audio is added.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0d024.
+
+Empty DOS entry, called by the continue scene; no inferred continue audio is added.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:stop_cd
+
+PROVEN: When CD enabled call selected-drive stop/poll wrapper; always reset cdTime and polling callback counter0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0d028.
+
+When CD enabled call selected-drive stop/poll wrapper; always reset cdTime and polling callback counter0.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### function:cd_playing
+
+PROVEN: Return selected-drive request-status busy/playing bit when CD enabled, else0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:0d050.
+
+Return selected-drive request-status busy/playing bit when CD enabled, else0.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+### global:CompteurTrameAudio
+
+PROVEN: Credits/rap CD poll callback counter, reset when>180 and queried on0.
+
+Units: callback count. DOS layout/address: 2:3faa0.
+
+Credits/rap CD poll callback counter, reset when>180 and queried on0.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
 ## basic.json
 
 Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN retains neutral names. Raw source/displacement/external token hits are candidates, not type proofs.
@@ -1796,6 +1930,52 @@ Initialize all 64 entries of the four tile-shape callback tables, pairing solid/
 
 Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
 
+## blood.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:DoEffectBloodOut
+
+PROVEN: Seed RNG, zero320 signed32 column offsets, choose10 seeds among160 two-pixel columns with speed2/3 rows per iteration. Propagate random nondecreasing heights left/right, finish when all observed offsets>=64000. On incomplete iterations sync then copy two-pixel source words downward by per-column byte offset, black above. DOS origin remains the frame start; exact comparison is offset<row*320+2*column, not simply offset<row*320.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:13800.
+
+Seed RNG, zero320 signed32 column offsets, choose10 seeds among160 two-pixel columns with speed2/3 rows per iteration. Propagate random nondecreasing heights left/right, finish when all observed offsets>=64000. On incomplete iterations sync then copy two-pixel source words downward by per-column byte offset, black above. DOS origin remains the frame start; exact comparison is offset<row*320+2*column, not simply offset<row*320.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
+The strict byte-offset comparison uses frame origin: equality at the first two-pixel word clears it; later words in the row can pass when displacement equals row*320. Do not replace this with a row-only test.
+
+### global:PosXLine
+
+PROVEN: Ten blood-out seed column indices sampled0..159, each column is two pixels wide.
+
+Units: two-pixel column index. DOS layout/address: 2:3faec.
+
+Ten blood-out seed column indices sampled0..159, each column is two pixels wide.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
+### global:PosYLine
+
+PROVEN: 320 signed32 storage slots cleared at entry; first160 are blood-out displacement heights in multiples of320 bytes.
+
+Units: byte displacement. DOS layout/address: 2:3fb14.
+
+320 signed32 storage slots cleared at entry; first160 are blood-out displacement heights in multiples of320 bytes.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
+### global:SpeedYLine
+
+PROVEN: Ten blood-out seed speeds, each2 or3 multiplied by320 bytes/row.
+
+Units: bytes per effect iteration. DOS layout/address: 2:3fac4.
+
+Ten blood-out seed speeds, each2 or3 multiplied by320 bytes/row.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
 ## bonus.json
 
 Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
@@ -3021,6 +3201,1070 @@ Units: see parameter/result contracts. DOS layout/address: 1:1937c.
 Select script label 0 when the current toon eta has bit 1 set.
 
 Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## cdaudio.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:AudioStatusByte
+
+PROVEN: Return the selected zero-based DOS drive index (A=0), despite the inherited status-like function name.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193b0.
+
+Return the selected zero-based DOS drive index (A=0), despite the inherited status-like function name.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193b8
+
+UNKNOWN: Return the independent byte at 2:4ef00. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193b8.
+
+Return the independent byte at 2:4ef00. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193c0
+
+UNKNOWN: Return the independent byte at 2:4eefc. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193c0.
+
+Return the independent byte at 2:4eefc. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193c8
+
+UNKNOWN: Return the independent byte at 2:4eefd. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193c8.
+
+Return the independent byte at 2:4eefd. Its accessor has no whole-image direct caller or address-taking fixup; historical meaning UNKNOWN.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193d0
+
+PROVEN: Store the selected zero-based DOS drive index used as CX by MSCDEX requests.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193d0.
+
+Store the selected zero-based DOS drive index used as CX by MSCDEX requests.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193d8
+
+UNKNOWN: Store byte at 2:4ef00; no live caller or consumer establishes an intended status meaning.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193d8.
+
+Store byte at 2:4ef00; no live caller or consumer establishes an intended status meaning.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193e0
+
+UNKNOWN: Store byte at 2:4eefc; no live caller or consumer establishes an intended status meaning.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193e0.
+
+Store byte at 2:4eefc; no live caller or consumer establishes an intended status meaning.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193e8
+
+UNKNOWN: Store byte at 2:4eefd; no live caller or consumer establishes an intended status meaning.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193e8.
+
+Store byte at 2:4eefd; no live caller or consumer establishes an intended status meaning.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_193f0
+
+PROVEN: Pass a dos_regs_t address to the DPMI real-mode interrupt wrapper with interrupt 2Fh.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:193f0.
+
+Pass a dos_regs_t address to the DPMI real-mode interrupt wrapper with interrupt 2Fh.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19400
+
+PROVEN: Decode a DOS request status word: if bit8000 is set return low8 error; otherwise return100h success, independently of other bits.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19400.
+
+Decode a DOS request status word: if bit8000 is set return low8 error; otherwise return100h success, independently of other bits.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19410
+
+PROVEN: Send MSCDEX AX1510 with drive index in CX and real-mode request ES:BX. Retry while protected request byte4 bit80 remains set, at most10 submissions. Decode the word at request+3.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19410.
+
+Send MSCDEX AX1510 with drive index in CX and real-mode request ES:BX. Retry while protected request byte4 bit80 remains set, at most10 submissions. Decode the word at request+3.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19474
+
+PROVEN: Initialize the13-byte DOS request header: length0Dh, unit0, supplied command byte, zero status word and eight reserved/link bytes.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19474.
+
+Initialize the13-byte DOS request header: length0Dh, unit0, supplied command byte, zero status word and eight reserved/link bytes.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_194a8
+
+PROVEN: Build IOCTL header with transfer-buffer ES:offset at+14/+16, byte length+18, media byte13=0, start word+20=0 and dword+22=0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:194a8.
+
+Build IOCTL header with transfer-buffer ES:offset at+14/+16, byte length+18, media byte13=0, start word+20=0 and dword+22=0.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_194f4
+
+PROVEN: Issue input IOCTL03, transfer command0Fh (11 bytes), then return low bit of transfer byte1; retain decoded request status in word_DE8BC.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:194f4.
+
+Issue input IOCTL03, transfer command0Fh (11 bytes), then return low bit of transfer byte1; retain decoded request status in word_DE8BC.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:AudioStatusCheck
+
+PROVEN: Issue input IOCTL command06h using the selected drive and return request status bit0200h (byte4 bit2), which the callers use as playing/busy. This is not the selected-drive getter.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19564.
+
+Issue input IOCTL command06h using the selected drive and return request status bit0200h (byte4 bit2), which the callers use as playing/busy. This is not the selected-drive getter.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_195ec
+
+PROVEN: Query IOCTL0Fh, derive request-busy bit0200h and transfer byte1 bit0, then set cd_status_error to the inverse OR of those two booleans; decode status word separately. Inherited ready/error labels do not imply a general hardware error API.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:195ec.
+
+Query IOCTL0Fh, derive request-busy bit0200h and transfer byte1 bit0, then set cd_status_error to the inverse OR of those two booleans; decode status word separately. Inherited ready/error labels do not imply a general hardware error API.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_196c4
+
+PROVEN: MSCDEX installation query AX1500, BX=CX=0; publish low CX as selected first-drive index and return low BX drive count.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:196c4.
+
+MSCDEX installation query AX1500, BX=CX=0; publish low CX as selected first-drive index and return low BX drive count.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19700
+
+PROVEN: Enumerate drive indices0..25 using AX150Bh while the installed-drive count remains nonzero; write one-byte membership flags and publish original count.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19700.
+
+Enumerate drive indices0..25 using AX150Bh while the installed-drive count remains nonzero; write one-byte membership flags and publish original count.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19768
+
+PROVEN: Free the conventional block when its selector is nonzero; set102h only if DPMI free reports failure. Does not clear the saved selector.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19768.
+
+Free the conventional block when its selector is nonzero; set102h only if DPMI free reports failure. Does not clear the saved selector.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19790
+
+PROVEN: Initialize MSCDEX state, require installation and version>=2.10, enumerate drives, allocate138 conventional bytes and establish eleven real/protected request views. Probe candidate media, initialize disc table, and fail with saved status or FatalError messages. Return status==100h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19790.
+
+Initialize MSCDEX state, require installation and version>=2.10, enumerate drives, allocate138 conventional bytes and establish eleven real/protected request views. Probe candidate media, initialize disc table, and fail with saved status or FatalError messages. Return status==100h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19a8c
+
+PROVEN: Query MSCDEX installation with AX1500 and return whether BX is nonzero.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19a8c.
+
+Query MSCDEX installation with AX1500 and return whether BX is nonzero.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19ac8
+
+PROVEN: Query AX150Ch; compute decimal major*100+minor from BX bytes into signed16 cd_computed_lba and accept values>=210. This storage is a version number here, not an LBA.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19ac8.
+
+Query AX150Ch; compute decimal major*100+minor from BX bytes into signed16 cd_computed_lba and accept values>=210. This storage is a version number here, not an LBA.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19b34
+
+PROVEN: Convert minute/second/frame bytes to an unsigned32 sector value: minute*4500+second*75+frame-150, including unsigned underflow below the150-sector lead-in.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19b34.
+
+Convert minute/second/frame bytes to an unsigned32 sector value: minute*4500+second*75+frame-150, including unsigned underflow below the150-sector lead-in.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19b7c
+
+PROVEN: Pack three bytes as high<<16 | middle<<8 | low using additions; no BCD conversion.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19b7c.
+
+Pack three bytes as high<<16 | middle<<8 | low using additions; no BCD conversion.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19b9c
+
+PROVEN: Split signed32 frame count by signed division/remainder4500 then75, narrowing each result to a byte; does not add the150-sector lead-in.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19b9c.
+
+Split signed32 frame count by signed division/remainder4500 then75, narrowing each result to a byte; does not add the150-sector lead-in.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19bdc
+
+PROVEN: Split signed32 value into high/middle/low24-bit bytes; high and middle are masked after arithmetic shifts.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19bdc.
+
+Split signed32 value into high/middle/low24-bit bytes; high and middle are masked after arithmetic shifts.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19c0c
+
+PROVEN: Convert a frame count to packed minute/second/frame via signed quotient/remainder without a lead-in adjustment.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19c0c.
+
+Convert a frame count to packed minute/second/frame via signed quotient/remainder without a lead-in adjustment.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19c40
+
+PROVEN: Unpack a24-bit MSF value and convert to sector count with -150 lead-in adjustment.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19c40.
+
+Unpack a24-bit MSF value and convert to sector count with -150 lead-in adjustment.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19c74
+
+PROVEN: Submit DOS CD stop-audio request85h for the given drive and save/return decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19c74.
+
+Submit DOS CD stop-audio request85h for the given drive and save/return decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19cc0
+
+PROVEN: Submit stop-audio request85h twice for the same drive, returning the second status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19cc0.
+
+Submit stop-audio request85h twice for the same drive, returning the second status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19ce4
+
+PROVEN: Submit DOS CD resume-audio request88h for the given drive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19ce4.
+
+Submit DOS CD resume-audio request88h for the given drive.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19d30
+
+PROVEN: Submit play-audio request84h: addressing mode byte+13, start dword+14 and length dword+18 supplied by caller.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19d30.
+
+Submit play-audio request84h: addressing mode byte+13, start dword+14 and length dword+18 supplied by caller.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19d88
+
+PROVEN: Output IOCTL0Ch, subcommand1, value0 (unlock request); save/return decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19d88.
+
+Output IOCTL0Ch, subcommand1, value0 (unlock request); save/return decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19df0
+
+PROVEN: Output IOCTL0Ch, subcommand1, value1 (lock request); save/return decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19df0.
+
+Output IOCTL0Ch, subcommand1, value1 (lock request); save/return decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19e58
+
+PROVEN: Output IOCTL0Ch, subcommand0 (eject request); save/return decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19e58.
+
+Output IOCTL0Ch, subcommand0 (eject request); save/return decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19eb4
+
+PROVEN: Output IOCTL0Ch, subcommand5 (close-tray request); save/return decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19eb4.
+
+Output IOCTL0Ch, subcommand5 (close-tray request); save/return decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19f10
+
+PROVEN: Input IOCTL03h subcommand0Ah: output first/last track bytes and raw lead-out address dword from the seven-byte transfer record. Output-pointer names minute/second/frame are misleading inherited names.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19f10.
+
+Input IOCTL03h subcommand0Ah: output first/last track bytes and raw lead-out address dword from the seven-byte transfer record. Output-pointer names minute/second/frame are misleading inherited names.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_19fa0
+
+PROVEN: Input IOCTL03h subcommand0Bh for an audio track number; output its raw MSF address dword and control/flags byte.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:19fa0.
+
+Input IOCTL03h subcommand0Bh for an audio track number; output its raw MSF address dword and control/flags byte.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a02c
+
+PROVEN: Input IOCTL03h subcommand0Ch; convert reported track byte from BCD to binary, return absolute minute/second/frame bytes+4/+5/+6 and decoded status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a02c.
+
+Input IOCTL03h subcommand0Ch; convert reported track byte from BCD to binary, return absolute minute/second/frame bytes+4/+5/+6 and decoded status.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a0e4
+
+PROVEN: Input IOCTL03h subcommand06h; output the device-status bitmask dword at transfer+1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a0e4.
+
+Input IOCTL03h subcommand06h; output the device-status bitmask dword at transfer+1.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a158
+
+PROVEN: Input IOCTL03h subcommand04h; output audio-channel volume bytes2,4,6,8 from the nine-byte transfer record.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a158.
+
+Input IOCTL03h subcommand04h; output audio-channel volume bytes2,4,6,8 from the nine-byte transfer record.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a1e8
+
+PROVEN: Output IOCTL0Ch subcommand03h: map channels0,1,2,3 to four supplied volume bytes in a nine-byte transfer record.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a1e8.
+
+Output IOCTL0Ch subcommand03h: map channels0,1,2,3 to four supplied volume bytes in a nine-byte transfer record.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a280
+
+PROVEN: Submit multiplex AX=(1500h | supplied command), CX=drive and ES:BX pointing at block+64h. Return the existing word_DE8BC without decoding a new status here.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a280.
+
+Submit multiplex AX=(1500h | supplied command), CX=drive and ES:BX pointing at block+64h. Return the existing word_DE8BC without decoding a new status here.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a2c8
+
+PROVEN: Query device-status dword through sub_1a0e4 and return it while keeping decoded status in word_DE8BC.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a2c8.
+
+Query device-status dword through sub_1a0e4 and return it while keeping decoded status in word_DE8BC.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a2e8
+
+PROVEN: Return whether device-status bit0 is clear; used as the tray-closed predicate by eject/close logic.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a2e8.
+
+Return whether device-status bit0 is clear; used as the tray-closed predicate by eject/close logic.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a300
+
+PROVEN: Return whether device-status bit1 is clear; used as unlocked predicate by lock/unlock logic.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a300.
+
+Return whether device-status bit1 is clear; used as unlocked predicate by lock/unlock logic.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a318
+
+PROVEN: Return device-status bit10h nonzero; installation requires this bit for a valid CD driver.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a318.
+
+Return device-status bit10h nonzero; installation requires this bit for a valid CD driver.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a330
+
+PROVEN: Return device-status bit100h nonzero; gate for four-channel audio-volume requests.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a330.
+
+Return device-status bit100h nonzero; gate for four-channel audio-volume requests.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a348
+
+PROVEN: Return whether cached track control bit40h is clear; callers require this for an audio rather than data track.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a348.
+
+Return whether cached track control bit40h is clear; callers require this for an audio rather than data track.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a360
+
+PROVEN: Return1 iff device-status bit800h (no disc) is clear and decoded query status is100h; otherwise0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a360.
+
+Return1 iff device-status bit800h (no disc) is clear and decoded query status is100h; otherwise0.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a384
+
+PROVEN: If drive is locked, issue unlock; otherwise publish100h without a request.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a384.
+
+If drive is locked, issue unlock; otherwise publish100h without a request.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a3b0
+
+PROVEN: If drive is unlocked and tray predicate permits, issue lock; otherwise publish100h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a3b0.
+
+If drive is unlocked and tray predicate permits, issue lock; otherwise publish100h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a3e8
+
+PROVEN: If tray-closed predicate is true, unlock if needed, eject, then busy-poll until that predicate clears; otherwise publish100h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a3e8.
+
+If tray-closed predicate is true, unlock if needed, eject, then busy-poll until that predicate clears; otherwise publish100h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a440
+
+PROVEN: When neither DOS-version exception nor Windows flag is set and tray-closed predicate is false, issue close-tray and poll until it becomes true; otherwise publish100h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a440.
+
+When neither DOS-version exception nor Windows flag is set and tray-closed predicate is false, issue close-tray and poll until it becomes true; otherwise publish100h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a734
+
+PROVEN: Populate the cached disc table once: optionally close tray, poll media readiness with byte retry countdown, clear51Fh bytes, query first/last/lead-out and each track start/control. Store sector differences in both track_end and track_length; compute packed total duration, set cache-valid byte, return final status==100h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a734.
+
+Populate the cached disc table once: optionally close tray, poll media readiness with byte retry countdown, clear51Fh bytes, query first/last/lead-out and each track start/control. Store sector differences in both track_end and track_length; compute packed total duration, set cache-valid byte, return final status==100h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a4a0
+
+PROVEN: Return the enumerated membership byte for the zero-based DOS drive index.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a4a0.
+
+Return the enumerated membership byte for the zero-based DOS drive index.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a4ac
+
+PROVEN: Validate cached track range and audio flag, add packed minute:second:00 to track start, check against next track/lead-out, stop and play with MSF mode1 and remaining sector length. Publish7 for nonaudio/track100 and8 for range/time failures.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a4ac.
+
+Validate cached track range and audio flag, add packed minute:second:00 to track start, check against next track/lead-out, stop and play with MSF mode1 and remaining sector length. Publish7 for nonaudio/track100 and8 for range/time failures.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:effect_set_audio_status
+
+PROVEN: Stop audio once (request85h) on the supplied drive; pause/effect/movie callers later resume via88h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a5a4.
+
+Stop audio once (request85h) on the supplied drive; pause/effect/movie callers later resume via88h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a5b8
+
+PROVEN: Stop audio twice on the supplied drive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a5b8.
+
+Stop audio twice on the supplied drive.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:effect_restore_audio_status
+
+PROVEN: Resume audio with request88h on the supplied drive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a5cc.
+
+Resume audio with request88h on the supplied drive.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a5e0
+
+PROVEN: If device-status bit100h is set, send four-channel volumes (a,b,a,b); otherwise publish status3.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a5e0.
+
+If device-status bit100h is set, send four-channel volumes (a,b,a,b); otherwise publish status3.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a61c
+
+PROVEN: Call multiplex helper; on status100h convert packed real-mode ES:offset into a linear conventional-memory address via ((packed>>12)&~15)+(packed&FFFFh), else return0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a61c.
+
+Call multiplex helper; on status100h convert packed real-mode ES:offset into a linear conventional-memory address via ((packed>>12)&~15)+(packed&FFFFh), else return0.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a654
+
+PROVEN: Start a cached track on the globally selected drive with play request84h, addressing mode1, cached packed MSF start and cached sector count track_end. No range validation occurs here.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a654.
+
+Start a cached track on the globally selected drive with play request84h, addressing mode1, cached packed MSF start and cached sector count track_end. No range validation occurs here.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a6bc
+
+PROVEN: Stop audio on selected drive twice.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a6bc.
+
+Stop audio on selected drive twice.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a6c4
+
+PROVEN: Stop audio on selected drive once with request85h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a6c4.
+
+Stop audio on selected drive once with request85h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:AudioTrackCommand
+
+PROVEN: Stop selected-drive audio once, then play the specified cached audio track.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a710.
+
+Stop selected-drive audio once, then play the specified cached audio track.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:sub_1a724
+
+PROVEN: Clear disc-table-valid byte and refresh the cached disc information for the supplied drive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a724.
+
+Clear disc-table-valid byte and refresh the cached disc information for the supplied drive.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### function:AudioStopCommand
+
+PROVEN: Refresh busy/status flags; when either observed activity flag is set, stop twice then poll until their OR is zero. The argument selects a drive, not a status value.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1a908.
+
+Refresh busy/status flags; when either observed activity flag is set, stop twice then poll until their OR is zero. The argument selects a drive, not a status value.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:byte_DEEFB
+
+PROVEN: Selected zero-based DOS drive index from MSCDEX CX; used as request CX, drive letter is value+41h.
+
+Units: replaceable CD backend selection. DOS layout/address: 2:4eefb.
+
+Selected zero-based DOS drive index from MSCDEX CX; used as request CX, drive letter is value+41h.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:byte_DEEFC
+
+UNKNOWN: Independent zero-initialized byte with orphan getter/setter only; no live status meaning established.
+
+Units: orphan platform byte. DOS layout/address: 2:4eefc.
+
+Independent zero-initialized byte with orphan getter/setter only; no live status meaning established.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:byte_DEEFD
+
+UNKNOWN: Independent zero-initialized byte with orphan getter/setter only; no live status meaning established.
+
+Units: orphan platform byte. DOS layout/address: 2:4eefd.
+
+Independent zero-initialized byte with orphan getter/setter only; no live status meaning established.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:byte_DEF00
+
+UNKNOWN: Independent zero-initialized byte with orphan getter/setter only; distinct from cd_status_playing.
+
+Units: orphan platform byte. DOS layout/address: 2:4ef00.
+
+Independent zero-initialized byte with orphan getter/setter only; distinct from cd_status_playing.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_860
+
+PROVEN: Protected far pointer to CD allocation+0x4e (eleven-byte Q-channel IOCTL transfer), selector from DPMI DX; aliases real-mode cd_offset_838.
+
+Units: replaceable platform address. DOS layout/address: 2:4e860.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_866
+
+PROVEN: Protected far pointer to CD allocation+0x35 (seven-byte disc-info transfer), selector from DPMI DX; aliases real-mode cd_offset_854.
+
+Units: replaceable platform address. DOS layout/address: 2:4e866.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_86c
+
+PROVEN: Protected far pointer to CD allocation+0x1a (stop/resume/play request), selector from DPMI DX; aliases real-mode cd_offset_848.
+
+Units: replaceable platform address. DOS layout/address: 2:4e86c.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_872
+
+PROVEN: Protected far pointer to CD allocation+0x30 (one/five-byte device-control/status transfer), selector from DPMI DX; aliases real-mode cd_offset_858.
+
+Units: replaceable platform address. DOS layout/address: 2:4e872.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_878
+
+PROVEN: Protected far pointer to CD allocation+0x0 (IOCTL request), selector from DPMI DX; aliases real-mode cd_offset_850.
+
+Units: replaceable platform address. DOS layout/address: 2:4e878.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_87e
+
+PROVEN: Protected far pointer to CD allocation+0x59 (two-byte lock/unlock IOCTL transfer), selector from DPMI DX; aliases real-mode cd_offset_830.
+
+Units: replaceable platform address. DOS layout/address: 2:4e87e.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_884
+
+PROVEN: Protected far pointer to CD allocation+0x3c (seven-byte track-info transfer), selector from DPMI DX; aliases real-mode cd_offset_84c.
+
+Units: replaceable platform address. DOS layout/address: 2:4e884.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_88a
+
+PROVEN: Protected far pointer to CD allocation+0x0 (IOCTL request), selector from DPMI DX; aliases real-mode cd_offset_850.
+
+Units: replaceable platform address. DOS layout/address: 2:4e88a.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_890
+
+PROVEN: Protected far pointer to CD allocation+0x43 (eleven-byte audio-status transfer), selector from DPMI DX; aliases real-mode cd_offset_844.
+
+Units: replaceable platform address. DOS layout/address: 2:4e890.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_896
+
+PROVEN: Protected far pointer to CD allocation+0x64 (multiplex transfer area), selector from DPMI DX; aliases real-mode cd_offset_834.
+
+Units: replaceable platform address. DOS layout/address: 2:4e896.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_buffer_89c
+
+PROVEN: Protected far pointer to CD allocation+0x5b (nine-byte channel/volume IOCTL transfer), selector from DPMI DX; aliases real-mode cd_offset_83c.
+
+Units: replaceable platform address. DOS layout/address: 2:4e89c.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_computed_lba
+
+PROVEN: Signed16 cached MSCDEX version major*100+minor, compared>=210; inherited lba name is misleading.
+
+Units: version hundredths. DOS layout/address: 2:4e8ba.
+
+Signed16 cached MSCDEX version major*100+minor, compared>=210; inherited lba name is misleading.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_disc_info
+
+PROVEN: Cached disc TOC: first/last/count, packed MSF starts and lead-out, sector-length arrays and audio/data flags. track_end and track_length both hold lengths rather than end addresses.
+
+Units: resource metadata and backend cache. DOS layout/address: 2:4e8c0.
+
+Cached disc TOC: first/last/count, packed MSF starts and lead-out, sector-length arrays and audio/data flags. track_end and track_length both hold lengths rather than end addresses.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_drive_count
+
+PROVEN: Low-byte MSCDEX installed drive count.
+
+Units: replaceable platform discovery. DOS layout/address: 2:4eede.
+
+Low-byte MSCDEX installed drive count.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_drive_handle
+
+PROVEN: DPMI selector for the138-byte conventional CD request allocation, not a CD track or sample handle.
+
+Units: replaceable platform allocation. DOS layout/address: 2:4e8b8.
+
+DPMI selector for the138-byte conventional CD request allocation, not a CD track or sample handle.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_drive_map
+
+PROVEN: 26 one-byte membership flags for DOS drive indices A..Z, built by AX150Bh.
+
+Units: replaceable platform discovery. DOS layout/address: 2:4eedf.
+
+26 one-byte membership flags for DOS drive indices A..Z, built by AX150Bh.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_830
+
+PROVEN: Packed real-mode segment:offset for two-byte lock/unlock IOCTL transfer at allocation+0x59, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e830.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_834
+
+PROVEN: Packed real-mode segment:offset for multiplex transfer area at allocation+0x64, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e834.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_838
+
+PROVEN: Packed real-mode segment:offset for eleven-byte Q-channel IOCTL transfer at allocation+0x4e, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e838.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_83c
+
+PROVEN: Packed real-mode segment:offset for nine-byte channel/volume IOCTL transfer at allocation+0x5b, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e83c.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_840
+
+PROVEN: Packed real-mode segment:offset for allocation base at allocation+0x0, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e840.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_844
+
+PROVEN: Packed real-mode segment:offset for eleven-byte audio-status transfer at allocation+0x43, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e844.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_848
+
+PROVEN: Packed real-mode segment:offset for stop/resume/play request at allocation+0x1a, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e848.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_84c
+
+PROVEN: Packed real-mode segment:offset for seven-byte track-info transfer at allocation+0x3c, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e84c.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_850
+
+PROVEN: Packed real-mode segment:offset for IOCTL request at allocation+0x0, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e850.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_854
+
+PROVEN: Packed real-mode segment:offset for seven-byte disc-info transfer at allocation+0x35, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e854.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_offset_858
+
+PROVEN: Packed real-mode segment:offset for one/five-byte device-control/status transfer at allocation+0x30, constructed from base returned by DPMI. This is distinct from the protected far-pointer view.
+
+Units: replaceable platform address. DOS layout/address: 2:4e858.
+
+Conventional CD allocation address view initialized by sub_19790; exact block displacement/representation and readers/writers are attached. No persistent game state is stored in the pointer itself.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_request_busy
+
+PROVEN: Disc-table cache-valid byte:0 causes refresh,1 reuses cached table. Its inherited busy name is not request-in-flight meaning.
+
+Units: backend cache latch. DOS layout/address: 2:4eefe.
+
+Disc-table cache-valid byte:0 causes refresh,1 reuses cached table. Its inherited busy name is not request-in-flight meaning.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_request_regs
+
+PROVEN: Single22-byte real-mode register request/response block used for INT2Fh via DPMI wrapper.
+
+Units: replaceable platform scratch. DOS layout/address: 2:4e8a2.
+
+Single22-byte real-mode register request/response block used for INT2Fh via DPMI wrapper.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_status_error
+
+PROVEN: Inverse OR of the two queried activity booleans; stop/poll ends when this becomes1. Not the decoded error word.
+
+Units: backend stopped predicate. DOS layout/address: 2:4eefa.
+
+Inverse OR of the two queried activity booleans; stop/poll ends when this becomes1. Not the decoded error word.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_status_playing
+
+PROVEN: Boolean from request status0200h, used with transfer byte bit0 in stop/poll loop.
+
+Units: backend playback query. DOS layout/address: 2:4eeff.
+
+Boolean from request status0200h, used with transfer byte bit0 in stop/poll loop.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:cd_status_ready
+
+PROVEN: Boolean from IOCTL0Fh transfer byte1 bit0, combined with request busy flag; broader ready interpretation is not established here.
+
+Units: backend query bit. DOS layout/address: 2:4eef9.
+
+Boolean from IOCTL0Fh transfer byte1 bit0, combined with request busy flag; broader ready interpretation is not established here.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:dos_error_messages
+
+PROVEN: Sixteen initialized pointers to DOS critical-error message strings. No additional game use is inferred from the table spelling.
+
+Units: platform error text. DOS layout/address: 2:62d8.
+
+Sixteen initialized pointers to DOS critical-error message strings. No additional game use is inferred from the table spelling.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+### global:word_DE8BC
+
+PROVEN: Last decoded MSCDEX request error:100h success, low8 DOS error when8000h set, plus application101h allocation/102h free failure.
+
+Units: backend request result. DOS layout/address: 2:4e8bc.
+
+Last decoded MSCDEX request error:100h success, low8 DOS error when8000h set, plus application101h allocation/102h free failure.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
 
 ## cdsave.json
 
@@ -5206,6 +6450,1012 @@ Units: see parameter/result and side-effect contract. DOS layout/address: 1:25db
 
 Only fills missing powers:poing beyond1:3,hang beyond1:8,grap beyond1:17,helico beyond2:11,run beyond3:11. Helped musician beyond3:6,Joe2 beyond5:6. This is game progression in display.c,not backend state.
 
+## dosmem.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:dos_allocate_conventional_block
+
+PROVEN: DPMI INT31h AX0100 allocate ceil(u16 bytes/16) paragraphs. On carry set output0/return0; else return DX selector and write AX real-mode segment<<16. Output is a packed ES:offset with offset0, not a protected selector pair.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:56460.
+
+DPMI INT31h AX0100 allocate ceil(u16 bytes/16) paragraphs. On carry set output0/return0; else return DX selector and write AX real-mode segment<<16. Output is a packed ES:offset with offset0, not a protected selector pair.
+
+Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation.
+
+### function:dos_free_conventional_block
+
+PROVEN: DPMI INT31h AX0101 free DX selector, return carry bit as byte failure boolean.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:564c4.
+
+DPMI INT31h AX0101 free DX selector, return carry bit as byte failure boolean.
+
+Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation.
+
+### function:sub_564f8
+
+PROVEN: Clear DPMI host/real/segment scratch, copy low16 request registers to real-mode block, INT31h AX0300 with interrupt byteBL, BH0,CX0 and ES:EDI real-block pointer. Copy AX/BX/CX/DX/SI/DI/flags/CS/DS/ES/SS back as16-bit outputs and return SS.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:564f8.
+
+Clear DPMI host/real/segment scratch, copy low16 request registers to real-mode block, INT31h AX0300 with interrupt byteBL, BH0,CX0 and ES:EDI real-block pointer. Copy AX/BX/CX/DX/SI/DI/flags/CS/DS/ES/SS back as16-bit outputs and return SS.
+
+Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation.
+
+### global:dpmi_workspace
+
+PROVEN: 92-byte shared DPMI scratch:28-byte host REGS,52-byte real-mode register frame,12-byte segment registers.
+
+Units: replaceable platform scratch. DOS layout/address: 2:54e1c.
+
+92-byte shared DPMI scratch:28-byte host REGS,52-byte real-mode register frame,12-byte segment registers.
+
+Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation.
+
+## dosprobe.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:detect_windows
+
+PROVEN: Probe real-mode INT2Fh AX1600. AL1/FF =>outputs2,0/return1; AL0/80 =>fallback4680 then1605/1606 with returns0/81/82; other AL =>outputsAL,AH/return83. Preserve observed status encoding; output byte names remain neutral.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6f200.
+
+Probe real-mode INT2Fh AX1600. AL1/FF =>outputs2,0/return1; AL0/80 =>fallback4680 then1605/1606 with returns0/81/82; other AL =>outputsAL,AH/return83. Preserve observed status encoding; output byte names remain neutral.
+
+Replace BIOS/DOS/Windows detection with explicit native platform policy. Preserve the existing downstream conditional behavior where relevant; no native OS-version number should masquerade as DOS return bytes.
+
+### function:detect_dos_version
+
+PROVEN: INT21h AX3000; output DOS major/minor from AL/AH, set byte_CFA14 iff major10 or20, return output byte5 (BH). Backend environment classification, not gameplay version selection.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6f32c.
+
+INT21h AX3000; output DOS major/minor from AL/AH, set byte_CFA14 iff major10 or20, return output byte5 (BH). Backend environment classification, not gameplay version selection.
+
+Replace BIOS/DOS/Windows detection with explicit native platform policy. Preserve the existing downstream conditional behavior where relevant; no native OS-version number should masquerade as DOS return bytes.
+
+## effect1.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:sub_37B90
+
+PROVEN: Poll input; clear64000-byte draw buffer; update via sub_38ED4; return done if progress0 or any of four buttons/space, then draw via sub_391C0 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27b90.
+
+Poll input; clear64000-byte draw buffer; update via sub_38ED4; return done if progress0 or any of four buttons/space, then draw via sub_391C0 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37C00
+
+PROVEN: Save PLAN3 palette; for sign1 initialize fade-in; run synchronized sub_37B90; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27c00.
+
+Save PLAN3 palette; for sign1 initialize fade-in; run synchronized sub_37B90; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37C40
+
+PROVEN: Poll input; update via effect_helper_6ef5c; return done if progress0 or any of four buttons/space, then draw via effect_helper_6f0e0 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27c40.
+
+Poll input; update via effect_helper_6ef5c; return done if progress0 or any of four buttons/space, then draw via effect_helper_6f0e0 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37C98
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37C40; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27c98.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37C40; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37CDC
+
+PROVEN: Poll input; clear64000-byte draw buffer; update via effect_helper_16404; return done if progress0 or any of four buttons/space, then draw via effect_helper_168c8 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27cdc.
+
+Poll input; clear64000-byte draw buffer; update via effect_helper_16404; return done if progress0 or any of four buttons/space, then draw via effect_helper_168c8 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37D4C
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37CDC; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27d4c.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37CDC; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37D90
+
+PROVEN: Poll input; clear64000-byte draw buffer; update via effect_helper_348a4; return done if progress0 or any of four buttons/space, then draw via effect_helper_34760 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27d90.
+
+Poll input; clear64000-byte draw buffer; update via effect_helper_348a4; return done if progress0 or any of four buttons/space, then draw via effect_helper_34760 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37E00
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37D90; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27e00.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37D90; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37E44
+
+PROVEN: Poll input; update via effect_helper_63614; return done if progress0 or any of four buttons/space, then draw via effect_helper_63838 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27e44.
+
+Poll input; update via effect_helper_63614; return done if progress0 or any of four buttons/space, then draw via effect_helper_63838 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37E9C
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37E44; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27e9c.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37E44; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37EE0
+
+PROVEN: Poll input; clear64000-byte draw buffer; update via effect_helper_507f0; return done if progress0 or any of four buttons/space, then draw via effect_helper_50aa8 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27ee0.
+
+Poll input; clear64000-byte draw buffer; update via effect_helper_507f0; return done if progress0 or any of four buttons/space, then draw via effect_helper_50aa8 even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37F50
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37EE0; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27f50.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37EE0; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37F94
+
+PROVEN: Poll input; update via effect_helper_6c8d4; return done if progress0 or any of four buttons/space, then draw via effect_helper_6c9bc even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27f94.
+
+Poll input; update via effect_helper_6c8d4; return done if progress0 or any of four buttons/space, then draw via effect_helper_6c9bc even on the done call. Incoming scene clock unused; short-circuit query order is preserved.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_37FEC
+
+PROVEN: Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37F94; for signed sign-1 perform fade-out; restore palette.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:27fec.
+
+Save PLAN3 palette; for sign1 clear video and initialize fade-in; run synchronized sub_37F94; for signed sign-1 perform fade-out; restore palette.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38030
+
+PROVEN: Choose random effect2..8 for positive transition sign, otherwise1..8, using inclusive myRand.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28030.
+
+Choose random effect2..8 for positive transition sign, otherwise1..8, using inclusive myRand.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38054
+
+PROVEN: Return random row-wipe mode1..12.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28054.
+
+Return random row-wipe mode1..12.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38064
+
+PROVEN: Return random two-panel mode1..15.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28064.
+
+Return random two-panel mode1..15.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38074
+
+PROVEN: Return random two-panel mode1..7.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28074.
+
+Return random two-panel mode1..7.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_380A4
+
+PROVEN: Initialize selected transition: effect9 randomizes;4 aliases2. Multiply sign byte as s8 into speed. Grid1=(8,8,sign,120), wave3=(20,10,sign,400), sphere5=(20,8,61,2sign,50), row2=(mode,2sign), column8=(22,2sign), panel6=(mode,4sign), radial7=(160,100,48,4sign,1000). Preserve mode-randomization sentinels13/16/100.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:280a4.
+
+Initialize selected transition: effect9 randomizes;4 aliases2. Multiply sign byte as s8 into speed. Grid1=(8,8,sign,120), wave3=(20,10,sign,400), sphere5=(20,8,61,2sign,50), row2=(mode,2sign), column8=(22,2sign), panel6=(mode,4sign), radial7=(160,100,48,4sign,1000). Preserve mode-randomization sentinels13/16/100.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38208
+
+PROVEN: Set transition sign byte1 then dispatch initializer with source/destination pointers.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28208.
+
+Set transition sign byte1 then dispatch initializer with source/destination pointers.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38220
+
+PROVEN: Set transition sign byteFFh (signed-1) then dispatch initializer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28220.
+
+Set transition sign byteFFh (signed-1) then dispatch initializer.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38258
+
+PROVEN: Dispatch scene loop for effect selectors1,2,3,5,6,7,8;4/unsupported return without action.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28258.
+
+Dispatch scene loop for effect selectors1,2,3,5,6,7,8;4/unsupported return without action.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:sub_38290
+
+PROVEN: Free effect-specific allocations for selectors1,2,3,5,6,7,8;4/unsupported no action.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28290.
+
+Free effect-specific allocations for selectors1,2,3,5,6,7,8;4/unsupported no action.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:SaveScreen
+
+PROVEN: In ModeX1 select VGA read-map planes0..3 via port3CEh index4 and copy16000 bytes each into consecutive plane slots. Other modes copy64000 contiguous bytes.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:282ac.
+
+In ModeX1 select VGA read-map planes0..3 via port3CEh index4 and copy16000 bytes each into consecutive plane slots. Other modes copy64000 contiguous bytes.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:RestoreScreen
+
+PROVEN: In ModeX1 select write-plane masks1,2,4,8 via port3C4h index2 and copy four16000-byte source planes to the same destination address. Other modes copy64000 bytes.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28320.
+
+In ModeX1 select write-plane masks1,2,4,8 via port3C4h index2 and copy four16000-byte source planes to the same destination address. Other modes copy64000 bytes.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:DO_AFFICHE_PAUSE
+
+PROVEN: Save sprite clip rectangle, set full320x200 clip, draw language_txt[160] at160,100 font2/color1, restore original clip.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2839c.
+
+Save sprite clip rectangle, set full320x200 clip, draw language_txt[160] at160,100 font2/color1, restore original clip.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:dummy_prg
+
+PROVEN: Return signed16 constant1; aligned DOS public aliases dummy_scene_func.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28400.
+
+Return signed16 constant1; aligned DOS public aliases dummy_scene_func.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:dummy_scene_func
+
+PROVEN: Return signed16 constant1 without using incoming scene clock.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28400.
+
+Return signed16 constant1 without using incoming scene clock.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:Do_Effect_Pause_Simple
+
+PROVEN: Save/restore screen and show pause text, synchronize, poll pause/cheats and paired shift keys to toggle pause-text visibility. FondAutorise2 takes special12-sync startup and waits for in_pause to clear. Preserve cadence15, touch-count guards and ModeNormal restore behavior.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28408.
+
+Save/restore screen and show pause text, synchronize, poll pause/cheats and paired shift keys to toggle pause-text visibility. FondAutorise2 takes special12-sync startup and waits for in_pause to clear. Preserve cadence15, touch-count guards and ModeNormal restore behavior.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:Do_Effect_Pause_unknown
+
+PROVEN: Pause scene callback: first7*VGA_FREQ calls restore two packed half-screen bands and handle five-shift-call text toggle. Later run panel transform, reverse speed/random mode at completion, wait VGA_FREQ frames after restoration, and use the pause_bloque branch for static pause with shift reentry. Restore full frame on exit and return in_pause==0; incoming clock unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28574.
+
+Pause scene callback: first7*VGA_FREQ calls restore two packed half-screen bands and handle five-shift-call text toggle. Later run panel transform, reverse speed/random mode at completion, wait VGA_FREQ frames after restoration, and use the pause_bloque branch for static pause with shift reentry. Restore full frame on exit and return in_pause==0; incoming clock unused.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### function:Do_Effect_Pause
+
+PROVEN: Mute effects and pause CD; use panel animation in ModeNormal when allocation succeeds, else simple pause. After return add paused BIOS-tick interval to cdTimeStart, resume CD, clear freeze/pause and idle counter.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28924.
+
+Mute effects and pause CD; use panel animation in ModeNormal when allocation succeeds, else simple pause. After return add paused BIOS-tick interval to cdTimeStart, resume CD, clear freeze/pause and idle counter.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:byte_964C8
+
+PROVEN: Selected per-algorithm variation/mode, including randomization sentinels handled before dispatch.
+
+Units: presentation mode. DOS layout/address: 2:64c8.
+
+Selected per-algorithm variation/mode, including randomization sentinels handled before dispatch.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:byte_964CA
+
+PROVEN: Transition direction/fade sign byte:1 orFFh interpreted signed-1; controls speed and palette fades.
+
+Units: signed8 transition direction. DOS layout/address: 2:64ca.
+
+Transition direction/fade sign byte:1 orFFh interpreted signed-1; controls speed and palette fades.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_audio_clock_end
+
+PROVEN: BIOS tick snapshot at pause exit.
+
+Units: BIOS ticks. DOS layout/address: 2:4f7d8.
+
+BIOS tick snapshot at pause exit.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_audio_clock_start
+
+PROVEN: BIOS tick snapshot at pause entry, paired with exit snapshot to correct CD start time.
+
+Units: BIOS ticks. DOS layout/address: 2:4f7d4.
+
+BIOS tick snapshot at pause entry, paired with exit snapshot to correct CD start time.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_choice
+
+PROVEN: Transition algorithm selector1..8,4 aliases2 at initialization;9 randomizes before storage.
+
+Units: presentation algorithm. DOS layout/address: 2:64c9.
+
+Transition algorithm selector1..8,4 aliases2 at initialization;9 randomizes before storage.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_pause_bloque
+
+PROVEN: Byte selecting static/blocked pause presentation and visibility/animation branches; paired shift input toggles/sets it.
+
+Units: pause presentation latch. DOS layout/address: 2:64ce.
+
+Byte selecting static/blocked pause presentation and visibility/animation branches; paired shift input toggles/sets it.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_pause_count
+
+PROVEN: Signed16 pause callback count compared with7*VGA_FREQ during initial static display.
+
+Units: presentation callbacks. DOS layout/address: 2:64d0.
+
+Signed16 pause callback count compared with7*VGA_FREQ during initial static display.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_pause_counter
+
+PROVEN: Signed32 phase-dependent pause value: early paired-shift hold count, later panel update progress/return.
+
+Units: phase-dependent counter. DOS layout/address: 2:64d4.
+
+Signed32 phase-dependent pause value: early paired-shift hold count, later panel update progress/return.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_pause_timer
+
+PROVEN: Unsigned16 pause dwell countdown, setVGA_FREQ after reverse panel completion.
+
+Units: presentation callbacks. DOS layout/address: 2:64d2.
+
+Unsigned16 pause dwell countdown, setVGA_FREQ after reverse panel completion.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:effect_speed
+
+PROVEN: Signed16 pause-panel animation speed, initially-4 then negated between transforms; simple pause temporarily uses15 as polling countdown.
+
+Units: phase-dependent presentation parameter. DOS layout/address: 2:64cc.
+
+Signed16 pause-panel animation speed, initially-4 then negated between transforms; simple pause temporarily uses15 as polling countdown.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+## effect2.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:sub_38A30
+
+PROVEN: Allocate signed16 sort-key copy and selection-sort descending while swapping only draw_order values. Equal keys keep the first encountered maximum. Allocation failure leaves existing order.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28a30.
+
+Allocate signed16 sort-key copy and selection-sort descending while swapping only draw_order values. Equal keys keep the first encountered maximum. Allocation failure leaves existing order.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### function:sub_38B58
+
+PROVEN: Initialize rectangular tile fragments: 320/columns and200/rows narrowed to bytes, depth512, half-screen texture views, per-tile random velocities and angle increments. Normalize signed speed to nonzero, frame limit>=1, then sort draw order.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28b58.
+
+Initialize rectangular tile fragments: 320/columns and200/rows narrowed to bytes, depth512, half-screen texture views, per-tile random velocities and angle increments. Normalize signed speed to nonzero, frame limit>=1, then sort draw order.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### function:sub_38DA0
+
+PROVEN: Free tile items then tile-state allocation when nonnull.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28da0.
+
+Free tile items then tile-state allocation when nonnull.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### function:sub_38DCC
+
+PROVEN: Allocate tile-state/items for clamped columns>=2,rows>=1; copy left/right160x200 bands into256-pitch effect textures, initialize grid motion. Cleanup and return0 on allocation/input failure, else1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28dcc.
+
+Allocate tile-state/items for clamped columns>=2,rows>=1; copy left/right160x200 bands into256-pitch effect textures, initialize grid motion. Cleanup and return0 on allocation/input failure, else1.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### function:sub_38ED4
+
+PROVEN: For each fragment update four3D corners abs(speed) byte-count times, rotate about fragment center with Q9 sinus/cosinus, divide projected coordinates by rotated depth+center depth, and wrap byte angles. Every fifth frame after20 increase vertical velocity; advance frame by step and wrap0 when>limit. Negative speed affects initial sign contract but step is absolute here.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:28ed4.
+
+For each fragment update four3D corners abs(speed) byte-count times, rotate about fragment center with Q9 sinus/cosinus, divide projected coordinates by rotated depth+center depth, and wrap byte angles. Every fifth frame after20 increase vertical velocity; advance frame by step and wrap0 when>limit. Negative speed affects initial sign contract but step is absolute here.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### function:sub_391C0
+
+PROVEN: Draw fragments in draw_order using44-byte descriptor at item+3Ch through draw_effect_segment.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:291c0.
+
+Draw fragments in draw_order using44-byte descriptor at item+3Ch through draw_effect_segment.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+### global:effect_data
+
+PROVEN: Owning pointer to tile-fragment transition state; owns dynamically allocated108-byte fragment records.
+
+Units: presentation state ownership. DOS layout/address: 2:4f7dc.
+
+Owning pointer to tile-fragment transition state; owns dynamically allocated108-byte fragment records.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+## effect34580.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_prepare_rows
+
+PROVEN: Initialize200 row spans and normalized signed direction; clamp mode1..12. Limits:320 for3/7/11/12,100 for9,200 otherwise; mode12 reverses direction.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:345b0.
+
+Initialize200 row spans and normalized signed direction; clamp mode1..12. Limits:320 for3/7/11/12,100 for9,200 otherwise; mode12 reverses direction.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+### function:effect_cleanup_34688
+
+PROVEN: Free row-span array and row-state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:34688.
+
+Free row-span array and row-state.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+### function:effect_helper_346b4
+
+PROVEN: Allocate row-state/200 ten-byte spans, snapshot64000 source bytes to effect buffer, bind destination and initialize mode/direction; cleanup on failure.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:346b4.
+
+Allocate row-state/200 ten-byte spans, snapshot64000 source bytes to effect buffer, bind destination and initialize mode/direction; cleanup on failure.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+### function:effect_helper_34760
+
+PROVEN: For each span require positive width and valid source/destination row, clip source x then destination x against0..319 (without compensating the other x), then copy clipped width bytes at320 stride.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:34760.
+
+For each span require positive width and valid source/destination row, clip source x then destination x against0..319 (without compensating the other x), then copy clipped width bytes at320 stride.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+### function:effect_helper_348a4
+
+PROVEN: Compute distance=limit-position for nonnegative direction else position. Modes1..8 combine source-y shift and source/destination-x shifts;10 alternates vertical directions;11 alternates horizontal directions;9 constructs three triangular span passes (two drawn immediately);12 centers a growing/shrinking rectangle with inclusive vertical bound. Narrow span coordinates to s16, advance u16 position by abs(direction), wrap0 only when>limit.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:348a4.
+
+Compute distance=limit-position for nonnegative direction else position. Modes1..8 combine source-y shift and source/destination-x shifts;10 alternates vertical directions;11 alternates horizontal directions;9 constructs three triangular span passes (two drawn immediately);12 centers a growing/shrinking rectangle with inclusive vertical bound. Narrow span coordinates to s16, advance u16 position by abs(direction), wrap0 only when>limit.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+### global:dword_E0D14
+
+PROVEN: Owning pointer to200-row span-wipe state and its ten-byte span array.
+
+Units: presentation state ownership. DOS layout/address: 2:50d14.
+
+Owning pointer to200-row span-wipe state and its ten-byte span array.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+## effect50350.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_activate
+
+PROVEN: Initialize two textured panels (six3D points) and signed speed inverted from input. Clamp mode1..15, set depth progress512 and center160,100. Modes1..7 select axis increments;8..15 select edge hinges at x=-2/321 or y=-2/201 with explicit initial angles128/384/512 and limitabs(speed)+128. Exact mode table attached.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:5038c.
+
+Initialize two textured panels (six3D points) and signed speed inverted from input. Clamp mode1..15, set depth progress512 and center160,100. Modes1..7 select axis increments;8..15 select edge hinges at x=-2/321 or y=-2/201 with explicit initial angles128/384/512 and limitabs(speed)+128. Exact mode table attached.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+### function:effect_cleanup_506fc
+
+PROVEN: Free two panel draw descriptors, six transformed points and panel state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:506fc.
+
+Free two panel draw descriptors, six transformed points and panel state.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+### function:effect_helper_50738
+
+PROVEN: Allocate panel state,88-byte draw records,120-byte point array; copy two160x200 half-screen textures to256 pitch, then initialize mode/speed. Cleanup on failure.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:50738.
+
+Allocate panel state,88-byte draw records,120-byte point array; copy two160x200 half-screen textures to256 pitch, then initialize mode/speed. Cleanup on failure.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+### function:effect_helper_507f0
+
+PROVEN: Rotate six points in Z,Y,X order with Q9 coefficients and arithmetic shifts after each axis; add depth512 or512+4*directed_progress, project (x<<9)/depth around stored pivot. Populate two quad descriptors sharing center edge, advance signed16 angles and u16 position byabs(speed), wrap0 when>limit.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:507f0.
+
+Rotate six points in Z,Y,X order with Q9 coefficients and arithmetic shifts after each axis; add depth512 or512+4*directed_progress, project (x<<9)/depth around stored pivot. Populate two quad descriptors sharing center edge, advance signed16 angles and u16 position byabs(speed), wrap0 when>limit.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+### function:effect_helper_50aa8
+
+PROVEN: Draw exactly two panel descriptors through shared draw_effect_segment.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:50aa8.
+
+Draw exactly two panel descriptors through shared draw_effect_segment.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+### global:dword_E4DA8
+
+PROVEN: Owning pointer to two-panel3D transition state, six points and two draw records.
+
+Units: presentation state ownership. DOS layout/address: 2:54da8.
+
+Owning pointer to two-panel3D transition state, six points and two draw records.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+## effect633e0.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_update_table_633e0
+
+PROVEN: Reset progress; invert/normalize input speed sign and select initial mode0 forpositive delta or3 fornegative. Build2*width signed32 table entries trunc(acos(y/width)*width) for y=-width..width-1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:633e0.
+
+Reset progress; invert/normalize input speed sign and select initial mode0 forpositive delta or3 fornegative. Build2*width signed32 table entries trunc(acos(y/width)*width) for y=-width..width-1.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+### function:effect_cleanup_634c4
+
+PROVEN: Free column-remap table then state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:634c4.
+
+Free column-remap table then state.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+### function:effect_helper_634f0
+
+PROVEN: Clamp radius-like width8..40, span2*width, periods trunc(width*pi),trunc(width*pi/2), snapshot full source, allocate4*span lookup bytes and initialize column-remap progression.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:634f0.
+
+Clamp radius-like width8..40, span2*width, periods trunc(width*pi),trunc(width*pi/2), snapshot full source, allocate4*span lookup bytes and initialize column-remap progression.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+### function:effect_helper_63614
+
+PROVEN: Prepare column-remap mode0 sine leading edge, mode1 cosine transition (clamped after period1), or mode2 trailing edge using signed32 limits/center and initialized latch. Advance signed16 progress byabs(delta); return0 in forward mode4 or reverse modeFFh. Rendering advances the actual column center and mode.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63614.
+
+Prepare column-remap mode0 sine leading edge, mode1 cosine transition (clamped after period1), or mode2 trailing edge using signed32 limits/center and initialized latch. Advance signed16 progress byabs(delta); return0 in forward mode4 or reverse modeFFh. Rendering advances the actual column center and mode.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+### function:effect_helper_63838
+
+PROVEN: Mode3 clears64000 destination bytes and advances/decrements mode. Modes0..2 map source columns through acos table across200 rows, substitute alternate source when sampled pixel0, and restore/clear edge strips according to delta sign. Subtract delta from center, compare against phase thresholds and reset initialized latch when changing mode; preserve asymmetric x<0/x<=0 and -1 differences.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63838.
+
+Mode3 clears64000 destination bytes and advances/decrements mode. Modes0..2 map source columns through acos table across200 rows, substitute alternate source when sampled pixel0, and restore/clear edge strips according to delta sign. Subtract delta from center, compare against phase thresholds and reset initialized latch when changing mode; preserve asymmetric x<0/x<=0 and -1 differences.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+### global:effect_state_55760
+
+PROVEN: Owning pointer to horizontal column-remap transition state and acos lookup table.
+
+Units: presentation state ownership. DOS layout/address: 2:55760.
+
+Owning pointer to horizontal column-remap transition state and acos lookup table.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+## effect6c3b0.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_helper_6c3b0
+
+PROVEN: Reset frame/limit, normalize velocity, optionally retain center for x/y=-1, clamp center by radius and randomize velocity signs. With both coordinates supplied build signed-byte displacement pairs: d=sqrt(x*x+y*y), a=d*exp(-(2/r)^2*d*d), transformed=(d*cos(theta)-a*sin(theta),d*sin(theta)+a*cos(theta)); truncate delta to s32 then store byte. Sentinel calls return before rebuilding map.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6c3b0.
+
+Reset frame/limit, normalize velocity, optionally retain center for x/y=-1, clamp center by radius and randomize velocity signs. With both coordinates supplied build signed-byte displacement pairs: d=sqrt(x*x+y*y), a=d*exp(-(2/r)^2*d*d), transformed=(d*cos(theta)-a*sin(theta),d*sin(theta)+a*cos(theta)); truncate delta to s32 then store byte. Sentinel calls return before rebuilding map.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+### function:effect_cleanup_6c7a0
+
+PROVEN: Free radial displacement map then state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6c7a0.
+
+Free radial displacement map then state.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+### function:effect_helper_6c7cc
+
+PROVEN: Clamp radius8..48, dimensions2r+1 square, snapshot64000 source bytes and allocate2*width*height displacement bytes in32-byte state; initialize center/speed/limit or cleanup on failure.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6c7cc.
+
+Clamp radius8..48, dimensions2r+1 square, snapshot64000 source bytes and allocate2*width*height displacement bytes in32-byte state; initialize center/speed/limit or cleanup on failure.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+### function:effect_helper_6c8d4
+
+PROVEN: Move signed16 center by signed16 velocities, clamp and reflect at0..319/0..199 radius boundaries; advance u16 frame byabs(base velocity), wrap0 when>step.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6c8d4.
+
+Move signed16 center by signed16 velocities, clamp and reflect at0..319/0..199 radius boundaries; advance u16 frame byabs(base velocity), wrap0 when>step.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+### function:effect_helper_6c9bc
+
+PROVEN: Copy full source snapshot to output, then replace square(2r+1)^2 around center using signed8(dx,dy) map offsets dx+320*dy and fixed320 pitch; displacement sampling is not separately clipped.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6c9bc.
+
+Copy full source snapshot to output, then replace square(2r+1)^2 around center using signed8(dx,dy) map offsets dx+320*dy and fixed320 pitch; displacement sampling is not separately clipped.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+### global:effect_state_6c
+
+PROVEN: Owning pointer to moving radial signed-byte displacement effect.
+
+Units: presentation state ownership. DOS layout/address: 2:57460.
+
+Owning pointer to moving radial signed-byte displacement effect.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
+## effect6e380.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_copy_band
+
+PROVEN: Copy200 rows source stride320 to destination stride256, width bytes each; destination advances totalC800h. Used for160-wide halves and256-wide cropped texture.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6e380.
+
+Copy200 rows source stride320 to destination stride256, width bytes each; destination advances totalC800h. Used for160-wide halves and256-wide cropped texture.
+
+Keep200-row width-limited copies and320/256 pitch conversion; native textures may replace physical packed buffers.
+
+### function:effect_copy_pause_band
+
+PROVEN: Copy200 rows source stride256 to destination stride320, width bytes each; source advances totalC800h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6e3cc.
+
+Copy200 rows source stride256 to destination stride320, width bytes each; source advances totalC800h.
+
+Keep200-row width-limited copies and320/256 pitch conversion; native textures may replace physical packed buffers.
+
+## effect6ec80.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_helper_6ec80
+
+PROVEN: Initialize (columns+1)*(rows+1) grid vertex coordinates and UV rectangles, frame0, nonzero signed speed and limit>=1. Build75-byte history zeroes and ramp from trunc(sinus(2*byte_angle)*-40/512), angle increments10 modulo256.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6ec80.
+
+Initialize (columns+1)*(rows+1) grid vertex coordinates and UV rectangles, frame0, nonzero signed speed and limit>=1. Build75-byte history zeroes and ramp from trunc(sinus(2*byte_angle)*-40/512), angle increments10 modulo256.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+### function:effect_cleanup_6ee28
+
+PROVEN: Free wave-grid vertex records then state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6ee28.
+
+Free wave-grid vertex records then state.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+### function:effect_helper_6ee54
+
+PROVEN: Allocate188-byte state and52-byte vertices using original parameter products, clamp row/column bytes, copy two160-wide source bands to256-pitch textures, initialize wave speed/limit; cleanup on failure.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6ee54.
+
+Allocate188-byte state and52-byte vertices using original parameter products, clamp row/column bytes, copy two160-wide source bands to256-pitch textures, initialize wave speed/limit; cleanup on failure.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+### function:effect_helper_6ef5c
+
+PROVEN: Repeat abs(speed) times: history_position+=2; for interior grid vertices radius index=(dx*dx+dy*dy)>>9, signed history byte+512 is denominator, project dx*512/divisor+160 anddy*512/divisor+100 into unsigned16/byte outputs. Shift75-byte history with reverse ramp feed, suppress new waves after position600 when head0; increment progress and wrap0 when>limit.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6ef5c.
+
+Repeat abs(speed) times: history_position+=2; for interior grid vertices radius index=(dx*dx+dy*dy)>>9, signed history byte+512 is denominator, project dx*512/divisor+160 anddy*512/divisor+100 into unsigned16/byte outputs. Shift75-byte history with reverse ramp feed, suppress new waves after position600 when head0; increment progress and wrap0 when>limit.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+### function:effect_helper_6f0e0
+
+PROVEN: Build/draw one quad per grid cell from current/right/below/below-right next coordinates, subtract1 from right x edges; boundary vertices remain initialized fixed values.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6f0e0.
+
+Build/draw one quad per grid cell from current/right/below/below-right next coordinates, subtract1 from right x edges; boundary vertices remain initialized fixed values.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+### global:effect_state_6e
+
+PROVEN: Owning pointer to wave-grid vertices and75-byte history/ramp state.
+
+Units: presentation state ownership. DOS layout/address: 2:57464.
+
+Owning pointer to wave-grid vertices and75-byte history/ramp state.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+## effecthelp.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:effect_helper_15e60
+
+PROVEN: Initialize sphere grid with radius clamped40..70; latitude from-pi/2 to+pi/2 and longitude0..2pi, coordinates truncated to s16. Build quad point indices and integer UV rectangles over256x200 centered crop; normalize nonzero speed and frame limit>=1; set mode1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:15e60.
+
+Initialize sphere grid with radius clamped40..70; latitude from-pi/2 to+pi/2 and longitude0..2pi, coordinates truncated to s16. Build quad point indices and integer UV rectangles over256x200 centered crop; normalize nonzero speed and frame limit>=1; set mode1.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+Caller grid20x8 over crop256x200 gives width_step12 and height_step25: UV cells cover240 columns because integer division discards the remainder; no redistribution.
+
+### function:effect_cleanup_16200
+
+PROVEN: Free sphere point array, quad array and state.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:16200.
+
+Free sphere point array, quad array and state.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### function:effect_helper_1623c
+
+PROVEN: Set texture crop256x200 at32,0, allocate60-byte state,52-byte quad records and10-byte points, copy cropped source to256-pitch texture, then initialize sphere. Stored grid counts use original parameter products while row/column bytes are clamped; do not infer arbitrary-input safety.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:1623c.
+
+Set texture crop256x200 at32,0, allocate60-byte state,52-byte quad records and10-byte points, copy cropped source to256-pitch texture, then initialize sphere. Stored grid counts use original parameter products while row/column bytes are clamped; do not infer arbitrary-input safety.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### function:effect_helper_16404
+
+PROVEN: Mode1 interpolates Q9-perspective sphere points to a flat rectangle with frame/limit integer interpolation (reverse progress for negative speed). Negative completion enters bouncing/rotating mode: initialize center160,100 velocities8,10; gravity+1, edge reflections with asymmetric +/-1/+2 corrections, /4 movement then*abs(speed), Q9 rotations and512-depth projection. Byte latches govern bounce/drop; advance angle/frame as written.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:16404.
+
+Mode1 interpolates Q9-perspective sphere points to a flat rectangle with frame/limit integer interpolation (reverse progress for negative speed). Negative completion enters bouncing/rotating mode: initialize center160,100 velocities8,10; gravity+1, edge reflections with asymmetric +/-1/+2 corrections, /4 movement then*abs(speed), Q9 rotations and512-depth projection. Byte latches govern bounce/drop; advance angle/frame as written.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### function:effect_helper_168c8
+
+PROVEN: Gather each quad projected corners, subtract1 from right-edge u values, cull by signed cross-product inequality and draw reordered quad0,3,2,1 through shared rasterizer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:168c8.
+
+Gather each quad projected corners, subtract1 from right-edge u values, cull by signed cross-product inequality and draw reordered quad0,3,2,1 through shared rasterizer.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### global:effect5_height
+
+PROVEN: Sphere texture crop height initialized200.
+
+Units: pixels. DOS layout/address: 2:4e756.
+
+Sphere texture crop height initialized200.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### global:effect5_state
+
+PROVEN: Owning pointer to sphere-grid transition state and its point/quad arrays.
+
+Units: presentation state ownership. DOS layout/address: 2:4e750.
+
+Owning pointer to sphere-grid transition state and its point/quad arrays.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### global:effect5_width
+
+PROVEN: Sphere texture crop width initialized256.
+
+Units: pixels. DOS layout/address: 2:4e754.
+
+Sphere texture crop width initialized256.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### global:effect5_x_offset
+
+PROVEN: Sphere texture source crop x initialized32.
+
+Units: pixels. DOS layout/address: 2:4e758.
+
+Sphere texture source crop x initialized32.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+### global:effect5_y_offset
+
+PROVEN: Sphere texture source crop y initialized0.
+
+Units: pixels. DOS layout/address: 2:4e75a.
+
+Sphere texture source crop y initialized0.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
 ## fee.json
 
 Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
@@ -5289,6 +7539,60 @@ Units: see observed computation and contract. DOS layout/address: 1:2a118.
 Guide Rayman horizontally toward the fairy while preserving x parity, or stop him in the air.
 
 Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+## fnd.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:LOAD_FND
+
+PROVEN: Load selected Plan0NumPcx resource unless signed slot value-1; ModeNormal additionally calls Init_Bande with selected background, dimensions, decoded pixels and draw buffer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:38ef0.
+
+Load selected Plan0NumPcx resource unless signed slot value-1; ModeNormal additionally calls Init_Bande with selected background, dimensions, decoded pixels and draw buffer.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
+### function:INIT_FND
+
+PROVEN: Set background vertical mode3 if16*map.height<background.height else0, then apply exact world/level mode/divisor exceptions. Modes1 use divisors2 or4; selected fixed-bottom levels use3. Set horizontal lock marker for selected levels, then force it0 in ModeNormal; call LOAD_FND.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:39098.
+
+Set background vertical mode3 if16*map.height<background.height else0, then apply exact world/level mode/divisor exceptions. Modes1 use divisors2 or4; selected fixed-bottom levels use3. Set horizontal lock marker for selected levels, then force it0 in ModeNormal; call LOAD_FND.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
+### function:calc_off_fnd
+
+PROVEN: Set signed16 background y offset: mode0 ymap*(plan0_height-216)/ymapmax (signed32 promoted arithmetic), mode1 (ymap/sp_y)%plan0_height, mode2 zero, mode3 plan0_height-216; other modes leave previous value. Preconditions on divisors are not replaced with invented fallback behavior.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:391d4.
+
+Set signed16 background y offset: mode0 ymap*(plan0_height-216)/ymapmax (signed32 promoted arithmetic), mode1 (ymap/sp_y)%plan0_height, mode2 zero, mode3 plan0_height-216; other modes leave previous value. Preconditions on divisors are not replaced with invented fallback behavior.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
+### global:sp_y
+
+PROVEN: Background vertical camera divisor, assigned2 or4 for type_fnd1; zero in default initialization.
+
+Units: camera divisor. DOS layout/address: 2:540a9.
+
+Background vertical camera divisor, assigned2 or4 for type_fnd1; zero in default initialization.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
+### global:type_fnd
+
+PROVEN: Background y mapping selector:0 proportional,1 camera/divisor modulo height,2 top0,3 bottom height-216.
+
+Units: background mode. DOS layout/address: 2:3fa21.
+
+Background y mapping selector:0 proportional,1 camera/divisor modulo height,2 top0,3 bottom height-216.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
 
 ## frame.json
 
@@ -5758,6 +8062,10 @@ Size6 in DOS; pointer32 and signed16 count.
 
 Object id normally selects level.objects[id]; circular successors are maintained separately in link_init.
 
+Loaded packed object-array pointer and signed16 object count.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
 ### global:flags
 
 PROVEN: Per-object-type packed32-bit behaviour/movement flags.
@@ -5788,6 +8096,12 @@ This pilot observes1/2/default; does not infer a complete enum.
 
 World time-table row is32 entries; do not infer level-file capacity from that stride.
 
+Current one-based world/level selector used by engine exceptions, time tables and spawn rules.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
 ### global:block_flags
 
 PROVEN: Per-tile-type byte classification flags used by collision and slope/water movement rules.
@@ -5807,6 +8121,10 @@ Units: object record. DOS layout/address: 2:3e650.
 Coordinates are world pixels; ray_dist is a map index in Rayman collision paths.
 
 Uses pixel speeds in player helpers; templates/snapshots rms/raytmp preserve subsets and full copies across modes.
+
+Live Rayman object record, updated separately from the counted active-object loop.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
 
 ### global:xmap
 
@@ -5828,6 +8146,10 @@ Signed16 storage.
 
 Normal object screen y is world y-ymap. DO_SCROLL clamps it, including shake, to scroll_start_y/end_y.
 
+Signed16 world y of the camera/map origin.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
 ### global:mp
 
 PROVEN: Current map dimensions, tile count and packed six-byte tile array.
@@ -5837,6 +8159,10 @@ Units: tiles / pointer. DOS layout/address: 2:3e638.
 Tile16x16 pixels; record stride6.
 
 Tile size is16 pixels; moteur can reduce/override mp.height without reallocating map data.
+
+Current map dimensions, tile count and packed six-byte tile array.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
 
 ### global:RayEvts
 
@@ -5965,6 +8291,10 @@ STRONG: Input callback table and packed game-option storage.
 Units: record. DOS layout/address: 2:32f78.
 
 Rayman calls four s16(void) callbacks at offsets0/4/8/12. Their runtime targets are assigned by input/menu setup. Remaining option fields retain separately documented meanings or UNKNOWN.
+
+Input callback table and packed game-option storage.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
 
 ### global:ray_between_clic
 
@@ -6160,6 +8490,16 @@ Units: byte-buffer pointer. DOS layout/address: 2:3d138.
 
 FondAutorise2 returns/decodes here. Renderer-owned capacity is not redeclared or inferred from one loader allocation.
 
+ModeNormal screen drawing buffer reused for direct background decoding.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
 ### global:EffetBufferNormal
 
 STRONG: ModeNormal effect buffer reused for compressed background input or duplicate background storage.
@@ -6168,6 +8508,26 @@ Units: byte-buffer pointer. DOS layout/address: 2:3d130.
 
 FondAutorise2 uses it as compressed input (cap128000) and PLAN0BIT in allocate_PLAN0. Preserve lifetime/aliasing; it is not always compressed data.
 
+ModeNormal effect buffer reused for compressed background input or duplicate background storage.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+Keep fragment grid, random draw sequence, byte angle wrapping, Q9 rotation/depth projection and draw order. Reuse ASM_SPEC quad rasterization and packed256-pitch textures.
+
+Keep sphere-grid generation, integer projection/interpolation and asymmetric bounce/drop latches. Floating setup uses DOS constant/truncation semantics. Reuse ASM_SPEC rasterizer.
+
+Keep15 mode hinge/axis cases, six-point Q9 Z/Y/X rotations, pivot/depth calculation and two draw records; surface/backend allocation representation can change.
+
+Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate.
+
+Keep75-byte signed wave history/ramp, unsigned geometry widths, integer radius-index/divisor projection, border vertices and quad order.
+
+Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted.
+
+Keep radial displacement formula, truncation to signed bytes, random velocity signs and boundary reflection; replace raw surfaces but preserve sampling positions.
+
 ### global:FondAutorise
 
 PROVEN: Background-loading mode selecting disabled, allocated background, or screen/effect buffers.
@@ -6175,6 +8535,10 @@ PROVEN: Background-loading mode selecting disabled, allocated background, or scr
 Units: mode byte. DOS layout/address: 2:3fa1a.
 
 0=>skip LoadPlan0;2=>DrawBufferNormal/EffetBufferNormal and possible128000-byte truncation. Other nonzero values use allocated background buffers. Do not reduce to boolean.
+
+Background-loading mode selecting disabled, allocated background, or screen/effect buffers.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
 
 ### global:HeaderFilevignet
 
@@ -6226,6 +8590,10 @@ Units: byte-buffer pointer. DOS layout/address: 2:3d824.
 
 Allocated capacity2*W*H+8*W or EffetBufferNormal; PLAN0FND_to_bits_planes writes duplicate planes/top rows. Normal loader later assigns PLAN0=this pointer.
 
+Duplicate/planar background destination selected by allocate_PLAN0.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
 ### global:PLAN1_BUFFER
 
 PROVEN: ModeX runtime map-render buffer allocated during world load.
@@ -6257,6 +8625,10 @@ PROVEN: World-local signed8 map from background slot to VIGNET resource index.
 Units: resource index array. DOS layout/address: 2:3ef48.
 
 Reset10 bytes to-1; decoded file IDs XOR15 fill count slots. LOAD_FND indexes with signed8 no_fnd and skips-1. All shipped world counts fit10.
+
+World-local signed8 map from background slot to VIGNET resource index.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
 
 ### global:RaymanExeCheckSum1
 
@@ -6524,6 +8896,10 @@ Units: char-pointer table. DOS layout/address: 2:32b48.
 
 LoadLanguageTxt produces237 entries per shipped block; declaration is incomplete array. A400-byte temporary is scanning scratch, not the backing storage. Delimiters becomeNUL, next start skips2bytes.
 
+Pointers into the decoded mutable language block, separated in place.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
 ### global:laserSourceSprNumInAnim
 
 STRONG: Space-Mama laser-source animation-layer selection, initialized to byte255.
@@ -6716,6 +9092,10 @@ Units: world background slot. DOS layout/address: 2:3fa22.
 
 LEV static/scroll byte assigned according to video mode and ScrollDiffOn; LOAD_FND indexes Plan0NumPcx and then loads the resulting VIGNET resource. It is not itself a VIGNET resource ID.
 
+Signed8 selected world background slot.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
 ### global:path_has_changed
 
 PROVEN: Path-prefix switch for selected data loaders.
@@ -6732,6 +9112,10 @@ Units: pixels. DOS layout/address: 2:3f7e4.
 
 u16; assigned decoded/croppedheight. Allocation height can differ from final croppedheight.
 
+Published background height after decode/conversion.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
+
 ### global:plan0_width
 
 PROVEN: Published background width in the active representation.
@@ -6739,6 +9123,10 @@ PROVEN: Published background width in the active representation.
 Units: pixels/storage columns. DOS layout/address: 2:3f7de.
 
 ModeX converter storesW; ModeNormal loader stores2*W. Do not assume it always equals the PCX visible width.
+
+Published background width in the active representation.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
 
 ### global:plan0bit_length
 
@@ -6944,6 +9332,18 @@ Units: boolean byte. DOS layout/address: 2:3fa17.
 
 DISPLAY_GAME_VIGNET only starts/frees English speech when this is nonzero;other sound APIs also test it. Independent of need_timer calibration.
 
+Permission to use sound-card effects/speech.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
 ### global:CompteurEclair
 
 PROVEN: Lightning effect counter advanced by palette-effect invocations.
@@ -6991,6 +9391,12 @@ PROVEN: Normal-mode display target used by frame presentation.
 Units: DOS byte pointer. DOS layout/address: 2:5e28.
 
 SWAP_BUFFERS supplies it to the assembly copy;mode initialization clears64000 bytes (ModeX entry clears0x10000). Distinct from draw RAM and effect RAM.
+
+Normal-mode display target used by frame presentation.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
 
 ### global:DrawSpriteColorFlipNormalEtX
 
@@ -7063,6 +9469,12 @@ PROVEN: Limited-install/protection-result flag consumed by game presentation/pro
 Units: boolean byte. DOS layout/address: 2:3fa2c.
 
 Triggers limited-version overlay and prevents world-map progression beyond world3. Wider protection writers are separately specified;do not infer debugger behavior from this name.
+
+Limited-install/protection-result flag consumed by game presentation/progression.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
 
 ### global:JumellePosX
 
@@ -7328,6 +9740,12 @@ Units: nominal refresh selector. DOS layout/address: 2:3fa4c.
 
 set_vga_frequency stores the supplied byte after programming branches50/60/70/80/100. This is not measured real refresh and is separate from Frequence.
 
+Last requested VGA refresh selection.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
 ### global:WidthNworld
 
 PROVEN: Loaded world-map background dimensions cached for binocular logic.
@@ -7487,6 +9905,12 @@ Units: DOS byte pointer. DOS layout/address: 2:3d7d0.
 
 ModeX toggles0xa0500/0xa6500;normal resets to DisplayBufferNormal and copies draw RAM. Native game state must not contain these physical addresses.
 
+Current presentation-source/display-page alias.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+Keep RNG call order, ten falling seeds,160 two-pixel columns, byte-height propagation and frame-origin comparison. This routine consumes game RNG and is observable presentation state.
+
 ### global:display_txt_fee
 
 PROVEN: Current/previous fairy dialogue descriptor-relative index.
@@ -7502,6 +9926,10 @@ PROVEN: Current rendering destination alias.
 Units: DOS byte pointer. DOS layout/address: 2:3d7b8.
 
 Normal mode aliases DrawBufferNormal;ModeX alternates VGA pages. WORLD_CHOICE temporarily aliases EffetBufferNormal. This is a backend destination/view,not owned image storage.
+
+Current rendering destination alias.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
 
 ### global:drawflocon1NormalETX
 
@@ -8069,6 +10497,10 @@ PROVEN: Palette loaded for the current PLAN3 scene background.
 Units: RGB6 palette. DOS layout/address: 2:37c88.
 
 Save/continue/menu/loader scene entry uses SAVE_PALETTE(&rvb_plan3),then fade-in. It is not the live DAC output buffer.
+
+Palette loaded for the current PLAN3 scene background.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
 
 ### global:rvb_save
 
@@ -8877,12 +11309,17 @@ No rename or declaration/ABI/ownership change is proposed. Preserve the observed
 
 ### global:byte_CFA14
 
-STRONG: [sem_boss; bat.c; STRONG] Result flag set by detect_dos_version when DOS major version is ten or twenty; gates bat and CD paths.
-[sem_flow; cdsave.c; UNKNOWN] Observed storage used by cdsave. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+PROVEN: DOS major-version exception byte set iff INT21h AX3000 returns major10 or20; consumed by CD and bat paths.
 
-Units: see observed computation and contract; uninterpreted declared representation. DOS layout/address: 2:3fa14.
+Units: platform environment policy. DOS layout/address: 2:3fa14.
 
 No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Result flag set by detect_dos_version when DOS major version is ten or twenty; gates bat and CD paths.
+
+DOS major-version exception byte set iff INT21h AX3000 returns major10 or20; consumed by CD and bat paths.
+
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+Replace BIOS/DOS/Windows detection with explicit native platform policy. Preserve the existing downstream conditional behavior where relevant; no native OS-version number should masquerade as DOS return bytes.
 
 ### global:dark_phase
 
@@ -9070,6 +11507,8 @@ Units: presented gameplay iterations. DOS layout/address: 2:3cfd8.
 
 Gameplay frame idle counter;input resets0 then loop increments;>=21600 requests pause.
 
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
 ### global:MenuPalette
 
 PROVEN: Modal menu palette containing game-color subset,plasma/gauge/grayscale/blue ramps and map overrides.
@@ -9096,11 +11535,21 @@ Saved/current poller mode and game-port selection bytes;LoadOptions reads saved 
 
 ### global:MusicCdActive
 
-PROVEN: Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+PROVEN: CD playback permission/capability flag. Protection-result paths can clear it; audio/movie/effect wrappers gate CD requests on it.
 
-Units: state / selector. DOS layout/address: 2:3fa50.
+Units: game/platform policy. DOS layout/address: 2:3fa50.
 
 Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+CD playback permission/capability flag. Protection-result paths can clear it; audio/movie/effect wrappers gate CD requests on it.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
 
 ### global:OptionMusicCdActive
 
@@ -9142,6 +11591,10 @@ Units: detector result. DOS layout/address: 2:3fa12.
 
 Windows/environment detection byte;zero chooses native-DOS timer/poller paths,nonzero Windows fallbacks. Specific codes printed in InitMemoryVariable.
 
+Replace MSCDEX/DPMI buffers, selectors, drive discovery and busy polling with a native CD-track backend. Keep track IDs, pause/resume semantics, TOC sector/MSF distinction and scene-level completion policy. Orphan byte APIs retain UNKNOWN meanings; existing PLATFORM_OPEN omit decision applies.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
 ### global:byte_E4CFE
 
 PROVEN: Maximum graphics frequency selector:2 for normal video,1 for ModeX;cycling wraps0..bound with special-rate handling.
@@ -9152,11 +11605,17 @@ Maximum graphics frequency selector:2 for normal video,1 for ModeX;cycling wraps
 
 ### global:cdTime
 
-PROVEN: Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+PROVEN: Level CD loop state:0 starts track,-1 disables progression, other values hold elapsed seconds approximated as10*BIOS_tick_delta/182+2.
 
-Units: state / selector. DOS layout/address: 2:3d85c.
+Units: game audio timing. DOS layout/address: 2:3d85c.
 
 Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+Level CD loop state:0 starts track,-1 disables progression, other values hold elapsed seconds approximated as10*BIOS_tick_delta/182+2.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Preserve scene CD tracks18/12/19/10, permission/protection gates, speech8 loss path and >180 callback poll cadence. Backend drive-index/status representations are replaceable.
 
 ### global:choix_menu
 
@@ -9450,6 +11909,8 @@ Units: boolean. DOS layout/address: 2:3fa2a.
 
 When CD detected,equality of executable argv0 first character and detected drive letter;gates loading-display branch.
 
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
 ### global:cheat_codes
 
 PROVEN: 324 encoded scan-code bytes;PC_init_cheats chooses layout-specific slices. No plain-text or null-terminated interpretation.
@@ -9570,6 +12031,8 @@ Units: capability / bytes. DOS layout/address: 2:3fa13.
 
 Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
 
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
 ### global:TheProcesseur
 
 PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
@@ -9578,11 +12041,17 @@ Units: detector codes. DOS layout/address: 2:3fa26.
 
 DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
 
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
 ### global:yp0
 
-UNKNOWN: Observed storage used by pcmain. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+PROVEN: Signed16 background vertical sampling origin written by calc_off_fnd from current mode/camera.
 
-Units: uninterpreted declared representation. DOS layout/address: 2:3f7e0.
+Units: background pixels. DOS layout/address: 2:3f7e0.
+
+Signed16 background vertical sampling origin written by calc_off_fnd from current mode/camera.
+
+Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract.
 
 ### global:temp_mem_buf
 
@@ -9599,6 +12068,502 @@ PROVEN: 32-bit random-table cursor;increment before read,wrap>=256 to0,initial/r
 Units: table index0..255. DOS layout/address: 2:5548c.
 
 32-bit random-table cursor;increment before read,wrap>=256 to0,initial/reset0 means first sample slot1.
+
+### global:movie_next_tick
+
+PROVEN: Unsigned-comparison movie-counter deadline; wait while now<=deadline before sync/present.
+
+Units: 256 subcounts per BIOS tick. DOS layout/address: 2:6544.
+
+Unsigned-comparison movie-counter deadline; wait while now<=deadline before sync/present.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:sound_config
+
+PROVEN: HMI driver-init storage. hifi.c views36-byte prefix of76-byte owning data_6664.c record; +10h is10000Hz sample rate and+1Ch callback.
+
+Units: replaceable backend configuration. DOS layout/address: 2:6664.
+
+HMI driver-init storage. hifi.c views36-byte prefix of76-byte owning data_6664.c record; +10h is10000Hz sample rate and+1Ch callback.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+## hifi.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:sub_3E66C
+
+PROVEN: Stop voice IDs0..32 inclusive, busy-wait until no HMI samples play, remove the registered mixer event and uninitialize timer. Movie suspend path; driver remains initialized.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e66c.
+
+Stop voice IDs0..32 inclusive, busy-wait until no HMI samples play, remove the registered mixer event and uninitialize timer. Movie suspend path; driver remains initialized.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:sub_3E6B0
+
+PROVEN: Initialize HMI timer (FF00h,0), register callback with period28h and event-handle output; on registration failure uninitialize timer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e6b0.
+
+Initialize HMI timer (FF00h,0), register callback with period28h and event-handle output; on registration failure uninitialize timer.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:rayman_sound_fatal_error
+
+PROVEN: Set BIOS video mode3 using the evidenced inline INT10h helper, print Rayman sound fatal message and exit(-1).
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e6ec.
+
+Set BIOS video mode3 using the evidenced inline INT10h helper, print Rayman sound fatal message and exit(-1).
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:sub_3E710
+
+PROVEN: HMI detect init/find-first/get-settings with error returns1/2/3, uninitializing detect after initialized paths. current_device_name is the capabilities output base and local probe is the device-handle output; inherited C argument labels are misleading.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e710.
+
+HMI detect init/find-first/get-settings with error returns1/2/3, uninitializing detect after initialized paths. current_device_name is the capabilities output base and local probe is the device-handle output; inherited C argument labels are misleading.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:sub_3E780
+
+PROVEN: Initialize digital/timer systems, write10000 to config+10h (SDK sample rate, inherited name timeout), initialize driver from selected device/hardware, then register mixer callback period28h. Roll back on failure and return1(driver) or2(event), else0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e780.
+
+Initialize digital/timer systems, write10000 to config+10h (SDK sample rate, inherited name timeout), initialize driver from selected device/hardware, then register mixer callback period28h. Roll back on failure and return1(driver) or2(event), else0.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:LoadBnkFile
+
+PROVEN: Stop CD, read128 16-byte sample headers from SNDH8B.DAT and verify sum(encoded)%256 against executable descriptor while XOR-decoding. Stop CD again, free old bank, allocate/read/decode SNDD8B.DAT and validate checksum. Add allocated data base to every header offset. Error messages and fatal exits are part of contract.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e820.
+
+Stop CD, read128 16-byte sample headers from SNDH8B.DAT and verify sum(encoded)%256 against executable descriptor while XOR-decoding. Stop CD again, free old bank, allocate/read/decode SNDD8B.DAT and validate checksum. Add allocated data base to every header offset. Error messages and fatal exits are part of contract.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:LoadBnkFixe
+
+PROVEN: When sound permitted and not SonLimite preload speech chunk6; always load fixed sample bank2.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2e9b4.
+
+When sound permitted and not SonLimite preload speech chunk6; always load fixed sample bank2.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:LoadBnkWorld
+
+PROVEN: Load world1..6 from sound-bank indices4,6,5,3,1,0 respectively; other values return0 without loading.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2ea00.
+
+Load world1..6 from sound-bank indices4,6,5,3,1,0 respectively; other values return0 without loading.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:KeyOn
+
+PROVEN: Build HMI request: volume=volume*32767/127, pan=pan*65535/127, Q16 pitch=pitchTab[note]<<8, flags0720h. Select fixed bank for low signed16 bank0, world bank otherwise; use signed16 program index. Looping adds4760h, count-1, byte start/length from header+8/+C. Submit nonempty samples; accept only returned voice!=-1 and<32, else-1. tone is unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2eabc.
+
+Build HMI request: volume=volume*32767/127, pan=pan*65535/127, Q16 pitch=pitchTab[note]<<8, flags0720h. Select fixed bank for low signed16 bank0, world bank otherwise; use signed16 program index. Looping adds4760h, count-1, byte start/length from header+8/+C. Submit nonempty samples; accept only returned voice!=-1 and<32, else-1. tone is unused.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:KeyOff
+
+PROVEN: Forward driver handle and signed16 voice to HMI stop-sample; bank/program/tone/note parameters are unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2ec0c.
+
+Forward driver handle and signed16 voice to HMI stop-sample; bank/program/tone/note parameters are unused.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:KeyVol
+
+PROVEN: Scale signed16 volume to32767/127 and pan to65535/127 using signed32 multiplication/division; issue separate HMI volume then pan requests.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2ec1c.
+
+Scale signed16 volume to32767/127 and pan to65535/127 using signed32 multiplication/division; issue separate HMI volume then pan requests.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:DigiMusicDone
+
+PROVEN: Stop voice IDs0..32 inclusive; remove mixer event, uninitialize timer, uninitialize driver with1/1, then digital system.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2ec78.
+
+Stop voice IDs0..32 inclusive; remove mixer event, uninitialize timer, uninitialize driver with1/1, then digital system.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:LoadTchatchPerdu
+
+PROVEN: Read/decode/check speech archive chunk6 into newly allocated storage; allocation failure closes and returns. Publish loss-speech pointer/size, then clear ptrTchatch so later temporary speech frees do not free the cached loss sample.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2ecc4.
+
+Read/decode/check speech archive chunk6 into newly allocated storage; allocation failure closes and returns. Publish loss-speech pointer/size, then clear ptrTchatch so later temporary speech frees do not free the cached loss sample.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:PlayTchatch
+
+PROVEN: Map speech IDs1,6,2,7,4,3,8,5/9 to archive chunks8,7,5,1,0,2,6,3. For chunk6 reuse cached loss speech; others stop CD, free old temporary speech, read/XOR/check new chunk. Request S16LE mono speech with flags0180h and scaled volume, publish HMI voice handle. No default mapping is supplied for other IDs.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2edf4.
+
+Map speech IDs1,6,2,7,4,3,8,5/9 to archive chunks8,7,5,1,0,2,6,3. For chunk6 reuse cached loss speech; others stop CD, free old temporary speech, read/XOR/check new chunk. Request S16LE mono speech with flags0180h and scaled volume, publish HMI voice handle. No default mapping is supplied for other IDs.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:FreeTchatchVignette
+
+PROVEN: Busy-wait until HMI sample-done returns exactly1, then free temporary speech pointer and clear it.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2efa4.
+
+Busy-wait until HMI sample-done returns exactly1, then free temporary speech pointer and clear it.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:SetPort_
+
+PROVEN: Zero-extend u16 port into selected signed32 hardware-port storage.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2efd4.
+
+Zero-extend u16 port into selected signed32 hardware-port storage.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:SetIrq
+
+PROVEN: Store selected signed32 interrupt request number.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2efe0.
+
+Store selected signed32 interrupt request number.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:SetDma
+
+PROVEN: Store selected signed32 DMA channel.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2efe8.
+
+Store selected signed32 DMA channel.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:SetParam
+
+PROVEN: Store selected signed32 device parameter.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2eff0.
+
+Store selected signed32 device parameter.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:SetDeviceID
+
+PROVEN: Store selected signed32 device ID.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2eff8.
+
+Store selected signed32 device ID.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetDeviceName
+
+PROVEN: Return capabilities-record base as char pointer; only its first32 bytes are the device-name string.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f000.
+
+Return capabilities-record base as char pointer; only its first32 bytes are the device-name string.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetPort
+
+PROVEN: Return address of selected signed32 hardware port.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f008.
+
+Return address of selected signed32 hardware port.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetIrq
+
+PROVEN: Return address of selected signed32 IRQ.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f010.
+
+Return address of selected signed32 IRQ.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetDma
+
+PROVEN: Return address of selected signed32 DMA channel.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f018.
+
+Return address of selected signed32 DMA channel.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetParam
+
+PROVEN: Return address of selected signed32 device parameter.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f020.
+
+Return address of selected signed32 device parameter.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:GetDeviceID_Ray
+
+PROVEN: Return address of selected signed32 device ID.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f028.
+
+Return address of selected signed32 device ID.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### function:FreeDetectDriver
+
+PROVEN: Call HMI detect uninitialize.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2f030.
+
+Call HMI detect uninitialize.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:TchachPerduPtr
+
+PROVEN: Cached decoded speech chunk6 allocation, reused by speech id8.
+
+Units: native resource ownership. DOS layout/address: 2:50b00.
+
+Cached decoded speech chunk6 allocation, reused by speech id8.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:TchachPerduSize
+
+PROVEN: Cached loss-speech chunk6 byte length; source frames are signed16 mono words.
+
+Units: bytes. DOS layout/address: 2:50b04.
+
+Cached loss-speech chunk6 byte length; source frames are signed16 mono words.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:bnkDataFixe
+
+PROVEN: Owned decoded fixed-bank sample allocation.
+
+Units: native resource ownership. DOS layout/address: 2:66b0.
+
+Owned decoded fixed-bank sample allocation.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:bnkDataWorld
+
+PROVEN: Owned decoded current-world sample allocation.
+
+Units: native resource ownership. DOS layout/address: 2:66b4.
+
+Owned decoded current-world sample allocation.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:bnkHeaderFixe
+
+PROVEN: 128 fixed-bank sample descriptors, offset pointers relocated after XOR decode, lengths/loop start/length remain bytes.
+
+Units: loaded resource state. DOS layout/address: 2:4faf0.
+
+128 fixed-bank sample descriptors, offset pointers relocated after XOR decode, lengths/loop start/length remain bytes.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:bnkHeaderWorld
+
+PROVEN: 128 current-world sample descriptors; world1..6 choose banks4,6,5,3,1,0.
+
+Units: loaded resource state. DOS layout/address: 2:502f0.
+
+128 current-world sample descriptors; world1..6 choose banks4,6,5,3,1,0.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_device_id
+
+PROVEN: Selected HMI device ID at capabilities+100, fully written by106-byte detection copy.
+
+Units: replaceable backend device id. DOS layout/address: 2:50b6e.
+
+Selected HMI device ID at capabilities+100, fully written by106-byte detection copy.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_device_name
+
+PROVEN: Base of HMI capabilities output: first32 bytes name, following capabilities; exact write106 bytes spans the separately bound device id. Existing char[100] view is not the complete record.
+
+Units: replaceable backend device selection. DOS layout/address: 2:50b0a.
+
+Base of HMI capabilities output: first32 bytes name, following capabilities; exact write106 bytes spans the separately bound device id. Existing char[100] view is not the complete record.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_dma
+
+PROVEN: Selected HMI DMA value.
+
+Units: replaceable backend hardware selection. DOS layout/address: 2:50af8.
+
+Selected HMI DMA value.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_irq
+
+PROVEN: Selected HMI IRQ value.
+
+Units: replaceable backend hardware selection. DOS layout/address: 2:50af4.
+
+Selected HMI IRQ value.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_param
+
+PROVEN: Selected HMI hardware parameter passed with port/IRQ/DMA.
+
+Units: replaceable backend hardware selection. DOS layout/address: 2:50afc.
+
+Selected HMI hardware parameter passed with port/IRQ/DMA.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:current_port
+
+PROVEN: Selected HMI hardware I/O port, first word of the adjacent hardware-settings record.
+
+Units: replaceable backend hardware selection. DOS layout/address: 2:50af0.
+
+Selected HMI hardware I/O port, first word of the adjacent hardware-settings record.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:pitchTab
+
+PROVEN: 128 signed16 Q8 pitch ratios; KeyOn shifts8 to produce Q16 source-step. Index53=256 is unity at the10000Hz mixer reference.
+
+Units: source step/256. DOS layout/address: 2:66b8.
+
+128 signed16 Q8 pitch ratios; KeyOn shifts8 to produce Q16 source-step. Index53=256 is unity at the10000Hz mixer reference.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+Shipped initial sample: 128 records, 127 values, 11..18390. This does not bound runtime values.
+
+### global:ptrTchatch
+
+PROVEN: Owned temporary decoded speech allocation, cleared after transferring loss-speech ownership.
+
+Units: native resource ownership. DOS layout/address: 2:67b8.
+
+Owned temporary decoded speech allocation, cleared after transferring loss-speech ownership.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:snd8b_data_infos
+
+PROVEN: Seven executable12-byte descriptors for encoded U8 mono effect-bank payloads in SNDD8B.DAT.
+
+Units: file byte offsets/sizes. DOS layout/address: 2:65a4.
+
+Seven executable12-byte descriptors for encoded U8 mono effect-bank payloads in SNDD8B.DAT.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:snd8b_header_infos
+
+PROVEN: Seven executable12-byte archive descriptors for encoded128x16-byte sample headers in SNDH8B.DAT.
+
+Units: file byte offsets/sizes. DOS layout/address: 2:6550.
+
+Seven executable12-byte archive descriptors for encoded128x16-byte sample headers in SNDH8B.DAT.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:sndvig_infos
+
+PROVEN: Nine executable12-byte descriptors for encoded S16LE mono speech chunks in SNDVIG.DAT.
+
+Units: file byte offsets/sizes. DOS layout/address: 2:65f8.
+
+Nine executable12-byte descriptors for encoded S16LE mono speech chunks in SNDVIG.DAT.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:sound_detect_handle
+
+PROVEN: HMI TIMERRegisterEvent output handle used by RemoveEvent; inherited detect spelling does not describe this use.
+
+Units: replaceable backend timer handle. DOS layout/address: 2:50b7c.
+
+HMI TIMERRegisterEvent output handle used by RemoveEvent; inherited detect spelling does not describe this use.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:sound_driver_handle
+
+PROVEN: HMI digital driver handle used by start/stop/volume/pan/done calls.
+
+Units: replaceable backend handle. DOS layout/address: 2:50b78.
+
+HMI digital driver handle used by start/stop/volume/pan/done calls.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
+
+### global:sound_voice_id
+
+PROVEN: Last HMI speech sample handle, polled for exactly done==1 before freeing temporary speech.
+
+Units: replaceable backend voice handle. DOS layout/address: 2:50b80.
+
+Last HMI speech sample handle, polled for exactly done==1 before freeing temporary speech.
+
+Replace HMI driver/device/IRQ/DMA/timer representation. Retain bank decoding/checksums, fixed/world mapping, PCM reference10000Hz, Q16 pitch, exact volume/pan scale, byte loop interval and speech resource lifetimes; reuse PLATFORM_OPEN item3/4.
 
 ## hybrid.json
 
@@ -14992,6 +17957,604 @@ Units: pixels. DOS layout/address: 2:2ba2.
 
 in_action_zone adds60 to local margins for a previously active object; special_flags_init changes table entries by world/level.
 
+## movie.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:sub_3A1C0
+
+PROVEN: Publish DrawBufferNormal as movie draw surface, clear its64000 bytes through fill_cld, return0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a1c0.
+
+Publish DrawBufferNormal as movie draw surface, clear its64000 bytes through fill_cld, return0.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A1E0
+
+PROVEN: Clear movie draw-surface pointer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a1e0.
+
+Clear movie draw-surface pointer.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A1EC
+
+PROVEN: BIOS INT10h AH0 set supplied video-mode byte; return1 regardless of BIOS result.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a1ec.
+
+BIOS INT10h AH0 set supplied video-mode byte; return1 regardless of BIOS result.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A214
+
+PROVEN: BIOS INT10h AH0Fh query current mode; return AL.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a214.
+
+BIOS INT10h AH0Fh query current mode; return AL.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A238
+
+PROVEN: Clear17-byte surface-info prefix, publish pointer/320x200 geometry, save VGA_FREQ and request60, clear display buffer and768 palette bytes; store movie_saved_mode=60 (not an observed BIOS mode snapshot).
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a238.
+
+Clear17-byte surface-info prefix, publish pointer/320x200 geometry, save VGA_FREQ and request60, clear display buffer and768 palette bytes; store movie_saved_mode=60 (not an observed BIOS mode snapshot).
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A2AC
+
+PROVEN: Restore saved VGA frequency through set_vga_frequency.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a2ac.
+
+Restore saved VGA frequency through set_vga_frequency.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A2C4
+
+PROVEN: Return surface signed32 width.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a2c4.
+
+Return surface signed32 width.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A2C8
+
+PROVEN: Return surface signed32 height.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a2c8.
+
+Return surface signed32 height.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A2CC
+
+PROVEN: Write one palette index at surface.pixels[y*surface.width+x], without clipping.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a2cc.
+
+Write one palette index at surface.pixels[y*surface.width+x], without clipping.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A2D8
+
+PROVEN: Copy width bytes to surface.pixels+x+320*y using guarded shared copy; fixed320 stride regardless of surface.width.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a2d8.
+
+Copy width bytes to surface.pixels+x+320*y using guarded shared copy; fixed320 stride regardless of surface.width.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A30C
+
+PROVEN: Write width repeated palette-index bytes at surface.pixels+x+320*y.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a30c.
+
+Write width repeated palette-index bytes at surface.pixels+x+320*y.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A34C
+
+PROVEN: Write width repeated16-bit two-pixel values at surface.pixels+x+320*y; width is a word count.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a34c.
+
+Write width repeated16-bit two-pixel values at surface.pixels+x+320*y; width is a word count.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A3B8
+
+PROVEN: Convert count RGB8 entries to VGA6 by component>>2, store in movie palette and extend dirty interval[x,x+count); context unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a3b8.
+
+Convert count RGB8 entries to VGA6 by component>>2, store in movie palette and extend dirty interval[x,x+count); context unused.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A428
+
+PROVEN: Copy count RGB entries unchanged into movie palette and extend dirty interval; context unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a428.
+
+Copy count RGB entries unchanged into movie palette and extend dirty interval; context unused.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A488
+
+PROVEN: Set timer scale1200h, program PIT control34h and two zero data bytes on channel0; return0. Timer units are256 subcounts per BIOS tick, not milliseconds.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a488.
+
+Set timer scale1200h, program PIT control34h and two zero data bytes on channel0; return0. Timer units are256 subcounts per BIOS tick, not milliseconds.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A4A4
+
+PROVEN: Restore PIT control36h and reload0/0; timer pointer unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a4a4.
+
+Restore PIT control36h and reload0/0; timer pointer unused.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A4B8
+
+PROVEN: Read BIOS INT1Ah time, latch PIT0, discard low count byte and negate high byte modulo256. Return pit_fraction + (CL<<24) + ((DH<<8)+DL)<<8; CH is omitted. timer argument unused.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a4b8.
+
+Read BIOS INT1Ah time, latch PIT0, discard low count byte and negate high byte modulo256. Return pit_fraction + (CL<<24) + ((DH<<8)+DL)<<8; CH is omitted. timer argument unused.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A518
+
+PROVEN: Return current movie counter + unsigned32(value*scale)/1000; integer product wraps as observed DOS32 arithmetic. Scale starts1200h.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a518.
+
+Return current movie counter + unsigned32(value*scale)/1000; integer product wraps as observed DOS32 arithmetic. Scale starts1200h.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A538
+
+PROVEN: Open binary read-only using flags200h; store fd, return-5 on fd<0 else0.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a538.
+
+Open binary read-only using flags200h; store fd, return-5 on fd<0 else0.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A55C
+
+PROVEN: Call _dos_read with requested count and an actual-count output; return-6 on nonzero DOS status, else0. Does not reject a successful short read.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a55c.
+
+Call _dos_read with requested count and an actual-count output; return-6 on nonzero DOS status, else0. Does not reject a successful short read.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A578
+
+PROVEN: Read count bytes into the supplied buffer pointer in chunks<=FFF0h using sub_3A55C; return first negative status else0. Advances local pointer only.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a578.
+
+Read count bytes into the supplied buffer pointer in chunks<=FFF0h using sub_3A55C; return first negative status else0. Advances local pointer only.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A5B4
+
+PROVEN: Processor4 selects alternate-frame presentation; processor<5 except4 returns-13; processor>=5 uses Windows flag to choose presentation cadence. Clear24-byte info, initialize timer, surface pointer, and VGA/palette state; roll back timer on setup failure.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a5b4.
+
+Processor4 selects alternate-frame presentation; processor<5 except4 returns-13; processor>=5 uses Windows flag to choose presentation cadence. Clear24-byte info, initialize timer, surface pointer, and VGA/palette state; roll back timer on setup failure.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A634
+
+PROVEN: Restore VGA frequency/PIT, clear movie draw pointer, and if CD enabled stop selected-drive audio twice.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a634.
+
+Restore VGA frequency/PIT, clear movie draw pointer, and if CD enabled stop selected-drive audio twice.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A664
+
+PROVEN: Decode palette packets: signed16 packet count, accumulated unsigned skip byte, run byte0 means256 RGB triples. Reset dirty bounds to256/0 and call supplied writer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a664.
+
+Decode palette packets: signed16 packet count, accumulated unsigned skip byte, run byte0 means256 RGB triples. Reset dirty bounds to256/0 and call supplied writer.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A6D0
+
+PROVEN: Decode palette chunk type4 with RGB8-to-VGA6 writer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a6d0.
+
+Decode palette chunk type4 with RGB8-to-VGA6 writer.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A6E0
+
+PROVEN: Decode palette chunk type11 with unchanged RGB6 writer.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a6e0.
+
+Decode palette chunk type11 with unchanged RGB6 writer.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A6F0
+
+PROVEN: Decode BRUN rows to movie width, ignoring each stored packet-count byte. Signed run>=0 repeats one byte; negative run becomes a signed8 literal length. Keep signed8 narrowing at -128; shipped corpus observations are separate.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a6f0.
+
+Decode BRUN rows to movie width, ignoring each stored packet-count byte. Signed run>=0 repeats one byte; negative run becomes a signed8 literal length. Keep signed8 narrowing at -128; shipped corpus observations are separate.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A7B4
+
+PROVEN: Decode byte-line delta (type12): signed16 first-line skip/count, unsigned packet count/skip and signed8 run. Negative repeats one byte; nonnegative copies literals; advance screen x by expanded length and rows by1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a7b4.
+
+Decode byte-line delta (type12): signed16 first-line skip/count, unsigned packet count/skip and signed8 run. Negative repeats one byte; nonnegative copies literals; advance screen x by expanded length and rows by1.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3A8A0
+
+PROVEN: Decode word-line delta (type7): signed16 line count/control; negative control with4000h skips rows, other negative control calls pixel helper with DOS argument order x=(u8)control,y=right,color=(u8)y. Packet runs are signed8*2 bytes, negative repeats a word, positive copies literals. Do not silently substitute the conventional FLC odd-last-byte argument order.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a8a0.
+
+Decode word-line delta (type7): signed16 line count/control; negative control with4000h skips rows, other negative control calls pixel helper with DOS argument order x=(u8)control,y=right,color=(u8)y. Packet runs are signed8*2 bytes, negative repeats a word, positive copies literals. Do not silently substitute the conventional FLC odd-last-byte argument order.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+DOS1:2a907..2a91a proves the nonstandard odd-byte helper argument order. Both available assets/DOS movies contain no such control codes; do not infer GOG absence from that sample.
+
+### function:sub_3A9F4
+
+PROVEN: Clear entire64000-byte surface using fill_cld, ignoring chunk payload/movie geometry.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2a9f4.
+
+Clear entire64000-byte surface using fill_cld, ignoring chunk payload/movie geometry.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3AA08
+
+PROVEN: Copy raw movie rows from tightly packed payload width bytes/row into fixed320-byte-pitch surface at centered surface_offset.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2aa08.
+
+Copy raw movie rows from tightly packed payload width bytes/row into fixed320-byte-pitch surface at centered surface_offset.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3AA4C
+
+PROVEN: Close work.fd then clear153-byte movie work descriptor.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2aa4c.
+
+Close work.fd then clear153-byte movie work descriptor.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3AA70
+
+PROVEN: Clear/open/read128-byte movie header, reject dimensions>320x200 (-3). Accept AF12h/FLC or AF11h/FLI (-11 otherwise). Size word12 selects compact header: data offset12, palette flag1, speed30(AF12) or5*1000/70(AF11). Normal FLI data starts128; FLC uses header+50h. Set frame index/path/presentation toggle and close/clear on post-open errors.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2aa70.
+
+Clear/open/read128-byte movie header, reject dimensions>320x200 (-3). Accept AF12h/FLC or AF11h/FLI (-11 otherwise). Size word12 selects compact header: data offset12, palette flag1, speed30(AF12) or5*1000/70(AF11). Normal FLI data starts128; FLC uses header+50h. Set frame index/path/presentation toggle and close/clear on post-open errors.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3ABE4
+
+PROVEN: Walk signed frame chunk count using each chunk size; dispatch palette4/11, word delta7, byte delta12, black13, BRUN15, copy16, ignore other types. Apply intro CD pause/resume windows from five rows, pace and present selected frames, and update alternate-frame toggle. Timer cadence is60ms-request or125ms-request, not header speed; full equations and sync table attached.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2abe4.
+
+Walk signed frame chunk count using each chunk size; dispatch palette4/11, word delta7, byte delta12, black13, BRUN15, copy16, ignore other types. Apply intro CD pause/resume windows from five rows, pace and present selected frames, and update alternate-frame toggle. Timer cadence is60ms-request or125ms-request, not header speed; full equations and sync table attached.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+On pause increment row index before the later resume test: that test reads column1 of the newly selected row. Deadline uses strict now>deadline, not >=. Header speed is not the pacing input.
+
+### function:sub_3AF20
+
+PROVEN: Increment frame_index before reading16-byte frame header; require F1FAh else-4. Read positive payload into EffetBufferNormal, then dispatch chunks; propagate negative read status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2af20.
+
+Increment frame_index before reading16-byte frame header; require F1FAh else-4. Read positive payload into EffetBufferNormal, then dispatch chunks; propagate negative read status.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3AFB4
+
+PROVEN: Center movie by signed (surface.width-work.width)/2 and analogous height; compute surface_offset=x+320*y.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2afb4.
+
+Center movie by signed (surface.width-work.width)/2 and analogous height; compute surface_offset=x+320*y.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3B014
+
+PROVEN: Reset audio state/counter; if requested and CD enabled stop twice, start chosen track at0:0 and pause it. For header frame_count iterations poll buttons/space before reading frame; return0 on dismissal, stop on negative decoder status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b014.
+
+Reset audio state/counter; if requested and CD enabled stop twice, start chosen track at0:0 and pause it. For header frame_count iterations poll buttons/space before reading frame; return0 on dismissal, stop on negative decoder status.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3B0F4
+
+PROVEN: Seek first-frame offset and read its16-byte header; save next-frame offset=data_offset+first size. Seek result is overwritten by read status.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b0f4.
+
+Seek first-frame offset and read its16-byte header; save next-frame offset=data_offset+first size. Seek result is overwritten by read status.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3B138
+
+PROVEN: Read first frame once, then repeatedly seek saved second-frame offset, reset frame_index=1 and audio window state, start/pause requested CD track, and decode frame_count frames per loop. Poll input after each frame and exit0 on button/space.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b138.
+
+Read first frame once, then repeatedly seek saved second-frame offset, reset frame_index=1 and audio window state, start/pause requested CD track, and decode frame_count frames per loop. Poll input after each frame and exit0 on button/space.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3B260
+
+PROVEN: Suspend sound-card mixer/timer through sub_3E66C when permitted.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b260.
+
+Suspend sound-card mixer/timer through sub_3E66C when permitted.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:sub_3B274
+
+PROVEN: Restart sound-card timer callback through sub_3E6B0 when permitted.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b274.
+
+Restart sound-card timer callback through sub_3E6B0 when permitted.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:display_movie_frames
+
+PROVEN: Fade all768 VGA6 palette components by2 with signed8 clamp0 for32 synchronization steps, writing palette after each step.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b288.
+
+Fade all768 VGA6 palette components by2 with signed8 clamp0 for32 synchronization steps, writing palette after each step.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:playVideo2
+
+PROVEN: Resolve filename (case-insensitive intro.dat selects intro sync windows), honor source-drive/path guard, probe file, stop CD or clear requested track, suspend mixer, setup/open/center/play once or loop, fade and close, restore platform/mixer state; return status. Intro caller selects track20, conclusion caller21.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b314.
+
+Resolve filename (case-insensitive intro.dat selects intro sync windows), honor source-drive/path guard, probe file, stop CD or clear requested track, suspend mixer, setup/open/center/play once or loop, fade and close, restore platform/mixer state; return status. Intro caller selects track20, conclusion caller21.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:playVideo
+
+PROVEN: Call playVideo2 with loop flag0 and supplied CD audio-track byte.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b4a8.
+
+Call playVideo2 with loop flag0 and supplied CD audio-track byte.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### function:playVideo_alt
+
+PROVEN: Call playVideo2 with loop flag1 and supplied CD audio-track byte.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:2b4b8.
+
+Call playVideo2 with loop flag1 and supplied CD audio-track byte.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_audio_counter
+
+PROVEN: Signed byte index into five intro synchronization rows; -1 disables windows after index5.
+
+Units: row index/-1 sentinel. DOS layout/address: 2:64dc.
+
+Signed byte index into five intro synchronization rows; -1 disables windows after index5.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_audio_enabled
+
+PROVEN: Current frame presentation/pacing toggle; kept1 on fast path, XOR1 each decoded frame on alternate path. Does not gate chunk decoding.
+
+Units: presentation cadence state. DOS layout/address: 2:64da.
+
+Current frame presentation/pacing toggle; kept1 on fast path, XOR1 each decoded frame on alternate path. Does not gate chunk decoding.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_audio_limits
+
+PROVEN: Five rows of packed MSF threshold, resume frame, pause-window start frame and exclusive/end frame. Row advance occurs on pause or exact end-frame; values retained verbatim.
+
+Units: packed MSF and frame indices. DOS layout/address: 2:64e0.
+
+Five rows of packed MSF threshold, resume frame, pause-window start frame and exclusive/end frame. Row advance occurs on pause or exact end-frame; values retained verbatim.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_audio_state
+
+PROVEN: Movie CD synchronization state:0 running/waiting to pause,1 paused/waiting to resume;2 suppresses this block if externally supplied.
+
+Units: CD scene synchronization. DOS layout/address: 2:64db.
+
+Movie CD synchronization state:0 running/waiting to pause,1 paused/waiting to resume;2 suppresses this block if externally supplied.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_audio_track
+
+PROVEN: Signed byte selecting every-frame versus alternate-frame presentation/timer cadence from processor/Windows detection. Does not contain the requested CD track, which is work.sound_mode.
+
+Units: platform cadence policy. DOS layout/address: 2:64d9.
+
+Signed byte selecting every-frame versus alternate-frame presentation/timer cadence from processor/Windows detection. Does not contain the requested CD track, which is work.sound_mode.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_draw_buffer
+
+PROVEN: Borrowed movie surface pointer, normally DrawBufferNormal; cleared on movie cleanup.
+
+Units: replaceable surface representation. DOS layout/address: 2:653c.
+
+Borrowed movie surface pointer, normally DrawBufferNormal; cleared on movie cleanup.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_palette_flag
+
+UNKNOWN: Set1 for compact12-byte FLI/FLC headers; no semantic reader found in the source/movie contract. Intended flag purpose UNKNOWN.
+
+Units: write-only observed byte. DOS layout/address: 2:6531.
+
+Set1 for compact12-byte FLI/FLC headers; no semantic reader found in the source/movie contract. Intended flag purpose UNKNOWN.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_palette_xmax
+
+PROVEN: Exclusive highest palette packet index written in current palette chunk, reset0.
+
+Units: palette entry index. DOS layout/address: 2:6538.
+
+Exclusive highest palette packet index written in current palette chunk, reset0.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_palette_xmin
+
+PROVEN: Lowest palette packet entry index written in current palette chunk, reset256.
+
+Units: palette entry index. DOS layout/address: 2:6534.
+
+Lowest palette packet entry index written in current palette chunk, reset256.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_playback_state
+
+PROVEN: Palette-dirty latch: palette chunks set1, selected-frame palette output clears0.
+
+Units: presentation state. DOS layout/address: 2:6532.
+
+Palette-dirty latch: palette chunks set1, selected-frame palette output clears0.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_saved_frequency
+
+PROVEN: VGA_FREQ saved before movie request60, restored during cleanup.
+
+Units: platform presentation policy. DOS layout/address: 2:64d8.
+
+VGA_FREQ saved before movie request60, restored during cleanup.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_saved_mode
+
+UNKNOWN: Movie setup writes60; no BIOS mode query feeds this store and no live reader establishes an intended role.
+
+Units: observed platform byte. DOS layout/address: 2:6530.
+
+Movie setup writes60; no BIOS mode query feeds this store and no live reader establishes an intended role.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:movie_video_buffer
+
+PROVEN: 768 mutable VGA6 palette component bytes used by movie packet decoders, presentation and final32-step fade.
+
+Units: presentation RGB6 state. DOS layout/address: 2:4f7e0.
+
+768 mutable VGA6 palette component bytes used by movie packet decoders, presentation and final32-step fade.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
+### global:playing_intro_video
+
+PROVEN: Case-insensitive filename==intro.dat byte; enables the five CD synchronization windows.
+
+Units: scene/audio synchronization policy. DOS layout/address: 2:64dd.
+
+Case-insensitive filename==intro.dat byte; enables the five CD synchronization windows.
+
+Replace BIOS/PIT/VGA/file-handle representation. Preserve chunk semantics, compact header handling, centering320 stride, frame index/input order, selected-frame pacing and CD sync table. Reuse ASM_SPEC palette/sync contracts; alternate presentation decodes every frame.
+
 ## neige.json
 
 Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
@@ -18555,6 +22118,650 @@ STRONG: Skops ray y position used for trails and returned-ray collision; -32000 
 Units: see observed computation and contract. DOS layout/address: 2:3f8f0.
 
 No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray y position used for trails and returned-ray collision; -32000 hides the terminal position.
+
+## sound.json
+
+Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.
+
+### function:manage_snd_event
+
+PROVEN: Empty DOS entry; no queued event processing occurs here.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c00.
+
+Empty DOS entry; no queued event processing occurs here.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:SetVolumeSound
+
+PROVEN: Store signed16 global effects/speech volume without clamping.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c04.
+
+Store signed16 global effects/speech volume without clamping.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:set_stereo
+
+PROVEN: Empty DOS mode hook.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c0c.
+
+Empty DOS mode hook.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:set_mono
+
+PROVEN: Empty DOS mode hook.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c0c.
+
+Empty DOS mode hook.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:stop_all_snd
+
+PROVEN: If sound permitted, call KeyOff for voice numbers0 through32 inclusive; do not silently change this loop to32 calls.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c10.
+
+If sound permitted, call KeyOff for voice numbers0 through32 inclusive; do not silently change this loop to32 calls.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:stop_ray_snd
+
+PROVEN: For32 voice records, cues6/245/2 receive KeyVol(voice,0,0), obj=-2 and snd=-1. Does not call KeyOff or clear working bytes.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61c40.
+
+For32 voice records, cues6/245/2 receive KeyVol(voice,0,0), obj=-2 and snd=-1. Does not call KeyOff or clear working bytes.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_pan_snd
+
+PROVEN: Narrow obj.offset_bx+obj.screen_x to signed16; return0 below-96,127 above416, else arithmetic (x+96)>>2 capped127. Pan0 is left,127 right.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61ca8.
+
+Narrow obj.offset_bx+obj.screen_x to signed16; return0 below-96,127 above416, else arithmetic (x+96)>>2 capped127. Pan0 is left,127 right.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_vol_snd
+
+PROVEN: Get animation bounds; narrow absolute center distance from Rayman anchor (ray.x+offset_bx, ray.y+offset_by-40) to signed16 components. Return signed16 127-((dx+dy)>>2), clamped at0 only.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61cec.
+
+Get animation bounds; narrow absolute center distance from Rayman anchor (ray.x+offset_bx, ray.y+offset_by-40) to signed16 components. Return signed16 127-((dx+dy)>>2), clamped at0 only.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:raj_env_sound
+
+PROVEN: Convert option-scale volume by signed (volume*127)/20 and store through SetVolumeSound.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61d80.
+
+Convert option-scale volume by signed (volume*127)/20 and store through SetVolumeSound.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:raj_env_audio
+
+PROVEN: Empty DOS hook; supplied argument has no effect.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61da0.
+
+Empty DOS hook; supplied argument has no effect.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:raj_env_stereo
+
+PROVEN: Return0 for input0, otherwise return the unchanged signed16 input; no hardware configuration.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61da4.
+
+Return0 for input0, otherwise return the unchanged signed16 input; no hardware configuration.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:InitSnd
+
+PROVEN: When permitted, clear20 cue-history entries (snd0,obj-2), reset queue/cadence indices, mark32 voice owners-2, map sound option0..20 to0..127 and pass stereo option through its no-op hook.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61da8.
+
+When permitted, clear20 cue-history entries (snd0,obj-2), reset queue/cadence indices, mark32 voice owners-2, map sound option0..20 to0..127 and pass stereo option through its no-op hook.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:EndSound
+
+PROVEN: Empty DOS entry.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61e40.
+
+Empty DOS entry.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:last_snd
+
+PROVEN: Find first history owner matching obj_id; if absent search backwards for a snd0 slot, default index0 if none. Return selected signed16 cue; retain search order and sentinel behavior.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61e44.
+
+Find first history owner matching obj_id; if absent search backwards for a snd0 slot, default index0 if none. Return selected signed16 cue; retain search order and sentinel behavior.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_pile_obj
+
+PROVEN: Return first delayed-queue owner index below pt_pile_snd or-1; preserves original guard/load ordering.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61ea0.
+
+Return first delayed-queue owner index below pt_pile_snd or-1; preserves original guard/load ordering.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_voice_obj
+
+PROVEN: Return first matching voice owner among32 records, or-1; original loads can examine the next record before the terminal index test.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61ef4.
+
+Return first matching voice owner among32 records, or-1; original loads can examine the next record before the terminal index test.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_voice_snd
+
+PROVEN: Return first matching voice cue using12-byte record stride, or-1 at32; retain terminal-load ordering.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61f30.
+
+Return first matching voice cue using12-byte record stride, or-1 at32; retain terminal-load ordering.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:get_voice_obj_snd
+
+PROVEN: For cue48 require both owner and cue match; for other cues stop when either matches. Return-1 at32, otherwise first index.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61f6c.
+
+For cue48 require both owner and cue match; for other cues stop when either matches. Return-1 at32, otherwise first index.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:erase_pile_snd
+
+PROVEN: Find queued owner, copy every following24-byte entry down one including the sentinel slot at old count, decrement count when positive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:61fc8.
+
+Find queued owner, copy every following24-byte entry down one including the sentinel slot at old count, decrement count when positive.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:nettoie_pile_snd
+
+PROVEN: Remove queue entries with nonzero end_time strictly less than current map_time under unsigned32 comparison; recheck shifted entry after each removal.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:620b8.
+
+Remove queue entries with nonzero end_time strictly less than current map_time under unsigned32 comparison; recheck shifted entry after each removal.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:erase_voice_table
+
+PROVEN: Find first owner match among32 voice records and write obj=-2 only; no audio request or cue clear.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:621c4.
+
+Find first owner match among32 voice records and write obj=-2 only; no audio request or cue clear.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:snd_in_pile_snd
+
+PROVEN: Return byte boolean for queued cue membership using24-byte stride; zero when queue empty.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62200.
+
+Return byte boolean for queued cue membership using24-byte stride; zero when queue empty.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:vol_r
+
+PROVEN: Return signed32 (volume*snd_sqrt_table[pan]) arithmetic-shifted8; table is the exact128-byte DOS lookup, not a recomputed floating square root.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62254.
+
+Return signed32 (volume*snd_sqrt_table[pan]) arithmetic-shifted8; table is the exact128-byte DOS lookup, not a recomputed floating square root.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:vol_l
+
+PROVEN: Return signed32 (volume*snd_sqrt_table[127-pan]) arithmetic-shifted8.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6226c.
+
+Return signed32 (volume*snd_sqrt_table[127-pan]) arithmetic-shifted8.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:PlaySnd
+
+PROVEN: Route a numeric cue and object owner. Normalize alternate Rayman owners to-1; handle previous-cue bit8 interruption, worldmap suppression, bit4 repeat policy, pan/bit1 attenuation, cue-specific program/pitch/cadence overrides. Skip programs-1/255; either KeyOn now or queue at map_time+frame_snd. Record history and start death CD19 for203/237/209/225/236 at dead_time64/128. Detailed bitfields, substitutions and event sites are attached; no numeric priority ranking is inferred.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6228c.
+
+Route a numeric cue and object owner. Normalize alternate Rayman owners to-1; handle previous-cue bit8 interruption, worldmap suppression, bit4 repeat policy, pan/bit1 attenuation, cue-specific program/pitch/cadence overrides. Skip programs-1/255; either KeyOn now or queue at map_time+frame_snd. Record history and start death CD19 for203/237/209/225/236 at dead_time64/128. Detailed bitfields, substitutions and event sites are attached; no numeric priority ranking is inferred.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:PlaySnd_old
+
+PROVEN: Play an unowned centered cue immediately using bank/program/tone/note table, volume=(Volume_Snd*cue.volume)>>7 and pan64; reject program-1/255. On success mark owner-2, volume64,pan64 and optional working bit; do not invent a cue-field write absent from DOS.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62960.
+
+Play an unowned centered cue immediately using bank/program/tone/note table, volume=(Volume_Snd*cue.volume)>>7 and pan64; reject program-1/255. On success mark owner-2, volume64,pan64 and optional working bit; do not invent a cue-field write absent from DOS.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:setvol
+
+PROVEN: Process an owner delayed entry only at exact end_time==map_time, with dynamic attenuation requiring policy bits1 and2. Start voice then optionally schedule one followup or compact queue. For live voice, cue204 or missing attenuation bits means127; update KeyVol only when working byte set. Preserve DOS followup stores through pt_pile_snd for tone/note/vol, which differ from the queued-index stores.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62a1c.
+
+Process an owner delayed entry only at exact end_time==map_time, with dynamic attenuation requiring policy bits1 and2. Start voice then optionally schedule one followup or compact queue. For live voice, cue204 or missing attenuation bits means127; update KeyVol only when working byte set. Preserve DOS followup stores through pt_pile_snd for tone/note/vol, which differ from the queued-index stores.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:setpan
+
+PROVEN: Normalize tiny-Rayman owner; compute pan for live voice or queued entry and store it. Hardware pan is applied by later KeyVol/setvol; this function does not call KeyVol.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62e74.
+
+Normalize tiny-Rayman owner; compute pan for live voice or queued entry and store it. Hardware pan is applied by later KeyVol/setvol; this function does not call KeyVol.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:manage_snd
+
+PROVEN: When permitted, scan32 voices; detach inactive/invalid/unowned cues, stopping only policy-bit10h voices and clearing working state/history. For active owned voices update volume then pan. Process active queued owners in the same order.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:62f38.
+
+When permitted, scan32 voices; detach inactive/invalid/unowned cues, stopping only policy-bit10h voices and clearing working state/history. For active owned voices update volume then pan. Process active queued owners in the same order.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:mute_snd_bouclant
+
+PROVEN: Mute voices for cues6/245/2 or policy-bit10h by KeyVol(i,0,0); no KeyOff or state detach.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:630dc.
+
+Mute voices for cues6/245/2 or policy-bit10h by KeyVol(i,0,0); no KeyOff or state detach.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:mute_snd
+
+PROVEN: Mute all32 voices by KeyVol(i,0,0) when permitted.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63138.
+
+Mute all32 voices by KeyVol(i,0,0) when permitted.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:start_freeze_snd
+
+PROVEN: Mute voices then set signed16 was_in_freeze=1.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63164.
+
+Mute voices then set signed16 was_in_freeze=1.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:stop_freeze_snd
+
+PROVEN: Clear was_in_freeze only; does not restore all audio volumes itself.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63178.
+
+Clear was_in_freeze only; does not restore all audio volumes itself.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:PlayTchatchVignette
+
+PROVEN: If requested speech ID0, map selected world1->1,3->2,4->4,5 level3->3 (other levels return),6->7. With sound permitted call PlayTchatch at Volume_Snd.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:6319c.
+
+If requested speech ID0, map selected world1->1,3->2,4->4,5 level3->3 (other levels return),6->7. With sound permitted call PlayTchatch at Volume_Snd.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:TestCdLoop
+
+PROVEN: At cdTime0 snapshot BIOS tick, start mapCd[(world-1)*22+level-1], phase0,time1. Later compute unsigned(10*tick_delta)/182+2 seconds; at configured duration stop once, delay by four flagCDPlay callback phases, restart cached track, toggle phaseCd and reset. cdTime=-1 disables this progression; pause adds its tick delta to the start snapshot.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63204.
+
+At cdTime0 snapshot BIOS tick, start mapCd[(world-1)*22+level-1], phase0,time1. Later compute unsigned(10*tick_delta)/182+2 seconds; at configured duration stop once, delay by four flagCDPlay callback phases, restart cached track, toggle phaseCd and reset. cdTime=-1 disables this progression; pause adds its tick delta to the start snapshot.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:InitMusic
+
+PROVEN: Initialize CD backend; if present and media-ready, stop twice and lock drive; otherwise disable MusicCdActive.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:63384.
+
+Initialize CD backend; if present and media-ready, stop twice and lock drive; otherwise disable MusicCdActive.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### function:DoneMusic
+
+PROVEN: Stop selected-drive audio twice, unlock when necessary, free conventional request storage.
+
+Units: see parameters/result/side-effect contract. DOS layout/address: 1:633bc.
+
+Stop selected-drive audio twice, unlock when necessary, free conventional request storage.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:Volume_Snd
+
+PROVEN: Signed16 effects/speech master volume, option conversion sound_volume*127/20; setters do not clamp.
+
+Units: nominal0..127. DOS layout/address: 2:7f64.
+
+Signed16 effects/speech master volume, option conversion sound_volume*127/20; setters do not clamp.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:bank_to_use
+
+PROVEN: Cue-to-sample-bank selector: low signed16 zero chooses fixed bank2, nonzero chooses currently loaded world bank.
+
+Units: 0 fixed / nonzero world. DOS layout/address: 2:7e44.
+
+Cue-to-sample-bank selector: low signed16 zero chooses fixed bank2, nonzero chooses currently loaded world bank.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 256 records, 2 values, 0..1. This does not bound runtime values.
+
+### global:cdTimeEnd
+
+PROVEN: Latest BIOS-tick sample used to compute level CD elapsed time.
+
+Units: BIOS ticks. DOS layout/address: 2:3d870.
+
+Latest BIOS-tick sample used to compute level CD elapsed time.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:cdTimeStart
+
+PROVEN: BIOS-tick snapshot for level CD duration; pause adds its elapsed BIOS ticks to this start value.
+
+Units: BIOS ticks. DOS layout/address: 2:3d858.
+
+BIOS-tick snapshot for level CD duration; pause adds its elapsed BIOS ticks to this start value.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Keep pause input/callback cadence, palette fades, chosen algorithm parameters and BIOS-tick correction of CD time. Replace VGA plane I/O/screen storage while preserving four-plane copy semantics.
+
+### global:flagCDPlay
+
+PROVEN: Post-duration CD restart sequence counter:0 stop once,1..3 wait callbacks,>=4 restart and reset0.
+
+Units: callback phase. DOS layout/address: 2:7f78.
+
+Post-duration CD restart sequence counter:0 stop once,1..3 wait callbacks,>=4 restart and reset0.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:frame_snd
+
+PROVEN: Initial cue delay in map_time increments; zero starts immediately, nonzero queues exact due_time=current+delay.
+
+Units: game update increments. DOS layout/address: 2:7644.
+
+Initial cue delay in map_time increments; zero starts immediately, nonzero queues exact due_time=current+delay.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 256 records, 23 values, 0..80. This does not bound runtime values.
+
+### global:frame_snd_bis
+
+PROVEN: Delay added to current map_time for the one followup cue after initial delayed playback.
+
+Units: game update increments. DOS layout/address: 2:7744.
+
+Delay added to current map_time for the one followup cue after initial delayed playback.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 256 records, 8 values, 0..65. This does not bound runtime values.
+
+### global:hard_sound_table
+
+PROVEN: 256 cue records of note, sample program, unused tone argument and relative volume bytes, used by immediate/deferred sound routing.
+
+Units: cue descriptors. DOS layout/address: 2:7a44.
+
+256 cue records of note, sample program, unused tone argument and relative volume bytes, used by immediate/deferred sound routing.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:indice_ray_wait
+
+PROVEN: Signed16 cue15 cadence counter, reset on Rayman non15 cue and after postincrement old value>2.
+
+Units: cue15 calls. DOS layout/address: 2:55750.
+
+Signed16 cue15 cadence counter, reset on Rayman non15 cue and after postincrement old value>2.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:indice_snd_wiz
+
+UNKNOWN: Written0 by InitSnd; no semantic reader in this group. Intended index meaning remains UNKNOWN.
+
+Units: observed signed16 storage. DOS layout/address: 2:5575a.
+
+Written0 by InitSnd; no semantic reader in this group. Intended index meaning remains UNKNOWN.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:indice_trz_wait
+
+PROVEN: Signed16 cue80 cadence counter initialized2; emits selected sample when postincrement old value>1, then resets0.
+
+Units: cue80 calls. DOS layout/address: 2:55754.
+
+Signed16 cue80 cadence counter initialized2; emits selected sample when postincrement old value>1, then resets0.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:mapCd
+
+PROVEN: Executable132-byte six-by22 map from one-based world/level to CD track number. C declaration is128 in sound.c; retain all observed132 table bytes in the native resource view without structural edits here.
+
+Units: CD track numbers. DOS layout/address: 2:4f3c.
+
+Executable132-byte six-by22 map from one-based world/level to CD track number. C declaration is128 in sound.c; retain all observed132 table bytes in the native resource view without structural edits here.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 132 records, 15 values, 0..17. This does not bound runtime values.
+
+### global:not_snd_wiz
+
+PROVEN: Eight note offsets indexed by collected-object substate-24 for cue14.
+
+Units: semitone-table index offsets. DOS layout/address: 2:7f6e.
+
+Eight note offsets indexed by collected-object substate-24 for cue14.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 8 records, 8 values, 0..12. This does not bound runtime values.
+
+### global:phaseCd
+
+PROVEN: Byte toggled on every level-CD restart and initialized0 on start; no different track selection is made from it here.
+
+Units: game audio phase. DOS layout/address: 2:7f79.
+
+Byte toggled on every level-CD restart and initialized0 on start; no different track selection is made from it here.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:pile_snd
+
+PROVEN: Ten24-byte delayed cue records; queue count grows only to9, retaining a sentinel/copied slot. Due time is map_time, not wall-clock audio time.
+
+Units: game cue queue. DOS layout/address: 2:554e0.
+
+Ten24-byte delayed cue records; queue count grows only to9, retaining a sentinel/copied slot. Due time is map_time, not wall-clock audio time.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:pt_pile_snd
+
+PROVEN: Signed16 delayed-queue count/insertion index; increments while<9, compaction reads the following slot.
+
+Units: queue index/count. DOS layout/address: 2:55756.
+
+Signed16 delayed-queue count/insertion index; increments while<9, compaction reads the following slot.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:snd_bis
+
+PROVEN: Unsigned16 followup cue id; zero means none. Only one followup is armed by field_14.
+
+Units: cue id /0 sentinel. DOS layout/address: 2:7844.
+
+Unsigned16 followup cue id; zero means none. Only one followup is armed by field_14.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 256 records, 9 values, 0..238. This does not bound runtime values.
+
+### global:snd_sqrt_table
+
+PROVEN: Exact128-byte pan gain table, indexed by pan for right and127-pan for left, products shifted8.
+
+Units: gain/256. DOS layout/address: 1:61b80.
+
+Exact128-byte pan gain table, indexed by pan for right and127-pan for left, products shifted8.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 128 records, 128 values, 40..251. This does not bound runtime values.
+
+### global:sound_table
+
+PROVEN: 256 cue policy bytes:01 initial attenuation,02 enables dynamic attenuation with01,04 repeat same cue,08 stop previous owner cue on replacement,10 tracked/mutable/mute-cleanup voice. No numeric cue-priority ordering is present.
+
+Units: bitfield. DOS layout/address: 2:7544.
+
+256 cue policy bytes:01 initial attenuation,02 enables dynamic attenuation with01,04 repeat same cue,08 stop previous owner cue on replacement,10 tracked/mutable/mute-cleanup voice. No numeric cue-priority ordering is present.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 256 records, 8 values, 0..31. This does not bound runtime values.
+
+### global:stk_obj
+
+PROVEN: 20 signed16 cue-history owner IDs: -1 Rayman,-2 free/unowned; consulted for repeat/replacement policy.
+
+Units: game sound ownership. DOS layout/address: 2:55490.
+
+20 signed16 cue-history owner IDs: -1 Rayman,-2 free/unowned; consulted for repeat/replacement policy.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:stk_snd
+
+PROVEN: 20 signed16 last-cue history values paired with stk_obj;0 free/no requested cue, cleanup may set-1.
+
+Units: cue id/sentinels. DOS layout/address: 2:554b8.
+
+20 signed16 last-cue history values paired with stk_obj;0 free/no requested cue, cleanup may set-1.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:timeCd
+
+PROVEN: Six-by22 signed32 nominal CD durations compared as unsigned to computed seconds by TestCdLoop. Zero entries are unused table slots, not reachability proof.
+
+Units: seconds. DOS layout/address: 2:4fc0.
+
+Six-by22 signed32 nominal CD durations compared as unsigned to computed seconds by TestCdLoop. Zero entries are unused table slots, not reachability proof.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+Shipped initial sample: 132 records, 13 values, 0..315. This does not bound runtime values.
+
+### global:voice_is_working
+
+PROVEN: 32 byte latches set for policy10h voices, gating dynamic KeyVol updates and cleared by selected stop/removal paths.
+
+Units: game sound policy latches. DOS layout/address: 2:7f44.
+
+32 byte latches set for policy10h voices, gating dynamic KeyVol updates and cleared by selected stop/removal paths.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:voice_table
+
+PROVEN: 32 twelve-byte owner/attenuation/pan/cue records indexed by backend voice handle; obj-2 free/unowned,-1 Rayman. Two trailing words are unconsumed here.
+
+Units: game sound ownership and gain state. DOS layout/address: 2:555d0.
+
+32 twelve-byte owner/attenuation/pan/cue records indexed by backend voice handle; obj-2 free/unowned,-1 Rayman. Two trailing words are unconsumed here.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
+
+### global:was_in_freeze
+
+PROVEN: Signed16 audio-freeze latch set after mute and cleared on thaw; thaw function itself does not restore voice gains.
+
+Units: game pause policy. DOS layout/address: 2:7f76.
+
+Signed16 audio-freeze latch set after mute and cleared on thaw; thaw function itself does not restore voice gains.
+
+Keep numeric cue routing, per-object ownership/repeat/interruption policy, delayed/followup map_time queue, table gains/pitches, sentinels and call ordering. Backend voice handles can change representation. There is no game-level numeric priority comparator to recreate from the policy-byte magnitude.
 
 ## special.json
 
@@ -24483,6 +28690,2470 @@ PROVEN: Historical diagnostic high-water value;fallback updates compare pool cap
 Units: bytes. DOS layout/address: +0x24, 4 B.
 
 Historical diagnostic high-water value;fallback updates compare pool capacity+single request,not sum of all live heap fallbacks.
+
+### field:dos_regs_t.ax
+
+PROVEN: Low16 AX input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.bx
+
+PROVEN: Low16 BX input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.cx
+
+PROVEN: Low16 CX input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.dx
+
+PROVEN: Low16 DX input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.si
+
+PROVEN: Low16 SI input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.di
+
+PROVEN: Low16 DI input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.flags
+
+PROVEN: Low16 FLAGS input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0xc, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.cs
+
+PROVEN: Low16 CS input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.ds
+
+PROVEN: Low16 DS input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x10, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.es
+
+PROVEN: Low16 ES input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x12, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_regs_t.ss
+
+PROVEN: Low16 SS input/output copied to/from DPMI real-mode register frame.
+
+Units: 16-bit x86 register. DOS layout/address: +0x14, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.track_count
+
+PROVEN: Last track+1-first track narrowed to byte.
+
+Units: track count. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.first_track
+
+PROVEN: First track number from IOCTL0Ah.
+
+Units: track number. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.last_track
+
+PROVEN: Last track number from IOCTL0Ah.
+
+Units: track number. DOS layout/address: +0x2, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.leadout_lba
+
+PROVEN: Raw packed MSF lead-out address returned by IOCTL0Ah; inherited lba name is misleading.
+
+Units: packed MSF. DOS layout/address: +0x3, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.track_start
+
+PROVEN: Packed MSF track starts indexed by track number; temporary last+1 slot is used during duration computation then zeroed.
+
+Units: packed MSF. DOS layout/address: +0x7, 400 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.leadout
+
+PROVEN: Packed MSF total disc duration after subtracting converted first-track start from lead-out; no lead-in added by re-packer.
+
+Units: packed MSF duration. DOS layout/address: +0x197, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.track_end
+
+PROVEN: Sector duration computed from adjacent converted starts, same as track_length; used as playback byte18 length.
+
+Units: 75 sectors/second. DOS layout/address: +0x19b, 400 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.track_length
+
+PROVEN: Sector duration computed from adjacent starts, used for partial-track remaining length.
+
+Units: 75 sectors/second. DOS layout/address: +0x32b, 400 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_cd_disc_info_t.track_flags
+
+PROVEN: Per-track control byte from IOCTL0Bh; bit40h distinguishes data from audio.
+
+Units: control bitfield. DOS layout/address: +0x4bb, 100 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:cd_far_parts_t.offset
+
+PROVEN: Offset32 part of the six-byte protected far pointer. CD_OFFSET macro stores allocation-relative request offsets through this exact member.
+
+Units: protected far-pointer byte offset. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:cd_far_parts_t.selector
+
+PROVEN: Selector16 part of protected far pointer, filled from DPMI allocation DX by CD_SELECTOR macro.
+
+Units: DPMI selector. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.obj
+
+PROVEN: Game owner id; -1 is Rayman, -2 detached/free/unowned.
+
+Units: object id/sentinel. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.vol
+
+PROVEN: Most recent distance attenuation value before master/cue gain scaling.
+
+Units: nominal0..127. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.pan
+
+PROVEN: Most recent position-derived pan; applied by a later KeyVol update.
+
+Units: nominal0..127. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.snd
+
+PROVEN: Numeric cue id assigned for owned PlaySnd voices; -1 marks detached sound. PlaySnd_old does not populate this word.
+
+Units: cue id/-1. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.field_8
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:voice_t.field_A
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.obj
+
+PROVEN: Delayed cue owner id, using the same Rayman/free conventions as live voices.
+
+Units: object id/sentinel. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.snd
+
+PROVEN: Numeric cue id, replaced once by snd_bis when followup latch is set.
+
+Units: cue id. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.prog
+
+PROVEN: Resolved sample program saved before delay.
+
+Units: sample index. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.tone
+
+PROVEN: Table tone byte widened to word and forwarded to unused KeyOn tone parameter.
+
+Units: unused backend argument. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.note
+
+PROVEN: Resolved pitch-table index saved before delay.
+
+Units: pitchTab index. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.vol
+
+PROVEN: Per-cue relative gain saved from hard_sound_table.
+
+Units: nominal0..127. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.field_C
+
+PROVEN: Current distance attenuation0..127 copied when queued and refreshed by setvol.
+
+Units: gain input0..127. DOS layout/address: +0xc, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.pan
+
+PROVEN: Queued spatial pan, refreshed by setpan before deferred KeyOn.
+
+Units: nominal0..127. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.end_time
+
+PROVEN: Due map_time value; exact equality starts sample and unsigned strict-less cleanup discards expired entry.
+
+Units: game update increments. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.field_14
+
+PROVEN: One-followup latch from snd_bis!=0; clear after scheduling followup.
+
+Units: boolean. DOS layout/address: +0x14, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:pile_snd_t.field_16
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x16, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:sound_table_entry_t.note
+
+PROVEN: Index into pitchTab; cue-specific paths can add note offsets.
+
+Units: pitch-table index. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:sound_table_entry_t.prog
+
+PROVEN: Sample program in128-entry bank;255 means disabled.
+
+Units: sample index/255. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:sound_table_entry_t.tone
+
+PROVEN: Argument forwarded through sound routing; DOS KeyOn ignores it.
+
+Units: retained unused tone selector. DOS layout/address: +0x2, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:sound_table_entry_t.volume
+
+PROVEN: Cue gain multiplied by master and distance gain before >>14 or master-only >>7.
+
+Units: nominal0..127. DOS layout/address: +0x3, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:archive_header_t.offset
+
+PROVEN: Archive file offset passed to fseek.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:archive_header_t.size
+
+PROVEN: Encoded payload byte length.
+
+Units: bytes. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:archive_header_t.xor_byte
+
+PROVEN: XOR key applied to every encoded byte after subtracting that encoded byte from checksum residual.
+
+Units: byte mask. DOS layout/address: +0x8, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:archive_header_t.checksum_byte
+
+PROVEN: Initial8-bit residual, sum(encoded bytes) modulo256; valid decode finishes at0.
+
+Units: modulo256 checksum. DOS layout/address: +0x9, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:archive_header_t.pad
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:bnk_header_t.offset
+
+PROVEN: Relocated sample data pointer after bank load; serialized value is byte offset within decoded data bank.
+
+Units: bytes/pointer. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:bnk_header_t.size
+
+PROVEN: Sample byte length; effects are U8 mono.
+
+Units: bytes. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:bnk_header_t.field_8
+
+PROVEN: Loop byte start within sample, copied to request+30h.
+
+Units: bytes. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:bnk_header_t.field_C
+
+PROVEN: Loop byte length, not absolute end; zero disables looping.
+
+Units: bytes. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_config_t.reserved_00
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x0, 16 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_config_t.timeout
+
+PROVEN: SDK wSampleRate at+10h, written10000 before driver init.
+
+Units: Hz. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_config_t.reserved_14
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x14, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_config_t.callback
+
+PROVEN: Mixer fill callback pointer returned/populated through driver initialization, registered with timer.
+
+Units: far callback pointer. DOS layout/address: +0x1c, 6 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_config_t.pad_22
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x22, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.data
+
+PROVEN: Far pointer to mono PCM source bytes.
+
+Units: U8 effects / S16LE speech. DOS layout/address: +0x0, 6 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.pointer_pad
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.size
+
+PROVEN: PCM source byte length, not frames.
+
+Units: bytes. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_0c
+
+PROVEN: SDK loop count: -1 for infinite staged loop.
+
+Units: signed count/-1. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_10
+
+PROVEN: SDK channel selection; initialized2, center/mono source channel.
+
+Units: channel selector. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.volume
+
+PROVEN: SDK linear volume scaled signed input*32767/127.
+
+Units: nominal0..32767. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_18
+
+PROVEN: SDK sample-ID/callback/port ABI area: first dword initialized1 effects or2 speech; remaining slots retained from initializer. Not a numeric sound priority.
+
+Units: SDK sample identification/ABI slots. DOS layout/address: +0x18, 16 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.flags
+
+PROVEN: SDK sample flags: effects0720h, speech0180h; looping OR4760h.
+
+Units: bitfield. DOS layout/address: +0x28, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_2c
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x2c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_30
+
+PROVEN: Loop byte start; source loop interval is[start,start+length).
+
+Units: bytes. DOS layout/address: +0x30, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_34
+
+PROVEN: Loop byte length, not inclusive endpoint.
+
+Units: bytes. DOS layout/address: +0x34, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.sample_rate
+
+PROVEN: SDK dwSamplePitchAdd, Q16 source step pitchTab[note]<<8. Inherited sample_rate is not Hz.
+
+Units: Q16 source step. DOS layout/address: +0x38, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.field_3c
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x3c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.pan
+
+PROVEN: SDK pan location scaled pan*65535/127.
+
+Units: nominal0..65535. DOS layout/address: +0x40, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dos_sound_request_t.reserved
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x44, 48 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_surface_t.pixels
+
+PROVEN: Borrowed indexed-color draw-surface base.
+
+Units: pixel pointer. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_surface_t.width
+
+PROVEN: Surface width, initialized320; single-pixel helper uses it as stride.
+
+Units: pixels. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_surface_t.height
+
+PROVEN: Surface height, initialized200 and used for centering.
+
+Units: pixels. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.file_size
+
+PROVEN: Header size word:12 is the compact12-byte-header discriminator; not the actual full file byte length for shipped compact movies.
+
+Units: file bytes / compact marker. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.file_magic
+
+PROVEN: AF12h FLC or AF11h FLI discriminator, rejected otherwise.
+
+Units: file format magic. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.frame_count
+
+PROVEN: Header frame count used by once/loop decode loops; not inferred from EOF.
+
+Units: frames. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.width
+
+PROVEN: Movie row width; accepted only<=320 and used for decoder/copy row length.
+
+Units: pixels. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.height
+
+PROVEN: Movie height; accepted only<=200.
+
+Units: pixels. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.depth
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xc, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.flags
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.speed
+
+PROVEN: Header frame delay normalized to milliseconds for FLI or30 for compact FLC; playback pacing code does not read it.
+
+Units: header ms metadata / unconsumed timing. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.reserved14
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x14, 60 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.data_offset
+
+PROVEN: First frame file position: compact12, standard FLI128, standard FLC header+50h.
+
+Units: file byte offset. DOS layout/address: +0x50, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.current_offset
+
+PROVEN: Second-frame offset cached for looping after decoding the first frame once.
+
+Units: file byte offset. DOS layout/address: +0x54, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.reserved58
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x58, 40 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.fd
+
+PROVEN: Open binary-read file descriptor, closed before clearing work.
+
+Units: replaceable backend handle. DOS layout/address: +0x80, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.frame_index
+
+PROVEN: One-based decoded frame index after preincrement; looping resets1 before reading second frame.
+
+Units: frame index. DOS layout/address: +0x84, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.path
+
+PROVEN: Borrowed pointer to resolved local.path string.
+
+Units: borrowed string pointer. DOS layout/address: +0x88, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.x_offset
+
+PROVEN: Centered left coordinate (surface.width-movie.width)/2.
+
+Units: pixels. DOS layout/address: +0x8c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.y_offset
+
+PROVEN: Centered top coordinate (surface.height-movie.height)/2.
+
+Units: pixels. DOS layout/address: +0x90, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.surface_offset
+
+PROVEN: Centered movie origin x_offset+320*y_offset.
+
+Units: surface byte offset. DOS layout/address: +0x94, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_work_t.sound_mode
+
+PROVEN: Requested CD audio track number supplied by playVideo2 (intro20/conclusion21), zero disables CD accompaniment.
+
+Units: CD track number. DOS layout/address: +0x98, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_frame_header_t.size
+
+PROVEN: Total frame bytes including16-byte header.
+
+Units: file bytes. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_frame_header_t.magic
+
+PROVEN: Frame signatureF1FAh.
+
+Units: magic. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_frame_header_t.chunks
+
+PROVEN: Signed16 number of chunk records iterated by dispatcher.
+
+Units: chunk count. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_frame_header_t.reserved
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x8, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_chunk_t.size
+
+PROVEN: Total chunk bytes including six-byte prefix; determines next chunk pointer.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_chunk_t.type
+
+PROVEN: Chunk discriminator; supported4/7/11/12/13/15/16, unknown types skipped.
+
+Units: numeric format id. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_local_t.work
+
+PROVEN: First152 bytes of153-byte packed movie work descriptor; next sound_mode byte completes it.
+
+Units: packed work prefix. DOS layout/address: +0x0, 152 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_local_t.sound_mode
+
+PROVEN: Byte completing movie_work_t at+98h; requested CD audio track.
+
+Units: CD track number. DOS layout/address: +0x98, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_local_t.pad
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x99, 3 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_local_t.path
+
+PROVEN: Resolved filename passed to probe/open and borrowed by work.path.
+
+Units: byte string. DOS layout/address: +0x9c, 128 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:movie_local_t.info
+
+PROVEN: 24-byte surface/timer context:12-byte surface prefix and timer scale at byte17.
+
+Units: platform/presentation context. DOS layout/address: +0x11c, 24 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:vga_register_t.word
+
+PROVEN: Combined16-bit OUT DX,AX value with low index byte and high data byte.
+
+Units: VGA indexed-register word. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:vga_register_t.byte
+
+PROVEN: Two-byte index/data view over the OUT word.
+
+Units: VGA indexed-register bytes. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:vga_register_t.byte.index
+
+PROVEN: Low output byte: VGA read-map index4 or sequencer map-mask index2.
+
+Units: register index. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:vga_register_t.byte.value
+
+PROVEN: High output byte: read-plane0..3 or write-plane bit mask1/2/4/8.
+
+Units: plane index/mask. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.x0
+
+PROVEN: Unprojected corner0 x coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.y0
+
+PROVEN: Unprojected corner0 y coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.width0
+
+PROVEN: Corner0 depth coordinate initialized512 and incremented by sort_key, despite inherited width name.
+
+Units: signed32 depth. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.x1
+
+PROVEN: Unprojected corner1 x coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.y1
+
+PROVEN: Unprojected corner1 y coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.width1
+
+PROVEN: Corner1 depth coordinate, same update/projection convention as corner0.
+
+Units: signed32 depth. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.x2
+
+PROVEN: Unprojected corner2 x coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.y2
+
+PROVEN: Unprojected corner2 y coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.width2
+
+PROVEN: Corner2 depth coordinate, same update/projection convention as corner0.
+
+Units: signed32 depth. DOS layout/address: +0x20, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.x3
+
+PROVEN: Unprojected corner3 x coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x24, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.y3
+
+PROVEN: Unprojected corner3 y coordinate, translated and rotated around fragment center.
+
+Units: signed32 pixels. DOS layout/address: +0x28, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.width3
+
+PROVEN: Corner3 depth coordinate, same update/projection convention as corner0.
+
+Units: signed32 depth. DOS layout/address: +0x2c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.random_x
+
+PROVEN: Per-substep horizontal translation: rand()%3 or rand()%3-2 selected by item index%10.
+
+Units: pixels/substep. DOS layout/address: +0x30, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.random_y
+
+PROVEN: Per-substep vertical translation initialized rand()%8-6; gravity adds step every fifth frame after20.
+
+Units: pixels/substep. DOS layout/address: +0x32, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.sort_key
+
+PROVEN: Signed16 depth step shared by four corners and initial descending draw-order sort; reset0 if a pre-update depth<50.
+
+Units: depth per substep. DOS layout/address: +0x34, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_r
+
+PROVEN: Wrapping byte X-axis angle accumulator, doubled before sinus_cosinus; not a palette color.
+
+Units: byte angle/2 trig units. DOS layout/address: +0x36, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_g
+
+PROVEN: Wrapping byte Y-axis angle accumulator, doubled before sinus_cosinus.
+
+Units: byte angle/2 trig units. DOS layout/address: +0x37, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_b
+
+PROVEN: Wrapping byte Z-axis angle accumulator, doubled before sinus_cosinus.
+
+Units: byte angle/2 trig units. DOS layout/address: +0x38, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_step_r
+
+PROVEN: Wrapping X-angle byte increment factor, sampled rand()%5+2.
+
+Units: byte angle/substep. DOS layout/address: +0x39, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_step_g
+
+PROVEN: Wrapping Y-angle byte increment factor.
+
+Units: byte angle/substep. DOS layout/address: +0x3a, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.color_step_b
+
+PROVEN: Wrapping Z-angle byte increment factor.
+
+Units: byte angle/substep. DOS layout/address: +0x3b, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.screen
+
+PROVEN: 256-pitch texture base for left/right half-screen.
+
+Units: texture pointer. DOS layout/address: +0x3c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.vertices
+
+PROVEN: Four projected signed32(x,y) pairs in rasterizer corner order.
+
+Units: pixels. DOS layout/address: +0x40, 32 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.rectangle
+
+PROVEN: Four byte(u,v) texture corners, local to selected half-screen.
+
+Units: texture pixels. DOS layout/address: +0x60, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.draw_order
+
+PROVEN: Index into original fragment array; only these indices are swapped by sort.
+
+Units: fragment index. DOS layout/address: +0x68, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_item_t.reserved_6a
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x6a, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.columns
+
+PROVEN: Stored byte grid column count, clamped to at least2 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.rows
+
+PROVEN: Stored byte grid row count, clamped to at least1 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.count
+
+PROVEN: Number of cell/fragment records used by iteration/allocation.
+
+Units: records. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.frame
+
+PROVEN: Unsigned16 progress advanced by absolute signed speed.
+
+Units: effect progress. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.frame_limit
+
+PROVEN: Unsigned16 progress limit; reset0 when progress>limit.
+
+Units: effect progress. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.speed
+
+PROVEN: Normalized nonzero signed16 effect rate/direction; per-unit contract defines sign use.
+
+Units: effect progress/callback. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.reserved_0a
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.source
+
+PROVEN: Borrowed source320-pitch snapshot input.
+
+Units: surface pointer. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.destination
+
+PROVEN: Borrowed320-pitch draw destination.
+
+Units: surface pointer. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.screen_a
+
+PROVEN: Packed256-pitch first/cropped texture in EffetBufferNormal.
+
+Units: texture pointer. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.screen_b
+
+PROVEN: Packed256-pitch second texture at+C800h, or0 for256-wide sphere crop.
+
+Units: texture pointer. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_tile_state_t.items
+
+PROVEN: Owned cell/fragment records; record size specified by unit-local type.
+
+Units: owning pointer. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_point_t.x
+
+PROVEN: Sphere-space x coordinate truncated from setup sin/cos into signed16.
+
+Units: sphere coordinate. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_point_t.y
+
+PROVEN: Sphere-space y coordinate truncated from setup sin/cos into signed16.
+
+Units: sphere coordinate. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_point_t.z
+
+PROVEN: Sphere-space z coordinate truncated from setup sin/cos into signed16.
+
+Units: sphere coordinate. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_point_t.u
+
+PROVEN: Projected u coordinate narrowed to signed16 for drawing.
+
+Units: pixels. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_point_t.v
+
+PROVEN: Projected v coordinate narrowed to signed16 for drawing.
+
+Units: pixels. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_item_t.point
+
+PROVEN: Four indices into shared grid point array.
+
+Units: point indices. DOS layout/address: +0x0, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_item_t.screen
+
+PROVEN: 256-pitch crop/half texture base.
+
+Units: texture pointer. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_item_t.projected
+
+PROVEN: Four signed32(x,y) pairs populated after backface test.
+
+Units: pixels. DOS layout/address: +0xc, 32 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_item_t.rectangle
+
+PROVEN: Four byte(u,v) texture corners.
+
+Units: texture pixels. DOS layout/address: +0x2c, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.columns
+
+PROVEN: Stored byte grid column count, clamped to at least2 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.rows
+
+PROVEN: Stored byte grid row count, clamped to at least1 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.count
+
+PROVEN: Number of cell/fragment records used by iteration/allocation.
+
+Units: records. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.point_count
+
+PROVEN: Stored(columns+1)*(rows+1), calculated from original parameters before allocation.
+
+Units: vertices. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.frame
+
+PROVEN: Unsigned16 progress advanced by absolute signed speed.
+
+Units: effect progress. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.frame_limit
+
+PROVEN: Unsigned16 progress limit; reset0 when progress>limit.
+
+Units: effect progress. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.speed
+
+PROVEN: Normalized nonzero signed16 effect rate/direction; per-unit contract defines sign use.
+
+Units: effect progress/callback. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.radius
+
+PROVEN: Byte sphere radius clamped40..70.
+
+Units: pixels/sphere units. DOS layout/address: +0xc, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.mode
+
+PROVEN: 1 interpolation;2 initializes bounce state on next call;0 bouncing/rotating phase.
+
+Units: effect phase. DOS layout/address: +0xd, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.reserved_0e
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.source
+
+PROVEN: Borrowed source320-pitch snapshot input.
+
+Units: surface pointer. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.destination
+
+PROVEN: Borrowed320-pitch draw destination.
+
+Units: surface pointer. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.screen_a
+
+PROVEN: Packed256-pitch first/cropped texture in EffetBufferNormal.
+
+Units: texture pointer. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.screen_b
+
+PROVEN: Packed256-pitch second texture at+C800h, or0 for256-wide sphere crop.
+
+Units: texture pointer. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.points
+
+PROVEN: Owned ten-byte sphere vertex array.
+
+Units: owning pointer. DOS layout/address: +0x20, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.items
+
+PROVEN: Owned cell/fragment records; record size specified by unit-local type.
+
+Units: owning pointer. DOS layout/address: +0x24, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.center_x
+
+PROVEN: Unsigned16 projection/bounce center x.
+
+Units: pixels. DOS layout/address: +0x28, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.center_y
+
+PROVEN: Unsigned16 projection/bounce center y.
+
+Units: pixels. DOS layout/address: +0x2a, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.velocity_x
+
+PROVEN: Signed16 horizontal bounce velocity, /4 then*abs(speed) for motion.
+
+Units: quarter-pixel step input. DOS layout/address: +0x2c, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.velocity_y
+
+PROVEN: Signed16 vertical velocity; gravity+1 each bounce call before /4 motion.
+
+Units: quarter-pixel step input. DOS layout/address: +0x2e, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.angle_x
+
+PROVEN: Signed16 Q9-trig angle advanced2*abs(speed).
+
+Units: trig units512/turn. DOS layout/address: +0x30, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.angle_y
+
+PROVEN: Signed16 Q9-trig angle advanced4*abs(speed) once rotation latch set.
+
+Units: trig units512/turn. DOS layout/address: +0x32, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.phase_x
+
+PROVEN: Bottom-contact latch suppressing repeated vertical reflection.
+
+Units: boolean latch. DOS layout/address: +0x34, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.phase_y
+
+PROVEN: Side-contact latch suppressing repeated horizontal reflection.
+
+Units: boolean latch. DOS layout/address: +0x35, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.flags_36
+
+PROVEN: Latch enabling extra angle_y rotation after first bottom bounce.
+
+Units: boolean latch. DOS layout/address: +0x36, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.flags_37
+
+PROVEN: Latch disabling bottom bounce after subsequent right-edge contact, allowing sphere to fall offscreen.
+
+Units: boolean latch. DOS layout/address: +0x37, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.flags_38
+
+PROVEN: Records first right-edge contact; subsequent right-edge contact sets flags_37.
+
+Units: boolean latch. DOS layout/address: +0x38, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect5_state_t.reserved_39
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x39, 3 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_span_t.source_x
+
+PROVEN: Signed16 source column before independent clipping.
+
+Units: pixels. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_span_t.source_y
+
+PROVEN: Signed16 source row, valid0..199.
+
+Units: pixels. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_span_t.destination_x
+
+PROVEN: Signed16 destination column before independent clipping.
+
+Units: pixels. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_span_t.destination_y
+
+PROVEN: Signed16 destination row, valid0..199.
+
+Units: pixels. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_span_t.width
+
+PROVEN: Signed16 byte copy length, nonpositive spans skipped.
+
+Units: pixels. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.count
+
+PROVEN: Byte row-span count, set200.
+
+Units: rows. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.reserved_01
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.position
+
+PROVEN: Unsigned16 transition progress.
+
+Units: effect progress. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.position_limit
+
+PROVEN: Limit320/200/100 depending on mode.
+
+Units: effect progress. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.direction
+
+PROVEN: Normalized signed16 rate/sign; position advancesabs(direction).
+
+Units: effect progress/callback. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.mode
+
+PROVEN: Clamped1..12 row-span transformation selector.
+
+Units: mode id. DOS layout/address: +0x8, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.reserved_09
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x9, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.reserved_0a
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.entries
+
+PROVEN: Owned200 ten-byte spans.
+
+Units: owning pointer. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.screen
+
+PROVEN: Full64000-byte source snapshot at EffetBufferNormal.
+
+Units: surface pointer. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_rows_t.destination
+
+PROVEN: Borrowed320-pitch output.
+
+Units: surface pointer. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_point_t.x
+
+PROVEN: Panel-space x coordinate from initialization; x/y measured relative to pivot during rotations.
+
+Units: signed32 coordinate. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_point_t.y
+
+PROVEN: Panel-space y coordinate from initialization; x/y measured relative to pivot during rotations.
+
+Units: signed32 coordinate. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_point_t.z
+
+PROVEN: Panel-space z coordinate from initialization; x/y measured relative to pivot during rotations.
+
+Units: signed32 coordinate. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_point_t.screen_x
+
+PROVEN: Projected signed32 screen_x output.
+
+Units: pixels. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_point_t.screen_y
+
+PROVEN: Projected signed32 screen_y output.
+
+Units: pixels. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_segment_t.screen
+
+PROVEN: 256-pitch half-screen texture pointer.
+
+Units: texture pointer. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_segment_t.points
+
+PROVEN: Four signed32(x,y) projected corner pairs.
+
+Units: pixels. DOS layout/address: +0x4, 32 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_segment_t.rectangle
+
+PROVEN: Four byte(u,v) texture corners; each half uses0..159 by0..199.
+
+Units: texture pixels. DOS layout/address: +0x24, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.position
+
+PROVEN: Unsigned16 transform progress advancedabs(speed).
+
+Units: effect progress. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.position_limit
+
+PROVEN: 512 for centered rotation/depth modes orabs(speed)+128 for hinges.
+
+Units: effect progress. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.speed
+
+PROVEN: Normalized input with reversed sign; also controls depth-progress direction.
+
+Units: effect rate/direction. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.angle_x
+
+PROVEN: Signed16 X-axis trig angle.
+
+Units: trig units512/turn. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.angle_y
+
+PROVEN: Signed16 Y-axis trig angle.
+
+Units: trig units512/turn. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.angle_z
+
+PROVEN: Signed16 Z-axis trig angle.
+
+Units: trig units512/turn. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_0c
+
+UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role.
+
+Units: observed signed16 storage. DOS layout/address: +0xc, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_0e
+
+UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role.
+
+Units: observed signed16 storage. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_10
+
+UNKNOWN: Initialized0 by effect_activate; no semantic reader establishes an intended role.
+
+Units: observed signed16 storage. DOS layout/address: +0x10, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.step_x
+
+PROVEN: Signed16 angle_x increment/callback.
+
+Units: trig units/callback. DOS layout/address: +0x12, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.step_y
+
+PROVEN: Signed16 angle_y increment/callback.
+
+Units: trig units/callback. DOS layout/address: +0x14, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.step_z
+
+PROVEN: Signed16 angle_z increment/callback.
+
+Units: trig units/callback. DOS layout/address: +0x16, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_18
+
+PROVEN: Projection/rotation pivot x, set160 normally or-2/321 for vertical edge hinges.
+
+Units: pixels. DOS layout/address: +0x18, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_1a
+
+PROVEN: Projection/rotation pivot y, set100 normally or-2/201 for horizontal edge hinges.
+
+Units: pixels. DOS layout/address: +0x1a, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.field_1c
+
+PROVEN: Edge-hinge mode latch;1 fixes projection depth512 and uses position limitabs(speed)+128,0 animates depth.
+
+Units: boolean. DOS layout/address: +0x1c, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.mode
+
+PROVEN: Clamped1..15 panel transform selector.
+
+Units: mode id. DOS layout/address: +0x1d, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.reserved_1e
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x1e, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.source
+
+PROVEN: Borrowed320-pitch source.
+
+Units: surface pointer. DOS layout/address: +0x20, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.destination
+
+PROVEN: Borrowed320-pitch output.
+
+Units: surface pointer. DOS layout/address: +0x24, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.screen_a
+
+PROVEN: Left160-wide256-pitch texture.
+
+Units: texture pointer. DOS layout/address: +0x28, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.screen_b
+
+PROVEN: Right160-wide256-pitch texture.
+
+Units: texture pointer. DOS layout/address: +0x2c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.vertices
+
+PROVEN: Owned two44-byte quad draw records.
+
+Units: owning pointer. DOS layout/address: +0x30, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect3d_t.transformed
+
+PROVEN: Owned six20-byte panel vertex records.
+
+Units: owning pointer. DOS layout/address: +0x34, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.x
+
+PROVEN: Original unsigned16 grid vertex x, including right boundary320.
+
+Units: pixels. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.y
+
+PROVEN: Original byte grid y, including bottom boundary200.
+
+Units: pixels. DOS layout/address: +0x2, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.field_3
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x3, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.next_x
+
+PROVEN: Unsigned16 projected x updated for interior vertices only.
+
+Units: pixels. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.next_y
+
+PROVEN: Byte projected y updated for interior vertices only.
+
+Units: pixels modulo256. DOS layout/address: +0x6, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.field_7
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x7, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.surface
+
+PROVEN: Pointer-shaped dword for selected256-pitch half texture.
+
+Units: 32-bit pointer representation. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.projected
+
+PROVEN: Four signed32 projected corner pairs for current cell draw.
+
+Units: pixels. DOS layout/address: +0xc, 32 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_vertex_6e_t.rectangle
+
+PROVEN: Four byte(u,v) texture corners.
+
+Units: texture pixels. DOS layout/address: +0x2c, 8 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.columns
+
+PROVEN: Stored byte grid column count, clamped to at least2 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x0, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.rows
+
+PROVEN: Stored byte grid row count, clamped to at least1 before narrowing.
+
+Units: grid cells. DOS layout/address: +0x1, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.vertex_count
+
+PROVEN: Original(columns+1)*(rows+1) product narrowed to u16 for52-byte vertex allocation.
+
+Units: vertices. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.current
+
+PROVEN: Unsigned16 progress counter.
+
+Units: effect progress. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.speed_fraction
+
+PROVEN: Unsigned16 frame/progress limit>=1; inherited fraction spelling does not mean fixed-point scale.
+
+Units: effect progress. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.speed
+
+PROVEN: Normalized signed16 rate, absolute value controls repeated history substeps.
+
+Units: substeps/callback. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.field_a
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.source
+
+PROVEN: Borrowed320-pitch source.
+
+Units: surface pointer. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.sprite
+
+PROVEN: Borrowed destination for quad rasterizer.
+
+Units: surface pointer. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.surface_a
+
+PROVEN: Left160-wide256-pitch texture.
+
+Units: texture pointer. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.surface_b
+
+PROVEN: Right160-wide256-pitch texture.
+
+Units: texture pointer. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.vertices
+
+PROVEN: Owned52-byte wave vertex/draw records.
+
+Units: owning pointer. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.history
+
+PROVEN: 75-byte shift register, read as signed8 displacement in512-based divisor.
+
+Units: signed displacement bytes. DOS layout/address: +0x20, 75 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.ramp
+
+PROVEN: 75-byte precomputed sinus-derived displacement sequence, consumed in reverse index order.
+
+Units: signed displacement bytes. DOS layout/address: +0x6b, 75 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.history_position
+
+PROVEN: Unsigned16 substep counter advanced2 each iteration;>600 can suppress feed when head0.
+
+Units: twice substeps. DOS layout/address: +0xb6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.history_length
+
+PROVEN: Byte number of unconsumed ramp entries, initially75.
+
+Units: entries remaining. DOS layout/address: +0xb8, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6e_t.tail
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xb9, 3 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.pos_x
+
+PROVEN: Signed16 completion/progress return counter; geometric center is field_14.
+
+Units: effect progress. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.delta
+
+PROVEN: Signed16 column step with sign inverted from input.
+
+Units: pixels/render. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_04
+
+PROVEN: Phase upper/right comparison boundary and sine/cosine origin established when initialized0.
+
+Units: signed32 column/phase extent. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_08
+
+PROVEN: Phase lower/left comparison boundary; positive delta changes mode when center falls below it.
+
+Units: signed32 column boundary. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_0c
+
+PROVEN: Current sine/cosine edge offset delimiting remapped columns in rendering.
+
+Units: signed32 pixels. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_10
+
+PROVEN: Source-remap base column added to acos table entries.
+
+Units: signed32 pixels. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_14
+
+PROVEN: Current destination/remap center column; render subtracts signed delta after drawing.
+
+Units: signed32 pixels. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.mode
+
+PROVEN: Byte phase0/1/2 remap,3 clear,4 forward done,FFh reverse done.
+
+Units: phase id. DOS layout/address: +0x18, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.initialized
+
+PROVEN: Phase latch0=needs setup,1=setup done,2=forward mode0 full snapshot already copied.
+
+Units: phase latch. DOS layout/address: +0x19, 1 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.field_1a
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x1a, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.width
+
+PROVEN: Clamped8..40 half-span used by acos/sine/cosine geometry.
+
+Units: pixels. DOS layout/address: +0x1c, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.span
+
+PROVEN: 2*width table entries.
+
+Units: entries. DOS layout/address: +0x1e, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.period1
+
+PROVEN: Truncated width*pi.
+
+Units: phase units. DOS layout/address: +0x20, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.period2
+
+PROVEN: Truncated width*pi/2.
+
+Units: phase units. DOS layout/address: +0x22, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.table
+
+PROVEN: Owned2*width signed32 acos remap entries.
+
+Units: pixel offsets. DOS layout/address: +0x24, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.source
+
+PROVEN: Full snapshot in EffetBufferNormal.
+
+Units: surface pointer. DOS layout/address: +0x28, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_column_state_t.destination
+
+PROVEN: Borrowed320-pitch output.
+
+Units: surface pointer. DOS layout/address: +0x2c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.frame
+
+PROVEN: Unsigned16 progress counter.
+
+Units: effect progress. DOS layout/address: +0x0, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.step
+
+PROVEN: Unsigned16 progress limit>=1.
+
+Units: effect progress. DOS layout/address: +0x2, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.x
+
+PROVEN: Signed16 radial-region center x.
+
+Units: pixels. DOS layout/address: +0x4, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.y
+
+PROVEN: Signed16 radial-region center y.
+
+Units: pixels. DOS layout/address: +0x6, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.velocity_x
+
+PROVEN: Signed16 center x increment, sign reflects on side collision.
+
+Units: pixels/callback. DOS layout/address: +0x8, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.velocity_y
+
+PROVEN: Signed16 center y increment, sign reflects on top/bottom collision.
+
+Units: pixels/callback. DOS layout/address: +0xa, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.velocity
+
+PROVEN: Normalized signed16 base rate; abs controls progress.
+
+Units: effect progress/callback. DOS layout/address: +0xc, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.radius
+
+PROVEN: Clamped8..48 radial-region half-size.
+
+Units: pixels. DOS layout/address: +0xe, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.width
+
+PROVEN: 2*radius+1.
+
+Units: pixels. DOS layout/address: +0x10, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.height
+
+PROVEN: 2*radius+1.
+
+Units: pixels. DOS layout/address: +0x12, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.map
+
+PROVEN: Owned interleaved(dx,dy) bytes read as signed8.
+
+Units: displacement pairs. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.screen
+
+PROVEN: Full64000-byte snapshot in EffetBufferNormal.
+
+Units: surface pointer. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:effect_state_6c_t.output
+
+PROVEN: Borrowed320-pitch output.
+
+Units: surface pointer. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.edi
+
+STRONG: Field real_mode_regs_t.edi participates in sub_564f8: dpmi_workspace.real.edi. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x0, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.esi
+
+STRONG: Field real_mode_regs_t.esi participates in sub_564f8: dpmi_workspace.real.esi. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x4, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ebp
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x8, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.reserved
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0xc, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ebx
+
+STRONG: Field real_mode_regs_t.ebx participates in sub_564f8: dpmi_workspace.real.ebx. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x10, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.edx
+
+STRONG: Field real_mode_regs_t.edx participates in sub_564f8: dpmi_workspace.real.edx. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x14, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ecx
+
+STRONG: Field real_mode_regs_t.ecx participates in sub_564f8: dpmi_workspace.real.ecx. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x18, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.eax
+
+STRONG: Field real_mode_regs_t.eax participates in sub_564f8: dpmi_workspace.real.eax. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x1c, 4 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.flags
+
+STRONG: Field real_mode_regs_t.flags participates in sub_564f8: dpmi_workspace.real.flags. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x20, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.es
+
+STRONG: Field real_mode_regs_t.es participates in sub_564f8: dpmi_workspace.real.es. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x22, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ds
+
+STRONG: Field real_mode_regs_t.ds participates in sub_564f8: dpmi_workspace.real.ds. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x24, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.fs
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x26, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.gs
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x28, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ip
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x2a, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.cs
+
+STRONG: Field real_mode_regs_t.cs participates in sub_564f8: dpmi_workspace.real.cs. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x2c, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.sp
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x2e, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.ss
+
+STRONG: Field real_mode_regs_t.ss participates in sub_564f8: dpmi_workspace.real.ss. Function contracts and attached computations define this scoped use; no broader enum is inferred.
+
+Units: see function equations / declared representation. DOS layout/address: +0x30, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:real_mode_regs_t.padding
+
+UNKNOWN: Declared storage at the measured offset/width; no named field reader or writer in this group establishes an intended meaning.
+
+Units: observed layout only. DOS layout/address: +0x32, 2 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dpmi_scratch_t.regs
+
+PROVEN: Host INT31h register union used by int386/int386x.
+
+Units: 28-byte SDK REGS. DOS layout/address: +0x0, 28 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dpmi_scratch_t.real
+
+PROVEN: Real-mode interrupt0300 register frame.
+
+Units: 52-byte frame. DOS layout/address: +0x1c, 52 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
+
+### field:dpmi_scratch_t.segments
+
+PROVEN: Host segment-register block; ES selects the real-mode frame pointer.
+
+Units: 12-byte SDK SREGS. DOS layout/address: +0x50, 12 B.
+
+Preserve declared signedness, integer promotion/narrowing, byte wrapping and expression order from the owning function contract.
 
 ## ufo.json
 

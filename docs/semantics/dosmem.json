@@ -1,0 +1,1426 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "dosmem.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/dos_regs.h"
+  ],
+  "local_headers": [
+   "dosmem_local.h"
+  ],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:dpmi_workspace"
+  ],
+  "types": [
+   "type:dos_regs_t",
+   "type:real_mode_regs_t",
+   "type:dpmi_scratch_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:dos_allocate_conventional_block",
+   "kind": "function",
+   "current_name": "dos_allocate_conventional_block",
+   "proposed_name": null,
+   "c_type": "u16 dos_allocate_conventional_block(u16 bytes, s32 *selector_and_segment)",
+   "meaning": "DPMI INT31h AX0100 allocate ceil(u16 bytes/16) paragraphs. On carry set output0/return0; else return DX selector and write AX real-mode segment<<16. Output is a packed ES:offset with offset0, not a protected selector pair.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "dpmi_workspace.regs.x.eax = 0x100",
+     "paragraphs = (((s32) bytes) + 15) / 16",
+     "dpmi_workspace.regs.x.ebx = paragraphs",
+     "if ((dpmi_workspace.regs.x.cflag & 1) != 0)",
+     "*selector_and_segment = 0",
+     "return 0;",
+     "handle = dpmi_workspace.regs.w.dx",
+     "*selector_and_segment = ((u32) dpmi_workspace.regs.w.ax) << 16",
+     "return handle;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_allocate_conventional_block",
+     "address": "1:56460",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "dos_allocate_conventional_block"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "dos_allocate_conventional_block"
+    }
+   ],
+   "port_notes": [
+    "DPMI INT31h AX0100 allocate ceil(u16 bytes/16) paragraphs. On carry set output0/return0; else return DX selector and write AX real-mode segment<<16. Output is a packed ES:offset with offset0, not a protected selector pair.",
+    "Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation."
+   ],
+   "oracle_address": "1:56460",
+   "source_file": "src/dosmem.c",
+   "source_body_sha256": "8befd54e6b4670cc973ef872fca731f8d6ebb7faeb5bd6629f014747e5aa8e5a",
+   "baseline_parser_body_sha256": "8befd54e6b4670cc973ef872fca731f8d6ebb7faeb5bd6629f014747e5aa8e5a",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dpmi_workspace"
+    ],
+    "calls": [
+     "int386"
+    ],
+    "members": [
+     "ax",
+     "cflag",
+     "dx",
+     "eax",
+     "ebx",
+     "regs",
+     "w",
+     "x"
+    ]
+   }
+  },
+  {
+   "id": "local:dos_allocate_conventional_block:paragraphs:1",
+   "kind": "local",
+   "current_name": "paragraphs",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in dos_allocate_conventional_block: u32 paragraphs; paragraphs = (((s32) bytes) + 15) / 16; dpmi_workspace.regs.x.ebx = paragraphs.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u32 paragraphs",
+     "paragraphs = (((s32) bytes) + 15) / 16",
+     "dpmi_workspace.regs.x.ebx = paragraphs"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_allocate_conventional_block",
+     "address": "1:56460",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "dos_allocate_conventional_block",
+     "ordinal": 1,
+     "uses": [
+      "u32 paragraphs",
+      "paragraphs = (((s32) bytes) + 15) / 16",
+      "dpmi_workspace.regs.x.ebx = paragraphs"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "dos_allocate_conventional_block",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "u32 $",
+   "source_file": "src/dosmem.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:dos_allocate_conventional_block:handle:2",
+   "kind": "local",
+   "current_name": "handle",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Local value in dos_allocate_conventional_block: u16 handle; handle = dpmi_workspace.regs.w.dx; return handle;.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u16 handle",
+     "handle = dpmi_workspace.regs.w.dx",
+     "return handle;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_allocate_conventional_block",
+     "address": "1:56460",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "dos_allocate_conventional_block",
+     "ordinal": 2,
+     "uses": [
+      "u16 handle",
+      "handle = dpmi_workspace.regs.w.dx",
+      "return handle;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "dos_allocate_conventional_block",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u16 $",
+   "source_file": "src/dosmem.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:dos_allocate_conventional_block:bytes:3",
+   "kind": "local",
+   "current_name": "bytes",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in dos_allocate_conventional_block: paragraphs = (((s32) bytes) + 15) / 16.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "paragraphs = (((s32) bytes) + 15) / 16"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_allocate_conventional_block",
+     "address": "1:56460",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "dos_allocate_conventional_block",
+     "ordinal": 3,
+     "uses": [
+      "paragraphs = (((s32) bytes) + 15) / 16"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "dos_allocate_conventional_block",
+   "role": "parameter",
+   "declaration_ordinal": 3,
+   "declarator": "u16 $",
+   "source_file": "src/dosmem.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:dos_allocate_conventional_block:selector_and_segment:4",
+   "kind": "local",
+   "current_name": "selector_and_segment",
+   "proposed_name": null,
+   "c_type": "s32 *",
+   "meaning": "Parameter in dos_allocate_conventional_block: *selector_and_segment = 0; *selector_and_segment; *selector_and_segment = ((u32) dpmi_workspace.regs.w.ax) << 16.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "*selector_and_segment = 0",
+     "*selector_and_segment",
+     "*selector_and_segment = ((u32) dpmi_workspace.regs.w.ax) << 16"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_allocate_conventional_block",
+     "address": "1:56460",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "dos_allocate_conventional_block",
+     "ordinal": 4,
+     "uses": [
+      "*selector_and_segment = 0",
+      "*selector_and_segment",
+      "*selector_and_segment = ((u32) dpmi_workspace.regs.w.ax) << 16"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "dos_allocate_conventional_block",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "s32 *$",
+   "source_file": "src/dosmem.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:dos_free_conventional_block",
+   "kind": "function",
+   "current_name": "dos_free_conventional_block",
+   "proposed_name": null,
+   "c_type": "u8 dos_free_conventional_block(u16 handle)",
+   "meaning": "DPMI INT31h AX0101 free DX selector, return carry bit as byte failure boolean.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "dpmi_workspace.regs.w.ax = 0x101",
+     "dpmi_workspace.regs.w.dx = handle",
+     "return (dpmi_workspace.regs.x.cflag & 1) != 0;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_free_conventional_block",
+     "address": "1:564c4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "dos_free_conventional_block"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "dos_free_conventional_block"
+    }
+   ],
+   "port_notes": [
+    "DPMI INT31h AX0101 free DX selector, return carry bit as byte failure boolean.",
+    "Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation."
+   ],
+   "oracle_address": "1:564c4",
+   "source_file": "src/dosmem.c",
+   "source_body_sha256": "afbbe90fe94d44dc038b7257f61f88df60749cd85c579995881461194684d0a9",
+   "baseline_parser_body_sha256": "afbbe90fe94d44dc038b7257f61f88df60749cd85c579995881461194684d0a9",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dpmi_workspace"
+    ],
+    "calls": [
+     "int386"
+    ],
+    "members": [
+     "ax",
+     "cflag",
+     "dx",
+     "regs",
+     "w",
+     "x"
+    ]
+   }
+  },
+  {
+   "id": "local:dos_free_conventional_block:handle:1",
+   "kind": "local",
+   "current_name": "handle",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in dos_free_conventional_block: dpmi_workspace.regs.w.dx = handle.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "dpmi_workspace.regs.w.dx = handle"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "dos_free_conventional_block",
+     "address": "1:564c4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "dos_free_conventional_block",
+     "ordinal": 1,
+     "uses": [
+      "dpmi_workspace.regs.w.dx = handle"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "dos_free_conventional_block",
+   "role": "parameter",
+   "declaration_ordinal": 1,
+   "declarator": "u16 $",
+   "source_file": "src/dosmem.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:sub_564f8",
+   "kind": "function",
+   "current_name": "sub_564f8",
+   "proposed_name": null,
+   "c_type": "s16 sub_564f8(u8 interrupt_number, dos_regs_t *registers)",
+   "meaning": "Clear DPMI host/real/segment scratch, copy low16 request registers to real-mode block, INT31h AX0300 with interrupt byteBL, BH0,CX0 and ES:EDI real-block pointer. Copy AX/BX/CX/DX/SI/DI/flags/CS/DS/ES/SS back as16-bit outputs and return SS.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "dpmi_workspace.real.eax = (u16) registers->ax",
+     "dpmi_workspace.real.ebx = (u16) registers->bx",
+     "dpmi_workspace.real.ecx = (u16) registers->cx",
+     "dpmi_workspace.real.edx = (u16) registers->dx",
+     "dpmi_workspace.real.esi = (u16) registers->si",
+     "dpmi_workspace.real.edi = (u16) registers->di",
+     "dpmi_workspace.regs.w.ax = 0x0300",
+     "dpmi_workspace.real.flags = registers->flags",
+     "dpmi_workspace.regs.h.bl = interrupt_number",
+     "dpmi_workspace.real.cs = registers->cs",
+     "dpmi_workspace.regs.w.cx = 0",
+     "dpmi_workspace.real.ds = registers->ds",
+     "dpmi_workspace.real.es = registers->es",
+     "dpmi_workspace.real.ss = registers->ss",
+     "dpmi_workspace.regs.h.bh = 0",
+     "dpmi_workspace.segments.es = FP_SEG(&dpmi_workspace.real)",
+     "dpmi_workspace.regs.x.edi = (u32) (&dpmi_workspace.real)",
+     "registers->ax = (s16) dpmi_workspace.real.eax",
+     "registers->bx = (s16) dpmi_workspace.real.ebx",
+     "registers->cx = (s16) dpmi_workspace.real.ecx",
+     "registers->dx = (s16) dpmi_workspace.real.edx",
+     "registers->si = (s16) dpmi_workspace.real.esi",
+     "registers->di = (s16) dpmi_workspace.real.edi",
+     "registers->flags = (s16) dpmi_workspace.real.flags",
+     "registers->cs = (s16) dpmi_workspace.real.cs",
+     "registers->ds = (s16) dpmi_workspace.real.ds",
+     "registers->es = (s16) dpmi_workspace.real.es",
+     "registers->ss = (s16) dpmi_workspace.real.ss",
+     "return registers->ss;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "sub_564f8",
+     "address": "1:564f8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "sub_564f8"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "sub_564f8"
+    }
+   ],
+   "port_notes": [
+    "Clear DPMI host/real/segment scratch, copy low16 request registers to real-mode block, INT31h AX0300 with interrupt byteBL, BH0,CX0 and ES:EDI real-block pointer. Copy AX/BX/CX/DX/SI/DI/flags/CS/DS/ES/SS back as16-bit outputs and return SS.",
+    "Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation."
+   ],
+   "oracle_address": "1:564f8",
+   "source_file": "src/dosmem.c",
+   "source_body_sha256": "c5a22ac8a562530e38dbe6fa11c4a428e3a5a8bc819601b79dad1962de50aab5",
+   "baseline_parser_body_sha256": "c5a22ac8a562530e38dbe6fa11c4a428e3a5a8bc819601b79dad1962de50aab5",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dpmi_workspace"
+    ],
+    "calls": [
+     "FP_SEG",
+     "clear_memory",
+     "int386x"
+    ],
+    "members": [
+     "ax",
+     "bh",
+     "bl",
+     "bx",
+     "cs",
+     "cx",
+     "di",
+     "ds",
+     "dx",
+     "eax",
+     "ebx",
+     "ecx",
+     "edi",
+     "edx",
+     "es",
+     "esi",
+     "flags",
+     "h",
+     "real",
+     "regs",
+     "segments",
+     "si",
+     "ss",
+     "w",
+     "x"
+    ]
+   }
+  },
+  {
+   "id": "local:sub_564f8:interrupt_number:1",
+   "kind": "local",
+   "current_name": "interrupt_number",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Parameter in sub_564f8: dpmi_workspace.regs.h.bl = interrupt_number.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "dpmi_workspace.regs.h.bl = interrupt_number"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "sub_564f8",
+     "address": "1:564f8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "sub_564f8",
+     "ordinal": 1,
+     "uses": [
+      "dpmi_workspace.regs.h.bl = interrupt_number"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "sub_564f8",
+   "role": "parameter",
+   "declaration_ordinal": 1,
+   "declarator": "u8 $",
+   "source_file": "src/dosmem.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:sub_564f8:registers:2",
+   "kind": "local",
+   "current_name": "registers",
+   "proposed_name": null,
+   "c_type": "dos_regs_t *",
+   "meaning": "Parameter in sub_564f8: dpmi_workspace.real.eax = (u16) registers->ax; dpmi_workspace.real.ebx = (u16) registers->bx; dpmi_workspace.real.ecx = (u16) registers->cx; dpmi_workspace.real.edx = (u16) registers->dx; dpmi_workspace.real.esi = (u16) registers->si.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "dpmi_workspace.real.eax = (u16) registers->ax",
+     "dpmi_workspace.real.ebx = (u16) registers->bx",
+     "dpmi_workspace.real.ecx = (u16) registers->cx",
+     "dpmi_workspace.real.edx = (u16) registers->dx",
+     "dpmi_workspace.real.esi = (u16) registers->si",
+     "dpmi_workspace.real.edi = (u16) registers->di",
+     "dpmi_workspace.real.flags = registers->flags",
+     "dpmi_workspace.real.cs = registers->cs",
+     "dpmi_workspace.real.ds = registers->ds",
+     "dpmi_workspace.real.es = registers->es",
+     "dpmi_workspace.real.ss = registers->ss",
+     "registers->ax = (s16) dpmi_workspace.real.eax",
+     "registers->bx = (s16) dpmi_workspace.real.ebx",
+     "registers->cx = (s16) dpmi_workspace.real.ecx",
+     "registers->dx = (s16) dpmi_workspace.real.edx",
+     "registers->si = (s16) dpmi_workspace.real.esi",
+     "registers->di = (s16) dpmi_workspace.real.edi",
+     "registers->flags = (s16) dpmi_workspace.real.flags",
+     "registers->cs = (s16) dpmi_workspace.real.cs",
+     "registers->ds = (s16) dpmi_workspace.real.ds",
+     "registers->es = (s16) dpmi_workspace.real.es",
+     "registers->ss = (s16) dpmi_workspace.real.ss",
+     "return registers->ss;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosmem.dos.txt",
+     "function": "sub_564f8",
+     "address": "1:564f8",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosmem.json",
+     "function": "sub_564f8",
+     "ordinal": 2,
+     "uses": [
+      "dpmi_workspace.real.eax = (u16) registers->ax",
+      "dpmi_workspace.real.ebx = (u16) registers->bx",
+      "dpmi_workspace.real.ecx = (u16) registers->cx",
+      "dpmi_workspace.real.edx = (u16) registers->dx",
+      "dpmi_workspace.real.esi = (u16) registers->si",
+      "dpmi_workspace.real.edi = (u16) registers->di",
+      "dpmi_workspace.real.flags = registers->flags",
+      "dpmi_workspace.real.cs = registers->cs",
+      "dpmi_workspace.real.ds = registers->ds",
+      "dpmi_workspace.real.es = registers->es",
+      "dpmi_workspace.real.ss = registers->ss",
+      "registers->ax = (s16) dpmi_workspace.real.eax",
+      "registers->bx = (s16) dpmi_workspace.real.ebx",
+      "registers->cx = (s16) dpmi_workspace.real.ecx",
+      "registers->dx = (s16) dpmi_workspace.real.edx",
+      "registers->si = (s16) dpmi_workspace.real.esi",
+      "registers->di = (s16) dpmi_workspace.real.edi",
+      "registers->flags = (s16) dpmi_workspace.real.flags",
+      "registers->cs = (s16) dpmi_workspace.real.cs",
+      "registers->ds = (s16) dpmi_workspace.real.ds",
+      "registers->es = (s16) dpmi_workspace.real.es",
+      "registers->ss = (s16) dpmi_workspace.real.ss",
+      "return registers->ss;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "sub_564f8",
+   "role": "parameter",
+   "declaration_ordinal": 2,
+   "declarator": "dos_regs_t *$",
+   "source_file": "src/dosmem.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "global:dpmi_workspace",
+   "kind": "global",
+   "current_name": "dpmi_workspace",
+   "proposed_name": null,
+   "c_type": "dpmi_scratch_t",
+   "meaning": "92-byte shared DPMI scratch:28-byte host REGS,52-byte real-mode register frame,12-byte segment registers.",
+   "unit": "replaceable platform scratch",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "dosmem"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "dpmi_workspace"
+    }
+   ],
+   "port_notes": [
+    "92-byte shared DPMI scratch:28-byte host REGS,52-byte real-mode register frame,12-byte segment registers.",
+    "Replace conventional/DPMI allocation and interrupt scratch with native platform services. Preserve error/result contracts at callers; selectors/real-mode segment math are backend representation."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:54e1c",
+   "source_file": "src/dosmem.c",
+   "name_provenance": "INVENTED",
+   "declarator": "dpmi_scratch_t $",
+   "context_declarators": {
+    "dosmem.c": "dpmi_scratch_t $"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:565aa",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:565a7",
+      "containing_bound_function": "sub_564f8",
+      "instruction": "mov word ptr [0x54e1c], dx",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:565d5",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:565d4",
+      "containing_bound_function": "sub_564f8",
+      "instruction": "mov ebx, 0x54e1c",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:56466",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:56464",
+      "containing_bound_function": "dos_allocate_conventional_block",
+      "instruction": "mov dword ptr [0x54e1c], 0x100",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:56484",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:56483",
+      "containing_bound_function": "dos_allocate_conventional_block",
+      "instruction": "mov ebx, 0x54e1c",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:564b2",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:564af",
+      "containing_bound_function": "dos_allocate_conventional_block",
+      "instruction": "mov dx, word ptr [0x54e1c]",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:564cc",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:564cb",
+      "containing_bound_function": "dos_free_conventional_block",
+      "instruction": "mov ebx, 0x54e1c",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:564de",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:564db",
+      "containing_bound_function": "dos_free_conventional_block",
+      "instruction": "mov word ptr [0x54e1c], dx",
+      "memory_operands": [
+       {
+        "width": 2,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:56505",
+      "target": "2:54e1c",
+      "kind": 7,
+      "instruction_address": "1:56504",
+      "containing_bound_function": "sub_564f8",
+      "instruction": "mov eax, 0x54e1c",
+      "instruction_class": "address immediate / address escape"
+     }
+    ],
+    "shifted_or_interior_references": [
+     {
+      "site": "1:54eb9",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54eb7",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov ah, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54ec9",
+      "target": "2:54e18",
+      "kind": 7,
+      "instruction_address": "1:54ec7",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov dh, byte ptr [0x54e18]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54ed1",
+      "target": "2:54e18",
+      "kind": 7,
+      "instruction_address": "1:54ecf",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e18], dh",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54ede",
+      "target": "2:54e18",
+      "kind": 7,
+      "instruction_address": "1:54edc",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e18], bh",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54ee3",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54ee2",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov al, byte ptr [0x54e19]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f17",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54f16",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e19], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f21",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54f1f",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e19], cl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f2a",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54f29",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e19], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f3a",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54f38",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e19], ch",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f66",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54f64",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov dl, byte ptr [0x54e19]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f77",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54f76",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov byte ptr [0x54e1a], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54f7e",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54f7d",
+      "containing_bound_function": "pma_attaque_suivante",
+      "instruction": "mov al, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:546c0",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:546bf",
+      "containing_bound_function": "init_move_couteau",
+      "instruction": "mov al, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54723",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54721",
+      "containing_bound_function": "init_move_couteau",
+      "instruction": "cmp byte ptr [0x54e1a], 3",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54843",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54841",
+      "containing_bound_function": "init_lance_couteau",
+      "instruction": "mov bl, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54909",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:54907",
+      "containing_bound_function": "init_lance_couteau",
+      "instruction": "cmp byte ptr [0x54e1a], 5",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54959",
+      "target": "2:54e18",
+      "kind": 7,
+      "instruction_address": "1:54957",
+      "containing_bound_function": "init_lance_couteau",
+      "instruction": "mov dl, byte ptr [0x54e18]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:54542",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:54540",
+      "containing_bound_function": "check_couteaux",
+      "instruction": "mov dl, byte ptr [0x54e19]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:55242",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:55240",
+      "containing_bound_function": "lance_couteau_droit",
+      "instruction": "mov dl, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:560d6",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:560d4",
+      "containing_bound_function": "DO_PMA_COMMAND",
+      "instruction": "cmp byte ptr [0x54e1a], 5",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:56190",
+      "target": "2:54e19",
+      "kind": 7,
+      "instruction_address": "1:5618e",
+      "containing_bound_function": "init_mama_pirate",
+      "instruction": "mov byte ptr [0x54e19], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:561a2",
+      "target": "2:54e18",
+      "kind": 7,
+      "instruction_address": "1:561a0",
+      "containing_bound_function": "init_mama_pirate",
+      "instruction": "mov byte ptr [0x54e18], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:561b3",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:561b2",
+      "containing_bound_function": "init_mama_pirate",
+      "instruction": "mov byte ptr [0x54e1a], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:561c1",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:561c0",
+      "containing_bound_function": "init_mama_pirate",
+      "instruction": "mov al, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:562fd",
+      "target": "2:54e1a",
+      "kind": 7,
+      "instruction_address": "1:562fc",
+      "containing_bound_function": "DO_COU_ATTER",
+      "instruction": "mov al, byte ptr [0x54e1a]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "source_references": [
+     {
+      "source": "src/dosmem.c",
+      "line": 15,
+      "text": "extern dpmi_scratch_t dpmi_workspace;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 23,
+      "text": "dpmi_workspace.regs.x.eax = 0x100;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 25,
+      "text": "dpmi_workspace.regs.x.ebx = paragraphs;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 26,
+      "text": "int386(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 27,
+      "text": "if ((dpmi_workspace.regs.x.cflag & 1) != 0) {"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 31,
+      "text": "handle = dpmi_workspace.regs.w.dx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 32,
+      "text": "*selector_and_segment = (u32)dpmi_workspace.regs.w.ax << 16;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 38,
+      "text": "dpmi_workspace.regs.w.ax = 0x101;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 39,
+      "text": "dpmi_workspace.regs.w.dx = handle;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 40,
+      "text": "int386(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 41,
+      "text": "return (dpmi_workspace.regs.x.cflag & 1) != 0;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 48,
+      "text": "clear_memory(&dpmi_workspace.regs, 0, 0x1c);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 49,
+      "text": "clear_memory(&dpmi_workspace.segments, 0, 0x0c);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 50,
+      "text": "clear_memory(&dpmi_workspace.real, 0, 0x34);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 52,
+      "text": "dpmi_workspace.real.eax = (u16)registers->ax;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 53,
+      "text": "dpmi_workspace.real.ebx = (u16)registers->bx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 54,
+      "text": "dpmi_workspace.real.ecx = (u16)registers->cx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 55,
+      "text": "dpmi_workspace.real.edx = (u16)registers->dx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 56,
+      "text": "dpmi_workspace.real.esi = (u16)registers->si;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 57,
+      "text": "dpmi_workspace.real.edi = (u16)registers->di;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 58,
+      "text": "dpmi_workspace.regs.w.ax = 0x0300;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 59,
+      "text": "dpmi_workspace.real.flags = registers->flags;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 60,
+      "text": "dpmi_workspace.regs.h.bl = interrupt_number;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 61,
+      "text": "dpmi_workspace.real.cs = registers->cs;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 62,
+      "text": "dpmi_workspace.regs.w.cx = 0;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 63,
+      "text": "dpmi_workspace.real.ds = registers->ds;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 64,
+      "text": "dpmi_workspace.real.es = registers->es;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 65,
+      "text": "dpmi_workspace.real.ss = registers->ss;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 66,
+      "text": "dpmi_workspace.regs.h.bh = 0;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 67,
+      "text": "dpmi_workspace.segments.es = FP_SEG(&dpmi_workspace.real);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 68,
+      "text": "dpmi_workspace.regs.x.edi = (u32)&dpmi_workspace.real;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 69,
+      "text": "int386x(0x31, &dpmi_workspace.regs, &dpmi_workspace.regs,"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 70,
+      "text": "&dpmi_workspace.segments);"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 72,
+      "text": "registers->ax = (s16)dpmi_workspace.real.eax;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 73,
+      "text": "registers->bx = (s16)dpmi_workspace.real.ebx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 74,
+      "text": "registers->cx = (s16)dpmi_workspace.real.ecx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 75,
+      "text": "registers->dx = (s16)dpmi_workspace.real.edx;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 76,
+      "text": "registers->si = (s16)dpmi_workspace.real.esi;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 77,
+      "text": "registers->di = (s16)dpmi_workspace.real.edi;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 78,
+      "text": "registers->flags = (s16)dpmi_workspace.real.flags;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 79,
+      "text": "registers->cs = (s16)dpmi_workspace.real.cs;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 80,
+      "text": "registers->ds = (s16)dpmi_workspace.real.ds;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 81,
+      "text": "registers->es = (s16)dpmi_workspace.real.es;"
+     },
+     {
+      "source": "src/dosmem.c",
+      "line": 82,
+      "text": "registers->ss = (s16)dpmi_workspace.real.ss;"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/dosmem.c": "1c553ea8a79109b6e23e5f9a88a328f261f7254e72b696220d599cee087cca37",
+  "src/dosmem_local.h": "412dd1c3df5fb4da630b242e5dbc2cc4db638864a620f70ed767ac4dbaed4ab6"
+ },
+ "proposal_fingerprints": {
+  "dosmem.c": "1c553ea8a79109b6e23e5f9a88a328f261f7254e72b696220d599cee087cca37",
+  "dosmem_local.h": "412dd1c3df5fb4da630b242e5dbc2cc4db638864a620f70ed767ac4dbaed4ab6"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/dosmem.dos.txt": null,
+  "evidence/inventory_dosmem.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

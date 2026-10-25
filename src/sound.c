@@ -375,13 +375,15 @@ u8 snd_in_pile_snd(s16 snd) {
     return index;
 }
 
-s32 vol_r(s16 a1, s16 a2) {
-    s32 result = (a1 * snd_sqrt_table[a2]) >> 8;
+/* a1 -> volume; a2 -> pan. See docs/semantics/sound.json. */
+s32 vol_r(s16 volume, s16 pan) {
+    s32 result = (volume * snd_sqrt_table[pan]) >> 8;
     return result;
 }
 
-s32 vol_l(s16 a1, s16 a2) {
-    s32 result = (a1 * snd_sqrt_table[127 - a2]) >> 8;
+/* a1 -> volume; a2 -> pan. See docs/semantics/sound.json. */
+s32 vol_l(s16 volume, s16 pan) {
+    s32 result = (volume * snd_sqrt_table[127 - pan]) >> 8;
     return result;
 }
 
@@ -641,11 +643,12 @@ void PlaySnd_old(s16 sound_id) {
     }
 }
 
+/* unk_pan -> voice_pan; unk_vol -> distance_volume; unk_pile -> queued_index; unk_map_time -> current_map_time. See docs/semantics/sound.json. */
 void setvol(s16 obj_id, u8 unused) {
-    s16 unk_pan;
-    u8 unk_vol;
-    s16 unk_pile;
-    s32 unk_map_time;
+    s16 voice_pan;
+    u8 distance_volume;
+    s16 queued_index;
+    s32 current_map_time;
     s16 voice_ind;
     s16 cur_pile;
     s32 next_pile;
@@ -656,45 +659,45 @@ void setvol(s16 obj_id, u8 unused) {
     if ((ray.scale != 0 && obj_id == reduced_rayman_id) || obj_id == rayman_obj_id)
         obj_id = -1;
 
-    unk_pile = get_pile_obj(obj_id);
-    if (unk_pile != -1) {
+    queued_index = get_pile_obj(obj_id);
+    if (queued_index != -1) {
         if (obj_id == -1 || (obj_id == rayman_obj_id && rayman_obj_id != -1)) {
-            unk_vol = 127;
+            distance_volume = 127;
         } else {
-            if (!(sound_table[pile_snd[unk_pile].snd] & 1) || !(sound_table[pile_snd[unk_pile].snd] & 2))
-                unk_vol = 127;
+            if (!(sound_table[pile_snd[queued_index].snd] & 1) || !(sound_table[pile_snd[queued_index].snd] & 2))
+                distance_volume = 127;
             else
-                unk_vol = get_vol_snd(level.objects + obj_id);
+                distance_volume = get_vol_snd(level.objects + obj_id);
         }
 
-        pile_snd[unk_pile].field_C = unk_vol;
-        unk_map_time = map_time;
-        if (pile_snd[unk_pile].end_time == unk_map_time) {
-            voice_ind = KeyOn(bank_to_use[pile_snd[unk_pile].snd],
-                              pile_snd[unk_pile].prog, pile_snd[unk_pile].tone,
-                              pile_snd[unk_pile].note,
-                              (Volume_Snd * unk_vol * pile_snd[unk_pile].vol) >> 14,
-                              pile_snd[unk_pile].pan);
+        pile_snd[queued_index].field_C = distance_volume;
+        current_map_time = map_time;
+        if (pile_snd[queued_index].end_time == current_map_time) {
+            voice_ind = KeyOn(bank_to_use[pile_snd[queued_index].snd],
+                              pile_snd[queued_index].prog, pile_snd[queued_index].tone,
+                              pile_snd[queued_index].note,
+                              (Volume_Snd * distance_volume * pile_snd[queued_index].vol) >> 14,
+                              pile_snd[queued_index].pan);
             if (voice_ind != -1) {
                 erase_voice_table(obj_id);
                 voice_table[voice_ind].obj = obj_id;
-                voice_table[voice_ind].vol = unk_vol;
-                voice_table[voice_ind].pan = pile_snd[unk_pile].pan;
-                voice_table[voice_ind].snd = pile_snd[unk_pile].snd;
-                if (sound_table[pile_snd[unk_pile].snd] & 0x10)
+                voice_table[voice_ind].vol = distance_volume;
+                voice_table[voice_ind].pan = pile_snd[queued_index].pan;
+                voice_table[voice_ind].snd = pile_snd[queued_index].snd;
+                if (sound_table[pile_snd[queued_index].snd] & 0x10)
                     voice_is_working[voice_ind] = 1;
             }
 
-            if (pile_snd[unk_pile].field_14 != 0) {
-                pile_snd[unk_pile].end_time = unk_map_time + frame_snd_bis[pile_snd[unk_pile].snd];
-                pile_snd[unk_pile].snd = snd_bis[pile_snd[unk_pile].snd];
-                pile_snd[unk_pile].prog = hard_sound_table[pile_snd[unk_pile].snd].prog;
-                pile_snd[pt_pile_snd].tone = hard_sound_table[pile_snd[unk_pile].snd].tone;
-                pile_snd[pt_pile_snd].note = hard_sound_table[pile_snd[unk_pile].snd].note;
-                pile_snd[pt_pile_snd].vol = hard_sound_table[pile_snd[unk_pile].snd].volume;
-                pile_snd[unk_pile].field_14 = 0;
+            if (pile_snd[queued_index].field_14 != 0) {
+                pile_snd[queued_index].end_time = current_map_time + frame_snd_bis[pile_snd[queued_index].snd];
+                pile_snd[queued_index].snd = snd_bis[pile_snd[queued_index].snd];
+                pile_snd[queued_index].prog = hard_sound_table[pile_snd[queued_index].snd].prog;
+                pile_snd[pt_pile_snd].tone = hard_sound_table[pile_snd[queued_index].snd].tone;
+                pile_snd[pt_pile_snd].note = hard_sound_table[pile_snd[queued_index].snd].note;
+                pile_snd[pt_pile_snd].vol = hard_sound_table[pile_snd[queued_index].snd].volume;
+                pile_snd[queued_index].field_14 = 0;
             } else {
-                for (cur_pile = unk_pile; cur_pile < pt_pile_snd; ++cur_pile) {
+                for (cur_pile = queued_index; cur_pile < pt_pile_snd; ++cur_pile) {
                     next_pile = cur_pile + 1;
                     pile_snd[cur_pile].obj = pile_snd[next_pile].obj;
                     pile_snd[cur_pile].snd = pile_snd[next_pile].snd;
@@ -716,24 +719,24 @@ void setvol(s16 obj_id, u8 unused) {
     voice_ind = get_voice_obj(obj_id);
     if (voice_ind != -1) {
         if (obj_id == -1 || (obj_id == rayman_obj_id && rayman_obj_id != -1)) {
-            unk_vol = 127;
+            distance_volume = 127;
         } else {
             if (voice_table[voice_ind].snd == 204 ||
                 !(sound_table[voice_table[voice_ind].snd] & 1) ||
                 !(sound_table[voice_table[voice_ind].snd] & 2))
-                unk_vol = 127;
+                distance_volume = 127;
             else
-                unk_vol = get_vol_snd(level.objects + obj_id);
+                distance_volume = get_vol_snd(level.objects + obj_id);
         }
-        unk_pan = voice_table[voice_ind].pan;
-        voice_table[voice_ind].vol = unk_vol;
+        voice_pan = voice_table[voice_ind].pan;
+        voice_table[voice_ind].vol = distance_volume;
         if (voice_is_working[voice_ind]) {
             {
             s32 combined_volume;
-            combined_volume = (Volume_Snd * unk_vol * hard_sound_table[voice_table[voice_ind].snd].volume) >> 14;
+            combined_volume = (Volume_Snd * distance_volume * hard_sound_table[voice_table[voice_ind].snd].volume) >> 14;
             vol_both = combined_volume;
         }
-            KeyVol(voice_ind, vol_both, unk_pan);
+            KeyVol(voice_ind, vol_both, voice_pan);
         }
     }
 }

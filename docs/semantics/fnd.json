@@ -1,0 +1,1395 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "fnd.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/type_island_abi.h",
+   "include/obj.h",
+   "include/palette.h",
+   "include/game.h",
+   "include/map.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:DrawBufferNormal",
+   "global:GameModeVideo",
+   "global:PLAN0BIT",
+   "global:Plan0NumPcx",
+   "global:mp",
+   "global:no_fnd",
+   "global:num_level",
+   "global:num_world",
+   "global:plan0_height",
+   "global:plan0_width",
+   "global:sp_y",
+   "global:type_fnd",
+   "global:type_fndscrX",
+   "global:ymap",
+   "global:ymapmax",
+   "global:yp0"
+  ],
+  "types": [
+   "type:eta_t",
+   "type:sprite_t",
+   "type:anim_layer_t",
+   "type:anim_frame_t",
+   "type:anim_t",
+   "type:obj_flags_t",
+   "type:cmd_context_t",
+   "type:obj_t",
+   "type:zdc_t",
+   "type:level_t",
+   "type:level_obj_t",
+   "type:active_objects_t",
+   "type:cptr_t",
+   "type:rgb_t",
+   "type:rgb_palette_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:finbosslevel_t",
+   "type:bb_attack_entry_t",
+   "type:save_state_t",
+   "type:display_item_t",
+   "type:options_jeu_t",
+   "type:loadinforay_t",
+   "type:credit_t",
+   "type:record_t",
+   "type:mem_t",
+   "type:obj_type_flags_t",
+   "type:font_t",
+   "type:world_info_save_t",
+   "type:map_tile_t",
+   "type:map_data_t",
+   "type:block_flags_t",
+   "type:display_map_t",
+   "type:big_map_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:LOAD_FND",
+   "kind": "function",
+   "current_name": "LOAD_FND",
+   "proposed_name": null,
+   "c_type": "void LOAD_FND(void)",
+   "meaning": "Load selected Plan0NumPcx resource unless signed slot value-1; ModeNormal additionally calls Init_Bande with selected background, dimensions, decoded pixels and draw buffer.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (Plan0NumPcx[no_fnd] != (-1))",
+     "if (GameModeVideo == MODE_NORMAL)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/fnd.dos.txt",
+     "function": "LOAD_FND",
+     "address": "1:38ef0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "LOAD_FND"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "LOAD_FND"
+    }
+   ],
+   "port_notes": [
+    "Load selected Plan0NumPcx resource unless signed slot value-1; ModeNormal additionally calls Init_Bande with selected background, dimensions, decoded pixels and draw buffer.",
+    "Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract."
+   ],
+   "oracle_address": "1:38ef0",
+   "source_file": "src/fnd.c",
+   "source_body_sha256": "329168bb7ffe5ac6944c5ef3e8174d5ca29030c5f1ae6216f1170d19c72b60b4",
+   "baseline_parser_body_sha256": "329168bb7ffe5ac6944c5ef3e8174d5ca29030c5f1ae6216f1170d19c72b60b4",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "DrawBufferNormal",
+     "GameModeVideo",
+     "PLAN0BIT",
+     "Plan0NumPcx",
+     "no_fnd",
+     "plan0_height",
+     "plan0_width"
+    ],
+    "calls": [
+     "Init_Bande",
+     "LoadPlan0InVignet"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:INIT_FND",
+   "kind": "function",
+   "current_name": "INIT_FND",
+   "proposed_name": null,
+   "c_type": "void INIT_FND(void)",
+   "meaning": "Set background vertical mode3 if16*map.height<background.height else0, then apply exact world/level mode/divisor exceptions. Modes1 use divisors2 or4; selected fixed-bottom levels use3. Set horizontal lock marker for selected levels, then force it0 in ModeNormal; call LOAD_FND.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "sp_y = 0",
+     "if ((16 * mp.height) < plan0_height)",
+     "type_fnd = 3",
+     "type_fnd = 0",
+     "type_fndscrX = 0",
+     "type_fndscrX = 1",
+     "sp_y = 2",
+     "type_fnd = 1",
+     "sp_y = 4",
+     "if (GameModeVideo == MODE_NORMAL)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/fnd.dos.txt",
+     "function": "INIT_FND",
+     "address": "1:39098",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "INIT_FND"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "INIT_FND"
+    }
+   ],
+   "port_notes": [
+    "Set background vertical mode3 if16*map.height<background.height else0, then apply exact world/level mode/divisor exceptions. Modes1 use divisors2 or4; selected fixed-bottom levels use3. Set horizontal lock marker for selected levels, then force it0 in ModeNormal; call LOAD_FND.",
+    "Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract."
+   ],
+   "oracle_address": "1:39098",
+   "source_file": "src/fnd.c",
+   "source_body_sha256": "fb9397582375a5ce6a74bafca0c79e241f8c5e411b5ed1f7f1b0ba2c55b9b0ca",
+   "baseline_parser_body_sha256": "fb9397582375a5ce6a74bafca0c79e241f8c5e411b5ed1f7f1b0ba2c55b9b0ca",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "GameModeVideo",
+     "mp",
+     "num_level",
+     "num_world",
+     "plan0_height",
+     "sp_y",
+     "type_fnd",
+     "type_fndscrX"
+    ],
+    "calls": [
+     "LOAD_FND"
+    ],
+    "members": [
+     "height"
+    ]
+   }
+  },
+  {
+   "id": "function:calc_off_fnd",
+   "kind": "function",
+   "current_name": "calc_off_fnd",
+   "proposed_name": null,
+   "c_type": "void calc_off_fnd(void)",
+   "meaning": "Set signed16 background y offset: mode0 ymap*(plan0_height-216)/ymapmax (signed32 promoted arithmetic), mode1 (ymap/sp_y)%plan0_height, mode2 zero, mode3 plan0_height-216; other modes leave previous value. Preconditions on divisors are not replaced with invented fallback behavior.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "yp0 = (ymap * (plan0_height - 216)) / ymapmax",
+     "yp0 = (ymap / sp_y) % plan0_height",
+     "yp0 = 0",
+     "yp0 = plan0_height - 216"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/fnd.dos.txt",
+     "function": "calc_off_fnd",
+     "address": "1:391d4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "calc_off_fnd"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "calc_off_fnd"
+    }
+   ],
+   "port_notes": [
+    "Set signed16 background y offset: mode0 ymap*(plan0_height-216)/ymapmax (signed32 promoted arithmetic), mode1 (ymap/sp_y)%plan0_height, mode2 zero, mode3 plan0_height-216; other modes leave previous value. Preconditions on divisors are not replaced with invented fallback behavior.",
+    "Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract."
+   ],
+   "oracle_address": "1:391d4",
+   "source_file": "src/fnd.c",
+   "source_body_sha256": "761e27ee88b76637b835a91e8c420334532bd0cda837bfe05945346f088ed96e",
+   "baseline_parser_body_sha256": "761e27ee88b76637b835a91e8c420334532bd0cda837bfe05945346f088ed96e",
+   "name_provenance": "Android original symbol",
+   "readers_writers": {
+    "globals": [
+     "plan0_height",
+     "sp_y",
+     "type_fnd",
+     "ymap",
+     "ymapmax",
+     "yp0"
+    ],
+    "calls": [],
+    "members": []
+   }
+  },
+  {
+   "id": "global:sp_y",
+   "kind": "global",
+   "current_name": "sp_y",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Background vertical camera divisor, assigned2 or4 for type_fnd1; zero in default initialization.",
+   "unit": "camera divisor",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "fnd"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "sp_y"
+    }
+   ],
+   "port_notes": [
+    "Background vertical camera divisor, assigned2 or4 for type_fnd1; zero in default initialization.",
+    "Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:540a9",
+   "source_file": "src/fnd.c",
+   "name_provenance": "RAYVERSE",
+   "declarator": "u8 $",
+   "context_declarators": {
+    "fnd.c": "u8 $"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:3923c",
+      "target": "2:540a9",
+      "kind": 7,
+      "instruction_address": "1:3923a",
+      "containing_bound_function": "calc_off_fnd",
+      "instruction": "mov bl, byte ptr [0x540a9]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:391aa",
+      "target": "2:540a9",
+      "kind": 7,
+      "instruction_address": "1:391a8",
+      "containing_bound_function": "INIT_FND",
+      "instruction": "mov byte ptr [0x540a9], bl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [],
+    "source_references": [
+     {
+      "source": "src/fnd.c",
+      "line": 57,
+      "text": "extern u8 sp_y;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 81,
+      "text": "sp_y = 0;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 99,
+      "text": "sp_y = 2;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 104,
+      "text": "sp_y = 2;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 150,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 154,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 158,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 162,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 166,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 170,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 194,
+      "text": "sp_y = 4;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 293,
+      "text": "yp0 = (ymap / sp_y) % plan0_height;"
+     }
+    ]
+   }
+  },
+  {
+   "id": "global:type_fnd",
+   "kind": "global",
+   "current_name": "type_fnd",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Background y mapping selector:0 proportional,1 camera/divisor modulo height,2 top0,3 bottom height-216.",
+   "unit": "background mode",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "fnd"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "type_fnd"
+    }
+   ],
+   "port_notes": [
+    "Background y mapping selector:0 proportional,1 camera/divisor modulo height,2 top0,3 bottom height-216.",
+    "Keep one-based world/level background-mode exceptions, camera parallax equations and signed16 output. VGA buffer/PLAN0 conversion remains the existing FILE_FORMATS/RENDERING contract."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:3fa21",
+   "source_file": "src/fnd.c",
+   "name_provenance": "RAYVERSE",
+   "declarator": "u8 $",
+   "context_declarators": {
+    "fnd.c": "u8 $"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:391e0",
+      "target": "2:3fa21",
+      "kind": 7,
+      "instruction_address": "1:391de",
+      "containing_bound_function": "calc_off_fnd",
+      "instruction": "mov dl, byte ptr [0x3fa21]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3919e",
+      "target": "2:3fa21",
+      "kind": 7,
+      "instruction_address": "1:3919c",
+      "containing_bound_function": "INIT_FND",
+      "instruction": "mov byte ptr [0x3fa21], dl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:391bc",
+      "target": "2:3fa21",
+      "kind": 7,
+      "instruction_address": "1:391ba",
+      "containing_bound_function": "INIT_FND",
+      "instruction": "mov dl, byte ptr [0x3fa21]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [
+     {
+      "site": "1:07a4d",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:07a4b",
+      "containing_bound_function": "DO_MAIN_LOOP_PC_X",
+      "instruction": "cmp byte ptr [0x3fa20], 0",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:07a9e",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:07a9c",
+      "containing_bound_function": "DO_MAIN_LOOP_PC_X",
+      "instruction": "cmp byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:07b30",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:07b2f",
+      "containing_bound_function": "DO_MAIN_LOOP_PC_X",
+      "instruction": "mov eax, dword ptr [0x3fa1f]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:07b5b",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:07b5a",
+      "containing_bound_function": "DO_MAIN_LOOP_PC_X",
+      "instruction": "mov eax, dword ptr [0x3fa1f]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:08782",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:08780",
+      "containing_bound_function": "PcMain",
+      "instruction": "cmp byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:08034",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:08032",
+      "containing_bound_function": "InitMemoryVariable",
+      "instruction": "mov byte ptr [0x3fa20], bl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:080a3",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:080a1",
+      "containing_bound_function": "InitMemoryVariable",
+      "instruction": "mov byte ptr [0x3fa20], bl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:096a4",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:096a2",
+      "containing_bound_function": "DISPLAY_FIXE",
+      "instruction": "cmp bl, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:09075",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:09073",
+      "containing_bound_function": "DISPLAY_CLING",
+      "instruction": "cmp ah, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:091d2",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:091d0",
+      "containing_bound_function": "display_bar_boss",
+      "instruction": "cmp byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:17f08",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:17f06",
+      "containing_bound_function": "casse_brique_init",
+      "instruction": "mov dh, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:17ca1",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:17c9f",
+      "containing_bound_function": "init_briques",
+      "instruction": "mov ch, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:1863a",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:18638",
+      "containing_bound_function": "DISPLAY_FIXE_CB",
+      "instruction": "cmp dh, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:185bc",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:185ba",
+      "containing_bound_function": "DISPLAY_FIXE_CB",
+      "instruction": "cmp dl, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:268ad",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:268ab",
+      "containing_bound_function": "DEPART_WORLD",
+      "instruction": "mov byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:2be6a",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:2be68",
+      "containing_bound_function": "sub_3BE20",
+      "instruction": "mov dl, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:2bf8f",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:2bf8d",
+      "containing_bound_function": "sub_3BEE0",
+      "instruction": "mov ah, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:2c11d",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:2c11b",
+      "containing_bound_function": "sub_3BEE0",
+      "instruction": "mov dl, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:2c43c",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:2c43a",
+      "containing_bound_function": "sub_3C3BC",
+      "instruction": "mov bl, byte ptr [0x3fa20]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3281b",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:32819",
+      "containing_bound_function": "JoystickPresent",
+      "instruction": "mov bl, byte ptr [0x3fa1d]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:32914",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:32912",
+      "containing_bound_function": "JoystickPresent",
+      "instruction": "mov byte ptr [0x3fa1d], bl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:327bf",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:327bd",
+      "containing_bound_function": "JoystickPresent",
+      "instruction": "mov byte ptr [0x3fa1d], bh",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:327ce",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:327cc",
+      "containing_bound_function": "JoystickPresent",
+      "instruction": "mov byte ptr [0x3fa1d], dl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:35963",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:35961",
+      "containing_bound_function": "load_level",
+      "instruction": "cmp byte ptr [0x3fa1f], 0",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:35980",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:3597e",
+      "containing_bound_function": "load_level",
+      "instruction": "mov bh, byte ptr [0x3fa1f]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:37867",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:37865",
+      "containing_bound_function": "LoadPlan0InVignet",
+      "instruction": "cmp byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:38ef4",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:38ef3",
+      "containing_bound_function": "LOAD_FND",
+      "instruction": "mov eax, dword ptr [0x3fa1f]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:39dec",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:39dea",
+      "containing_bound_function": "DO_OPTIONS_IN_GAME",
+      "instruction": "cmp byte ptr [0x3fa20], 1",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:393d1",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:393cf",
+      "containing_bound_function": "LOAD_CONFIG",
+      "instruction": "mov byte ptr [0x3fa20], ch",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:393e8",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:393e6",
+      "containing_bound_function": "LOAD_CONFIG",
+      "instruction": "mov byte ptr [0x3fa20], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3949d",
+      "target": "2:3fa1e",
+      "kind": 7,
+      "instruction_address": "1:3949c",
+      "containing_bound_function": "LOAD_CONFIG",
+      "instruction": "mov al, byte ptr [0x3fa1e]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:394a3",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:394a1",
+      "containing_bound_function": "LOAD_CONFIG",
+      "instruction": "cmp al, byte ptr [0x3fa1d]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3dec8",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3dec6",
+      "containing_bound_function": "DO_COMMANDE_GRAPHIC",
+      "instruction": "mov byte ptr [0x3fa20], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3dfd4",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:3dfd3",
+      "containing_bound_function": "END_GRAPHIC_SCREEN",
+      "instruction": "mov byte ptr [0x3fa1f], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3d0f3",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3d0f1",
+      "containing_bound_function": "INIT_GRAPHIC_SCREEN",
+      "instruction": "cmp byte ptr [0x3fa20], 0",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3d157",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:3d156",
+      "containing_bound_function": "INIT_GRAPHIC_SCREEN",
+      "instruction": "mov al, byte ptr [0x3fa1f]",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e72d",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e72b",
+      "containing_bound_function": "END_VIDEOMODE_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e747",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e745",
+      "containing_bound_function": "END_VIDEOMODE_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e76c",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e76a",
+      "containing_bound_function": "END_VIDEOMODE_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], dl",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e003",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e001",
+      "containing_bound_function": "END_GRAPHIC_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], ah",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e016",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e015",
+      "containing_bound_function": "END_GRAPHIC_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], al",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e028",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e026",
+      "containing_bound_function": "END_GRAPHIC_SCREEN",
+      "instruction": "mov byte ptr [0x3fa20], bh",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3e17a",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3e178",
+      "containing_bound_function": "INIT_VIDEOMODE_SCREEN",
+      "instruction": "cmp byte ptr [0x3fa20], 0",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3f5c9",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:3f5c7",
+      "containing_bound_function": "CalcSpeed",
+      "instruction": "cmp byte ptr [0x3fa20], 0",
+      "memory_operands": [
+       {
+        "width": 1,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:64f3c",
+      "target": "2:3fa1d",
+      "kind": 7,
+      "instruction_address": "1:64f3b",
+      "containing_bound_function": "SaveOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa1d",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:650a2",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:650a1",
+      "containing_bound_function": "SaveOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa20",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:6515c",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:6515b",
+      "containing_bound_function": "SaveOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa1f",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:654fa",
+      "target": "2:3fa1e",
+      "kind": 7,
+      "instruction_address": "1:654f9",
+      "containing_bound_function": "LoadOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa1e",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:6565f",
+      "target": "2:3fa20",
+      "kind": 7,
+      "instruction_address": "1:6565e",
+      "containing_bound_function": "LoadOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa20",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:6572b",
+      "target": "2:3fa1f",
+      "kind": 7,
+      "instruction_address": "1:6572a",
+      "containing_bound_function": "LoadOptionsOnDisk",
+      "instruction": "mov edx, 0x3fa1f",
+      "instruction_class": "address immediate / address escape"
+     }
+    ],
+    "source_references": [
+     {
+      "source": "src/fnd.c",
+      "line": 58,
+      "text": "extern u8 type_fnd;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 83,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 85,
+      "text": "type_fnd = 0;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 100,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 105,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 108,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 111,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 123,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 127,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 149,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 153,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 157,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 161,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 165,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 169,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 193,
+      "text": "type_fnd = 1;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 205,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 219,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 223,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 245,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 249,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 273,
+      "text": "type_fnd = 3;"
+     },
+     {
+      "source": "src/fnd.c",
+      "line": 288,
+      "text": "switch (type_fnd) {"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7"
+ },
+ "proposal_fingerprints": {
+  "fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/fnd.dos.txt": null,
+  "evidence/inventory_fnd.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

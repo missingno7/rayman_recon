@@ -1,0 +1,3607 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "effect34580.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/inline_helpers.h"
+  ],
+  "local_headers": [
+   "effect_types.h"
+  ],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:EffetBufferNormal",
+   "global:dword_E0D14"
+  ],
+  "types": [
+   "type:effect_span_t",
+   "type:effect_rows_t",
+   "type:effect3d_point_t",
+   "type:effect_segment_t",
+   "type:effect3d_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:effect_prepare_rows",
+   "kind": "function",
+   "current_name": "effect_prepare_rows",
+   "proposed_name": null,
+   "c_type": "void effect_prepare_rows(u8 mode, s16 direction)",
+   "meaning": "Initialize200 row spans and normalized signed direction; clamp mode1..12. Limits:320 for3/7/11/12,100 for9,200 otherwise; mode12 reverses direction.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state->position = 0",
+     "if (direction >= 0)",
+     "amount = max32(1, direction)",
+     "amount = -max32(1, -direction)",
+     "state->direction = amount",
+     "state->mode = min32(max32(1, mode), 12)",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "i = 0",
+     "span->width = 0",
+     "span->destination_y = i",
+     "span->destination_x = (span->source_x = (span->source_y = span->width))",
+     "span->source_x = (span->source_y = span->width)",
+     "span->source_y = span->width",
+     "state->position_limit = 320",
+     "state->direction = -state->direction",
+     "state->position_limit = 100",
+     "state->position_limit = 200"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_prepare_rows"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_prepare_rows"
+    }
+   ],
+   "port_notes": [
+    "Initialize200 row spans and normalized signed direction; clamp mode1..12. Limits:320 for3/7/11/12,100 for9,200 otherwise; mode12 reverses direction.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "oracle_address": "1:345b0",
+   "source_file": "src/effect34580.c",
+   "source_body_sha256": "8c4d995b251b6ae2f0037873f43ef2857ecdf3a998a195377004710ac5b8446b",
+   "baseline_parser_body_sha256": "8c4d995b251b6ae2f0037873f43ef2857ecdf3a998a195377004710ac5b8446b",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "current_rows",
+     "max32",
+     "min32"
+    ],
+    "members": [
+     "count",
+     "destination_x",
+     "destination_y",
+     "direction",
+     "entries",
+     "mode",
+     "position",
+     "position_limit",
+     "source_x",
+     "source_y",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_prepare_rows:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_rows_t * = current_rows()",
+   "meaning": "Local value in effect_prepare_rows: effect_rows_t *state = current_rows(); effect_span_t *span = state->entries; state->position = 0; state->direction = amount; state->mode = min32(max32(1, mode), 12).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_rows_t *state = current_rows()",
+     "effect_span_t *span = state->entries",
+     "state->position = 0",
+     "state->direction = amount",
+     "state->mode = min32(max32(1, mode), 12)",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "state->position_limit = 320",
+     "state->direction = -state->direction",
+     "-state->direction",
+     "state->position_limit = 100",
+     "state->position_limit = 200"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 1,
+     "uses": [
+      "effect_rows_t *state = current_rows()",
+      "effect_span_t *span = state->entries",
+      "state->position = 0",
+      "state->direction = amount",
+      "state->mode = min32(max32(1, mode), 12)",
+      "for (i = 0; i < state->count; ++i, ++span)",
+      "state->position_limit = 320",
+      "state->direction = -state->direction",
+      "-state->direction",
+      "state->position_limit = 100",
+      "state->position_limit = 200"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_rows_t *$ = current_rows()",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_prepare_rows:span:2",
+   "kind": "local",
+   "current_name": "span",
+   "proposed_name": null,
+   "c_type": "effect_span_t * = state->entries",
+   "meaning": "Local value in effect_prepare_rows: effect_span_t *span = state->entries; for (i = 0; i < state->count; ++i, ++span); ++span; span->width = 0; span->destination_y = i.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_span_t *span = state->entries",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "++span",
+     "span->width = 0",
+     "span->destination_y = i",
+     "span->destination_x = (span->source_x = (span->source_y = span->width))",
+     "span->source_x = (span->source_y = span->width)",
+     "span->source_y = span->width"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 2,
+     "uses": [
+      "effect_span_t *span = state->entries",
+      "for (i = 0; i < state->count; ++i, ++span)",
+      "++span",
+      "span->width = 0",
+      "span->destination_y = i",
+      "span->destination_x = (span->source_x = (span->source_y = span->width))",
+      "span->source_x = (span->source_y = span->width)",
+      "span->source_y = span->width"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "effect_span_t *$ = state->entries",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_prepare_rows:amount:3",
+   "kind": "local",
+   "current_name": "amount",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_prepare_rows: s16 amount; amount = max32(1, direction); amount = -max32(1, -direction); state->direction = amount.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 amount",
+     "amount = max32(1, direction)",
+     "amount = -max32(1, -direction)",
+     "state->direction = amount"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 3,
+     "uses": [
+      "s16 amount",
+      "amount = max32(1, direction)",
+      "amount = -max32(1, -direction)",
+      "state->direction = amount"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_prepare_rows:i:4",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in effect_prepare_rows: u8 i; for (i = 0; i < state->count; ++i, ++span); i = 0; ++i; span->destination_y = i.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 i",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "i = 0",
+     "++i",
+     "span->destination_y = i"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 4,
+     "uses": [
+      "u8 i",
+      "for (i = 0; i < state->count; ++i, ++span)",
+      "i = 0",
+      "++i",
+      "span->destination_y = i"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "u8 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_prepare_rows:mode:5",
+   "kind": "local",
+   "current_name": "mode",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Parameter in effect_prepare_rows: state->mode = min32(max32(1, mode), 12); min32(max32(1, mode), 12); max32(1, mode).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->mode = min32(max32(1, mode), 12)",
+     "min32(max32(1, mode), 12)",
+     "max32(1, mode)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 5,
+     "uses": [
+      "state->mode = min32(max32(1, mode), 12)",
+      "min32(max32(1, mode), 12)",
+      "max32(1, mode)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_prepare_rows:direction:6",
+   "kind": "local",
+   "current_name": "direction",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_prepare_rows: direction >= 0; amount = max32(1, direction); max32(1, direction); amount = -max32(1, -direction); -max32(1, -direction).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "direction >= 0",
+     "amount = max32(1, direction)",
+     "max32(1, direction)",
+     "amount = -max32(1, -direction)",
+     "-max32(1, -direction)",
+     "max32(1, -direction)",
+     "-direction",
+     "state->direction = amount",
+     "state->direction = -state->direction",
+     "-state->direction"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_prepare_rows",
+     "address": "1:345b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_prepare_rows",
+     "ordinal": 6,
+     "uses": [
+      "direction >= 0",
+      "amount = max32(1, direction)",
+      "max32(1, direction)",
+      "amount = -max32(1, -direction)",
+      "-max32(1, -direction)",
+      "max32(1, -direction)",
+      "-direction",
+      "state->direction = amount",
+      "state->direction = -state->direction",
+      "-state->direction"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_prepare_rows",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_cleanup_34688",
+   "kind": "function",
+   "current_name": "effect_cleanup_34688",
+   "proposed_name": null,
+   "c_type": "void effect_cleanup_34688(void)",
+   "meaning": "Free row-span array and row-state.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state == 0)",
+     "return;",
+     "if (state->entries != 0)",
+     "if (dword_E0D14 != 0)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_cleanup_34688",
+     "address": "1:34688",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_cleanup_34688"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_cleanup_34688"
+    }
+   ],
+   "port_notes": [
+    "Free row-span array and row-state.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "oracle_address": "1:34688",
+   "source_file": "src/effect34580.c",
+   "source_body_sha256": "2f42a32fc4b95affc644ec66ccf1f8d07672dd36d5d8d372bfa64d02f688386e",
+   "baseline_parser_body_sha256": "2f42a32fc4b95affc644ec66ccf1f8d07672dd36d5d8d372bfa64d02f688386e",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dword_E0D14"
+    ],
+    "calls": [
+     "JumelleFreeArray",
+     "current_rows"
+    ],
+    "members": [
+     "entries"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_cleanup_34688:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_rows_t * = current_rows()",
+   "meaning": "Local value in effect_cleanup_34688: effect_rows_t *state = current_rows(); state == 0; state->entries != 0; JumelleFreeArray((void **) (&state->entries)); &state->entries.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_rows_t *state = current_rows()",
+     "state == 0",
+     "state->entries != 0",
+     "JumelleFreeArray((void **) (&state->entries))",
+     "&state->entries"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_cleanup_34688",
+     "address": "1:34688",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_cleanup_34688",
+     "ordinal": 1,
+     "uses": [
+      "effect_rows_t *state = current_rows()",
+      "state == 0",
+      "state->entries != 0",
+      "JumelleFreeArray((void **) (&state->entries))",
+      "&state->entries"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_cleanup_34688",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_rows_t *$ = current_rows()",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_346b4",
+   "kind": "function",
+   "current_name": "effect_helper_346b4",
+   "proposed_name": null,
+   "c_type": "u8 effect_helper_346b4(u8 mode, s16 direction, u8 *screen, void *destination)",
+   "meaning": "Allocate row-state/200 ten-byte spans, snapshot64000 source bytes to effect buffer, bind destination and initialize mode/direction; cleanup on failure.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if ((screen != 0) && (destination != 0))",
+     "dword_E0D14 = (effect_rows_t *) sub_6FBB4(sizeof(effect_rows_t))",
+     "state = current_rows()",
+     "if (state != 0)",
+     "state->count = 200",
+     "state->screen = EffetBufferNormal",
+     "state->destination = (u8 *) destination",
+     "screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+     "state->entries = (effect_span_t *) screen",
+     "if (state->entries != 0)",
+     "okay = 1",
+     "if (okay != 0)",
+     "return okay;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_346b4"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_346b4"
+    }
+   ],
+   "port_notes": [
+    "Allocate row-state/200 ten-byte spans, snapshot64000 source bytes to effect buffer, bind destination and initialize mode/direction; cleanup on failure.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "oracle_address": "1:346b4",
+   "source_file": "src/effect34580.c",
+   "source_body_sha256": "4aa144826d6fd9ca47226e83d22c0fbf6df4210b57018ef7b95e536e5042f9b6",
+   "baseline_parser_body_sha256": "4aa144826d6fd9ca47226e83d22c0fbf6df4210b57018ef7b95e536e5042f9b6",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "EffetBufferNormal",
+     "dword_E0D14"
+    ],
+    "calls": [
+     "copy",
+     "current_rows",
+     "effect_cleanup_34688",
+     "effect_prepare_rows",
+     "sub_6FBB4"
+    ],
+    "members": [
+     "count",
+     "destination",
+     "entries",
+     "screen"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_346b4:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_rows_t *",
+   "meaning": "Local value in effect_helper_346b4: effect_rows_t *state; state = current_rows(); state != 0; state->count = 200; state->screen = EffetBufferNormal.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_rows_t *state",
+     "state = current_rows()",
+     "state != 0",
+     "state->count = 200",
+     "state->screen = EffetBufferNormal",
+     "state->destination = (u8 *) destination",
+     "screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+     "sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+     "state->entries = (effect_span_t *) screen",
+     "state->entries != 0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 1,
+     "uses": [
+      "effect_rows_t *state",
+      "state = current_rows()",
+      "state != 0",
+      "state->count = 200",
+      "state->screen = EffetBufferNormal",
+      "state->destination = (u8 *) destination",
+      "screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+      "sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+      "state->entries = (effect_span_t *) screen",
+      "state->entries != 0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_rows_t *$",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_346b4:okay:2",
+   "kind": "local",
+   "current_name": "okay",
+   "proposed_name": null,
+   "c_type": "u8 = 0",
+   "meaning": "Local value in effect_helper_346b4: u8 okay = 0; okay = 1; okay != 0; return okay;.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 okay = 0",
+     "okay = 1",
+     "okay != 0",
+     "return okay;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 2,
+     "uses": [
+      "u8 okay = 0",
+      "okay = 1",
+      "okay != 0",
+      "return okay;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 $ = 0",
+   "source_file": "src/effect34580.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_346b4:mode:3",
+   "kind": "local",
+   "current_name": "mode",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Parameter in effect_helper_346b4: effect_prepare_rows(mode, direction).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_prepare_rows(mode, direction)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 3,
+     "uses": [
+      "effect_prepare_rows(mode, direction)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "parameter",
+   "declaration_ordinal": 3,
+   "declarator": "u8 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_346b4:direction:4",
+   "kind": "local",
+   "current_name": "direction",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_346b4: effect_prepare_rows(mode, direction).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_prepare_rows(mode, direction)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 4,
+     "uses": [
+      "effect_prepare_rows(mode, direction)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_346b4:screen:5",
+   "kind": "local",
+   "current_name": "screen",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_346b4: (screen != 0) && (destination != 0); copy(screen, EffetBufferNormal, 0xfa00); state->screen = EffetBufferNormal; screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t))); state->entries = (effect_span_t *) screen.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(screen != 0) && (destination != 0)",
+     "copy(screen, EffetBufferNormal, 0xfa00)",
+     "state->screen = EffetBufferNormal",
+     "screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+     "state->entries = (effect_span_t *) screen"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 5,
+     "uses": [
+      "(screen != 0) && (destination != 0)",
+      "copy(screen, EffetBufferNormal, 0xfa00)",
+      "state->screen = EffetBufferNormal",
+      "screen = (u8 *) sub_6FBB4(state->count * (sizeof(effect_span_t)))",
+      "state->entries = (effect_span_t *) screen"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_346b4:destination:6",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "void *",
+   "meaning": "Parameter in effect_helper_346b4: (screen != 0) && (destination != 0); state->destination = (u8 *) destination.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(screen != 0) && (destination != 0)",
+     "state->destination = (u8 *) destination"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_346b4",
+     "address": "1:346b4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_346b4",
+     "ordinal": 6,
+     "uses": [
+      "(screen != 0) && (destination != 0)",
+      "state->destination = (u8 *) destination"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_346b4",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "void *$",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_34760",
+   "kind": "function",
+   "current_name": "effect_helper_34760",
+   "proposed_name": null,
+   "c_type": "void effect_helper_34760(void)",
+   "meaning": "For each span require positive width and valid source/destination row, clip source x then destination x against0..319 (without compensating the other x), then copy clipped width bytes at320 stride.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state = dword_E0D14",
+     "index = 0",
+     "span = state->entries",
+     "for (; index < state->count; ++index, ++span)",
+     "if (((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200))",
+     "if (source_x < 0)",
+     "width += source_x",
+     "source_x = 0",
+     "if ((source_x + width) > 320)",
+     "width = 320 - source_x",
+     "if ((width > 0) != 0)",
+     "if (destination_x < 0)",
+     "width = ((s32) ((s32) ((s32) width))) + destination_x",
+     "destination_x = 0",
+     "if ((destination_x + width) > 320)",
+     "width = 320 - destination_x",
+     "if (width > 0)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_34760"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_34760"
+    }
+   ],
+   "port_notes": [
+    "For each span require positive width and valid source/destination row, clip source x then destination x against0..319 (without compensating the other x), then copy clipped width bytes at320 stride.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "oracle_address": "1:34760",
+   "source_file": "src/effect34580.c",
+   "source_body_sha256": "6d2d02419b15e88862d2824b3e8a28d9d898e28bfab502b4d8d814578cac16c6",
+   "baseline_parser_body_sha256": "6d2d02419b15e88862d2824b3e8a28d9d898e28bfab502b4d8d814578cac16c6",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "dword_E0D14"
+    ],
+    "calls": [
+     "copy"
+    ],
+    "members": [
+     "count",
+     "destination",
+     "destination_x",
+     "destination_y",
+     "entries",
+     "screen",
+     "source_x",
+     "source_y",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_34760:span:1",
+   "kind": "local",
+   "current_name": "span",
+   "proposed_name": null,
+   "c_type": "effect_span_t *",
+   "meaning": "Local value in effect_helper_34760: effect_span_t *span; span = state->entries; for (; index < state->count; ++index, ++span); ++span; s32 width = span->width.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_span_t *span",
+     "span = state->entries",
+     "for (; index < state->count; ++index, ++span)",
+     "++span",
+     "s32 width = span->width",
+     "s32 destination_y = span->destination_y",
+     "s32 source_y = span->source_y",
+     "s32 source_x = span->source_x",
+     "s32 destination_x = span->destination_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 1,
+     "uses": [
+      "effect_span_t *span",
+      "span = state->entries",
+      "for (; index < state->count; ++index, ++span)",
+      "++span",
+      "s32 width = span->width",
+      "s32 destination_y = span->destination_y",
+      "s32 source_y = span->source_y",
+      "s32 source_x = span->source_x",
+      "s32 destination_x = span->destination_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_span_t *$",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:state:2",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_rows_t *",
+   "meaning": "Local value in effect_helper_34760: effect_rows_t *state; state = dword_E0D14; span = state->entries; for (; index < state->count; ++index, ++span); u8 *source = (state->screen + (source_y * 320)) + source_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_rows_t *state",
+     "state = dword_E0D14",
+     "span = state->entries",
+     "for (; index < state->count; ++index, ++span)",
+     "u8 *source = (state->screen + (source_y * 320)) + source_x",
+     "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 2,
+     "uses": [
+      "effect_rows_t *state",
+      "state = dword_E0D14",
+      "span = state->entries",
+      "for (; index < state->count; ++index, ++span)",
+      "u8 *source = (state->screen + (source_y * 320)) + source_x",
+      "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "effect_rows_t *$",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:index:3",
+   "kind": "local",
+   "current_name": "index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_34760: s32 index; index = 0; for (; index < state->count; ++index, ++span); ++index.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 index",
+     "index = 0",
+     "for (; index < state->count; ++index, ++span)",
+     "++index"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 3,
+     "uses": [
+      "s32 index",
+      "index = 0",
+      "for (; index < state->count; ++index, ++span)",
+      "++index"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s32 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:width:4",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s32 = span->width",
+   "meaning": "Local value in effect_helper_34760: s32 width = span->width; ((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200); width += source_x; (source_x + width) > 320; width = 320 - source_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 width = span->width",
+     "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+     "width += source_x",
+     "(source_x + width) > 320",
+     "width = 320 - source_x",
+     "(width > 0) != 0",
+     "width = ((s32) ((s32) ((s32) width))) + destination_x",
+     "(destination_x + width) > 320",
+     "width = 320 - destination_x",
+     "width > 0",
+     "copy(source, destination, width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 4,
+     "uses": [
+      "s32 width = span->width",
+      "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+      "width += source_x",
+      "(source_x + width) > 320",
+      "width = 320 - source_x",
+      "(width > 0) != 0",
+      "width = ((s32) ((s32) ((s32) width))) + destination_x",
+      "(destination_x + width) > 320",
+      "width = 320 - destination_x",
+      "width > 0",
+      "copy(source, destination, width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "s32 $ = span->width",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:destination_y:5",
+   "kind": "local",
+   "current_name": "destination_y",
+   "proposed_name": null,
+   "c_type": "s32 = span->destination_y",
+   "meaning": "Local value in effect_helper_34760: s32 destination_y = span->destination_y; ((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200); u8 *destination = (state->destination + (destination_y * 320)) + destination_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 destination_y = span->destination_y",
+     "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+     "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 5,
+     "uses": [
+      "s32 destination_y = span->destination_y",
+      "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+      "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "s32 $ = span->destination_y",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:source_y:6",
+   "kind": "local",
+   "current_name": "source_y",
+   "proposed_name": null,
+   "c_type": "s32 = span->source_y",
+   "meaning": "Local value in effect_helper_34760: s32 source_y = span->source_y; ((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200); u8 *source = (state->screen + (source_y * 320)) + source_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 source_y = span->source_y",
+     "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+     "u8 *source = (state->screen + (source_y * 320)) + source_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 6,
+     "uses": [
+      "s32 source_y = span->source_y",
+      "((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200)",
+      "u8 *source = (state->screen + (source_y * 320)) + source_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "s32 $ = span->source_y",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:source_x:7",
+   "kind": "local",
+   "current_name": "source_x",
+   "proposed_name": null,
+   "c_type": "s32 = span->source_x",
+   "meaning": "Local value in effect_helper_34760: s32 source_x = span->source_x; source_x < 0; width += source_x; source_x = 0; (source_x + width) > 320.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 source_x = span->source_x",
+     "source_x < 0",
+     "width += source_x",
+     "source_x = 0",
+     "(source_x + width) > 320",
+     "width = 320 - source_x",
+     "u8 *source = (state->screen + (source_y * 320)) + source_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 7,
+     "uses": [
+      "s32 source_x = span->source_x",
+      "source_x < 0",
+      "width += source_x",
+      "source_x = 0",
+      "(source_x + width) > 320",
+      "width = 320 - source_x",
+      "u8 *source = (state->screen + (source_y * 320)) + source_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "s32 $ = span->source_x",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:destination_x:8",
+   "kind": "local",
+   "current_name": "destination_x",
+   "proposed_name": null,
+   "c_type": "s32 = span->destination_x",
+   "meaning": "Local value in effect_helper_34760: s32 destination_x = span->destination_x; destination_x < 0; width = ((s32) ((s32) ((s32) width))) + destination_x; destination_x = 0; (destination_x + width) > 320.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 destination_x = span->destination_x",
+     "destination_x < 0",
+     "width = ((s32) ((s32) ((s32) width))) + destination_x",
+     "destination_x = 0",
+     "(destination_x + width) > 320",
+     "width = 320 - destination_x",
+     "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 8,
+     "uses": [
+      "s32 destination_x = span->destination_x",
+      "destination_x < 0",
+      "width = ((s32) ((s32) ((s32) width))) + destination_x",
+      "destination_x = 0",
+      "(destination_x + width) > 320",
+      "width = 320 - destination_x",
+      "u8 *destination = (state->destination + (destination_y * 320)) + destination_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "s32 $ = span->destination_x",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:source:9",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 * = (state->screen + (source_y * 320)) + source_x",
+   "meaning": "Local value in effect_helper_34760: u8 *source = (state->screen + (source_y * 320)) + source_x; copy(source, destination, width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *source = (state->screen + (source_y * 320)) + source_x",
+     "copy(source, destination, width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 9,
+     "uses": [
+      "u8 *source = (state->screen + (source_y * 320)) + source_x",
+      "copy(source, destination, width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "u8 *$ = (state->screen + (source_y * 320)) + source_x",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_34760:destination:10",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 * = (state->destination + (destination_y * 320)) + destination_x",
+   "meaning": "Local value in effect_helper_34760: u8 *destination = (state->destination + (destination_y * 320)) + destination_x; copy(source, destination, width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *destination = (state->destination + (destination_y * 320)) + destination_x",
+     "copy(source, destination, width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_34760",
+     "address": "1:34760",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_34760",
+     "ordinal": 10,
+     "uses": [
+      "u8 *destination = (state->destination + (destination_y * 320)) + destination_x",
+      "copy(source, destination, width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_34760",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "u8 *$ = (state->destination + (destination_y * 320)) + destination_x",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_348a4",
+   "kind": "function",
+   "current_name": "effect_helper_348a4",
+   "proposed_name": null,
+   "c_type": "u16 effect_helper_348a4(void)",
+   "meaning": "Compute distance=limit-position for nonnegative direction else position. Modes1..8 combine source-y shift and source/destination-x shifts;10 alternates vertical directions;11 alternates horizontal directions;9 constructs three triangular span passes (two drawn immediately);12 centers a growing/shrinking rectangle with inclusive vertical bound. Narrow span coordinates to s16, advance u16 position by abs(direction), wrap0 only when>limit.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state->direction >= 0)",
+     "distance = state->position_limit - state->position",
+     "distance = state->position",
+     "if (((state->mode == 1) || (state->mode == 2)) || (state->mode == 8))",
+     "source_offset = distance",
+     "source_offset = 0",
+     "if (((state->mode == 5) || (state->mode == 4)) || (state->mode == 6))",
+     "source_offset = -distance",
+     "if (((state->mode == 3) || (state->mode == 2)) || (state->mode == 4))",
+     "destination_x = distance",
+     "destination_x = 0",
+     "if (((state->mode == 7) || (state->mode == 8)) || (state->mode == 6))",
+     "source_x = distance",
+     "source_x = 0",
+     "if ((state->mode == 1) || (state->mode == 5))",
+     "distance = 0",
+     "distance = -distance",
+     "distance += 320",
+     "span = state->entries",
+     "for (i = 0; i < 200; ++i, ++span)",
+     "i = 0",
+     "span->destination_x = destination_x",
+     "span->destination_y = i",
+     "span->source_x = source_x",
+     "span->width = distance",
+     "span->source_y = source_offset + i",
+     "for (i = 0, j = 1; i < 200; i += 2, j += 2)",
+     "j = 1",
+     "i += 2",
+     "j += 2",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[j].source_x = 0",
+     "span[i].destination_y = i",
+     "span[j].destination_y = j",
+     "span[i].source_y = even_y",
+     "span[j].source_y = odd_y",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "even_y = next_even_y",
+     "odd_y += 2",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].destination_y = (span[i].source_y = i)",
+     "span[i].source_y = i",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "span[j].destination_y = (span[j].source_y = j)",
+     "span[j].source_y = j",
+     "for (i = 0; i < 200; ++i)",
+     "state->entries[i].width = 0",
+     "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+     "j = 199",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "span[j].source_y = source_y",
+     "width -= 2",
+     "for (i = 0, j = 199; i < 100; ++i, --j)",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[j].destination_x = 0",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[j].destination_x = destination_x",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[j].source_x = source_x",
+     "span[j].source_y = destination_y",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->destination_y = (span->source_y = i)",
+     "span->source_y = i",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->source_x = horizontal",
+     "if ((i >= vertical) && ((200 - vertical) >= i))",
+     "span->width = 0",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "span->destination_x = (span->source_x = 0)",
+     "span->source_x = 0",
+     "span->width = 320",
+     "if (step < 0)",
+     "step = -step",
+     "state->position += step",
+     "if (state->position > state->position_limit)",
+     "state->position = 0",
+     "return state->position;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_348a4"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_348a4"
+    }
+   ],
+   "port_notes": [
+    "Compute distance=limit-position for nonnegative direction else position. Modes1..8 combine source-y shift and source/destination-x shifts;10 alternates vertical directions;11 alternates horizontal directions;9 constructs three triangular span passes (two drawn immediately);12 centers a growing/shrinking rectangle with inclusive vertical bound. Narrow span coordinates to s16, advance u16 position by abs(direction), wrap0 only when>limit.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "oracle_address": "1:348a4",
+   "source_file": "src/effect34580.c",
+   "source_body_sha256": "503ad7abb285fe742dfa6e787c4f140d0685b49582d272c962adf0bd4bf99cb1",
+   "baseline_parser_body_sha256": "503ad7abb285fe742dfa6e787c4f140d0685b49582d272c962adf0bd4bf99cb1",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "current_rows",
+     "effect_helper_34760"
+    ],
+    "members": [
+     "count",
+     "destination_x",
+     "destination_y",
+     "direction",
+     "entries",
+     "mode",
+     "position",
+     "position_limit",
+     "source_x",
+     "source_y",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_348a4:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_rows_t * = current_rows()",
+   "meaning": "Local value in effect_helper_348a4: effect_rows_t *state = current_rows(); effect_span_t *span = state->entries; state->direction >= 0; distance = state->position_limit - state->position; distance = state->position.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_rows_t *state = current_rows()",
+     "effect_span_t *span = state->entries",
+     "state->direction >= 0",
+     "distance = state->position_limit - state->position",
+     "distance = state->position",
+     "((state->mode == 1) || (state->mode == 2)) || (state->mode == 8)",
+     "((state->mode == 5) || (state->mode == 4)) || (state->mode == 6)",
+     "((state->mode == 3) || (state->mode == 2)) || (state->mode == 4)",
+     "((state->mode == 7) || (state->mode == 8)) || (state->mode == 6)",
+     "(state->mode == 1) || (state->mode == 5)",
+     "span = state->entries",
+     "state->entries[i].width = 0",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "s32 step = (s32) state->direction",
+     "state->position += step",
+     "state->position > state->position_limit",
+     "state->position = 0",
+     "return state->position;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 1,
+     "uses": [
+      "effect_rows_t *state = current_rows()",
+      "effect_span_t *span = state->entries",
+      "state->direction >= 0",
+      "distance = state->position_limit - state->position",
+      "distance = state->position",
+      "((state->mode == 1) || (state->mode == 2)) || (state->mode == 8)",
+      "((state->mode == 5) || (state->mode == 4)) || (state->mode == 6)",
+      "((state->mode == 3) || (state->mode == 2)) || (state->mode == 4)",
+      "((state->mode == 7) || (state->mode == 8)) || (state->mode == 6)",
+      "(state->mode == 1) || (state->mode == 5)",
+      "span = state->entries",
+      "state->entries[i].width = 0",
+      "for (i = 0; i < state->count; ++i, ++span)",
+      "s32 step = (s32) state->direction",
+      "state->position += step",
+      "state->position > state->position_limit",
+      "state->position = 0",
+      "return state->position;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_rows_t *$ = current_rows()",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:span:2",
+   "kind": "local",
+   "current_name": "span",
+   "proposed_name": null,
+   "c_type": "effect_span_t * = state->entries",
+   "meaning": "Local value in effect_helper_348a4: effect_span_t *span = state->entries; span = state->entries; for (i = 0; i < 200; ++i, ++span); ++span; span->destination_x = destination_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_span_t *span = state->entries",
+     "span = state->entries",
+     "for (i = 0; i < 200; ++i, ++span)",
+     "++span",
+     "span->destination_x = destination_x",
+     "span->destination_y = i",
+     "span->source_x = source_x",
+     "span->width = distance",
+     "span->source_y = source_offset + i",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[j].source_x = 0",
+     "span[i].destination_y = i",
+     "span[j].destination_y = j",
+     "span[i].source_y = even_y",
+     "span[j].source_y = odd_y",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].destination_y = (span[i].source_y = i)",
+     "span[i].source_y = i",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "span[j].destination_y = (span[j].source_y = j)",
+     "span[j].source_y = j",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "span[j].source_y = source_y",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[j].destination_x = 0",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[j].destination_x = destination_x",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[j].source_x = source_x",
+     "span[j].source_y = destination_y",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->destination_y = (span->source_y = i)",
+     "span->source_y = i",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->source_x = horizontal",
+     "span->width = 0",
+     "for (i = 0; i < state->count; ++i, ++span)",
+     "span->destination_x = (span->source_x = 0)",
+     "span->source_x = 0",
+     "span->width = 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 2,
+     "uses": [
+      "effect_span_t *span = state->entries",
+      "span = state->entries",
+      "for (i = 0; i < 200; ++i, ++span)",
+      "++span",
+      "span->destination_x = destination_x",
+      "span->destination_y = i",
+      "span->source_x = source_x",
+      "span->width = distance",
+      "span->source_y = source_offset + i",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].source_x = (span[j].source_x = 0)",
+      "span[j].source_x = 0",
+      "span[i].destination_y = i",
+      "span[j].destination_y = j",
+      "span[i].source_y = even_y",
+      "span[j].source_y = odd_y",
+      "span[i].width = (span[j].width = 320)",
+      "span[j].width = 320",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].destination_y = (span[i].source_y = i)",
+      "span[i].source_y = i",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[j].destination_x = distance",
+      "span[i].width = (span[j].width = width)",
+      "span[j].width = width",
+      "span[j].destination_y = (span[j].source_y = j)",
+      "span[j].source_y = j",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "span[j].source_y = source_y",
+      "span[i].destination_x = (span[j].destination_x = 0)",
+      "span[j].destination_x = 0",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[j].source_x = distance",
+      "span[i].destination_x = (span[j].destination_x = destination_x)",
+      "span[j].destination_x = destination_x",
+      "span[i].source_x = (span[j].source_x = source_x)",
+      "span[j].source_x = source_x",
+      "span[j].source_y = destination_y",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "span->destination_y = (span->source_y = i)",
+      "span->source_y = i",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->source_x = horizontal",
+      "span->width = 0",
+      "for (i = 0; i < state->count; ++i, ++span)",
+      "span->destination_x = (span->source_x = 0)",
+      "span->source_x = 0",
+      "span->width = 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "effect_span_t *$ = state->entries",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:distance:3",
+   "kind": "local",
+   "current_name": "distance",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_348a4: s16 distance; distance = state->position_limit - state->position; distance = state->position; source_offset = distance; source_offset = -distance.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 distance",
+     "distance = state->position_limit - state->position",
+     "distance = state->position",
+     "source_offset = distance",
+     "source_offset = -distance",
+     "-distance",
+     "destination_x = distance",
+     "source_x = distance",
+     "distance = 0",
+     "distance = -distance",
+     "distance += 320",
+     "span->width = distance",
+     "s16 even_y = distance",
+     "s16 odd_y = -distance",
+     "s16 width = 320 - distance",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "s16 width = 320 - (2 * distance)",
+     "s16 source_y = 199 - distance",
+     "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "s16 width = -distance",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "s16 destination_x = 320 + distance",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "s16 vertical = (200 - distance) >> 1",
+     "s16 horizontal = (320 - distance) >> 1"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 3,
+     "uses": [
+      "s16 distance",
+      "distance = state->position_limit - state->position",
+      "distance = state->position",
+      "source_offset = distance",
+      "source_offset = -distance",
+      "-distance",
+      "destination_x = distance",
+      "source_x = distance",
+      "distance = 0",
+      "distance = -distance",
+      "distance += 320",
+      "span->width = distance",
+      "s16 even_y = distance",
+      "s16 odd_y = -distance",
+      "s16 width = 320 - distance",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[j].destination_x = distance",
+      "s16 width = 320 - (2 * distance)",
+      "s16 source_y = 199 - distance",
+      "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "s16 width = -distance",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[j].source_x = distance",
+      "s16 destination_x = 320 + distance",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "s16 vertical = (200 - distance) >> 1",
+      "s16 horizontal = (320 - distance) >> 1"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:i:4",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_348a4: s32 i; for (i = 0; i < 200; ++i, ++span); i = 0; ++i; span->destination_y = i.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 i",
+     "for (i = 0; i < 200; ++i, ++span)",
+     "i = 0",
+     "++i",
+     "span->destination_y = i",
+     "span->source_y = source_offset + i",
+     "for (i = 0, j = 1; i < 200; i += 2, j += 2)",
+     "i += 2",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[i].destination_y = i",
+     "span[i].source_y = even_y",
+     "span[i].width = (span[j].width = 320)",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].destination_y = (span[i].source_y = i)",
+     "span[i].source_y = i",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[i].width = (span[j].width = width)",
+     "for (i = 0; i < 200; ++i)",
+     "state->entries[i].width = 0",
+     "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "for (i = 0, j = 199; i < 100; ++i, --j)",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->destination_y = (span->source_y = i)",
+     "span->source_y = i",
+     "(i >= vertical) && ((200 - vertical) >= i)",
+     "for (i = 0; i < state->count; ++i, ++span)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 4,
+     "uses": [
+      "s32 i",
+      "for (i = 0; i < 200; ++i, ++span)",
+      "i = 0",
+      "++i",
+      "span->destination_y = i",
+      "span->source_y = source_offset + i",
+      "for (i = 0, j = 1; i < 200; i += 2, j += 2)",
+      "i += 2",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].source_x = (span[j].source_x = 0)",
+      "span[i].destination_y = i",
+      "span[i].source_y = even_y",
+      "span[i].width = (span[j].width = 320)",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].destination_y = (span[i].source_y = i)",
+      "span[i].source_y = i",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[i].width = (span[j].width = width)",
+      "for (i = 0; i < 200; ++i)",
+      "state->entries[i].width = 0",
+      "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "for (i = 0, j = 199; i < 100; ++i, --j)",
+      "span[i].destination_x = (span[j].destination_x = 0)",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[i].destination_x = (span[j].destination_x = destination_x)",
+      "span[i].source_x = (span[j].source_x = source_x)",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "span->destination_y = (span->source_y = i)",
+      "span->source_y = i",
+      "(i >= vertical) && ((200 - vertical) >= i)",
+      "for (i = 0; i < state->count; ++i, ++span)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "s32 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:j:5",
+   "kind": "local",
+   "current_name": "j",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_348a4: s32 j; for (i = 0, j = 1; i < 200; i += 2, j += 2); j = 1; j += 2; span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 j",
+     "for (i = 0, j = 1; i < 200; i += 2, j += 2)",
+     "j = 1",
+     "j += 2",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[j].source_x = 0",
+     "span[j].destination_y = j",
+     "span[j].source_y = odd_y",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "span[j].destination_y = (span[j].source_y = j)",
+     "span[j].source_y = j",
+     "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+     "j = 199",
+     "--j",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "span[j].source_y = source_y",
+     "for (i = 0, j = 199; i < 100; ++i, --j)",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[j].destination_x = 0",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[j].destination_x = destination_x",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[j].source_x = source_x",
+     "span[j].source_y = destination_y",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 5,
+     "uses": [
+      "s32 j",
+      "for (i = 0, j = 1; i < 200; i += 2, j += 2)",
+      "j = 1",
+      "j += 2",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].source_x = (span[j].source_x = 0)",
+      "span[j].source_x = 0",
+      "span[j].destination_y = j",
+      "span[j].source_y = odd_y",
+      "span[i].width = (span[j].width = 320)",
+      "span[j].width = 320",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[j].destination_x = distance",
+      "span[i].width = (span[j].width = width)",
+      "span[j].width = width",
+      "span[j].destination_y = (span[j].source_y = j)",
+      "span[j].source_y = j",
+      "for (i = 0, j = 199; i < (100 - distance); ++i, --j)",
+      "j = 199",
+      "--j",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "span[j].source_y = source_y",
+      "for (i = 0, j = 199; i < 100; ++i, --j)",
+      "span[i].destination_x = (span[j].destination_x = 0)",
+      "span[j].destination_x = 0",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[j].source_x = distance",
+      "span[i].destination_x = (span[j].destination_x = destination_x)",
+      "span[j].destination_x = destination_x",
+      "span[i].source_x = (span[j].source_x = source_x)",
+      "span[j].source_x = source_x",
+      "span[j].source_y = destination_y",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "s32 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:source_offset:6",
+   "kind": "local",
+   "current_name": "source_offset",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_348a4: s16 source_offset; source_offset = distance; source_offset = 0; source_offset = -distance; span->source_y = source_offset + i.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 source_offset",
+     "source_offset = distance",
+     "source_offset = 0",
+     "source_offset = -distance",
+     "span->source_y = source_offset + i"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 6,
+     "uses": [
+      "s16 source_offset",
+      "source_offset = distance",
+      "source_offset = 0",
+      "source_offset = -distance",
+      "span->source_y = source_offset + i"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:destination_x:7",
+   "kind": "local",
+   "current_name": "destination_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_348a4: s16 destination_x; destination_x = distance; destination_x = 0; span->destination_x = destination_x; span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 destination_x",
+     "destination_x = distance",
+     "destination_x = 0",
+     "span->destination_x = destination_x",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[j].destination_x = 0",
+     "s16 destination_x = 320 + distance",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[j].destination_x = destination_x",
+     "--destination_x",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->destination_x = (span->source_x = 0)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 7,
+     "uses": [
+      "s16 destination_x",
+      "destination_x = distance",
+      "destination_x = 0",
+      "span->destination_x = destination_x",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[j].destination_x = distance",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[i].destination_x = (span[j].destination_x = 0)",
+      "span[j].destination_x = 0",
+      "s16 destination_x = 320 + distance",
+      "span[i].destination_x = (span[j].destination_x = destination_x)",
+      "span[j].destination_x = destination_x",
+      "--destination_x",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->destination_x = (span->source_x = 0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:source_x:8",
+   "kind": "local",
+   "current_name": "source_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_helper_348a4: s16 source_x; source_x = distance; source_x = 0; span->source_x = source_x; span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 source_x",
+     "source_x = distance",
+     "source_x = 0",
+     "span->source_x = source_x",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[j].source_x = 0",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "s16 source_x = 320",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[j].source_x = source_x",
+     "--source_x",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->source_x = horizontal",
+     "span->destination_x = (span->source_x = 0)",
+     "span->source_x = 0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 8,
+     "uses": [
+      "s16 source_x",
+      "source_x = distance",
+      "source_x = 0",
+      "span->source_x = source_x",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].source_x = (span[j].source_x = 0)",
+      "span[j].source_x = 0",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[j].source_x = distance",
+      "s16 source_x = 320",
+      "span[i].source_x = (span[j].source_x = source_x)",
+      "span[j].source_x = source_x",
+      "--source_x",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->source_x = horizontal",
+      "span->destination_x = (span->source_x = 0)",
+      "span->source_x = 0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "s16 $",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:even_y:9",
+   "kind": "local",
+   "current_name": "even_y",
+   "proposed_name": null,
+   "c_type": "s16 = distance",
+   "meaning": "Local value in effect_helper_348a4: s16 even_y = distance; span[i].source_y = even_y; s16 next_even_y = even_y + 2; even_y = next_even_y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 even_y = distance",
+     "span[i].source_y = even_y",
+     "s16 next_even_y = even_y + 2",
+     "even_y = next_even_y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 9,
+     "uses": [
+      "s16 even_y = distance",
+      "span[i].source_y = even_y",
+      "s16 next_even_y = even_y + 2",
+      "even_y = next_even_y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "s16 $ = distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:odd_y:10",
+   "kind": "local",
+   "current_name": "odd_y",
+   "proposed_name": null,
+   "c_type": "s16 = -distance",
+   "meaning": "Local value in effect_helper_348a4: s16 odd_y = -distance; span[j].source_y = odd_y; odd_y += 2.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 odd_y = -distance",
+     "span[j].source_y = odd_y",
+     "odd_y += 2"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 10,
+     "uses": [
+      "s16 odd_y = -distance",
+      "span[j].source_y = odd_y",
+      "odd_y += 2"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "s16 $ = -distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:next_even_y:11",
+   "kind": "local",
+   "current_name": "next_even_y",
+   "proposed_name": null,
+   "c_type": "s16 = even_y + 2",
+   "meaning": "Local value in effect_helper_348a4: s16 next_even_y = even_y + 2; even_y = next_even_y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 next_even_y = even_y + 2",
+     "even_y = next_even_y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 11,
+     "uses": [
+      "s16 next_even_y = even_y + 2",
+      "even_y = next_even_y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 11,
+   "declarator": "s16 $ = even_y + 2",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:width:12",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s16 = 320 - distance",
+   "meaning": "Local value in effect_helper_348a4: span->width = distance; span[i].width = (span[j].width = 320); span[j].width = 320; s16 width = 320 - distance; span[i].width = (span[j].width = width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "span->width = distance",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "s16 width = 320 - distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "state->entries[i].width = 0",
+     "s16 width = 320 - (2 * distance)",
+     "width -= 2",
+     "s16 width = -distance",
+     "++width",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->width = 0",
+     "span->width = 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 12,
+     "uses": [
+      "span->width = distance",
+      "span[i].width = (span[j].width = 320)",
+      "span[j].width = 320",
+      "s16 width = 320 - distance",
+      "span[i].width = (span[j].width = width)",
+      "span[j].width = width",
+      "state->entries[i].width = 0",
+      "s16 width = 320 - (2 * distance)",
+      "width -= 2",
+      "s16 width = -distance",
+      "++width",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "span->width = 0",
+      "span->width = 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 12,
+   "declarator": "s16 $ = 320 - distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:width:13",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s16 = 320 - (2 * distance)",
+   "meaning": "Local value in effect_helper_348a4: span->width = distance; span[i].width = (span[j].width = 320); span[j].width = 320; s16 width = 320 - distance; span[i].width = (span[j].width = width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "span->width = distance",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "s16 width = 320 - distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "state->entries[i].width = 0",
+     "s16 width = 320 - (2 * distance)",
+     "width -= 2",
+     "s16 width = -distance",
+     "++width",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->width = 0",
+     "span->width = 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 13,
+     "uses": [
+      "span->width = distance",
+      "span[i].width = (span[j].width = 320)",
+      "span[j].width = 320",
+      "s16 width = 320 - distance",
+      "span[i].width = (span[j].width = width)",
+      "span[j].width = width",
+      "state->entries[i].width = 0",
+      "s16 width = 320 - (2 * distance)",
+      "width -= 2",
+      "s16 width = -distance",
+      "++width",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "span->width = 0",
+      "span->width = 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 13,
+   "declarator": "s16 $ = 320 - (2 * distance)",
+   "source_file": "src/effect34580.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:source_y:14",
+   "kind": "local",
+   "current_name": "source_y",
+   "proposed_name": null,
+   "c_type": "s16 = 199 - distance",
+   "meaning": "Local value in effect_helper_348a4: span->source_y = source_offset + i; span[i].source_y = even_y; span[j].source_y = odd_y; span[i].destination_y = (span[i].source_y = i); span[i].source_y = i.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "span->source_y = source_offset + i",
+     "span[i].source_y = even_y",
+     "span[j].source_y = odd_y",
+     "span[i].destination_y = (span[i].source_y = i)",
+     "span[i].source_y = i",
+     "span[j].destination_y = (span[j].source_y = j)",
+     "span[j].source_y = j",
+     "s16 source_y = 199 - distance",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].source_y = source_y",
+     "--source_y",
+     "span[j].source_y = destination_y",
+     "span->destination_y = (span->source_y = i)",
+     "span->source_y = i"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 14,
+     "uses": [
+      "span->source_y = source_offset + i",
+      "span[i].source_y = even_y",
+      "span[j].source_y = odd_y",
+      "span[i].destination_y = (span[i].source_y = i)",
+      "span[i].source_y = i",
+      "span[j].destination_y = (span[j].source_y = j)",
+      "span[j].source_y = j",
+      "s16 source_y = 199 - distance",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].source_y = source_y",
+      "--source_y",
+      "span[j].source_y = destination_y",
+      "span->destination_y = (span->source_y = i)",
+      "span->source_y = i"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 14,
+   "declarator": "s16 $ = 199 - distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:width:15",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s16 = -distance",
+   "meaning": "Local value in effect_helper_348a4: span->width = distance; span[i].width = (span[j].width = 320); span[j].width = 320; s16 width = 320 - distance; span[i].width = (span[j].width = width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "span->width = distance",
+     "span[i].width = (span[j].width = 320)",
+     "span[j].width = 320",
+     "s16 width = 320 - distance",
+     "span[i].width = (span[j].width = width)",
+     "span[j].width = width",
+     "state->entries[i].width = 0",
+     "s16 width = 320 - (2 * distance)",
+     "width -= 2",
+     "s16 width = -distance",
+     "++width",
+     "span[i].width = (span[j].width = i - distance)",
+     "span[j].width = i - distance",
+     "span->width = 0",
+     "span->width = 320"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 15,
+     "uses": [
+      "span->width = distance",
+      "span[i].width = (span[j].width = 320)",
+      "span[j].width = 320",
+      "s16 width = 320 - distance",
+      "span[i].width = (span[j].width = width)",
+      "span[j].width = width",
+      "state->entries[i].width = 0",
+      "s16 width = 320 - (2 * distance)",
+      "width -= 2",
+      "s16 width = -distance",
+      "++width",
+      "span[i].width = (span[j].width = i - distance)",
+      "span[j].width = i - distance",
+      "span->width = 0",
+      "span->width = 320"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 15,
+   "declarator": "s16 $ = -distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:destination_x:16",
+   "kind": "local",
+   "current_name": "destination_x",
+   "proposed_name": null,
+   "c_type": "s16 = 320 + distance",
+   "meaning": "Local value in effect_helper_348a4: s16 destination_x; destination_x = distance; destination_x = 0; span->destination_x = destination_x; span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 destination_x",
+     "destination_x = distance",
+     "destination_x = 0",
+     "span->destination_x = destination_x",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[j].destination_x = distance",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[i].destination_x = (span[j].destination_x = 0)",
+     "span[j].destination_x = 0",
+     "s16 destination_x = 320 + distance",
+     "span[i].destination_x = (span[j].destination_x = destination_x)",
+     "span[j].destination_x = destination_x",
+     "--destination_x",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->destination_x = (span->source_x = 0)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 16,
+     "uses": [
+      "s16 destination_x",
+      "destination_x = distance",
+      "destination_x = 0",
+      "span->destination_x = destination_x",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[j].destination_x = distance",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[i].destination_x = (span[j].destination_x = 0)",
+      "span[j].destination_x = 0",
+      "s16 destination_x = 320 + distance",
+      "span[i].destination_x = (span[j].destination_x = destination_x)",
+      "span[j].destination_x = destination_x",
+      "--destination_x",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->destination_x = (span->source_x = 0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 16,
+   "declarator": "s16 $ = 320 + distance",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:source_x:17",
+   "kind": "local",
+   "current_name": "source_x",
+   "proposed_name": null,
+   "c_type": "s16 = 320",
+   "meaning": "Local value in effect_helper_348a4: s16 source_x; source_x = distance; source_x = 0; span->source_x = source_x; span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 source_x",
+     "source_x = distance",
+     "source_x = 0",
+     "span->source_x = source_x",
+     "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+     "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+     "span[i].source_x = (span[j].source_x = 0)",
+     "span[j].source_x = 0",
+     "span[i].destination_x = (span[j].source_x = 0)",
+     "span[i].source_x = (span[j].destination_x = distance)",
+     "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+     "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+     "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+     "span[j].destination_x = (span[j].source_x = i + distance)",
+     "span[j].source_x = i + distance",
+     "span[i].source_x = (span[j].source_x = distance)",
+     "span[j].source_x = distance",
+     "s16 source_x = 320",
+     "span[i].source_x = (span[j].source_x = source_x)",
+     "span[j].source_x = source_x",
+     "--source_x",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->source_x = horizontal",
+     "span->destination_x = (span->source_x = 0)",
+     "span->source_x = 0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 17,
+     "uses": [
+      "s16 source_x",
+      "source_x = distance",
+      "source_x = 0",
+      "span->source_x = source_x",
+      "span[i].destination_x = (span[j].destination_x = (span[i].source_x = (span[j].source_x = 0)))",
+      "span[j].destination_x = (span[i].source_x = (span[j].source_x = 0))",
+      "span[i].source_x = (span[j].source_x = 0)",
+      "span[j].source_x = 0",
+      "span[i].destination_x = (span[j].source_x = 0)",
+      "span[i].source_x = (span[j].destination_x = distance)",
+      "span[i].destination_x = (span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))))",
+      "span[i].source_x = (span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance)))",
+      "span[i].source_y = (span[j].destination_x = (span[j].source_x = i + distance))",
+      "span[j].destination_x = (span[j].source_x = i + distance)",
+      "span[j].source_x = i + distance",
+      "span[i].source_x = (span[j].source_x = distance)",
+      "span[j].source_x = distance",
+      "s16 source_x = 320",
+      "span[i].source_x = (span[j].source_x = source_x)",
+      "span[j].source_x = source_x",
+      "--source_x",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->source_x = horizontal",
+      "span->destination_x = (span->source_x = 0)",
+      "span->source_x = 0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 17,
+   "declarator": "s16 $ = 320",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:destination_y:18",
+   "kind": "local",
+   "current_name": "destination_y",
+   "proposed_name": null,
+   "c_type": "s16 = 200",
+   "meaning": "Local value in effect_helper_348a4: span->destination_y = i; span[i].destination_y = i; span[j].destination_y = j; span[i].destination_y = (span[i].source_y = i); span[j].destination_y = (span[j].source_y = j).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "span->destination_y = i",
+     "span[i].destination_y = i",
+     "span[j].destination_y = j",
+     "span[i].destination_y = (span[i].source_y = i)",
+     "span[j].destination_y = (span[j].source_y = j)",
+     "s16 destination_y = 200",
+     "span[j].source_y = destination_y",
+     "--destination_y",
+     "span->destination_y = (span->source_y = i)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 18,
+     "uses": [
+      "span->destination_y = i",
+      "span[i].destination_y = i",
+      "span[j].destination_y = j",
+      "span[i].destination_y = (span[i].source_y = i)",
+      "span[j].destination_y = (span[j].source_y = j)",
+      "s16 destination_y = 200",
+      "span[j].source_y = destination_y",
+      "--destination_y",
+      "span->destination_y = (span->source_y = i)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 18,
+   "declarator": "s16 $ = 200",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:vertical:19",
+   "kind": "local",
+   "current_name": "vertical",
+   "proposed_name": null,
+   "c_type": "s16 = (200 - distance) >> 1",
+   "meaning": "Local value in effect_helper_348a4: s16 vertical = (200 - distance) >> 1; (i >= vertical) && ((200 - vertical) >= i).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 vertical = (200 - distance) >> 1",
+     "(i >= vertical) && ((200 - vertical) >= i)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 19,
+     "uses": [
+      "s16 vertical = (200 - distance) >> 1",
+      "(i >= vertical) && ((200 - vertical) >= i)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 19,
+   "declarator": "s16 $ = (200 - distance) >> 1",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:horizontal:20",
+   "kind": "local",
+   "current_name": "horizontal",
+   "proposed_name": null,
+   "c_type": "s16 = (320 - distance) >> 1",
+   "meaning": "Local value in effect_helper_348a4: s16 horizontal = (320 - distance) >> 1; span->destination_x = (span->source_x = horizontal); span->source_x = horizontal.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 horizontal = (320 - distance) >> 1",
+     "span->destination_x = (span->source_x = horizontal)",
+     "span->source_x = horizontal"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 20,
+     "uses": [
+      "s16 horizontal = (320 - distance) >> 1",
+      "span->destination_x = (span->source_x = horizontal)",
+      "span->source_x = horizontal"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 20,
+   "declarator": "s16 $ = (320 - distance) >> 1",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_348a4:step:21",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "s32 = (s32) state->direction",
+   "meaning": "Local value in effect_helper_348a4: s32 step = (s32) state->direction; step < 0; step = -step; -step; state->position += step.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 step = (s32) state->direction",
+     "step < 0",
+     "step = -step",
+     "-step",
+     "state->position += step"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect34580.dos.txt",
+     "function": "effect_helper_348a4",
+     "address": "1:348a4",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect34580.json",
+     "function": "effect_helper_348a4",
+     "ordinal": 21,
+     "uses": [
+      "s32 step = (s32) state->direction",
+      "step < 0",
+      "step = -step",
+      "-step",
+      "state->position += step"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_348a4",
+   "role": "local",
+   "declaration_ordinal": 21,
+   "declarator": "s32 $ = (s32) state->direction",
+   "source_file": "src/effect34580.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "global:dword_E0D14",
+   "kind": "global",
+   "current_name": "dword_E0D14",
+   "proposed_name": null,
+   "c_type": "effect_rows_t *",
+   "meaning": "Owning pointer to200-row span-wipe state and its ten-byte span array.",
+   "unit": "presentation state ownership",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "effect34580"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "dword_E0D14"
+    }
+   ],
+   "port_notes": [
+    "Owning pointer to200-row span-wipe state and its ten-byte span array.",
+    "Keep12 row-span modes, signed16 truncation, clipped-copy behavior and mode9 extra immediate passes. Source/destination clipping does not compensate the opposite coordinate."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:50d14",
+   "source_file": "src/effect34580.c",
+   "name_provenance": "RAYVERSE",
+   "declarator": "effect_rows_t *$",
+   "context_declarators": {
+    "effect34580.c": "effect_rows_t *$"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:345bc",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:345ba",
+      "containing_bound_function": "effect_prepare_rows",
+      "instruction": "mov ecx, dword ptr [0x50d14]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:34689",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:34688",
+      "containing_bound_function": "effect_cleanup_34688",
+      "instruction": "mov eax, dword ptr [0x50d14]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:346a1",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:3469f",
+      "containing_bound_function": "effect_cleanup_34688",
+      "instruction": "cmp dword ptr [0x50d14], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:346a9",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:346a8",
+      "containing_bound_function": "effect_cleanup_34688",
+      "instruction": "mov eax, 0x50d14",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:346df",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:346de",
+      "containing_bound_function": "effect_helper_346b4",
+      "instruction": "mov dword ptr [0x50d14], eax",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3476a",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:34769",
+      "containing_bound_function": "effect_helper_34760",
+      "instruction": "mov eax, dword ptr [0x50d14]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:348af",
+      "target": "2:50d14",
+      "kind": 7,
+      "instruction_address": "1:348ad",
+      "containing_bound_function": "effect_helper_348a4",
+      "instruction": "mov ebp, dword ptr [0x50d14]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "shifted_or_interior_references": [
+     {
+      "site": "1:32f6e",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:32f6c",
+      "containing_bound_function": "InitMatriceJumelle",
+      "instruction": "cmp dword ptr [0x50d10], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:32f76",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:32f75",
+      "containing_bound_function": "InitMatriceJumelle",
+      "instruction": "mov eax, 0x50d10",
+      "instruction_class": "address immediate / address escape"
+     },
+     {
+      "site": "1:32f13",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:32f12",
+      "containing_bound_function": "InitMatriceJumelle",
+      "instruction": "mov dword ptr [0x50d10], eax",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:32f3b",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:32f39",
+      "containing_bound_function": "InitMatriceJumelle",
+      "instruction": "cmp dword ptr [0x50d10], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:3391a",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:33918",
+      "containing_bound_function": "PrepareJumelleZoom",
+      "instruction": "mov edx, dword ptr [0x50d10]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:33019",
+      "target": "2:50d10",
+      "kind": 7,
+      "instruction_address": "1:33017",
+      "containing_bound_function": "InitMatriceJumelle",
+      "instruction": "mov edx, dword ptr [0x50d10]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     }
+    ],
+    "source_references": [
+     {
+      "source": "src/effect34580.c",
+      "line": 6,
+      "text": "extern effect_rows_t *dword_E0D14;"
+     },
+     {
+      "source": "src/effect34580.c",
+      "line": 11,
+      "text": "#define current_rows() (dword_E0D14)"
+     },
+     {
+      "source": "src/effect34580.c",
+      "line": 58,
+      "text": "if (dword_E0D14 != 0)"
+     },
+     {
+      "source": "src/effect34580.c",
+      "line": 59,
+      "text": "JumelleFreeArray((void **)&dword_E0D14);"
+     },
+     {
+      "source": "src/effect34580.c",
+      "line": 68,
+      "text": "dword_E0D14 = (effect_rows_t *)sub_6FBB4(sizeof(effect_rows_t));"
+     },
+     {
+      "source": "src/effect34580.c",
+      "line": 93,
+      "text": "state = dword_E0D14;"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/effect34580.c": "cbf6b3033a0baf2535a7e9c9c98c82c26dcf1ce3f5162421a288da8f09a1b45f",
+  "src/effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
+ },
+ "proposal_fingerprints": {
+  "effect34580.c": "cbf6b3033a0baf2535a7e9c9c98c82c26dcf1ce3f5162421a288da8f09a1b45f",
+  "effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/effect34580.dos.txt": null,
+  "evidence/inventory_effect34580.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

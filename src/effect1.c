@@ -305,7 +305,8 @@ u8 sub_38074(void)
     return (u8)(myRand(6) + 1);
 }
 
-u8 sub_380A4(u8 effect, u8 value, u8 *arg3, u8 *arg4)
+/* arg3 -> source; arg4 -> destination. See docs/semantics/effect1.json. */
+u8 sub_380A4(u8 effect, u8 value, u8 *source, u8 *destination)
 {
     s16 scale = 1;
 
@@ -325,40 +326,42 @@ u8 sub_380A4(u8 effect, u8 value, u8 *arg3, u8 *arg4)
     effect_choice = effect;
     switch (effect) {
     case 1:
-        return sub_38DCC(8, 8, scale, 120, arg3, arg4);
+        return sub_38DCC(8, 8, scale, 120, source, destination);
     case 3:
-        return effect_helper_6ee54(20, 10, scale, 400, arg3, arg4);
+        return effect_helper_6ee54(20, 10, scale, 400, source, destination);
     case 5:
-        return effect_helper_1623c(20, 8, 61, scale * 2, 50, arg3, arg4);
+        return effect_helper_1623c(20, 8, 61, scale * 2, 50, source, destination);
     case 2:
         if (value == 13 || value == 100) {
             byte_964C8 = sub_38054();
         }
-        return effect_helper_346b4(byte_964C8, scale * 2, arg3, arg4);
+        return effect_helper_346b4(byte_964C8, scale * 2, source, destination);
     case 8:
-        return effect_helper_634f0(22, scale * 2, arg3, arg4);
+        return effect_helper_634f0(22, scale * 2, source, destination);
     case 6:
         if (value == 16 || value == 100) {
             byte_964C8 = sub_38064();
         }
-        return effect_helper_50738(byte_964C8, scale * 4, arg3, arg4);
+        return effect_helper_50738(byte_964C8, scale * 4, source, destination);
     case 7:
-        return effect_helper_6c7cc(160, 100, 48, scale * 4, 1000, arg3, arg4);
+        return effect_helper_6c7cc(160, 100, 48, scale * 4, 1000, source, destination);
     default:
         return 0;
     }
 }
 
-u8 sub_38208(u8 effect, u8 value, u8 *unused_1, u8 *unused_2)
+/* unused_1 -> source; unused_2 -> destination. See docs/semantics/effect1.json. */
+u8 sub_38208(u8 effect, u8 value, u8 *source, u8 *destination)
 {
     byte_964CA = 1;
-    return sub_380A4(effect, value, unused_1, unused_2);
+    return sub_380A4(effect, value, source, destination);
 }
 
-u8 sub_38220(u8 effect, u8 value, u8 *unused_1, u8 *unused_2)
+/* unused_1 -> source; unused_2 -> destination. See docs/semantics/effect1.json. */
+u8 sub_38220(u8 effect, u8 value, u8 *source, u8 *destination)
 {
     byte_964CA = 0xff;
-    return sub_380A4(effect, value, unused_1, unused_2);
+    return sub_380A4(effect, value, source, destination);
 }
 
 extern void effect_cleanup_34688(void);

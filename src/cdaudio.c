@@ -152,24 +152,27 @@ void sub_193d0(u8 value) { byte_DEEFB = value; }
 void sub_193d8(u8 value) { byte_DEF00 = value; }
 void sub_193e0(u8 value) { byte_DEEFC = value; }
 void sub_193e8(u8 value) { byte_DEEFD = value; }
-void sub_193f0(s32 value) { sub_564f8(0x2f, value); }
-u16 sub_19400(u16 value) { if (value & 0x8000) return value & 0xff; return 0x100; }
+/* value -> register_block. See docs/semantics/cdaudio.json. */
+void sub_193f0(s32 register_block) { sub_564f8(0x2f, register_block); }
+/* value -> request_status. See docs/semantics/cdaudio.json. */
+u16 sub_19400(u16 request_status) { if (request_status & 0x8000) return request_status & 0xff; return 0x100; }
 
-u16 sub_19410(u8 command, u32 argument, u8 __far *request)
+/* command -> drive_index; argument -> real_mode_request; request -> protected_request. See docs/semantics/cdaudio.json. */
+u16 sub_19410(u8 drive_index, u32 real_mode_request, u8 __far *protected_request)
 {
     u8 tries;
     tries = 0;
     do {
         cd_request_regs.ax = 0x1510;
-        cd_request_regs.es = (u16)(argument >> 16);
-        cd_request_regs.bx = (u16)argument;
-        cd_request_regs.cx = command;
+        cd_request_regs.es = (u16)(real_mode_request >> 16);
+        cd_request_regs.bx = (u16)real_mode_request;
+        cd_request_regs.cx = drive_index;
         ++tries;
         sub_193f0((s32)&cd_request_regs);
         if (tries == 10)
             break;
-    } while (request[4] & 0x80);
-    return sub_19400(*(u16 __far *)(request + 3));
+    } while (protected_request[4] & 0x80);
+    return sub_19400(*(u16 __far *)(protected_request + 3));
 }
 
 void sub_19474(u8 __far *request, u8 command)
@@ -183,30 +186,33 @@ void sub_19474(u8 __far *request, u8 command)
         request[i + 5] = 0;
 }
 
-void sub_194a8(u8 __far *request, u32 argument, u8 command, u16 size)
+/* argument -> real_mode_transfer_buffer; command -> request_command; size -> transfer_bytes. See docs/semantics/cdaudio.json. */
+void sub_194a8(u8 __far *request, u32 real_mode_transfer_buffer, u8 request_command, u16 transfer_bytes)
 {
-    sub_19474(request, command);
+    sub_19474(request, request_command);
     request[13] = 0;
     *(u16 __far *)(request + 20) = 0;
     *(u32 __far *)(request + 22) = 0;
-    *(u16 __far *)(request + 14) = (u16)argument;
-    *(u16 __far *)(request + 16) = (u16)(argument >> 16);
-    *(u16 __far *)(request + 18) = size;
+    *(u16 __far *)(request + 14) = (u16)real_mode_transfer_buffer;
+    *(u16 __far *)(request + 16) = (u16)(real_mode_transfer_buffer >> 16);
+    *(u16 __far *)(request + 18) = transfer_bytes;
 }
 
-u32 sub_194f4(u8 command)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_194f4(u8 drive_index)
 {
     sub_194a8(cd_buffer_878, cd_offset_844, 3, 11);
     cd_buffer_890[0] = 0x0f;
-    word_DE8BC = sub_19410(command, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return (cd_buffer_890[1] & 1) != 0;
 }
 
-u32 AudioStatusCheck(u8 command)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+u32 AudioStatusCheck(u8 drive_index)
 {
     sub_194a8(cd_buffer_878, cd_offset_858, 3, 5);
     cd_buffer_872[0] = 6;
-    cd_request_regs.cx = command;
+    cd_request_regs.cx = drive_index;
     cd_request_regs.es = (u16)(cd_offset_850 >> 16);
     cd_request_regs.bx = (u16)cd_offset_850;
     cd_request_regs.ax = 0x1510;
@@ -217,11 +223,12 @@ u32 AudioStatusCheck(u8 command)
 /* INVENTED type alias; same far-word pointer, avoids the permuter macro guard. */
 typedef u16 __far *cd_status_word_ptr_t;
 
-void sub_195ec(u8 command)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_195ec(u8 drive_index)
 {
     sub_194a8(cd_buffer_878, cd_offset_844, 3, 11);
     cd_buffer_890[0] = 0x0f;
-    cd_request_regs.cx = command;
+    cd_request_regs.cx = drive_index;
     cd_request_regs.es = (u16)(cd_offset_850 >> 16);
     cd_request_regs.bx = (u16)cd_offset_850;
     cd_request_regs.ax = 0x1510;
@@ -423,114 +430,125 @@ u32 sub_19c40(u32 packed_msf)
     return sub_19b34(minute, second, frame);
 }
 
-u16 sub_19c74(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19c74(u8 drive_index)
 {
     u8 __far *request;
     sub_19474(cd_buffer_86c, 0x85);
     request = cd_buffer_86c;
-    word_DE8BC = sub_19410(track, cd_offset_848, request);
+    word_DE8BC = sub_19410(drive_index, cd_offset_848, request);
     return word_DE8BC;
 }
 
-u16 sub_19cc0(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19cc0(u8 drive_index)
 {
-    word_DE8BC = sub_19c74(track);
-    word_DE8BC = sub_19c74(track);
+    word_DE8BC = sub_19c74(drive_index);
+    word_DE8BC = sub_19c74(drive_index);
     return word_DE8BC;
 }
 
-u16 sub_19ce4(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19ce4(u8 drive_index)
 {
     sub_19474(cd_buffer_86c, 0x88);
-    word_DE8BC = sub_19410(track, cd_offset_848, cd_buffer_86c);
+    word_DE8BC = sub_19410(drive_index, cd_offset_848, cd_buffer_86c);
     return word_DE8BC;
 }
 
-u16 sub_19d30(u8 command, u8 byte_value, u32 value, u32 address)
+/* command -> drive_index; byte_value -> addressing_mode; value -> start_address; address -> sector_count. See docs/semantics/cdaudio.json. */
+u16 sub_19d30(u8 drive_index, u8 addressing_mode, u32 start_address, u32 sector_count)
 {
     sub_19474(cd_buffer_86c, 0x84);
-    cd_buffer_86c[13] = byte_value;
-    *(u32 __far *)(cd_buffer_86c + 18) = address;
-    *(u32 __far *)(cd_buffer_86c + 14) = value;
-    word_DE8BC = sub_19410(command, cd_offset_848, cd_buffer_86c);
+    cd_buffer_86c[13] = addressing_mode;
+    *(u32 __far *)(cd_buffer_86c + 18) = sector_count;
+    *(u32 __far *)(cd_buffer_86c + 14) = start_address;
+    word_DE8BC = sub_19410(drive_index, cd_offset_848, cd_buffer_86c);
     return word_DE8BC;
 }
 
-u16 sub_19d88(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19d88(u8 drive_index)
 {
     u8 __far *request;
     sub_194a8(cd_buffer_878, cd_offset_830, 0x0c, 2);
     request = cd_buffer_87e;
     request[0] = 1;
     request[1] = 0;
-    word_DE8BC = sub_19410(track, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return word_DE8BC;
 }
 
-u16 sub_19df0(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19df0(u8 drive_index)
 {
     u8 __far *request;
     sub_194a8(cd_buffer_878, cd_offset_830, 0x0c, 2);
     request = cd_buffer_87e;
     request[0] = 1;
     request[1] = 1;
-    word_DE8BC = sub_19410(track, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return word_DE8BC;
 }
 
-u16 sub_19e58(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19e58(u8 drive_index)
 {
     u8 __far *request;
     sub_194a8(cd_buffer_878, cd_offset_858, 0x0c, 1);
     request = cd_buffer_872;
     request[0] = 0;
-    word_DE8BC = sub_19410(track, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return word_DE8BC;
 }
 
-u16 sub_19eb4(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_19eb4(u8 drive_index)
 {
     u8 __far *request;
     sub_194a8(cd_buffer_878, cd_offset_858, 0x0c, 1);
     request = cd_buffer_872;
     request[0] = 5;
-    word_DE8BC = sub_19410(track, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return word_DE8BC;
 }
 
-u16 sub_19f10(u8 command, u8 *minute, u8 *second, u32 *frame)
+/* command -> drive_index; minute -> first_track; second -> last_track; frame -> leadout_msf. See docs/semantics/cdaudio.json. */
+u16 sub_19f10(u8 drive_index, u8 *first_track, u8 *last_track, u32 *leadout_msf)
 {
     sub_194a8(cd_buffer_878, cd_offset_854, 3, 7);
     cd_buffer_866[0] = 0x0a;
     cd_buffer_866[1] = 0;
     cd_buffer_866[2] = 0;
     *(u32 __far *)(cd_buffer_866 + 3) = 0;
-    word_DE8BC = sub_19410(command, cd_offset_850, cd_buffer_878);
-    *minute = cd_buffer_866[1];
-    *second = cd_buffer_866[2];
-    *frame = *(u32 __far *)(cd_buffer_866 + 3);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
+    *first_track = cd_buffer_866[1];
+    *last_track = cd_buffer_866[2];
+    *leadout_msf = *(u32 __far *)(cd_buffer_866 + 3);
     return word_DE8BC;
 }
 
-u16 sub_19fa0(u8 command, u8 track, u32 *address, u8 *flags)
+/* command -> drive_index; address -> start_msf; flags -> control_flags. See docs/semantics/cdaudio.json. */
+u16 sub_19fa0(u8 drive_index, u8 track, u32 *start_msf, u8 *control_flags)
 {
     sub_194a8(cd_buffer_878, cd_offset_84c, 3, 7);
     cd_buffer_884[0] = 0x0b;
     cd_buffer_884[1] = track;
     *(u32 __far *)(cd_buffer_884 + 2) = 0;
     cd_buffer_884[6] = 0;
-    word_DE8BC = sub_19410(command, cd_offset_850, cd_buffer_878);
-    *address = *(u32 __far *)(cd_buffer_884 + 2);
-    *flags = cd_buffer_884[6];
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
+    *start_msf = *(u32 __far *)(cd_buffer_884 + 2);
+    *control_flags = cd_buffer_884[6];
     return word_DE8BC;
 }
 
-u16 sub_1a02c(u8 command, u8 *track, u8 *minute, u8 *second, u8 *frame)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_1a02c(u8 drive_index, u8 *track, u8 *minute, u8 *second, u8 *frame)
 {
     u16 value;
     sub_194a8(cd_buffer_878, cd_offset_838, 3, 11);
     cd_buffer_860[0] = 0x0c;
-    word_DE8BC = value = sub_19410(command, cd_offset_850, cd_buffer_878);
+    word_DE8BC = value = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     *track = ((cd_buffer_860[2] & 0xf0) >> 4) * 10 + (cd_buffer_860[2] & 15);
     *minute = cd_buffer_860[4];
     *second = cd_buffer_860[5];
@@ -538,30 +556,33 @@ u16 sub_1a02c(u8 command, u8 *track, u8 *minute, u8 *second, u8 *frame)
     return (u16)value;
 }
 
-u16 sub_1a0e4(u8 command, u32 *value)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_1a0e4(u8 drive_index, u32 *value)
 {
     sub_194a8(cd_buffer_878, cd_offset_858, 3, 5);
     cd_buffer_872[0] = 6;
     *(u32 __far *)(cd_buffer_872 + 1) = 0;
-    word_DE8BC = sub_19410(command, cd_offset_850, cd_buffer_878);
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     *value = *(u32 __far *)(cd_buffer_872 + 1);
     return word_DE8BC;
 }
 
-u16 sub_1a158(u8 command, u8 *a, u8 *b, u8 *c, u8 *d)
+/* command -> drive_index; a -> channel0_volume; b -> channel1_volume; c -> channel2_volume; d -> channel3_volume. See docs/semantics/cdaudio.json. */
+u16 sub_1a158(u8 drive_index, u8 *channel0_volume, u8 *channel1_volume, u8 *channel2_volume, u8 *channel3_volume)
 {
     u16 result;
     sub_194a8(cd_buffer_878, cd_offset_83c, 3, 9);
     cd_buffer_89c[0] = 4;
-    word_DE8BC = result = sub_19410(command, cd_offset_850, cd_buffer_878);
-    *a = cd_buffer_89c[2];
-    *b = cd_buffer_89c[4];
-    *c = cd_buffer_89c[6];
-    *d = cd_buffer_89c[8];
+    word_DE8BC = result = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
+    *channel0_volume = cd_buffer_89c[2];
+    *channel1_volume = cd_buffer_89c[4];
+    *channel2_volume = cd_buffer_89c[6];
+    *channel3_volume = cd_buffer_89c[8];
     return result;
 }
 
-u16 sub_1a1e8(u8 command, u8 a, u8 b, u8 c, u8 d)
+/* command -> drive_index; a -> channel0_volume; b -> channel1_volume; c -> channel2_volume; d -> channel3_volume. See docs/semantics/cdaudio.json. */
+u16 sub_1a1e8(u8 drive_index, u8 channel0_volume, u8 channel1_volume, u8 channel2_volume, u8 channel3_volume)
 {
     u8 __far *request;
     sub_194a8(cd_buffer_878, cd_offset_83c, 0x0c, 9);
@@ -571,15 +592,16 @@ u16 sub_1a1e8(u8 command, u8 a, u8 b, u8 c, u8 d)
     request[3] = 1;
     request[5] = 2;
     request[7] = 3;
-    request[2] = a;
-    request[4] = b;
-    request[6] = c;
-    request[8] = d;
-    word_DE8BC = sub_19410(command, cd_offset_850, cd_buffer_878);
+    request[2] = channel0_volume;
+    request[4] = channel1_volume;
+    request[6] = channel2_volume;
+    request[8] = channel3_volume;
+    word_DE8BC = sub_19410(drive_index, cd_offset_850, cd_buffer_878);
     return word_DE8BC;
 }
 
-u16 sub_1a280(u8 track, u8 command)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u16 sub_1a280(u8 drive_index, u8 command)
 {
     /* COMPILER_STEERED: the address-taken local retains the word temporary,
      * giving AX for the command and BL for track (DOS 1:1a280..1a2c5). */
@@ -590,65 +612,75 @@ u16 sub_1a280(u8 track, u8 command)
     cd_request_regs.ax = function;
     cd_request_regs.es = (u16)(cd_offset_834 >> 16);
     cd_request_regs.bx = (u16)cd_offset_834;
-    cd_request_regs.cx = track;
+    cd_request_regs.cx = drive_index;
     sub_193f0((s32)&cd_request_regs);
     return word_DE8BC;
 }
 
-u32 sub_1a2c8(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a2c8(u8 drive_index)
 {
     u32 value;
-    word_DE8BC = sub_1a0e4(track, &value);
+    word_DE8BC = sub_1a0e4(drive_index, &value);
     return value;
 }
 
-u32 sub_1a2e8(u8 track) { return (sub_1a2c8(track) & 1) == 0; }
-u32 sub_1a300(u8 track) { return (sub_1a2c8(track) & 2) == 0; }
-u32 sub_1a318(u8 track) { return (sub_1a2c8(track) & 0x10) != 0; }
-u32 sub_1a330(u8 track) { return (sub_1a2c8(track) & 0x100) != 0; }
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a2e8(u8 drive_index) { return (sub_1a2c8(drive_index) & 1) == 0; }
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a300(u8 drive_index) { return (sub_1a2c8(drive_index) & 2) == 0; }
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a318(u8 drive_index) { return (sub_1a2c8(drive_index) & 0x10) != 0; }
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a330(u8 drive_index) { return (sub_1a2c8(drive_index) & 0x100) != 0; }
 u32 sub_1a348(u8 track) { return (cd_disc_info.track_flags[track] & 0x40) == 0; }
-u32 sub_1a360(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a360(u8 drive_index)
 {
     u32 status;
-    status = sub_1a2c8(track);
+    status = sub_1a2c8(drive_index);
     if ((status & 0x800) == 0 && word_DE8BC == 0x100)
         return 1;
     return 0;
 }
 
-void sub_1a384(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a384(u8 drive_index)
 {
-    if ((u8)sub_1a300(track) == 1)
-        word_DE8BC = sub_19d88(track);
+    if ((u8)sub_1a300(drive_index) == 1)
+        word_DE8BC = sub_19d88(drive_index);
     else
         word_DE8BC = 0x100;
 }
 
-void sub_1a3b0(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a3b0(u8 drive_index)
 {
-    if (!(u8)sub_1a300(track) && (u8)sub_1a2e8(track) == 1)
-        word_DE8BC = sub_19df0(track);
+    if (!(u8)sub_1a300(drive_index) && (u8)sub_1a2e8(drive_index) == 1)
+        word_DE8BC = sub_19df0(drive_index);
     else
         word_DE8BC = 0x100;
 }
 
-void sub_1a3e8(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a3e8(u8 drive_index)
 {
-    if ((u8)sub_1a2e8(track) == 1) {
-        if ((u8)sub_1a300(track) == 1)
-            word_DE8BC = sub_19d88(track);
-        word_DE8BC = sub_19e58(track);
-        while ((u8)sub_1a2e8(track) == 1) { }
+    if ((u8)sub_1a2e8(drive_index) == 1) {
+        if ((u8)sub_1a300(drive_index) == 1)
+            word_DE8BC = sub_19d88(drive_index);
+        word_DE8BC = sub_19e58(drive_index);
+        while ((u8)sub_1a2e8(drive_index) == 1) { }
     } else {
         word_DE8BC = 0x100;
     }
 }
 
-void sub_1a440(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a440(u8 drive_index)
 {
-    if (byte_CFA14 == 0 && WindowsLance == 0 && ((u8)sub_1a2e8(track) ? 1 : 0)) {
-        word_DE8BC = sub_19eb4(track);
-        while ((u8)sub_1a2e8(track) == 0) { }
+    if (byte_CFA14 == 0 && WindowsLance == 0 && ((u8)sub_1a2e8(drive_index) ? 1 : 0)) {
+        word_DE8BC = sub_19eb4(drive_index);
+        while ((u8)sub_1a2e8(drive_index) == 0) { }
     } else {
         word_DE8BC = 0x100;
     }
@@ -657,7 +689,8 @@ void sub_1a440(u8 track)
 /* Define this before sub_1a4a0: Watcom keeps its cold return at 1:1a493,
  * then moves its entry/body beside the later sub_1a724 fall-through caller.
  * Nested guards below are also necessary for the DOS block placement. */
-u8 sub_1a734(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u8 sub_1a734(u8 drive_index)
 {
     u8 result;
     u8 first;
@@ -671,17 +704,17 @@ u8 sub_1a734(u8 track)
     result = 1;
     if (!cd_request_busy) {
         retry = 0xff;
-        sub_1a440(track);
-        while (!(u8)sub_1a360(track) && --retry) { }
-        if ((u8)sub_1a360(track) == 1) {
+        sub_1a440(drive_index);
+        while (!(u8)sub_1a360(drive_index) && --retry) { }
+        if ((u8)sub_1a360(drive_index) == 1) {
             clear_memory((void *)&cd_disc_info, 0, 0x51f);
-            word_DE8BC = sub_19f10(track, &first, &last, &leadout);
+            word_DE8BC = sub_19f10(drive_index, &first, &last, &leadout);
             cd_disc_info.first_track = first;
             cd_disc_info.last_track = last;
             cd_disc_info.leadout_lba = leadout;
             cd_disc_info.track_count = last + 1 - first;
             for (index = first; index <= cd_disc_info.last_track; ++index) {
-                word_DE8BC = sub_19fa0(track, index, &start, &flag);
+                word_DE8BC = sub_19fa0(drive_index, index, &start, &flag);
                 cd_disc_info.track_start[index] = start;
                 cd_disc_info.track_flags[index] = flag;
             }
@@ -701,11 +734,13 @@ u8 sub_1a734(u8 track)
     return result;
 }
 
-u8 sub_1a4a0(u8 track) { return cd_drive_map[track]; }
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u8 sub_1a4a0(u8 drive_index) { return cd_drive_map[drive_index]; }
 
-void sub_1a4ac(u8 command, u8 track, u8 minute, u8 second)
+/* command -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a4ac(u8 drive_index, u8 track, u8 minute, u8 second)
 {
-    if (sub_1a734(command) == 1) {
+    if (sub_1a734(drive_index) == 1) {
         if (track >= cd_disc_info.first_track && track <= cd_disc_info.last_track) {
             if ((u8)sub_1a348(track) == 1) {
                 s32 requested;
@@ -715,8 +750,8 @@ void sub_1a4ac(u8 command, u8 track, u8 minute, u8 second)
                     requested = time + cd_disc_info.track_start[track];
                 }
                 if (requested < (s32)(track < cd_disc_info.last_track ? cd_disc_info.track_start[track + 1] : cd_disc_info.leadout_lba)) {
-                    word_DE8BC = sub_19c74(command);
-                    word_DE8BC = sub_19d30(command, 1, requested, cd_disc_info.track_length[track] - (minute * 60 + second) * 75);
+                    word_DE8BC = sub_19c74(drive_index);
+                    word_DE8BC = sub_19d30(drive_index, 1, requested, cd_disc_info.track_length[track] - (minute * 60 + second) * 75);
                 } else
                     word_DE8BC = 8;
             } else
@@ -728,31 +763,36 @@ void sub_1a4ac(u8 command, u8 track, u8 minute, u8 second)
     }
 }
 
-void effect_set_audio_status(u8 status)
+/* status -> drive_index. See docs/semantics/cdaudio.json. */
+void effect_set_audio_status(u8 drive_index)
 {
-    word_DE8BC = sub_19c74(status);
+    word_DE8BC = sub_19c74(drive_index);
 }
-void sub_1a5b8(u8 status)
+/* status -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a5b8(u8 drive_index)
 {
-    word_DE8BC = sub_19cc0(status);
+    word_DE8BC = sub_19cc0(drive_index);
 }
-void effect_restore_audio_status(u8 status)
+/* status -> drive_index. See docs/semantics/cdaudio.json. */
+void effect_restore_audio_status(u8 drive_index)
 {
-    word_DE8BC = sub_19ce4(status);
+    word_DE8BC = sub_19ce4(drive_index);
 }
 
-void sub_1a5e0(u8 track, u8 minute, u8 second)
+/* track -> drive_index; minute -> channel_0_2_volume; second -> channel_1_3_volume. See docs/semantics/cdaudio.json. */
+void sub_1a5e0(u8 drive_index, u8 channel_0_2_volume, u8 channel_1_3_volume)
 {
-    if ((u8)sub_1a330(track) == 1)
-        word_DE8BC = sub_1a1e8(track, minute, second, minute, second);
+    if ((u8)sub_1a330(drive_index) == 1)
+        word_DE8BC = sub_1a1e8(drive_index, channel_0_2_volume, channel_1_3_volume, channel_0_2_volume, channel_1_3_volume);
     else
         word_DE8BC = 3;
 }
 
-u32 sub_1a61c(u8 track, u8 command)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+u32 sub_1a61c(u8 drive_index, u8 command)
 {
     u32 result;
-    word_DE8BC = sub_1a280(track, command);
+    word_DE8BC = sub_1a280(drive_index, command);
     if (word_DE8BC == 0x100) {
         u32 segment = (cd_offset_834 >> 12) & ~15;
         result = cd_offset_834 & 0xffff;
@@ -795,20 +835,22 @@ void AudioTrackCommand(u8 track)
     sub_1a654(track);
 }
 
-void sub_1a724(u8 track)
+/* track -> drive_index. See docs/semantics/cdaudio.json. */
+void sub_1a724(u8 drive_index)
 {
     cd_request_busy = 0;
-    (void)sub_1a734(track);
+    (void)sub_1a734(drive_index);
 }
 
 
-void AudioStopCommand(u8 status)
+/* status -> drive_index. See docs/semantics/cdaudio.json. */
+void AudioStopCommand(u8 drive_index)
 {
-    sub_195ec(status);
+    sub_195ec(drive_index);
     if (!cd_status_error) {
-        sub_19cc0(status);
+        sub_19cc0(drive_index);
         do {
-            sub_195ec(status);
+            sub_195ec(drive_index);
         } while (!cd_status_error);
     }
 }

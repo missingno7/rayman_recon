@@ -2461,9 +2461,9 @@
   "external/rayverse/src/luciole.c": "39c2880d7548b1c856b2e63bfa134c45ecf5f471f48d933c582c73483843f8d5"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/luciole.dos.txt": "a86b47e4afd5041eb7c0dd39b3e1916b6a1321a23345a032fd3f0fb38dd896f0",
-  "evidence/luciole_operations.json": "fba2c7b5e77a07127703c6702a9788abf9879f99f956c7443f019076778cee95",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/luciole.dos.txt": null,
+  "evidence/luciole_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
@@ -2502,7 +2502,7 @@
   "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
   "src/display_local.h": "fa7f501b8c913a762570217464dff976596797ee5ec746061236357df58aaeb5",
-  "src/effect1.c": "6aa0b532fa19c31f02b1dbb885dce33d0f3ce31c75553ac390c996873b5bf2d7",
+  "src/effect1.c": "09f74494dfa7481564b8ef8db372fc8e4a54a2c626e139515effb54ac8872cfd",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
   "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
@@ -2532,7 +2532,7 @@
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
-  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
   "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",

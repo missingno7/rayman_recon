@@ -1,0 +1,2342 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "effect633e0.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/inline_helpers.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:EffetBufferNormal",
+   "global:effect_state_55760"
+  ],
+  "types": [
+   "type:effect_column_state_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:effect_update_table_633e0",
+   "kind": "function",
+   "current_name": "effect_update_table_633e0",
+   "proposed_name": null,
+   "c_type": "void effect_update_table_633e0(s16 amount)",
+   "meaning": "Reset progress; invert/normalize input speed sign and select initial mode0 forpositive delta or3 fornegative. Build2*width signed32 table entries trunc(acos(y/width)*width) for y=-width..width-1.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state = effect_state_55760",
+     "state->pos_x = 0",
+     "if (amount >= 0)",
+     "amount = max32(1, amount)",
+     "amount = -amount",
+     "amount = max32(1, -((s32) amount))",
+     "state->delta = amount",
+     "state->mode = (state->delta > 0) ? (0) : (3)",
+     "state->initialized = 0",
+     "for (y = -state->width; y < state->width; y++)",
+     "y = -state->width",
+     "width = state->width",
+     "scale = (double) width",
+     "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_update_table_633e0"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_update_table_633e0"
+    }
+   ],
+   "port_notes": [
+    "Reset progress; invert/normalize input speed sign and select initial mode0 forpositive delta or3 fornegative. Build2*width signed32 table entries trunc(acos(y/width)*width) for y=-width..width-1.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "oracle_address": "1:633e0",
+   "source_file": "src/effect633e0.c",
+   "source_body_sha256": "52ace051985a245130287d1ec1f39b9f230af03c7bcc9c920d471b4e20b40625",
+   "baseline_parser_body_sha256": "8fcf61358d92dc56a0a277d313cfcad37796c0a6ad4aea4b6e6cdf0964629dc5",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_55760"
+    ],
+    "calls": [
+     "effect_math_curve",
+     "max32"
+    ],
+    "members": [
+     "delta",
+     "initialized",
+     "mode",
+     "pos_x",
+     "table",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_update_table_633e0:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t *",
+   "meaning": "Local value in effect_update_table_633e0: effect_state_t *state; state = effect_state_55760; state->pos_x = 0; state->delta = amount; state->mode = (state->delta > 0) ? (0) : (3).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_t *state",
+     "state = effect_state_55760",
+     "state->pos_x = 0",
+     "state->delta = amount",
+     "state->mode = (state->delta > 0) ? (0) : (3)",
+     "state->initialized = 0",
+     "for (y = -state->width; y < state->width; y++)",
+     "y = -state->width",
+     "-state->width",
+     "width = state->width",
+     "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_update_table_633e0",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_t *state",
+      "state = effect_state_55760",
+      "state->pos_x = 0",
+      "state->delta = amount",
+      "state->mode = (state->delta > 0) ? (0) : (3)",
+      "state->initialized = 0",
+      "for (y = -state->width; y < state->width; y++)",
+      "y = -state->width",
+      "-state->width",
+      "width = state->width",
+      "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_update_table_633e0",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_column_state_t *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_update_table_633e0:width:2",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_update_table_633e0: s32 width; for (y = -state->width; y < state->width; y++); y = -state->width; -state->width; width = state->width.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 width",
+     "for (y = -state->width; y < state->width; y++)",
+     "y = -state->width",
+     "-state->width",
+     "width = state->width",
+     "scale = (double) width",
+     "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_update_table_633e0",
+     "ordinal": 2,
+     "uses": [
+      "s32 width",
+      "for (y = -state->width; y < state->width; y++)",
+      "y = -state->width",
+      "-state->width",
+      "width = state->width",
+      "scale = (double) width",
+      "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_update_table_633e0",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_update_table_633e0:y:3",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in effect_update_table_633e0: s16 y; for (y = -state->width; y < state->width; y++); y = -state->width; y++; state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s16 y",
+     "for (y = -state->width; y < state->width; y++)",
+     "y = -state->width",
+     "y++",
+     "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)",
+     "effect_math_curve(((double) y) / scale)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_update_table_633e0",
+     "ordinal": 3,
+     "uses": [
+      "s16 y",
+      "for (y = -state->width; y < state->width; y++)",
+      "y = -state->width",
+      "y++",
+      "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)",
+      "effect_math_curve(((double) y) / scale)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_update_table_633e0",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "s16 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_update_table_633e0:scale:4",
+   "kind": "local",
+   "current_name": "scale",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_update_table_633e0: double scale; scale = (double) width; state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale); effect_math_curve(((double) y) / scale).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double scale",
+     "scale = (double) width",
+     "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)",
+     "effect_math_curve(((double) y) / scale)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_update_table_633e0",
+     "ordinal": 4,
+     "uses": [
+      "double scale",
+      "scale = (double) width",
+      "state->table[width + y] = (s32) (effect_math_curve(((double) y) / scale) * scale)",
+      "effect_math_curve(((double) y) / scale)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_update_table_633e0",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "double $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_update_table_633e0:amount:5",
+   "kind": "local",
+   "current_name": "amount",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_update_table_633e0: amount >= 0; amount = max32(1, amount); max32(1, amount); amount = -amount; -amount.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "amount >= 0",
+     "amount = max32(1, amount)",
+     "max32(1, amount)",
+     "amount = -amount",
+     "-amount",
+     "amount = max32(1, -((s32) amount))",
+     "max32(1, -((s32) amount))",
+     "-((s32) amount)",
+     "state->delta = amount"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_update_table_633e0",
+     "address": "1:633e0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_update_table_633e0",
+     "ordinal": 5,
+     "uses": [
+      "amount >= 0",
+      "amount = max32(1, amount)",
+      "max32(1, amount)",
+      "amount = -amount",
+      "-amount",
+      "amount = max32(1, -((s32) amount))",
+      "max32(1, -((s32) amount))",
+      "-((s32) amount)",
+      "state->delta = amount"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_update_table_633e0",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "s16 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_cleanup_634c4",
+   "kind": "function",
+   "current_name": "effect_cleanup_634c4",
+   "proposed_name": null,
+   "c_type": "void effect_cleanup_634c4(void)",
+   "meaning": "Free column-remap table then state.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "if (state != 0)",
+     "if (state->table != 0)",
+     "if (effect_state_55760 != 0)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_cleanup_634c4",
+     "address": "1:634c4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_cleanup_634c4"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_cleanup_634c4"
+    }
+   ],
+   "port_notes": [
+    "Free column-remap table then state.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "oracle_address": "1:634c4",
+   "source_file": "src/effect633e0.c",
+   "source_body_sha256": "be1da5b33a67aae255b565fd35c803996773c87277203ab910477f551cff83f8",
+   "baseline_parser_body_sha256": "b881efc906e69cea43c3f092823df8bc4d79e6cae7d054fa7240d84464aec7a6",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_55760"
+    ],
+    "calls": [
+     "JumelleFreeArray"
+    ],
+    "members": [
+     "table"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_cleanup_634c4:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t * = effect_state_55760",
+   "meaning": "Local value in effect_cleanup_634c4: effect_state_t *state = effect_state_55760; state != 0; state->table != 0; JumelleFreeArray((void **) (&state->table)); &state->table.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_t *state = effect_state_55760",
+     "state != 0",
+     "state->table != 0",
+     "JumelleFreeArray((void **) (&state->table))",
+     "&state->table"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_cleanup_634c4",
+     "address": "1:634c4",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_cleanup_634c4",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_t *state = effect_state_55760",
+      "state != 0",
+      "state->table != 0",
+      "JumelleFreeArray((void **) (&state->table))",
+      "&state->table"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_cleanup_634c4",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_column_state_t *$ = effect_state_55760",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_634f0",
+   "kind": "function",
+   "current_name": "effect_helper_634f0",
+   "proposed_name": null,
+   "c_type": "u8 effect_helper_634f0(u16 width, s16 amount, u8 *source, u8 *destination)",
+   "meaning": "Clamp radius-like width8..40, span2*width, periods trunc(width*pi),trunc(width*pi/2), snapshot full source, allocate4*span lookup bytes and initialize column-remap progression.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "success = 0",
+     "if ((source != 0) && (destination != 0))",
+     "state = (effect_column_state_t *) sub_6FBB4(0x30)",
+     "effect_state_55760 = state",
+     "if (state != 0)",
+     "state->width = max32(8, min32(width, 40))",
+     "state->span = state->width * 2",
+     "state->period1 = (u16) (((double) state->width) * 3.14159265359)",
+     "state->period2 = (u16) ((3.14159265359 * ((double) state->width)) * 0.5)",
+     "state->source = EffetBufferNormal",
+     "state->destination = destination",
+     "state->table = (s32 *) sub_6FBB4(((u32) state->span) * 4)",
+     "if (state->table != 0)",
+     "success = 1",
+     "if (success != 0)",
+     "return success;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_634f0"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_634f0"
+    }
+   ],
+   "port_notes": [
+    "Clamp radius-like width8..40, span2*width, periods trunc(width*pi),trunc(width*pi/2), snapshot full source, allocate4*span lookup bytes and initialize column-remap progression.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "oracle_address": "1:634f0",
+   "source_file": "src/effect633e0.c",
+   "source_body_sha256": "f887364746daecec463e9786b9cedbac2522f5cac9276487e50c6ba8cf059378",
+   "baseline_parser_body_sha256": "71aaf1e2bb441068885682f97bfc107e3cf1fc726c3980f8e6feb3c8ddfeb063",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "EffetBufferNormal",
+     "effect_state_55760"
+    ],
+    "calls": [
+     "copy",
+     "effect_cleanup_634c4",
+     "effect_update_table_633e0",
+     "max32",
+     "min32",
+     "sub_6FBB4"
+    ],
+    "members": [
+     "destination",
+     "period1",
+     "period2",
+     "source",
+     "span",
+     "table",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_634f0:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t *",
+   "meaning": "Local value in effect_helper_634f0: effect_state_t *state; state = (effect_state_t *) sub_6FBB4(0x30); effect_state_55760 = state; state != 0; state->width = max32(8, min32(width, 40)).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_t *state",
+     "state = (effect_state_t *) sub_6FBB4(0x30)",
+     "effect_state_55760 = state",
+     "state != 0",
+     "state->width = max32(8, min32(width, 40))",
+     "state->span = state->width * 2",
+     "state->period1 = (u16) (((double) state->width) * 3.14159265359)",
+     "state->period2 = (u16) ((3.14159265359 * ((double) state->width)) * 0.5)",
+     "state->source = EffetBufferNormal",
+     "state->destination = destination",
+     "state->table = (s32 *) sub_6FBB4(((u32) state->span) * 4)",
+     "sub_6FBB4(((u32) state->span) * 4)",
+     "state->table != 0"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_t *state",
+      "state = (effect_state_t *) sub_6FBB4(0x30)",
+      "effect_state_55760 = state",
+      "state != 0",
+      "state->width = max32(8, min32(width, 40))",
+      "state->span = state->width * 2",
+      "state->period1 = (u16) (((double) state->width) * 3.14159265359)",
+      "state->period2 = (u16) ((3.14159265359 * ((double) state->width)) * 0.5)",
+      "state->source = EffetBufferNormal",
+      "state->destination = destination",
+      "state->table = (s32 *) sub_6FBB4(((u32) state->span) * 4)",
+      "sub_6FBB4(((u32) state->span) * 4)",
+      "state->table != 0"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_column_state_t *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_634f0:success:2",
+   "kind": "local",
+   "current_name": "success",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in effect_helper_634f0: u8 success; success = 0; success = 1; success != 0; return success;.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 success",
+     "success = 0",
+     "success = 1",
+     "success != 0",
+     "return success;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 2,
+     "uses": [
+      "u8 success",
+      "success = 0",
+      "success = 1",
+      "success != 0",
+      "return success;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_634f0:width:3",
+   "kind": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u16",
+   "meaning": "Parameter in effect_helper_634f0: state->width = max32(8, min32(width, 40)); max32(8, min32(width, 40)); min32(width, 40); state->span = state->width * 2; state->period1 = (u16) (((double) state->width) * 3.14159265359).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "state->width = max32(8, min32(width, 40))",
+     "max32(8, min32(width, 40))",
+     "min32(width, 40)",
+     "state->span = state->width * 2",
+     "state->period1 = (u16) (((double) state->width) * 3.14159265359)",
+     "state->period2 = (u16) ((3.14159265359 * ((double) state->width)) * 0.5)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 3,
+     "uses": [
+      "state->width = max32(8, min32(width, 40))",
+      "max32(8, min32(width, 40))",
+      "min32(width, 40)",
+      "state->span = state->width * 2",
+      "state->period1 = (u16) (((double) state->width) * 3.14159265359)",
+      "state->period2 = (u16) ((3.14159265359 * ((double) state->width)) * 0.5)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "parameter",
+   "declaration_ordinal": 3,
+   "declarator": "u16 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_634f0:amount:4",
+   "kind": "local",
+   "current_name": "amount",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Parameter in effect_helper_634f0: effect_update_table_633e0(amount).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_update_table_633e0(amount)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 4,
+     "uses": [
+      "effect_update_table_633e0(amount)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "s16 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_634f0:source:5",
+   "kind": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_634f0: (source != 0) && (destination != 0); copy(source, EffetBufferNormal, 64000); state->source = EffetBufferNormal.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(source != 0) && (destination != 0)",
+     "copy(source, EffetBufferNormal, 64000)",
+     "state->source = EffetBufferNormal"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 5,
+     "uses": [
+      "(source != 0) && (destination != 0)",
+      "copy(source, EffetBufferNormal, 64000)",
+      "state->source = EffetBufferNormal"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_634f0:destination:6",
+   "kind": "local",
+   "current_name": "destination",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in effect_helper_634f0: (source != 0) && (destination != 0); state->destination = destination.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "(source != 0) && (destination != 0)",
+     "state->destination = destination"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_634f0",
+     "address": "1:634f0",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_634f0",
+     "ordinal": 6,
+     "uses": [
+      "(source != 0) && (destination != 0)",
+      "state->destination = destination"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_634f0",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u8 *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_63614",
+   "kind": "function",
+   "current_name": "effect_helper_63614",
+   "proposed_name": null,
+   "c_type": "s16 effect_helper_63614(void)",
+   "meaning": "Prepare column-remap mode0 sine leading edge, mode1 cosine transition (clamped after period1), or mode2 trailing edge using signed32 limits/center and initialized latch. Advance signed16 progress byabs(delta); return0 in forward mode4 or reverse modeFFh. Rendering advances the actual column center and mode.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state = effect_state_55760",
+     "if (state->initialized == 0)",
+     "if (state->delta > 0)",
+     "state->field_04 = 319",
+     "state->field_14 = state->field_04",
+     "state->field_08 = 319 - state->period2",
+     "state->field_08 = state->field_14",
+     "state->initialized = 1",
+     "state->field_0c = (s32) (sin(((double) (state->field_04 - state->field_14)) / ((double) state->width)) * ((double) state->width))",
+     "state->field_10 = state->field_14 - state->period2",
+     "state->field_04 = state->field_14",
+     "state->field_08 = state->width",
+     "state->field_04 = 319 - state->period2",
+     "difference[0] = (double) (state->field_04 - state->field_14)",
+     "if (difference[0] <= ((double) state->period1))",
+     "quotient = difference[0] / ((double) state->width)",
+     "quotient = cos(quotient)",
+     "state->field_0c = (s32) (quotient * ((double) state->width))",
+     "state->field_0c = -((s32) state->width)",
+     "state->field_10 = 319 - (state->field_04 - state->field_14)",
+     "state->field_08 = -((s32) state->width)",
+     "state->field_04 = ((s32) state->width) - 1",
+     "state->field_14 = -((s32) state->width)",
+     "state->field_0c = -state->field_14",
+     "state->field_10 = state->field_14 + state->period2",
+     "if (step < 0)",
+     "step = -step",
+     "state->pos_x = step + state->pos_x",
+     "if (state->mode == 4)",
+     "state->pos_x = 0",
+     "if (((s8) state->mode) == (-1))",
+     "return state->pos_x;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63614",
+     "address": "1:63614",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_63614"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_63614"
+    }
+   ],
+   "port_notes": [
+    "Prepare column-remap mode0 sine leading edge, mode1 cosine transition (clamped after period1), or mode2 trailing edge using signed32 limits/center and initialized latch. Advance signed16 progress byabs(delta); return0 in forward mode4 or reverse modeFFh. Rendering advances the actual column center and mode.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "oracle_address": "1:63614",
+   "source_file": "src/effect633e0.c",
+   "source_body_sha256": "a566d541d9165a7ff2688ec7e78ebb3c1e7f61b02535428b42a3eb9887444247",
+   "baseline_parser_body_sha256": "c13b44f72a21b99d6b3127cb094fa4fff7645434df4971c51915399ab3a35aa9",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_55760"
+    ],
+    "calls": [
+     "cos",
+     "sin"
+    ],
+    "members": [
+     "delta",
+     "field_04",
+     "field_08",
+     "field_0c",
+     "field_10",
+     "field_14",
+     "initialized",
+     "mode",
+     "period1",
+     "period2",
+     "pos_x",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_63614:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t *",
+   "meaning": "Local value in effect_helper_63614: effect_state_t *state; state = effect_state_55760; state->initialized == 0; state->delta > 0; state->field_04 = 319.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_t *state",
+     "state = effect_state_55760",
+     "state->initialized == 0",
+     "state->delta > 0",
+     "state->field_04 = 319",
+     "state->field_14 = state->field_04",
+     "state->field_08 = 319 - state->period2",
+     "state->field_08 = state->field_14",
+     "state->initialized = 1",
+     "state->field_0c = (s32) (sin(((double) (state->field_04 - state->field_14)) / ((double) state->width)) * ((double) state->width))",
+     "sin(((double) (state->field_04 - state->field_14)) / ((double) state->width))",
+     "state->field_10 = state->field_14 - state->period2",
+     "state->field_04 = state->field_14",
+     "state->field_08 = state->width",
+     "state->field_04 = 319 - state->period2",
+     "difference[0] = (double) (state->field_04 - state->field_14)",
+     "difference[0] <= ((double) state->period1)",
+     "quotient = difference[0] / ((double) state->width)",
+     "state->field_0c = (s32) (quotient * ((double) state->width))",
+     "state->field_0c = -((s32) state->width)",
+     "-((s32) state->width)",
+     "state->field_10 = 319 - (state->field_04 - state->field_14)",
+     "state->field_08 = -((s32) state->width)",
+     "state->field_04 = ((s32) state->width) - 1",
+     "state->field_14 = -((s32) state->width)",
+     "state->field_0c = -state->field_14",
+     "-state->field_14",
+     "state->field_10 = state->field_14 + state->period2",
+     "s32 step = state->delta",
+     "state->pos_x = step + state->pos_x",
+     "state->mode == 4",
+     "state->pos_x = 0",
+     "((s8) state->mode) == (-1)",
+     "return state->pos_x;"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63614",
+     "address": "1:63614",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63614",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_t *state",
+      "state = effect_state_55760",
+      "state->initialized == 0",
+      "state->delta > 0",
+      "state->field_04 = 319",
+      "state->field_14 = state->field_04",
+      "state->field_08 = 319 - state->period2",
+      "state->field_08 = state->field_14",
+      "state->initialized = 1",
+      "state->field_0c = (s32) (sin(((double) (state->field_04 - state->field_14)) / ((double) state->width)) * ((double) state->width))",
+      "sin(((double) (state->field_04 - state->field_14)) / ((double) state->width))",
+      "state->field_10 = state->field_14 - state->period2",
+      "state->field_04 = state->field_14",
+      "state->field_08 = state->width",
+      "state->field_04 = 319 - state->period2",
+      "difference[0] = (double) (state->field_04 - state->field_14)",
+      "difference[0] <= ((double) state->period1)",
+      "quotient = difference[0] / ((double) state->width)",
+      "state->field_0c = (s32) (quotient * ((double) state->width))",
+      "state->field_0c = -((s32) state->width)",
+      "-((s32) state->width)",
+      "state->field_10 = 319 - (state->field_04 - state->field_14)",
+      "state->field_08 = -((s32) state->width)",
+      "state->field_04 = ((s32) state->width) - 1",
+      "state->field_14 = -((s32) state->width)",
+      "state->field_0c = -state->field_14",
+      "-state->field_14",
+      "state->field_10 = state->field_14 + state->period2",
+      "s32 step = state->delta",
+      "state->pos_x = step + state->pos_x",
+      "state->mode == 4",
+      "state->pos_x = 0",
+      "((s8) state->mode) == (-1)",
+      "return state->pos_x;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63614",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_column_state_t *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63614:difference:2",
+   "kind": "local",
+   "current_name": "difference",
+   "proposed_name": null,
+   "c_type": "double [1]",
+   "meaning": "Local value in effect_helper_63614: double difference[1]; difference[0] = (double) (state->field_04 - state->field_14); difference[0] <= ((double) state->period1); quotient = difference[0] / ((double) state->width).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double difference[1]",
+     "difference[0] = (double) (state->field_04 - state->field_14)",
+     "difference[0] <= ((double) state->period1)",
+     "quotient = difference[0] / ((double) state->width)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63614",
+     "address": "1:63614",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63614",
+     "ordinal": 2,
+     "uses": [
+      "double difference[1]",
+      "difference[0] = (double) (state->field_04 - state->field_14)",
+      "difference[0] <= ((double) state->period1)",
+      "quotient = difference[0] / ((double) state->width)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63614",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "double $[1]",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63614:quotient:3",
+   "kind": "local",
+   "current_name": "quotient",
+   "proposed_name": null,
+   "c_type": "double",
+   "meaning": "Local value in effect_helper_63614: double quotient; quotient = difference[0] / ((double) state->width); quotient = cos(quotient); cos(quotient); state->field_0c = (s32) (quotient * ((double) state->width)).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "double quotient",
+     "quotient = difference[0] / ((double) state->width)",
+     "quotient = cos(quotient)",
+     "cos(quotient)",
+     "state->field_0c = (s32) (quotient * ((double) state->width))"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63614",
+     "address": "1:63614",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63614",
+     "ordinal": 3,
+     "uses": [
+      "double quotient",
+      "quotient = difference[0] / ((double) state->width)",
+      "quotient = cos(quotient)",
+      "cos(quotient)",
+      "state->field_0c = (s32) (quotient * ((double) state->width))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63614",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "double $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63614:step:4",
+   "kind": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "s32 = state->delta",
+   "meaning": "Local value in effect_helper_63614: s32 step = state->delta; step < 0; step = -step; -step; state->pos_x = step + state->pos_x.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 step = state->delta",
+     "step < 0",
+     "step = -step",
+     "-step",
+     "state->pos_x = step + state->pos_x"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63614",
+     "address": "1:63614",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63614",
+     "ordinal": 4,
+     "uses": [
+      "s32 step = state->delta",
+      "step < 0",
+      "step = -step",
+      "-step",
+      "state->pos_x = step + state->pos_x"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63614",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "s32 $ = state->delta",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:effect_helper_63838",
+   "kind": "function",
+   "current_name": "effect_helper_63838",
+   "proposed_name": null,
+   "c_type": "void effect_helper_63838(void)",
+   "meaning": "Mode3 clears64000 destination bytes and advances/decrements mode. Modes0..2 map source columns through acos table across200 rows, substitute alternate source when sampled pixel0, and restore/clear edge strips according to delta sign. Subtract delta from center, compare against phase thresholds and reset initialized latch when changing mode; preserve asymmetric x<0/x<=0 and -1 differences.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "state = effect_state_55760",
+     "if (state->mode == 3)",
+     "for (; count; --count)",
+     "*(clear_pos++) = 0",
+     "if (state->delta > 0)",
+     "next_mode = state->mode + 1",
+     "next_mode = state->mode - 1",
+     "state->initialized = 0",
+     "state->mode = next_mode",
+     "source_row = state->source",
+     "destination_row = state->destination",
+     "if ((state->delta > 0) && (state->initialized == 1))",
+     "state->initialized = 2",
+     "for (y = 0; y < 200; ++y)",
+     "y = 0",
+     "for (x = 0; x < state->field_0c; ++x)",
+     "x = 0",
+     "source_x = state->field_10 + state->table[state->width - x]",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "for (x = state->field_0c; x < (abs32_inline((s32) state->delta) + state->field_0c); ++x)",
+     "x = state->field_0c",
+     "if ((state->field_14 + x) < 320)",
+     "destination_row[state->field_14 + x] = 0",
+     "for (x = -1; x < (ABS((s32) state->delta) - 1); ++x)",
+     "x = -1",
+     "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+     "source_row += 320",
+     "destination_row += 320",
+     "for (x = state->field_0c; x < state->width; ++x)",
+     "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+     "if (source_row[source_x] == 0)",
+     "if (x <= 0)",
+     "source_x = state->field_14 + x",
+     "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+     "for (x = state->width; x < (ABS((s32) state->delta) + state->width); ++x)",
+     "x = state->width",
+     "if (state->width < state->field_14)",
+     "for (x = (-state->width) - ABS((s32) state->delta); x < state->field_0c; ++x)",
+     "x = (-state->width) - ABS((s32) state->delta)",
+     "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+     "source_x = state->field_10 + state->table[state->width + x]",
+     "destination_x = state->field_14 + x",
+     "if (x < 0)",
+     "source_x = state->field_10 - state->table[state->width + x]",
+     "destination_row[destination_x] = source_row[source_x]",
+     "for (x = state->width; x < (abs32_inline((s32) state->delta) + state->width); ++x)",
+     "state->field_14 -= state->delta",
+     "if (state->field_14 < state->field_08)",
+     "state->mode = state->mode + 1",
+     "if (state->field_14 > state->field_04)",
+     "state->mode = state->mode - 1"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_helper_63838"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "effect_helper_63838"
+    }
+   ],
+   "port_notes": [
+    "Mode3 clears64000 destination bytes and advances/decrements mode. Modes0..2 map source columns through acos table across200 rows, substitute alternate source when sampled pixel0, and restore/clear edge strips according to delta sign. Subtract delta from center, compare against phase thresholds and reset initialized latch when changing mode; preserve asymmetric x<0/x<=0 and -1 differences.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "oracle_address": "1:63838",
+   "source_file": "src/effect633e0.c",
+   "source_body_sha256": "59375bfbccb7af9325408c6c680632e1c21f911b46813f042e686ccb0e57ce34",
+   "baseline_parser_body_sha256": "bde8fb55200c949df7dd4a81a17ba189d982b06a144765573d4d3a1eada134ca",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "effect_state_55760"
+    ],
+    "calls": [
+     "ABS",
+     "MIN",
+     "abs32_inline",
+     "memcpy"
+    ],
+    "members": [
+     "delta",
+     "destination",
+     "field_04",
+     "field_08",
+     "field_0c",
+     "field_10",
+     "field_14",
+     "initialized",
+     "mode",
+     "source",
+     "table",
+     "width"
+    ]
+   }
+  },
+  {
+   "id": "local:effect_helper_63838:state:1",
+   "kind": "local",
+   "current_name": "state",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t *",
+   "meaning": "Local value in effect_helper_63838: effect_state_t *state; state = effect_state_55760; state->mode == 3; u32 *clear_pos = (u32 *) state->destination; state->delta > 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "effect_state_t *state",
+     "state = effect_state_55760",
+     "state->mode == 3",
+     "u32 *clear_pos = (u32 *) state->destination",
+     "state->delta > 0",
+     "next_mode = state->mode + 1",
+     "next_mode = state->mode - 1",
+     "state->initialized = 0",
+     "state->mode = next_mode",
+     "source_row = state->source",
+     "destination_row = state->destination",
+     "(state->delta > 0) && (state->initialized == 1)",
+     "state->initialized = 2",
+     "for (x = 0; x < state->field_0c; ++x)",
+     "source_x = state->field_10 + state->table[state->width - x]",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "for (x = state->field_0c; x < (abs32_inline((s32) state->delta) + state->field_0c); ++x)",
+     "x = state->field_0c",
+     "abs32_inline((s32) state->delta)",
+     "(state->field_14 + x) < 320",
+     "destination_row[state->field_14 + x] = 0",
+     "for (x = -1; x < (ABS((s32) state->delta) - 1); ++x)",
+     "ABS((s32) state->delta)",
+     "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+     "for (x = state->field_0c; x < state->width; ++x)",
+     "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+     "MIN(319, state->field_10 + state->table[state->width + x])",
+     "source_x = state->field_14 + x",
+     "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+     "for (x = state->width; x < (ABS((s32) state->delta) + state->width); ++x)",
+     "x = state->width",
+     "state->width < state->field_14",
+     "for (x = (-state->width) - ABS((s32) state->delta); x < state->field_0c; ++x)",
+     "x = (-state->width) - ABS((s32) state->delta)",
+     "-state->width",
+     "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+     "source_x = state->field_10 + state->table[state->width + x]",
+     "destination_x = state->field_14 + x",
+     "source_x = state->field_10 - state->table[state->width + x]",
+     "for (x = state->width; x < (abs32_inline((s32) state->delta) + state->width); ++x)",
+     "state->field_14 -= state->delta",
+     "state->field_14 < state->field_08",
+     "state->mode = state->mode + 1",
+     "state->field_14 > state->field_04",
+     "state->mode = state->mode - 1"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 1,
+     "uses": [
+      "effect_state_t *state",
+      "state = effect_state_55760",
+      "state->mode == 3",
+      "u32 *clear_pos = (u32 *) state->destination",
+      "state->delta > 0",
+      "next_mode = state->mode + 1",
+      "next_mode = state->mode - 1",
+      "state->initialized = 0",
+      "state->mode = next_mode",
+      "source_row = state->source",
+      "destination_row = state->destination",
+      "(state->delta > 0) && (state->initialized == 1)",
+      "state->initialized = 2",
+      "for (x = 0; x < state->field_0c; ++x)",
+      "source_x = state->field_10 + state->table[state->width - x]",
+      "destination_row[state->field_14 + x] = source_row[source_x]",
+      "for (x = state->field_0c; x < (abs32_inline((s32) state->delta) + state->field_0c); ++x)",
+      "x = state->field_0c",
+      "abs32_inline((s32) state->delta)",
+      "(state->field_14 + x) < 320",
+      "destination_row[state->field_14 + x] = 0",
+      "for (x = -1; x < (ABS((s32) state->delta) - 1); ++x)",
+      "ABS((s32) state->delta)",
+      "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+      "for (x = state->field_0c; x < state->width; ++x)",
+      "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+      "MIN(319, state->field_10 + state->table[state->width + x])",
+      "source_x = state->field_14 + x",
+      "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+      "for (x = state->width; x < (ABS((s32) state->delta) + state->width); ++x)",
+      "x = state->width",
+      "state->width < state->field_14",
+      "for (x = (-state->width) - ABS((s32) state->delta); x < state->field_0c; ++x)",
+      "x = (-state->width) - ABS((s32) state->delta)",
+      "-state->width",
+      "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+      "source_x = state->field_10 + state->table[state->width + x]",
+      "destination_x = state->field_14 + x",
+      "source_x = state->field_10 - state->table[state->width + x]",
+      "for (x = state->width; x < (abs32_inline((s32) state->delta) + state->width); ++x)",
+      "state->field_14 -= state->delta",
+      "state->field_14 < state->field_08",
+      "state->mode = state->mode + 1",
+      "state->field_14 > state->field_04",
+      "state->mode = state->mode - 1"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "effect_column_state_t *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:source_row:2",
+   "kind": "local",
+   "current_name": "source_row",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_helper_63838: u8 *source_row; source_row = state->source; memcpy(destination_row, source_row, 64000); destination_row[state->field_14 + x] = source_row[source_x]; destination_row[state->field_14 - x] = source_row[state->field_14 - x].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *source_row",
+     "source_row = state->source",
+     "memcpy(destination_row, source_row, 64000)",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+     "source_row += 320",
+     "source_row[source_x] == 0",
+     "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+     "destination_row[destination_x] = source_row[source_x]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 2,
+     "uses": [
+      "u8 *source_row",
+      "source_row = state->source",
+      "memcpy(destination_row, source_row, 64000)",
+      "destination_row[state->field_14 + x] = source_row[source_x]",
+      "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+      "source_row += 320",
+      "source_row[source_x] == 0",
+      "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+      "destination_row[destination_x] = source_row[source_x]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:destination_row:3",
+   "kind": "local",
+   "current_name": "destination_row",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local value in effect_helper_63838: u8 *destination_row; destination_row = state->destination; memcpy(destination_row, source_row, 64000); destination_row[state->field_14 + x] = source_row[source_x]; destination_row[state->field_14 + x] = 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 *destination_row",
+     "destination_row = state->destination",
+     "memcpy(destination_row, source_row, 64000)",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "destination_row[state->field_14 + x] = 0",
+     "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+     "destination_row += 320",
+     "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+     "destination_row[destination_x] = source_row[source_x]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 3,
+     "uses": [
+      "u8 *destination_row",
+      "destination_row = state->destination",
+      "memcpy(destination_row, source_row, 64000)",
+      "destination_row[state->field_14 + x] = source_row[source_x]",
+      "destination_row[state->field_14 + x] = 0",
+      "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+      "destination_row += 320",
+      "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+      "destination_row[destination_x] = source_row[source_x]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:x:4",
+   "kind": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 x; for (x = 0; x < state->field_0c; ++x); x = 0; ++x; source_x = state->field_10 + state->table[state->width - x].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 x",
+     "for (x = 0; x < state->field_0c; ++x)",
+     "x = 0",
+     "++x",
+     "source_x = state->field_10 + state->table[state->width - x]",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "for (x = state->field_0c; x < (abs32_inline((s32) state->delta) + state->field_0c); ++x)",
+     "x = state->field_0c",
+     "(state->field_14 + x) < 320",
+     "destination_row[state->field_14 + x] = 0",
+     "for (x = -1; x < (ABS((s32) state->delta) - 1); ++x)",
+     "x = -1",
+     "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+     "for (x = state->field_0c; x < state->width; ++x)",
+     "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+     "MIN(319, state->field_10 + state->table[state->width + x])",
+     "x <= 0",
+     "source_x = state->field_14 + x",
+     "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+     "for (x = state->width; x < (ABS((s32) state->delta) + state->width); ++x)",
+     "x = state->width",
+     "for (x = (-state->width) - ABS((s32) state->delta); x < state->field_0c; ++x)",
+     "x = (-state->width) - ABS((s32) state->delta)",
+     "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+     "source_x = state->field_10 + state->table[state->width + x]",
+     "destination_x = state->field_14 + x",
+     "x < 0",
+     "source_x = state->field_10 - state->table[state->width + x]",
+     "for (x = state->width; x < (abs32_inline((s32) state->delta) + state->width); ++x)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 4,
+     "uses": [
+      "s32 x",
+      "for (x = 0; x < state->field_0c; ++x)",
+      "x = 0",
+      "++x",
+      "source_x = state->field_10 + state->table[state->width - x]",
+      "destination_row[state->field_14 + x] = source_row[source_x]",
+      "for (x = state->field_0c; x < (abs32_inline((s32) state->delta) + state->field_0c); ++x)",
+      "x = state->field_0c",
+      "(state->field_14 + x) < 320",
+      "destination_row[state->field_14 + x] = 0",
+      "for (x = -1; x < (ABS((s32) state->delta) - 1); ++x)",
+      "x = -1",
+      "destination_row[state->field_14 - x] = source_row[state->field_14 - x]",
+      "for (x = state->field_0c; x < state->width; ++x)",
+      "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+      "MIN(319, state->field_10 + state->table[state->width + x])",
+      "x <= 0",
+      "source_x = state->field_14 + x",
+      "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+      "for (x = state->width; x < (ABS((s32) state->delta) + state->width); ++x)",
+      "x = state->width",
+      "for (x = (-state->width) - ABS((s32) state->delta); x < state->field_0c; ++x)",
+      "x = (-state->width) - ABS((s32) state->delta)",
+      "destination_row[state->field_14 + x] = source_row[state->field_14 + x]",
+      "source_x = state->field_10 + state->table[state->width + x]",
+      "destination_x = state->field_14 + x",
+      "x < 0",
+      "source_x = state->field_10 - state->table[state->width + x]",
+      "for (x = state->width; x < (abs32_inline((s32) state->delta) + state->width); ++x)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:source_x:5",
+   "kind": "local",
+   "current_name": "source_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 source_x; source_x = state->field_10 + state->table[state->width - x]; destination_row[state->field_14 + x] = source_row[source_x]; source_x = MIN(319, state->field_10 + state->table[state->width + x]); source_row[source_x] == 0.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 source_x",
+     "source_x = state->field_10 + state->table[state->width - x]",
+     "destination_row[state->field_14 + x] = source_row[source_x]",
+     "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+     "source_row[source_x] == 0",
+     "source_x = state->field_14 + x",
+     "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+     "source_x = state->field_10 + state->table[state->width + x]",
+     "source_x = state->field_10 - state->table[state->width + x]",
+     "destination_row[destination_x] = source_row[source_x]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 5,
+     "uses": [
+      "s32 source_x",
+      "source_x = state->field_10 + state->table[state->width - x]",
+      "destination_row[state->field_14 + x] = source_row[source_x]",
+      "source_x = MIN(319, state->field_10 + state->table[state->width + x])",
+      "source_row[source_x] == 0",
+      "source_x = state->field_14 + x",
+      "source_x = (state->field_10 - state->table[state->width + x]) - 1",
+      "source_x = state->field_10 + state->table[state->width + x]",
+      "source_x = state->field_10 - state->table[state->width + x]",
+      "destination_row[destination_x] = source_row[source_x]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:clear_pos:6",
+   "kind": "local",
+   "current_name": "clear_pos",
+   "proposed_name": null,
+   "c_type": "u32 * = (u32 *) state->destination",
+   "meaning": "Local value in effect_helper_63838: u32 *clear_pos = (u32 *) state->destination; *(clear_pos++) = 0; *(clear_pos++); clear_pos++.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u32 *clear_pos = (u32 *) state->destination",
+     "*(clear_pos++) = 0",
+     "*(clear_pos++)",
+     "clear_pos++"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 6,
+     "uses": [
+      "u32 *clear_pos = (u32 *) state->destination",
+      "*(clear_pos++) = 0",
+      "*(clear_pos++)",
+      "clear_pos++"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "declarator": "u32 *$ = (u32 *) state->destination",
+   "source_file": "src/effect633e0.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:count:7",
+   "kind": "local",
+   "current_name": "count",
+   "proposed_name": null,
+   "c_type": "u32 = 16000",
+   "meaning": "Local value in effect_helper_63838: u32 count = 16000; for (; count; --count); --count.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u32 count = 16000",
+     "for (; count; --count)",
+     "--count"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 7,
+     "uses": [
+      "u32 count = 16000",
+      "for (; count; --count)",
+      "--count"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 7,
+   "declarator": "u32 $ = 16000",
+   "source_file": "src/effect633e0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:next_mode:8",
+   "kind": "local",
+   "current_name": "next_mode",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in effect_helper_63838: u8 next_mode; next_mode = state->mode + 1; next_mode = state->mode - 1; state->mode = next_mode.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 next_mode",
+     "next_mode = state->mode + 1",
+     "next_mode = state->mode - 1",
+     "state->mode = next_mode"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 8,
+     "uses": [
+      "u8 next_mode",
+      "next_mode = state->mode + 1",
+      "next_mode = state->mode - 1",
+      "state->mode = next_mode"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 8,
+   "declarator": "u8 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:y:9",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 y; for (y = 0; y < 200; ++y); y = 0; ++y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 y",
+     "for (y = 0; y < 200; ++y)",
+     "y = 0",
+     "++y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 9,
+     "uses": [
+      "s32 y",
+      "for (y = 0; y < 200; ++y)",
+      "y = 0",
+      "++y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:y:10",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 y; for (y = 0; y < 200; ++y); y = 0; ++y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 y",
+     "for (y = 0; y < 200; ++y)",
+     "y = 0",
+     "++y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 10,
+     "uses": [
+      "s32 y",
+      "for (y = 0; y < 200; ++y)",
+      "y = 0",
+      "++y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 10,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:y:11",
+   "kind": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 y; for (y = 0; y < 200; ++y); y = 0; ++y.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 y",
+     "for (y = 0; y < 200; ++y)",
+     "y = 0",
+     "++y"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 11,
+     "uses": [
+      "s32 y",
+      "for (y = 0; y < 200; ++y)",
+      "y = 0",
+      "++y"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 11,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:effect_helper_63838:destination_x:12",
+   "kind": "local",
+   "current_name": "destination_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local value in effect_helper_63838: s32 destination_x; destination_x = state->field_14 + x; destination_row[destination_x] = source_row[source_x].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "s32 destination_x",
+     "destination_x = state->field_14 + x",
+     "destination_row[destination_x] = source_row[source_x]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/effect633e0.dos.txt",
+     "function": "effect_helper_63838",
+     "address": "1:63838",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_effect633e0.json",
+     "function": "effect_helper_63838",
+     "ordinal": 12,
+     "uses": [
+      "s32 destination_x",
+      "destination_x = state->field_14 + x",
+      "destination_row[destination_x] = source_row[source_x]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "effect_helper_63838",
+   "role": "local",
+   "declaration_ordinal": 12,
+   "declarator": "s32 $",
+   "source_file": "src/effect633e0.c",
+   "signedness": "signed",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "global:effect_state_55760",
+   "kind": "global",
+   "current_name": "effect_state_55760",
+   "proposed_name": null,
+   "c_type": "effect_column_state_t *",
+   "meaning": "Owning pointer to horizontal column-remap transition state and acos lookup table.",
+   "unit": "presentation state ownership",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "contexts": [
+     "effect633e0"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "whole_binary_target_references_and_source_readers_writers",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "effect_state_55760"
+    }
+   ],
+   "port_notes": [
+    "Owning pointer to horizontal column-remap transition state and acos lookup table.",
+    "Keep acos setup table, three remap phases/clear phase, asymmetric zero-pixel fallback, signed phase direction and exact source-column arithmetic. Visual name beyond observed column remap is not promoted."
+   ],
+   "binding_kind": "game_data",
+   "oracle_address": "2:55760",
+   "source_file": "src/effect633e0.c",
+   "name_provenance": "INVENTED",
+   "declarator": "effect_column_state_t *$",
+   "context_declarators": {
+    "effect633e0.c": "effect_column_state_t *$"
+   },
+   "readers_writers": {
+    "exact_target_references": [
+     {
+      "site": "1:63525",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:63524",
+      "containing_bound_function": "effect_helper_634f0",
+      "instruction": "mov dword ptr [0x55760], eax",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": false,
+        "write": true
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:6361f",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:6361d",
+      "containing_bound_function": "effect_helper_63614",
+      "instruction": "mov esi, dword ptr [0x55760]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:63843",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:63841",
+      "containing_bound_function": "effect_helper_63838",
+      "instruction": "mov edx, dword ptr [0x55760]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:633eb",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:633e9",
+      "containing_bound_function": "effect_update_table_633e0",
+      "instruction": "mov ebp, dword ptr [0x55760]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:634c5",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:634c4",
+      "containing_bound_function": "effect_cleanup_634c4",
+      "instruction": "mov eax, dword ptr [0x55760]",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:634dd",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:634db",
+      "containing_bound_function": "effect_cleanup_634c4",
+      "instruction": "cmp dword ptr [0x55760], 0",
+      "memory_operands": [
+       {
+        "width": 4,
+        "read": true,
+        "write": false
+       }
+      ],
+      "instruction_class": "memory access"
+     },
+     {
+      "site": "1:634e5",
+      "target": "2:55760",
+      "kind": 7,
+      "instruction_address": "1:634e4",
+      "containing_bound_function": "effect_cleanup_634c4",
+      "instruction": "mov eax, 0x55760",
+      "instruction_class": "address immediate / address escape"
+     }
+    ],
+    "shifted_or_interior_references": [],
+    "source_references": [
+     {
+      "source": "src/effect633e0.c",
+      "line": 32,
+      "text": "extern effect_state_t *effect_state_55760;"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 45,
+      "text": "state = effect_state_55760;"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 68,
+      "text": "effect_state_t *state = effect_state_55760;"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 72,
+      "text": "if (effect_state_55760 != 0)"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 73,
+      "text": "JumelleFreeArray((void **)&effect_state_55760);"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 85,
+      "text": "effect_state_55760 = state;"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 111,
+      "text": "state = effect_state_55760;"
+     },
+     {
+      "source": "src/effect633e0.c",
+      "line": 195,
+      "text": "state = effect_state_55760;"
+     }
+    ]
+   }
+  }
+ ],
+ "source_fingerprints": {
+  "src/effect633e0.c": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6"
+ },
+ "proposal_fingerprints": {
+  "effect633e0.c": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/effect633e0.dos.txt": null,
+  "evidence/inventory_effect633e0.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

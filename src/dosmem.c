@@ -3,15 +3,7 @@
 #include <i86.h>
 
 /* INVENTED layout, offsets proven at 1:564f8..1:56664. */
-typedef struct real_mode_regs {
-    u32 edi, esi, ebp, reserved, ebx, edx, ecx, eax;
-    u16 flags, es, ds, fs, gs, ip, cs, sp, ss, padding;
-} real_mode_regs_t;
-typedef struct dpmi_scratch {
-    union REGS regs;
-    real_mode_regs_t real;
-    struct SREGS segments;
-} dpmi_scratch_t;
+#include "dosmem_local.h"
 extern dpmi_scratch_t dpmi_workspace;
 extern void clear_memory(void *destination, s32 value, s32 bytes);
 

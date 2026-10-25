@@ -1,0 +1,730 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "dosprobe.c",
+  "headers": [
+   "include/rtypes.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:byte_CFA14"
+  ],
+  "types": []
+ },
+ "artifact_root": "build/workers/sem_plat",
+ "proof_boundary": "Meaning confidence describes the stated DOS contract, separately from STRICT matching or layout identity. Original public/shared names remain; UNKNOWN keeps neutral names and observed operations. No hypothetical audible/visual label becomes a name.",
+ "entities": [
+  {
+   "id": "function:detect_windows",
+   "kind": "function",
+   "current_name": "detect_windows",
+   "proposed_name": null,
+   "c_type": "u8 detect_windows(u8 *first_result, u8 *second_result)",
+   "meaning": "Probe real-mode INT2Fh AX1600. AL1/FF =>outputs2,0/return1; AL0/80 =>fallback4680 then1605/1606 with returns0/81/82; other AL =>outputsAL,AH/return83. Preserve observed status encoding; output byte names remain neutral.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "*first_result = 0",
+     "*second_result = 0",
+     "request.words[0] = 0x1600",
+     "code = request.bytes[0]",
+     "*first_result = 2",
+     "return 1;",
+     "request.words[0] = 0x4680",
+     "if (request.bytes[0] == 0x80)",
+     "return 0;",
+     "request.words[0] = 0x1605",
+     "request.words[2] = 0",
+     "request.words[4] = 0",
+     "request.words[1] = 0",
+     "request.words[3] = 1",
+     "if (request.words[2] == 0)",
+     "request.words[0] = 0x1606",
+     "return 0x81;",
+     "return 0x82;",
+     "*first_result = request.bytes[0]",
+     "*second_result = request.bytes[1]",
+     "return 0x83;"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "detect_windows"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "detect_windows"
+    }
+   ],
+   "port_notes": [
+    "Probe real-mode INT2Fh AX1600. AL1/FF =>outputs2,0/return1; AL0/80 =>fallback4680 then1605/1606 with returns0/81/82; other AL =>outputsAL,AH/return83. Preserve observed status encoding; output byte names remain neutral.",
+    "Replace BIOS/DOS/Windows detection with explicit native platform policy. Preserve the existing downstream conditional behavior where relevant; no native OS-version number should masquerade as DOS return bytes."
+   ],
+   "oracle_address": "1:6f200",
+   "source_file": "src/dosprobe.c",
+   "source_body_sha256": "2129f633954579576c118c6c2c56a0c9830291951baff12eecfceed0f329c6c3",
+   "baseline_parser_body_sha256": "2129f633954579576c118c6c2c56a0c9830291951baff12eecfceed0f329c6c3",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [],
+    "calls": [
+     "clear_memory",
+     "sub_564f8"
+    ],
+    "members": [
+     "bytes",
+     "words"
+    ]
+   }
+  },
+  {
+   "id": "local:detect_windows:request:1",
+   "kind": "local",
+   "current_name": "request",
+   "proposed_name": null,
+   "c_type": "union { u16 words[11]; u8 bytes[22]; }",
+   "meaning": "Local value in detect_windows: union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request; clear_memory(&request, 0, 0x16); &request; request.words[0] = 0x1600; sub_564f8(0x2f, &request).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+     "clear_memory(&request, 0, 0x16)",
+     "&request",
+     "request.words[0] = 0x1600",
+     "sub_564f8(0x2f, &request)",
+     "code = request.bytes[0]",
+     "request.words[0] = 0x4680",
+     "request.bytes[0] == 0x80",
+     "request.words[0] = 0x1605",
+     "request.words[2] = 0",
+     "request.words[4] = 0",
+     "request.words[1] = 0",
+     "request.words[3] = 1",
+     "request.words[2] == 0",
+     "request.words[0] = 0x1606",
+     "*first_result = request.bytes[0]",
+     "*second_result = request.bytes[1]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 1,
+     "uses": [
+      "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+      "clear_memory(&request, 0, 0x16)",
+      "&request",
+      "request.words[0] = 0x1600",
+      "sub_564f8(0x2f, &request)",
+      "code = request.bytes[0]",
+      "request.words[0] = 0x4680",
+      "request.bytes[0] == 0x80",
+      "request.words[0] = 0x1605",
+      "request.words[2] = 0",
+      "request.words[4] = 0",
+      "request.words[1] = 0",
+      "request.words[3] = 1",
+      "request.words[2] == 0",
+      "request.words[0] = 0x1606",
+      "*first_result = request.bytes[0]",
+      "*second_result = request.bytes[1]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} $",
+   "source_file": "src/dosprobe.c",
+   "signedness": "not applicable (aggregate)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_windows:words:2",
+   "kind": "local",
+   "current_name": "words",
+   "proposed_name": null,
+   "c_type": "u16 [11]",
+   "meaning": "Member of local request anonymous union in detect_windows; word/byte views of the same22-byte interrupt block.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+     "u16 words[11]",
+     "request.words[0] = 0x1600",
+     "request.words[0] = 0x4680",
+     "request.words[0] = 0x1605",
+     "request.words[2] = 0",
+     "request.words[4] = 0",
+     "request.words[1] = 0",
+     "request.words[3] = 1",
+     "request.words[2] == 0",
+     "request.words[0] = 0x1606"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 2,
+     "uses": [
+      "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+      "u16 words[11]",
+      "request.words[0] = 0x1600",
+      "request.words[0] = 0x4680",
+      "request.words[0] = 0x1605",
+      "request.words[2] = 0",
+      "request.words[4] = 0",
+      "request.words[1] = 0",
+      "request.words[3] = 1",
+      "request.words[2] == 0",
+      "request.words[0] = 0x1606"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u16 $[11]",
+   "source_file": "src/dosprobe.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_windows:bytes:3",
+   "kind": "local",
+   "current_name": "bytes",
+   "proposed_name": null,
+   "c_type": "u8 [22]",
+   "meaning": "Member of local request anonymous union in detect_windows; word/byte views of the same22-byte interrupt block.",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+     "u8 bytes[22]",
+     "code = request.bytes[0]",
+     "request.bytes[0] == 0x80",
+     "*first_result = request.bytes[0]",
+     "*second_result = request.bytes[1]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 3,
+     "uses": [
+      "union \n{\n  u16 words[11];\n  u8 bytes[22];\n} request",
+      "u8 bytes[22]",
+      "code = request.bytes[0]",
+      "request.bytes[0] == 0x80",
+      "*first_result = request.bytes[0]",
+      "*second_result = request.bytes[1]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "declarator": "u8 $[22]",
+   "source_file": "src/dosprobe.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_windows:code:4",
+   "kind": "local",
+   "current_name": "code",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in detect_windows: u8 code; code = request.bytes[0].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 code",
+     "code = request.bytes[0]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 4,
+     "uses": [
+      "u8 code",
+      "code = request.bytes[0]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "declarator": "u8 $",
+   "source_file": "src/dosprobe.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_windows:first_result:5",
+   "kind": "local",
+   "current_name": "first_result",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in detect_windows: *first_result = 0; *first_result; *first_result = 2; *first_result = request.bytes[0].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "*first_result = 0",
+     "*first_result",
+     "*first_result = 2",
+     "*first_result = request.bytes[0]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 5,
+     "uses": [
+      "*first_result = 0",
+      "*first_result",
+      "*first_result = 2",
+      "*first_result = request.bytes[0]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "parameter",
+   "declaration_ordinal": 5,
+   "declarator": "u8 *$",
+   "source_file": "src/dosprobe.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_windows:second_result:6",
+   "kind": "local",
+   "current_name": "second_result",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Parameter in detect_windows: *second_result = 0; *second_result; *second_result = request.bytes[1].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "*second_result = 0",
+     "*second_result",
+     "*second_result = request.bytes[1]"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_windows",
+     "address": "1:6f200",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_windows",
+     "ordinal": 6,
+     "uses": [
+      "*second_result = 0",
+      "*second_result",
+      "*second_result = request.bytes[1]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_windows",
+   "role": "parameter",
+   "declaration_ordinal": 6,
+   "declarator": "u8 *$",
+   "source_file": "src/dosprobe.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "function:detect_dos_version",
+   "kind": "function",
+   "current_name": "detect_dos_version",
+   "proposed_name": null,
+   "c_type": "u8 detect_dos_version(u8 *major_version, u8 *minor_version)",
+   "meaning": "INT21h AX3000; output DOS major/minor from AL/AH, set byte_CFA14 iff major10 or20, return output byte5 (BH). Backend environment classification, not gameplay version selection.",
+   "unit": "see parameters/result/side-effect contract",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "computation": [
+     "*major_version = 0",
+     "*minor_version = 0",
+     "*((u32 *) input_registers) = 0x3000",
+     "*major_version = output_registers[0]",
+     "*minor_version = output_registers[1]",
+     "if (((*major_version) == 10) || ((*major_version) == 20))",
+     "byte_CFA14 = 1",
+     "byte_CFA14 = 0",
+     "return output_registers[5];"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_dos_version",
+     "address": "1:6f32c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "whole_binary_callers_fixups_and_source_references",
+     "artifact": "build/workers/sem_plat/evidence/symbols.json",
+     "key": "detect_dos_version"
+    },
+    {
+     "kind": "external_name_corroboration_only",
+     "artifact": "build/workers/sem_plat/evidence/xref_names.json",
+     "key": "detect_dos_version"
+    }
+   ],
+   "port_notes": [
+    "INT21h AX3000; output DOS major/minor from AL/AH, set byte_CFA14 iff major10 or20, return output byte5 (BH). Backend environment classification, not gameplay version selection.",
+    "Replace BIOS/DOS/Windows detection with explicit native platform policy. Preserve the existing downstream conditional behavior where relevant; no native OS-version number should masquerade as DOS return bytes."
+   ],
+   "oracle_address": "1:6f32c",
+   "source_file": "src/dosprobe.c",
+   "source_body_sha256": "83eb2e1006d3c0427095fb5a8ac8751b2bd15fcdc0fbec74b7340def8c4e9b81",
+   "baseline_parser_body_sha256": "7df30755e4453c5d7e80586621a2584a38e0a38979b09db549b831e4ca5dbea2",
+   "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
+   "readers_writers": {
+    "globals": [
+     "byte_CFA14"
+    ],
+    "calls": [
+     "clear_memory",
+     "int386"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:detect_dos_version:input_registers:1",
+   "kind": "local",
+   "current_name": "input_registers",
+   "proposed_name": null,
+   "c_type": "u8 [0x1c]",
+   "meaning": "Local value in detect_dos_version: u8 input_registers[0x1c]; clear_memory(input_registers, 0, 0x1c); *((u32 *) input_registers) = 0x3000; *((u32 *) input_registers); int386(0x21, input_registers, output_registers).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 input_registers[0x1c]",
+     "clear_memory(input_registers, 0, 0x1c)",
+     "*((u32 *) input_registers) = 0x3000",
+     "*((u32 *) input_registers)",
+     "int386(0x21, input_registers, output_registers)"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_dos_version",
+     "address": "1:6f32c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_dos_version",
+     "ordinal": 1,
+     "uses": [
+      "u8 input_registers[0x1c]",
+      "clear_memory(input_registers, 0, 0x1c)",
+      "*((u32 *) input_registers) = 0x3000",
+      "*((u32 *) input_registers)",
+      "int386(0x21, input_registers, output_registers)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_dos_version",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "declarator": "u8 $[0x1c]",
+   "source_file": "src/dosprobe.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_dos_version:output_registers:2",
+   "kind": "local",
+   "current_name": "output_registers",
+   "proposed_name": null,
+   "c_type": "u8 [0x1c]",
+   "meaning": "Local value in detect_dos_version: u8 output_registers[0x1c]; clear_memory(output_registers, 0, 0x1c); int386(0x21, input_registers, output_registers); *first_result = output_registers[0]; *second_result = output_registers[1].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "u8 output_registers[0x1c]",
+     "clear_memory(output_registers, 0, 0x1c)",
+     "int386(0x21, input_registers, output_registers)",
+     "*first_result = output_registers[0]",
+     "*second_result = output_registers[1]",
+     "return output_registers[5];"
+    ]
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_dos_version",
+     "address": "1:6f32c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_dos_version",
+     "ordinal": 2,
+     "uses": [
+      "u8 output_registers[0x1c]",
+      "clear_memory(output_registers, 0, 0x1c)",
+      "int386(0x21, input_registers, output_registers)",
+      "*first_result = output_registers[0]",
+      "*second_result = output_registers[1]",
+      "return output_registers[5];"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_dos_version",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "declarator": "u8 $[0x1c]",
+   "source_file": "src/dosprobe.c",
+   "signedness": "unsigned",
+   "name_provenance": "Existing source spelling retained"
+  },
+  {
+   "id": "local:detect_dos_version:first_result:3",
+   "kind": "local",
+   "current_name": "major_version",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Observed role major_version (previous spelling first_result). Parameter in detect_dos_version: *first_result = 0; *first_result; *first_result = output_registers[0]; ((*first_result) == 10) || ((*first_result) == 20).",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "*first_result = 0",
+     "*first_result",
+     "*first_result = output_registers[0]",
+     "((*first_result) == 10) || ((*first_result) == 20)"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_dos_version",
+     "address": "1:6f32c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_dos_version",
+     "ordinal": 3,
+     "uses": [
+      "*first_result = 0",
+      "*first_result",
+      "*first_result = output_registers[0]",
+      "((*first_result) == 10) || ((*first_result) == 20)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_dos_version",
+   "role": "parameter",
+   "declaration_ordinal": 3,
+   "declarator": "u8 *$",
+   "source_file": "src/dosprobe.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "INVENTED descriptive local rename from DOS dataflow",
+   "previous_name": "first_result"
+  },
+  {
+   "id": "local:detect_dos_version:second_result:4",
+   "kind": "local",
+   "current_name": "minor_version",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Observed role minor_version (previous spelling second_result). Parameter in detect_dos_version: *second_result = 0; *second_result; *second_result = output_registers[1].",
+   "unit": "see owning function computation / declared representation",
+   "value_domain": {
+    "limitation": "Observed operations/initial values only; no declaration-capacity or universal runtime-range proof.",
+    "observed_uses": [
+     "*second_result = 0",
+     "*second_result",
+     "*second_result = output_registers[1]"
+    ]
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_dataflow",
+     "artifact": "build/workers/sem_plat/evidence/dosprobe.dos.txt",
+     "function": "detect_dos_version",
+     "address": "1:6f32c",
+     "verification_status": "STRICT"
+    },
+    {
+     "kind": "declaration_and_scoped_operations",
+     "artifact": "build/workers/sem_plat/evidence/inventory_dosprobe.json",
+     "function": "detect_dos_version",
+     "ordinal": 4,
+     "uses": [
+      "*second_result = 0",
+      "*second_result",
+      "*second_result = output_registers[1]"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the stated integer width/signedness and operation order; pointer/handle representation can change only at the documented native boundary."
+   ],
+   "function": "detect_dos_version",
+   "role": "parameter",
+   "declaration_ordinal": 4,
+   "declarator": "u8 *$",
+   "source_file": "src/dosprobe.c",
+   "signedness": "not applicable (pointer)",
+   "name_provenance": "INVENTED descriptive local rename from DOS dataflow",
+   "previous_name": "second_result"
+  }
+ ],
+ "source_fingerprints": {
+  "src/dosprobe.c": "26b43039ce778f41c91bf471a742c04c3afe1e95aa5ef6cc8a4551d3a8bce291"
+ },
+ "proposal_fingerprints": {
+  "dosprobe.c": "26b43039ce778f41c91bf471a742c04c3afe1e95aa5ef6cc8a4551d3a8bce291"
+ },
+ "evidence_source_fingerprints": {
+  "docs/port/PLATFORM_OPEN.md": "b1204d69c05732e257f301086e4beea64242c18444862024b815359121bf52d3",
+  "docs/port/ASM_SPEC.md": "37b782e0e20b29b28bba76fd7bb9fa784277d5bbedad935c60da17211d741a99",
+  "docs/port/FILE_FORMATS.md": "bcf0c06fb45742e665350c95a72fdbf20753a346cf5e6070c0ba3e5c1771aa44",
+  "docs/port/RENDERING.md": "394df77ebc7af89528a6fe1c0fc179c5a4dd028e9180fc760c33928538889f44"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/dosprobe.dos.txt": null,
+  "evidence/inventory_dosprobe.json": null,
+  "evidence/symbols.json": null,
+  "evidence/xref_names.json": null,
+  "evidence/field_displacement_scans.json": null,
+  "evidence/typed_accesses.json": null,
+  "evidence/proposed_identifier_android_checks.json": null
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-ps1-decomp/src/sound.c": "db8d0341177e4f154b9e42ca751246674261d60623c179a7283aecceb7b206c3",
+  "external/rayverse/src/sound.c": "2d06a0573b308f51ffd0463970721450361d7f3e48fac0bb2a0e7bf8c993e753",
+  "external/rayverse/src/hifi.c": "8860869b6b74de2a24e6a13a87c4550f16f0829d1e28ced9eda7311a2cbf7910",
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ }
+}

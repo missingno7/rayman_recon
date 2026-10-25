@@ -4466,9 +4466,9 @@
   "external/rayverse/src/blocs.c": "6fd0170066f5ee3b42a007a6de24adc0ec426ebd014c5239f5c6828231a9a28b"
  },
  "evidence_artifact_fingerprints": {
-  "evidence/blocs.dos.txt": "7f8a5e8def99755b4b5e37701adac367ae13aa462f746c528f065a244ab7724b",
-  "evidence/blocs_operations.json": "901fc027bdbe9ee5aac2c7ad6bebdd9fdd2bae15f1de25aab0f586831f6b67bd",
-  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+  "evidence/blocs.dos.txt": null,
+  "evidence/blocs_operations.json": null,
+  "evidence/typed_fields.json": null
  },
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
@@ -4491,7 +4491,7 @@
   "src/bss/bss_3fa7c.c": "f9d0aefdebcfe342185f718907c930144fc57bc2dcc69a0b7a9d73f4e618782b",
   "src/bss/bss_54e1c.c": "c95e04d2c1a446aa137ca0aeb101be218cc47c6ee6995185c8a3c645d5f172bf",
   "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
-  "src/cdaudio.c": "b81b651081993cd63e3ef26840672ad810afad2ddb5643e0734725e97a257c3e",
+  "src/cdaudio.c": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d",
   "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
   "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
   "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
@@ -4501,10 +4501,10 @@
   "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
   "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
-  "src/dosmem.c": "e8c5f3fb8a75461f787319365f7c5fe6e83803a5543e32123d0e3b8882cfe79b",
+  "src/dosmem.c": "1c553ea8a79109b6e23e5f9a88a328f261f7254e72b696220d599cee087cca37",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
-  "src/hifi.c": "4b617784c1af8fd843cbbf6b80993f5a65802203c09a2f532bfae74169280ebb",
+  "src/hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
   "src/hmi/hmi_active.c": "1af10ae4e44363f019241aacfcad7a8bc4674352bca487cf4721b3a2e64adc63",
   "src/hmi/hmi_dpmi_asm.asm": "3c0e5535dbc681e741280c0e65b1e9858c68e36c1e0ef1df9e3700436161302c",
   "src/hmi/hmi_local.h": "ce7378ce7505dfd7fa287f9060e97754f72d1ea2e7622278f499c01d309ff9de",
@@ -4526,7 +4526,7 @@
   "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
   "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
   "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
-  "src/movie.c": "cf17158fd0425314fb207bc55ee5264ef2f72c97ea07eb4d34d61405c976c2a4",
+  "src/movie.c": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb",
   "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
   "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
   "src/objupdate1.c": "52022124cf64b5361d24b7b147bd0a7bcce3ec2ea1d4ed6bde3bdc2a72c8e327",
@@ -4541,7 +4541,7 @@
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
-  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
   "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
