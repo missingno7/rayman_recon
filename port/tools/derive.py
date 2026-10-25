@@ -96,6 +96,18 @@ def main(argv):
     if cmd == "apply":
         out = Path(argv[argv.index("--out") + 1])
         out.mkdir(parents=True, exist_ok=True)
+        # A derived header must be found by every file that includes it with #include "..." (resolved next to the
+        # including file first): "with_directory" copies the header's whole src directory, unchanged, into the
+        # derived tree, so all of its units compile from there.
+        for unit, info in units.items():
+            if info.get("with_directory"):
+                for f in (SRC / unit).parent.iterdir():
+                    rel = f.relative_to(SRC).as_posix()
+                    if f.is_file() and rel not in units:
+                        dst = out / rel
+                        dst.parent.mkdir(parents=True, exist_ok=True)
+                        if not dst.exists() or dst.read_bytes() != f.read_bytes():
+                            dst.write_bytes(f.read_bytes())
         for unit, info in units.items():
             data = derived_text(unit, info)
             dst = out / unit
@@ -133,7 +145,7 @@ def main(argv):
     if cmd in ("save", "refresh"):
         base = text(SRC / unit)
         derived = text(WORK / unit) if cmd == "save" else derived_text(unit, units[unit])
-        info = units.setdefault(unit, {"patch": unit.replace("/", "_").replace(".c", ".patch"),
+        info = units.setdefault(unit, {"patch": unit.replace("/", "_").replace(".c", ".patch").replace(".h", "_h.patch"),
                                        "reason": "TODO", "divergences": []})
         (DERIVE / info["patch"]).write_text(make_patch(unit, base, derived), encoding="latin-1", newline="\n")
         info["base_sha256"] = sha(base)

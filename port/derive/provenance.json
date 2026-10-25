@@ -125,6 +125,15 @@
     "Eleven native pointer views are assigned from bounded port_cd_buffer offsets instead of writing offset:selector bytes into native pointer storage. Request bytes and all TOC/status/cue policy remain unchanged."
    ],
    "base_sha256": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d"
+  },
+  "bss/bt.h": {
+   "patch": "bss_bt_h.patch",
+   "reason": "bt.h opens #pragma pack(4) (never closed) before including the shared headers, so that Watcom places the central BSS with natural <= 4 alignment. With 8-byte pointers the BSS units then defined pointer-carrying types (mem_t, bande_t, ...) with a different layout than the code units (main_mem_world capacity aliased cdTime; the 288-row heat-haze Bande table of world 5 level 10 diverged).",
+   "divergences": [
+    "No global pack(4): every BSS unit uses the native natural layout of the code units. temp_mem_entry_t keeps pack(4) between push/pop, exactly as sysutils_local.h declares it. The whole src/bss directory is compiled from the derived tree (unchanged copies) so that the units find this header."
+   ],
+   "base_sha256": "eaefba2a9e5949168639ac93a3a51d7504b0b82ef213646c486ef3691f3b8359",
+   "with_directory": true
   }
  }
 }

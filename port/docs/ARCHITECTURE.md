@@ -44,7 +44,7 @@ A unit whose code depends on the DOS machine in a way no boundary service can ab
 against its `src/` file, each change marked `/* PORT: ... */`, with reason and divergence list in
 `derive/provenance.json`. The build applies the patch to the current `src/` file, so matching improvements flow
 into the port automatically; `tools/derive.py check` (a ctest gate) fails when the base changed since review.
-Current derivatives (15): `cdaudio.c` (CD transport), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
+Current derivatives (16): `bss/bt.h` (BSS layout), `cdaudio.c` (CD transport), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
 
 `game/port_main.c` mirrors `PcMain` call for call for the test entries; `tools/mirror.py` pins the mirrored
 bodies so a change to `PcMain` forces a review.
@@ -63,10 +63,12 @@ by truncating pointers or emulating a DOS address space:
 - **Unsigned 32-bit index wraparound** (`ptr[x - y*224]` with `u32 x, y`) is kept with an `(s32)` cast.
 - **Allocation sizes and arenas.** Literal DOS sizes of pointer-carrying records are replaced by `sizeof`;
   the game's block arenas are scaled (`PORT_ARENA_SCALE`) because native records are larger.
-- **Packing pragmas.** `src/bss/bt.h` opens `#pragma pack(4)` before including the shared headers (natural
-  <= 4 alignment for the DOS BSS placement). Natively that capped pointer alignment and gave the BSS units a
-  smaller `mem_t` than the code units (the arena capacity aliased `cdTime`); the BSS units pre-include the shared
-  headers (`compat/include/port_bss_layout.h`) so every unit sees one natural layout.
+- **Packing pragmas.** `src/bss/bt.h` opens `#pragma pack(4)` (never closed) before the shared headers, for the
+  DOS BSS placement. Natively it capped pointer alignment, so the BSS units defined pointer-carrying types with a
+  different layout than the code units (`mem_t` 16 vs 24 bytes: the arena capacity aliased `cdTime`; the
+  `bande_t` table of the world 5 heat haze). A derivative of `bt.h` removes the global pragma (keeping it only
+  around `temp_mem_entry_t`, as `sysutils_local.h` does); the whole `src/bss` directory is compiled from the
+  derived tree (`with_directory` in provenance.json) so its units find the derived header.
 - **One assembly routine, several C views.** On DOS a `#pragma aux` register ABI let callers see one routine
   through prototypes with different argument orders; natively each extra view gets an adapter
   (`video/lowlevel_adapters.c`) or a one-line derivative.
@@ -99,6 +101,6 @@ between the x86_64 and i686 builds on the same deterministic input exposes a 64-
 game interactively; `--dos-main` the unmodified DOS `main`. `--deterministic --headless --frame-log` give
 reproducible per-frame hashes for regression runs. `ctest` runs: derivative/mirror/prototype/ABI gates, native unit
 tests of the compat layer, the screen-effect differential (`tests/effect_diff.c`: 18,428 effect frames, x86_64
-and i686 derivatives equal to the unmodified units at DOS pointer width) and the end-to-end demo against its
-golden summary; `tests/asm_diff/` proves the native drawing layer against the original assembly in
+and i686 derivatives equal to the unmodified units at DOS pointer width) and the six original demos end to end against
+their golden summaries (shared by all architectures); `tests/asm_diff/` proves the native drawing layer against the original assembly in
 Unicorn (14,594 cases, zero mismatches).

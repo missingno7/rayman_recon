@@ -1,0 +1,23 @@
+--- a/src/bss/bt.h
++++ b/src/bss/bt.h
+@@ -2,7 +2,8 @@
+  * allocation starts; this does not change any canonical code-unit header.
+  * Types/names RAYVERSE except where the shared headers document otherwise.
+  */
+-#pragma pack(4)
++/* PORT: no global #pragma pack(4) - the BSS units use the natural layout every code unit uses (with 8-byte
++   pointers, pack(4) gave e.g. mem_t 16 instead of 24 bytes and bande_t a different stride). */
+ #include "obj.h"
+ #include "game.h"
+ #include "map.h"
+@@ -43,8 +44,10 @@
+ /* Type/member names INVENTED. DOS 1:6f753..6f7ca initializes 30 records
+  * at 2:39688 with stride 12: capacity +0, buffer +4, allocation flag +8.
+  * The trailing alignment is natural, not a source padding field. */
++#pragma pack(push, 4)  /* PORT: kept for this record only, as in sysutils_local.h */
+ typedef struct temp_mem_entry_t {
+     u32 capacity;
+     u8 *data;
+     u8 allocated;
+ } temp_mem_entry_t;
++#pragma pack(pop)
