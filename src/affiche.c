@@ -1,6 +1,6 @@
 #include "type_island_abi.h"
 #include "map.h"
-/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. Worker g_affiche: see NOTES.md. */
+/* Original affiche object, DOS v1.21 1:08ce0..0c0b5. Names RAYVERSE/ANDROID; DOS evidence is authoritative. See docs/semantics/affiche.json and docs/port/ASM_SPEC.md. */
 #include "obj.h"
 #include "game.h"
 #include "map.h"
@@ -386,6 +386,8 @@ void DO_SPIDER_TIR(obj_t *obj);
 void DoSpiderPoingCollision(obj_t* other_obj, s16 sprite);
 void DoSpiderRaymanZDD(obj_t* obj);
 
+/* Names/meaning: 1:08ce8; docs/semantics/affiche.json.
+   Draw the current object animation in ascending layer order. */
 void display2(obj_t* obj) {
     anim_t* anim;
     s16 layers_per_frame;
@@ -400,7 +402,7 @@ void display2(obj_t* obj) {
     u16 packed_size;
     u16 sprite_index;
     u8 *target;
-    u8 sprite_field_A;
+    u8 palette_index;
     anim_layer_t* layer;
     u8* image_data;
 
@@ -432,9 +434,9 @@ void display2(obj_t* obj) {
                 proj_height = get_proj_dist(obj->scale, sprite->outer_height);
                 proj_width = get_proj_dist(obj->scale, sprite->outer_width);
                 packed_size = (u16)((proj_height << 8) + proj_width);
-                sprite_field_A = sprite->color >> 4;
+                palette_index = sprite->color >> 4;
                 image_data = obj->img_buffer + sprite->offset_in_atlas;
-                draw_func(proj_x, sprite_field_A, proj_y, packed_size,
+                draw_func(proj_x, palette_index, proj_y, packed_size,
                           target, image_data);
             }
         }
@@ -701,7 +703,9 @@ void DISPLAY_PTS_TO_PLAN2(s16 origin_x, s16 origin_y, s16 dest_x, s16 dest_y, s1
     Bresenham(DISPLAY_POINT, origin_x + 8, origin_y, dest_x + 8, dest_y, 7, percent);
 }
 
-void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
+/* Names/meaning: 1:098f4; docs/semantics/affiche.json.
+   Draw one three-layer half of a cymbal animation. */
+void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 draw_first_half) {
     /* NEAR: explicit palette snapshot recovers the 312-byte DOS extent.
        Projection lifetimes and stack placement remain unresolved. */
     s32 begin;
@@ -720,7 +724,7 @@ void DISPLAY_CYMBALE(obj_t* obj, u8* draw_buf, u8 a3) {
     anim_t* anim = &obj->animations[obj->anim_index];
     anim_layer_t* layer = &anim->layers[(anim->layers_per_frame & 0x3FFF) * obj->anim_frame];
 
-    if (!a3) {
+    if (!draw_first_half) {
         end = 5;
         begin = 3;
     } else {
@@ -829,6 +833,8 @@ extern island_snow_t *drawpluie5NormalETX;
 extern island_snow_t *drawpluie6NormalETX;
 extern island_snow_t *drawpluie7NormalETX;
 /* STRICT: DOS 1:09d2c..09f08. Counter setup and depth induction follow DOS. */
+/* Names/meaning: 1:09d2c; docs/semantics/affiche.json.
+   Weather positions are integer coordinates before projection; field spellings are editorial. */
 void display_flocons_behind(void) {
     snow_draw_t *draw_func;
     s16 layer;
@@ -876,8 +882,8 @@ void display_flocons_behind(void) {
         }
         for (index = first_index; index < end_index; ++index) {
             s32 x, y;
-            y = ((entry->field_2 * multiplier) >> 8) + center_y;
-            x = ((multiplier * entry->field_0) >> 8) + center_x;
+            y = ((entry->unprojected_y * multiplier) >> 8) + center_y;
+            x = ((multiplier * entry->unprojected_x) >> 8) + center_x;
             ++entry;
             draw_func(draw_buffer, x, y);
         }
@@ -887,6 +893,8 @@ void display_flocons_behind(void) {
     PROJ_CENTER_Y = previous_center_y;
 }
 /* STRICT: DOS 1:09f08..0a110. Keep depth update in the for induction clause. */
+/* Names/meaning: 1:09f08; docs/semantics/affiche.json.
+   Weather positions are integer coordinates before projection; field spellings are editorial. */
 void display_flocons_before(void) {
     s16 previous_center_x;
     s16 previous_center_y;
@@ -916,21 +924,21 @@ void display_flocons_before(void) {
                 
                 for (snow6_index = first_index; snow6_index < end_index; ++snow6_index, ++entry)
                     drawflocon6NormalETX(draw_buffer,
-                        ((multiplier * entry->field_0) >> 8) + center_x,
-                        ((entry->field_2 * multiplier) >> 8) + center_y);
+                        ((multiplier * entry->unprojected_x) >> 8) + center_x,
+                        ((entry->unprojected_y * multiplier) >> 8) + center_y);
             } else {
                 
                 for (snow7_index = first_index; snow7_index < end_index; ++snow7_index, ++entry)
                     drawflocon7NormalETX(draw_buffer,
-                        ((multiplier * entry->field_0) >> 8) + center_x,
-                        ((entry->field_2 * multiplier) >> 8) + center_y);
+                        ((multiplier * entry->unprojected_x) >> 8) + center_x,
+                        ((entry->unprojected_y * multiplier) >> 8) + center_y);
             }
         } else {
             
             for (rain_index = first_index; rain_index < end_index; ++rain_index, ++entry)
                 drawpluie7NormalETX(draw_buffer,
-                    ((multiplier * entry->field_0) >> 8) + center_x,
-                    ((entry->field_2 * multiplier) >> 8) + center_y);
+                    ((multiplier * entry->unprojected_x) >> 8) + center_x,
+                    ((entry->unprojected_y * multiplier) >> 8) + center_y);
         }
         ++group;
     }
@@ -938,12 +946,14 @@ void display_flocons_before(void) {
     PROJ_CENTER_Y = previous_center_y;
 }
 
+/* Names/meaning: 1:0a110; docs/semantics/affiche.json.
+   Draw active particle pixels from the eight64-particle groups. */
 void display_pix_gerbes(void) {
     u8 color;
     s16 i;
     s16 j;
     pix_gerbe_item_t* cur_item;
-    u8 unk_1;
+    u8 active_and_color;
     s16 spd_y;
 
     for (i = 0; i < 8; ++i) {
@@ -951,13 +961,13 @@ void display_pix_gerbes(void) {
             cur_item = &pix_gerbe[i].items[0];
             j = 0;
             do {
-                unk_1 = cur_item->unk_1;
-                if (unk_1 >= 128 && cur_item->y_pos > (Bloc_lim_H1_Aff << 6)) {
+                active_and_color = cur_item->unk_1;
+                if (active_and_color >= 128 && cur_item->y_pos > (Bloc_lim_H1_Aff << 6)) {
                     spd_y = ABS_1((s32)(u8)cur_item->speed_y);
                     if (spd_y >= 128)
                         color = 88;
                     else
-                        color = (spd_y >> 5) + ((unk_1 & 127) + 4);
+                        color = (spd_y >> 5) + ((active_and_color & 127) + 4);
                     fplotNormalETX(draw_buffer, cur_item->x_pos >> 6,
                                    cur_item->y_pos >> 6, color);
                 }
@@ -968,7 +978,9 @@ void display_pix_gerbes(void) {
     }
 }
 
-void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_fond) {
+/* Names/meaning: 1:0a1c4; docs/semantics/affiche.json.
+   Clip a UI rectangle to320x200 and optionally fill/draw its border. */
+void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 fill_mode, u8 is_fond) {
     if (x < 0) { width = width + x; x = 0; }
     else if (x > 320) x = 320;
     if (x + width > 320) width = 320 - x;
@@ -976,7 +988,7 @@ void DISPLAY_BLACKBOX(s16 x, s16 y, s16 width, s16 height, u8 font_size, u8 is_f
     else if (y > 200) y = 200;
     if (y + height > 200) height = 200 - y;
     if (width > 0 && height > 0) {
-        if (font_size == 255) {
+        if (fill_mode == 255) {
             if (ModeVideoActuel == MODE_X)
                 draw_blackbox(draw_buffer, x, y, height, width);
             else if (is_fond != 0)
@@ -1049,7 +1061,9 @@ void display_text(const char* text, s16 x, s16 y, u8 font_size, u8 color) {
 
 /* STRICT: DOS 1:0a68c..0a8dc. Short metric/baseline lifetimes and the
  * grouped font switch reproduce the complete 592-byte public extent. */
-void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color, s16 rotation, s16 enx, s16 eny) {
+/* Names/meaning: 1:0a68c; docs/semantics/affiche.json.
+   Draw the same baseline/centering text through transformed sprite quads. */
+void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color, s16 rotation, s16 scale_x, s16 scale_y) {
     s16 line_height;
     s16 space_width;
     s16 char_spacing;
@@ -1082,18 +1096,18 @@ void display_deform_text(const char* text, s16 x, s16 y, u8 font_size, s8 color,
                 calc_num_let_spr(font_size, (u8*)&number);
                 if (number >= 1000) {
                     sprite = alpha_numbers.sprites + (number - 1000);
-                    DISPLAY_DEFORM_SPRITE(sprite, alpha_numbers.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha_numbers.img_buffer, current_x, current_y - sprite->outer_height, rotation, scale_x, scale_y);
                     index += 3;
                 }
                 else switch (font_size) {
                 case 0:
                 case 1:
                     sprite = alpha2.sprites + number;
-                    DISPLAY_DEFORM_SPRITE(sprite, alpha2.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha2.img_buffer, current_x, current_y - sprite->outer_height, rotation, scale_x, scale_y);
                     break;
                 case 2:
                     sprite = alpha.sprites + number;
-                    DISPLAY_DEFORM_SPRITE(sprite, alpha.img_buffer, current_x, current_y - sprite->outer_height, rotation, enx, eny);
+                    DISPLAY_DEFORM_SPRITE(sprite, alpha.img_buffer, current_x, current_y - sprite->outer_height, rotation, scale_x, scale_y);
                     break;
                 }
                 current_x += sprite->sprite_pos.bits.x + sprite->inner_width - char_spacing;
@@ -1197,10 +1211,12 @@ void CLRSCR(void) {
     }
 }
 
+/* Names/meaning: 1:0ad38; docs/semantics/affiche.json.
+   Advance and draw one randomly varying grapple-path star. */
 void display_etoile(s16 in_x, s16 in_y) {
     u8 loc_star_spr[8] = {21, 22, 23, 24, 21, 25, 22, 21};
     grp_star_t* star;
-    s32 rand_res;
+    s32 random_choice;
     s32 draw_x;
     s16 draw_y;
     sprite_t* sprite;
@@ -1209,11 +1225,11 @@ void display_etoile(s16 in_x, s16 in_y) {
     star = &grp_stars[current_star];
     star->timer++;
     if (star->timer > star->length) {
-        rand_res = myRand(7);
+        random_choice = myRand(7);
         star->timer = 0;
         star->length = myRand(5);
-        star->dist = rand_res;
-        star->sprite_table_index = rand_res;
+        star->dist = random_choice;
+        star->sprite_table_index = random_choice;
     }
     draw_x = (s16)(star->dist + (in_x - xmap));
     draw_y = star->dist + (in_y - ymap);
@@ -1254,10 +1270,12 @@ void display_grp_stars(void)
     }
 }
 
+/* Names/meaning: 1:0af1c; docs/semantics/affiche.json.
+   Draw the fairy dialogue bars and text while its actor crosses the text. */
 void DISPLAY_TEXT_FEE(void) {
     /* 19D20 8013E520 -O2 -msoft-float */
     obj_t* obj;
-    display_item_t ttd;
+    display_item_t text_box;
     s16 obj_x;
     s16 cen_x;
 
@@ -1266,33 +1284,33 @@ void DISPLAY_TEXT_FEE(void) {
     if (display_txt_fee != 255)
     {
         obj = &level.objects[png_or_fee_id];
-        memcpy(&ttd, (text_to_display + 1) + display_txt_fee, sizeof(ttd));
-        if (ttd.text[0] != '\0')
+        memcpy(&text_box, (text_to_display + 1) + display_txt_fee, sizeof(text_box));
+        if (text_box.text[0] != '\0')
         {
             if (obj->flags.alive)
             {
                 s16 y_fee = 190;
                 obj->screen_y = y_fee - obj->offset_by;
                 obj_x = obj->offset_bx + obj->screen_x;
-                cen_x = ttd.centered_x_pos;
-                if (obj_x - 8 > cen_x && obj_x < cen_x + ttd.width) {
-                    ttd.text[(s16)((obj_x - 8 - cen_x) / 7)] = '\0';
-                    display_box_text(&ttd);
-                } else if (obj_x >= ttd.centered_x_pos + ttd.width)
-                    display_box_text(&ttd);
+                cen_x = text_box.centered_x_pos;
+                if (obj_x - 8 > cen_x && obj_x < cen_x + text_box.width) {
+                    text_box.text[(s16)((obj_x - 8 - cen_x) / 7)] = '\0';
+                    display_box_text(&text_box);
+                } else if (obj_x >= text_box.centered_x_pos + text_box.width)
+                    display_box_text(&text_box);
 
                 DISPLAY_BLACKBOX(obj_x, obj->screen_y + obj->offset_by - 20, 30, 18, 255, 0);
                 display2(obj);
             }
             else
-                display_box_text(&ttd);
+                display_box_text(&text_box);
         }
     }
 
     if (old_txt_fee != 255) {
-        memcpy(&ttd, (text_to_display + 1) + old_txt_fee, sizeof(ttd));
-        if (ttd.text[0] != '\0')
-            display_box_text(&ttd);
+        memcpy(&text_box, (text_to_display + 1) + old_txt_fee, sizeof(text_box));
+        if (text_box.text[0] != '\0')
+            display_box_text(&text_box);
     }
 }
 

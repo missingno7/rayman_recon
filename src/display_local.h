@@ -1,5 +1,5 @@
 #include "type_island_abi.h"
-/* Local DOS declarations; proposals and evidence in header_proposal.md. */
+/* Local DOS declarations; see docs/semantics/display.json and docs/port/ASM_SPEC.md. */
 #ifndef GFIN_DISPLAY_LOCAL_H
 #define GFIN_DISPLAY_LOCAL_H
 extern s16 SizeScreen;

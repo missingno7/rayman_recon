@@ -69,8 +69,8 @@ typedef struct obj_procs_t {
 #define flags3_0x40_no_link (1 << 30)
 
 typedef struct flocon_t {
-    s16 field_0;
-    s16 field_2;
+    s16 unprojected_x; /* field_0: pre-projection pixels; docs/semantics/types.json. */
+    s16 unprojected_y; /* field_2: pre-projection pixels; docs/semantics/types.json. */
     s16 field_4;
     u8 field_6;
     u8 field_7;
@@ -785,6 +785,8 @@ void sub_one_floc(void)
     }
 }
 
+/* Names/meaning: 1:4b9a0; docs/semantics/types.json.
+   Weather positions are integer coordinates before projection; field spellings are editorial. */
 void init_flocons(void) {
     s16 flc_i;
     s16 i;
@@ -831,8 +833,8 @@ void init_flocons(void) {
                     unk_6 = get_proj_y(scale, unk_4);
                 
             } while (unk_5 >= 320 || unk_5 <= 0 || unk_6 >= 200 || unk_6 <= 0);
-            flocon_tab[flc_i].field_0 = unk_3;
-            flocon_tab[flc_i].field_2 = unk_4;
+            flocon_tab[flc_i].unprojected_x = unk_3;
+            flocon_tab[flc_i].unprojected_y = unk_4;
             flocon_tab[flc_i].field_4 = scale;
             flc_i++;
         }
@@ -844,6 +846,8 @@ void init_flocons(void) {
     VENT_Y = 0;
 }
 
+/* Names/meaning: 1:4bb78; docs/semantics/types.json.
+   Weather positions are integer coordinates before projection; field spellings are editorial. */
 void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     s16 unk_x_1;
     s16 unk_y_1;
@@ -911,18 +915,18 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
         flc_i_2 = flc_i_1;
         while (flc_i_2 < unk_2)
         {
-            cur_floc->field_0 += unk_x_3;
-            cur_floc->field_2 += unk_y_3;
+            cur_floc->unprojected_x += unk_x_3;
+            cur_floc->unprojected_y += unk_y_3;
 
-            if (cur_floc->field_0 > x_320)
-                cur_floc->field_0 = x_0;
-            else if (cur_floc->field_0 < x_0)
-                cur_floc->field_0 = x_320;
+            if (cur_floc->unprojected_x > x_320)
+                cur_floc->unprojected_x = x_0;
+            else if (cur_floc->unprojected_x < x_0)
+                cur_floc->unprojected_x = x_320;
 
-            if (cur_floc->field_2 > y_200)
-                cur_floc->field_2 = y_0;
-            else if (cur_floc->field_2 < y_0)
-                cur_floc->field_2 = y_200;
+            if (cur_floc->unprojected_y > y_200)
+                cur_floc->unprojected_y = y_0;
+            else if (cur_floc->unprojected_y < y_0)
+                cur_floc->unprojected_y = y_200;
 
             cur_floc++;
             flc_i_2++;

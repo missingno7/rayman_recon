@@ -1,5 +1,5 @@
 #include "type_island_abi.h"
-/* display: original object 1:240f0..1:25f49. Worker c3_display; see NOTES.md for measured status.
+/* display: original object 1:240f0..1:25f49. See docs/semantics/display.json for meanings.
  * Function/global names RAYVERSE/ANDROID. Diagnostic local names and font_t are INVENTED. */
 #include "obj.h"
 #include "game.h"
@@ -301,7 +301,9 @@ void DO_CONTINUE(void)
 
 /* The incoming callback value is discarded; the word formal is reused for completion.
  * DOS 1:242b2..242cf computes it before the optional name restoration. */
-s16 saisie_nom_prg(s16 a1)
+/* Names/meaning: 1:24240; docs/semantics/display.json.
+   Run one save-name entry scene iteration. */
+s16 saisie_nom_prg(s16 done)
 {
     readinput();
     button_released = ButtonReleasedSav3;
@@ -323,14 +325,14 @@ s16 saisie_nom_prg(s16 a1)
         sortie_save = 1;
 
     {
-        a1 = fin_saisie_nom || MENU_RETURN;
+        done = fin_saisie_nom || MENU_RETURN;
         if (MENU_RETURN) {
             if (action == 1)
                 strcpy(save_ray[fichier_selectionne - 1], save_ray_copy);
             else
                 strcpy(save_ray[fichier_selectionne - 1], "");
         }
-        return a1;
+        return done;
     }
 }
 
@@ -404,6 +406,8 @@ void DO_SAVE_CHOICE(void)
     align_mem_desc(&main_mem_level);
 }
 
+/* Names/meaning: 1:2452c; docs/semantics/display.json.
+   Render the save menu and animate the selected name character. */
 void AFFICHE_ECRAN_SAVE(void)
 {
     s32 blink_period = 30;
@@ -411,8 +415,8 @@ void AFFICHE_ECRAN_SAVE(void)
     s16 start_xpos;
     s16 erase_xpos;
     s16 copy_xpos;
-    s16 cur_x;
-    char temp[4];
+    s16 name_character;
+    char name_prefix[4];
 
     if (compteur < max_compteur && !button_released) {
         ++compteur;
@@ -463,36 +467,36 @@ void AFFICHE_ECRAN_SAVE(void)
 
     for (save_index = 0; NBRE_SAVE > save_index; ++save_index) {
         if (strcmp(save_ray[save_index], "")) {
-            for (cur_x = 1; cur_x <= strlen(save_ray[save_index]); ++cur_x) {
-                if (cur_x != positionx || positiony != save_index + 1 || !clignotement) {
-                    strcpy(temp, save_ray[save_index]);
-                    temp[cur_x] = '\0';
-                    if (temp[cur_x - 1] == '~')
-                        display_deform_text("~", basex + ecartx * (cur_x - 1) - 10,
+            for (name_character = 1; name_character <= strlen(save_ray[save_index]); ++name_character) {
+                if (name_character != positionx || positiony != save_index + 1 || !clignotement) {
+                    strcpy(name_prefix, save_ray[save_index]);
+                    name_prefix[name_character] = '\0';
+                    if (name_prefix[name_character - 1] == '~')
+                        display_deform_text("~", basex + ecartx * (name_character - 1) - 10,
                             debut_options + save_index * (ecarty + 23), 1, 2,
                             rotationtxt, ktxtenx, ktxteny);
-                    else if (temp[cur_x - 1] == ' ')
+                    else if (name_prefix[name_character - 1] == ' ')
                         /* DOS 1:2484b passes 2:30c0d, the NUL of a "z" literal (CONST "" "~" "z" "level "), not the shared "" */
-                        display_text("z" + 1, basex + ecartx * (cur_x - 1),
+                        display_text("z" + 1, basex + ecartx * (name_character - 1),
                             debut_options + save_index * (ecarty + 23), 1, 2);
                     else
-                        display_text(temp + cur_x - 1, basex + ecartx * (cur_x - 1),
+                        display_text(name_prefix + name_character - 1, basex + ecartx * (name_character - 1),
                             debut_options + save_index * (ecarty + 23), 1, colour);
                 } else {
-                    s32 delta;
-                    strcpy(temp, save_ray[save_index]);
-                    temp[cur_x] = '\0';
+                    s32 phase_step;
+                    strcpy(name_prefix, save_ray[save_index]);
+                    name_prefix[name_character] = '\0';
                     ktxtenx = 4096;
                     if (coeffktxt >= 512) coeffktxt = 0;
-                    delta = (cosinus(coeffktxt + 256) >> 7) + 5;
+                    phase_step = (cosinus(coeffktxt + 256) >> 7) + 5;
                     ktxteny = 8 * cosinus(coeffktxt);
-                    coeffktxt += delta;
-                    if (temp[cur_x - 1] == '~')
-                        display_deform_text("~", basex + ecartx * (cur_x - 1) - 10,
+                    coeffktxt += phase_step;
+                    if (name_prefix[name_character - 1] == '~')
+                        display_deform_text("~", basex + ecartx * (name_character - 1) - 10,
                             debut_options + save_index * (ecarty + 23), 1, 2,
                             rotationtxt, ktxtenx, ktxteny);
                     else
-                        display_deform_text(temp + cur_x - 1, basex + ecartx * (cur_x - 1) + 1,
+                        display_deform_text(name_prefix + name_character - 1, basex + ecartx * (name_character - 1) + 1,
                             debut_options + save_index * (ecarty + 23) + 1, 1, colour,
                             rotationtxt, ktxtenx, ktxteny);
                 }
@@ -507,9 +511,11 @@ void AFFICHE_ECRAN_SAVE(void)
     DISPLAY_SAVE_POING();
 }
 
+/* Names/meaning: 1:24a80; docs/semantics/display.json.
+   Run the cheat level-selector frame. */
 s16 select_level_prg(u32 a1)
 {
-    s32 num[6] = {17, 16, 11, 11, 11, 4};
+    s32 levels_per_world[6] = {17, 16, 11, 11, 11, 4};
     char level_text[12];
 
     readinput();
@@ -523,8 +529,8 @@ s16 select_level_prg(u32 a1)
     else if (leftjoy() && inter_select == 0)
         --level_select;
 
-    if (level_select > num[num_world_choice - 1])
-        level_select = num[num_world_choice - 1];
+    if (level_select > levels_per_world[num_world_choice - 1])
+        level_select = levels_per_world[num_world_choice - 1];
     if (level_select < 1)
         level_select = 1;
     ++inter_select;
@@ -641,14 +647,16 @@ void DISPLAY_STAGE_NAMES(void)
     }
 }
 
-s16 WORLD_CHOICE(u32 a1)
+/* Names/meaning: 1:25028; docs/semantics/display.json.
+   Advance and draw one world-map scene frame. */
+s16 WORLD_CHOICE(u32 frame_clock)
 {
-    s32 next_clock_target;
+    s32 frame_deadline;
     s16 result;
 
     PC_do_cheats_in_world_map();
     if (need_timer)
-        next_clock_target = word_CF7EE + a1;
+        frame_deadline = word_CF7EE + frame_clock;
 
     let_shadow = 0;
     fill(DrawBufferNormal);
@@ -677,7 +685,7 @@ s16 WORLD_CHOICE(u32 a1)
         result = 1;
 
     if (need_timer) {
-        if (!wait_until(next_clock_target)) {
+        if (!wait_until(frame_deadline)) {
             DO_RAYMAN_IN_WLD_MAP();
             DO_CHEMIN();
         }

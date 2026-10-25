@@ -53,7 +53,11 @@ def type_signedness(t):
 
 def clean(s):
     s = re.sub(r'/\*.*?\*/|//[^\n]*', lambda m: '\n' * m[0].count('\n'), s, flags=re.S)
-    return re.sub(r'^\s*#.*$', '', s, flags=re.M)
+    # Continued directives are one preprocessing line. Leaving their body in
+    # the parser stream creates phantom declarations/uses (frame.c's unused
+    # WRITE_SPECIAL_PALETTE macro is a do/while statement at file scope).
+    return re.sub(r'^[ \t]*#(?:[^\n]*\\\n)*[^\n]*$',
+                  lambda m: '\n' * m[0].count('\n'), s, flags=re.M)
 
 def source_path(base, rel):
     """A proposal is a sparse overlay of src; canonical files are read-only fallback."""
@@ -137,7 +141,10 @@ def reverse_names(s, entities, function=None):
         if e['kind'] == 'local' and function == e['function']:
             s = re.sub(r'\b' + re.escape(p) + r'\b', e['current_name'], s)
         elif e['kind'] == 'field':
-            s = re.sub(r'\b' + re.escape(p.split('.')[-1]) + r'\b', e['current_name'].split('.')[-1], s)
+            # Field normalization must not rewrite an unrelated parameter/local
+            # with the same spelling (get_proj_x already uses unprojected_x).
+            s = re.sub(r'(->|\.)\s*' + re.escape(p.split('.')[-1]) + r'\b',
+                       lambda m:m[1]+e['current_name'].split('.')[-1], s)
     return s
 
 def validate_schema(reg):
@@ -150,6 +157,9 @@ def validate_schema(reg):
     for c in contexts:
         if not isinstance(c.get('headers'), list): errors.append('scope headers must be a list')
         if c.get('source') and (Path(c['source']).is_absolute() or '..' in Path(c['source']).parts): errors.append('source must be relative to src')
+        for owner,view in c.get('shared_type_views',{}).items():
+            if not isinstance(view,dict) or not isinstance(view.get('omitted_fields'),list) or not view.get('evidence') or not isinstance(view.get('size_bytes'),int):
+                errors.append('invalid shared type view '+owner)
     if scope.get('kind') == 'unit' and not scope.get('source'): errors.append('unit source missing')
     seen = set()
     for e in reg.get('entities', []):
@@ -195,7 +205,18 @@ def function_declarations(ast):
     return {n.decl.name:n for n in ast.ext if isinstance(n, ca.FuncDef)}
 
 def global_declarations(ast):
-    return {n.name:n for n in ast.ext if isinstance(n, ca.Decl) and 'extern' in n.storage and not isinstance(n.type, ca.FuncDecl)}
+    typedefs = {n.name:n.type for n in ast.ext if isinstance(n,ca.Typedef)}
+    def is_function(t, seen=()):
+        # `extern block_copy_t block_copy` declares a routine when the typedef
+        # denotes a function. Function-pointer variables remain data globals.
+        if isinstance(t,ca.FuncDecl): return True
+        if isinstance(t,ca.TypeDecl): return is_function(t.type,seen)
+        if isinstance(t,ca.IdentifierType) and len(t.names)==1:
+            name=t.names[0]
+            if name in typedefs and name not in seen:
+                return is_function(typedefs[name],seen+(name,))
+        return False
+    return {n.name:n for n in ast.ext if isinstance(n, ca.Decl) and 'extern' in n.storage and not is_function(n.type)}
 
 def used_globals(funcs, globs):
     names = set()
@@ -332,7 +353,14 @@ def check_collection(registries, source_root=None):
         for owner,expected in shared_fields.items():
             if owner not in owners: continue
             actual = {member:d for (typ,member),d in declared.items() if typ == owner}
-            if actual.keys() != expected.keys():
+            # Some existing TUs omit a compatibility union alias while retaining
+            # every physical field (affiche pix_gerbe_t omits moteur's words).
+            # Enforce the exact documented view, never silently accept subsets.
+            view=reg['scope'].get('shared_type_views',{}).get(owner,{})
+            omitted=set(view.get('omitted_fields',[]))
+            if not omitted <= expected.keys():
+                errors.append(name + ': unknown omitted shared field: '+owner)
+            if actual.keys() != expected.keys()-omitted:
                 errors.append(name + ': shared type field coverage drift: ' + owner)
             for member in actual.keys() & expected.keys():
                 e = expected[member]; d = actual[member]
@@ -373,6 +401,8 @@ def assertion_source(reg, proposal=False, source_root=None):
               'typedef char sem_int_width[(sizeof(int) == 4) ? 1 : -1];',
               'typedef char sem_short_width[(sizeof(short) == 2) ? 1 : -1];',
               'typedef char sem_char_unsigned[(((char)-1) > 0) ? 1 : -1];']
+    for owner,view in scope.get('shared_type_views',{}).items():
+        lines.append(f'typedef char sem_view_{owner}[(sizeof({owner}) == {view["size_bytes"]}) ? 1 : -1];')
     for i,e in enumerate(reg['entities']):
         if e['kind'] == 'type': lines.append(f'typedef char sem_type_{i}[(sizeof({e["current_name"]}) == {e["size"]}) ? 1 : -1];')
         if e['kind'] != 'field': continue

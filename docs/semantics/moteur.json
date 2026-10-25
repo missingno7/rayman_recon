@@ -21051,18 +21051,21 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d0a4",
    "binding_kind": "game_data",
-   "meaning": "Vertical viewport/block bounds copied to display bounds at level initialization.",
-   "unit": "pixels",
+   "meaning": "Top gameplay viewport bound.",
+   "unit": "screen pixels",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Other display/map readers establish the geometry; moteur only copies these values."
+    "code_contract": "Other display/map readers establish the geometry; moteur only copies these values.",
+    "pass5_contract": "Menu copy covers rows[H1,H2),normal background/weather use related limits. Not necessarily the current sprite clipping ymin."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -21099,11 +21102,50 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_H1",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_H1",
+     "supplied_by": "frame.c",
+     "functions": {
+      "DISPLAY_FOND_MENU": "1:2ce20"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "Other display/map readers establish the geometry; moteur only copies these values."
-   ]
+    "Other display/map readers establish the geometry; moteur only copies these values.",
+    "Pass5: Menu copy covers rows[H1,H2),normal background/weather use related limits. Not necessarily the current sprite clipping ymin."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Vertical viewport/block bounds copied to display bounds at level initialization.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Other display/map readers establish the geometry; moteur only copies these values."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Other display/map readers establish the geometry; moteur only copies these values."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:Bloc_lim_H1_Aff",
@@ -21114,18 +21156,20 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d088",
    "binding_kind": "game_data",
-   "meaning": "Displayed viewport/block bounds snapshot initialized from the corresponding live bound.",
-   "unit": "pixels",
+   "meaning": "Displayed top viewport snapshot used to cull particle pixels.",
+   "unit": "screen pixels",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL."
+    "code_contract": "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL.",
+    "pass5_contract": "display_pix_gerbes requires Q6 y>this_bound<<6. The live/menu top bound and sprite clipping box are separate state."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -21162,11 +21206,40 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_H1_Aff",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_pix_gerbes": "1:0a110"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL."
-   ]
+    "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL.",
+    "Pass5: display_pix_gerbes requires Q6 y>this_bound<<6. The live/menu top bound and sprite clipping box are separate state."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Displayed viewport/block bounds snapshot initialized from the corresponding live bound.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:Bloc_lim_H2",
@@ -21177,20 +21250,23 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d0a0",
    "binding_kind": "game_data",
-   "meaning": "Vertical viewport/block bounds copied to display bounds at level initialization.",
-   "unit": "pixels",
+   "meaning": "Bottom gameplay viewport bound.",
+   "unit": "screen pixels",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Other display/map readers establish the geometry; moteur only copies these values."
+    "code_contract": "Other display/map readers establish the geometry; moteur only copies these values.",
+    "pass5_contract": "Menu row loop excludesH2;HUD uses bottom-relative anchors;some object types temporarily clip atH2-40. The separate sprite clipping setter clamps bounds;individual blitters can have rounded fringes."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
     "collision2.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -21247,11 +21323,53 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_H2",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_bar_boss": "1:091a8",
+      "DISPLAY_FIXE": "1:09420",
+      "DISPLAY_ALL_OBJECTS": "1:09a2c",
+      "display_time": "1:0b56c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_H2",
+     "supplied_by": "frame.c",
+     "functions": {
+      "DISPLAY_FOND_MENU": "1:2ce20"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "Other display/map readers establish the geometry; moteur only copies these values."
-   ]
+    "Other display/map readers establish the geometry; moteur only copies these values.",
+    "Pass5: Menu row loop excludesH2;HUD uses bottom-relative anchors;some object types temporarily clip atH2-40. The separate sprite clipping setter clamps bounds;individual blitters can have rounded fringes."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Vertical viewport/block bounds copied to display bounds at level initialization.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Other display/map readers establish the geometry; moteur only copies these values."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Other display/map readers establish the geometry; moteur only copies these values."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:Bloc_lim_H2_Aff",
@@ -21325,18 +21443,21 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d09c",
    "binding_kind": "game_data",
-   "meaning": "Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.",
-   "unit": "pixels",
+   "meaning": "Left gameplay viewport bound.",
+   "unit": "screen pixels",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+    "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.",
+    "pass5_contract": "Used as inclusive left copy/draw bound;menu background loops columns[W1,W2),not width=W2. Sprite clipping is separate mutable assembly state."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -21374,11 +21495,51 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_W1",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_bar_boss": "1:091a8",
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_W1",
+     "supplied_by": "frame.c",
+     "functions": {
+      "DISPLAY_FOND_MENU": "1:2ce20"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
-   ]
+    "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.",
+    "Pass5: Used as inclusive left copy/draw bound;menu background loops columns[W1,W2),not width=W2. Sprite clipping is separate mutable assembly state."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:Bloc_lim_W1_Aff",
@@ -21452,18 +21613,21 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d098",
    "binding_kind": "game_data",
-   "meaning": "Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.",
-   "unit": "pixels",
+   "meaning": "Right gameplay viewport bound.",
+   "unit": "screen pixels",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+    "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.",
+    "pass5_contract": "Used as exclusive right copy/draw bound in menu restoration;HUD anchors are relative to this bound. Assembly clipping quantization is separately specified."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -21501,11 +21665,51 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_W2",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_FIXE": "1:09420",
+      "display_time": "1:0b56c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Bloc_lim_W2",
+     "supplied_by": "frame.c",
+     "functions": {
+      "DISPLAY_FOND_MENU": "1:2ce20"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
-   ]
+    "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.",
+    "Pass5: Used as exclusive right copy/draw bound in menu restoration;HUD anchors are relative to this bound. Assembly clipping quantization is separately specified."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.",
+     "unit": "pixels",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:Bloc_lim_W2_Aff",
@@ -21592,7 +21796,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -21629,11 +21834,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "DemoRecordMap",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Session initialization avoids one Cave5/10 pair; no new table-capacity inference."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:DemoRecordWorld",
@@ -21657,7 +21873,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -21689,11 +21906,22 @@
      "supplied_by": "moteur.c",
      "android": null,
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "DemoRecordWorld",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Session initialization avoids one Cave5/10 pair; no new table-capacity inference."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:First_Hist",
@@ -21830,20 +22058,23 @@
    "declarator": "u8 $",
    "oracle_address": "2:5e2d",
    "binding_kind": "game_data",
-   "meaning": "Video-mode selectors read by camera-limit initialization and per-frame player bounds.",
+   "meaning": "Configured gameplay display-mode choice.",
    "unit": "mode code",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+    "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.",
+    "pass5_contract": "0 normal/1 ModeX controls game setup/HUD offsets/demo exclusions;distinct from ModeVideoActuel,the temporary active backend."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
     "collision2.c",
-    "load.c"
+    "load.c",
+    "affiche.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -21903,11 +22134,52 @@
       "LoadPlan0InVignet"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "GameModeVideo",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_CLING": "1:09060",
+      "display_bar_boss": "1:091a8",
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "GameModeVideo",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
-   ]
+    "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.",
+    "Pass5: 0 normal/1 ModeX controls game setup/HUD offsets/demo exclusions;distinct from ModeVideoActuel,the temporary active backend."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Video-mode selectors read by camera-limit initialization and per-frame player bounds.",
+     "unit": "mode code",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+     ]
+    }
+   ],
+   "platform_class": "platform_policy"
   },
   {
    "id": "global:IsBossThere",
@@ -22144,7 +22416,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -22182,11 +22455,25 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ModeDemo",
+     "supplied_by": "display.c",
+     "functions": {
+      "selection_save_option_prg": "1:24334",
+      "DO_WORLD_MAP": "1:2514c",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_MOTEUR treats3/4 as abort conditions and writes2 on abort; nonzero is not the complete state meaning."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:ModeVideoActuel",
@@ -22197,18 +22484,22 @@
    "declarator": "u8 $",
    "oracle_address": "2:5e2c",
    "binding_kind": "game_data",
-   "meaning": "Video-mode selectors read by camera-limit initialization and per-frame player bounds.",
+   "meaning": "Currently initialized display backend.",
    "unit": "mode code",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+    "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.",
+    "pass5_contract": "0 normal chunky,1 ModeX,255 text. Mode functions skip initialization/frequency change when requested mode is already active. Scenes may temporarily override the configured game mode."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c",
+    "display.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -22245,11 +22536,66 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ModeVideoActuel",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_BLACKBOX": "1:0a1c4",
+      "CLRSCR": "1:0ad00"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ModeVideoActuel",
+     "supplied_by": "display.c",
+     "functions": {
+      "DISPLAY_GAME_VIGNET": "1:254a4"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ModeVideoActuel",
+     "supplied_by": "frame.c",
+     "functions": {
+      "SWAP_BUFFERS": "1:2b4d0",
+      "EFFACE_VIDEO": "1:2cb04",
+      "SYNCHRO_LOOP": "1:2cb54",
+      "InitModeXWithFrequency": "1:2d8ac",
+      "InitTextMode": "1:2d9d4",
+      "InitModeNormalWithFrequency": "1:2d9e4"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
-   ]
+    "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.",
+    "Pass5: 0 normal chunky,1 ModeX,255 text. Mode functions skip initialization/frequency change when requested mode is already active. Scenes may temporarily override the configured game mode."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Video-mode selectors read by camera-limit initialization and per-frame player bounds.",
+     "unit": "mode code",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1."
+     ]
+    }
+   ],
+   "platform_class": "backend_state"
   },
   {
    "id": "global:NbTramesEcrase",
@@ -22397,7 +22743,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -22434,11 +22781,23 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "NumDemo",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Session chooses myRand(5), then may advance/wrap at6 for the excluded pair."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:NumScrollObj",
@@ -22603,18 +22962,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f742",
    "binding_kind": "game_data",
-   "meaning": "Weather lightning scheduling control forced to1 during eligible frozen weather update.",
-   "unit": "weather sequence state",
+   "meaning": "Delay threshold for the next PC lightning sequence.",
+   "unit": "DoPaletteSpecialPC invocations",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Full countdown/selection meaning belongs to weather code; no timer unit inferred here."
+    "code_contract": "Full countdown/selection meaning belongs to weather code; no timer unit inferred here.",
+    "pass5_contract": "Initialization uses myRand(200)+1;after each completed sequence uses myRand(400)+1. Compared with preincremented CompteurEclair. Game-loop resets can also assign1;not milliseconds or map ticks."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -22651,11 +23013,51 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ProchainEclair",
+     "supplied_by": "display.c",
+     "functions": {
+      "DISPLAY_GAME_VIGNET": "1:254a4"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "ProchainEclair",
+     "supplied_by": "frame.c",
+     "functions": {
+      "InitPaletteSpecialPC": "1:2cf70",
+      "DoPaletteSpecialPC": "1:2d704"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "Full countdown/selection meaning belongs to weather code; no timer unit inferred here."
-   ]
+    "Full countdown/selection meaning belongs to weather code; no timer unit inferred here.",
+    "Pass5: Initialization uses myRand(200)+1;after each completed sequence uses myRand(400)+1. Compared with preincremented CompteurEclair. Game-loop resets can also assign1;not milliseconds or map ticks."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Weather lightning scheduling control forced to1 during eligible frozen weather update.",
+     "unit": "weather sequence state",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Full countdown/selection meaning belongs to weather code; no timer unit inferred here."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Full countdown/selection meaning belongs to weather code; no timer unit inferred here."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:RAY_MODE_SPEED",
@@ -22879,7 +23281,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -22916,11 +23319,23 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "RunTimeDemo",
+     "supplied_by": "display.c",
+     "functions": {
+      "selection_save_option_prg": "1:24334",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "The display/demo path consumes it separately from record.length and map_time."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:SauveRayEvts",
@@ -23027,7 +23442,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -23064,11 +23480,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "SizeScreen",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "INIT_MOTEUR tests SizeScreen==0 or ModeX when mp.width<=20."
-   ]
+   ],
+   "platform_class": "platform_policy"
   },
   {
    "id": "global:TextDark2_Affiche",
@@ -23153,7 +23580,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -23190,11 +23618,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "Vignet_To_Display",
+     "supplied_by": "display.c",
+     "functions": {
+      "DISPLAY_GAME_VIGNET": "1:254a4"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Full selection meanings belong to menu/display code."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:You_Win",
@@ -23216,7 +23655,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -23253,11 +23693,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "You_Win",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_VICTOIRE": "1:25878"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Credits consumers determine the later progression; not equivalent to fin_du_jeu."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:allowed_time",
@@ -23345,7 +23796,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "objinit.c"
+    "objinit.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -23393,11 +23845,23 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "bateau_obj_id",
+     "supplied_by": "frame.c",
+     "functions": {
+      "guetteurFollowsShip": "1:2db68",
+      "DO_PAR_POING_COLLISION": "1:2e398"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "deactivate_ship_links clears alive on its other linked members only when the group marker is set."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:bonus_map",
@@ -23575,7 +24039,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "ray.c"
+    "ray.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -23648,6 +24113,18 @@
      "supplied_by": "ray/collision pass3",
      "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
      "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "button_released",
+     "supplied_by": "display.c",
+     "functions": {
+      "saisie_nom_prg": "1:24240",
+      "selection_save_option_prg": "1:24334",
+      "AFFICHE_ECRAN_SAVE": "1:2452c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
@@ -23670,7 +24147,8 @@
      ],
      "supplied_by": "accepted passes1-2 before ray/collision pass3"
     }
-   ]
+   ],
+   "platform_class": "input_state"
   },
   {
    "id": "global:compteur_attente",
@@ -23770,7 +24248,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "load.c"
+    "load.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -23817,11 +24296,29 @@
       "load_level"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "current_pal_id",
+     "supplied_by": "frame.c",
+     "functions": {
+      "actualize_palette": "1:2c6f8",
+      "DO_SWAP_PALETTE": "1:2c8c8",
+      "DO_FADE": "1:2ca64",
+      "INIT_FADE_IN": "1:2ca8c",
+      "INIT_FADE_OUT": "1:2cab4",
+      "DO_FADE_OUT": "1:2cadc",
+      "SAVE_PALETTE": "1:2cce4",
+      "RESTORE_PALETTE": "1:2cd58"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Checkpoint return writes pal_id_at_wizard+1 then actualize_palette(pal_id_at_wizard), preserving its force-refresh convention."
-   ]
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:dans_la_map_monde",
@@ -23911,7 +24408,8 @@
     "moteur.c",
     "collision1.c",
     "collision2.c",
-    "ray.c"
+    "ray.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -23989,6 +24487,16 @@
      "supplied_by": "ray/collision pass3",
      "artifact": "build/workers/sem_ray/evidence/secondary_dos.txt",
      "detail": "Earlier meaning retained in meaning_history. New unit-specific DOS consumers refine the shared interpretation."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "dead_time",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
@@ -24011,7 +24519,8 @@
      ],
      "supplied_by": "accepted passes1-2 before ray/collision pass3"
     }
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:decalage_en_cours",
@@ -24288,18 +24797,20 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f7e8",
    "binding_kind": "game_data",
-   "meaning": "Display-mode control whose value adjusts the inclusive death-fade upper threshold.",
-   "unit": "mode code",
+   "meaning": "Control of extra engine updates per presented gameplay frame,also scaling visual blink/fade policy.",
+   "unit": "update-count and visual-timing policy",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean."
+    "code_contract": "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean.",
+    "pass5_contract": "The byte loop executes(u8)display_mode+1 updates while gameplay continues;calibration writes0 or1. Rayman blink period2*display_mode+2,visible remainder<=display_mode. Existing death fade threshold also uses this signed16 value. This is separate from VGA mode."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -24336,11 +24847,40 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "display_mode",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_ALL_OBJECTS": "1:09a2c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean."
-   ]
+    "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean.",
+    "Pass5: The byte loop executes(u8)display_mode+1 updates while gameplay continues;calibration writes0 or1. Rayman blink period2*display_mode+2,visible remainder<=display_mode. Existing death fade threshold also uses this signed16 value. This is separate from VGA mode."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Display-mode control whose value adjusts the inclusive death-fade upper threshold.",
+     "unit": "mode code",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean."
+     ]
+    }
+   ],
+   "platform_class": "timing_policy"
   },
   {
    "id": "global:dontdoit",
@@ -24821,18 +25361,20 @@
    "declarator": "u8 $",
    "oracle_address": "2:3fa87",
    "binding_kind": "game_data",
-   "meaning": "Fade controller byte carrying phase and a bit0x40 completion/inactivity condition.",
-   "unit": "fade state",
+   "meaning": "Palette fade direction plus completion bit.",
+   "unit": "state byte",
    "value_domain": {
     "representation_min": 0,
     "representation_max": 255,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation."
+    "code_contract": "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation.",
+    "pass5_contract": "Start1=in,2=out;last update OR0x40 ->65/66. do_fade compares exact1/2;special palette and palette swapping test bit0x40;actualize_palette emits immediately only on65. Completion does not mean the image was presented."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -24869,11 +25411,45 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fade",
+     "supplied_by": "frame.c",
+     "functions": {
+      "start_fade_in": "1:2c54c",
+      "start_fade_out": "1:2c5a4",
+      "do_fade": "1:2c5cc",
+      "actualize_palette": "1:2c6f8",
+      "DO_SWAP_PALETTE": "1:2c8c8",
+      "DoPaletteSpecialPC": "1:2d704"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation."
-   ]
+    "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation.",
+    "Pass5: Start1=in,2=out;last update OR0x40 ->65/66. do_fade compares exact1/2;special palette and palette swapping test bit0x40;actualize_palette emits immediately only on65. Completion does not mean the image was presented."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Fade controller byte carrying phase and a bit0x40 completion/inactivity condition.",
+     "unit": "fade state",
+     "value_domain": {
+      "representation_min": 0,
+      "representation_max": 255,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:fee_obj_id",
@@ -25056,7 +25632,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -25097,11 +25674,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fin_continue",
+     "supplied_by": "display.c",
+     "functions": {
+      "continue_fonction": "1:24174"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Different initialization branches inspect it; preserve its branch role without reducing it to fin_du_jeu."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:fin_dark",
@@ -25123,7 +25711,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -25160,11 +25749,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fin_dark",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_CONTINUE": "1:241b0"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Full progression belongs to dark.c; no state labels invented here."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:fin_de_rayman",
@@ -25186,7 +25786,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -25223,11 +25824,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fin_de_rayman",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "PcMain loops while clear; menu/display exit branches set1 and INIT_MOTEUR_BEGIN clears it."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:fin_du_jeu",
@@ -25250,7 +25862,9 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "affiche.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -25299,11 +25913,35 @@
       "DO_MORT_DE_RAY"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fin_du_jeu",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "fin_du_jeu",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_CONTINUE": "1:241b0",
+      "selection_save_option_prg": "1:24334",
+      "DO_WORLD_MAP": "1:2514c",
+      "START_LEVEL_ANIM": "1:25d74"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Engine initialization clears boss_mort/fin_boss; fin_du_jeu suppresses level initialization and changes dead_time setup. Keep the globals distinct."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:gele",
@@ -25325,7 +25963,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -25364,11 +26003,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "gele",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_ALL_OBJECTS": "1:09a2c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_MOTEUR_GELE always rebuilds the active table, including mode3. It is not a universal pause boolean."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:gerbe",
@@ -25667,7 +26317,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -25715,11 +26366,23 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "id_Cling_1up",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_CLING": "1:09060",
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_CLING_ANIMS retires the id on clock-gated EOA; only the extra-life animation can award a life."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:id_Cling_Pow",
@@ -25742,7 +26405,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -25790,11 +26454,23 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "id_Cling_Pow",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_CLING": "1:09060",
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_CLING_ANIMS retires the id on clock-gated EOA; only the extra-life animation can award a life."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:in_air_because_hit",
@@ -25927,7 +26603,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -25964,11 +26641,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "in_pause",
+     "supplied_by": "frame.c",
+     "functions": {
+      "SYNCHRO_LOOP": "1:2cb54"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "The frozen-engine gele modes are separate from this control."
-   ]
+   ],
+   "platform_class": "scene_state"
   },
   {
    "id": "global:joe_exp_probleme",
@@ -26641,7 +27329,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "load.c"
+    "load.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -26688,11 +27377,27 @@
       "LOAD_ALL_FIX"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "main_mem_level",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_CONTINUE": "1:241b0",
+      "DO_SAVE_CHOICE": "1:24490",
+      "SELECT_LEVEL": "1:24bb4",
+      "DO_WORLD_MAP": "1:2514c",
+      "DISPLAY_PROTOON_BACK": "1:257e4",
+      "DO_VICTOIRE": "1:25878"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DONE_MOTEUR_LEVEL calls align_mem_desc, which resets bump offset to base&3. align is not an alignment constant."
-   ]
+   ],
+   "platform_class": "resource_state"
   },
   {
    "id": "global:map_time",
@@ -26703,19 +27408,22 @@
    "declarator": "s32 $",
    "oracle_address": "2:3d8c0",
    "binding_kind": "game_data",
-   "meaning": "Signed32 global map-time counter, advanced by the byte horloges argument and also used as the common fractional movement phase.",
+   "meaning": "Map update counter/fractional movement phase with scene-specific reuse.",
    "unit": "nominal map ticks",
    "value_domain": {
     "representation_min": -2147483648,
     "representation_max": 2147483647,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second."
+    "code_contract": "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second.",
+    "pass5_contract": "horloges advances by supplied ticks;bonus uses60 ticks per displayed second. CLEAR_STAGE_NAMES uses1->2 as world-map setup latch. Not a monotonic wall clock or presentation count."
    },
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "affiche.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -26765,11 +27473,51 @@
       "rayMayLandOnAnObject"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "map_time",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_time": "1:0b56c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "map_time",
+     "supplied_by": "display.c",
+     "functions": {
+      "CLEAR_STAGE_NAMES": "1:24c00",
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second."
-   ]
+    "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second.",
+    "Pass5: horloges advances by supplied ticks;bonus uses60 ticks per displayed second. CLEAR_STAGE_NAMES uses1->2 as world-map setup latch. Not a monotonic wall clock or presentation count."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Signed32 global map-time counter, advanced by the byte horloges argument and also used as the common fractional movement phase.",
+     "unit": "nominal map ticks",
+     "value_domain": {
+      "representation_min": -2147483648,
+      "representation_max": 2147483647,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second."
+     },
+     "evidence_level": "PROVEN",
+     "port_notes": [
+      "Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second."
+     ]
+    }
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:nb_continue",
@@ -26791,7 +27539,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -26828,11 +27577,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "nb_continue",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_CONTINUE_SPR": "1:0b79c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "New session initializes9; keep separate from lives and fin_continue."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:nb_wiz_collected",
@@ -26920,7 +27680,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "ray.c"
+    "ray.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -26981,11 +27742,25 @@
       "DO_RAY_ON_MS"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "new_level",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_CONTINUE": "1:241b0",
+      "DO_WORLD_MAP": "1:2514c",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "INIT_MOTEUR_BEGIN sets both; world entry clears new_world and sets new_level; level initialization clears new_level."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:new_world",
@@ -27009,7 +27784,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "ray.c"
+    "ray.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -27070,11 +27846,25 @@
       "DO_RAY_ON_MS"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "new_world",
+     "supplied_by": "display.c",
+     "functions": {
+      "WORLD_CHOICE": "1:25028",
+      "DO_WORLD_MAP": "1:2514c",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "INIT_MOTEUR_BEGIN sets both; world entry clears new_world and sets new_level; level initialization clears new_level."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:no_ray_landing_smoke",
@@ -27173,7 +27963,10 @@
     "moteur.c",
     "collision2.c",
     "ray.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c",
+    "display.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -27245,11 +28038,46 @@
       "special_flags_init"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "num_level",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_ALL_OBJECTS": "1:09a2c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "num_level",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c",
+      "DO_VICTOIRE": "1:25878",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "num_level",
+     "supplied_by": "frame.c",
+     "functions": {
+      "InitPaletteSpecialPC": "1:2cf70",
+      "DoPaletteSpecialPC": "1:2d704"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "World time-table row is32 entries; do not infer level-file capacity from that stride."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:num_level_choice",
@@ -27271,7 +28099,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -27308,11 +28137,25 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "num_level_choice",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c",
+      "DO_VICTOIRE": "1:25878",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Distinct from current num_world/num_level; firefly grant checks selected Cave5/4."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:num_world_choice",
@@ -27334,7 +28177,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -27371,11 +28215,25 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "num_world_choice",
+     "supplied_by": "display.c",
+     "functions": {
+      "select_level_prg": "1:24a80",
+      "DO_WORLD_MAP": "1:2514c",
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Distinct from current num_world/num_level; firefly grant checks selected Cave5/4."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:numero_palette_special",
@@ -27386,18 +28244,21 @@
    "declarator": "s16 $",
    "oracle_address": "2:3f740",
    "binding_kind": "game_data",
-   "meaning": "Special weather palette selection state cleared during frozen weather update.",
-   "unit": "palette state",
+   "meaning": "Current output phase of the PC special-palette sequence.",
+   "unit": "palette index0..14",
    "value_domain": {
     "representation_min": -32768,
     "representation_max": 32767,
     "observed": "Representation bounds only; see observed computations/data separately.",
-    "code_contract": "Other display/weather consumers determine nonzero codes."
+    "code_contract": "Other display/weather consumers determine nonzero codes.",
+    "pass5_contract": "Phase15 wraps/resets to0;palette15 is the saved original anchor,not an output phase. Cave advances on horloge5;lightning advances first immediately then on even render counters."
    },
-   "evidence_level": "STRONG",
+   "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "display.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -27434,11 +28295,51 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "numero_palette_special",
+     "supplied_by": "display.c",
+     "functions": {
+      "DISPLAY_GAME_VIGNET": "1:254a4"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "numero_palette_special",
+     "supplied_by": "frame.c",
+     "functions": {
+      "InitPaletteSpecialPC": "1:2cf70",
+      "DoPaletteSpecialPC": "1:2d704"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
-    "Other display/weather consumers determine nonzero codes."
-   ]
+    "Other display/weather consumers determine nonzero codes.",
+    "Pass5: Phase15 wraps/resets to0;palette15 is the saved original anchor,not an output phase. Cave advances on horloge5;lightning advances first immediately then on even render counters."
+   ],
+   "meaning_history": [
+    {
+     "supplied_by": "accepted passes1-4 before rendering pass5",
+     "meaning": "Special weather palette selection state cleared during frozen weather update.",
+     "unit": "palette state",
+     "value_domain": {
+      "representation_min": -32768,
+      "representation_max": 32767,
+      "observed": "Representation bounds only; see observed computations/data separately.",
+      "code_contract": "Other display/weather consumers determine nonzero codes."
+     },
+     "evidence_level": "STRONG",
+     "port_notes": [
+      "Other display/weather consumers determine nonzero codes."
+     ]
+    }
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:oldPrio",
@@ -27754,7 +28655,8 @@
    "evidence_level": "PROVEN",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -27791,11 +28693,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "pix_gerbe",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_pix_gerbes": "1:0a110"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Engine initialization clears each batch marker and all320 words of its item storage; per-particle update lives in effect handling."
-   ]
+   ],
+   "platform_class": "presentation_state"
   },
   {
    "id": "global:pixels_enfonce",
@@ -27883,7 +28796,8 @@
     "collision1.c",
     "collision2.c",
     "ray.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -27963,11 +28877,24 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "poing_obj",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_POING": "1:09048",
+      "display_bar_boss": "1:091a8",
+      "display_etoile": "1:0ad38"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Mounted DO_MOTEUR2 offsets it by camera speeds in addition to ordinary fist movement."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:pos_stack",
@@ -29159,7 +30086,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "ray.c"
+    "ray.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -29207,11 +30135,23 @@
       "DO_RAYMAN"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "record",
+     "supplied_by": "display.c",
+     "functions": {
+      "InitDemoJeu": "1:25908",
+      "FinDemoJeu": "1:25b78"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "INIT_RAY reads recording to retain seed power; level teardown may stop playback."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:reduced_rayman_id",
@@ -29908,7 +30848,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c"
    ],
    "evidence": [
     {
@@ -29956,11 +30897,22 @@
       "obj_init"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "scrollLocked",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "display_bar_boss": "1:091a8"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Set by boss handlers, cleared by engine/object initialization; do not equate with both scroll axis bounds being equal."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:scroll_end_x",
@@ -29983,7 +30935,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "collision2.c"
+    "collision2.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -30031,11 +30984,22 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "scroll_end_x",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_SCROLL clamps xmap; level/background/boss logic may make the two equal to lock x scrolling."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:scroll_end_y",
@@ -30059,7 +31023,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "collision2.c"
+    "collision2.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -30120,11 +31085,22 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "scroll_end_y",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_SCROLL clamps ymap. Follow and upward player-bound code read these independently of ymapmax."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:scroll_obj_id",
@@ -30223,7 +31199,8 @@
    "name_provenance": "RAYVERSE",
    "evidence_units": [
     "moteur.c",
-    "collision2.c"
+    "collision2.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -30272,11 +31249,22 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "scroll_start_x",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_SCROLL clamps xmap; level/background/boss logic may make the two equal to lock x scrolling."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:scroll_start_y",
@@ -30300,7 +31288,8 @@
    "evidence_units": [
     "moteur.c",
     "collision1.c",
-    "collision2.c"
+    "collision2.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -30360,11 +31349,22 @@
       "doShipCommand"
      ],
      "detail": "Full-image code/data fixup references plus -2/-3 widened-load candidates and whole-source token readers/writers. Candidates are not all proved typed consumers."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "scroll_start_y",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_WORLD_MAP": "1:2514c"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "DO_SCROLL clamps ymap. Follow and upward player-bound code read these independently of ymapmax."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:scroll_x",
@@ -30872,7 +31872,8 @@
    "evidence_units": [
     "moteur.c",
     "ray.c",
-    "objinit.c"
+    "objinit.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -30929,11 +31930,22 @@
       "obj_init"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "star_ray_der",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_VICTOIRE": "1:25878"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "RAY_REVERSE_COMMANDS toggles alive/active and assigns explicit priorities3/1 when enabled,3/3 when disabled."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:star_ray_dev",
@@ -30956,7 +31968,8 @@
    "evidence_units": [
     "moteur.c",
     "ray.c",
-    "objinit.c"
+    "objinit.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -31013,11 +32026,22 @@
       "obj_init"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "star_ray_dev",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_VICTOIRE": "1:25878"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "RAY_REVERSE_COMMANDS toggles alive/active and assigns explicit priorities3/1 when enabled,3/3 when disabled."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:status_bar",
@@ -31040,7 +32064,9 @@
    "evidence_units": [
     "moteur.c",
     "ray.c",
-    "objinit.c"
+    "objinit.c",
+    "affiche.c",
+    "display.c"
    ],
    "evidence": [
     {
@@ -31103,11 +32129,33 @@
       "INIT_OBJECTS"
      ],
      "detail": "Full-image direct calls, absolute fixup reads/writes and widened-load candidates are retained. Adjacent-data/offset candidates require instruction/base-type review."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "status_bar",
+     "supplied_by": "affiche.c",
+     "functions": {
+      "DISPLAY_FIXE": "1:09420"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "status_bar",
+     "supplied_by": "display.c",
+     "functions": {
+      "DO_CONTINUE": "1:241b0",
+      "InitDemoJeu": "1:25908"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Engine phases update health/lives/tings and call DO_FIXE to derive display slots."
-   ]
+   ],
+   "platform_class": "game_state"
   },
   {
    "id": "global:type_fndscrX",
@@ -31129,7 +32177,8 @@
    "evidence_level": "STRONG",
    "name_provenance": "RAYVERSE",
    "evidence_units": [
-    "moteur.c"
+    "moteur.c",
+    "frame.c"
    ],
    "evidence": [
     {
@@ -31166,11 +32215,22 @@
       "kind": "O"
      },
      "authority": "Name/size/section corroboration only."
+    },
+    {
+     "artifact": "build/workers/sem_render/evidence/symbols.json",
+     "kind": "render_readers_writers",
+     "key": "type_fndscrX",
+     "supplied_by": "frame.c",
+     "functions": {
+      "sub_3BE20": "1:2be20"
+     },
+     "detail": "Whole bound-image call/fixup scan includes game/vendor/runtime. Exact and-2/-3 widened-load candidates retained;source token matches alone are not identity proof."
     }
    ],
    "port_notes": [
     "Set by background setup; INIT_MOTEUR collapses scroll_end_x to scroll_start_x."
-   ]
+   ],
+   "platform_class": "backend_state"
   },
   {
    "id": "global:v_scroll_speed",
@@ -31884,7 +32944,7 @@
   }
  ],
  "source_fingerprints": {
-  "src/moteur.c": "0c3b644a36a417a29a8d8d23a981be885d3d61c456b2ec972ae1517f54cb88ed",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
   "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
   "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
   "src/include/obj.h": "0b560ce35a2f8c82a009dbfc7c1ad3bf78297258c02ecd11bc7c863fd93029f1",
@@ -31893,7 +32953,7 @@
  },
  "evidence_source_fingerprints": {
   "src/action.c": "548466c277addecf8be6fc145fd10d58fe4537099f97955b114bcc29f91f4800",
-  "src/affiche.c": "8665d7c42ed956afa26314e9ec23e0e00b7a43b47eeaf80957565e3fdb39c5de",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
   "src/araignee.c": "aa7a13f3b2ec8bfe0fb25e8d64f948787e83ff32c03b922162c702d58676f69a",
   "src/basic.c": "1215f883088592fce3cce0dcfdc47bd14df9ac638ea6fa05756b1e5f9717f6e3",
   "src/basic_local.h": "74730338d5d0c320f18c1fdefb941a109962bad2471778ebccbee6e0c5bc1258",
@@ -31976,8 +33036,8 @@
   "src/dark.c": "2f894302ae3da291bc3b55de074a501de2728d5803156e658ff708fef2ebdd74",
   "src/data/blk_215c.c": "0152325f1047d5e5fa0145258214e318f86424e9c7da0e3784c0b46e2587e6c6",
   "src/data/blk_6384.c": "ba8f66df4b619733719e4075be80c3b4a2b3bc7b8232ea883d59380d57846c9c",
-  "src/display.c": "c22b8f1b60f2c8b01a2ff6d094e4d833eecba0601ceb96df5a2a9987554db1a5",
-  "src/display_local.h": "489a60149f409a9e893bb78f40b0a538e40a4d3ec151dc7a52f53218ff2c2cf5",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/display_local.h": "fa7f501b8c913a762570217464dff976596797ee5ec746061236357df58aaeb5",
   "src/dosmem.c": "c4e90b7d39c66ecd81e171930b5fbec191dcfe1862939dbf1d16fef76a5e5269",
   "src/dosprobe.c": "e8258005a1455b33e638fc6b2db7beed112e0a1de5ad13231fcf34ff80e126ef",
   "src/effect1.c": "06a0f1198b337d8cc7b7bf5965b7a79a423e3008923c8e30ce56cadfd26fec6c",
@@ -31991,7 +33051,7 @@
   "src/effecthelp.c": "4fb846223acadc7c428e849757035efcb1b1df5f030e78db1939942b55bfed54",
   "src/fee.c": "f5f1d67f53af740aa097c6e4c68e5663f844e96df52217cf4991e61e27d2cfff",
   "src/fnd.c": "9cc392171a93b5de4cbd3516118fb1d9081453e8e4bec9f9027331ae5985bda0",
-  "src/frame.c": "a5370161fc9a178f84c9ffc94d5d202dc5e8459a08fe945d6db502d381e3938a",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
   "src/hifi.c": "4451b5775797956f751a0e0da739f8ffe730866b7c451871f6bd030c260d66ba",
   "src/hmi/hmi_active.c": "98094b1afd3cbb8a6be9856eecb6b1edd52c09183ad5a29d0092c30548f6c87e",
   "src/hmi/hmi_detect.c": "76c6b138e5ba67d87ffa8ddd156ce11e4737dd47f2f623a70585b8c5b6bda861",
@@ -32026,7 +33086,7 @@
   "src/mite.c": "ce8c470708530f0d1eb872f3ca75fa7d1a923effd758fbf9fe0215e2f8c129d4",
   "src/moskito.c": "64bc059d5e70df1e9249166d1bf2b6c3776b3b1cf4f88099f24a0355296a5208",
   "src/movie.c": "dae4c6a7de11580392a99f465ffadbaedbdaa374845321957d6f767d5301ef27",
-  "src/neige.c": "d85fb91c0688f0712441c801eb07779421888f2fcc3095a6e174ee0eecfff3b5",
+  "src/neige.c": "f787107baf4b2eba336a51e8bbdf1ab954e5e0d00027ed4e62d60f5366d8ed6d",
   "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
   "src/objupdate1.c": "58073eaaa3cf46ac78e9f5a3593ddb0a240327d226c0d70e673c3e427ed1d456",
   "src/objupdate2.c": "817c7aba028dc4e1bf0670c86f97ff2963c46c5e652589047dbdf554870c3612",
@@ -32294,5 +33354,45 @@
    "evidence/xref_names.json": "4ddd076bab425bbae5facee1686a58cd0e5e824c9d7b62ca18247e30cd222773"
   },
   "limitation": "Earlier evidence hashes/roots are retained, including missing/pruned artifacts. This supplement does not silently refresh earlier proof."
+ },
+ "pass5_evidence": {
+  "artifact_root": "build/workers/sem_render",
+  "files": {
+   "evidence/affiche.dos.txt": "b9f0b3fe4e1f1e92644bdcb82a1e6dd1b2731c98b670acafef52a7a028f92152",
+   "evidence/affiche_extent.json": "01801bb66ee5145c200861cd8e649e584c529318ebbf981466c2e7a844ba3725",
+   "evidence/affiche_typed_accesses.json": "afe38216fe6f12359a8c3c67329715f584a4d2c6cab1208e7e9ad6bb5c37dfb2",
+   "evidence/archive_formats.json": "2a32cc120087612867017267b1506a1734f21704571b22ef257fd5112cb7cbb3",
+   "evidence/callers_writers.dos.txt": "76df5d4ec14c8fbf7e70d41ec2ebfe282be09c472a315c1031957f57e2eb3ac7",
+   "evidence/callers_writers_index.json": "2c32ead225ddd9e26b3c266a23a5097f01af642dc33e2a2916ad76627c170b18",
+   "evidence/canonical_input_hashes.json": "6b978d730fabcb97bf4a0a3b61ce4637a5a7de46a92c6b80d984c78b71474ab7",
+   "evidence/context_declarations.json": "7e106dcaf49dc214599aff0986032441cd8e468b462f38f82b00467e069733bb",
+   "evidence/displacement_candidates.json": "ff911db7de0d82fb45ade889feb4ad0c3754d4120b6493663dc5e06fd00338f3",
+   "evidence/display.dos.txt": "fcec495ab214dcf4f92bff171d3557860b42fa61b1690e148b5c2c0ae4f2708a",
+   "evidence/display_extent.json": "5a9efb26bc6aa8f0a7e76caadacde182d62c2cfa9d12fe564200e192afa68f69",
+   "evidence/display_typed_accesses.json": "d4a9974d485f946d8795663470db525d32f14b6178bcbc148d3f22e9daabfc4d",
+   "evidence/earlier_render_meanings.json": "edef823b4fd5ee41eaae3f6af26c837cb72784ac21587051430f5b501dc6b02a",
+   "evidence/external_fields.json": "bb428d1db75bec91d363ca797360bfd99ca24aa7a9880be9db209b34fa01f118",
+   "evidence/external_render_fields.json": "b1e0e289a20c67fbeea0525234f3f4c4b00ff736bd1839fd4d980f48e499ffec",
+   "evidence/field_source_candidates.json": "ce7e164593f4642e78a4880a7ffbc99382c8cb0141a1c732c657afae9aaf2bf0",
+   "evidence/file_formats.json": "5c752eab9a300d255ec38347ea728c6abfe23ee1dd15d58318dc10d2478a59f7",
+   "evidence/frame.dos.txt": "3f1c8df566d064477cd3925576f6841690850a59296af6765d3e8b1ae4414e56",
+   "evidence/frame_extent.json": "3a32516c033b1379e868560ff2121cb28a00911c12f63ecdb138997fe11568ba",
+   "evidence/frame_typed_accesses.json": "a4d9a07c75d69abdd15a3d2d92bfcae51c5c4cda72fba3d9294875bd99ce841f",
+   "evidence/name_provenance_checks.json": "921f01820fff74f45528aa7cf881a1a3cab1004b4d411ff7c9a6cc2477d0d879",
+   "evidence/negative_results.json": "30f4816e4defcbf37697f2e0c4023b9591e27af4f58d282038d21d0b8b81e802",
+   "evidence/new_types.json": "b417d0573e907be4952fe0aa8d266897c9ea2049da611b9fdc06d82a3b037e74",
+   "evidence/oracle_table_domains.json": "2c04a0cb810b7ff3eb2cb91465685f3a4d0d8657c88d918c34558c2a04406701",
+   "evidence/platform_classes.json": "d12dd591018b4838846a8924bd4d843467f5251811f5f4557f1d2af46ccc2c9f",
+   "evidence/prior_render_observations.json": "f42044971f190ed0ad48587878a070aad1abf726c4e953be6ddab46d4c9e589f",
+   "evidence/reachable_private_constants.json": "1571db9a5087f56194aec0d35bc6f37dc58bf60882437099ac09809c7706c270",
+   "evidence/reference_input_hashes.json": "761c18c7b826540198bec6084888cb3d58b8354d8e88e2087f2c27264858cb6e",
+   "evidence/render_coverage.json": "3c8154f27562655f71078f86072aa41863d2c3c5f8a450899f7d9188e9ddae1c",
+   "evidence/render_initial_values.json": "e2d44182da7ee5cfb01fa84717c1febe228c9d80523708d43011da923740f276",
+   "evidence/shipped_map_domains.json": "396d24351640ddbcd7dccbecf7269c7fe1e4ef4add9615c514989fdcfd44c08c",
+   "evidence/symbols.json": "9f2b15d18fbf61f4d877da574af13622993335f69afdc94e73755e664db69b9c",
+   "evidence/target_abi.json": "edef4a9e9bcb90c8a1eaf0a6cd7a6a457f2a469228b78d6711df2f60802a493f",
+   "evidence/xref_names.json": "2fa864fbcad69d842d68a0e53e2bb78619f38f505565f2302ebe114c43eca1a1"
+  },
+  "description": "New DOS source/caller/layout and read-only asset evidence;prior evidence roots and hashes retained."
  }
 }

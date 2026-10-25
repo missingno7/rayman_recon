@@ -1014,7 +1014,9 @@ void SYNCHRO_LOOP(scene_func_t scene_func) {
         in_pause = 0;
 }
 
-void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
+/* Names/meaning: 1:2cbe8; docs/semantics/frame.json.
+   Set up a cropped four-plane picture blit. */
+void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_y,
                              s16 x, s16 y, s16 height, s16 width) {
   s32 source_stride;
   u32 source_length;
@@ -1060,12 +1062,12 @@ void DISPLAY_ANYSIZE_PICTURE(void *image, s16 source_x, s16 source_width,
     width = ((s32) width) >> 2;
   }
   {
-    s16 perm_value_2;
-    perm_value_2 = source_x & 3;
-    source_plane = perm_value_2;
+    s16 source_plane_bits;
+    source_plane_bits = source_x & 3;
+    source_plane = source_plane_bits;
   }
   source_x >>= 2;
-  source = ((((u8 *) image) + (source_length * source_plane)) + (source_width * source_stride)) + source_x;
+  source = ((((u8 *) image) + (source_length * source_plane)) + (source_y * source_stride)) + source_x;
   x >>= 2;
   dest = ((draw_buffer + (y << 6)) + (y << 4)) + x;
   display_anypicture(source, dest, height, source_stride + ((1 << source_plane) << 8), source_length, width);
@@ -1103,13 +1105,15 @@ void DISPLAY_FOND3(void) {
     memcpy(DrawBufferNormal, PLAN3BIT, 320 * 200);
 }
 
+/* Names/meaning: 1:2ce20; docs/semantics/frame.json.
+   Restore the menu background,optionally within the gameplay viewport. */
 void DISPLAY_FOND_MENU(void) {
-    s16 v1;
+    s16 row_skip;
     s16 x;
     s16 row;
     u8 *dest_pos;
     u8 *source_pos;
-    v1 = 320 - (s16)Bloc_lim_W2 + (s16)Bloc_lim_W1;
+    row_skip = 320 - (s16)Bloc_lim_W2 + (s16)Bloc_lim_W1;
     if (!OptionGame) {
         memcpy(draw_buffer, EffetBufferNormal, 320 * 200);
     } else {
@@ -1129,8 +1133,8 @@ void DISPLAY_FOND_MENU(void) {
                 *dest_pos++ = *source_pos++;
                 ++x;
             }
-            dest_pos += v1;
-            source_pos += v1;
+            dest_pos += row_skip;
+            source_pos += row_skip;
             ++row;
         }
         clear_memory(draw_buffer + Bloc_lim_H2 * 320, 0, (200 - Bloc_lim_H2) * 320);
@@ -1203,22 +1207,24 @@ void InitPaletteSpecialPC(void) {
     }
 }
 
+/* Names/meaning: 1:2d54c; docs/semantics/frame.json.
+   Interpolate the palettes strictly between two special-palette anchors. */
 void DoFadePaletteSpecialPC(s16 start, s16 end) {
     /* COMPILER_STEERED: start-R/end-R/start-G product order selects the DOS allocation. */
     /* DOS 1:2d55f/2d6d6: short indices; 2d5fe, 2d660, 2d6b6:
        truncate each interpolated channel before the constant-first clamp. */
-    s16 p, i;
-    for (p = start + 1; p < end; ++p) {
-        for (i = 0; i < 256; ++i) {
-            rvb_special[p].colors[i].r = min32(63, (u8)(
-                ((end - p) * rvb_special[start].colors[i].r +
-                 (p - start) * rvb_special[end].colors[i].r) / (end - start)));
-            rvb_special[p].colors[i].g = min32(63, (u8)(
-                ((end - p) * rvb_special[start].colors[i].g +
-                 rvb_special[end].colors[i].g * (p - start)) / (end - start)));
-            rvb_special[p].colors[i].b = min32(63, (u8)(
-                (rvb_special[start].colors[i].b * (end - p) +
-                 rvb_special[end].colors[i].b * (p - start)) / (end - start)));
+    s16 palette_index, color_index;
+    for (palette_index = start + 1; palette_index < end; ++palette_index) {
+        for (color_index = 0; color_index < 256; ++color_index) {
+            rvb_special[palette_index].colors[color_index].r = min32(63, (u8)(
+                ((end - palette_index) * rvb_special[start].colors[color_index].r +
+                 (palette_index - start) * rvb_special[end].colors[color_index].r) / (end - start)));
+            rvb_special[palette_index].colors[color_index].g = min32(63, (u8)(
+                ((end - palette_index) * rvb_special[start].colors[color_index].g +
+                 rvb_special[end].colors[color_index].g * (palette_index - start)) / (end - start)));
+            rvb_special[palette_index].colors[color_index].b = min32(63, (u8)(
+                (rvb_special[start].colors[color_index].b * (end - palette_index) +
+                 rvb_special[end].colors[color_index].b * (palette_index - start)) / (end - start)));
         }
     }
 }
@@ -1392,9 +1398,11 @@ void WaitNSynchro(s32 n_frames) {
     }
 }
 
-void swapGuetteurCollZones(obj_t *obj, u8 param_2)
+/* Names/meaning: 1:2db40; docs/semantics/frame.json.
+   Select the ship-attached/free lookout type and matching collision descriptor. */
+void swapGuetteurCollZones(obj_t *obj, u8 ship_attached)
 {
-    obj->type = param_2 ? TYPE_PIRATE_GUETTEUR : TYPE_PIRATE_GUETTEUR2;
+    obj->type = ship_attached ? TYPE_PIRATE_GUETTEUR : TYPE_PIRATE_GUETTEUR2;
     obj->zdc = type_zdc[obj->type];
 }
 
@@ -1470,24 +1478,28 @@ void DO_ONE_PAR_COMMAND(obj_t* obj) {
     if (obj->iframes_timer != 0) obj->iframes_timer--;
 }
 
+/* Names/meaning: 1:2de28; docs/semantics/frame.json.
+   Locate the currently held bomb layer when eta flag4 permits it. */
 s16 hasGuetteurABomb(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
-    s16 unk_1;
+    s16 bomb_layer_index;
     anim_t *anim;
-    anim_layer_t *unk_2;
+    anim_layer_t *frame_layers;
 
     if (obj->eta[obj->main_etat][obj->sub_etat].flags & 4) {
-        unk_1 = obj->type == TYPE_PIRATE_GUETTEUR ? 0 : 5;
+        bomb_layer_index = obj->type == TYPE_PIRATE_GUETTEUR ? 0 : 5;
         anim = &obj->animations[obj->anim_index];
-        unk_2 = &anim->layers[(anim->layers_per_frame & 0x3fff) * obj->anim_frame];
-        if (unk_2[unk_1].sprite_index == 0)
-            unk_1 = -1;
+        frame_layers = &anim->layers[(anim->layers_per_frame & 0x3fff) * obj->anim_frame];
+        if (frame_layers[bomb_layer_index].sprite_index == 0)
+            bomb_layer_index = -1;
     }
 
-    return unk_1;
+    return bomb_layer_index;
 }
 
-void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 param_4) {
+/* Names/meaning: 1:2dea0; docs/semantics/frame.json.
+   Activate the first inactive type78 bomb using the lookout held-bomb geometry. */
+void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 initial_speed_y, u8 match_facing, u8 fuse_timer) {
     s16 new_spd_x;
     eta_t *cur_eta_2;
     s16 gue_h;
@@ -1498,26 +1510,26 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
     s16 i;
     s16 nb_objs;
     s16 gue_y;
-    s16 unk_1;
+    s16 bomb_layer_index;
     u8 mul_x_pos;
     s16 gue_x;
 
     /* DOS leaves the multiplier/speed unset on unhandled substates. */
-    unk_1 = hasGuetteurABomb(gue_obj);
-    if ((s16) unk_1 != -1) {
+    bomb_layer_index = hasGuetteurABomb(gue_obj);
+    if ((s16) bomb_layer_index != -1) {
         i = 0;
         cur_obj = &level.objects[i];
         nb_objs = level.nb_objects;
         while (i < nb_objs) {
             if (cur_obj->type == TYPE_PIRATE_BOMB) {
                 if (!cur_obj->is_active) {
-                    if (param_3)
+                    if (match_facing)
                         cur_obj->flags.flip_x = gue_obj->flags.flip_x;
                     else
                         cur_obj->flags.flip_x = !gue_obj->flags.flip_x;
 
-                    cur_obj->speed_y = param_2;
-                    GET_SPRITE_POS(gue_obj, (s16) unk_1, &gue_x, &gue_y, &gue_w, &gue_h);
+                    cur_obj->speed_y = initial_speed_y;
+                    GET_SPRITE_POS(gue_obj, (s16) bomb_layer_index, &gue_x, &gue_y, &gue_w, &gue_h);
                     cur_obj->x = gue_x - cur_obj->offset_bx + (gue_w >> 1);
                     cur_obj->y = gue_y + gue_h - cur_obj->offset_by;
                     switch (gue_obj->sub_etat) {
@@ -1555,7 +1567,7 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                             cur_obj->y -= 20;
                             break;
                     }
-                    if (param_3 == 0)
+                    if (match_facing == 0)
                         new_spd_x = 16;
 
                     cur_obj->speed_x = new_spd_x;
@@ -1568,7 +1580,7 @@ void allocatePirateGuetteurBomb(obj_t* gue_obj, s32 param_2, u8 param_3, u8 para
                     cur_obj->is_active = 1;
                     cur_obj->flags.alive = 1;
                     add_alwobj(cur_obj);
-                    cur_obj->timer = param_4;
+                    cur_obj->timer = fuse_timer;
                     cur_obj->flags.flag_0x40 = 0;
                     break;
                 }
@@ -1617,12 +1629,14 @@ void DO_PAR_TIR(obj_t* obj) {
     }
 }
 
-void DO_PAR_POING_COLLISION(obj_t *obj, s16 param_2)
+/* Names/meaning: 1:2e398; docs/semantics/frame.json.
+   Apply fist damage and a possible held-bomb drop to the lookout. */
+void DO_PAR_POING_COLLISION(obj_t *obj, s16 sprite_index)
 {
     if (
         (obj->eta[obj->main_etat][obj->sub_etat].flags & 1) &&
         obj->iframes_timer == 0 &&
-        (obj->type == TYPE_PIRATE_GUETTEUR || param_2 == 3)
+        (obj->type == TYPE_PIRATE_GUETTEUR || sprite_index == 3)
     )
     {
         if (obj->type == TYPE_PIRATE_GUETTEUR2 &&

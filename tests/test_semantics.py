@@ -30,6 +30,40 @@ def all_entities(regs):
     return [e for r in regs.values() for e in r['entities']]
 
 class SemanticRegistry(unittest.TestCase):
+    def test_continued_unused_directive_has_no_phantom_c_body(self):
+        text='#define UNUSED(p) \\\n    do { \\\n        phantom(p); \\\n    } while (0)\nextern int real;\n'
+        cleaned=semantics.clean(text)
+        self.assertNotIn('phantom',cleaned)
+        self.assertEqual(cleaned.count('\n'),text.count('\n'))
+        ast=semantics.c_parser.CParser().parse(cleaned)
+        self.assertEqual(set(semantics.global_declarations(ast)),{'real'})
+
+    def test_function_typedef_extern_is_not_a_data_global(self):
+        ast=semantics.c_parser.CParser().parse('typedef void routine_t(int); typedef routine_t alias_t; extern routine_t direct; extern alias_t indirect; extern routine_t *dispatch; extern int value;')
+        self.assertEqual(set(semantics.global_declarations(ast)),{'dispatch','value'})
+
+    def test_field_rename_does_not_rewrite_unrelated_local(self):
+        entity=dict(kind='field',current_name='field_0',proposed_name='unprojected_x')
+        self.assertEqual(semantics.reverse_names('unprojected_x + entry->unprojected_x + value.unprojected_x',[entity]),
+                         'unprojected_x + entry->field_0 + value.field_0')
+
+    def test_render_compatible_type_view_is_exact(self):
+        regs=registries()
+        if 'affiche.json' not in regs:self.skipTest('Rendering registry not selected')
+        regs['affiche.json']['scope']['shared_type_views']['pix_gerbe_t']['omitted_fields']=[]
+        self.assertTrue(any('affiche.json: shared type field coverage drift: pix_gerbe_t' in s for s in semantics.check_collection(regs,SOURCE_ROOT)))
+
+    def test_render_type_view_requires_evidence(self):
+        reg=copy.deepcopy(registries()['types.json'])
+        reg['scope']['shared_type_views']={'pix_gerbe_t':dict(omitted_fields=['words'],size_bytes=642)}
+        self.assertTrue(any('invalid shared type view' in s for s in semantics.validate_schema(reg)))
+
+    def test_render_type_view_size_is_compiled(self):
+        regs=registries()
+        if 'affiche.json' not in regs:self.skipTest('Rendering registry not selected')
+        reg=regs['affiche.json'];reg['scope']['shared_type_views']['pix_gerbe_t']['size_bytes']+=1
+        self.assertTrue(semantics.check_layout(reg,WORK/'negative_render_view_size',SOURCE_ROOT))
+
     def test_missing_scope_kind_reports_schema_error(self):
         reg=copy.deepcopy(registries()['types.json'])
         del reg['scope']['kind']

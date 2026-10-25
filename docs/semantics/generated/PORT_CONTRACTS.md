@@ -2,6 +2,298 @@
 
 Generated from all selected semantic registries. UNKNOWN and HYPOTHESIS are observations, not implementation requirements.
 
+## affiche.json
+
+Meaning confidence is independent of STRICT and of compiled layout. DOS writers/readers/callers are primary;external names corroborate. Raw token/displacement hits are candidates,not typed-field proof. UNKNOWN keeps neutral names. Only identifier/comment edits are proposed.
+
+### function:display2
+
+STRONG: Draw the current object animation in ascending layer order.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:08ce8.
+
+Layer count is layers_per_frame&0x3fff; skip sprite_index0 and sprite.id0. Coordinates are projected from screen_x/screen_y; object flip mirrors placement about2*offset_bx and XORs layer.mirrored to select the flipped drawer. At scale256, layer5, animations14..16, the flipped x additionally subtracts16. Pack dimensions into low16 bits, height in high byte; color is sprite.color>>4.
+
+### function:display_sprite
+
+STRONG: Draw one indexed object sprite with projection and the sprite/formal flip rule.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:08eb0.
+
+Project caller x/y and outer dimensions with object.scale. Select NORMAL when sprite.flags_bits.flip_x XOR flip is nonzero, FLIPPED otherwise; this is deliberately opposite to display2 layer selection. Palette selector is color>>4. Sprite index formal is u8; size narrows to16 bits.
+
+### function:display_sprite_NoClip
+
+STRONG: Draw one projected object sprite through the no-clip dispatch slots.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:08f7c.
+
+Same coordinate, palette and flip expression as display_sprite, using the two no-clip pointer slots. ModeX initializes those slots to oppositely named assembly entries; retain actual assignment/entry contracts in docs/port/ASM_SPEC.md.
+
+### function:DISPLAY_POING
+
+PROVEN: Draw the fist object only while poing.is_active is nonzero.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09048.
+
+Uses display2(poing_obj); the caller places this immediately after Rayman in the priority3 pass.
+
+### function:DISPLAY_CLING
+
+PROVEN: Draw the life/power pickup HUD animations in a temporary100x100 clip window.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09060.
+
+Set id_Cling_Old=1; ids-1 mean absent; draw only when object.timer==0. Life anchor(61,5), power anchor(66,14), subtract object offsets. Add16 to y only for GameModeVideo1 and P486==1. Save/restore clipping for each draw.
+
+### function:display_bar_boss
+
+PROVEN: Draw the locked-scroll boss health bar and type-selected icon.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:091a8.
+
+Requires scrollLocked and nonzero hit_points. Lost and blank widths are6 pixels per hit point, with29-point reference width. X offset4 in normal mode,8 otherwise; latter subtracts8 y when P486==1. Uses fist resource sprites60/61 and type-selected reference icons44,108..113.
+
+### function:DisplayCrackers
+
+PROVEN: Draw the two limited-installation diagnostic messages.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:093a8.
+
+Centered slash text at(160,100),font0,color0 and(160,150),font2,color1; no protection state is changed here.
+
+### function:DisplayProgrammerMessage
+
+PROVEN: Draw the two programmer greeting messages.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:093e4.
+
+Same centered positions/fonts/colors as DisplayCrackers, with different fixed text.
+
+### function:DISPLAY_FIXE
+
+PROVEN: Draw the gameplay HUD or its bonus-mode subset.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09420.
+
+ray_mode5 delegates to DISPLAY_FIXE_CB. Otherwise death refresh can set fixontemp300; decrement each call and clear borders on the last normal-mode refresh. Draw when fixon, refresh, or time0. time==-2 selects normal lives/HP/tings HUD; other values select bottom-left tings. Normal anchors are(16,5),(244,5), digits x55,70,276,290 and HP(35,27),(59,27); ModeX/P486==1 adds16 y. HP255 and fin_du_jeu suppress HP; max_hitp4 enables second HP sprite. Popup clipping is restored by DISPLAY_CLING.
+
+### function:DISPLAY_POINT
+
+PROVEN: Stamp a world-path point into PLAN2BIT.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09864.
+
+Pass(x,y-2) to DrawWldPointPlan2Normal; the buffer coordinates and stamp contract are in docs/port/ASM_SPEC.md.
+
+### function:DISPLAY_PTS_TO
+
+PROVEN: Draw a percentage of a world-map dotted path after camera conversion.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0987c.
+
+Translate both endpoints by(-xmap+52,-ymap+35), then Bresenham callback DISPLAY_POINT, spacing argument7 and supplied percentage.
+
+### function:DISPLAY_PTS_TO_PLAN2
+
+PROVEN: Draw a dotted path in PLAN2 coordinates with the8-pixel x bias.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:098c4.
+
+Add8 to both endpoint x values, retain y, then Bresenham(DISPLAY_POINT,...,7,percent). No new point-count correction is proposed.
+
+### function:DISPLAY_CYMBALE
+
+STRONG: Draw one three-layer half of a cymbal animation.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:098f4.
+
+Nonzero last argument selects inclusive layers0..2; zero selects3..5. Project layer+screen coordinates, skip sprite.id0, use normal drawer and palette high nibble; no object/layer flip is applied here. First half is drawn in the object bucket; second half after bucket2.
+
+### function:DISPLAY_ALL_OBJECTS
+
+STRONG: Draw object priority buckets and the separately ordered player/cymbal/final-object passes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09a2c.
+
+Traverse buckets7 down to1, preserving actobj order within each. At bucket1 draw boss bars before bucket equality testing. Type157 in cave8 draws only x>=300; type81 draws cymbal layers0..2; type254 uses slope-derived deformation; types252/251/173 temporarily set clip ymax=Bloc_lim_H2-40. After bucket3 draw alive active Rayman and fist if freeze/blink predicate permits. After bucket2 draw active cymbal layers3..5. Finally draw only the first priority0,type245 object. Other priority0 objects and buckets>=8 are not drawn by the ordinary loop.
+
+### function:display_flocons_behind
+
+PROVEN: Draw the five weather groups behind the map/objects.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09d2c.
+
+Temporarily use projection center(160,170). Groups3..7 use depths32,64,96,128,160 and integer multiplier65536/(depth+256); project unprojected coordinates with >>8 plus center correction. Non-jungle uses snow drawers4,3,2,1,5; jungle uses rain6,5,5,4,4. Restore both projection-center globals.
+
+### function:display_flocons_before
+
+PROVEN: Draw the three weather groups over the objects.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:09f08.
+
+Groups0..2 have depths-64,-32,0 with the same projection arithmetic and temporary center(160,170). Non-jungle group0 uses snow6, others snow7; jungle uses rain7. Restore projection center.
+
+### function:display_pix_gerbes
+
+PROVEN: Draw active particle pixels from the eight64-particle groups.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0a110.
+
+Require group active and particle byte+9>=128; y must exceed Bloc_lim_H1_Aff<<6. Positions are signed Q6 pixels, drawn with arithmetic>>6. Brightness uses ABS((u8)speed_y), therefore0..255 rather than the full signed speed:>=128 selects88, else(speed_byte>>5)+(low7 bits of byte+9)+4. fplot has its own backend contract.
+
+### function:DISPLAY_BLACKBOX
+
+PROVEN: Clip a UI rectangle to320x200 and optionally fill/draw its border.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0a1c4.
+
+Last-but-one formal is a byte fill selector, not a font metric:255 fills; other values omit fill. is_fond1/2 add borders, normal-mode colors0x2026/0x2620. ModeX uses its own fill/border assembly. Negative left/top reduce width/height; empty rectangles do nothing.
+
+### function:display_text
+
+STRONG: Draw raw-byte sprite-font text at a baseline, with slash centering and numeric escapes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0a3f0.
+
+font2: line15,spacing1,space8; font1:23,3,10; otherwise36,3,12. Slash centers the following line using calc_largmax_text and advances baseline when character index>1. Space advances without drawing. Glyph>=1000 uses alpha_numbers and consumes3 extra input bytes; font0/1 uses alpha2 (+41 for1),font2 alpha. Draw top=baseline-outer_height. Advance by packed x inset+inner_width-spacing. Color goes to the color drawer; font indices outside0..2 are not a supported native extension.
+
+### function:display_deform_text
+
+PROVEN: Draw the same baseline/centering text through transformed sprite quads.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0a68c.
+
+Same font metrics/escapes as display_text; calc_num_let_spr adjusts the low glyph byte before sprite lookup. rotation is a512-unit turn; enx/eny are Q12 scales passed to DISPLAY_DEFORM_SPRITE. Color formal is not consumed by this function; transformed sprites use their own palette nibble.
+
+### function:display_text_sin
+
+STRONG: Draw baseline text with a per-input-byte cosine y offset.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0a8dc.
+
+Same glyph metrics and escapes; vertical offset is ashr16(cosinus((s16)(phase+(index<<5))),5). Phase512 is a full turn; escaped-byte consumption therefore affects the next phase. Keep the exact font index adjustment and baseline narrowing.
+
+### function:display_box_text
+
+PROVEN: Draw a text descriptor with optional filled background and border-dependent text displacement.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0abe0.
+
+Expand descriptor rectangle by3 each side. field_D5 nonzero requests fill255 and offsets text(-1,-1) for is_fond1 or(+1,+1) for2; field_D5zero optionally draws border with fill254, then unshifted text. No new broad name is inferred for field_D5.
+
+### function:CLRSCR
+
+PROVEN: Clear the current drawing target according to active video mode.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0ad00.
+
+ModeX calls display_emptypicture with an ignored compatibility ECX argument16000;the assembly always clears16000 aperture bytes with all planes selected,meaning64000 logical pixels. Normal clears64000 bytes at DrawBufferNormal. See docs/port/ASM_SPEC.md.
+
+### function:display_etoile
+
+STRONG: Advance and draw one randomly varying grapple-path star.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0ad38.
+
+Select grp_stars[current_star], increment timer, and when timer>length reset timer0,length=myRand(5),dist=sprite_table_index=myRand(7). Dist is added to both camera-relative coordinates, without the usual+8 x bias. Reject anchors on/outside x0/320,y0/200. Sprite table21,22,23,24,21,25,22,21; increment current_star when<30. The index==30 boundary is not repaired by this pass.
+
+### function:display_grp_stars
+
+STRONG: Draw the grapple star path between Rayman and the grapple target.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0ae50.
+
+Only alive Rayman main state7. Start from center of Rayman layer1, y-6; end target x+offset_bx,y+offset_hy. Reset current_star0 and Bresenham(display_etoile,...,5,128). State meanings remain Rayman-specific in docs/semantics/RAY_STATES.md.
+
+### function:DISPLAY_TEXT_FEE
+
+PROVEN: Draw the fairy dialogue bars and text while its actor crosses the text.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0af1c.
+
+Black bars y0..15 and160..199; byte255 disables current/old text. Work on a descriptor copy. Alive actor bottom anchored190; truncate current text by(obj_center_x-8-box_left)/7 while it crosses, erase30x18 around its bottom and draw it. Old text is drawn afterward. No buffer ownership changes.
+
+### function:DISPLAY_SAVE_SPRITES
+
+STRONG: Draw save-slot lives, continues and cage completion percentage.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b0e0.
+
+Slot baseline=debut_options+(ecarty+23)*save_index. Uses lives icon27,digits28+,continue icon57 from mapobj0. Percentage=floor(cages*100/102), displayed as three digits and percent text, even for leading zeroes; horizontal advances use resource outer widths.
+
+### function:DISPLAY_SAVE_POING
+
+PROVEN: Draw save-menu selection and optional copy-source fist cursors.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b424.
+
+Sprite2 at x10 for selected1-based row; optional sprite1 for fichier_a_copier. Y=(row-1)*(ecarty+23)+debut_options-23.
+
+### function:DISPLAY_OPTIONS_POING
+
+PROVEN: Draw the options-menu fist cursor beside the selected text box.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b4ac.
+
+Sprite2 at centered_x_pos-30; exit option uses debut_sortie-13, other options use box centered_y_pos.
+
+### function:DISPLAY_YESNO_POING
+
+PROVEN: Draw the yes/no selection cursor.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b53c.
+
+mapobj0 sprite2 at x120,y117+(pos_YN-1)*22.
+
+### function:display_time
+
+PROVEN: Draw the bonus countdown and timed tings-to-get/go prompts.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b56c.
+
+time==-2 skips the entire function. Digits use time/60,time/600,time/6000 modulo10, so60 nominal ticks per displayed second. Prompt<=map_time100 disables Rayman and oscillates the byte color1..5 while horloge8<4;120<map_time<=160 shows go. Negative values other than-2 are not a new valid digit domain.
+
+### function:DISPLAY_CONTINUE_SPR
+
+PROVEN: Draw the continue countdown/game-over message and its animated actors.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b79c.
+
+loop_timing255 selects game-over text (language-dependent quotes); otherwise draw remaining continues and countdown digits at fixed anchors. Then ray,clockobj,and alive mapobj0. continue_fonction separately treats-1 as ended;255 is not the same signed value.
+
+### function:AFFICHE_SPRITE_DEFORME
+
+STRONG: Build deformation scan geometry for a four-corner sprite and draw its scratch image.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0b944.
+
+Derive bounding rectangle and edge direction/absolute deltas; replace zero dy by1. Descriptor dest_offset=(x0-min_x)+(y0-min_y)*width; source dimensions are sprite outer dimensions. Rasterize atlas sprite into new_sprite_deform, then normal draw at rectangle min with palette high nibble and16-bit packed dimensions. Exact raster quirks are specified in docs/port/ASM_SPEC.md and its remaining coverage question is resolved in PLATFORM_OPEN.md.
+
+### function:DISPLAY_DEFORMATION
+
+STRONG: Transform every nonzero layer sprite around an object-derived screen pivot.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0bbc4.
+
+Follow-enabled pivot uses GET_SPRITE_POS with x-xmap+8+w/2,y-ymap+offset_hy; otherwise animation rectangle center after camera subtraction/+8. Layer rectangle uses screen coordinates, Q12 scales and512-unit angle. Transform3 corners, derive fourth by vector addition, then rasterize; this path does not apply display2 flip placement/XOR.
+
+### function:DISPLAY_DEFORM_SPRITE
+
+PROVEN: Transform one sprite around its inner-content center.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0bea8.
+
+Pivot x+sprite_x_inset+inner_width/2,y+sprite_y_inset+1+inner_height/2. Scale/rotate three outer corners; derive fourth; call AFFICHE_SPRITE_DEFORME. Outer and inner metrics have distinct roles.
+
+### function:CALCUL_DEFORMATION
+
+PROVEN: Scale and rotate one signed16 coordinate pair with integer fixed-point arithmetic.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:0c030.
+
+First narrow((s32)coordinate*Q12_scale)>>12 to signed16. Obtain sine/cosine scaled512, then arithmetic>>9 of signed products and narrow to signed16. angle512 is one full turn. Do not combine stages into floating-point math.
+
 ## basic.json
 
 Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN retains neutral names. Raw source/displacement/external token hits are candidates, not type proofs.
@@ -1144,6 +1436,710 @@ Units: see parameter/result and side-effect contract. DOS layout/address: 1:2176
 
 timer255 disables;0 activates, optionally ray3:40 for marker main5, removes marker, aligns anchors and writes dead_time64. The final decrement changes0 to255, making activation one-shot.
 
+## display.json
+
+Meaning confidence is independent of STRICT and of compiled layout. DOS writers/readers/callers are primary;external names corroborate. Raw token/displacement hits are candidates,not typed-field proof. UNKNOWN keeps neutral names. Only identifier/comment edits are proposed.
+
+### function:display_inter_anim
+
+PROVEN: Render/update Rayman and run the selected inter-level animation callback.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24108.
+
+horloges1,clear,read input,draw BEFORE DO_ANIM,test exit/buttons,then anim_func;return PROC_EXIT. Incoming scene clock is unused.
+
+### function:continue_fonction
+
+PROVEN: Render and advance the continue screen until its logic ends.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24174.
+
+Clear,background,sprites,MAIN_CONTINUE_PRG,input;return loop_timing==-1||fin_continue. No incoming clock parameter in this existing callback view.
+
+### function:DO_CONTINUE
+
+PROVEN: Run the continue scene after an ordinary exhausted-lives game over.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:241b0.
+
+Require lives0,fin_du_jeu1,!fin_dark. Arena alignment,load/swap palette,clear,audio,fade-in/init,scene,fade-out/finalize,stop audio,restore palette,align and request new_level1.
+
+### function:saisie_nom_prg
+
+PROVEN: Run one save-name entry scene iteration.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24240.
+
+Save/restore button-release context3,optionally rebuild plasma and present;AFFICHE_ECRAN_SAVE may run multiple times. Incoming word formal is discarded then reused for fin_saisie_nom||MENU_RETURN. On return/cancel restore previous name for action1,otherwise empty it;action3 requests sortie_save.
+
+### function:selection_save_option_prg
+
+PROVEN: Run one save-selection/action iteration and possibly enter the attract demo.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24334.
+
+Separate button-release snapshots for command and selection;optional plasma rebuild. Actions1 or3 may run name entry then SaveGameOnDisk unless MENU_RETURN. Increment TempsDemo,clear action,and start demo at RunTimeDemo if no exit/game end. Return end/exit/demo/menu-return. Incoming clock unused.
+
+### function:DO_SAVE_CHOICE
+
+PROVEN: Load and run the save menu with palette/audio/timer setup.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24490.
+
+Save palette,init plasma/fade/menu;reset demo time,button snapshots,repeat counters and saved world-map coordinates. Scene loop,fade-out,palette restore,arena alignment.
+
+### function:AFFICHE_ECRAN_SAVE
+
+STRONG: Render the save menu and animate the selected name character.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2452c.
+
+Repeat/flash counters advance per draw invocation. Row pitch ecarty+23,1-based character selection;name prefixes are4-byte arrays. Language1 shifts copy/erase/start labels;selected character uses Q12 deformation with cosine-driven vertical scale. Draw slot summaries and selection fist after the text.
+
+### function:select_level_prg
+
+PROVEN: Run the cheat level-selector frame.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24a80.
+
+Draw current decimal level;horizontal input changes selection only inter_select0. Clamp1..{17,16,11,11,11,4}[world-1];repeat clock cycles0..3. Return any action button. Incoming clock unused;the private array initializer is part of object identity.
+
+### function:SELECT_LEVEL
+
+PROVEN: Run the optional world-specific level selector and return its selection.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24bb4.
+
+Initialize selection/repeat,load vignette50,palette/fade/scene/fade-out/restore.
+
+### function:CLEAR_STAGE_NAMES
+
+PROVEN: Clear the world-map stage-name background regions.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24c00.
+
+At map_time1 clear descriptors2/4 strings and change map_time2;otherwise black out nonempty descriptors in order2,1,4,3 with y-2,height+2. This is a scene-specific use of map_time.
+
+### function:DISPLAY_STAGE_NAMES
+
+STRONG: Draw fixed or animated world-map world/level names.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:24d2c.
+
+DO_STAGE_NAMES then set full320x200 sprite clipping,without restoring it. If PositionStageNameCalcule!=1 draw descriptors2,1,4,3. If flag nonzero draw animated strings too;positions>>4 are signed Q4 screen pixels,top=baseline-outer_height. World glyphs use alpha2 index+41;level uses alpha. Spaces/slashes skip.
+
+### function:WORLD_CHOICE
+
+PROVEN: Advance and draw one world-map scene frame.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25028.
+
+If need_timer set deadline=incoming clock+word_CF7EE. Clear draw RAM,redirect draw_buffer to effect RAM;update Rayman/path,draw background/Rayman/platform;apply binocular copy to draw RAM;restore draw alias;draw names/read input/audio/cheats. Return new_world/exit/minigame. If wait_until(deadline) returnsfalse,advance Rayman/path a second time without another draw.
+
+### function:DO_WORLD_MAP
+
+PROVEN: Set up and run world selection,then determine the chosen world/level.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2514c.
+
+Initialize actor/input/audio counter;non-demo load vignette48 and route image dimensions;save palette/fade/path. If no saved coordinates,use midpoint of scroll bounds and reset binocular geometry. Limited-install flag beyond world3 ends game. Exit configures menu return;otherwise wait button release,determine destination,and optionally cheat-select level. Finish world scene and stop CD.
+
+### function:DISPLAY_TXT_VIGNET
+
+PROVEN: Draw at most two consecutive vignette text descriptors.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25370.
+
+Start text_to_display+1+new_txt_fee,stop at empty string or after two entries;use display_box_text.
+
+### function:display_vignet_prg
+
+PROVEN: Run a timed vignette page and advance two text boxes at a time.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:253c8.
+
+Read/draw;increment loop_nb_trames,at60 reset0 and decrement loop_timing. Accept input only when timing<=3;auto end at<=0. Next pair resets timing5;no later pair sets new_txt_fee10 and returnsdone. This is60 callback invocations per nominal second,not measured elapsed time.
+
+### function:DISPLAY_GAME_VIGNET
+
+PROVEN: Run the in-game dialogue vignette with temporary normal mode and clipping.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:254a4.
+
+Mute/reset lightning,fade-out,save clipping,set full screen,palette/PLAN3 save. If current ModeX,switch normal at VGA_FREQ and restore ModeX afterward. Initialize page/speech for sound-enabled English;scene;free speech/fade-out/clear/reset exit;restore palette,PLAN3,clip;start fade-in.
+
+### function:DISPLAY_TXT_CREDITS
+
+PROVEN: Draw the currently visible inclusive range of credit entries.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:255bc.
+
+Loop unsigned first_credit..last_credit,using each text pointer,x/y,font,color;bounds are byte globals,not Android widened sizes.
+
+### function:display_credits_prg
+
+PROVEN: Update and render one credits frame,with deferred/interactive exit.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2561c.
+
+Read input/CD/DO_CREDITS,copy background/draw text. Save previous PROC_EXIT then clear;valid/select sets PROC_EXIT1 and display_Vignet7. Return either old or new exit. Incoming clock unused.
+
+### function:display_anim_victoire
+
+PROVEN: Render and update the victory Rayman animation once.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25680.
+
+horloges1,clear,input,display2 BEFORE DO_ANIM,then DO_RAYMAN_WINS;return PROC_EXIT.
+
+### function:DISPLAY_CREDITS
+
+PROVEN: Run the game-ending sequence of vignette-backed credit pages.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:256b8.
+
+While display_Vignet<=7,save selected palette/PLAN3,fade-in,scene,fade-out,clear exit,increment page,restore views. Stop CD before/after;start final fade-in.
+
+### function:DISPLAY_CREDITS_MENU
+
+PROVEN: Run menu credits with a local presentation/fade loop.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2572c.
+
+Initialize credits with MenuCredits1 then reset0. Each frame speaker/endsynchro/synchro,clock sample if need_timer,DO_FADE until nb_fade0,SWAP then credits scene. Local sound_state remains0;do_fade is not reset for each page. End with fade-out,palette restore,CD stop,fade-in.
+
+### function:DISPLAY_PROTOON_BACK
+
+PROVEN: Run the first timed ending vignette then load credits resources.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:257e4.
+
+Select page0,palette/PLAN3 save,fade-in,counters0 and timing4,new_txt_fee0,text init;scene,load credits,fade-out,restore views.
+
+### function:DO_ANIM_VICTOIRE
+
+PROVEN: Run the victory inter-animation scene.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25850.
+
+Fade-in/init victory,set anim_func=DO_RAYMAN_WINS,scene display_inter_anim,fade-out.
+
+### function:DO_VICTOIRE
+
+PROVEN: Run the completion movie/ending/credits after winning.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25878.
+
+Clear front/back stars. If You_Win:optionally movieconclu.dat unless levelchoice<=1 or Frequence70;set world6/level4,align/free/load ending resources,run protoon/credits. Always clear PROC_EXIT.
+
+### function:InitDemoJeu
+
+PROVEN: Install the recorded attract-demo world,abilities,input and starting progress.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25908.
+
+Fade-out;skip specific problematic demo combinations for GameModeVideo/SizeScreen;save abilities/options. Enable standard powers,disable handstand/dash/reverse/forced run/tiny,conditional magicseed/firefly. Select six-entry demo metadata,record pointer=DemoRecord+250*NumDemo,initialize playback and status(lives3,HP2,tings0),clear2592-byte save-zone flags and current-world cages;reset clocks.
+
+### function:FinDemoJeu
+
+PROVEN: End demo playback and restore saved abilities/options.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25b78.
+
+Fade-out;RunTimeDemo180 if repeat completed,otherwise1800. Clear demo/world/level/playback state,INIT_RAY1,restore RayEvts/options;advance NumDemo modulo6.
+
+### function:loader_anim_prg
+
+PROVEN: Run the loading animation frame until exit and fade completion.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25c64.
+
+Input can set PROC_EXIT;horloges1,CD,background,bigray draw,DO_LOADER_ANIM. Return PROC_EXIT&&nb_fade0. Incoming scene clock unused.
+
+### function:START_LOADER_ANIM
+
+PROVEN: Load and run the large-Rayman loading animation using256-color sprite drawers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25cc4.
+
+Load bigray/save background,save palette,start CD/fade/init. Temporarily install DrawSpriteNormal256/FlipNormal256 in common dispatch slots;scene;restore ordinary marker-run sprite routines. Active mode is not switched here.
+
+### function:END_LOADER_ANIM
+
+PROVEN: Fade out the loader scene and restore its saved palette0/id.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25d30.
+
+DO_FADE_OUT then RESTORE_PALETTE.
+
+### function:DO_GROS_RAYMAN
+
+PROVEN: Run the loading scene while fixed resources are reloaded.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25d3c.
+
+Allocate main_mem_tmp0x41a00,start loader/free temp/reset exit,LOAD_ALL_FIX,end loader. This is arena lifetime sequencing,not a frame buffer swap.
+
+### function:START_LEVEL_ANIM
+
+PROVEN: Run an inter-level animation unless the game has ended.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25d74.
+
+fin_du_jeu!=1:initialize,save PROC_EXIT;if not exiting clear video/stop CD/fade-in/scene/finish,restore saved exit byte.
+
+### function:PouvoirsParMap
+
+PROVEN: Enable progress-dependent powers and helper-completion flags for a world/level.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:25db4.
+
+Only fills missing powers:poing beyond1:3,hang beyond1:8,grap beyond1:17,helico beyond2:11,run beyond3:11. Helped musician beyond3:6,Joe2 beyond5:6. This is game progression in display.c,not backend state.
+
+## frame.json
+
+Meaning confidence is independent of STRICT and of compiled layout. DOS writers/readers/callers are primary;external names corroborate. Raw token/displacement hits are candidates,not typed-field proof. UNKNOWN keeps neutral names. Only identifier/comment edits are proposed.
+
+### function:SWAP_BUFFERS
+
+PROVEN: Present the prepared frame using the active backend.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b4d0.
+
+ModeX toggles display_buffer between VGA apertures0xa0500 and0xa6500, points draw_buffer at the other page and selects display page. Normal resets aliases to DrawBufferNormal/DisplayBufferNormal and copies320x200, optionally polling the joystick in the copy. It does not exchange normal RAM pointers.
+
+### function:sub_3B580
+
+PROVEN: Swap ModeX pages with optional retrace waits around selection.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b580.
+
+If use_sync, endsynchro before and synchro after the same page toggle as SWAP_BUFFERS. No mode test; caller is the ModeX game loop.
+
+### function:sub_3B5E8
+
+PROVEN: Run the dormant half-second BIOS/VGA copy benchmark.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b5e8.
+
+Request INT15 interval500000 microseconds with an uninitialized global flag pointer; repeatedly copy0x3fff dwords from linear0 to VGA0xa0000; return iterations/8. No direct caller/address-taking reference or pointer initializer exists in the audited image. docs/port/PLATFORM_OPEN.md omits this diagnostic from the port; historical pointer translation stays unresolved.
+
+### function:calc_gros_type
+
+STRONG: Classify map-referenced tiles by zero-pixel transparency.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b64c.
+
+Inspect16x16 pixels in640-wide MAP_BLOCKS atlas, texture columns40, all4 interleaved phases. Opaque=0,all-zero=1,mixed=2; force texture0 transparent before clamping texture_id>=1200 to0, then store classification in smap[texture_id]. This overwrites runtime map byte+4; it is independent of collision tile_type.
+
+### function:find_in_map
+
+PROVEN: Read the transparency lookup from atlas pixel coordinates.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b7d4.
+
+Arithmetic shift x,y by4 and index smap[(y>>4)*40+(x>>4)]. Coordinates refer to the40-column atlas, not mp.width level coordinates.
+
+### function:init_find_in_map
+
+PROVEN: Allocate and initialize the1200-byte tile transparency lookup.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b804.
+
+temp_malloc0x4b0,fill all entries1 (transparent); ownership ends with end_find_in_map.
+
+### function:end_find_in_map
+
+PROVEN: Release the temporary tile transparency lookup.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b838.
+
+temp_free(smap); no nulling is performed.
+
+### function:build_map
+
+STRONG: Build the initial four-plane opaque-tile ring buffer.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b844.
+
+Use mp.map+(y>>4)*mp.width+(x>>4). Four planes,14 rows,20 columns; plane stride0x4600=80*224, tile source plane stride64. Copy only texture0..1199 with transparency0; clear all other cells. Set PLAN1_BUFFER_START_POINTER to base.
+
+### function:build_line_map
+
+STRONG: Refresh one horizontal row of the opaque-tile ring buffer.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2b948.
+
+Tile row selector is row/13 (176 selects13);20 tiles across, dest phase wraps at80 bytes. Four source plane offsets0,64,128,192, destination plane step0x4600. Unlike build_map, skipped/transparent cells are not cleared here.
+
+### function:build_column_map
+
+STRONG: Refresh one vertical column of the opaque-tile ring buffer.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2ba64.
+
+Tile column selector is column/16 (304 selects19);14 tiles vertically, dest step1280=80*16 and wrap0x4600. Four source plane offsets0,64,128,192. Skipped/transparent cells are not cleared.
+
+### function:update_map
+
+STRONG: Rotate and refresh the opaque-tile ring buffer after a tile-boundary camera change.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2bb84.
+
+Align both coordinate pairs to16 pixels. dx=first_aligned_x-second_aligned_x,dy likewise; callers pass current camera first,old second. Update byte column by dx/4 and row by dy, with one80/224 wrap correction. Refresh edges using current coordinates and original special corner cases; no generalized multi-tile scrolling is invented.
+
+### function:sub_3BE20
+
+PROVEN: Copy background row records through the selected ModeX assembly path.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2be20.
+
+Formal x/y are unused. Context words are plane length,end pointer,length-1; fourth word unused/unknown. type_fndscrX forces mask1. P486 nonzero calls asm_037e4,else4 plane calls asm_03257; doubling mask wraps16->1 and dest phase1. Record semantics are in docs/port/ASM_SPEC.md.
+
+### function:sub_3BEE0
+
+STRONG: Composite the opaque map ring and partial-tile callbacks over the ModeX background.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2bee0.
+
+First4 plane copies use PLAN1 ring,80-byte stride and frame_records_38f88 (P486 skips first record row). Then repurpose context for background strides,mp row skip and final-tile sentinel; call4 phases of asm_04430/04493 with block_add. Tile callbacks are constant painters per docs/port/TILE_CODE.md; do not execute asset code in the port.
+
+### function:set_vga_frequency
+
+PROVEN: Program VGA timing registers for the requested refresh selection.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c194.
+
+Restore saved register set first. Select branches100,80,70,60,50 with exact VGA port effects; store freq to VGA_FREQ and wait500ms. Other values only restore/save/delay; no assertion of measured physical refresh. Register effects belong to the backend.
+
+### function:GetVideoRegister
+
+PROVEN: Save six VGA timing register bytes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c2d0.
+
+Slots0..5 hold CRTC11,CRTC10,misc output,CRTC7,CRTC6,CRTC16 respectively. Get from3cc/3d4/3d5; state is backend-only.
+
+### function:SetVideoRegister
+
+PROVEN: Restore the six saved VGA timing register bytes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c34c.
+
+Restore misc output and CRTC10,11,6,7,16 via3c2/3d4/3d5. Exact byte order matters only to the DOS backend contract.
+
+### function:sub_3C3BC
+
+STRONG: Build background/opaque-map row record lists for the current camera.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c3bc.
+
+Get dest/source origins from InitData and row skip=(mp.width-20)*6. When BackgroundOn&&FondAutorise, use asm_029d3 normally or VGA-cached asm_02a73 for P486; always asm_02850 for PLAN1 ring records. Record format/assembly side effects are already specified in docs/port/ASM_SPEC.md.
+
+### function:clear_palette
+
+PROVEN: Clear all768 palette bytes and all768 fade accumulators.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c4fc.
+
+The passed RGB palette and global rvb_fade are cleared in the same768-iteration loop.
+
+### function:set_fade_palette
+
+PROVEN: Initialize signed16 fade accumulators from RGB component bytes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c520.
+
+rvb_fade[i]=palette_byte[i]<<6 for768 channels. This is Q6 RGB-component state; do not treat the array as RGB8 colors.
+
+### function:start_fade_in
+
+PROVEN: Start an integer palette fade from black.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c54c.
+
+nb_fade=1<<(6-speed),fade=1,fade_speed=speed; clear current_rvb and accumulators then output all256 black entries. Palette formal is ignored. All observed live callers use speed2; invalid shift counts are not assigned portable behavior.
+
+### function:start_fade_out
+
+PROVEN: Start a palette fade using the existing accumulators.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c5a4.
+
+nb_fade=1<<(6-speed),fade=2,fade_speed=speed; palette formal ignored. Does not load/clear rvb_fade. Caller must already have established its contents.
+
+### function:do_fade
+
+STRONG: Advance the signed Q6 component accumulators and output the current palette.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c5cc.
+
+If nb_fade0 do nothing; otherwise decrement first. fade==1 adds source_byte<<fade_speed to each signed16 accumulator;fade==2 subtracts only while accumulator>0,without saturation. Then dest_byte=(u8)(signed_accum>>6), and output current_rvb specifically even if dest differs. Last step ORs fade with0x40. Speed2 gives16 steps with exact truncation; completed states65/66 are not treated as1/2.
+
+### function:fade_out
+
+PROVEN: Run every fade-out update synchronously.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c6bc.
+
+Start fade-out, snapshot count, then endsynchro,synchro,do_fade per step. Default wrapper passes speed2.
+
+### function:actualize_palette
+
+PROVEN: Switch the selected level palette and reset fade accumulators.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c6f8.
+
+Only on changed palette id: copy rvb[id] to current_rvb,seed accumulators,output immediately only when fade==65. Do not output on completed fade-out66.
+
+### function:cyclage_palette
+
+PROVEN: Rotate an inclusive palette color interval left by one entry.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c770.
+
+Save first RGB triple,shift first..last-1 from successor,put saved at last. Copy entire selected palette to current_rvb,seed accumulators; if no pending update,set nb_fade1. No direct DAC output here.
+
+### function:DO_SWAP_PALETTE
+
+PROVEN: Select level palettes from active type158 boundary objects.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2c8c8.
+
+Only if last_plan1_palette!=0 and fade bit0x40 set. Substates0..5 choose ordered palette pairs across x+offset_bx;6..11 across y+offset_by. Equality retains current id; multiple objects apply in actobj order,so last applicable change wins. Preserve observed side mapping rather than labels left/above alone.
+
+### function:DO_FADE
+
+PROVEN: Advance a fade using the selected level palette as source.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2ca64.
+
+do_fade(&rvb[current_pal_id],&current_rvb).
+
+### function:INIT_FADE_IN
+
+PROVEN: Start the standard16-update fade-in.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2ca8c.
+
+start_fade_in(2,&rvb[current_pal_id]); palette formal is unused by the callee.
+
+### function:INIT_FADE_OUT
+
+PROVEN: Start the standard16-update fade-out.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cab4.
+
+start_fade_out(2,&rvb[current_pal_id]); existing accumulators are retained.
+
+### function:DO_FADE_OUT
+
+PROVEN: Run the standard16-update synchronous fade-out.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cadc.
+
+fade_out(2,&rvb[current_pal_id]).
+
+### function:EFFACE_VIDEO
+
+PROVEN: Clear both display/draw targets after ending retrace.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cb04.
+
+ModeX swaps once then clears both through display_emptypicture;ECX0x3e80 is ignored and the assembly clears16000 aperture bytes/all planes per target. Normal calls ClearDrawAndDisplayBufferNormal. Preserve backend aperture semantics,not physical pointers in native game state.
+
+### function:SYNCHRO_LOOP
+
+PROVEN: Present frames and call a scene callback until it reports completion.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cb54.
+
+speaker_enable each iteration. ModeX:endsynchro,swap,synchro;normal:endsynchro,synchro,swap. need_timer nonzero refreshes callback clock_ticks value (local timer_enabled stays0). First iteration skips DO_FADE; later iterations call it. Scene runs after presentation,so it prepares the next frame. Clear in_pause on exit except dummy_prg. Callback clocks are hardware-clock samples,not animation deltas.
+
+### function:DISPLAY_ANYSIZE_PICTURE
+
+STRONG: Set up a cropped four-plane picture blit.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cbe8.
+
+PLAN2BIT selects plan2 metadata,all other image pointers select plan3. Divide source length by4. width0 defaults to source_stride,then divides width by4 after computing default height=plane_length/predivided_width-4. source_x&3 selects plane;source_x>>2 is byte column. Third formal is a source row index (despite old source_width spelling),multiplied by source_stride. Destination=(x>>2)+80*y; pass stride|(plane_mask<<8) to display_anypicture. Keep byte/pixel width asymmetry.
+
+### function:SAVE_PALETTE
+
+PROVEN: Temporarily replace level palette0 for a scene.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cce4.
+
+Save current id and old rvb0; copy supplied palette to rvb0/current_rvb and select id0. Does not seed accumulators or emit hardware output itself; normal scene flow immediately starts a fade.
+
+### function:RESTORE_PALETTE
+
+PROVEN: Restore the saved palette id and palette0 bytes.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cd58.
+
+Does not restore current_rvb,rvb_fade or DAC by itself. SAVE/RESTORE use a single slot,not a nested stack.
+
+### function:SAVE_PLAN3
+
+PROVEN: Temporarily substitute a vignette image as PLAN3.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cd88.
+
+Save PLAN3 pointer,length,stride in PLANTMP fields; select PLANVIGBIT[display_Vignet] and matching metadata. Single save slot; no data copy or allocation.
+
+### function:RESTORE_PLAN3
+
+PROVEN: Restore the single saved PLAN3 image view.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cdd8.
+
+Restore pointer,length,stride only; buffers remain owned by their loaders/memory arenas.
+
+### function:DISPLAY_FOND3
+
+PROVEN: Copy a full normal-mode scene background into the drawing RAM buffer.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cdf8.
+
+Exactly320*200 bytes from PLAN3BIT to DrawBufferNormal; this does not use draw_buffer or planar picture metadata.
+
+### function:DISPLAY_FOND_MENU
+
+STRONG: Restore the menu background,optionally within the gameplay viewport.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2ce20.
+
+OptionGame0 copies64000 bytes EffetBufferNormal->draw_buffer. Otherwise update/clear changed borders,zero top/bottom bands and copy only columns[W1,W2),rows[H1,H2); row skip=320-W2+W1. prev_Bloc_lim_W1 is remembered presentation geometry.
+
+### function:InitPaletteSpecialPC
+
+STRONG: Construct the PC lightning/firefly special-palette sequences.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2cf70.
+
+Lightning levels(1,9),(2,4),(4,9):save original in15;anchors0/14=(r/2,g/2,4b/5),5=4RGB/3,7=(2r/3,2g/3,b),10=2RGB,clamp63;replace rvb0 with0;interpolate0->5->7->10->14;next delay=myRand(200)+1. Cave(5,4):loop only colors0..254,save15;0/14=(r,77g/100,12b/100),replace rvb0,interpolate;then recolor128..174 in palette9 using84%,62%,12% of the ALREADY tinted rvb0 and interpolate0->9->14. Entry255 omission is retained.
+
+### function:DoFadePaletteSpecialPC
+
+PROVEN: Interpolate the palettes strictly between two special-palette anchors.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2d54c.
+
+For p=start+1..end-1 and every256 RGB entry: weighted sum((end-p)*start+(p-start)*end)/(end-start),then narrow to u8,then min32(63,byte). Endpoints unchanged; signed division truncates toward zero. No division when there are no intermediate palettes.
+
+### function:DoPaletteSpecialPC
+
+STRONG: Advance and output the active PC special-palette effect.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2d704.
+
+Only with fade bit0x40. Output colors1..255 (765 bytes),leaving DAC color0. Cave5,4:advance on horloge5==0;nonzero phase becomes1 on nonzero clock if it was0;wrap15->0. Lightning:++CompteurEclair;start at>=ProchainEclair or nonzero phase;phase0 plays sound195 and advances;later phases advance on even counter. At15 reset counter/phase0,next delay=myRand(400)+1. Render-call cadence drives this effect.
+
+### function:InitModeXWithFrequency
+
+PROVEN: Enter ModeX and install its drawing dispatch pointers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2d8ac.
+
+From text255 initialize video/save registers. Only if current mode!=1 initialize ModeX,clear64KiB normal display memory,set refresh,mode1,draw aperture0xa0500 and dispatch sprite/weather/plot functions. NoClip slot naming is crossed in the actual assignments. Requesting the already active mode does not change refresh.
+
+### function:InitTextMode
+
+PROVEN: Return to text mode and mark current mode255.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2d9d4.
+
+Backend textmode effect followed by byte store255.
+
+### function:InitModeNormalWithFrequency
+
+PROVEN: Enter chunky320x200 mode and install normal dispatch pointers.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2d9e4.
+
+From text255 initialize/save VGA state. On mode change clear both64000-byte buffers,select display,set frequency,mode0,draw_buffer=DrawBufferNormal,and install normal sprite/weather/plot routines. Already-active mode skips refresh changes.
+
+### function:WaitNSynchro
+
+PROVEN: Wait for a requested number of retrace edge pairs.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2db24.
+
+For signed n_frames>0 repeat endsynchro then synchro; zero/negative does nothing. This counts synchronization pairs,not a guaranteed fixed wall-clock second.
+
+### function:swapGuetteurCollZones
+
+PROVEN: Select the ship-attached/free lookout type and matching collision descriptor.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2db40.
+
+Nonzero second argument chooses type77;zero239. Then obj.zdc=type_zdc[obj.type].
+
+### function:guetteurFollowsShip
+
+PROVEN: Attach the lookout to ship layer1,or stop it if no ship exists.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2db68.
+
+bateau_obj_id!=-1 snaps with offsets(-52,-63);else speed_y then speed_x become0.
+
+### function:DO_ONE_PAR_COMMAND
+
+PROVEN: Update the lookout state,shooting and timer behavior.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2dbb8.
+
+Snapshot facing,decrement timer;type239 turns to player,type77 follows ship. Dispatch by main*256+sub. Restore facing on the listed substates;use animation-end tests for detach/jump. iframes_timer decrements when nonzero. State labels are actor-specific,not Rayman labels.
+
+### function:hasGuetteurABomb
+
+PROVEN: Locate the currently held bomb layer when eta flag4 permits it.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2de28.
+
+Layer0 for type77,otherwise5;read current frame layers and return-1 if selected sprite_index0. If eta flag4 is clear the original return register/local is not defined by this body; callers/domain must justify use. This pass does not invent a fallback return.
+
+### function:allocatePirateGuetteurBomb
+
+STRONG: Activate the first inactive type78 bomb using the lookout held-bomb geometry.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2dea0.
+
+Only when hasGuetteurABomb!=-1. Third arg chooses matching/inverted facing;second initial speed_y;fourth fuse byte. Position from selected layer center/bottom. Substates2/18 set x-speed48,Q4,gravity(0,10),eta high nibbleA;5 sets32 and y+24;13 randomized8-myRand32 plus8*sgn and y-20. Nonmatching facing forces speed16. Unsupported substates leave some original values undefined; preserve documented valid caller domain. Set active/alive,register always-active,clear flag0x40.
+
+### function:DO_PAR_TIR
+
+PROVEN: Fire lookout bombs once at the state-specific animation frame.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2e1ac.
+
+Main0 substates2/5/13 fire at21/18/2 only on selected clock phase0 and link latch0. Calls one bomb for2/5,four alternating-facing bombs for13;set link1. Reset latch when outside these trigger intervals.
+
+### function:DO_PAR_POING_COLLISION
+
+PROVEN: Apply fist damage and a possible held-bomb drop to the lookout.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2e398.
+
+Require eta flag1,iframes0,and either type77 or hit layer3. Type239 with eta flag4 drops bomb(speed_y1,inverted facing,fuse20). Force fist damage1;death state0:3;type77 takes sub6 after3 lost HP and advances ship command,otherwise sub12;type239 hurt0:1.
+
+### function:PAR_REACT_TO_RAY_IN_ZONE
+
+PROVEN: Choose a lookout attack/approach substate after its delay expires.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2e4b4.
+
+Only timer0,main0. Sub11->2,sub4->5;sub0 stores horizontal center distance in sub_speed then chooses8 when abs(distance)>detect_zone+16,else9. This use refines only this actor context of the shared scratch.
+
+### function:DO_PAR_BOMB_COMMAND
+
+PROVEN: Advance the lookout bomb fuse or explode it.
+
+Units: see parameter/result and side-effect contract. DOS layout/address: 1:2e550.
+
+Nonzero timer decrements only on horloge2!=0;timer0 plays147 then BombExplosion. Fuse units are eligible phase updates,not milliseconds.
+
 ## globals.json
 
 Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN retains neutral names. Raw source/displacement/external token hits are candidates, not type proofs.
@@ -1610,11 +2606,13 @@ Initialized-1; type55 supplies obj.id. Consumers include DO_MUSICIEN. Do not ass
 
 ### global:P486
 
-PROVEN: Byte mode switch that selects the cropped background decode path when equal1.
+PROVEN: Presentation variant selecting cropped/preloaded ModeX paths and HUD offsets.
 
 Units: mode byte. DOS layout/address: 2:3fa20.
 
 LoadPlan0 uses P486==1, not any nonzero value. Hardware identification/origin is outside this pass; no CPU-capability inference from its name.
+
+Pass5: Rendering often tests nonzero for optimized assembly,while HUD offsets and loader crop use==1. Preserve each exact predicate;the historical CPU-detection intent is not inferred from the spelling.
 
 ### global:PLAN0
 
@@ -1874,11 +2872,13 @@ obj_init resets0; action-end consumers set/test this byte. No universal enum inf
 
 ### global:current_rvb
 
-PROVEN: Current768-byte256-color palette used for display/palette effects.
+PROVEN: Current palette byte buffer emitted by fade/palette-switch effects.
 
-Units: RGB6 component bytes. DOS layout/address: 2:37988.
+Units: RGB component bytes. DOS layout/address: 2:37988.
 
 load_level copies rvb[last_plan1_palette]; LoadPcxPaletteInVignet XOR-decodes8-bit channels then divides4. LEV palettes are read raw, without that conversion.
+
+Pass5: 768 RGB6-intended components. do_fade writes its dest argument but always outputs this global;SAVE_PALETTE copies here without seeding accumulators or output. Keep current palette bytes and Q6 accumulator state separate.
 
 ### global:cymbal_obj_id
 
@@ -2295,6 +3295,1262 @@ PROVEN: Current world-map stage-record index.
 Units: stage index. DOS layout/address: 2:3fa60.
 
 INIT_OBJECTS indexes t_world_info with thisbyte. DOS byte storage differs from Android2-byte symbol; do not widen from Android size.
+
+### global:ALL_WORLD
+
+PROVEN: World-map cheat permission for direct level selection.
+
+Units: boolean byte. DOS layout/address: 2:3fa61.
+
+DO_WORLD_MAP offers SELECT_LEVEL only when this is set,!ModeDemo,and no active minigame.
+
+### global:BackgroundOn
+
+PROVEN: Global permission for background composition.
+
+Units: boolean byte. DOS layout/address: 2:5e6e.
+
+ModeX record setup requires BackgroundOn&&FondAutorise;game loops separately choose normal/ModeX background/clear paths. Presentation setting,not map collision state.
+
+### global:ButtonReleasedSav1
+
+PROVEN: Saved input-release state for the save-command context.
+
+Units: byte latch. DOS layout/address: 2:4f757.
+
+Swap with button_released around DO_COMMANDE_SAVE;initialize1 on menu entry.
+
+### global:ButtonReleasedSav2
+
+PROVEN: Saved input-release state for save-option selection.
+
+Units: byte latch. DOS layout/address: 2:4f756.
+
+Swap around SELECTION_SAVE_OPTION;initialize1 on menu entry.
+
+### global:ButtonReleasedSav3
+
+PROVEN: Saved input-release state for save-name entry.
+
+Units: byte latch. DOS layout/address: 2:6380.
+
+Swap around SAISIE_NOM;initialize0 on menu entry.
+
+### global:CarteSonAutorisee
+
+PROVEN: Permission to use sound-card effects/speech.
+
+Units: boolean byte. DOS layout/address: 2:3fa17.
+
+DISPLAY_GAME_VIGNET only starts/frees English speech when this is nonzero;other sound APIs also test it. Independent of need_timer calibration.
+
+### global:CompteurEclair
+
+PROVEN: Lightning effect counter advanced by palette-effect invocations.
+
+Units: render invocations. DOS layout/address: 2:4fae0.
+
+Reset by InitPaletteSpecialPC and at end of a lightning cycle. ++ before threshold test;even phases advance the nonzero palette sequence. Does not use clock_ticks.
+
+### global:CouleurStageNameLevel
+
+PROVEN: Animated stage-name color-drawer selector.
+
+Units: palette bank index. DOS layout/address: 2:3d090.
+
+Narrowed to u8 at DrawSpriteColorNormalEtX;not an RGB value.
+
+### global:CouleurStageNameWorld
+
+PROVEN: Animated stage-name color-drawer selector.
+
+Units: palette bank index. DOS layout/address: 2:3d0a8.
+
+Narrowed to u8 at DrawSpriteColorNormalEtX;not an RGB value.
+
+### global:DemoRecord
+
+PROVEN: Concatenated attract-demo input records.
+
+Units: 1500 bytes. DOS layout/address: 2:5828.
+
+Six250-byte slots selected by NumDemo;record.length comes from DemoRecordSize and playback consumes the recorded bytes. No image/palette meaning.
+
+### global:DemoRecordSize
+
+PROVEN: Stored attract-demo record length per demo.
+
+Units: six signed16 lengths. DOS layout/address: 2:5e04.
+
+InitDemoJeu sign-extends selected length into record.length;this is metadata,not a duration in seconds.
+
+### global:DisplayBufferNormal
+
+PROVEN: Normal-mode display target used by frame presentation.
+
+Units: DOS byte pointer. DOS layout/address: 2:5e28.
+
+SWAP_BUFFERS supplies it to the assembly copy;mode initialization clears64000 bytes (ModeX entry clears0x10000). Distinct from draw RAM and effect RAM.
+
+### global:DrawSpriteColorFlipNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteColorFlipNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d11c.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:DrawSpriteColorNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteColorNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d0f8.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:DrawSpriteFlipNoClipNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteFlipNoClipNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d114.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:DrawSpriteFlipNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteFlipNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d118.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:DrawSpriteNoClipNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteNoClipNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d0f4.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:DrawSpriteNormalEtX
+
+PROVEN: Selected sprite-drawing dispatch slot DrawSpriteNormalEtX.
+
+Units: function pointer. DOS layout/address: 2:3d10c.
+
+Mode initialization selects normal/ModeX assembly implementations;loader temporarily replaces the normal/flip slots with256-color drawers. Arguments carry projected x,y,packed dimensions,destination,atlas pixels,and palette selector. Preserve actual assignments and docs/port/ASM_SPEC.md entry semantics;no-clip ModeX slots are crossed by name.
+
+### global:Frequence
+
+PROVEN: Persisted/command-line frequency policy byte.
+
+Units: policy code. DOS layout/address: 2:5e6c.
+
+FREQ70 makes0x46;ordinary saved policy values0/1/2 are mapped by setup elsewhere. DO_VICTOIRE uses0x46 to suppress the conclusion movie. Not interchangeable with VGA_FREQ.
+
+### global:HeightNworld
+
+PROVEN: Loaded world-map background dimensions cached for binocular logic.
+
+Units: pixels. DOS layout/address: 2:3f75e.
+
+DO_WORLD_MAP copies plan2_width/height after vignette48 load;distinct from map-tile width/height.
+
+### global:JeuCracker
+
+PROVEN: Limited-install/protection-result flag consumed by game presentation/progression.
+
+Units: boolean byte. DOS layout/address: 2:3fa2c.
+
+Triggers limited-version overlay and prevents world-map progression beyond world3. Wider protection writers are separately specified;do not infer debugger behavior from this name.
+
+### global:JumellePosX
+
+PROVEN: World-map binocular effect center coordinate.
+
+Units: screen pixels. DOS layout/address: 2:3d0c4.
+
+WORLD_CHOICE forwards these to DisplayJumellesNormal;state is maintained by jumelle logic. Not world position xmap/ymap.
+
+### global:JumellePosY
+
+PROVEN: World-map binocular effect center coordinate.
+
+Units: screen pixels. DOS layout/address: 2:3d0c0.
+
+WORLD_CHOICE forwards these to DisplayJumellesNormal;state is maintained by jumelle logic. Not world position xmap/ymap.
+
+### global:LoadInfoRay
+
+PROVEN: Cached save-slot status summaries.
+
+Units: three declared4-byte records. DOS layout/address: 2:3d8b0.
+
+DISPLAY_SAVE_SPRITES reads lives,continues,cages;LoadInfoGame fills summaries. cages*100/102 gives displayed completion percentage.
+
+### global:LongueurStageNameLevel
+
+PROVEN: Number of characters processed in an animated stage-name string.
+
+Units: signed character count. DOS layout/address: 2:3d0d0.
+
+Loop i<length;space and slash are skipped without changing stored position indexing.
+
+### global:LongueurStageNameWorld
+
+PROVEN: Number of characters processed in an animated stage-name string.
+
+Units: signed character count. DOS layout/address: 2:3d0cc.
+
+Loop i<length;space and slash are skipped without changing stored position indexing.
+
+### global:MENU_RETURN
+
+PROVEN: Menu return/cancel request.
+
+Units: boolean byte. DOS layout/address: 2:3fa39.
+
+Name entry uses it to restore/empty the current save name;save-selection callback includes it in completion and suppresses SaveGameOnDisk.
+
+### global:Main_Control
+
+PROVEN: Enable the joystick control/polling branch.
+
+Units: control byte. DOS layout/address: 2:5eb2.
+
+Combined with is_joypad_mode==1 for joystick-aware copy;also read by joystick direction/button routines. No CPU-speed meaning is inferred.
+
+### global:MenuCredits
+
+PROVEN: Temporary credits-initialization context.
+
+Units: boolean byte. DOS layout/address: 2:3fa19.
+
+DISPLAY_CREDITS_MENU sets1 only around INIT_CREDITS,then0;not a running frame counter.
+
+### global:NBRE_SAVE
+
+PROVEN: Number of save slots offered by the UI.
+
+Units: slot count byte. DOS layout/address: 2:3fa3d.
+
+AFFICHE_ECRAN_SAVE iterates slot0..<NBRE_SAVE;current name/summary views have3 slots. No automatic capacity extension.
+
+### global:OptionGame
+
+PROVEN: Menu context indicating an in-game options overlay.
+
+Units: boolean byte. DOS layout/address: 2:5e63.
+
+DISPLAY_FOND_MENU copies a whole effect image when0;nonzero restores only the gameplay viewport and clears border bands.
+
+### global:PC_TingsToGet_Col
+
+PROVEN: Animated palette-bank selector for the initial bonus tings prompt.
+
+Units: byte color selector. DOS layout/address: 2:5ec0.
+
+During map_time<=100 and horloge8<4 add PC_TingsToGet_ColAdd;reflect at>5 to5 and at0 to1. Other phases do not update/draw the prompt.
+
+### global:PC_TingsToGet_ColAdd
+
+PROVEN: Modulo256 signed-direction step for the bonus-prompt color.
+
+Units: u8 modular increment. DOS layout/address: 2:5ec1.
+
+Negation is assigned back to u8,so opposite directions are1 and255 when initialized that way. Do not treat255 as a large positive native increment.
+
+### global:PLAN1_BUFFER_START_POINTER
+
+PROVEN: Current first-plane ring-buffer origin stored as a32-bit address.
+
+Units: DOS byte address. DOS layout/address: 2:3d834.
+
+build_map initializes PLAN1_BUFFER;update_map rotates at80-byte row and224-row wraps. It is an absolute DOS address,not a tile index or allocation size.
+
+### global:PLAN3BIT
+
+PROVEN: Current full normal-mode scene background image.
+
+Units: u8 pointer. DOS layout/address: 2:3d82c.
+
+DISPLAY_FOND3 copies64000 bytes to DrawBufferNormal. SAVE_PLAN3 may substitute a vignette view without copying or transferring ownership.
+
+### global:PLANTMPBIT
+
+PROVEN: Single saved PLAN3 image pointer.
+
+Units: u8 pointer. DOS layout/address: 2:3d7c0.
+
+SAVE_PLAN3 stores previous PLAN3BIT;RESTORE_PLAN3 restores it. No allocation/free and no nested stack.
+
+### global:PLANVIGBIT
+
+PROVEN: Loaded vignette image pointer slots.
+
+Units: array of image pointers. DOS layout/address: 2:35528.
+
+SAVE_PLAN3 selects display_Vignet;loaders own the storage. Keep current declared8-slot view;do not infer original capacity from Android/adjacent data.
+
+### global:PROC_EXIT
+
+PROVEN: Scene-specific exit/completion request.
+
+Units: boolean byte. DOS layout/address: 2:3fa40.
+
+Many scene logic/input routines set/reset it;SYNCHRO callbacks return it or combine with fade completion. START_LEVEL_ANIM saves/restores the byte. Not the same as process termination/fin_du_jeu.
+
+### global:PositionStageNameCalcule
+
+PROVEN: Select fixed and/or animated world-map stage-name rendering.
+
+Units: state byte. DOS layout/address: 2:3fa2d.
+
+Value1 suppresses fixed descriptor names;any nonzero value enables animated names. Therefore values beyond1 are not interchangeable with true.
+
+### global:PositionXStageNameLevel
+
+PROVEN: Animated stage-name glyph x positions.
+
+Units: signed Q4 screen pixels. DOS layout/address: 2:324f0.
+
+DISPLAY_STAGE_NAMES arithmetic>>4 before drawing;world text selects alpha2,level text alpha.
+
+### global:PositionXStageNameWorld
+
+PROVEN: Animated stage-name glyph x positions.
+
+Units: signed Q4 screen pixels. DOS layout/address: 2:325b8.
+
+DISPLAY_STAGE_NAMES arithmetic>>4 before drawing;world text selects alpha2,level text alpha.
+
+### global:PositionYStageNameLevel
+
+PROVEN: Animated stage-name glyph baseline y positions.
+
+Units: signed Q4 screen pixels. DOS layout/address: 2:32680.
+
+DISPLAY_STAGE_NAMES uses(position>>4)-sprite.outer_height for top. No world-camera subtraction at the draw.
+
+### global:PositionYStageNameWorld
+
+PROVEN: Animated stage-name glyph baseline y positions.
+
+Units: signed Q4 screen pixels. DOS layout/address: 2:323b0.
+
+DISPLAY_STAGE_NAMES uses(position>>4)-sprite.outer_height for top. No world-camera subtraction at the draw.
+
+### global:RayonJumelle
+
+PROVEN: World-map binocular horizontal radius.
+
+Units: pixels. DOS layout/address: 2:3d0ec.
+
+WORLD_CHOICE supplies radius_y=3*radius/4 with integer division. Aspect correction is part of the effect geometry.
+
+### global:ReInitPlasma
+
+PROVEN: Request to rebuild menu plasma before drawing.
+
+Units: boolean byte. DOS layout/address: 2:5eb1.
+
+Save/name callbacks consume it,set0,wait retrace,InitPlasma1,redraw and present. Other menu paths may set it again.
+
+### global:SauveRayEvtsDemo
+
+PROVEN: Saved Rayman ability bitfield for demo playback.
+
+Units: rayevts_t. DOS layout/address: 2:3f762.
+
+InitDemoJeu copies RayEvts here;FinDemoJeu restores it. Two-byte DOS layout,not a new32-bit native flag schema.
+
+### global:Swap_And_Test_Joystick
+
+PROVEN: Selected assembly framebuffer-copy/joystick-polling routine.
+
+Units: function pointer. DOS layout/address: 2:3d120.
+
+Installed by JoystickPresent;register order of this TU is EDI,ESI,ECX,EAX. Other call sites have local ABI views;keep actual register contracts in ASM_SPEC rather than assuming C argument names prove direction.
+
+### global:TailleStageNameLevel
+
+PROVEN: Animated stage-name font metric selector.
+
+Units: font selector. DOS layout/address: 2:3d08c.
+
+Passed as u8 to calc_let_Width;world sprite bank remains alpha2+41 and level bank alpha regardless of this metric selector.
+
+### global:TailleStageNameWorld
+
+PROVEN: Animated stage-name font metric selector.
+
+Units: font selector. DOS layout/address: 2:3d094.
+
+Passed as u8 to calc_let_Width;world sprite bank remains alpha2+41 and level bank alpha regardless of this metric selector.
+
+### global:TempsDemo
+
+PROVEN: Attract-demo inactivity/selection counter.
+
+Units: menu callback invocations. DOS layout/address: 2:3d134.
+
+DO_SAVE_CHOICE and demo entry/exit clear0;selection_save_option_prg increments and compares RunTimeDemo. Different scenes repurpose timing storage;not clock_ticks.
+
+### global:TexteStageNameLevel
+
+PROVEN: Raw-byte animated stage-name text.
+
+Units: NUL-terminated glyph bytes. DOS layout/address: 2:3ef16.
+
+DO_STAGE_NAMES supplies text;renderer loops recorded length,ignores spaces/slashes and looks up other bytes. No Unicode conversion or original string capacity is inferred.
+
+### global:TexteStageNameWorld
+
+PROVEN: Raw-byte animated stage-name text.
+
+Units: NUL-terminated glyph bytes. DOS layout/address: 2:3eef8.
+
+DO_STAGE_NAMES supplies text;renderer loops recorded length,ignores spaces/slashes and looks up other bytes. No Unicode conversion or original string capacity is inferred.
+
+### global:VGA_FREQ
+
+PROVEN: Last requested VGA refresh selection.
+
+Units: nominal refresh selector. DOS layout/address: 2:3fa4c.
+
+set_vga_frequency stores the supplied byte after programming branches50/60/70/80/100. This is not measured real refresh and is separate from Frequence.
+
+### global:WidthNworld
+
+PROVEN: Loaded world-map background dimensions cached for binocular logic.
+
+Units: pixels. DOS layout/address: 2:3f760.
+
+DO_WORLD_MAP copies plan2_width/height after vignette48 load;distinct from map-tile width/height.
+
+### global:action
+
+STRONG: Menu/save action code.
+
+Units: signed16 action code. DOS layout/address: 2:3f7a2.
+
+In these callbacks1 requests save-name/load-style action,3 new/empty-slot handling;reset0 after realization. Code meaning is context-specific;no universal menu enum is invented.
+
+### global:anim_func
+
+PROVEN: Current inter-animation update callback.
+
+Units: void(void) function pointer. DOS layout/address: 2:3d13c.
+
+display_inter_anim invokes it after drawing/advancing Rayman;DO_ANIM_VICTOIRE installs DO_RAYMAN_WINS. Callback identity is scene state;host addresses need translation.
+
+### global:basex
+
+PROVEN: Save/menu text left anchor.
+
+Units: screen pixels. DOS layout/address: 2:3f76e.
+
+Save name character x=basex+ecartx*(index-1);summary uses basex+3*(ecartx+11)-30. Other menus initialize this shared anchor.
+
+### global:chemin_percent
+
+STRONG: World-map route reveal/completion parameter.
+
+Units: Bresenham percent units. DOS layout/address: 2:3fa45.
+
+DO_WORLD_MAP sets1,route functions update/consume. Bresenham callers use128 for complete paths;do not convert this byte directly to a0..100 percentage.
+
+### global:clignotement
+
+PROVEN: Enable deformation/blink of the selected save-name character.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f782.
+
+Requires current character/row match;otherwise normal text render.
+
+### global:coeffktxt
+
+STRONG: Shared integer phase used for save-name deformation.
+
+Units: 512 units per turn. DOS layout/address: 2:3f7cc.
+
+Save renderer resets when>=512,then adds(cosinus(phase+256)>>7)+5;other effects also use this storage.
+
+### global:colour
+
+PROVEN: Color-drawer palette selector for menu/level text.
+
+Units: byte selector. DOS layout/address: 2:3fa48.
+
+Read by save-name/level-selector text;no direct runtime writer found in this snapshot,initial value is retained. It is not RGB.
+
+### global:compteur
+
+STRONG: Shared menu input-repeat counter.
+
+Units: draw/control invocations. DOS layout/address: 2:3f78a.
+
+Save renderer increments while held below max,else reloads delai_repetition+1 or clears0 when released. Other menu controls share it;not a hardware timer.
+
+### global:compteur_clignote
+
+PROVEN: Save-menu blink phase counter.
+
+Units: draw invocations. DOS layout/address: 2:3f772.
+
+Increment through30 then reset0;repeat renderer calls advance more than once per scene callback.
+
+### global:credits
+
+PROVEN: Mutable visible-credit records.
+
+Units: declared135 credit_t records. DOS layout/address: 2:3d140.
+
+DISPLAY_TXT_CREDITS consumes inclusive first..last byte indices. Pointer/font/color/x/y layout is12 bytes;Android record count/capacity annotations are not DOS capacity proof. No capacity edit.
+
+### global:current_star
+
+PROVEN: Current grapple-star slot consumed by the path callback.
+
+Units: signed slot index. DOS layout/address: 2:3f7fc.
+
+display_grp_stars resets0;display_etoile accesses before conditionally incrementing if<30. No original capacity/endpoint safety claim is added.
+
+### global:debut_options
+
+PROVEN: First save/menu row text baseline.
+
+Units: screen y pixels. DOS layout/address: 2:3f7c4.
+
+Save row baseline adds(ecarty+23)*slot;cursor/summary subtract23.
+
+### global:debut_sortie
+
+PROVEN: Menu action/exit baseline.
+
+Units: screen y pixels. DOS layout/address: 2:3f7b8.
+
+Save action labels use it;options exit cursor uses value-13.
+
+### global:debut_titre
+
+PROVEN: Menu title text baseline.
+
+Units: screen y pixels. DOS layout/address: 2:3f7ac.
+
+Save renderer uses(160,debut_titre);shared menu initializers set it.
+
+### global:delai_repetition
+
+PROVEN: Held-input repeat reload threshold.
+
+Units: repeat-counter units. DOS layout/address: 2:3f79a.
+
+Save renderer reloads compteur=delai_repetition+1 while held after initial threshold.
+
+### global:demo_video_mem
+
+PROVEN: DOS save/movie path string buffer.
+
+Units: char[100] path bytes. DOS layout/address: 2:3cfdc.
+
+init_arg defaults to .\ and parses SAVE= suffix;save/load APIs append names to this path;DO_VICTOIRE passes the same address as the movie path. Existing mem_t binding/prototype annotations are misleading. No declaration/ABI change is made.
+
+### global:display_Vignet
+
+PROVEN: Current vignette/credits image and palette selector.
+
+Units: page index. DOS layout/address: 2:3fa47.
+
+Dialogue/ending sets0;credits increments while<=7;input skip sets7 before loop increment. Scene control,not a frame-counter byte.
+
+### global:display_buffer
+
+PROVEN: Current presentation-source/display-page alias.
+
+Units: DOS byte pointer. DOS layout/address: 2:3d7d0.
+
+ModeX toggles0xa0500/0xa6500;normal resets to DisplayBufferNormal and copies draw RAM. Native game state must not contain these physical addresses.
+
+### global:display_txt_fee
+
+PROVEN: Current/previous fairy dialogue descriptor-relative index.
+
+Units: byte index or255. DOS layout/address: 2:3fa5d.
+
+DISPLAY_TEXT_FEE uses text_to_display+1+index;255 disables the corresponding text. Current descriptor may be locally truncated;old one draws afterward.
+
+### global:draw_buffer
+
+PROVEN: Current rendering destination alias.
+
+Units: DOS byte pointer. DOS layout/address: 2:3d7b8.
+
+Normal mode aliases DrawBufferNormal;ModeX alternates VGA pages. WORLD_CHOICE temporarily aliases EffetBufferNormal. This is a backend destination/view,not owned image storage.
+
+### global:drawflocon1NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon1NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d110.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon2NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon2NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d108.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon3NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon3NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d12c.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon4NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon4NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0e8.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon5NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon5NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d104.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon6NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon6NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0b8.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawflocon7NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawflocon7NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0bc.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawpluie4NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawpluie4NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0d8.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawpluie5NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawpluie5NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0e0.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawpluie6NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawpluie6NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0f0.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:drawpluie7NormalETX
+
+PROVEN: Selected weather-stamp dispatch slot drawpluie7NormalETX.
+
+Units: function pointer. DOS layout/address: 2:3d0d4.
+
+Mode initialization chooses the backend stamp routine;affiche passes draw_buffer and projected integer x/y. Shape,clipping and palette indices are already specified in docs/port/ASM_SPEC.md.
+
+### global:ecartx
+
+PROVEN: Save-name character horizontal pitch.
+
+Units: pixels. DOS layout/address: 2:3f7b6.
+
+Multiply by character_index-1. It is layout state,not object speed.
+
+### global:ecarty
+
+PROVEN: Extra spacing between save rows.
+
+Units: pixels. DOS layout/address: 2:3f7b4.
+
+Actual save baseline pitch isecarty+23;the font baseline constant is not included in this variable.
+
+### global:fade_speed
+
+PROVEN: Exponent of the per-step palette-component increment.
+
+Units: binary shift count. DOS layout/address: 2:3f7ea.
+
+Source byte<<fade_speed;start count1<<(6-speed). All inspected live callers pass2,giving16 steps. Keep source as unsigned byte,accumulator signed16.
+
+### global:fichier_a_copier
+
+PROVEN: Copy-source save slot shown by the secondary fist cursor.
+
+Units: 1-based slot index or0. DOS layout/address: 2:3f7c2.
+
+DISPLAY_SAVE_POING draws sprite1 on this row only when nonzero;selected target cursor uses sprite2.
+
+### global:fichier_existant
+
+STRONG: Existing-save condition used by save action handling.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f788.
+
+selection callback action3 opens name/save only when this is zero and selected slot nonzero. Exact full menu state machine is outside rendering.
+
+### global:fichier_selectionne
+
+PROVEN: Selected save slot.
+
+Units: 1-based slot index or0. DOS layout/address: 2:3f7bc.
+
+Name buffers use[slot-1];0 means no slot;DO_WORLD_MAP clears it on return to menus.
+
+### global:fin_saisie_nom
+
+PROVEN: Save-name entry completion latch.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f784.
+
+Skips another name-entry scene when nonzero;combined with MENU_RETURN by saisie_nom_prg.
+
+### global:first_credit
+
+PROVEN: Inclusive currently visible credit range endpoint.
+
+Units: u8 credit index. DOS layout/address: 2:3fa34.
+
+DO_CREDITS/INIT_CREDITS update;DISPLAY_TXT_CREDITS loops first<=i<=last. DOS uses bytes even where Android widened corresponding symbols.
+
+### global:fixon
+
+PROVEN: Persistent HUD display option.
+
+Units: boolean-like signed16. DOS layout/address: 2:5e66.
+
+DISPLAY_FIXE draws when nonzero;normal game presentation copies full width while HUD is on. Its saved-option writer uses the low byte.
+
+### global:fixontemp
+
+PROVEN: Temporary HUD/border refresh countdown.
+
+Units: DISPLAY_FIXE invocations. DOS layout/address: 2:5e68.
+
+Set300 on death-state change when idle,decrement once per HUD call;nonzero keeps HUD visible and normal presentation copies its band. Last tick1 clears both normal buffers borders.
+
+### global:floc_ind
+
+PROVEN: Starting weather-particle index for each depth group.
+
+Units: eight signed16 indices. DOS layout/address: 2:3af78.
+
+init_flocons builds prefix indices;display/do_flocons use flocon_tab+floc_ind[group].
+
+### global:flocon_tab
+
+PROVEN: Allocated weather-particle storage.
+
+Units: flocon_t pointer. DOS layout/address: 2:3d8bc.
+
+AllocVariablesAutorisee allocates512 records;neige initializes eight groups;affiche draws them in five-behind/three-before passes. Coordinates are unprojected screen-plane pixels,not Q6 gerbe coordinates.
+
+### global:fplotNormalETX
+
+PROVEN: Selected pixel-plotting routine used by particle rendering.
+
+Units: function pointer. DOS layout/address: 2:3d100.
+
+Normal/ModeX initialization selects backend;register ABI/color source is in docs/port/ASM_SPEC.md. This TU has local prototype views which must not be used as evidence of a new source ABI.
+
+### global:frame_records_38888
+
+PROVEN: Background row-run records produced/consumed by ModeX assembly.
+
+Units: 14 rows of128 bytes. DOS layout/address: 2:38888.
+
+sub_3C3BC builds with asm_029d3/02a73;sub_3BE20 consumes with asm_03257/037e4. Refer to docs/port/ASM_SPEC.md for the typed record grammar;do not reinterpret all32 dwords as one homogeneous array of pointers.
+
+### global:frame_records_38f88
+
+PROVEN: Opaque map ring row-run records produced/consumed by ModeX assembly.
+
+Units: 14 rows of128 bytes. DOS layout/address: 2:38f88.
+
+Produced via asm_02850,consumed via asm_03912/03ea1;P486 starts the consumer at row1. Existing assembly contract is authoritative.
+
+### global:grp_stars
+
+PROVEN: Per-slot random animation state for grapple-path stars.
+
+Units: declared30 records of4 bytes. DOS layout/address: 2:399f8.
+
+Each record has timer,length,shared diagonal distance choice,and sprite-table index. Only display_etoile directly reads/writes records.
+
+### global:id_Cling_Old
+
+PROVEN: HUD popup-background cleanup latch.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f830.
+
+DISPLAY_CLING sets1;DISPLAY_FIXE consumes it to enlarge cleanup region85x45,then resets0. CLEAR_FIXE_LUCIOLE is another consumer.
+
+### global:init_data_state
+
+PROVEN: ModeX camera-phase and background-origin setup record.
+
+Units: init_data_state_t. DOS layout/address: 2:321c0.
+
+InitData writes all six fields;renderer consumes absolute address-valued draw_origin/source_origin and background scroll pixels. Keep pointer representation at the backend boundary.
+
+### global:inter_select
+
+PROVEN: Four-invocation repeat phase for level selection.
+
+Units: callback phase0..3. DOS layout/address: 2:3f8f4.
+
+Change level only at0;increment then wrap at4;SELECT_LEVEL resets0.
+
+### global:is_joypad_mode
+
+PROVEN: Select joystick versus keyboard input/presentation polling path.
+
+Units: mode byte. DOS layout/address: 2:3fa23.
+
+SWAP_BUFFERS tests==1;normal presentation may poll joystick during copy when Main_Control nonzero. Hardware polling belongs at input/backend boundary.
+
+### global:ktxtenx
+
+PROVEN: Text deformation scale multiplier.
+
+Units: signed Q12 multiplier. DOS layout/address: 2:3f7d8.
+
+4096 unity;selected-name frame forces horizontal4096 and vertical8*cosinus(coeffktxt). Keep signed16 narrowing,including negative vertical scale.
+
+### global:ktxteny
+
+PROVEN: Text deformation scale multiplier.
+
+Units: signed Q12 multiplier. DOS layout/address: 2:3f7da.
+
+4096 unity;selected-name frame forces horizontal4096 and vertical8*cosinus(coeffktxt). Keep signed16 narrowing,including negative vertical scale.
+
+### global:language
+
+PROVEN: Selected text/speech language id.
+
+Units: u8 language selector. DOS layout/address: 2:3fa35.
+
+0 is English speech branch and unquoted continue text;save UI has a special label layout for1. Language loader encoding remains raw glyph bytes.
+
+### global:last_credit
+
+PROVEN: Inclusive currently visible credit range endpoint.
+
+Units: u8 credit index. DOS layout/address: 2:3fa3a.
+
+DO_CREDITS/INIT_CREDITS update;DISPLAY_TXT_CREDITS loops first<=i<=last. DOS uses bytes even where Android widened corresponding symbols.
+
+### global:let_shadow
+
+UNKNOWN: Byte written by save/world-map rendering without a located value-consuming reader.
+
+Units: unknown. DOS layout/address: 2:51d0.
+
+Known stores0/1 and original name retained;the name does not prove a shadow-rendering effect in DOS. Whole-image exact/widened-reference search found only writers in audited functions.
+
+### global:level_select
+
+PROVEN: Current cheat level-selector result.
+
+Units: 1-based level index. DOS layout/address: 2:4f750.
+
+Clamp to1..per-world limit;SELECT_LEVEL returns it.
+
+### global:loop_nb_trames
+
+PROVEN: Subsecond scene callback counter.
+
+Units: callback invocations. DOS layout/address: 2:3f824.
+
+display_vignet_prg increments and resets at60,then decrements loop_timing. Continue logic shares this storage;render helpers may be called multiple times,so it is not a hardware clock.
+
+### global:loop_timing
+
+PROVEN: Scene countdown/status value.
+
+Units: nominal seconds or sentinel. DOS layout/address: 2:3f826.
+
+Vignette counts60 invocations per decrement;input admitted<=3,auto-end<=0. Continue renderer tests255 for game-over while continue_fonction tests-1 for end. Preserve signed16 and distinct sentinels.
+
+### global:main_mem_tmp
+
+PROVEN: Temporary resource arena descriptor.
+
+Units: mem_t. DOS layout/address: 2:3d8a0.
+
+DO_GROS_RAYMAN allocates0x41a00 for loader resources,then frees before LOAD_ALL_FIX. Owns resources,not an image pointer itself.
+
+### global:max_compteur
+
+PROVEN: Initial input-repeat threshold.
+
+Units: repeat-counter units. DOS layout/address: 2:3f794.
+
+DO_SAVE_CHOICE sets100;save renderer compares compteur against it. Other menu initializers may choose other values.
+
+### global:menuEtape
+
+STRONG: Menu state selector.
+
+Units: state byte. DOS layout/address: 2:3fa37.
+
+DO_WORLD_MAP assigns4 on exit back to the save/menu flow. Rendering does not establish a complete menu-state enumeration.
+
+### global:menu_to_display
+
+PROVEN: Shared menu text-box descriptors.
+
+Units: nine declared display_item_t records. DOS layout/address: 2:3bd08.
+
+Save renderer updates record0 for selected action;options cursor uses selected descriptor anchors.
+
+### global:nb_fade
+
+PROVEN: Number of remaining palette updates.
+
+Units: update count. DOS layout/address: 2:3f8da.
+
+u16;standard start16,decrement before channel updates,0 stops do_fade. Also gates input and scene exit;not milliseconds. cyclage_palette forces1 if idle.
+
+### global:nb_floc
+
+PROVEN: Currently displayed/updated weather-particle count per depth group.
+
+Units: eight signed16 counts. DOS layout/address: 2:3aeb0.
+
+Distinct from allocated/candidate totals;renderer iterates[start,start+count). saveGameState/restoreGameState preserve it.
+
+### global:need_timer
+
+PROVEN: Enable clock-based deadline/pacing checks.
+
+Units: boolean byte. DOS layout/address: 2:3fa4b.
+
+Set by InitPcSoundCard calibration;scene loops sample clock_ticks when nonzero,WORLD_CHOICE waits and may perform one additional update. Not an audio-playback-enabled flag.
+
+### global:new_txt_fee
+
+PROVEN: First text index for the next two-box vignette page.
+
+Units: descriptor-relative index. DOS layout/address: 2:3fa58.
+
+DISPLAY_TXT_VIGNET addresses text_to_display+1+index;advance by2,terminal marker10;initialized0. It is separate from the fairy current/old indices.
+
+### global:old_txt_fee
+
+PROVEN: Current/previous fairy dialogue descriptor-relative index.
+
+Units: byte index or255. DOS layout/address: 2:3fa59.
+
+DISPLAY_TEXT_FEE uses text_to_display+1+index;255 disables the corresponding text. Current descriptor may be locally truncated;old one draws afterward.
+
+### global:option_exit
+
+PROVEN: Options-menu exit-item index.
+
+Units: descriptor index. DOS layout/address: 2:3f754.
+
+Used to choose the special cursor anchor and text descriptor;not a process exit flag.
+
+### global:options_jeu_save
+
+PROVEN: Saved user control/options record for the attract demo.
+
+Units: options_jeu_t. DOS layout/address: 2:32f58.
+
+InitDemoJeu copies32 bytes,overwrites demo controls,FinDemoJeu restores. Save record belongs to game/config state.
+
+### global:plan3bit_length
+
+PROVEN: Current PLAN3 data length used by planar picture setup.
+
+Units: bytes. DOS layout/address: 2:3d820.
+
+SAVE/RESTORE_PLAN3 substitute this with matching vignette metadata;DISPLAY_ANYSIZE_PICTURE divides by4 before plane addressing. DISPLAY_FOND3 ignores this length and copies64000.
+
+### global:plan3bit_nb_bytes
+
+PROVEN: Current PLAN3 source stride used by picture setup.
+
+Units: source bytes per row. DOS layout/address: 2:3d7f0.
+
+Third DISPLAY_ANYSIZE_PICTURE argument is a source row multiplied by this stride. Keep metadata in the layout selected by the active image loader.
+
+### global:planVigbit_length
+
+PROVEN: Vignette image lengths selected with PLANVIGBIT.
+
+Units: array of byte lengths. DOS layout/address: 2:35548.
+
+Matching index follows display_Vignet;current source declares8,older binding annotation says7. Capacity is not changed or promoted by this pass.
+
+### global:planVigbit_nb_bytes
+
+PROVEN: Vignette image strides selected with PLANVIGBIT.
+
+Units: array of source-row strides. DOS layout/address: 2:36d68.
+
+Matching index follows display_Vignet;declaration/binding capacity discrepancy retained without structural changes.
+
+### global:planar_copy_offset
+
+PROVEN: Initial VGA plane mask derived from camera x phase.
+
+Units: bit mask. DOS layout/address: 2:321d4.
+
+InitData stores1<<(3-(x&3));renderer doubles1,2,4,8 and wraps16->1 while advancing destination byte. Despite old spelling it is a mask,not a byte offset.
+
+### global:plantmp_length
+
+PROVEN: Single saved PLAN3 byte length.
+
+Units: bytes. DOS layout/address: 2:3d7c8.
+
+Saved/restored together with PLANTMPBIT and plantmp_nb_bytes.
+
+### global:plantmp_nb_bytes
+
+PROVEN: Single saved PLAN3 source stride.
+
+Units: bytes per source row. DOS layout/address: 2:3d7cc.
+
+Saved/restored with the image view.
+
+### global:png_or_fee_id
+
+PROVEN: Object index of the fairy/dialogue actor.
+
+Units: object index. DOS layout/address: 2:3f822.
+
+DISPLAY_TEXT_FEE uses it only for enabled current dialogue;actor is positioned at bottom190. Existing broader ping/fairy allocation role retained;do not assume-1 is checked here.
+
+### global:pos_YN
+
+PROVEN: Yes/no dialog selection.
+
+Units: 1-based row selector. DOS layout/address: 2:3fa4f.
+
+DISPLAY_YESNO_POING places cursor at117+(value-1)*22.
+
+### global:position
+
+PROVEN: Current options-menu item selection.
+
+Units: descriptor index. DOS layout/address: 2:3f78c.
+
+DISPLAY_OPTIONS_POING uses menu_to_display[position],with a separate exit-item anchor.
+
+### global:positionx
+
+PROVEN: Current save-name character selection.
+
+Units: 1-based character index. DOS layout/address: 2:3f7c0.
+
+Compared to the1-based name rendering loop;blink/deformation also requires selected save row.
+
+### global:positionx2
+
+STRONG: Current horizontal save-menu action selection.
+
+Units: menu code1..3 in save UI. DOS layout/address: 2:3f7aa.
+
+1 copy,2 erase,3 start labels select menu_to_display0 text/anchor. Other menus reuse this storage.
+
+### global:positiony
+
+STRONG: Current save/menu row selection.
+
+Units: 1-based row index in save UI. DOS layout/address: 2:3f7be.
+
+DISPLAY_SAVE_POING uses(row-1)*pitch;name animation compares row==save_index+1. Other menu contexts may use it differently.
+
+### global:prev_Bloc_lim_W1
+
+PROVEN: Last left viewport bound handled by menu-background restoration.
+
+Units: pixels. DOS layout/address: 2:654c.
+
+On change DISPLAY_FOND_MENU may ClearBorder when bound grows,then remembers it. It is a presentation cache.
+
+### global:realisation_effectuee
+
+PROVEN: Save-action completion latch.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f778.
+
+After REALISATION_ACTION,nonzero triggers INIT_SAVE_CONTINUE.
+
+### global:rotationtxt
+
+PROVEN: Text deformation rotation argument.
+
+Units: 512 units per turn. DOS layout/address: 2:3f7dc.
+
+Forwarded by save UI to DISPLAY_DEFORM_SPRITE through display_deform_text.
+
+### global:rvb_Vig
+
+PROVEN: Loaded vignette/credits palettes.
+
+Units: eight declared256-entry palettes. DOS layout/address: 2:35568.
+
+Selected by display_Vignet0..7 or page0 during dialogue/ending;SAVE_PALETTE installs the selected palette for scene fades.
+
+### global:rvb_fade
+
+PROVEN: Signed16 accumulators for all256 RGB palette entries.
+
+Units: Q6 RGB components. DOS layout/address: 2:37388.
+
+768 words;seed palette_byte<<6. Fade-in adds source<<speed;fade-out subtracts when accumulator>0,without clamping;convert with signed>>6 then u8. At valid RGB6/speed2 levels the final16th step reaches the exact target/black.
+
+### global:rvb_plan3
+
+PROVEN: Palette loaded for the current PLAN3 scene background.
+
+Units: RGB6 palette. DOS layout/address: 2:37c88.
+
+Save/continue/menu/loader scene entry uses SAVE_PALETTE(&rvb_plan3),then fade-in. It is not the live DAC output buffer.
+
+### global:rvb_save
+
+PROVEN: Single saved copy of level palette0.
+
+Units: 256 RGB triples. DOS layout/address: 2:36d88.
+
+SAVE_PALETTE saves rvb0 here;RESTORE_PALETTE restores it. Single slot,not a nested palette stack;current_rvb and accumulators are separate.
+
+### global:rvb_special
+
+PROVEN: Allocated array of PC special-effect palettes.
+
+Units: RGB6 palettes. DOS layout/address: 2:3d83c.
+
+AllocVariablesAutorisee allocates16 palettes;InitPaletteSpecialPC fills/interpolates lightning/cave sequences. Output routine writes only colors1..255;index15 saves original but output cycle wraps at15.
+
+### global:save_current_pal
+
+PROVEN: Single saved selected level-palette id.
+
+Units: palette index. DOS layout/address: 2:3fa4d.
+
+Saved by SAVE_PALETTE;RESTORE restores id and rvb0 but does not immediately output DAC or restore current_rvb.
+
+### global:save_ray
+
+PROVEN: Three four-byte save-name buffers.
+
+Units: raw-byte name strings. DOS layout/address: 2:3d798.
+
+Name entry renders1-based character positions;strcpy restoration copies from save_ray_copy. Retain small DOS name format;new user-interface strings need explicit translation.
+
+### global:save_ray_copy
+
+PROVEN: Backup of one save name while editing.
+
+Units: four raw bytes. DOS layout/address: 2:3d794.
+
+saisie_nom_prg restores it on MENU_RETURN when action1,otherwise empties selected name.
+
+### global:save_zone
+
+PROVEN: Persistent per-level collected/progress bits cleared for a fresh demo.
+
+Units: 2592 bytes. DOS layout/address: 2:3afa0.
+
+InitDemoJeu clears full array;bonus/save routines own bit interpretations. Rendering reads none of its individual bytes.
+
+### global:saved_vga_registers
+
+PROVEN: Saved VGA timing register bytes.
+
+Units: six bytes. DOS layout/address: 2:4fae8.
+
+Slots0..5=CRTC11,CRTC10,misc-output,CRTC7,CRTC6,CRTC16. Used only by Get/SetVideoRegister.
+
+### global:smap
+
+PROVEN: Temporary transparency class lookup for the40-column tile atlas.
+
+Units: u8 pointer to1200 entries. DOS layout/address: 2:4fae4.
+
+Allocate/init1,calc_gros_type writes0 opaque/1 transparent/2 mixed,find_in_map indexes from atlas pixel coordinates,then free. Not a level collision map.
+
+### global:sortie_save
+
+PROVEN: Save-menu exit request.
+
+Units: boolean-like signed16. DOS layout/address: 2:3f776.
+
+Name callback sets1 for action3;selection callback returns it and prevents inactivity demo.
+
+### global:unk_ptr_3d840
+
+UNKNOWN: Pointer used only as the dormant BIOS benchmark completion flag.
+
+Units: u8 pointer. DOS layout/address: 2:3d840.
+
+Zero BSS;no initializer or live caller was found. Only sub_3B5E8 dereferences it. Native port may omit this diagnostic per docs/port/PLATFORM_OPEN.md;historical pointer ownership remains UNKNOWN.
+
+### global:use_sync
+
+PROVEN: Enable explicit retrace synchronization.
+
+Units: boolean byte. DOS layout/address: 2:3fa4e.
+
+Controls ModeX swap edge waits and game-loop synchronization/extra-step policy. Keep timing policy separate from hardware wait implementation.
+
+### global:word_CF7EE
+
+PROVEN: Calibrated world-map frame-wait interval.
+
+Units: clock_ticks units. DOS layout/address: 2:3f7ee.
+
+InitPcSoundCard stores(word_CF7F0*31U)/32;WORLD_CHOICE adds this to callback clock sample. Do not rename to milliseconds or assume60Hz.
+
+### global:xwldmapsave
+
+PROVEN: Saved world-map camera coordinate.
+
+Units: world-map pixels. DOS layout/address: 2:3f834.
+
+DO_SAVE_CHOICE clears both0;DO_WORLD_MAP uses both-zero to choose fresh scroll midpoint;FIN_WORLD_CHOICE stores current camera. Keep sentinel behavior,not merely an optional host pointer.
+
+### global:ywldmapsave
+
+PROVEN: Saved world-map camera coordinate.
+
+Units: world-map pixels. DOS layout/address: 2:3f832.
+
+DO_SAVE_CHOICE clears both0;DO_WORLD_MAP uses both-zero to choose fresh scroll midpoint;FIN_WORLD_CHOICE stores current camera. Keep sentinel behavior,not merely an optional host pointer.
 
 ## load.json
 
@@ -3042,27 +5298,33 @@ gele2 advances horloges(1), signpost and Rayman animation; other non3 states run
 
 ### global:Bloc_lim_H1
 
-STRONG: Vertical viewport/block bounds copied to display bounds at level initialization.
+PROVEN: Top gameplay viewport bound.
 
-Units: pixels. DOS layout/address: 2:3d0a4.
+Units: screen pixels. DOS layout/address: 2:3d0a4.
 
 Other display/map readers establish the geometry; moteur only copies these values.
+
+Pass5: Menu copy covers rows[H1,H2),normal background/weather use related limits. Not necessarily the current sprite clipping ymin.
 
 ### global:Bloc_lim_H1_Aff
 
-STRONG: Displayed viewport/block bounds snapshot initialized from the corresponding live bound.
+PROVEN: Displayed top viewport snapshot used to cull particle pixels.
 
-Units: pixels. DOS layout/address: 2:3d088.
+Units: screen pixels. DOS layout/address: 2:3d088.
 
 These are separate display-state globals; preserve the pairing/order in INIT_MOTEUR_LEVEL.
 
+Pass5: display_pix_gerbes requires Q6 y>this_bound<<6. The live/menu top bound and sprite clipping box are separate state.
+
 ### global:Bloc_lim_H2
 
-STRONG: Vertical viewport/block bounds copied to display bounds at level initialization.
+PROVEN: Bottom gameplay viewport bound.
 
-Units: pixels. DOS layout/address: 2:3d0a0.
+Units: screen pixels. DOS layout/address: 2:3d0a0.
 
 Other display/map readers establish the geometry; moteur only copies these values.
+
+Pass5: Menu row loop excludesH2;HUD uses bottom-relative anchors;some object types temporarily clip atH2-40. The separate sprite clipping setter clamps bounds;individual blitters can have rounded fringes.
 
 ### global:Bloc_lim_H2_Aff
 
@@ -3074,11 +5336,13 @@ These are separate display-state globals; preserve the pairing/order in INIT_MOT
 
 ### global:Bloc_lim_W1
 
-STRONG: Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.
+PROVEN: Left gameplay viewport bound.
 
-Units: pixels. DOS layout/address: 2:3d09c.
+Units: screen pixels. DOS layout/address: 2:3d09c.
 
 INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.
+
+Pass5: Used as inclusive left copy/draw bound;menu background loops columns[W1,W2),not width=W2. Sprite clipping is separate mutable assembly state.
 
 ### global:Bloc_lim_W1_Aff
 
@@ -3090,11 +5354,13 @@ These are separate display-state globals; preserve the pairing/order in INIT_MOT
 
 ### global:Bloc_lim_W2
 
-STRONG: Horizontal viewport/block limits used to derive per-frame Rayman camera-relative boundaries.
+PROVEN: Right gameplay viewport bound.
 
-Units: pixels. DOS layout/address: 2:3d098.
+Units: screen pixels. DOS layout/address: 2:3d098.
 
 INIT_MOTEUR_LEVEL copies them into displayed bounds. ModeX uses separate fixed320 geometry.
+
+Pass5: Used as exclusive right copy/draw bound in menu restoration;HUD anchors are relative to this bound. Assembly clipping quantization is separately specified.
 
 ### global:Bloc_lim_W2_Aff
 
@@ -3138,11 +5404,13 @@ Keep current name. Indirect aggregate accesses are not excluded, and no unreacha
 
 ### global:GameModeVideo
 
-STRONG: Video-mode selectors read by camera-limit initialization and per-frame player bounds.
+PROVEN: Configured gameplay display-mode choice.
 
 Units: mode code. DOS layout/address: 2:5e2d.
 
 They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.
+
+Pass5: 0 normal/1 ModeX controls game setup/HUD offsets/demo exclusions;distinct from ModeVideoActuel,the temporary active backend.
 
 ### global:IsBossThere
 
@@ -3178,11 +5446,13 @@ DO_MOTEUR treats3/4 as abort conditions and writes2 on abort; nonzero is not the
 
 ### global:ModeVideoActuel
 
-STRONG: Video-mode selectors read by camera-limit initialization and per-frame player bounds.
+PROVEN: Currently initialized display backend.
 
 Units: mode code. DOS layout/address: 2:5e2c.
 
 They are separate globals: GameModeVideo controls initialization, ModeVideoActuel controls per-frame border geometry. ModeX=1.
+
+Pass5: 0 normal chunky,1 ModeX,255 text. Mode functions skip initialization/frequency change when requested mode is already active. Scenes may temporarily override the configured game mode.
 
 ### global:NbTramesEcrase
 
@@ -3226,11 +5496,13 @@ Moteur invokes command and rayman_in_zone; callers in other units prove the rema
 
 ### global:ProchainEclair
 
-STRONG: Weather lightning scheduling control forced to1 during eligible frozen weather update.
+PROVEN: Delay threshold for the next PC lightning sequence.
 
-Units: weather sequence state. DOS layout/address: 2:3f742.
+Units: DoPaletteSpecialPC invocations. DOS layout/address: 2:3f742.
 
 Full countdown/selection meaning belongs to weather code; no timer unit inferred here.
+
+Pass5: Initialization uses myRand(200)+1;after each completed sequence uses myRand(400)+1. Compared with preincremented CompteurEclair. Game-loop resets can also assign1;not milliseconds or map ticks.
 
 ### global:RAY_MODE_SPEED
 
@@ -3408,11 +5680,13 @@ Approaches ashr16(screen_error,2) by one; ashr16(dhspeed,2) contributes to actua
 
 ### global:display_mode
 
-STRONG: Display-mode control whose value adjusts the inclusive death-fade upper threshold.
+PROVEN: Control of extra engine updates per presented gameplay frame,also scaling visual blink/fade policy.
 
-Units: mode code. DOS layout/address: 2:3f7e8.
+Units: update-count and visual-timing policy. DOS layout/address: 2:3f7e8.
 
 fades uses dead_time in[32,display_mode+33]. Other display consumers are retained as evidence; do not assume a boolean.
+
+Pass5: The byte loop executes(u8)display_mode+1 updates while gameplay continues;calibration writes0 or1. Rayman blink period2*display_mode+2,visible remainder<=display_mode. Existing death fade threshold also uses this signed16 value. This is separate from VGA mode.
 
 ### global:dontdoit
 
@@ -3456,11 +5730,13 @@ A positive255 stops the sequence; negative samples shift the camera normally.
 
 ### global:fade
 
-STRONG: Fade controller byte carrying phase and a bit0x40 completion/inactivity condition.
+PROVEN: Palette fade direction plus completion bit.
 
-Units: fade state. DOS layout/address: 2:3fa87.
+Units: state byte. DOS layout/address: 2:3fa87.
 
 fades starts fade-out on65 and calls DO_FADE only while bit0x40 is clear; full palette-step rules belong to the display implementation.
+
+Pass5: Start1=in,2=out;last update OR0x40 ->65/66. do_fade compares exact1/2;special palette and palette swapping test bit0x40;actualize_palette emits immediately only on65. Completion does not mean the image was presented.
 
 ### global:fee_obj_id
 
@@ -3654,11 +5930,13 @@ DONE_MOTEUR_LEVEL calls align_mem_desc, which resets bump offset to base&3. alig
 
 ### global:map_time
 
-PROVEN: Signed32 global map-time counter, advanced by the byte horloges argument and also used as the common fractional movement phase.
+PROVEN: Map update counter/fractional movement phase with scene-specific reuse.
 
 Units: nominal map ticks. DOS layout/address: 2:3d8c0.
 
 Not a monotonic hardware time source: initialization clears it, ray_inertia_speed can adjust odd phases, and weather warm-up calls horloges(0). Bonus arithmetic uses60 ticks per displayed second.
+
+Pass5: horloges advances by supplied ticks;bonus uses60 ticks per displayed second. CLEAR_STAGE_NAMES uses1->2 as world-map setup latch. Not a monotonic wall clock or presentation count.
 
 ### global:nb_continue
 
@@ -3726,11 +6004,13 @@ Distinct from current num_world/num_level; firefly grant checks selected Cave5/4
 
 ### global:numero_palette_special
 
-STRONG: Special weather palette selection state cleared during frozen weather update.
+PROVEN: Current output phase of the PC special-palette sequence.
 
-Units: palette state. DOS layout/address: 2:3f740.
+Units: palette index0..14. DOS layout/address: 2:3f740.
 
 Other display/weather consumers determine nonzero codes.
+
+Pass5: Phase15 wraps/resets to0;palette15 is the saved original anchor,not an output phase. Cave advances on horloge5;lightning advances first immediately then on even render counters.
 
 ### global:oldPrio
 
@@ -5390,11 +7670,13 @@ Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runti
 
 ### field:obj_t.display_prio
 
-STRONG: Object drawing-order bucket selector.
+PROVEN: Object display bucket,distinct from activation/list membership.
 
 Units: priority bucket. DOS layout/address: +0x7e, 1 B.
 
 Byte, separate from activity flags; exact bucket policy belongs with display-list generation.
+
+Pass5: DISPLAY_ALL_OBJECTS draws7..1 descending,retaining active-list order;Rayman/fist after3,cymbal second half after2,only first priority0/type245 at end. No ordinary pass for other0 or>=8.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -5840,11 +8122,13 @@ Shipped initial sample: 5512 records, 4 values, 0..3. This does not bound runtim
 
 ### field:sprite_t.flags_bits.flip_x
 
-PROVEN: Sprite horizontal flip bit XORed with object flip to select the bounds reflection.
+PROVEN: Sprite orientation bit used by single-sprite drawing.
 
-Units: boolean. DOS layout/address: +0xb, 1 B.
+Units: one bit. DOS layout/address: +0xb, 1 B.
 
 Bit2 of sprite flags byte; differs from layer.mirrored renderer input.
+
+Pass5: display_sprite/NoClip choose normal when this bit XOR formal flip is nonzero,flipped otherwise. display2 does not consult this bit;it uses layer.mirrored.
 
 Shipped initial sample: 5512 records, 2 values, 0..1. This does not bound runtime values.
 
@@ -5942,11 +8226,13 @@ Shipped initial sample: 44955 records, 256 values, 0..255. This does not bound r
 
 ### field:anim_layer_t.mirrored
 
-STRONG: Layer horizontal mirror selector used by the renderer.
+PROVEN: Layer horizontal mirror selector combined with object facing.
 
-Units: boolean-like byte. DOS layout/address: +0x0, 1 B.
+Units: one bit. DOS layout/address: +0x0, 1 B.
 
 Renderer XORs with object flip; bounds helper instead uses sprite.flags bit2.
+
+Pass5: display2 selects flipped drawer iff obj.flags.flip_x XOR layer.mirrored;object placement reflection uses object facing alone. Not the same rule as display_sprite.
 
 Shipped initial sample: 382694 records, 2 values, 0..1. This does not bound runtime values.
 
@@ -6758,11 +9044,13 @@ Supported0/1/2; line heights36/23/15 respectively, no general size parameter.
 
 ### field:display_item_t.field_D5
 
-PROVEN: Byte selecting the palette255 box branch instead of the ordinary palette254/no-box branch.
+PROVEN: Observed filled-background/text-offset selector in box rendering;broader intended label unresolved.
 
-Units: boolean-like selector. DOS layout/address: +0xd5, 1 B.
+Units: byte selector. DOS layout/address: +0xd5, 1 B.
 
 Observed effect proven, broader intended UI meaning unknown; keep neutral name. All located direct source stores are0.
+
+Pass5: Nonzero requests fill255 in display_box_text and +/-1 text offset for is_fond1/2;zero optionally draws border254 without fill. Existing initialization writes0. Retain neutral name rather than invent a shadow/opacity terminology.
 
 ### field:display_item_t.is_fond
 
@@ -7174,51 +9462,63 @@ block_malloc compares align+adjusted_size with capacity and leaves capacity unch
 
 ### field:pix_gerbe_item_t.x_pos
 
-UNKNOWN: Declared pix_gerbe_item_t.x_pos storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Particle x position relative to the current displayed scene.
 
-Units: unknown. DOS layout/address: +0x0, 2 B.
+Units: signed Q6 pixels. DOS layout/address: +0x0, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: start_pix_gerbe stores x<<6,do_pix_gerbes adds speed_x-h_scroll_speed*64,display arithmetic>>6. Not ordinary integer weather coordinates.
 
 ### field:pix_gerbe_item_t.y_pos
 
-UNKNOWN: Declared pix_gerbe_item_t.y_pos storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Particle y position relative to the current displayed scene.
 
-Units: unknown. DOS layout/address: +0x2, 2 B.
+Units: signed Q6 pixels. DOS layout/address: +0x2, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: start_pix_gerbe stores y<<6,do_pix_gerbes adds speed_y-v_scroll_speed*64,display arithmetic>>6;renderer tests strict>top<<6.
 
 ### field:pix_gerbe_item_t.speed_x
 
-UNKNOWN: Declared pix_gerbe_item_t.speed_x storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Horizontal particle displacement per update.
 
-Units: unknown. DOS layout/address: +0x4, 2 B.
+Units: signed Q6 pixels per update. DOS layout/address: +0x4, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: Added to Q6 x after subtracting camera scrolling*64. Source initializer chooses a signed random value;no floating point.
 
 ### field:pix_gerbe_item_t.speed_y
 
-UNKNOWN: Declared pix_gerbe_item_t.speed_y storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Vertical particle displacement per update.
 
-Units: unknown. DOS layout/address: +0x6, 2 B.
+Units: signed Q6 pixels per update. DOS layout/address: +0x6, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: Added to Q6 y;then y_accel is added. Rendering brightness uses only the unsigned low byte,not signed absolute full speed.
 
 ### field:pix_gerbe_item_t.y_accel
 
-UNKNOWN: Declared pix_gerbe_item_t.y_accel storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Increment of the particle vertical speed each update.
 
-Units: unknown. DOS layout/address: +0x8, 1 B.
+Units: Q6 pixels per update squared. DOS layout/address: +0x8, 1 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: start_pix_gerbe writes myRand8+8;do_pix_gerbes adds this unsigned byte to signed16 speed_y. Preserve narrowing/wrap behavior.
 
 ### field:pix_gerbe_item_t.unk_1
 
-UNKNOWN: Declared pix_gerbe_item_t.unk_1 storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Observed particle-active high bit plus drawing color bias in low7 bits.
 
-Units: unknown. DOS layout/address: +0x9, 1 B.
+Units: packed byte. DOS layout/address: +0x9, 1 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: Initializer writes128;offscreen updater writes0;renderer requires>=128 and adds low7 bits to low-speed color. Intended broader packed-field name is not proved;keep neutral spelling.
 
 ### field:pix_gerbe_t.items
 
@@ -7286,19 +9586,23 @@ DOS initial table has261 ObjectUTurnDefault targets and one blkUTurn target here
 
 ### field:flocon_t.field_0
 
-UNKNOWN: Declared flocon_t.field_0 storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Weather particle x coordinate before perspective projection.
 
-Units: unknown. DOS layout/address: +0x0, 2 B.
+Units: signed integer pixels in the unprojected screen plane. DOS layout/address: +0x0, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: init_flocons stores random x accepted by get_proj_x(depth,x);do_flocons adds camera delta/wind and wraps at inverse-projected screen edges;affiche uses integer multiplier65536/(depth+256),>>8 and center correction. Editorial proposed name unprojected_x;no original local/member symbol claimed.
 
 ### field:flocon_t.field_2
 
-UNKNOWN: Declared flocon_t.field_2 storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Weather particle y coordinate before perspective projection.
 
-Units: unknown. DOS layout/address: +0x2, 2 B.
+Units: signed integer pixels in the unprojected screen plane. DOS layout/address: +0x2, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+Pass5: init_flocons stores random y accepted by get_proj_y;update adds vertical camera delta/wind and wraps at inverse-projected edges;affiche projects with temporary center(160,170). Editorial proposed name unprojected_y.
 
 ### field:flocon_t.field_4
 
@@ -8107,4 +10411,340 @@ UNKNOWN: Declared big_map_local_t.field_1C storage; no intended meaning is assig
 Units: unknown. DOS layout/address: +0x1c, 2 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+### field:loadinforay_t.lives
+
+PROVEN: Cached save-slot life count.
+
+Units: lives. DOS layout/address: +0x0, 1 B.
+
+DISPLAY_SAVE_SPRITES draws quotient/remainder10 with glyph base28;LoadInfoGame copies low status_bar.lives byte.
+
+### field:loadinforay_t.tings
+
+PROVEN: Cached save-slot ting count.
+
+Units: tings. DOS layout/address: +0x1, 1 B.
+
+LoadInfoGame copies status_bar.num_wiz;save-summary renderer does not consume this member. No arbitrary original capacity is inferred.
+
+### field:loadinforay_t.cages
+
+PROVEN: Cached total cages across the save progress records.
+
+Units: cage count. DOS layout/address: +0x2, 1 B.
+
+LoadInfoGame sums24 world-info cage fields;DISPLAY_SAVE_SPRITES displays floor(cages*100/102).
+
+### field:loadinforay_t.continues
+
+PROVEN: Cached save-slot continue count.
+
+Units: continues. DOS layout/address: +0x3, 1 B.
+
+LoadInfoGame copies nb_continue;renderer draws only the ones digit (value%10)+28 beside icon57.
+
+### field:credit_t.text
+
+PROVEN: Current credit line string pointer.
+
+Units: raw-byte string pointer. DOS layout/address: +0x0, 4 B.
+
+DISPLAY_TXT_CREDITS passes to display_text;loader/credits initializer own strings. Not an inline text[200] record.
+
+### field:credit_t.x_pos
+
+PROVEN: Credit line drawing x anchor.
+
+Units: screen pixels. DOS layout/address: +0x4, 2 B.
+
+Passed unchanged to display_text;slash-prefixed strings cause centering around this anchor.
+
+### field:credit_t.y_pos
+
+PROVEN: Credit line text baseline.
+
+Units: screen y pixels. DOS layout/address: +0x6, 2 B.
+
+Passed unchanged to display_text,which subtracts glyph outer_height for top. DO_CREDITS may move the baseline.
+
+### field:credit_t.font
+
+PROVEN: Credit line font selector.
+
+Units: font code. DOS layout/address: +0x8, 1 B.
+
+Passed as u8 to display_text;usual0/1/2 metric/bank rules apply.
+
+### field:credit_t.cmd
+
+UNKNOWN: Credit control byte consumed by credits logic outside the display loop.
+
+Units: unknown. DOS layout/address: +0x9, 1 B.
+
+DISPLAY_TXT_CREDITS does not read it;recorded layout9. No command enum/intended meaning is assigned from the name alone.
+
+### field:credit_t.color
+
+PROVEN: Credit line color-drawer selector.
+
+Units: palette bank index. DOS layout/address: +0xa, 1 B.
+
+Passed as u8 to display_text;not an RGB component.
+
+### field:credit_t.unknown_b
+
+UNKNOWN: Credit record trailing byte not read by the display loop.
+
+Units: unknown. DOS layout/address: +0xb, 1 B.
+
+Observed12-byte record includes this byte at+11;no purpose inferred from padding/capacity.
+
+### field:init_data_state_t.x
+
+PROVEN: Low four bits of the current camera x coordinate.
+
+Units: pixels modulo16. DOS layout/address: +0x0, 2 B.
+
+InitData masks camera coordinate with0x0f. These values choose tile/plane alignment,not world position.
+
+### field:init_data_state_t.y
+
+PROVEN: Low four bits of the current camera y coordinate.
+
+Units: pixels modulo16. DOS layout/address: +0x2, 2 B.
+
+InitData masks camera coordinate with0x0f. These values choose tile/plane alignment,not world position.
+
+### field:init_data_state_t.draw_origin
+
+PROVEN: Absolute DOS destination pointer for the top-left partial tile.
+
+Units: DOS byte address. DOS layout/address: +0x4, 4 B.
+
+Stored in signed32:draw_buffer-(camera_x&15)/4-80*(camera_y&15)+1. Renderer casts to u8*. Existing header description as buffer-relative is imprecise:the buffer base is included.
+
+### field:init_data_state_t.scroll_x
+
+PROVEN: Background source x coordinate adjusted for the current tile phase.
+
+Units: background pixels. DOS layout/address: +0x8, 4 B.
+
+type_fndscrX forces0;otherwise origin_x+16-(camera_x&15). Div/mod4 select byte column/plane.
+
+### field:init_data_state_t.scroll_y
+
+PROVEN: Background source y coordinate adjusted for the current tile phase.
+
+Units: background rows. DOS layout/address: +0xc, 4 B.
+
+origin_y+16-(camera_y&15),multiplied by plan0bit_nb_bytes for source addressing.
+
+### field:init_data_state_t.source_origin
+
+PROVEN: Absolute DOS background source pointer.
+
+Units: DOS byte address. DOS layout/address: +0x10, 4 B.
+
+PLAN0BIT+scroll_x/4+(scroll_x%4)*(plan0bit_length>>2)+scroll_y*plan0bit_nb_bytes. Not a byte displacement despite legacy relative wording.
+
+### field:deform_blit_t.x_step_1
+
+PROVEN: Horizontal edge1 direction as a destination byte step.
+
+Units: signed byte step. DOS layout/address: +0x0, 4 B.
+
++1 or-1 according to edge1 dx;absolute dx is stored separately.
+
+### field:deform_blit_t.row_step_1
+
+PROVEN: Vertical edge1 direction as a destination row step.
+
+Units: signed byte step. DOS layout/address: +0x4, 4 B.
+
++dest_width or-dest_width according to edge1 dy.
+
+### field:deform_blit_t.dx_1
+
+PROVEN: Absolute horizontal length of edge1.
+
+Units: pixels. DOS layout/address: +0x8, 4 B.
+
+Derived from corner difference before rasterization;integer edge stepping is specified in ASM_SPEC.
+
+### field:deform_blit_t.dy_1
+
+PROVEN: Absolute vertical length of edge1,with zero replaced by1.
+
+Units: pixels. DOS layout/address: +0xc, 4 B.
+
+The forced1 prevents a zero-height edge denominator;do not recover the original zero from this field.
+
+### field:deform_blit_t.x_step_2
+
+PROVEN: Horizontal edge2 direction as a destination byte step.
+
+Units: signed byte step. DOS layout/address: +0x10, 4 B.
+
++1 or-1 according to edge2 dx;absolute dx is stored separately.
+
+### field:deform_blit_t.row_step_2
+
+PROVEN: Vertical edge2 direction as a destination row step.
+
+Units: signed byte step. DOS layout/address: +0x14, 4 B.
+
++dest_width or-dest_width according to edge2 dy.
+
+### field:deform_blit_t.dx_2
+
+PROVEN: Absolute horizontal length of edge2.
+
+Units: pixels. DOS layout/address: +0x18, 4 B.
+
+Derived from corner difference before rasterization;integer edge stepping is specified in ASM_SPEC.
+
+### field:deform_blit_t.dy_2
+
+PROVEN: Absolute vertical length of edge2,with zero replaced by1.
+
+Units: pixels. DOS layout/address: +0x1c, 4 B.
+
+The forced1 prevents a zero-height edge denominator;do not recover the original zero from this field.
+
+### field:deform_blit_t.dest_width
+
+PROVEN: Deformed bounding rectangle width and scratch row pitch.
+
+Units: pixels/bytes. DOS layout/address: +0x20, 4 B.
+
+max_x-min_x;1 byte per scratch pixel. Prefill writes a rounded extra dword per row per ASM_SPEC.
+
+### field:deform_blit_t.dest_height
+
+PROVEN: Deformed bounding rectangle height.
+
+Units: rows. DOS layout/address: +0x24, 4 B.
+
+max_y-min_y;not inclusive+1.
+
+### field:deform_blit_t.dest_offset
+
+PROVEN: First transformed corner offset within the scratch bounding rectangle.
+
+Units: bytes. DOS layout/address: +0x28, 4 B.
+
+(x0-min_x)+(y0-min_y)*dest_width. Does not include new_sprite_deform base.
+
+### field:deform_blit_t.source_width
+
+PROVEN: Undeformed outer sprite width and source row pitch.
+
+Units: pixels/bytes. DOS layout/address: +0x2c, 4 B.
+
+sprite.outer_width;not inner_width or width after projection.
+
+### field:deform_blit_t.source_height
+
+PROVEN: Undeformed outer sprite height.
+
+Units: rows. DOS layout/address: +0x30, 4 B.
+
+sprite.outer_height;source sampling/marker asymmetry already specified in ASM_SPEC and PLATFORM_OPEN.
+
+### field:grp_star_t.timer
+
+PROVEN: Elapsed calls for one grapple-star slot since its last reroll.
+
+Units: callback visits. DOS layout/address: +0x0, 1 B.
+
+Byte increments before timer>length;on exceeding resets0. Not map_time or an independently running clock.
+
+### field:grp_star_t.length
+
+PROVEN: Last randomized grapple-star reroll threshold.
+
+Units: callback visits. DOS layout/address: +0x1, 1 B.
+
+Set by myRand(5);reroll when timer>length (strictly greater). Shipped bound/PRNG endpoint contract belongs to myRand.
+
+### field:grp_star_t.dist
+
+PROVEN: Random diagonal displacement of this grapple star.
+
+Units: pixels. DOS layout/address: +0x2, 1 B.
+
+Same myRand7 result also supplies sprite_table_index;add to BOTH x-xmap and y-ymap.
+
+### field:grp_star_t.sprite_table_index
+
+PROVEN: Index into the local grapple-star sprite sequence.
+
+Units: table index. DOS layout/address: +0x3, 1 B.
+
+Chosen with the same random result as dist. Local8-byte table={21,22,23,24,21,25,22,21}.
+
+### field:frame_context_t.plane_size
+
+PROVEN: Phase-dependent context word0.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Opaque ring copy writes0x4600 (saved/discarded by those consumers);callback stage overwrites with plan0bit_nb_bytes*16. It is not an invariant allocation size. Assembly consumers in ASM_SPEC are authoritative.
+
+### field:frame_context_t.source_end
+
+PROVEN: Phase-dependent context word4.
+
+Units: DOS address or row byte skip. DOS layout/address: +0x4, 4 B.
+
+First phase accumulates PLAN1_BUFFER+(plane+1)*0x4600 as source-end threshold;callback phase overwrites with mp.width*6. Same storage has different dimensions by stage.
+
+### field:frame_context_t.run_step
+
+PROVEN: Phase-dependent context word8.
+
+Units: source-wrap bytes or callback table stride. DOS layout/address: +0x8, 4 B.
+
+First phase0x4600;callback phase1200. The separate sub_3BE20 local context word8 uses plan0bit_length-1. Do not unify these values by the field spelling alone.
+
+### field:frame_context_t.source_stride
+
+PROVEN: Background source scanline pitch supplied to tile helpers.
+
+Units: bytes per row. DOS layout/address: +0xc, 4 B.
+
+Assigned plan0bit_nb_bytes before callback rendering;ASM_SPEC describes typed consumers.
+
+### field:frame_context_t.source_three_rows
+
+PROVEN: Three background scanline pitches.
+
+Units: bytes. DOS layout/address: +0x10, 4 B.
+
+Assigned plan0bit_nb_bytes*3 for callback helper row stepping.
+
+### field:frame_context_t.last_tile
+
+PROVEN: Pointer to the final level map record.
+
+Units: map_tile_t pointer. DOS layout/address: +0x14, 4 B.
+
+mp.map+mp.width*mp.height-1;used as a boundary sentinel,not one-past-the-end.
+
+### field:frame_context_t.background_end
+
+PROVEN: One-past background buffer endpoint.
+
+Units: u8 pointer. DOS layout/address: +0x18, 4 B.
+
+PLAN0BIT+plan0bit_length;consumer wrap/compare rules are in ASM_SPEC.
+
+### field:frame_context_t.background_length
+
+PROVEN: Full background data length across all four planes.
+
+Units: bytes. DOS layout/address: +0x1c, 4 B.
+
+plan0bit_length;distinct from per-plane length and per-row stride.
 

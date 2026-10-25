@@ -201,7 +201,7 @@
 /* PROVEN: Type-specific byte configuration tested for Blacktoon edge-turning. */
 #define DOS_OBJ_T_CONFIG_OFFSET 0x7d
 #define DOS_OBJ_T_CONFIG_SIZE 1
-/* STRONG: Object drawing-order bucket selector. */
+/* PROVEN: Object display bucket,distinct from activation/list membership. */
 #define DOS_OBJ_T_DISPLAY_PRIO_OFFSET 0x7e
 #define DOS_OBJ_T_DISPLAY_PRIO_SIZE 1
 /* UNKNOWN: Multipurpose byte countdown/state scratch with common reset0 and actor-specific defaults. */
@@ -345,7 +345,7 @@
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED0_OFFSET 0xb
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED0_SIZE 1
 #define DOS_SPRITE_T_FLAGS_BITS_UNUSED0_MASK 0x03
-/* PROVEN: Sprite horizontal flip bit XORed with object flip to select the bounds reflection. */
+/* PROVEN: Sprite orientation bit used by single-sprite drawing. */
 #define DOS_SPRITE_T_FLAGS_BITS_FLIP_X_OFFSET 0xb
 #define DOS_SPRITE_T_FLAGS_BITS_FLIP_X_SIZE 1
 #define DOS_SPRITE_T_FLAGS_BITS_FLIP_X_MASK 0x04
@@ -377,7 +377,7 @@
 /* PROVEN: Animation bounding rectangle dimension height. */
 #define DOS_ANIM_FRAME_T_HEIGHT_OFFSET 0x3
 #define DOS_ANIM_FRAME_T_HEIGHT_SIZE 1
-/* STRONG: Layer horizontal mirror selector used by the renderer. */
+/* PROVEN: Layer horizontal mirror selector combined with object facing. */
 #define DOS_ANIM_LAYER_T_MIRRORED_OFFSET 0x0
 #define DOS_ANIM_LAYER_T_MIRRORED_SIZE 1
 /* PROVEN: Unsigned object-relative layer offset component x. */
@@ -709,7 +709,7 @@
 /* PROVEN: Font selector controlling bank and line metrics. */
 #define DOS_DISPLAY_ITEM_T_FONT_SIZE_OFFSET 0xd4
 #define DOS_DISPLAY_ITEM_T_FONT_SIZE_SIZE 1
-/* PROVEN: Byte selecting the palette255 box branch instead of the ordinary palette254/no-box branch. */
+/* PROVEN: Observed filled-background/text-offset selector in box rendering;broader intended label unresolved. */
 #define DOS_DISPLAY_ITEM_T_FIELD_D5_OFFSET 0xd5
 #define DOS_DISPLAY_ITEM_T_FIELD_D5_SIZE 1
 /* PROVEN: Box drawing/position mode passed to DISPLAY_BLACKBOX and used to offset text by +/-1. */
@@ -873,22 +873,22 @@
 /* PROVEN: Total arena byte capacity against which the bump offset is checked. */
 #define DOS_MEM_T_CAPACITY_OFFSET 0x8
 #define DOS_MEM_T_CAPACITY_SIZE 4
-/* UNKNOWN: Declared pix_gerbe_item_t.x_pos storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Particle x position relative to the current displayed scene. */
 #define DOS_PIX_GERBE_ITEM_T_X_POS_OFFSET 0x0
 #define DOS_PIX_GERBE_ITEM_T_X_POS_SIZE 2
-/* UNKNOWN: Declared pix_gerbe_item_t.y_pos storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Particle y position relative to the current displayed scene. */
 #define DOS_PIX_GERBE_ITEM_T_Y_POS_OFFSET 0x2
 #define DOS_PIX_GERBE_ITEM_T_Y_POS_SIZE 2
-/* UNKNOWN: Declared pix_gerbe_item_t.speed_x storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Horizontal particle displacement per update. */
 #define DOS_PIX_GERBE_ITEM_T_SPEED_X_OFFSET 0x4
 #define DOS_PIX_GERBE_ITEM_T_SPEED_X_SIZE 2
-/* UNKNOWN: Declared pix_gerbe_item_t.speed_y storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Vertical particle displacement per update. */
 #define DOS_PIX_GERBE_ITEM_T_SPEED_Y_OFFSET 0x6
 #define DOS_PIX_GERBE_ITEM_T_SPEED_Y_SIZE 2
-/* UNKNOWN: Declared pix_gerbe_item_t.y_accel storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Increment of the particle vertical speed each update. */
 #define DOS_PIX_GERBE_ITEM_T_Y_ACCEL_OFFSET 0x8
 #define DOS_PIX_GERBE_ITEM_T_Y_ACCEL_SIZE 1
-/* UNKNOWN: Declared pix_gerbe_item_t.unk_1 storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Observed particle-active high bit plus drawing color bias in low7 bits. */
 #define DOS_PIX_GERBE_ITEM_T_UNK_1_OFFSET 0x9
 #define DOS_PIX_GERBE_ITEM_T_UNK_1_SIZE 1
 /* PROVEN: 64-item particle storage view. */
@@ -915,12 +915,12 @@
 /* STRONG: Fifth callback slot, initialized with turn-handler function pointers. */
 #define DOS_OBJ_PROCS_T_U_TURN_OFFSET 0x10
 #define DOS_OBJ_PROCS_T_U_TURN_SIZE 4
-/* UNKNOWN: Declared flocon_t.field_0 storage; moteur only clears its enclosing storage or never accesses it. */
-#define DOS_FLOCON_T_FIELD_0_OFFSET 0x0
-#define DOS_FLOCON_T_FIELD_0_SIZE 2
-/* UNKNOWN: Declared flocon_t.field_2 storage; moteur only clears its enclosing storage or never accesses it. */
-#define DOS_FLOCON_T_FIELD_2_OFFSET 0x2
-#define DOS_FLOCON_T_FIELD_2_SIZE 2
+/* PROVEN: Weather particle x coordinate before perspective projection. */
+#define DOS_FLOCON_T_UNPROJECTED_X_OFFSET 0x0
+#define DOS_FLOCON_T_UNPROJECTED_X_SIZE 2
+/* PROVEN: Weather particle y coordinate before perspective projection. */
+#define DOS_FLOCON_T_UNPROJECTED_Y_OFFSET 0x2
+#define DOS_FLOCON_T_UNPROJECTED_Y_SIZE 2
 /* UNKNOWN: Declared flocon_t.field_4 storage; moteur only clears its enclosing storage or never accesses it. */
 #define DOS_FLOCON_T_FIELD_4_OFFSET 0x4
 #define DOS_FLOCON_T_FIELD_4_SIZE 2
@@ -1241,5 +1241,137 @@
 /* UNKNOWN: Declared big_map_local_t.field_1C storage; no intended meaning is assigned from its spelling alone. */
 #define DOS_BIG_MAP_LOCAL_T_FIELD_1C_OFFSET 0x1c
 #define DOS_BIG_MAP_LOCAL_T_FIELD_1C_SIZE 2
+#define DOS_LOADINFORAY_T_SIZE 4
+#define DOS_CREDIT_T_SIZE 12
+#define DOS_INIT_DATA_STATE_T_SIZE 20
+#define DOS_DEFORM_BLIT_T_SIZE 52
+#define DOS_GRP_STAR_T_SIZE 4
+#define DOS_FRAME_CONTEXT_T_SIZE 32
+/* PROVEN: Cached save-slot life count. */
+#define DOS_LOADINFORAY_T_LIVES_OFFSET 0x0
+#define DOS_LOADINFORAY_T_LIVES_SIZE 1
+/* PROVEN: Cached save-slot ting count. */
+#define DOS_LOADINFORAY_T_TINGS_OFFSET 0x1
+#define DOS_LOADINFORAY_T_TINGS_SIZE 1
+/* PROVEN: Cached total cages across the save progress records. */
+#define DOS_LOADINFORAY_T_CAGES_OFFSET 0x2
+#define DOS_LOADINFORAY_T_CAGES_SIZE 1
+/* PROVEN: Cached save-slot continue count. */
+#define DOS_LOADINFORAY_T_CONTINUES_OFFSET 0x3
+#define DOS_LOADINFORAY_T_CONTINUES_SIZE 1
+/* PROVEN: Current credit line string pointer. */
+#define DOS_CREDIT_T_TEXT_OFFSET 0x0
+#define DOS_CREDIT_T_TEXT_SIZE 4
+/* PROVEN: Credit line drawing x anchor. */
+#define DOS_CREDIT_T_X_POS_OFFSET 0x4
+#define DOS_CREDIT_T_X_POS_SIZE 2
+/* PROVEN: Credit line text baseline. */
+#define DOS_CREDIT_T_Y_POS_OFFSET 0x6
+#define DOS_CREDIT_T_Y_POS_SIZE 2
+/* PROVEN: Credit line font selector. */
+#define DOS_CREDIT_T_FONT_OFFSET 0x8
+#define DOS_CREDIT_T_FONT_SIZE 1
+/* UNKNOWN: Credit control byte consumed by credits logic outside the display loop. */
+#define DOS_CREDIT_T_CMD_OFFSET 0x9
+#define DOS_CREDIT_T_CMD_SIZE 1
+/* PROVEN: Credit line color-drawer selector. */
+#define DOS_CREDIT_T_COLOR_OFFSET 0xa
+#define DOS_CREDIT_T_COLOR_SIZE 1
+/* UNKNOWN: Credit record trailing byte not read by the display loop. */
+#define DOS_CREDIT_T_UNKNOWN_B_OFFSET 0xb
+#define DOS_CREDIT_T_UNKNOWN_B_SIZE 1
+/* PROVEN: Low four bits of the current camera x coordinate. */
+#define DOS_INIT_DATA_STATE_T_X_OFFSET 0x0
+#define DOS_INIT_DATA_STATE_T_X_SIZE 2
+/* PROVEN: Low four bits of the current camera y coordinate. */
+#define DOS_INIT_DATA_STATE_T_Y_OFFSET 0x2
+#define DOS_INIT_DATA_STATE_T_Y_SIZE 2
+/* PROVEN: Absolute DOS destination pointer for the top-left partial tile. */
+#define DOS_INIT_DATA_STATE_T_DRAW_ORIGIN_OFFSET 0x4
+#define DOS_INIT_DATA_STATE_T_DRAW_ORIGIN_SIZE 4
+/* PROVEN: Background source x coordinate adjusted for the current tile phase. */
+#define DOS_INIT_DATA_STATE_T_SCROLL_X_OFFSET 0x8
+#define DOS_INIT_DATA_STATE_T_SCROLL_X_SIZE 4
+/* PROVEN: Background source y coordinate adjusted for the current tile phase. */
+#define DOS_INIT_DATA_STATE_T_SCROLL_Y_OFFSET 0xc
+#define DOS_INIT_DATA_STATE_T_SCROLL_Y_SIZE 4
+/* PROVEN: Absolute DOS background source pointer. */
+#define DOS_INIT_DATA_STATE_T_SOURCE_ORIGIN_OFFSET 0x10
+#define DOS_INIT_DATA_STATE_T_SOURCE_ORIGIN_SIZE 4
+/* PROVEN: Horizontal edge1 direction as a destination byte step. */
+#define DOS_DEFORM_BLIT_T_X_STEP_1_OFFSET 0x0
+#define DOS_DEFORM_BLIT_T_X_STEP_1_SIZE 4
+/* PROVEN: Vertical edge1 direction as a destination row step. */
+#define DOS_DEFORM_BLIT_T_ROW_STEP_1_OFFSET 0x4
+#define DOS_DEFORM_BLIT_T_ROW_STEP_1_SIZE 4
+/* PROVEN: Absolute horizontal length of edge1. */
+#define DOS_DEFORM_BLIT_T_DX_1_OFFSET 0x8
+#define DOS_DEFORM_BLIT_T_DX_1_SIZE 4
+/* PROVEN: Absolute vertical length of edge1,with zero replaced by1. */
+#define DOS_DEFORM_BLIT_T_DY_1_OFFSET 0xc
+#define DOS_DEFORM_BLIT_T_DY_1_SIZE 4
+/* PROVEN: Horizontal edge2 direction as a destination byte step. */
+#define DOS_DEFORM_BLIT_T_X_STEP_2_OFFSET 0x10
+#define DOS_DEFORM_BLIT_T_X_STEP_2_SIZE 4
+/* PROVEN: Vertical edge2 direction as a destination row step. */
+#define DOS_DEFORM_BLIT_T_ROW_STEP_2_OFFSET 0x14
+#define DOS_DEFORM_BLIT_T_ROW_STEP_2_SIZE 4
+/* PROVEN: Absolute horizontal length of edge2. */
+#define DOS_DEFORM_BLIT_T_DX_2_OFFSET 0x18
+#define DOS_DEFORM_BLIT_T_DX_2_SIZE 4
+/* PROVEN: Absolute vertical length of edge2,with zero replaced by1. */
+#define DOS_DEFORM_BLIT_T_DY_2_OFFSET 0x1c
+#define DOS_DEFORM_BLIT_T_DY_2_SIZE 4
+/* PROVEN: Deformed bounding rectangle width and scratch row pitch. */
+#define DOS_DEFORM_BLIT_T_DEST_WIDTH_OFFSET 0x20
+#define DOS_DEFORM_BLIT_T_DEST_WIDTH_SIZE 4
+/* PROVEN: Deformed bounding rectangle height. */
+#define DOS_DEFORM_BLIT_T_DEST_HEIGHT_OFFSET 0x24
+#define DOS_DEFORM_BLIT_T_DEST_HEIGHT_SIZE 4
+/* PROVEN: First transformed corner offset within the scratch bounding rectangle. */
+#define DOS_DEFORM_BLIT_T_DEST_OFFSET_OFFSET 0x28
+#define DOS_DEFORM_BLIT_T_DEST_OFFSET_SIZE 4
+/* PROVEN: Undeformed outer sprite width and source row pitch. */
+#define DOS_DEFORM_BLIT_T_SOURCE_WIDTH_OFFSET 0x2c
+#define DOS_DEFORM_BLIT_T_SOURCE_WIDTH_SIZE 4
+/* PROVEN: Undeformed outer sprite height. */
+#define DOS_DEFORM_BLIT_T_SOURCE_HEIGHT_OFFSET 0x30
+#define DOS_DEFORM_BLIT_T_SOURCE_HEIGHT_SIZE 4
+/* PROVEN: Elapsed calls for one grapple-star slot since its last reroll. */
+#define DOS_GRP_STAR_T_TIMER_OFFSET 0x0
+#define DOS_GRP_STAR_T_TIMER_SIZE 1
+/* PROVEN: Last randomized grapple-star reroll threshold. */
+#define DOS_GRP_STAR_T_LENGTH_OFFSET 0x1
+#define DOS_GRP_STAR_T_LENGTH_SIZE 1
+/* PROVEN: Random diagonal displacement of this grapple star. */
+#define DOS_GRP_STAR_T_DIST_OFFSET 0x2
+#define DOS_GRP_STAR_T_DIST_SIZE 1
+/* PROVEN: Index into the local grapple-star sprite sequence. */
+#define DOS_GRP_STAR_T_SPRITE_TABLE_INDEX_OFFSET 0x3
+#define DOS_GRP_STAR_T_SPRITE_TABLE_INDEX_SIZE 1
+/* PROVEN: Phase-dependent context word0. */
+#define DOS_FRAME_CONTEXT_T_PLANE_SIZE_OFFSET 0x0
+#define DOS_FRAME_CONTEXT_T_PLANE_SIZE_SIZE 4
+/* PROVEN: Phase-dependent context word4. */
+#define DOS_FRAME_CONTEXT_T_SOURCE_END_OFFSET 0x4
+#define DOS_FRAME_CONTEXT_T_SOURCE_END_SIZE 4
+/* PROVEN: Phase-dependent context word8. */
+#define DOS_FRAME_CONTEXT_T_RUN_STEP_OFFSET 0x8
+#define DOS_FRAME_CONTEXT_T_RUN_STEP_SIZE 4
+/* PROVEN: Background source scanline pitch supplied to tile helpers. */
+#define DOS_FRAME_CONTEXT_T_SOURCE_STRIDE_OFFSET 0xc
+#define DOS_FRAME_CONTEXT_T_SOURCE_STRIDE_SIZE 4
+/* PROVEN: Three background scanline pitches. */
+#define DOS_FRAME_CONTEXT_T_SOURCE_THREE_ROWS_OFFSET 0x10
+#define DOS_FRAME_CONTEXT_T_SOURCE_THREE_ROWS_SIZE 4
+/* PROVEN: Pointer to the final level map record. */
+#define DOS_FRAME_CONTEXT_T_LAST_TILE_OFFSET 0x14
+#define DOS_FRAME_CONTEXT_T_LAST_TILE_SIZE 4
+/* PROVEN: One-past background buffer endpoint. */
+#define DOS_FRAME_CONTEXT_T_BACKGROUND_END_OFFSET 0x18
+#define DOS_FRAME_CONTEXT_T_BACKGROUND_END_SIZE 4
+/* PROVEN: Full background data length across all four planes. */
+#define DOS_FRAME_CONTEXT_T_BACKGROUND_LENGTH_OFFSET 0x1c
+#define DOS_FRAME_CONTEXT_T_BACKGROUND_LENGTH_SIZE 4
 #endif
 

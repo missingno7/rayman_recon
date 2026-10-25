@@ -32,8 +32,8 @@ typedef struct pix_gerbe_t {
 } pix_gerbe_t;
 
 typedef struct flocon_t {
-    s16 field_0;
-    s16 field_2;
+    s16 unprojected_x; /* field_0: pre-projection pixels; docs/semantics/types.json. */
+    s16 unprojected_y; /* field_2: pre-projection pixels; docs/semantics/types.json. */
     s16 field_4;
     u8 field_6;
     u8 field_7;
