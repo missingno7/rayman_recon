@@ -6,6 +6,7 @@
 #include "compat/src/pc_hardware.h"
 #include "platform/clock.h"
 #include "platform/cdrom.h"
+#include "platform/hmi.h"
 #include "platform/host.h"
 #include "video/vga.h"
 
@@ -91,6 +92,7 @@ void port_pc_poll(void)
     int code;
     port_host_pump();
     port_cd_pump();
+    port_hmi_pump();
     if (in_interrupt)
         return;
     while ((code = port_host_next_scancode()) >= 0) {

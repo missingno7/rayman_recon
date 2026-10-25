@@ -1,4 +1,5 @@
 #include "platform/host.h"
+#include "platform/audio.h"
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
@@ -141,6 +142,7 @@ void port_host_shutdown(void)
     texture = NULL;
     renderer = NULL;
     window = NULL;
+    port_audio_shutdown();
     if (!headless)
         SDL_Quit();
 }

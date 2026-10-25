@@ -39,9 +39,61 @@ exit_if_not_cd_drive (succeeds), menu_patch_once (no-op), menu_check_debug_break
 | BIOS tick byte at 0x46C | `port_bios_tick_byte()` (load.c derivative) |
 | Ports | 0x20/0x21 PIC, 0x42/0x43/0x61 PIT ch. 2 and speaker gate, 0x60 keyboard latch, 0x201 game port (nothing connected), 0x3C0..0x3DF VGA |
 | Interrupt vectors | table in `pc_hardware.c`; INT 9 handler run per scan code; other vectors stored |
-| HMI SOS (sos*) | `compat/src/hmi_absent.c`: system/timer init succeed, driver init fails -> no-sound path |
+| HMI SOS (sos*) | `compat/src/hmi.c`: native 32-voice clock-driven HMI API; shared SDL audio device (`platform/audio.c`) with CD-DA |
 | Watcom C library | rand/srand (Watcom LCG, DOS 1:71396), itoa/ltoa, strupr, delay (`wait_milliseconds`), memset helper (`clear_memory`), acos (`effect_math_curve`, Watcom constant), sleep |
 | Data not reconstructed as source | PalPlasma, Def_Bande: generated at build time from the player's RAYMAN.EXE (`tools/gen_assets.py`, user decision 2026-10-22) |
 
 Any port, interrupt or service not listed stops the program with `PORT: unimplemented DOS/hardware service
 reached: ...`.
+
+## Effects and speech (HMI boundary)
+
+`compat/src/hmi.c` replaces every SOS entry used by hifi/menu/movie/sound. This is one native driver
+(handle 0), 32 voices. `src/hmi/hmi_samples.c`, `hmi_active.c`, `hmi_status.c` and `hmi_voice_params.c`
+are the API reference: first clear ACTIVE (8000h) slot, -1 on exhaustion; start ORs A000h; stop returns
+10 for voice >=32, otherwise 0, clearing ACTIVE/sample ID except when 1000h prevents it. Done returns
+10 for an invalid voice, 1 for inactive, 0 for active. SamplesPlaying counts ACTIVE. Volume/pan setters
+return 0 if inactive, otherwise the previous **signed 16-bit** stored value, storing the new low 16 bits.
+The game ignores setter results; presentation interprets pan as unsigned. Invalid setter indices are safely
+rejected (the original library indexed unchecked storage; no valid-call behavior depends on that).
+
+System/driver initialization succeeds without an output device. The driver supplies an opaque callback token;
+the DOS callback was the loaded driver's own DMA/mixer service, not a game function. Timer registration keeps
+the original first-free slot convention (16 entries, slot 15 occupied by DOS timer chaining when requested,
+11 when full); remove frees its slot. The port never calls that token: clock-position updates replace the
+service routine, with no DMA/IRQ or host audio callback deciding game state. Movie suspend/resume retains
+its original stop/wait/remove/register calls. Detection returns unavailable from DetectInit, FindFirst and
+GetSettings, with UnInit succeeding. `sub_3E710` has no source callers; LOAD_CONFIG uses `sub_3E780`
+(InitDriver directly), so detection is not reached on the supported entries. No DOS capabilities record
+is written into the 100-byte name buffer (PLATFORM_OPEN item 4).
+
+A voice borrows its sample storage until stop/done. Source position is floor(elapsed_ns * 10000 * Q16_step /
+(1e9 * 65536)), using overflow-safe integer decomposition. Without PITCH_SHIFT the step is 65536.
+Sizes and staged-loop L/N are bytes; U8 effects use one byte/frame, S16LE speech two. Staged loops play
+[0,L), then reload [L,L+N), count -1 infinitely. A nonlooping voice loses ACTIVE when all frames have
+been consumed. Updating or querying it never depends on queue consumption, wall-clock audio callbacks,
+or the presence of a host device. A deterministic status poll charges 1 microsecond (the game-port read
+model's per-read cost), then `port_pc_poll` pumps events, keyboard interrupts, CD and HMI. This also
+terminates the game's unchanged FreeTchatchVignette busy wait.
+
+Presentation uses a float stereo stream at the actual SDL device rate, nearest-source-frame sampling,
+and volume 0..32767. Pan uses linear balance: centre 8000h has full gain on both channels; to either side,
+the opposite channel falls linearly to zero at 0000h/FFFFh. Speech without PANNING is centred. The SFX sum
+is clipped to [-1,1]; SDL mixes this stream with the existing 44.1 kHz CD stream on **one shared logical
+device**. The original Sound Blaster driver's exact mixing, translation arithmetic and rate quantization
+are not reproduced; these are presentation choices. No device/stream is opened in headless or deterministic
+mode. The main thread fills bounded lookahead buffers; start/stop/gain/pan changes discard pending SFX
+presentation so freed sample storage is never read by another thread. CD transport and voice completion
+remain clock-driven.
+
+The hifi derivative reads/checksums/XORs the same 128 DOS records, then decodes their LE fields and binds
+native pointers. It retains all calculations and service-call order, changes the speech offset write to
+flags |= 100h, and uses a native request pointer and full config view matching data_6664.c (its buffer
+pointer moves timeout/callback on 64-bit hosts). No other pointer-record literals or wrapped u32 indices
+occur in this unit. BSS bank headers already have matching native field layouts.
+
+`RAYMAN_SOUND_TRACE=PATH` records Init, device format/queue diagnostics, StartSample, StopSample, Done and allocation exhaustion with clock,
+voice, fixed/world/speech bank (0/1/2), program, bytes, step and flags. This is diagnostic only. End-to-end
+tests require CarteSonAutorisee=1 and sample activity; RAYMAN_E2E_EVIDENCE retains traces/frame logs separately
+from golden summaries. Unit tests compile the current reconstructed HMI API bodies with private names and
+compare randomized operation sequences, alongside playback/PCM/interrupt tests and all nine actual PlayTchatch request paths.

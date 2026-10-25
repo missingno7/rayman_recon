@@ -6,6 +6,8 @@ against the same golden values, so the x86_64 build must reproduce the i686 refe
 
     python port/tests/e2e_demo.py RAYMAN_EXE DATA_DIR DEMO [CD_CUE] [--update]
 """
+import os
+import collections
 import json
 import shutil
 import subprocess
@@ -38,12 +40,35 @@ def main(argv):
                "--deterministic", "--frames", str(FRAMES), "--frame-log", str(log)]
         if cd:
             cmd += ["--cd", cd]
-        run = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        env = os.environ.copy()
+        env["RAYMAN_SOUND_TRACE"] = str(work / "sound.txt")
+        run = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=1800)
+        sound = (work / "sound.txt").read_text() if (work / "sound.txt").exists() else ""
+        cues = collections.Counter((int(v[3]), int(v[4])) for line in sound.splitlines()
+                                   if (v := line.split()) and v[0] == "StartSample")
+        audio = {"enabled": "CarteSonAutorisee=1" in run.stdout,
+                 "starts": sum(cues.values()),
+                 "cues": {f"{b}:{p}": n for (b,p),n in sorted(cues.items())},
+                 "stop_calls": sum(l.startswith("StopSample ") for l in sound.splitlines()),
+                 "game_exit": next((l for l in run.stdout.splitlines() if l.startswith("port exit:")), "")}
+        evidence = os.environ.get("RAYMAN_E2E_EVIDENCE")
+        if evidence:
+            dest = Path(evidence); dest.mkdir(parents=True, exist_ok=True)
+            (dest / f"demo{demo}.sound.txt").write_text(sound)
+            (dest / f"demo{demo}.frames.txt").write_text(log.read_text() if log.exists() else "")
+            (dest / f"demo{demo}.stdout.txt").write_text(run.stdout)
+            (dest / f"demo{demo}.stderr.txt").write_text(run.stderr)
+            (dest / f"demo{demo}.audio.json").write_text(json.dumps(audio, indent=1)+"\n")
         got = summary(log.read_text() if log.exists() else "")
         got["exit"] = run.returncode
     finally:
         shutil.rmtree(work, ignore_errors=True)
     path = GOLDEN / f"demo{demo}.json"
+    print(f"demo{demo} HMI: {audio}")
+    if not audio["enabled"] or not audio["starts"]:
+        print("FAIL: expected enabled sound card and sample activity")
+        print(run.stderr[-2000:])
+        return 1
     if update:
         GOLDEN.mkdir(exist_ok=True)
         path.write_text(json.dumps(got, indent=1) + "\n")

@@ -1,0 +1,62 @@
+--- a/src/hifi.c
++++ b/src/hifi.c
+@@ -2,7 +2,8 @@
+ #include "obj.h"
+ #include <stdlib.h>
+ #include <stdio.h>
+-#include "hifi_local.h"
++#include "platform/hmi_pcm.h" /* PORT: serialized LE bank words. */
++#include "game/hmi_types.h" /* PORT: native request and full config views. */
+ 
+ 
+ extern s32 current_device_id;
+@@ -167,15 +168,17 @@
+     u8 *end, *bytes;
+     u8 *sample;
+     u8 *new_data;
++    /* PORT: decode the 128 serialized 16-byte records before binding native pointers. */
++    u8 disk_headers[0x800];
+ 
+     stop_cd();
+     header_file = fopen("SNDH8B.DAT", "rb");
+     if (header_file == 0)
+         rayman_sound_fatal_error("Fichier header introuvable (SNDH8B.DAT).\n");
+     fseek(header_file, snd8b_header_infos[header_index].offset, SEEK_SET);
+-    fread(headers, 0x10, 0x80, header_file);
++    fread(disk_headers, 0x10, 0x80, header_file); /* PORT: DOS layout. */
+     fclose(header_file);
+-    bytes = (u8 *)headers;
++    bytes = disk_headers; /* PORT: checksum/XOR operate on serialized bytes. */
+     check = snd8b_header_infos[header_index].checksum_byte;
+     end = bytes + 0x800;
+     do {
+@@ -212,12 +215,14 @@
+     }
+     if (check != 0)
+         rayman_sound_fatal_error("Load error in sndd8b.dat.\n");
+-    bytes = (u8 *)headers;
+-    end = bytes + 0x800;
+-    do {
+-        *(u32 *)bytes += (u32)new_data;
+-        bytes += 0x10;
+-    } while (bytes != end);
++    /* PORT: little-endian DOS words become native fields; relocate without truncating addresses. */
++    for (i = 0; i < 128; i++) {
++        bytes = disk_headers + i * 16;
++        headers[i].offset = new_data + port_hmi_le32(bytes);
++        headers[i].size = port_hmi_le32(bytes + 4);
++        headers[i].field_8 = port_hmi_le32(bytes + 8);
++        headers[i].field_C = port_hmi_le32(bytes + 12);
++    }
+     return 0;
+ }
+ 
+@@ -356,7 +361,7 @@
+     s16 voice;
+ 
+     request.volume = (volume * 0x7fff) / 0x7f;
+-    ((u8 *)&request)[0x29] |= 1;
++    request.flags |= 0x100; /* PORT: byte 0x29 is the DOS flags high byte. */
+     switch (sound) {
+     case 1: bank = 8; break;
+     case 6: bank = 7; break;

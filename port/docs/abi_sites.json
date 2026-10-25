@@ -390,8 +390,8 @@
    "unit": "src/hifi.c",
    "code": "*(u32 *)bytes += (u32)new_data;",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "sound bank pointer relocation; sound driver absent, audio backend not ported yet"
+   "verdict": "DERIVED",
+   "reason": "hifi.patch decodes 128 DOS bank records, binds native pointers, replaces the speech flag byte offset, and uses the full native config layout; all seven banks tested on x86_64 and i686."
   },
   {
    "unit": "src/hybrid.c",

@@ -14,6 +14,8 @@
 #include "platform/clock.h"
 #include "platform/files.h"
 #include "platform/cdrom.h"
+#include "platform/hmi.h"
+#include "platform/audio.h"
 #include "platform/host.h"
 #include "video/vga.h"
 
@@ -26,7 +28,7 @@ void port_set_time_epoch(long long seconds);
 #include <stdlib.h>
 #include <string.h>
 
-extern unsigned char JeuCracker, MusicCdActive;
+extern unsigned char JeuCracker, MusicCdActive, CarteSonAutorisee;
 extern short num_world, num_level;
 static long frame_limit = -1;
 static long frame_count;
@@ -128,9 +130,11 @@ static void at_exit(void)
 {
     /* Headless regression runs: a one-line summary of where the game ended. */
     if (port_host_headless())
-        printf("port exit: JeuCracker=%u MusicCdActive=%u frames=%ld world=%d level=%d\n",
-               JeuCracker, MusicCdActive, frame_count, num_world, num_level);
+        printf("port exit: JeuCracker=%u MusicCdActive=%u frames=%ld world=%d level=%d CarteSonAutorisee=%u\n",
+               JeuCracker, MusicCdActive, frame_count, num_world, num_level, CarteSonAutorisee);
+    port_hmi_shutdown();
     port_cd_shutdown();
+    port_audio_shutdown();
     port_host_shutdown();
 }
 

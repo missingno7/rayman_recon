@@ -1,6 +1,7 @@
 /* Main-thread CD-DA feeder. The device clock determines position, never the SDL queue.
    No callback, thread, or device exists in headless/deterministic mode. */
 #include "platform/cd_audio.h"
+#include "platform/audio.h"
 #include "platform/cdrom.h"
 #include "platform/clock.h"
 #include "platform/host.h"
@@ -39,14 +40,8 @@ void port_cd_audio_pump(int playing, unsigned position, unsigned end)
         return;
     if (!playing) { port_cd_audio_reset(); return; }
     if (!stream) {
-        SDL_AudioSpec spec = {SDL_AUDIO_S16LE, 2, 44100};
-        if (!SDL_InitSubSystem(SDL_INIT_AUDIO) ||
-            !(stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL))) {
-            fprintf(stderr, "CD audio device: %s\n", SDL_GetError());
-            failed = 1;
-            return;
-        }
-        SDL_ResumeAudioStreamDevice(stream);
+        stream = port_audio_stream(SDL_AUDIO_S16LE, 2, 44100);
+        if (!stream) { failed = 1; return; }
         next_sample = current;
     }
     /* Catch up after a long host stall; never play a backlog after the device clock. */

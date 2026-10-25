@@ -134,6 +134,16 @@
    ],
    "base_sha256": "eaefba2a9e5949168639ac93a3a51d7504b0b82ef213646c486ef3691f3b8359",
    "with_directory": true
+  },
+  "hifi.c": {
+   "patch": "hifi.patch",
+   "reason": "DOS bank headers are serialized 16-byte records; native pointers and the full data_6664.c config view have different layouts. Speech sets a DOS byte offset into the request flags.",
+   "divergences": [
+    "No game calculations or service call order changed. Checksum and XOR process the same 2048 header bytes before field decoding and pointer binding.",
+    "Native data/config/request pointers replace padded DOS far-pointer views; full config member order matches the unchanged data_6664.c definition.",
+    "Speech request flags |= 0x100 replaces DOS byte-offset 0x29."
+   ],
+   "base_sha256": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04"
   }
  }
 }

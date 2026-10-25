@@ -44,7 +44,7 @@ A unit whose code depends on the DOS machine in a way no boundary service can ab
 against its `src/` file, each change marked `/* PORT: ... */`, with reason and divergence list in
 `derive/provenance.json`. The build applies the patch to the current `src/` file, so matching improvements flow
 into the port automatically; `tools/derive.py check` (a ctest gate) fails when the base changed since review.
-Current derivatives (16): `bss/bt.h` (BSS layout), `cdaudio.c` (CD transport), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
+Current derivatives (17): `bss/bt.h` (BSS layout), `cdaudio.c` (CD transport), `hifi.c` (serialized banks, request/config native views), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
 
 `game/port_main.c` mirrors `PcMain` call for call for the test entries; `tools/mirror.py` pins the mirrored
 bodies so a change to `PcMain` forces a review.

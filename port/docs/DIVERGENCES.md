@@ -17,7 +17,7 @@ Everything the port does differently from the DOS executable, with the reason. D
 | CPU | CPUID family | Pentium (5) | only printed |
 | DOS / Windows detection | INT 21h 30h, INT 2Fh 1600h/4680h | DOS 6.22, no Windows | printed; Windows paths not taken |
 | Video presentation | VGA normal mode or Mode X | normal mode only; Mode X entries stop the program | first milestone; GameModeVideo = Mode X from a config file would stop with a clear message |
-| Sound | HMI SOS driver | no driver: LOAD_CONFIG takes the game's no-sound-card path | audio backend is the next platform step |
+| Sound presentation | HMI SOS driver / Sound Blaster mixing and hardware rate | clock-driven HMI API, SDL resampling/mixing; linear balance pan with full centre gain | effects and speech enabled; exact driver mixing arithmetic and physical rate quantization are presentation differences (BOUNDARY.md) |
 | Joystick | analog game port | nothing connected (buttons released, axes at calibrated centres) | gamepad mapping is a later step |
 | CD drive | MSCDEX 2.21 + the Rayman CD | virtual MSCDEX drive (default D:) on the player's CUE/BIN image (`--cd`): the game's own CD code builds and interprets every request; the port serves INT 2Fh 15xxh and the device packets (IOCTL, PLAY, STOP, RESUME, READ LONG) with position from the port clock at 75 sectors/s; CD audio plays from the BIN through SDL3. Files on the CD letter are read from the installed data directory; writes fail (EROFS) | the protection probe and the music behave as with the disc; without an image the drive is empty and the original "insert CD" prompt appears |
 | Protection: `exit_if_not_cd_drive` | INT 21h 36h on the CD drive must report a read-only medium | succeeds | the player's own data stands in for the CD |
@@ -27,6 +27,7 @@ Everything the port does differently from the DOS executable, with the reason. D
 
 ## Derivative changes (same results, different spelling)
 
+- `hifi.c`: decode serialized 16-byte bank records into native fields, bind pointers without truncation, use the full native config layout matching data_6664.c, and replace the speech flag byte offset with a field operation. All calculations and call order remain.
 - `load.c`: DOS object records decoded field by field; file words stored into pointer fields sign-extended; BIOS
   tick read through the port clock.
 - `sysutils.c`: free-memory answer and arena scale (above).

@@ -133,7 +133,8 @@ endif()
 set(RAY_ASSETS_C ${CMAKE_CURRENT_BINARY_DIR}/assets/assets.c)
 add_custom_command(
     OUTPUT ${RAY_ASSETS_C}
-    COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tools/gen_assets.py ${RAY_EXE} ${RAY_ASSETS_C}
+    COMMAND ${CMAKE_COMMAND} -E env RAY_ROOT=${RAY_ROOT} PYTHONDONTWRITEBYTECODE=1
+            ${Python3_EXECUTABLE} ${RAY_PORT}/tools/gen_assets.py ${RAY_EXE} ${RAY_ASSETS_C}
     DEPENDS ${RAY_EXE} ${RAY_PORT}/tools/gen_assets.py
     COMMENT "Extracting external data assets from RAYMAN.EXE")
 
@@ -151,7 +152,7 @@ add_library(rayman_native STATIC
     compat/src/dos_clib.c
     compat/src/dos_services.c
     compat/src/gameport.c
-    compat/src/hmi_absent.c
+    compat/src/hmi.c
     compat/src/inline_helpers.c
     compat/src/pc_hardware.c
     compat/src/unimplemented.c
@@ -162,8 +163,9 @@ add_library(rayman_native STATIC
     platform/files.c
     platform/clock.c
     platform/cdrom.c
-    platform/cd_audio.c)
-target_include_directories(rayman_native PUBLIC ${RAY_PORT})
+    platform/cd_audio.c
+    platform/audio.c)
+target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
 target_compile_options(rayman_native PRIVATE -funsigned-char -fwrapv -fno-strict-aliasing)
 if(MINGW)
@@ -219,3 +221,14 @@ add_test(NAME port_cd_audio_tests COMMAND port_cd_audio_tests ${RAY_CD_TEST_IMAG
 set_tests_properties(port_cd_audio_tests PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy")
 add_test(NAME port_cd_missing_disc COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/cd_missing_disc.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${CMAKE_CURRENT_BINARY_DIR}/cd-no-image-save)
+
+set(HMI_REFERENCE ${CMAKE_CURRENT_BINARY_DIR}/hmi_reference.c)
+add_custom_command(OUTPUT ${HMI_REFERENCE}
+    COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tools/gen_hmi_reference.py ${RAY_ROOT} ${HMI_REFERENCE}
+    DEPENDS ${RAY_PORT}/tools/gen_hmi_reference.py
+        ${RAY_SRC}/hmi/hmi_local.h ${RAY_SRC}/hmi/hmi_samples.c
+        ${RAY_SRC}/hmi/hmi_status.c ${RAY_SRC}/hmi/hmi_active.c ${RAY_SRC}/hmi/hmi_voice_params.c)
+add_executable(port_hmi_tests tests/hmi_tests.c ${HMI_REFERENCE})
+target_include_directories(port_hmi_tests PRIVATE ${RAY_SRC}/hmi)
+target_link_libraries(port_hmi_tests PRIVATE rayman_native rayman_hist rayman_native m)
+add_test(NAME port_hmi_tests COMMAND port_hmi_tests ${RAY_DATA} ${CMAKE_CURRENT_BINARY_DIR}/hmi-test-save)
