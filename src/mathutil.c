@@ -55,9 +55,10 @@ u8 getbit(u8 *buffer, u16 index)
     return buffer[byte_index] & (1 << (index & 7));
 }
 
-s32 reflexion(s32 a1, s32 unused, s32 a3)
+/* Local meanings: docs/semantics/mathutil.json, function:reflexion. */
+s32 reflexion(s32 reflection_center, s32 unused, s32 reflected_value)
 {
-    return 2 * a1 - a3;
+    return 2 * reflection_center - reflected_value;
 }
 
 s16 sinus(s16 x);

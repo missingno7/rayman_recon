@@ -309,10 +309,11 @@ void allocateStoskoClaw(obj_t *stsk_obj)
     }
 }
 
+/* Local names: docs/semantics/hybrid.json (DOS dataflow; compiler output unchanged). */
 void doSTOSKOcommand(obj_t *stsk_obj)
 {
     s32 diff_y;
-    obj_t *unk_obj;
+    obj_t *claw_obj;
 
     scrollLocked = 1;
     switch (stsk_obj->main_etat * 0x100 + stsk_obj->sub_etat)
@@ -371,11 +372,11 @@ void doSTOSKOcommand(obj_t *stsk_obj)
     case 0x4:
         stsk_obj->timer = 50;
     case 0x2:
-        unk_obj = &level.objects[stsk_obj->link];
-        if (unk_obj->speed_x > 0 && unk_obj->x >= stsk_obj->x)
+        claw_obj = &level.objects[stsk_obj->link];
+        if (claw_obj->speed_x > 0 && claw_obj->x >= stsk_obj->x)
         {
             stsk_obj->link = -1;
-            unk_obj->flags.alive = 0;
+            claw_obj->flags.alive = 0;
             set_sub_etat(stsk_obj, 3);
         }
         break;
@@ -1187,7 +1188,8 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
     }
 }
 
-void allocate_DARK2_SORT(s16 param_1, s16 param_2, s16 param_3, s16 param_4)
+/* Local names: docs/semantics/hybrid.json (DOS dataflow; compiler output unchanged). */
+void allocate_DARK2_SORT(s16 spawn_x, s16 spawn_y, s16 substate, s16 lifetime)
 {
     obj_t *first;
     obj_t *cur_obj = level.objects;
@@ -1247,11 +1249,11 @@ void allocate_DARK2_SORT(s16 param_1, s16 param_2, s16 param_3, s16 param_4)
             add_alwobj(cur_obj);
         cur_obj->is_active = 1;
         cur_obj->hit_points = 1;
-        cur_obj->x = param_1;
-        cur_obj->y = param_2;
-        cur_obj->iframes_timer = param_4;
+        cur_obj->x = spawn_x;
+        cur_obj->y = spawn_y;
+        cur_obj->iframes_timer = lifetime;
         cur_obj->param = 0;
-        set_main_and_sub_etat(cur_obj, 0, (u8)param_3);
+        set_main_and_sub_etat(cur_obj, 0, (u8)substate);
     }
 }
 
@@ -1291,7 +1293,8 @@ void DoFlammeRaymanCollision(obj_t *obj)
     }
 }
 
-void AllocateFlammes(s16 param_1)
+/* Local names: docs/semantics/hybrid.json (DOS dataflow; compiler output unchanged). */
+void AllocateFlammes(s16 launch_mode)
 {
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
@@ -1300,7 +1303,7 @@ void AllocateFlammes(s16 param_1)
     while (i < nb_objs)
     {
         if (
-            param_1 == 0 &&
+            launch_mode == 0 &&
             cur_obj->type == TYPE_FIRE_LEFT && !(cur_obj->is_active)
         )
         {
@@ -1321,7 +1324,7 @@ void AllocateFlammes(s16 param_1)
             break;
         }
         if (
-            param_1 == 1 &&
+            launch_mode == 1 &&
             cur_obj->type == TYPE_FIRE_RIGHT && !(cur_obj->is_active)
         )
         {
@@ -1408,11 +1411,12 @@ void AllocateToons(void)
     }
 }
 
+/* Local names: docs/semantics/hybrid.json (DOS dataflow; compiler output unchanged). */
 void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
 {
     s16 diff_x;
     s16 ray_y;
-    obj_t *unk_obj;
+    obj_t *linked_toon;
     s32 speed_y_step;
     s32 speed_x_step;
     s32 diff_y;
@@ -1487,9 +1491,9 @@ void DO_DARK2_TOONS_COMMAND(obj_t *d2fly_obj)
         if (d2fly_obj->param == 0)
         {
             d2fly_obj->param = 1;
-            unk_obj = &level.objects[d2fly_obj->link];
-            if (!(unk_obj->is_active))
-                unk_obj->param = 1;
+            linked_toon = &level.objects[d2fly_obj->link];
+            if (!(linked_toon->is_active))
+                linked_toon->param = 1;
         }
     }
     if (dist > 0)

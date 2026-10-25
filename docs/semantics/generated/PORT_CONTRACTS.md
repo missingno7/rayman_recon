@@ -2,6 +2,60 @@
 
 Generated from all selected semantic registries. UNKNOWN and HYPOTHESIS are observations, not implementation requirements.
 
+## action.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:setBossReachingSpeeds
+
+STRONG: Calculate boss target speeds from Q4 coordinate gaps and Q14 speed factors, normalize by maximum-axis distance, and blend on the selected clock with byte weights over 255; either -32000 target disables motion.
+
+Units: see parameter/result contracts. DOS layout/address: 1:08890.
+
+Calculate boss target speeds from Q4 coordinate gaps and Q14 speed factors, normalize by maximum-axis distance, and blend on the selected clock with byte weights over 255; either -32000 target disables motion.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:testActionEnd
+
+PROVEN: Mark the boss action over when both targets are -32000 and nb_cmd is zero, or when both position coordinates exactly equal their targets.
+
+Units: see parameter/result contracts. DOS layout/address: 1:08a64.
+
+Mark the boss action over when both targets are -32000 and nb_cmd is zero, or when both position coordinates exactly equal their targets.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:firstFloorBelow
+
+PROVEN: Scan downward in 16-pixel steps from object feet until a solid block or ymapmax+200, then return the tile-aligned floor plus its slope height.
+
+Units: see parameter/result contracts. DOS layout/address: 1:08ad0.
+
+Scan downward in 16-pixel steps from object feet until a solid block or ymapmax+200, then return the tile-aligned floor plus its slope height.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:adjustBossScrollLocker
+
+PROVEN: Clamp boss camera limits to the mode-specific map bounds, preserving Normal horizontal bias 8 and negative clip origins.
+
+Units: see parameter/result contracts. DOS layout/address: 1:08b4c.
+
+Clamp boss camera limits to the mode-specific map bounds, preserving Normal horizontal bias 8 and negative clip origins.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:setBossScrollLimits
+
+PROVEN: Copy ordinary horizontal limits, sample floorLine below the boss and derive the vertical start from viewport height plus one tile before clamping.
+
+Units: see parameter/result contracts. DOS layout/address: 1:08c8c.
+
+Copy ordinary horizontal limits, sample floorLine below the boss and derive the vertical start from viewport height plus one tile before clamping.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
 ## affiche.json
 
 Meaning confidence is independent of STRICT and of compiled layout. DOS writers/readers/callers are primary;external names corroborate. Raw token/displacement hits are candidates,not typed-field proof. UNKNOWN keeps neutral names. Only identifier/comment edits are proposed.
@@ -293,6 +347,110 @@ PROVEN: Scale and rotate one signed16 coordinate pair with integer fixed-point a
 Units: see parameter/result and side-effect contract. DOS layout/address: 1:0c030.
 
 First narrow((s32)coordinate*Q12_scale)>>12 to signed16. Obtain sine/cosine scaled512, then arithmetic>>9 of signed products and narrow to signed16. angle512 is one full turn. Do not combine stages into floating-point math.
+
+## araignee.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:get_spi_zdc
+
+PROVEN: Return one of three Spider collision rectangles from eta flag bits 0x40/0x80.
+
+Units: see observed computation and contract. DOS layout/address: 1:0c0c0.
+
+Return one of three Spider collision rectangles from eta flag bits 0x40/0x80.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DO_SPIDER_PLAFOND
+
+STRONG: Run ceiling Spider movement, fist avoidance and sprite-anchored dart emission at frame 27.
+
+Units: see observed computation and contract. DOS layout/address: 1:0c160.
+
+Run ceiling Spider movement, fist avoidance and sprite-anchored dart emission at frame 27.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DO_SPIDER_PLAFOND_POING_COLLISION
+
+PROVEN: Reduce ceiling Spider HP and select location/state-specific hit or defeat animation.
+
+Units: see observed computation and contract. DOS layout/address: 1:0c588.
+
+Reduce ceiling Spider HP and select location/state-specific hit or defeat animation.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:SPIDER_PLAFOND_REACT
+
+PROVEN: Start ceiling Spider attack/turn reactions in the tested states.
+
+Units: see observed computation and contract. DOS layout/address: 1:0c6a0.
+
+Start ceiling Spider attack/turn reactions in the tested states.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DO_DARD_PLAFOND_ALWAYS
+
+STRONG: Steer the ceiling dart toward Rayman using Manhattan normalization and select directional frames.
+
+Units: see observed computation and contract. DOS layout/address: 1:0c75c.
+
+Steer the ceiling dart toward Rayman using Manhattan normalization and select directional frames.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DO_SPIDER_COMMAND
+
+PROVEN: Execute ground Spider walking, obstacle turns, waits and terminal substate 7 behavior.
+
+Units: see observed computation and contract. DOS layout/address: 1:0cac4.
+
+Execute ground Spider walking, obstacle turns, waits and terminal substate 7 behavior.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DO_SPIDER_TIR
+
+PROVEN: Run ground Spider commands and emit one dart while state 0:3 has link zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:0cc24.
+
+Run ground Spider commands and emit one dart while state 0:3 has link zero.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:allocateDard
+
+STRONG: Activate an inactive type-66 dart from Spider sprite 3 with horizontal speed +/-3.
+
+Units: see observed computation and contract. DOS layout/address: 1:0cc50.
+
+Activate an inactive type-66 dart from Spider sprite 3 with horizontal speed +/-3.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DoSpiderPoingCollision
+
+PROVEN: Apply ground Spider fist damage, resetting and stacking script labels for nonlethal reactions.
+
+Units: see observed computation and contract. DOS layout/address: 1:0cdb0.
+
+Apply ground Spider fist damage, resetting and stacking script labels for nonlethal reactions.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
+
+### function:DoSpiderRaymanZDD
+
+PROVEN: Turn a walking Spider toward Rayman and stack its attack script when link is zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:0ce70.
+
+Turn a walking Spider toward Rayman and stack its attack script when link is zero.
+
+Ceiling and ground Spider handlers use different state/HP/attack rules. Ceiling dart homing uses Manhattan normalization with bounded velocities and frame thresholds; the global position_ray selects Rayman target height. Ground dart type 66 launches at +/-3. Keep command-stack label ordering for hit reactions; do not flatten it into a generic state reset.
 
 ## basic.json
 
@@ -843,6 +1001,3004 @@ PROVEN: Input-mode byte whose value1 suppresses FatalError key waiting.
 Units: mode. DOS layout/address: 2:3fa51.
 
 This effect does not establish a complete meaning for its other values.
+
+## bat.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_BAT_FLASH
+
+PROVEN: Aim a projectile using collision-box separation and the N_anim ratio lookup.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fa40.
+
+Aim a projectile using collision-box separation and the N_anim ratio lookup.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:DO_BAT_LEFT_FLASH
+
+PROVEN: Fire from the center of sprite 14.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fbc0.
+
+Fire from the center of sprite 14.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:DO_BAT_RIGHT_FLASH
+
+PROVEN: Fire from the center of sprite 14, using the same DOS sprite index as the left entry.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fc18.
+
+Fire from the center of sprite 14, using the same DOS sprite index as the left entry.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:DO_BAT_LEFT_RIGHT_FLASH
+
+PROVEN: Fire from sprite 15 followed by sprite 14.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fc70.
+
+Fire from sprite 15 followed by sprite 14.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:bat_dir
+
+PROVEN: Return whether Rayman's horizontal center lies right of the bat's center.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fd14.
+
+Return whether Rayman's horizontal center lies right of the bat's center.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:DO_BAT_COMMAND
+
+PROVEN: Run bat animation-frame-gated fire, strike-count, script-choice and movement-turn logic.
+
+Units: see observed computation and contract. DOS layout/address: 1:0fd9c.
+
+Run bat animation-frame-gated fire, strike-count, script-choice and movement-turn logic.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:BAT_ray_in_zone
+
+PROVEN: Start the bat script only from substate zero while byte_CFA14 is zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:10058.
+
+Start the bat script only from substate zero while byte_CFA14 is zero.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:DO_BAT_POING_COLLISION
+
+PROVEN: Perform no operation on bat fist collision.
+
+Units: see observed computation and contract. DOS layout/address: 1:10088.
+
+Perform no operation on bat fist collision.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+### function:bat_get_eject_sens
+
+PROVEN: Set Rayman's iframes to 40 and return the side-dependent eject direction.
+
+Units: see observed computation and contract. DOS layout/address: 1:1008c.
+
+Set Rayman's iframes to 40 and return the side-dependent eject direction.
+
+Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.
+
+## bbmont.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:BB2_MARCHE
+
+PROVEN: Select walking substate 0/1/2 from bb1.speed_x.
+
+Units: see observed computation and contract. DOS layout/address: 1:100b0.
+
+Select walking substate 0/1/2 from bb1.speed_x.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_TOTEM_TOUCHE
+
+PROVEN: React to fist sprite contact on the totem; sprite 6 begins alternating displacement when param is zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:100f0.
+
+React to fist sprite contact on the totem; sprite 6 begins alternating displacement when param is zero.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_TOTEM_COMMAND
+
+PROVEN: Advance totem oscillation and boss contact, or replace it by six consecutive debris objects when bb1.field2_0x4 is 3.
+
+Units: see observed computation and contract. DOS layout/address: 1:1018c.
+
+Advance totem oscillation and boss contact, or replace it by six consecutive debris objects when bb1.field2_0x4 is 3.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_TOTBT_REBOND
+
+PROVEN: Halve horizontal and reversed vertical speeds of descending totem pieces below world y=264.
+
+Units: see observed computation and contract. DOS layout/address: 1:105c4.
+
+Halve horizontal and reversed vertical speeds of descending totem pieces below world y=264.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_PI_EXPLOSION2
+
+PROVEN: Spawn two stone-chip groups and an explosion, restoring the source x position.
+
+Units: see observed computation and contract. DOS layout/address: 1:10620.
+
+Spawn two stone-chip groups and an explosion, restoring the source x position.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBL_REBOND
+
+PROVEN: Bounce or destroy a type-97 projectile according to param, detaching Rayman when necessary.
+
+Units: see observed computation and contract. DOS layout/address: 1:10674.
+
+Bounce or destroy a type-97 projectile according to param, detaching Rayman when necessary.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:allocateDog
+
+PROVEN: Activate the first inactive type-122 dog at alternating arena sides.
+
+Units: see observed computation and contract. DOS layout/address: 1:10748.
+
+Activate the first inactive type-122 dog at alternating arena sides.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:allocateTir
+
+PROVEN: Activate the first inactive type-97 projectile with the selected launch pattern.
+
+Units: see observed computation and contract. DOS layout/address: 1:10868.
+
+Activate the first inactive type-97 projectile with the selected launch pattern.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:CreateFirstBBL
+
+PROVEN: Create the initial type-97 projectile at (-40,160) with param 2.
+
+Units: see observed computation and contract. DOS layout/address: 1:10b7c.
+
+Create the initial type-97 projectile at (-40,160) with param 2.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:INIT_BBMONT
+
+STRONG: Reset Mr Stone object and shared attack/timing scratch for the encounter.
+
+Units: see observed computation and contract. DOS layout/address: 1:10c4c.
+
+Reset Mr Stone object and shared attack/timing scratch for the encounter.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBL_COMMAND
+
+STRONG: Handle type-97 projectile lifetime, wall reflections and requested destruction.
+
+Units: see observed computation and contract. DOS layout/address: 1:10cf8.
+
+Handle type-97 projectile lifetime, wall reflections and requested destruction.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:BBMONT_ECLAIR
+
+PROVEN: Spawn a type-121 projectile from sprite 10 with facing-dependent horizontal speed.
+
+Units: see observed computation and contract. DOS layout/address: 1:10f38.
+
+Spawn a type-121 projectile from sprite 10 with facing-dependent horizontal speed.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:BBMONT_ETINCELLES
+
+PROVEN: Spawn two consecutive type-135 objects from sprites 3 and 2.
+
+Units: see observed computation and contract. DOS layout/address: 1:11098.
+
+Spawn two consecutive type-135 objects from sprites 3 and 2.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:BBMONT_TIRE
+
+PROVEN: Launch type-97 pattern 1.
+
+Units: see observed computation and contract. DOS layout/address: 1:112c4.
+
+Launch type-97 pattern 1.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:Cree_BBL
+
+PROVEN: Launch type-97 pattern 0.
+
+Units: see observed computation and contract. DOS layout/address: 1:112d4.
+
+Launch type-97 pattern 0.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:BB_Attaque
+
+PROVEN: Map NextAtak 0..7 to object state and numeric Phase.
+
+Units: see observed computation and contract. DOS layout/address: 1:11300.
+
+Map NextAtak 0..7 to object state and numeric Phase.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:Fin_BB_Attaque
+
+PROVEN: Advance the seven-entry attack row, treating attack 255 as a row terminator.
+
+Units: see observed computation and contract. DOS layout/address: 1:11400.
+
+Advance the seven-entry attack row, treating attack 255 as a row terminator.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:BB_Atan
+
+PROVEN: Enter phase 6 while an animation-wait count remains, otherwise start the next attack.
+
+Units: see observed computation and contract. DOS layout/address: 1:114b8.
+
+Enter phase 6 while an animation-wait count remains, otherwise start the next attack.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT_ATTER
+
+STRONG: Stop Mr Stone on landing, enter substate 6 and create landing smoke and screen shake.
+
+Units: see observed computation and contract. DOS layout/address: 1:114f8.
+
+Stop Mr Stone on landing, enter substate 6 and create landing smoke and screen shake.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT_COMMAND
+
+STRONG: Run the Mr Stone attack, totem-damage, dog-spawn and completion state machine.
+
+Units: see observed computation and contract. DOS layout/address: 1:11568.
+
+Run the Mr Stone attack, totem-damage, dog-spawn and completion state machine.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT_TOUCHE
+
+STRONG: On sprite-9 fist contact, enter substate 8, reset frame and select Phase 7 with wait count two.
+
+Units: see observed computation and contract. DOS layout/address: 1:12050.
+
+On sprite-9 fist contact, enter substate 8, reset frame and select Phase 7 with wait count two.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT2_COMMAND
+
+STRONG: Run the second Mr Stone encounter's movement, camera and ledge/jump phases.
+
+Units: see observed computation and contract. DOS layout/address: 1:12094.
+
+Run the second Mr Stone encounter's movement, camera and ledge/jump phases.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT2_MARCHE
+
+PROVEN: Copy the second Mr Stone encounter's hit_points into bb1.speed_x as its walking selector.
+
+Units: see observed computation and contract. DOS layout/address: 1:12a7c.
+
+Copy the second Mr Stone encounter's hit_points into bb1.speed_x as its walking selector.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT2_ATTER
+
+PROVEN: Advance the second encounter on landing with state-specific camera and motion updates.
+
+Units: see observed computation and contract. DOS layout/address: 1:12a98.
+
+Advance the second encounter on landing with state-specific camera and motion updates.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT3_COMMAND
+
+PROVEN: Run the third Mr Stone encounter's movement and ledge phases.
+
+Units: see observed computation and contract. DOS layout/address: 1:12bac.
+
+Run the third Mr Stone encounter's movement and ledge phases.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT3_ATTER
+
+PROVEN: Advance the third encounter on landing.
+
+Units: see observed computation and contract. DOS layout/address: 1:12d9c.
+
+Advance the third encounter on landing.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BBMONT4_COMMAND
+
+PROVEN: Run the fourth Mr Stone encounter's animation-triggered projectile attack.
+
+Units: see observed computation and contract. DOS layout/address: 1:12dd0.
+
+Run the fourth Mr Stone encounter's animation-triggered projectile attack.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_ECLAIR_COMMAND
+
+PROVEN: Move type-121 projectiles and activate a type-115 platform when the tested tile permits it.
+
+Units: see observed computation and contract. DOS layout/address: 1:12eac.
+
+Move type-121 projectiles and activate a type-115 platform when the tested tile permits it.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### function:DO_BB1_PLAT_CMD
+
+PROVEN: Update a type-115 platform's motion and activation state.
+
+Units: see observed computation and contract. DOS layout/address: 1:1300c.
+
+Update a type-115 platform's motion and activation state.
+
+Type 97 param selects launch/bounce behavior; param 3 has a 38-tick lifetime. Pattern 1 wall speeds reverse through magnitudes 12,13,14,15 before destruction. PosPierre=9999 is a sentinel. Attack rows have seven entries with 255 termination. Preserve the six consecutive debris and paired spark assumptions; completion writes finBosslevel.mr_stone.
+
+### global:FinAnim
+
+STRONG: Last-animation-frame and animation-clock-zero predicate shared by Mr Stone/Mr Sax handlers.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa93.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Last-animation-frame and animation-clock-zero predicate shared by Mr Stone/Mr Sax handlers.
+
+### global:IndAtak
+
+STRONG: Mr Stone attack entry cursor, wrapping at seven or the attack-255 terminator.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fab4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Stone attack entry cursor, wrapping at seven or the attack-255 terminator.
+
+### global:IndSerie
+
+STRONG: Mr Stone attack row index, incremented on totem contact and limited below six.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fabe.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Stone attack row index, incremented on totem contact and limited below six.
+
+### global:NextAtak
+
+STRONG: Current Mr Stone attack selector read by BB_Attaque.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fabc.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current Mr Stone attack selector read by BB_Attaque.
+
+### global:Phase
+
+STRONG: Numeric phase scratch shared by Mr Stone/Mr Sax encounters; interpretation is handler-specific.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa94.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Numeric phase scratch shared by Mr Stone/Mr Sax encounters; interpretation is handler-specific.
+
+### global:PierreDoitExploser
+
+STRONG: Request consumed by the type-97 projectile handler to explode and clear its active/alive flags.
+
+Units: see observed computation and contract. DOS layout/address: 2:3faba.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Request consumed by the type-97 projectile handler to explode and clear its active/alive flags.
+
+### global:SerieAtakBB
+
+STRONG: Six rows of seven Mr Stone attack/wait records; attack 255 ends a row.
+
+Units: see observed computation and contract. DOS layout/address: 2:5ec6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Six rows of seven Mr Stone attack/wait records; attack 255 ends a row.
+
+### global:WaitForFinAtan
+
+STRONG: Small wait/repetition count reused by Mr Stone and Mr Sax attack handlers.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa95.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Small wait/repetition count reused by Mr Stone and Mr Sax attack handlers.
+
+### global:YaDesChiens
+
+STRONG: Dog-spawn selector/count used to gate periodic spawning and alternate sides.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fab6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dog-spawn selector/count used to gate periodic spawning and alternate sides.
+
+### global:bb1
+
+STRONG: Mr Stone encounter scratch record, including saved states, movement selector and multipurpose counters.
+
+Units: see observed computation and contract. DOS layout/address: 2:3faa4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Stone encounter scratch record, including saved states, movement selector and multipurpose counters.
+
+### global:horlogeDog
+
+STRONG: Signed dog-spawn countdown reloaded to fifty when it becomes negative.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fab8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Signed dog-spawn countdown reloaded to fifty when it becomes negative.
+
+## blacktoon.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:allocateBlacktoonEyes
+
+PROVEN: Activate the first inactive type-130 eyes object from the always-loaded list.
+
+Units: see observed computation and contract. DOS layout/address: 1:13030.
+
+Activate the first inactive type-130 eyes object from the always-loaded list.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DO_BLK_SPEED_COMMAND
+
+PROVEN: Execute config-bit-specific scripted speed and direction-change handling.
+
+Units: see observed computation and contract. DOS layout/address: 1:1311c.
+
+Execute config-bit-specific scripted speed and direction-change handling.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:blkUTurn
+
+PROVEN: Jump left/right commands to opposite script labels, preserving 255 as no-label sentinel.
+
+Units: see observed computation and contract. DOS layout/address: 1:131bc.
+
+Jump left/right commands to opposite script labels, preserving 255 as no-label sentinel.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DO_BLK_LR_COMMAND
+
+PROVEN: Execute config-selected ground, sinusoidal or horizontal motion with obstacle turns.
+
+Units: see observed computation and contract. DOS layout/address: 1:1320c.
+
+Execute config-selected ground, sinusoidal or horizontal motion with obstacle turns.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DO_BLK_NOP_COMMAND
+
+PROVEN: Handle timer/target/detection waiting behavior and ground obstacle turns.
+
+Units: see observed computation and contract. DOS layout/address: 1:13350.
+
+Handle timer/target/detection waiting behavior and ground obstacle turns.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DO_BLKTOON_COMMAND
+
+PROVEN: Dispatch Blacktoon command modes to speed, left/right or no-op handlers.
+
+Units: see observed computation and contract. DOS layout/address: 1:134cc.
+
+Dispatch Blacktoon command modes to speed, left/right or no-op handlers.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DoBlackToonPoingCollision
+
+PROVEN: Apply fist damage; at zero HP enter 0:4, spawn eyes and select departure direction.
+
+Units: see observed computation and contract. DOS layout/address: 1:134fc.
+
+Apply fist damage; at zero HP enter 0:4, spawn eyes and select departure direction.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+### function:DoBlackToonRaymanZDD
+
+PROVEN: Choose detection responses by follow_sprite variants 2/3/4/7 and Rayman state.
+
+Units: see observed computation and contract. DOS layout/address: 1:135a0.
+
+Choose detection responses by follow_sprite variants 2/3/4/7 and Rayman state.
+
+config bits independently select ground/sinusoidal/fixed-vector/horizontal behaviors. follow_sprite variants control detection reactions, while follow_id/iframes_timer can hold velocity operands. timer=255 is the waiting sentinel, then 60 is a countdown. Zero HP spawns pooled type-130 eyes; no heap allocation is implied.
+
+## blocs.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:MURDUR
+
+PROVEN: Return whether the pixel coordinate selects tile type 15; this tests the exact type, not every solid flag.
+
+Units: see parameter/result contracts. DOS layout/address: 1:14e90.
+
+Return whether the pixel coordinate selects tile type 15; this tests the exact type, not every solid flag.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:dist_to_bloc_floor
+
+PROVEN: Evaluate the floor-shape callback at x and narrowed y, subtract the original y and return the signed 16-bit distance.
+
+Units: see parameter/result contracts. DOS layout/address: 1:14eac.
+
+Evaluate the floor-shape callback at x and narrowed y, subtract the original y and return the signed 16-bit distance.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:bloc_floor
+
+PROVEN: Return the supplied tile type when its floor distance is nonpositive, otherwise return zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:14ec8.
+
+Return the supplied tile type when its floor distance is nonpositive, otherwise return zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:calc_typ_trav
+
+PROVEN: Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:14f60.
+
+Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:calc_typ_travd
+
+PROVEN: Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.
+
+Units: see parameter/result contracts. DOS layout/address: 1:151f8.
+
+Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:TEST_FIN_BLOC
+
+PROVEN: When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15388.
+
+When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:TEST_IS_ON_RESSORT_BLOC
+
+PROVEN: Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.
+
+Units: see parameter/result contracts. DOS layout/address: 1:156d4.
+
+Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:IS_ON_RESSORT_BLOC
+
+STRONG: Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15708.
+
+Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:CALC_MOV_ON_BLOC
+
+STRONG: Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15820.
+
+Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:recale_position
+
+PROVEN: Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15b30.
+
+Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_empty
+
+PROVEN: Return y+1 for the empty-tile first shape callback.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bb0.
+
+Return y+1 for the empty-tile first shape callback.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_right_45
+
+PROVEN: Return 15-x for the right 45-degree tile floor.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bb4.
+
+Return 15-x for the right 45-degree tile floor.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_left_45
+
+PROVEN: Return x for the left 45-degree tile floor.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bc0.
+
+Return x for the left 45-degree tile floor.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_right1_30
+
+PROVEN: Return 15-(x>>1) for the first right shallow-slope half.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bc4.
+
+Return 15-(x>>1) for the first right shallow-slope half.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_right2_30
+
+PROVEN: Return 7-(x>>1) for the second right shallow-slope half.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bd4.
+
+Return 7-(x>>1) for the second right shallow-slope half.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_left1_30
+
+PROVEN: Return x>>1 for the first left shallow-slope half.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15be4.
+
+Return x>>1 for the first left shallow-slope half.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_left2_30
+
+PROVEN: Return (x>>1)+8 for the second left shallow-slope half.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15be8.
+
+Return (x>>1)+8 for the second left shallow-slope half.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_liane
+
+PROVEN: Share the y-preserving empty-floor implementation.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bf0.
+
+Share the y-preserving empty-floor implementation.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs3_empty
+
+PROVEN: Return y unchanged.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bf0.
+
+Return y unchanged.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs4_empty
+
+PROVEN: Return zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bf4.
+
+Return zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs1_hor
+
+PROVEN: Return zero for a horizontal supported tile.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bf4.
+
+Return zero for a horizontal supported tile.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:blocs2_empty
+
+PROVEN: Return the constant tile height 16.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15bf8.
+
+Return the constant tile height 16.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_calcbloc_func
+
+PROVEN: Initialize all 64 entries of the four tile-shape callback tables, pairing solid/slippery slope variants and assigning empty/vine/horizontal behavior.
+
+Units: see parameter/result contracts. DOS layout/address: 1:15c7c.
+
+Initialize all 64 entries of the four tile-shape callback tables, pairing solid/slippery slope variants and assigning empty/vine/horizontal behavior.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## bonus.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:get_allowed_time
+
+PROVEN: Read the signed allowed-time table at (world-1)*32+level-1.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13a00.
+
+Read the signed allowed-time table at (world-1)*32+level-1.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:calc_left_time
+
+PROVEN: Initialize bonus time on map_time 1, preserve -2 untimed sentinel, wait 120 ticks before countdown at 60 ticks/second, and return on exact timeout with uncollected Tings.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13a28.
+
+Initialize bonus time on map_time 1, preserve -2 untimed sentinel, wait 120 ticks before countdown at 60 ticks/second, and return on exact timeout with uncollected Tings.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:get_bonus_map_complete
+
+PROVEN: Read the perfect-bonus bit at the 32-level-per-world index.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13af8.
+
+Read the perfect-bonus bit at the 32-level-per-world index.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_bonus_map_complete
+
+PROVEN: Set the perfect-bonus bit at the 32-level-per-world index.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13b10.
+
+Set the perfect-bonus bit at the 32-level-per-world index.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_WIZ_AFTER_BONUS_MAP
+
+PROVEN: Outside bonus, move one collected Ting into the HUD on clock 4 and convert each hundred into a pending or immediate life.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13b28.
+
+Outside bonus, move one collected Ting into the HUD on clock 4 and convert each hundred into a pending or immediate life.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_bonus_perfect
+
+PROVEN: Clear all 24 bytes of the 192-bit bonus-perfect map.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13b8c.
+
+Clear all 24 bytes of the 192-bit bonus-perfect map.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:do_perfect_bonus
+
+PROVEN: Animate the perfect-bonus result screen, display time for repeat completions or award a life at tick 15, and finish at exactly tick 500 or a button after tick 50.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13ba0.
+
+Animate the perfect-bonus result screen, display time for repeat completions or award a life at tick 15, and finish at exactly tick 500 or a button after tick 50.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_PERFECT_BONUS_MAP
+
+PROVEN: After the negative exit delay reaches -1, load/show the perfect result scene, restore saved Tings, mark the perfect bit and restore the prior video mode/palette.
+
+Units: see parameter/result contracts. DOS layout/address: 1:13df0.
+
+After the negative exit delay reaches -1, load/show the perfect result scene, restore saved Tings, mark the perfect bit and restore the prior video mode/palette.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## box.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:CalcTab
+
+STRONG: Fill128x128 byte radial sine lookup:truncate distance sqrt to byte, multiply by DOS exact1/9.5, evaluate(sin+1)*40. Stock10.6 source remains1-byte NEAR at the double constant; do not alter it during this pass.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:13f30.
+
+Fill128x128 byte radial sine lookup:truncate distance sqrt to byte, multiply by DOS exact1/9.5, evaluate(sin+1)*40. Stock10.6 source remains1-byte NEAR at the double constant; do not alter it during this pass.
+
+### function:InitPlasma
+
+PROVEN: Select palette base74 for menuEtape0 else112; install16 entries with red/blue swapped from PalPlasma; optional hardware palette upload.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:13fdc.
+
+Select palette base74 for menuEtape0 else112; install16 entries with red/blue swapped from PalPlasma; optional hardware palette upload.
+
+### function:Plasma
+
+STRONG: Draw rectangle at320-byte stride from four128x128 lookup samples. Advance packed byte x/y phases modulo128; sum into a byte (wrap256), add bias, divide16 and add palette base.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14068.
+
+Draw rectangle at320-byte stride from four128x128 lookup samples. Advance packed byte x/y phases modulo128; sum into a byte (wrap256), add bias, divide16 and add palette base.
+
+### function:PlasmaBox
+
+PROVEN: Optionally advance9 signed16 phases and derive8 trigonometric coordinates, expand box by3 each side, apply historical clipping and call Plasma. Preserve y-clip anomalies (height+=x after x/y clamping; y+height compared with320).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:141fc.
+
+Optionally advance9 signed16 phases and derive8 trigonometric coordinates, expand box by3 each side, apply historical clipping and call Plasma. Preserve y-clip anomalies (height+=x after x/y clamping; y+height compared with320).
+
+### function:InitFire
+
+PROVEN: Reseed/refill random table, choose palette base74/112, upload converted16-entry fire palette, fill70x300 signed16 simulation grid with base color.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:143e0.
+
+Reseed/refill random table, choose palette base74/112, upload converted16-entry fire palette, fill70x300 signed16 simulation grid with base color.
+
+### function:Fire
+
+STRONG: Refill random table without reseeding, seed two bottom rows, propagate in-place four-neighbor averages with distinct left/right edge samples, then copy rectangle to320-stride framebuffer.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:144c4.
+
+Refill random table without reseeding, seed two bottom rows, propagate in-place four-neighbor averages with distinct left/right edge samples, then copy rectangle to320-stride framebuffer.
+
+### function:FireBox
+
+PROVEN: Expand fire rectangle by3 each side then apply historical clipping, including y+height comparison against320, before Fire.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14738.
+
+Expand fire rectangle by3 each side then apply historical clipping, including y+height comparison against320, before Fire.
+
+### function:InitMenuPalette
+
+PROVEN: Build256-color menu palette from active game palette plus gradients/plasma/grayscale/blue ranges; special world-map colors32 and38.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:1479c.
+
+Build256-color menu palette from active game palette plus gradients/plasma/grayscale/blue ranges; special world-map colors32 and38.
+
+### function:CaptureVideo
+
+STRONG: Copy320x200 screen into EffetBufferNormal, interleaving four VGA planes in ModeX. Optional grayscale is mean of RGB components plus128, not perceptual luminance.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:1494c.
+
+Copy320x200 screen into EffetBufferNormal, interleaving four VGA planes in ModeX. Optional grayscale is mean of RGB components plus128, not perceptual luminance.
+
+### function:CadreTrans
+
+PROVEN: Move x and width to the NEXT multiple4 (even when already aligned), modify whole dwords by0x40404040 or set0xC8C8C8C8, then draw border. Packed-byte carry behavior is retained.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14a98.
+
+Move x and width to the NEXT multiple4 (even when already aligned), modify whole dwords by0x40404040 or set0xC8C8C8C8, then draw border. Packed-byte carry behavior is retained.
+
+### function:DrawBlackBorderBox
+
+PROVEN: Draw a black rectangle plus border; flag selects packed border colors0x2026 or0x2620.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14b80.
+
+Draw a black rectangle plus border; flag selects packed border colors0x2026 or0x2620.
+
+### function:InitGauge
+
+PROVEN: Outside title stage and in-game options, install32-step red/green gauge gradient at70..101.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14bf0.
+
+Outside title stage and in-game options, install32-step red/green gauge gradient at70..101.
+
+### function:gauge
+
+STRONG: Clamp value, draw gradient gauge and slider. Slider width=max(width>>3,8), position uses(width-step-3)/(max-min); require nonzero range. Row/column counters are bytes.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14c54.
+
+Clamp value, draw gradient gauge and slider. Slider width=max(width>>3,8), position uses(width-step-3)/(max-min); require nonzero range. Row/column counters are bytes.
+
+### function:ClearBorder
+
+PROVEN: Clear top/bottom screen spans and left/right columns outside supplied clipping limits using320-byte stride.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:14dcc.
+
+Clear top/bottom screen spans and left/right columns outside supplied clipping limits using320-byte stride.
+
+### global:PalPlasma
+
+PROVEN: 16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales.
+
+Units: RGB palette entries. DOS layout/address: 2:5f70.
+
+16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales.
+
+### global:byte_DA43C
+
+PROVEN: 128x128 byte radial sine texture generated by CalcTab,consumed by four-phase Plasma.
+
+Units: intensity byte. DOS layout/address: 2:4a43c.
+
+128x128 byte radial sine texture generated by CalcTab,consumed by four-phase Plasma.
+
+### global:p1
+
+PROVEN: 70x300 signed16 fire simulation grid;InitFire fills palette base,Fire performs in-place neighbor averages.
+
+Units: palette-index simulation. DOS layout/address: 2:4002c.
+
+70x300 signed16 fire simulation grid;InitFire fills palette base,Fire performs in-place neighbor averages.
+
+### global:plasma_palette_color_index
+
+PROVEN: First of16 effect palette colors:74 on title menu stage0,else112.
+
+Units: palette index. DOS layout/address: 2:4e73c.
+
+First of16 effect palette colors:74 on title menu stage0,else112.
+
+### global:word_95FA0
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fa0.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FA2
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fa2.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FA4
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fa4.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FA6
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fa6.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FA8
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fa8.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FAA
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5faa.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FAC
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fac.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FAE
+
+PROVEN: Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+Units: angle units,512/turn. DOS layout/address: 2:5fae.
+
+Signed16 plasma trigonometric phase accumulators advanced by1,-2,1,-2,3,-2,1,-3 respectively.
+
+### global:word_95FB0
+
+PROVEN: Signed16 plasma additive phase advanced5 per animated PlasmaBox call;passed as intensity bias and narrowed during summation.
+
+Units: byte-phase bias. DOS layout/address: 2:5fb0.
+
+Signed16 plasma additive phase advanced5 per animated PlasmaBox call;passed as intensity bias and narrowed during summation.
+
+### global:word_DE73E
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e73e.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE740
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e740.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE742
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e742.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE744
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e744.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE746
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e746.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE748
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e748.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE74A
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e74a.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+### global:word_DE74C
+
+PROVEN: Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+Units: lookup coordinate before byte fold. DOS layout/address: 2:4e74c.
+
+Eight signed16 plasma lookup coordinates derived from(sine/cosine+32)>>4;exact source pairing retained.
+
+## breakout.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:get_casse_brique_ON
+
+PROVEN: Return the requested breakout-mode flag.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a20.
+
+Return the requested breakout-mode flag.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:set_casse_brique_ON
+
+PROVEN: Set the requested breakout-mode flag to the supplied byte.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a28.
+
+Set the requested breakout-mode flag to the supplied byte.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:get_casse_brique_active
+
+PROVEN: Return the breakout-activation flag.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a30.
+
+Return the breakout-activation flag.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:set_casse_brique_active
+
+PROVEN: Set the breakout-activation flag to one.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a38.
+
+Set the breakout-activation flag to one.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:enter_casse_brique
+
+PROVEN: Save the selected world/level and request world 1 level 22 when breakout is active.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a40.
+
+Save the selected world/level and request world 1 level 22 when breakout is active.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:enter_casse_brique2
+
+PROVEN: Clear the breakout exit latch.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a90.
+
+Clear the breakout exit latch.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:exit_casse_brique
+
+PROVEN: Restore the saved world/level choices.
+
+Units: see observed computation and contract. DOS layout/address: 1:16a9c.
+
+Restore the saved world/level choices.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:exit_casse_brique2
+
+PROVEN: Set current world to seven and clear breakout activation.
+
+Units: see observed computation and contract. DOS layout/address: 1:16ab8.
+
+Set current world to seven and clear breakout activation.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:get_speed_ball
+
+STRONG: Resolve ball velocity from the 72-unit angle and 0..7 speed level using quadrant table symmetry.
+
+Units: see observed computation and contract. DOS layout/address: 1:16ad0.
+
+Resolve ball velocity from the 72-unit angle and 0..7 speed level using quadrant table symmetry.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:speed_ball_null
+
+PROVEN: Clear object motion and all ball velocity/angle/level state.
+
+Units: see observed computation and contract. DOS layout/address: 1:16c00.
+
+Clear object motion and all ball velocity/angle/level state.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:speed_ball_init
+
+PROVEN: Initialize angle 18 at speed level zero and derive ball velocity.
+
+Units: see observed computation and contract. DOS layout/address: 1:16c30.
+
+Initialize angle 18 at speed level zero and derive ball velocity.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:speed_up_ball
+
+PROVEN: Increase ball speed level with a maximum of seven and update table velocity.
+
+Units: see observed computation and contract. DOS layout/address: 1:16c5c.
+
+Increase ball speed level with a maximum of seven and update table velocity.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:invert_speed_ball_x
+
+PROVEN: Reflect horizontal ball motion with angle=36-angle.
+
+Units: see observed computation and contract. DOS layout/address: 1:16c8c.
+
+Reflect horizontal ball motion with angle=36-angle.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:invert_speed_ball_y
+
+PROVEN: Reflect vertical ball motion with angle=72-angle.
+
+Units: see observed computation and contract. DOS layout/address: 1:16cb8.
+
+Reflect vertical ball motion with angle=72-angle.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:set_ball_pos
+
+PROVEN: Store object position and initialize the ball's signed 8-fractional-bit accumulators.
+
+Units: see observed computation and contract. DOS layout/address: 1:16ce4.
+
+Store object position and initialize the ball's signed 8-fractional-bit accumulators.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:angle_direction
+
+PROVEN: Quantize a direction vector into the 72-unit ball angle using CBdata thresholds.
+
+Units: see observed computation and contract. DOS layout/address: 1:16d0c.
+
+Quantize a direction vector into the 72-unit ball angle using CBdata thresholds.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:move_ball
+
+PROVEN: Advance ball accumulators and occasionally perturb motion to break repeated nondestructive collisions.
+
+Units: see observed computation and contract. DOS layout/address: 1:16d88.
+
+Advance ball accumulators and occasionally perturb motion to break repeated nondestructive collisions.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:get_brik_bonus
+
+PROVEN: Select a bonus brick among 20 slots, replacing its kind by six and storing its former kind.
+
+Units: see observed computation and contract. DOS layout/address: 1:16e4c.
+
+Select a bonus brick among 20 slots, replacing its kind by six and storing its former kind.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:do_bonus
+
+PROVEN: Arm/select a bonus after at least five bricks have been touched.
+
+Units: see observed computation and contract. DOS layout/address: 1:16ed0.
+
+Arm/select a bonus after at least five bricks have been touched.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:get_brik_info
+
+PROVEN: Read a brick layout entry from animation 2 and translate sprite IDs into numeric brick kinds.
+
+Units: see observed computation and contract. DOS layout/address: 1:16f2c.
+
+Read a brick layout entry from animation 2 and translate sprite IDs into numeric brick kinds.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:frame_briques
+
+PROVEN: Update brick animation/lifetime and screen-relative placement from its table slot.
+
+Units: see observed computation and contract. DOS layout/address: 1:1701c.
+
+Update brick animation/lifetime and screen-relative placement from its table slot.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:AllocateCasseBriqueBoum
+
+STRONG: Activate a type-11 explosion below the supplied object's animation rectangle.
+
+Units: see observed computation and contract. DOS layout/address: 1:17140.
+
+Activate a type-11 explosion below the supplied object's animation rectangle.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:AllocateBonus
+
+PROVEN: Activate an inactive bonus object of the requested type at the source position.
+
+Units: see observed computation and contract. DOS layout/address: 1:171f8.
+
+Activate an inactive bonus object of the requested type at the source position.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:bonus_fall
+
+STRONG: Choose a falling bonus from HP/fist upgrades and randomize the final alternative.
+
+Units: see observed computation and contract. DOS layout/address: 1:172d8.
+
+Choose a falling bonus from HP/fist upgrades and randomize the final alternative.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:collision_briques
+
+STRONG: Resolve ball/brick contacts, select reflection axes, damage bricks and update bonus/progression counters.
+
+Units: see observed computation and contract. DOS layout/address: 1:1737c.
+
+Resolve ball/brick contacts, select reflection axes, damage bricks and update bonus/progression counters.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:collision_rayman
+
+STRONG: Resolve ball contact with a pose-dependent rectangle derived from Rayman and select a reflected launch angle.
+
+Units: see observed computation and contract. DOS layout/address: 1:17798.
+
+Resolve ball contact with a pose-dependent rectangle derived from Rayman and select a reflected launch angle.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:move_briques
+
+PROVEN: Move the brick formation downward on a 500-tick cadence in InvadersMode 1.
+
+Units: see observed computation and contract. DOS layout/address: 1:179bc.
+
+Move the brick formation downward on a 500-tick cadence in InvadersMode 1.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:init_briques
+
+STRONG: Build up to 20 brick slots from animation data, setting counts, bounds and formation modes.
+
+Units: see observed computation and contract. DOS layout/address: 1:17a68.
+
+Build up to 20 brick slots from animation data, setting counts, bounds and formation modes.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:reset_briques
+
+PROVEN: Deactivate all 20 indexed brick slots.
+
+Units: see observed computation and contract. DOS layout/address: 1:17dc8.
+
+Deactivate all 20 indexed brick slots.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:casse_brique_init
+
+STRONG: Initialize breakout arena bounds, brick layout, lives and ball waiting state.
+
+Units: see observed computation and contract. DOS layout/address: 1:17e14.
+
+Initialize breakout arena bounds, brick layout, lives and ball waiting state.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:casse_brique_start
+
+PROVEN: Attach the waiting ball to Rayman and launch it on but0pressed.
+
+Units: see observed computation and contract. DOS layout/address: 1:18004.
+
+Attach the waiting ball to Rayman and launch it on but0pressed.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:ray_face_brik
+
+PROVEN: Test whether Rayman faces a supplied screen x coordinate.
+
+Units: see observed computation and contract. DOS layout/address: 1:18170.
+
+Test whether Rayman faces a supplied screen x coordinate.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:casse_brique_play
+
+STRONG: Advance active ball play, wall/brick/Rayman collisions and layout completion/failure.
+
+Units: see observed computation and contract. DOS layout/address: 1:181ac.
+
+Advance active ball play, wall/brick/Rayman collisions and layout completion/failure.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:casse_brique_end
+
+PROVEN: Restore an active bonus brick kind, consume a ball life and enter retry or completion delay.
+
+Units: see observed computation and contract. DOS layout/address: 1:18484.
+
+Restore an active bonus brick kind, consume a ball life and enter retry or completion delay.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:casse_brique_done
+
+PROVEN: After the completion delay, optionally award a life, restore choices and leave breakout through a fade.
+
+Units: see observed computation and contract. DOS layout/address: 1:18504.
+
+After the completion delay, optionally award a life, restore choices and leave breakout through a fade.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:DISPLAY_FIXE_CB
+
+PROVEN: Draw breakout lives/score/status using sprite and localized text calls.
+
+Units: see observed computation and contract. DOS layout/address: 1:18590.
+
+Draw breakout lives/score/status using sprite and localized text calls.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:DO_CB_BALL_COMMAND
+
+PROVEN: Dispatch ball substates 0..4 and handle the TOUCHE(1) exit request.
+
+Units: see observed computation and contract. DOS layout/address: 1:187d4.
+
+Dispatch ball substates 0..4 and handle the TOUCHE(1) exit request.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:DO_CB_BRIK_COMMAND
+
+PROVEN: Advance the brick formation and update an individual brick frame.
+
+Units: see observed computation and contract. DOS layout/address: 1:18874.
+
+Advance the brick formation and update an individual brick frame.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### function:DO_RAY_CASSE_BRIQUE
+
+PROVEN: Run breakout-specific Rayman input, movement, collision and animation.
+
+Units: see observed computation and contract. DOS layout/address: 1:18888.
+
+Run breakout-specific Rayman input, movement, collision and animation.
+
+Ball_x/y are signed fixed-point accumulators with eight fractional bits. Angle period 72, quadrant 18, speed level 0..7. Ball object substates 0 init,1 wait/launch,2 play,3 life loss,4 completion delay; kind 6 is a temporary bonus brick. Twenty brick slots come from animation 2. but0pressed launches; leftjoy/rightjoy steer Rayman; TOUCHE(1) requests exit. Enter requests world 1 level 22, saves choice globals; exit restores choices and clears active with num_world=7. Do not reinterpret CBdata as floating-point physics.
+
+### global:BonusBrik
+
+STRONG: Selected bonus brick slot, with twenty used as no-slot sentinel.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fe8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Selected bonus brick slot, with twenty used as no-slot sentinel.
+
+### global:BonusBrikType
+
+STRONG: Original kind of a temporarily substituted kind-six bonus brick.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fe9.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Original kind of a temporarily substituted kind-six bonus brick.
+
+### global:BonusMode
+
+STRONG: Breakout bonus state: one arms selection, two denotes the selected bonus brick.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fe7.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Breakout bonus state: one arms selection, two denotes the selected bonus brick.
+
+### global:CBdata
+
+STRONG: Ball first-quadrant angle thresholds and eight paired velocity columns.
+
+Units: see observed computation and contract. DOS layout/address: 2:6018.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball first-quadrant angle thresholds and eight paired velocity columns.
+
+### global:CBoffsetX
+
+STRONG: Horizontal brick formation offset applied together with camera x and local slot x.
+
+Units: see observed computation and contract. DOS layout/address: 2:6010.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Horizontal brick formation offset applied together with camera x and local slot x.
+
+### global:CBoffsetXMax
+
+STRONG: Computed upper horizontal formation-offset bound.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e816.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Computed upper horizontal formation-offset bound.
+
+### global:CBoffsetXMin
+
+STRONG: Computed lower horizontal formation-offset bound.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e810.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Computed lower horizontal formation-offset bound.
+
+### global:CBoffsetY
+
+STRONG: Vertical brick formation offset applied together with camera y and local slot y.
+
+Units: see observed computation and contract. DOS layout/address: 2:6012.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Vertical brick formation offset applied together with camera y and local slot y.
+
+### global:CBoffsetYMax
+
+STRONG: Computed upper vertical formation-offset bound.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e814.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Computed upper vertical formation-offset bound.
+
+### global:CBoffsetYMin
+
+STRONG: Computed lower vertical formation-offset bound.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e812.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Computed lower vertical formation-offset bound.
+
+### global:CasseBrique
+
+STRONG: Twenty runtime brick slots containing local layout position, object index and brick kind.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e764.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Twenty runtime brick slots containing local layout position, object index and brick kind.
+
+### global:CasseBriqueON
+
+STRONG: Requested breakout game mode exposed by the public get/set wrappers.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b9.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Requested breakout game mode exposed by the public get/set wrappers.
+
+### global:CasseBriqueOffsetX
+
+STRONG: Layout-indexed offset table used by breakout initialization; one y initialization also reads this X table.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fec.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Layout-indexed offset table used by breakout initialization; one y initialization also reads this X table.
+
+### global:CasseBriqueOffsetY
+
+STRONG: Layout-indexed vertical brick formation offset table.
+
+Units: see observed computation and contract. DOS layout/address: 2:5ffa.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Layout-indexed vertical brick formation offset table.
+
+### global:InvadersMode
+
+STRONG: Brick-formation mode: two is armed, one moves after ball launch, zero is stationary.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fe6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Brick-formation mode: two is armed, one moves after ball launch, zero is stationary.
+
+### global:LIMITE_DROITE
+
+STRONG: Rayman's right horizontal clamp in breakout.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e81e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Rayman's right horizontal clamp in breakout.
+
+### global:LIMITE_GAUCHE
+
+STRONG: Rayman's left horizontal clamp in breakout.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e818.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Rayman's left horizontal clamp in breakout.
+
+### global:LastTouched
+
+STRONG: Previous brick/contact selector suppressing immediate repeated collision handling; 20/25 are other contact sentinels.
+
+Units: see observed computation and contract. DOS layout/address: 2:6008.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Previous brick/contact selector suppressing immediate repeated collision handling; 20/25 are other contact sentinels.
+
+### global:NbBrikTouched
+
+STRONG: Accepted brick-hit count used to arm bonus selection at five.
+
+Units: see observed computation and contract. DOS layout/address: 2:5feb.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Accepted brick-hit count used to arm bonus selection at five.
+
+### global:NbClassicBrik
+
+STRONG: Remaining ordinary brick count, decremented on destructive contacts.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fea.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Remaining ordinary brick count, decremented on destructive contacts.
+
+### global:NoCB
+
+STRONG: Current brick-layout frame/index used for animation and formation offsets.
+
+Units: see observed computation and contract. DOS layout/address: 2:600a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current brick-layout frame/index used for animation and formation offsets.
+
+### global:NoCBInit
+
+STRONG: Initial layout index retained to detect layout-cycle completion.
+
+Units: see observed computation and contract. DOS layout/address: 2:600c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Initial layout index retained to detect layout-cycle completion.
+
+### global:XOFFSETCBLEFT
+
+STRONG: Left ball-wall inset used by breakout wall reflection.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e822.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Left ball-wall inset used by breakout wall reflection.
+
+### global:XOFFSETCBRIGHT
+
+STRONG: Right ball-wall inset used by breakout wall reflection.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e81a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Right ball-wall inset used by breakout wall reflection.
+
+### global:XOFFSETRAY
+
+UNKNOWN: Breakout initialization stores 56 or -8; no consuming reader found in the scoped code.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e81c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Breakout initialization stores 56 or -8; no consuming reader found in the scoped code.
+
+### global:Xdir
+
+STRONG: Brick-formation horizontal direction scratch; the scoped movement path writes zero.
+
+Units: see observed computation and contract. DOS layout/address: 2:6014.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Brick-formation horizontal direction scratch; the scoped movement path writes zero.
+
+### global:YOFFSETCB
+
+STRONG: Upper ball-wall inset used by breakout wall reflection.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e820.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Upper ball-wall inset used by breakout wall reflection.
+
+### global:Ydir
+
+STRONG: Brick-formation vertical step selected as zero/one and applied every formation timer expiry.
+
+Units: see observed computation and contract. DOS layout/address: 2:6016.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Brick-formation vertical step selected as zero/one and applied every formation timer expiry.
+
+### global:ball_x
+
+STRONG: Ball horizontal signed position accumulator with eight fractional bits.
+
+Units: see observed computation and contract. DOS layout/address: 2:62a8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball horizontal signed position accumulator with eight fractional bits.
+
+### global:ball_y
+
+STRONG: Ball vertical signed position accumulator with eight fractional bits.
+
+Units: see observed computation and contract. DOS layout/address: 2:62ac.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball vertical signed position accumulator with eight fractional bits.
+
+### global:casse_brique_active
+
+STRONG: Breakout activation latch used by entry/exit world-selection flow.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Breakout activation latch used by entry/exit world-selection flow.
+
+### global:cbout
+
+STRONG: Breakout exit-request latch preventing repeated TOUCHE(1) handling.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b5.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Breakout exit-request latch preventing repeated TOUCHE(1) handling.
+
+### global:dist2
+
+STRONG: Squared ball/brick proximity threshold used alongside the horizontal twenty-one-pixel test.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Squared ball/brick proximity threshold used alongside the horizontal twenty-one-pixel test.
+
+### global:nb_collis
+
+STRONG: Number of recorded ball/brick contacts; collision scan stops after one slot.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e824.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Number of recorded ball/brick contacts; collision scan stops after one slot.
+
+### global:nb_max_collis
+
+STRONG: Largest recorded contact count observed by the breakout collision routine.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Largest recorded contact count observed by the breakout collision routine.
+
+### global:no_sound
+
+STRONG: Sound ID selected by brick kind/contact and passed to PlaySnd_old.
+
+Units: see observed computation and contract. DOS layout/address: 2:5fe4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Sound ID selected by brick kind/contact and passed to PlaySnd_old.
+
+### global:old_num_level_choice
+
+STRONG: Saved selected level restored when leaving breakout.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e80e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Saved selected level restored when leaving breakout.
+
+### global:old_num_world_choice
+
+STRONG: Saved selected world restored when leaving breakout.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e80c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Saved selected world restored when leaving breakout.
+
+### global:speed_ball_angle
+
+STRONG: Ball direction with period 72 and quadrant width eighteen.
+
+Units: see observed computation and contract. DOS layout/address: 2:629e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball direction with period 72 and quadrant width eighteen.
+
+### global:speed_ball_level
+
+STRONG: Ball velocity-table speed column selector, limited to seven by speed_up_ball.
+
+Units: see observed computation and contract. DOS layout/address: 2:62a0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball velocity-table speed column selector, limited to seven by speed_up_ball.
+
+### global:speed_ball_x
+
+STRONG: Horizontal ball velocity added directly to the 8-fractional-bit accumulator.
+
+Units: see observed computation and contract. DOS layout/address: 2:62a2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Horizontal ball velocity added directly to the 8-fractional-bit accumulator.
+
+### global:speed_ball_y
+
+STRONG: Vertical ball velocity added directly to the 8-fractional-bit accumulator.
+
+Units: see observed computation and contract. DOS layout/address: 2:62a4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Vertical ball velocity added directly to the 8-fractional-bit accumulator.
+
+### global:tempo
+
+STRONG: Brick formation countdown, reloaded to 500 after a vertical step.
+
+Units: see observed computation and contract. DOS layout/address: 2:600e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Brick formation countdown, reloaded to 500 after a vertical step.
+
+### global:undestroy
+
+STRONG: Nondestructive collision counter; values above five request ball-motion perturbation.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Nondestructive collision counter; values above five request ball-motion perturbation.
+
+### global:upscreen
+
+STRONG: Ball-motion perturbation request latch cleared by move_ball.
+
+Units: see observed computation and contract. DOS layout/address: 2:62b7.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ball-motion perturbation request latch cleared by move_ball.
+
+## cage.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:DO_CAGE2
+
+PROVEN: Force cage fragment speed to (0,-8).
+
+Units: see parameter/result contracts. DOS layout/address: 1:18b40.
+
+Force cage fragment speed to (0,-8).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_CAGE
+
+PROVEN: At state 0:7 frame zero on the selected clock-zero phase, set priority 5 and allocate the cage grid fragment.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18b50.
+
+At state 0:7 frame zero on the selected clock-zero phase, set priority 5 and allocate the cage grid fragment.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoCagePoingCollision
+
+PROVEN: Apply cage damage; at zero health persist broken initial state/position, start medallion, increment total cages, set the pending-toon latch to 5, sound and collection, otherwise select hurt substate 10. DO_OBJECTS consumes the nonzero latch by requesting seven toons.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18ba4.
+
+Apply cage damage; at zero health persist broken initial state/position, start medallion, increment total cages, set the pending-toon latch to 5, sound and collection, otherwise select hurt substate 10. DO_OBJECTS consumes the nonzero latch by requesting seven toons.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_MEDAILLON_TOON
+
+PROVEN: Play sounds at frames 41/64 in substates 32..37 and kill/deactivate at substate 38.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18c2c.
+
+Play sounds at frames 41/64 in substates 32..37 and kill/deactivate at substate 38.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_MEDAILLON_TOON_GELE
+
+PROVEN: While frozen, advance active type-197 medallions and clocks with camera restored, mute loops once and release freeze/play sound 61 at substate 38.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18ca0.
+
+While frozen, advance active type-197 medallions and clocks with camera restored, mute loops once and release freeze/play sound 61 at substate 38.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:ALLOCATE_MEDAILLON_TOON
+
+PROVEN: Activate an inactive type-197 at screen-center top, select cage-count substate 32+n, saturate stored count at six and freeze camera/engine motion.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18dd4.
+
+Activate an inactive type-197 at screen-center top, select cage-count substate 32+n, saturate stored count at six and freeze camera/engine motion.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocate_toons
+
+PROVEN: Scan fourteen slots from the first type-3 object, activate up to count inactive toons using seven-entry speed tables and source sprite layers, and initialize their airborne scripts/eta speeds.
+
+Units: see parameter/result contracts. DOS layout/address: 1:18f14.
+
+Scan fourteen slots from the first type-3 object, activate up to count inactive toons using seven-entry speed tables and source sprite layers, and initialize their airborne scripts/eta speeds.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocateGrille
+
+PROVEN: Activate an inactive type-59 cage-grid fragment at source coordinates with vertical speed -4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:1912c.
+
+Activate an inactive type-59 cage-grid fragment at source coordinates with vertical speed -4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_ONE_PINK_CMD
+
+PROVEN: Update toon cooldown, launch burst/water escape, turn walking at walls, follow floors and stop airborne wall/ceiling collisions according to state.
+
+Units: see parameter/result contracts. DOS layout/address: 1:191b4.
+
+Update toon cooldown, launch burst/water escape, turn walking at walls, follow floors and stop airborne wall/ceiling collisions according to state.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoLidolPinkRaymanZDD
+
+PROVEN: Select script label 0 when the current toon eta has bit 1 set.
+
+Units: see parameter/result contracts. DOS layout/address: 1:1937c.
+
+Select script label 0 when the current toon eta has bit 1 set.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## cdsave.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Original Watcom declarations and source-local records are retained. Approved local name changes preserve whole compiled object contributions; parser adaptation is confined to the checker.
+
+### function:interrupt_handler_5ba70
+
+PROVEN: Empty interrupt handler with compiler-generated interrupt return; INTPACK parameter unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ba70.
+
+Empty interrupt handler with compiler-generated interrupt return; INTPACK parameter unused.
+
+### function:empty_handler_5ba88
+
+PROVEN: Empty ordinary function.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ba88.
+
+Empty ordinary function.
+
+### function:interrupt_handler_5ba8c
+
+PROVEN: Interrupt handler that disables then enables interrupts before compiler-generated return.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ba8c.
+
+Interrupt handler that disables then enables interrupts before compiler-generated return.
+
+### function:save_interrupt_vectors
+
+PROVEN: Snapshot all256 DOS interrupt vectors into the far-pointer table.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5baa8.
+
+Snapshot all256 DOS interrupt vectors into the far-pointer table.
+
+### function:empty_handler_5bad4
+
+PROVEN: Empty ordinary function sharing an aligned return contribution.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bad4.
+
+Empty ordinary function sharing an aligned return contribution.
+
+### function:sub_5BAD8
+
+PROVEN: Snapshot all interrupt vectors then install the exception-vector substitutes0..5.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bad8.
+
+Snapshot all interrupt vectors then install the exception-vector substitutes0..5.
+
+### function:sub_5BAE0
+
+PROVEN: Install interrupt_handler_5ba8c on DOS vectors0..5.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bae0.
+
+Install interrupt_handler_5ba8c on DOS vectors0..5.
+
+### function:sub_5BB48
+
+PROVEN: Restore all256 DOS vectors from the snapshot.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bb48.
+
+Restore all256 DOS vectors from the snapshot.
+
+### function:sub_5BB78
+
+PROVEN: Restore only INT3 vector from the snapshot.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bb78.
+
+Restore only INT3 vector from the snapshot.
+
+### function:sub_5BB94
+
+PROVEN: Restore only INT1 vector from the snapshot.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bb94.
+
+Restore only INT1 vector from the snapshot.
+
+### function:check_saved_drive_letter
+
+PROVEN: When byte_CFA29 is nonzero derive uppercase CD drive letter AudioStatusByte()+'A' and set byte_CFA2A to equality with saved_argv[0].
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bbb0.
+
+When byte_CFA29 is nonzero derive uppercase CD drive letter AudioStatusByte()+'A' and set byte_CFA2A to equality with saved_argv[0].
+
+### function:sub_5bbe8
+
+PROVEN: Empty function; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bbe8.
+
+Empty function; no observed operation.
+
+### function:verify_mscdex
+
+PROVEN: Require MSCDEX query success or print/terminate(-1). Secondary success sets byte_CFA29=1 and JeuCracker=0; failure clears byte_CFA29.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bbec.
+
+Require MSCDEX query success or print/terminate(-1). Secondary success sets byte_CFA29=1 and JeuCracker=0; failure clears byte_CFA29.
+
+### function:check_cd_for_save
+
+PROVEN: If CD/status checks permit, stop audio and probe a generated path for writable storage. Successful wb open closes/unlinks and sets JeuCracker1; failure leaves flag. Missing checks set1. Preserve DOS construction offsets: generated letters overwrite backslash; see PLATFORM_OPEN section6.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bc40.
+
+If CD/status checks permit, stop audio and probe a generated path for writable storage. Successful wb open closes/unlinks and sets JeuCracker1; failure leaves flag. Missing checks set1. Preserve DOS construction offsets: generated letters overwrite backslash; see PLATFORM_OPEN section6.
+
+### function:verify_cdrom_response
+
+PROVEN: Poll/validate CD readiness. Windows/forced branches terminate on missing disc; DOS prompt offers Escape exit or Space limited mode. Missing MSCDEX offers Space disabling OptionMusicCdActive. Return JeuCracker==0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bcec.
+
+Poll/validate CD readiness. Windows/forced branches terminate on missing disc; DOS prompt offers Escape exit or Space limited mode. Missing MSCDEX offers Space disabling OptionMusicCdActive. Return JeuCracker==0.
+
+### function:wait_for_cdrom_response
+
+PROVEN: Allocate100 temporary bytes, poll at most1000 times before final status check, call sub_1a724 on ready, free allocation, return readiness. The buffer is not passed to the status APIs.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bed8.
+
+Allocate100 temporary bytes, poll at most1000 times before final status check, call sub_1a724 on ready, free allocation, return readiness. The buffer is not passed to the status APIs.
+
+### function:save_file_exists
+
+PROVEN: Open rb, return0 on failure; otherwise close and return1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bf3c.
+
+Open rb, return0 on failure; otherwise close and return1.
+
+### function:sub_5BF58
+
+PROVEN: Empty function; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bf58.
+
+Empty function; no observed operation.
+
+### global:byte_CFA29
+
+PROVEN: MSCDEX secondary detection success flag;gates CD-drive checks/probe.
+
+Units: boolean. DOS layout/address: 2:3fa29.
+
+MSCDEX secondary detection success flag;gates CD-drive checks/probe.
+
+### global:interrupt_vectors
+
+PROVEN: 256 saved DOS interrupt vectors,6 bytes each (far offset32+selector16),snapshot/restored independently of native host addresses.
+
+Units: far interrupt addresses. DOS layout/address: 2:54e80.
+
+256 saved DOS interrupt vectors,6 bytes each (far offset32+selector16),snapshot/restored independently of native host addresses.
+
+## cheat.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Original Watcom declarations and source-local records are retained. Approved local name changes preserve whole compiled object contributions; parser adaptation is confined to the checker.
+
+### function:sub_35F70
+
+STRONG: Sample1000 clock ticks around empty500-iteration loops; derive999 positive intervals, count samples outside3/4..4/3 mean, set need_timer=(valid<10). Allocation failure leaves prior state; no sound-card probe occurs here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:25f70.
+
+Sample1000 clock ticks around empty500-iteration loops; derive999 positive intervals, count samples outside3/4..4/3 mean, set need_timer=(valid<10). Allocation failure leaves prior state; no sound-card probe occurs here.
+
+### function:sub_3609C
+
+PROVEN: If need_timer, measure VGA_FREQ/2 retrace periods; narrow mean to word_CF7F0, compute31/32 adjusted word_CF7EE and word_CF7E6=adjusted+low16(mean*display_mode).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2609c.
+
+If need_timer, measure VGA_FREQ/2 retrace periods; narrow mean to word_CF7F0, compute31/32 adjusted word_CF7EE and word_CF7E6=adjusted+low16(mean*display_mode).
+
+### function:InitPcSoundCard
+
+STRONG: Calibrate frame timing (despite inherited sound-card name):mask/permit interrupts, test retrace timing at most three failures, otherwise choose display_mode from CalcSpeed<=190 and disable need_timer.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26150.
+
+Calibrate frame timing (despite inherited sound-card name):mask/permit interrupts, test retrace timing at most three failures, otherwise choose display_mode from CalcSpeed<=190 and disable need_timer.
+
+### function:FIRST_INIT
+
+STRONG: Initialize temporary pool/text/input/replay state; allocate64064-byte draw and128000-byte effect buffers, fail if absent; initialize binocular lookup, set VGA_FREQ70 only for Frequence70 else60, enable sync/speaker, calibrate timer, clear changed-path flag.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2622c.
+
+Initialize temporary pool/text/input/replay state; allocate64064-byte draw and128000-byte effect buffers, fail if absent; initialize binocular lookup, set VGA_FREQ70 only for Frequence70 else60, enable sync/speaker, calibrate timer, clear changed-path flag.
+
+### function:init_divers_level_PC
+
+PROVEN: Unless game ended, set caller key byte255,poll input,and service first replay/record frame when offset0 and either flag set.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:262e4.
+
+Unless game ended, set caller key byte255,poll input,and service first replay/record frame when offset0 and either flag set.
+
+### function:file_level
+
+PROVEN: Format RAY<decimal signed level>.LEV into supplied destination.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2631c.
+
+Format RAY<decimal signed level>.LEV into supplied destination.
+
+### function:world_level
+
+PROVEN: Format RAY<decimal signed world>.WLD into supplied destination.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26394.
+
+Format RAY<decimal signed world>.WLD into supplied destination.
+
+### function:LoadPlan3InVignet
+
+PROVEN: Load resource through PLAN2 loader, transfer resulting buffer/length/row stride/palette to PLAN3, restore all prior PLAN2 metadata and rvb_pres.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2640c.
+
+Load resource through PLAN2 loader, transfer resulting buffer/length/row stride/palette to PLAN3, restore all prior PLAN2 metadata and rvb_pres.
+
+### function:DISPLAY_AND_FADE_PLAN3
+
+PROVEN: Start palette fade-in2, swap/present PLAN3 then process fade until nb_fade0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:264e8.
+
+Start palette fade-in2, swap/present PLAN3 then process fade until nb_fade0.
+
+### function:LOAD_VIGNET_PC
+
+PROVEN: Select world-loading resource:world1..6 ->68,70,69,66,63,62;default61;breakout64.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26554.
+
+Select world-loading resource:world1..6 ->68,70,69,66,63,62;default61;breakout64.
+
+### function:LOAD_SAVE_SCREEN
+
+PROVEN: Load PLAN3 resource12.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:265e0.
+
+Load PLAN3 resource12.
+
+### function:LOAD_PERFTIME_SCREEN
+
+PROVEN: Load PLAN3 resource73.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:265f0.
+
+Load PLAN3 resource73.
+
+### function:LOAD_PERFECT_SCREEN
+
+PROVEN: Load PLAN3 resource71.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26600.
+
+Load PLAN3 resource71.
+
+### function:LOAD_CONTINUE_SCREEN
+
+STRONG: Load PLAN3 resource11 then DOS free-space check on CD drive. AXFFFF or nonzero free clusters terminates through original inline sequence; behavior is documented separately from port policy.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26610.
+
+Load PLAN3 resource11 then DOS free-space check on CD drive. AXFFFF or nonzero free clusters terminates through original inline sequence; behavior is documented separately from port policy.
+
+### function:DISPLAY_FOND_CONTINUE
+
+PROVEN: Copy top137 rows of PLAN3 to draw buffer at320-byte stride.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26644.
+
+Copy top137 rows of PLAN3 to draw buffer at320-byte stride.
+
+### function:SwapPlan2PlanVignInVignet
+
+PROVEN: Load a resource into indexed vignette buffer/length/stride/palette, restoring prior PLAN2 metadata and palette afterward.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26678.
+
+Load a resource into indexed vignette buffer/length/stride/palette, restoring prior PLAN2 metadata and palette afterward.
+
+### function:LOAD_VIGNET_GAME
+
+PROVEN: Select level vignette from world/level branches;default-1 loads nothing. Retain exact source selection table, not a generalized world-only rule.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26788.
+
+Select level vignette from world/level branches;default-1 loads nothing. Retain exact source selection table, not a generalized world-only rule.
+
+### function:LOAD_CREDITS_VIGNET
+
+STRONG: Load resource IDs52,58,55,53 into first arena and56,54,59,57 into second;slots0..7.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2681c.
+
+Load resource IDs52,58,55,53 into first arena and56,54,59,57 into second;slots0..7.
+
+### function:DEPART_WORLD
+
+PROVEN: Stop CD,set video constraints, decide reload from selected/current world and breakout. Completed world6 invokes victory; otherwise reload world resources only when new_world and game not ended, with loading vignette and fixed-sprite cursor reset.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26880.
+
+Stop CD,set video constraints, decide reload from selected/current world and breakout. Completed world6 invokes victory; otherwise reload world resources only when new_world and game not ended, with loading vignette and fixed-sprite cursor reset.
+
+### function:DEPART_LEVEL
+
+PROVEN: Stop CD/install exception substitutes,set current world/level from choices. If active, optional loading fade, reset level/sprite cursors, load vignette and level, initialize background; invoke empty CD hook for world>=2,level>=7.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26998.
+
+Stop CD/install exception substitutes,set current world/level from choices. If active, optional loading fade, reset level/sprite cursors, load vignette and level, initialize background; invoke empty CD hook for world>=2,level>=7.
+
+### function:REMOVE_FICHIER
+
+PROVEN: Delete save-prefix+RAYMAN<selected slot>.SAV.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26b0c.
+
+Delete save-prefix+RAYMAN<selected slot>.SAV.
+
+### function:TestSave
+
+PROVEN: Return constant3; no filesystem capacity test occurs.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26bbc.
+
+Return constant3; no filesystem capacity test occurs.
+
+### function:test_EXIT
+
+PROVEN: Set PROC_EXIT on Escape:scan-code table in input_mode1,otherwise consuming BIOS/console byte27.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26bc4.
+
+Set PROC_EXIT on Escape:scan-code table in input_mode1,otherwise consuming BIOS/console byte27.
+
+### function:test_Keyb_on_wldmap
+
+PROVEN: World-map Escape requires no fade and confirmation message4 in scan-code mode; console Escape directly sets PROC_EXIT.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26bf8.
+
+World-map Escape requires no fade and confirmation message4 in scan-code mode; console Escape directly sets PROC_EXIT.
+
+### function:Keyflush
+
+PROVEN: Drain console key queue with kbhit/getch.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26c44.
+
+Drain console key queue with kbhit/getch.
+
+### function:LOAD_GENERAL_SCREEN
+
+PROVEN: Load PCX option resource13 and its palette into rvb_plan3.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26c54.
+
+Load PCX option resource13 and its palette into rvb_plan3.
+
+### function:LOAD_OPTIONS_SCREEN
+
+PROVEN: Load PCX option resource12 and its palette into rvb_plan3.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26c88.
+
+Load PCX option resource12 and its palette into rvb_plan3.
+
+### function:HANDLE_KEY
+
+PROVEN: Only outside scan-code mode, write available non-demo console byte or255 sentinel to caller; input_mode1 leaves caller byte unchanged.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26cbc.
+
+Only outside scan-code mode, write available non-demo console byte or255 sentinel to caller; input_mode1 leaves caller byte unchanged.
+
+### function:DISPLAY_FOND_SELECT
+
+PROVEN: Ensure Normal video when needed and copy320x200 PLAN2 into draw buffer.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26ce8.
+
+Ensure Normal video when needed and copy320x200 PLAN2 into draw buffer.
+
+### function:DEPART_INIT_LOOP
+
+PROVEN: Empty hook; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d30.
+
+Empty hook; no observed operation.
+
+### function:DEPART_DEAD_LOOP
+
+PROVEN: Empty hook; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d30.
+
+Empty hook; no observed operation.
+
+### function:FIN_GAME_LOOP
+
+PROVEN: Only if fin_du_jeu invalidate checkpoint/reset world arena and sprite cursor.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d34.
+
+Only if fin_du_jeu invalidate checkpoint/reset world arena and sprite cursor.
+
+### function:FIN_MAP_LOOP
+
+PROVEN: Capture JeuCracker before optional tiny-Rayman restoration, then original inline terminates to DOS if captured flag nonzero.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d58.
+
+Capture JeuCracker before optional tiny-Rayman restoration, then original inline terminates to DOS if captured flag nonzero.
+
+### function:FIN_DEAD_LOOP
+
+PROVEN: Empty hook; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d8c.
+
+Empty hook; no observed operation.
+
+### function:END_GAME
+
+PROVEN: Restore vectors, text mode, finish active recording state, optionally free all main arenas/drawing buffers; cleanup temp pool, restore vectors again and exit0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26d90.
+
+Restore vectors, text mode, finish active recording state, optionally free all main arenas/drawing buffers; cleanup temp pool, restore vectors again and exit0.
+
+### function:INIT_EXTENSIONS
+
+PROVEN: Empty hook; no observed operation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26e1c.
+
+Empty hook; no observed operation.
+
+### function:DISPLAY_LOADING
+
+PROVEN: Draw PLAN3 and loading text149 at160,190 or breakout240,160.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26e20.
+
+Draw PLAN3 and loading text149 at160,190 or breakout240,160.
+
+### function:START_WORLD_VIGNET
+
+PROVEN: Load selected world vignette, save current palette, fade in and run loading transition effect9/100, presenting loading text until fade complete.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26e60.
+
+Load selected world vignette, save current palette, fade in and run loading transition effect9/100, presenting loading text until fade complete.
+
+### function:END_WORLD_VIGNET
+
+PROVEN: Run reverse loading effect9/100,fade out2,restore saved palette.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26f48.
+
+Run reverse loading effect9/100,fade out2,restore saved palette.
+
+### function:sub_36FAC
+
+PROVEN: INT8 timer ISR increments signed phase; on nine of every ten calls, oscillate timer_step32..128 by signed count and scale palette entries1..8,clamped63. Upload then chain old timer and enable interrupts.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:26fac.
+
+INT8 timer ISR increments signed phase; on nine of every ten calls, oscillate timer_step32..128 by signed count and scale palette entries1..8,clamped63. Upload then chain old timer and enable interrupts.
+
+### function:sub_370E8
+
+PROVEN: Reset timer palette phase0,step64,count4;save INT8 vector and install sub_36FAC.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:270e8.
+
+Reset timer palette phase0,step64,count4;save INT8 vector and install sub_36FAC.
+
+### function:sub_37134
+
+PROVEN: Restore prior INT8 vector.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27134.
+
+Restore prior INT8 vector.
+
+### function:LOAD_BIG_RAYMAN
+
+PROVEN: Call load_big_ray on supplied arena and return1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27150.
+
+Call load_big_ray on supplied arena and return1.
+
+### function:ValidButPressed
+
+PROVEN: When no fade, accept joy_buttonA1==1 or scan-code Enter/Space in input_mode1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2715c.
+
+When no fade, accept joy_buttonA1==1 or scan-code Enter/Space in input_mode1.
+
+### function:StartButPressed
+
+PROVEN: Scan-code mode accepts Enter;console mode delegates button1 predicate.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:271a4.
+
+Scan-code mode accepts Enter;console mode delegates button1 predicate.
+
+### function:PauseButPressed
+
+PROVEN: Scan-code mode accepts NumLock;console mode consumes p/P. Separate ISR handles E1 pause sequence.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:271d4.
+
+Scan-code mode accepts NumLock;console mode consumes p/P. Separate ISR handles E1 pause sequence.
+
+### function:ExitButPressed
+
+PROVEN: Return Escape from scan-code state or consumed console byte27.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27210.
+
+Return Escape from scan-code state or consumed console byte27.
+
+### function:CancelButPressed
+
+PROVEN: Return Tab from scan-code state or consumed console byte9.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27248.
+
+Return Tab from scan-code state or consumed console byte9.
+
+### function:SelectButPressed
+
+PROVEN: Return Escape from scan-code state or consumed console byte27; same trigger as ExitButPressed.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27280.
+
+Return Escape from scan-code state or consumed console byte27; same trigger as ExitButPressed.
+
+### function:ToDoAtExit
+
+PROVEN: Restore keyboard/speaker/CD/text mode and print language text231.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:272b8.
+
+Restore keyboard/speaker/CD/text mode and print language text231.
+
+### function:PC_clear_text_input_buffer
+
+PROVEN: Clear all9 encoded scan-code history bytes.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:272f8.
+
+Clear all9 encoded scan-code history bytes.
+
+### function:PC_init_cheats
+
+PROVEN: Select23 cheat-code pointers by language==1 AZERTY versus other layouts. Pointers select slices of existing encoded cheat table; not plain-text strings.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27310.
+
+Select23 cheat-code pointers by language==1 AZERTY versus other layouts. Pointers select slices of existing encoded cheat table; not plain-text strings.
+
+### function:PC_do_cheats_in_world_map
+
+PROVEN: Consume need_check_cheats before gating on map/JeuCracker. Prefix memcmp actions include breakout (usually boss-gated), lens,powers,level unlock/all-world selector and80/100Hz toggle. Unlock-all excludes world6 except when num_world_choice==14; no guessed correction of that comparison.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:27528.
+
+Consume need_check_cheats before gating on map/JeuCracker. Prefix memcmp actions include breakout (usually boss-gated), lens,powers,level unlock/all-world selector and80/100Hz toggle. Unlock-all excludes world6 except when num_world_choice==14; no guessed correction of that comparison.
+
+### function:PC_do_cheats
+
+PROVEN: Consume pending-cheat flag;require active level,world!=6,not cracked,ray_mode!=5. Set99 lives,hitpoints/max4,powers,golden fist12,tings min99(+10),win only grounded stationary unattached,free movement via negated ray_mode and airborne2:2/dead_time64,or toggle programmer message.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2784c.
+
+Consume pending-cheat flag;require active level,world!=6,not cracked,ray_mode!=5. Set99 lives,hitpoints/max4,powers,golden fist12,tings min99(+10),win only grounded stationary unattached,free movement via negated ray_mode and airborne2:2/dead_time64,or toggle programmer message.
+
+### global:cheat_code_10_wiz
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f778.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_10_wiz_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f768.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_5hp
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7a4.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_5hp_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f788.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_99_lives
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f79c.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_99_lives_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f784.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_all_powers
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f798.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_all_powers_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f76c.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_breakout
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f794.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_breakout_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f770.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_breakout_before_victory
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7b0.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_free_movement
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7a0.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_freq100
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7bc.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_freq80
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7a8.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_golden_fist
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f78c.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_golden_fist_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f774.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_lens
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7ac.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_level_select
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f7b4.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_programmer_message
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f760.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_unlock_all_levels
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f790.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_unlock_all_levels_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f780.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_win_map
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f77c.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:cheat_code_win_map_alt
+
+PROVEN: Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+Units: encoded scan-code prefix. DOS layout/address: 2:4f764.
+
+Layout-selected pointer into encoded cheat_codes. Fixed memcmp length and gated effect are in PC_do_cheats/PC_do_cheats_in_world_map.
+
+### global:freeze
+
+UNKNOWN: Observed storage used by cheat. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3fa4a.
+
+### global:level_filename
+
+PROVEN: RAY<decimal>.WLD/.LEV filename buffers built for resource-loading calls.
+
+Units: DOS filename bytes. DOS layout/address: 2:3d80c.
+
+RAY<decimal>.WLD/.LEV filename buffers built for resource-loading calls.
+
+### global:old_timer
+
+PROVEN: Saved6-byte INT8 handler vector;timer palette ISR chains it and restore helper reinstalls it.
+
+Units: far interrupt address. DOS layout/address: 2:4f7cc.
+
+Saved6-byte INT8 handler vector;timer palette ISR chains it and restore helper reinstalls it.
+
+### global:saved_frequence
+
+PROVEN: Frequency saved when entering80/100Hz cheats from another rate;restore when toggling current special rate off.
+
+Units: frequency selector / Hz. DOS layout/address: 2:4f7b8.
+
+Frequency saved when entering80/100Hz cheats from another rate;restore when toggling current special rate off.
+
+### global:timer_count
+
+PROVEN: Signed32 palette brightness increment,initial4;negated on reaching32/128.
+
+Units: scale64 per eligible INT8. DOS layout/address: 2:4f7c0.
+
+Signed32 palette brightness increment,initial4;negated on reaching32/128.
+
+### global:timer_phase
+
+PROVEN: Signed32 timer ISR phase;palette step skipped on multiples10.
+
+Units: INT8 calls. DOS layout/address: 2:4f7c8.
+
+Signed32 timer ISR phase;palette step skipped on multiples10.
+
+### global:timer_step
+
+PROVEN: Signed32 palette brightness multiplier oscillating32..128,initial64;component product arithmetic>>6 then min63.
+
+Units: scale64. DOS layout/address: 2:4f7c4.
+
+Signed32 palette brightness multiplier oscillating32..128,initial64;component product arithmetic>>6 then min63.
+
+### global:word_CF7F0
+
+PROVEN: Measured mean retrace interval narrowed to16 bits by sub_3609C. Used in frame calibration101-percent comparison.
+
+Units: clock ticks. DOS layout/address: 2:3f7f0.
+
+Measured mean retrace interval narrowed to16 bits by sub_3609C. Used in frame calibration101-percent comparison.
+
+### global:world_filename
+
+PROVEN: RAY<decimal>.WLD/.LEV filename buffers built for resource-loading calls.
+
+Units: DOS filename bytes. DOS layout/address: 2:3d7d8.
+
+RAY<decimal>.WLD/.LEV filename buffers built for resource-loading calls.
+
+## clown.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_CLOWN_TNT_COMMAND
+
+PROVEN: Track Rayman horizontally with a type-specific TNT attack latch and 80-tick reset.
+
+Units: see observed computation and contract. DOS layout/address: 1:1a940.
+
+Track Rayman horizontally with a type-specific TNT attack latch and 80-tick reset.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DO_CLOWN_TNT2_COMMAND
+
+PROVEN: Execute TNT clown 2 commands and emit one bomb at substate 8 frame >=6.
+
+Units: see observed computation and contract. DOS layout/address: 1:1ab2c.
+
+Execute TNT clown 2 commands and emit one bomb at substate 8 frame >=6.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DO_CLOWN_TNT3_COMMAND
+
+PROVEN: Execute TNT clown 3 motion with vertical tracking/retreat selected by link.
+
+Units: see observed computation and contract. DOS layout/address: 1:1abc8.
+
+Execute TNT clown 3 motion with vertical tracking/retreat selected by link.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DO_BIG_CLOWN_ATTAK
+
+PROVEN: Trigger big-clown ground shake once at state 0:2 frame >=16 and affect Rayman's support state.
+
+Units: see observed computation and contract. DOS layout/address: 1:1ad1c.
+
+Trigger big-clown ground shake once at state 0:2 frame >=16 and affect Rayman's support state.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:allocatedrop
+
+PROVEN: Spawn one inactive type-62 water drop with facing-dependent speed.
+
+Units: see observed computation and contract. DOS layout/address: 1:1adb8.
+
+Spawn one inactive type-62 water drop with facing-dependent speed.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DO_WAT_CLOWN_ATTAK
+
+PROVEN: Emit one water drop in state 0:11 using link as a latch.
+
+Units: see observed computation and contract. DOS layout/address: 1:1aee4.
+
+Emit one water drop in state 0:11 using link as a latch.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DO_CLOWN_TNT_ATTACK
+
+PROVEN: Spawn one inactive type-119 TNT bomb from the attack sprite with variant-dependent speed.
+
+Units: see observed computation and contract. DOS layout/address: 1:1af3c.
+
+Spawn one inactive type-119 TNT bomb from the attack sprite with variant-dependent speed.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:Clown_Music_Atter
+
+PROVEN: Choose the music clown landing state from remaining/initial HP and resume its script.
+
+Units: see observed computation and contract. DOS layout/address: 1:1b0fc.
+
+Choose the music clown landing state from remaining/initial HP and resume its script.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DoWatAndBigClownPoingCollision
+
+PROVEN: Apply water/big clown fist damage and select knockback or defeat.
+
+Units: see observed computation and contract. DOS layout/address: 1:1b18c.
+
+Apply water/big clown fist damage and select knockback or defeat.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DoTntClownPoingCollision
+
+PROVEN: Apply TNT clown fist damage and select side-dependent recovery or defeat.
+
+Units: see observed computation and contract. DOS layout/address: 1:1b1fc.
+
+Apply TNT clown fist damage and select side-dependent recovery or defeat.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DoWatAndBigClownRaymanZDD
+
+PROVEN: Trigger water/big clown attack label 5 from states 0:0 or 1:0.
+
+Units: see observed computation and contract. DOS layout/address: 1:1b274.
+
+Trigger water/big clown attack label 5 from states 0:0 or 1:0.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
+
+### function:DoTntClownRaymanZDD
+
+PROVEN: Start a TNT attack using link as the one-shot latch and reset timer.
+
+Units: see observed computation and contract. DOS layout/address: 1:1b2a0.
+
+Start a TNT attack using link as the one-shot latch and reset timer.
+
+TNT variants differ in tracking, launch velocity and attack frames. link is an attack latch/retreat selector, timer can reset it after >80. Water-drop pool type 62 and TNT pool type 119 have distinct launch rules. Big clown ground shake affects Rayman support states; preserve that indirect gameplay effect.
 
 ## collision1.json
 
@@ -1436,6 +4592,360 @@ Units: see parameter/result and side-effect contract. DOS layout/address: 1:2176
 
 timer255 disables;0 activates, optionally ray3:40 for marker main5, removes marker, aligns anchors and writes dead_time64. The final decrement changes0 to255, making activation one-shot.
 
+## cymbal.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_CYMBAL_COMMAND
+
+PROVEN: Update rider-controlled cymbal speed, closing timing, hurt window and Rayman release.
+
+Units: see observed computation and contract. DOS layout/address: 1:21f00.
+
+Update rider-controlled cymbal speed, closing timing, hurt window and Rayman release.
+
+Cymbal link values 0..5 are local coordination phases. Paired halves resolve x before y with 4/1 pixel convergence speeds. Closure hurt/capture window is frames 20..22. Centered contact within 25 pixels can deactivate Rayman and attach follow_id; a later opening releases him at state 0:8. Preserve the existing asymmetric speed comparisons and collision-speed recomputation.
+
+### function:DO_2_PARTS_CYMBAL
+
+STRONG: Coordinate two linked cymbal halves through travel, convergence, close and separation phases.
+
+Units: see observed computation and contract. DOS layout/address: 1:22280.
+
+Coordinate two linked cymbal halves through travel, convergence, close and separation phases.
+
+Cymbal link values 0..5 are local coordination phases. Paired halves resolve x before y with 4/1 pixel convergence speeds. Closure hurt/capture window is frames 20..22. Centered contact within 25 pixels can deactivate Rayman and attach follow_id; a later opening releases him at state 0:8. Preserve the existing asymmetric speed comparisons and collision-speed recomputation.
+
+### function:DO_COLL_RAY_CYMBALE
+
+STRONG: Test cymbal closure against Rayman, capturing a centered contact or applying damage.
+
+Units: see observed computation and contract. DOS layout/address: 1:22738.
+
+Test cymbal closure against Rayman, capturing a centered contact or applying damage.
+
+Cymbal link values 0..5 are local coordination phases. Paired halves resolve x before y with 4/1 pixel convergence speeds. Closure hurt/capture window is frames 20..22. Centered contact within 25 pixels can deactivate Rayman and attach follow_id; a later opening releases him at state 0:8. Preserve the existing asymmetric speed comparisons and collision-speed recomputation.
+
+## dark.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:PlaceDarkPhase1et2
+
+PROVEN: Place Dark at xmapmax+144 and on the first floor, also storing initial coordinates.
+
+Units: see observed computation and contract. DOS layout/address: 1:22a70.
+
+Place Dark at xmapmax+144 and on the first floor, also storing initial coordinates.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:dark_attaque_suivante
+
+PROVEN: Advance the three-entry hybrid attack sequence, using terminal selector 3 after entry two.
+
+Units: see observed computation and contract. DOS layout/address: 1:22aa8.
+
+Advance the three-entry hybrid attack sequence, using terminal selector 3 after entry two.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:init_vitraux
+
+PROVEN: Register up to five type-247 windows and initialize their table state.
+
+Units: see observed computation and contract. DOS layout/address: 1:22ad8.
+
+Register up to five type-247 windows and initialize their table state.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:poing_face_obj
+
+PROVEN: Test whether the fist faces toward the supplied object using horizontal center separation.
+
+Units: see observed computation and contract. DOS layout/address: 1:22b90.
+
+Test whether the fist faces toward the supplied object using horizontal center separation.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DARK_phase1
+
+STRONG: Run Dark phase 1's rope and suspended-fist sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:22bd4.
+
+Run Dark phase 1's rope and suspended-fist sequence.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DARK_phase3
+
+PROVEN: Run Dark phase 3's hybrid selection and completion sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:22fac.
+
+Run Dark phase 3's hybrid selection and completion sequence.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_DARK_COMMAND
+
+PROVEN: Dispatch Dark phases and animation-triggered spells/reactive transitions.
+
+Units: see observed computation and contract. DOS layout/address: 1:231fc.
+
+Dispatch Dark phases and animation-triggered spells/reactive transitions.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_DARK_POING_COLLISION
+
+PROVEN: Reduce Dark HP only in visible states 0:16/17 and select 0:6 at zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:23630.
+
+Reduce Dark HP only in visible states 0:16/17 and select 0:6 at zero.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_DARK_REACT
+
+PROVEN: Advance Dark substates 7/9/11/13 to 8/10/12/14 during a reaction.
+
+Units: see observed computation and contract. DOS layout/address: 1:23670.
+
+Advance Dark substates 7/9/11/13 to 8/10/12/14 during a reaction.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_DARK_SORT_COMMAND
+
+PROVEN: Update Dark spell lifetime, steering and spawning according to substate.
+
+Units: see observed computation and contract. DOS layout/address: 1:236c8.
+
+Update Dark spell lifetime, steering and spawning according to substate.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_DARK_SORT_COLLISION
+
+PROVEN: Apply a spell once: force running, reverse controls, toggle tiny size or remove the fist.
+
+Units: see observed computation and contract. DOS layout/address: 1:23980.
+
+Apply a spell once: force running, reverse controls, toggle tiny size or remove the fist.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:allocate_DARK_SORT
+
+STRONG: Allocate an inactive type-215 spell, or use the greatest-animation-frame fallback scan with index-zero default.
+
+Units: see observed computation and contract. DOS layout/address: 1:23a18.
+
+Allocate an inactive type-215 spell, or use the greatest-animation-frame fallback scan with index-zero default.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DoAnnuleDarkSortRaymanCollision
+
+PROVEN: Cancel forced-run/reversed/tiny spell effects when any is present and retire the cancellation object.
+
+Units: see observed computation and contract. DOS layout/address: 1:23b4c.
+
+Cancel forced-run/reversed/tiny spell effects when any is present and retire the cancellation object.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:corde_en_bas
+
+PROVEN: Move the stored rope to its bottom coordinates, storing both current and initial position.
+
+Units: see observed computation and contract. DOS layout/address: 1:23bbc.
+
+Move the stored rope to its bottom coordinates, storing both current and initial position.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:corde_en_haut
+
+PROVEN: Move the rope to its top coordinates and optionally attach/show the suspended fist.
+
+Units: see observed computation and contract. DOS layout/address: 1:23c00.
+
+Move the rope to its top coordinates and optionally attach/show the suspended fist.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:init_corde
+
+PROVEN: Calculate rope endpoints from Dark's position and the stored rope object.
+
+Units: see observed computation and contract. DOS layout/address: 1:23cb4.
+
+Calculate rope endpoints from Dark's position and the stored rope object.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:goto_phase1
+
+PROVEN: Enter Dark phase 1, lock the camera and remove the fist ability.
+
+Units: see observed computation and contract. DOS layout/address: 1:23d28.
+
+Enter Dark phase 1, lock the camera and remove the fist ability.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:goto_phase2
+
+PROVEN: Enter Dark phase 2 and replace Dark with its separate phase-2 object.
+
+Units: see observed computation and contract. DOS layout/address: 1:23dd8.
+
+Enter Dark phase 2 and replace Dark with its separate phase-2 object.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:goto_phase3
+
+PROVEN: Enter Dark phase 3 and reset the hybrid attack sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:23e5c.
+
+Enter Dark phase 3 and reset the hybrid attack sequence.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:goto_phase5
+
+PROVEN: Enter completion phase 5, restore normal size and record the Mr Dark completion bit.
+
+Units: see observed computation and contract. DOS layout/address: 1:23f28.
+
+Enter completion phase 5, restore normal size and record the Mr Dark completion bit.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:DO_VITRAIL_COMMAND
+
+PROVEN: Display a window while its repeat count is nonzero, decrementing its 100-tick period.
+
+Units: see observed computation and contract. DOS layout/address: 1:24024.
+
+Display a window while its repeat count is nonzero, decrementing its 100-tick period.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### function:allume_vitraux
+
+PROVEN: Start inactive window entries from five supplied repeat counts.
+
+Units: see observed computation and contract. DOS layout/address: 1:24094.
+
+Start inactive window entries from five supplied repeat counts.
+
+Spell substates 0/1/2/3 force run, reverse commands, toggle tiny and disable fist respectively, once per nonzero HP latch. Cancellation is conditional on effects being present. A full spell pool scans for anim_frame strictly above the initial maximum zero; the selected object index defaults to zero if none wins. dark_phase 1/2/3/5 are transitions with rope/camera/fist setup, not Rayman animation states. Completion restores normal size and writes finBosslevel.mr_dark. Window mode is a repeat count with a 100-tick period.
+
+### global:VitrauxInfos
+
+STRONG: Five ten-byte window records binding object IDs to display-repeat state.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f710.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Five ten-byte window records binding object IDs to display-repeat state.
+
+### global:byte_DF74C
+
+UNKNOWN: Dark spell-selection branches store two. No value-consuming direct reader was found; purpose unresolved.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f74c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark spell-selection branches store two. No value-consuming direct reader was found; purpose unresolved.
+
+### global:corde_x
+
+STRONG: Horizontal placement of the Dark rope object.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f746.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Horizontal placement of the Dark rope object.
+
+### global:corde_y_bas
+
+STRONG: Bottom rope y endpoint used by placement and phase-1 motion.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f74a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Bottom rope y endpoint used by placement and phase-1 motion.
+
+### global:corde_y_haut
+
+STRONG: Top rope y endpoint calculated from Dark and rope offsets.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f748.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Top rope y endpoint calculated from Dark and rope offsets.
+
+### global:dark_attaque
+
+STRONG: Cursor into the three hybrid selectors; value three selects terminal action three.
+
+Units: see observed computation and contract. DOS layout/address: 2:637d.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Cursor into the three hybrid selectors; value three selects terminal action three.
+
+### global:dark_rayon_dx
+
+STRONG: Dark spell x velocity adjusted by unit steps toward the normalized target direction.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f744.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark spell x velocity adjusted by unit steps toward the normalized target direction.
+
+### global:dark_rayon_dy
+
+STRONG: Dark spell y velocity adjusted by unit steps toward the normalized target direction.
+
+Units: see observed computation and contract. DOS layout/address: 2:4f742.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark spell y velocity adjusted by unit steps toward the normalized target direction.
+
+### global:dark_sequence
+
+STRONG: Three hybrid selectors read by dark_attaque_suivante.
+
+Units: see observed computation and contract. DOS layout/address: 2:6366.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Three hybrid selectors read by dark_attaque_suivante.
+
+### global:oscille
+
+STRONG: Twenty-nine signed rope displacement samples indexed by rope iframes_timer.
+
+Units: see observed computation and contract. DOS layout/address: 2:632c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Twenty-nine signed rope displacement samples indexed by rope iframes_timer.
+
+### global:type_dark_attaque
+
+STRONG: Current hybrid selector consumed by DARK_phase3.
+
+Units: see observed computation and contract. DOS layout/address: 2:637e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current hybrid selector consumed by DARK_phase3.
+
+### global:vitrail_clignotement
+
+STRONG: Four five-byte repeat-count rows passed to allume_vitraux.
+
+Units: see observed computation and contract. DOS layout/address: 2:6369.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Four five-byte repeat-count rows passed to allume_vitraux.
+
 ## display.json
 
 Meaning confidence is independent of STRICT and of compiled layout. DOS writers/readers/callers are primary;external names corroborate. Raw token/displacement hits are candidates,not typed-field proof. UNKNOWN keeps neutral names. Only identifier/comment edits are proposed.
@@ -1695,6 +5205,90 @@ PROVEN: Enable progress-dependent powers and helper-completion flags for a world
 Units: see parameter/result and side-effect contract. DOS layout/address: 1:25db4.
 
 Only fills missing powers:poing beyond1:3,hang beyond1:8,grap beyond1:17,helico beyond2:11,run beyond3:11. Helped musician beyond3:6,Joe2 beyond5:6. This is game progression in display.c,not backend state.
+
+## fee.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:INIT_TXT_FEE
+
+PROVEN: Initialize the ten dialogue boxes at (150,188), center text and reset current/old dialogue indices.
+
+Units: see observed computation and contract. DOS layout/address: 1:29210.
+
+Initialize the ten dialogue boxes at (150,188), center text and reset current/old dialogue indices.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:allocate_poing_or_free
+
+PROVEN: Reserve an inactive type-238 dialogue-sweep object and store its ID.
+
+Units: see observed computation and contract. DOS layout/address: 1:292ac.
+
+Reserve an inactive type-238 dialogue-sweep object and store its ID.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:init_fee
+
+PROVEN: Load world/level-specific fairy dialogue and substitute configured fist/jump/action controls.
+
+Units: see observed computation and contract. DOS layout/address: 1:2932c.
+
+Load world/level-specific fairy dialogue and substitute configured fist/jump/action controls.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:wait_for_dialogue_fee
+
+PROVEN: Increment the object timer until the supplied threshold, then advance dialogue index and reset timer.
+
+Units: see observed computation and contract. DOS layout/address: 1:29bd0.
+
+Increment the object timer until the supplied threshold, then advance dialogue index and reset timer.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:DO_FEE_ETAPE
+
+PROVEN: Advance dialogue timing phases from object config using delays 100/110/50/120.
+
+Units: see observed computation and contract. DOS layout/address: 1:29c04.
+
+Advance dialogue timing phases from object config using delays 100/110/50/120.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:fee_gives_super_evts
+
+PROVEN: Grant fist/hang/grapple/helicopter/run ability at the corresponding world/level.
+
+Units: see observed computation and contract. DOS layout/address: 1:29d20.
+
+Grant fist/hang/grapple/helicopter/run ability at the corresponding world/level.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:DO_FEE
+
+PROVEN: Run the fairy interaction, Rayman scripted states, dialogue changes and sweeping object.
+
+Units: see observed computation and contract. DOS layout/address: 1:29db0.
+
+Run the fairy interaction, Rayman scripted states, dialogue changes and sweeping object.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
+
+### function:DoFeeRaymanZDD
+
+PROVEN: Guide Rayman horizontally toward the fairy while preserving x parity, or stop him in the air.
+
+Units: see observed computation and contract. DOS layout/address: 1:2a118.
+
+Guide Rayman horizontally toward the fairy while preserving x parity, or stop him in the air.
+
+Dialogue exists at world/level 1:3,1:8,1:17,2:11,3:11 and grants fist,hang,grapple,helicopter,run respectively. Localization substitutions read configured fist/jump/action inputs. Dialogue index 255 represents no current line; old/current line bytes and signed display globals must retain narrowing. Approach preserves Rayman x parity. Delays 100/110/50/120 and sweep +4 pixels are frame-based.
 
 ## frame.json
 
@@ -2398,11 +5992,13 @@ Activation clears0; retriggers increment, compare>=2, then reset0 on impulse or1
 
 ### global:joy_done
 
-PROVEN: Per-Rayman-update count/latch of handled directional inputs.
+PROVEN: Continue-secret accumulated direction mask-like values1/3/7/15;wrong input resets sequence.
 
-Units: byte count. DOS layout/address: 2:2994.
+Units: byte count; direction-sequence accumulator. DOS layout/address: 2:2994.
 
 DO_RAYMAN/DO_RAY_ON_MS clear it. Horizontal handlers increment it; down/up are conditionally gated on zero in normal mode. Both horizontal inputs can increment it twice; it is not a strict boolean.
+
+Pass6: Continue-secret accumulated direction mask-like values1/3/7/15;wrong input resets sequence.
 
 ### global:animation_attente
 
@@ -3290,19 +6886,23 @@ Atlas byte length uses obj_t.x. Sprite/animation/atlas/eta pointers are allocate
 
 ### global:world_index
 
-PROVEN: Current world-map stage-record index.
+PROVEN: One-byte selected world-map node0..23. SAV reads/writes TWO bytes at its true address,therefore also serializes/restores adjacent ALL_WORLD at+1;do not widen declaration.
 
-Units: stage index. DOS layout/address: 2:3fa60.
+Units: stage index; map-node index. DOS layout/address: 2:3fa60.
 
 INIT_OBJECTS indexes t_world_info with thisbyte. DOS byte storage differs from Android2-byte symbol; do not widen from Android size.
 
+Pass6: One-byte selected world-map node0..23. SAV reads/writes TWO bytes at its true address,therefore also serializes/restores adjacent ALL_WORLD at+1;do not widen declaration.
+
 ### global:ALL_WORLD
 
-PROVEN: World-map cheat permission for direct level selection.
+PROVEN: World-map level-select/unlock display flag;also adjacent second byte of two-byte world_index SAV I/O. 
 
-Units: boolean byte. DOS layout/address: 2:3fa61.
+Units: boolean byte; boolean / serialized companion byte. DOS layout/address: 2:3fa61.
 
 DO_WORLD_MAP offers SELECT_LEVEL only when this is set,!ModeDemo,and no active minigame.
+
+Pass6: World-map level-select/unlock display flag;also adjacent second byte of two-byte world_index SAV I/O. 
 
 ### global:BackgroundOn
 
@@ -3466,19 +7066,23 @@ Triggers limited-version overlay and prevents world-map progression beyond world
 
 ### global:JumellePosX
 
-PROVEN: World-map binocular effect center coordinate.
+PROVEN: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
 
 Units: screen pixels. DOS layout/address: 2:3d0c4.
 
 WORLD_CHOICE forwards these to DisplayJumellesNormal;state is maintained by jumelle logic. Not world position xmap/ymap.
 
+Pass6: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
+
 ### global:JumellePosY
 
-PROVEN: World-map binocular effect center coordinate.
+PROVEN: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
 
 Units: screen pixels. DOS layout/address: 2:3d0c0.
 
 WORLD_CHOICE forwards these to DisplayJumellesNormal;state is maintained by jumelle logic. Not world position xmap/ymap.
+
+Pass6: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
 
 ### global:LoadInfoRay
 
@@ -3514,11 +7118,13 @@ Name entry uses it to restore/empty the current save name;save-selection callbac
 
 ### global:Main_Control
 
-PROVEN: Enable the joystick control/polling branch.
+PROVEN: Joystick state0 absent/disabled,1 detected not centered,2 centered/calibrated. Direction analog thresholds apply only at2;button policy tests any nonzero.
 
-Units: control byte. DOS layout/address: 2:5eb2.
+Units: control byte; state / selector. DOS layout/address: 2:5eb2.
 
 Combined with is_joypad_mode==1 for joystick-aware copy;also read by joystick direction/button routines. No CPU-speed meaning is inferred.
+
+Pass6: Joystick state0 absent/disabled,1 detected not centered,2 centered/calibrated. Direction analog thresholds apply only at2;button policy tests any nonzero.
 
 ### global:MenuCredits
 
@@ -3642,11 +7248,13 @@ DISPLAY_STAGE_NAMES uses(position>>4)-sprite.outer_height for top. No world-came
 
 ### global:RayonJumelle
 
-PROVEN: World-map binocular horizontal radius.
+PROVEN: Lens radius/current auto target;normal radius clamped25..64.
 
-Units: pixels. DOS layout/address: 2:3d0ec.
+Units: pixels; screen pixels. DOS layout/address: 2:3d0ec.
 
 WORLD_CHOICE supplies radius_y=3*radius/4 with integer division. Aspect correction is part of the effect geometry.
+
+Pass6: Lens radius/current auto target;normal radius clamped25..64.
 
 ### global:ReInitPlasma
 
@@ -3770,11 +7378,14 @@ Requires current character/row match;otherwise normal text render.
 
 ### global:coeffktxt
 
-STRONG: Shared integer phase used for save-name deformation.
+STRONG: [sem_objs; display.c, luciole.c; STRONG] Shared signed16 control used as a save-name deformation phase and, during firefly death motion, as drift amplitude.
+[sem_flow; display.c, worldmap.c; STRONG] Shared integer phase used for save-name deformation.
 
-Units: 512 units per turn. DOS layout/address: 2:3f7cc.
+Units: 512 units per turn; scene-dependent phase/amplitude. DOS layout/address: 2:3f7cc.
 
 Save renderer resets when>=512,then adds(cosinus(phase+256)>>7)+5;other effects also use this storage.
+
+Pass6: init_aff_luciole sets5. Death drift multiplies cos/sin by coeffktxt and shifts9; each rotation wrap increments it up to10. The menu deformation-phase behavior remains valid in its separate scene lifetime.
 
 ### global:colour
 
@@ -3786,11 +7397,13 @@ Read by save-name/level-selector text;no direct runtime writer found in this sna
 
 ### global:compteur
 
-STRONG: Shared menu input-repeat counter.
+PROVEN: Held-input repeat counter;release0,increment until max_compteur,then delai_repetition+1.
 
-Units: draw/control invocations. DOS layout/address: 2:3f78a.
+Units: draw/control invocations; menu callback calls. DOS layout/address: 2:3f78a.
 
 Save renderer increments while held below max,else reloads delai_repetition+1 or clears0 when released. Other menu controls share it;not a hardware timer.
+
+Pass6: Held-input repeat counter;release0,increment until max_compteur,then delai_repetition+1.
 
 ### global:compteur_clignote
 
@@ -3842,11 +7455,13 @@ Save renderer uses(160,debut_titre);shared menu initializers set it.
 
 ### global:delai_repetition
 
-PROVEN: Held-input repeat reload threshold.
+PROVEN: Initial held-input delay used before modulo repetition admits actions.
 
-Units: repeat-counter units. DOS layout/address: 2:3f79a.
+Units: repeat-counter units; menu callback calls. DOS layout/address: 2:3f79a.
 
 Save renderer reloads compteur=delai_repetition+1 while held after initial threshold.
+
+Pass6: Initial held-input delay used before modulo repetition admits actions.
 
 ### global:demo_video_mem
 
@@ -4026,11 +7641,13 @@ Name buffers use[slot-1];0 means no slot;DO_WORLD_MAP clears it on return to men
 
 ### global:fin_saisie_nom
 
-PROVEN: Save-name entry completion latch.
+PROVEN: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
 
-Units: boolean-like signed16. DOS layout/address: 2:3f784.
+Units: boolean-like signed16; UI phase flag. DOS layout/address: 2:3f784.
 
 Skips another name-entry scene when nonzero;combined with MENU_RETURN by saisie_nom_prg.
+
+Pass6: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
 
 ### global:first_credit
 
@@ -4130,11 +7747,13 @@ Change level only at0;increment then wrap at4;SELECT_LEVEL resets0.
 
 ### global:is_joypad_mode
 
-PROVEN: Select joystick versus keyboard input/presentation polling path.
+PROVEN: Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
 
-Units: mode byte. DOS layout/address: 2:3fa23.
+Units: mode byte; state / selector. DOS layout/address: 2:3fa23.
 
 SWAP_BUFFERS tests==1;normal presentation may poll joystick during copy when Main_Control nonzero. Hardware polling belongs at input/backend boundary.
+
+Pass6: Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
 
 ### global:ktxtenx
 
@@ -4210,19 +7829,23 @@ DO_GROS_RAYMAN allocates0x41a00 for loader resources,then frees before LOAD_ALL_
 
 ### global:max_compteur
 
-PROVEN: Initial input-repeat threshold.
+PROVEN: Repeat-counter rollover threshold;menus initialize100.
 
-Units: repeat-counter units. DOS layout/address: 2:3f794.
+Units: repeat-counter units; menu callback calls. DOS layout/address: 2:3f794.
 
 DO_SAVE_CHOICE sets100;save renderer compares compteur against it. Other menu initializers may choose other values.
 
+Pass6: Repeat-counter rollover threshold;menus initialize100.
+
 ### global:menuEtape
 
-STRONG: Menu state selector.
+PROVEN: Menu dispatcher stage:0 general,3 save selection,4 options,7 keys,8 pad,9 graphics,10 video. In-game options uses4/7/8/9 and0 exit.
 
-Units: state byte. DOS layout/address: 2:3fa37.
+Units: state byte; state / selector. DOS layout/address: 2:3fa37.
 
 DO_WORLD_MAP assigns4 on exit back to the save/menu flow. Rendering does not establish a complete menu-state enumeration.
+
+Pass6: Menu dispatcher stage:0 general,3 save selection,4 options,7 keys,8 pad,9 graphics,10 video. In-game options uses4/7/8/9 and0 exit.
 
 ### global:menu_to_display
 
@@ -4274,11 +7897,13 @@ DISPLAY_TEXT_FEE uses text_to_display+1+index;255 disables the corresponding tex
 
 ### global:option_exit
 
-PROVEN: Options-menu exit-item index.
+PROVEN: Menu row whose confirmation sets sortie_options; not a general quit-game flag.
 
-Units: descriptor index. DOS layout/address: 2:3f754.
+Units: descriptor index; state / selector. DOS layout/address: 2:3f754.
 
 Used to choose the special cursor anchor and text descriptor;not a process exit flag.
+
+Pass6: Menu row whose confirmation sets sortie_options; not a general quit-game flag.
 
 ### global:options_jeu_save
 
@@ -4402,19 +8027,24 @@ On change DISPLAY_FOND_MENU may ClearBorder when bound grows,then remembers it. 
 
 ### global:realisation_effectuee
 
-PROVEN: Save-action completion latch.
+PROVEN: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
 
-Units: boolean-like signed16. DOS layout/address: 2:3f778.
+Units: boolean-like signed16; UI phase flag. DOS layout/address: 2:3f778.
 
 After REALISATION_ACTION,nonzero triggers INIT_SAVE_CONTINUE.
 
+Pass6: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
+
 ### global:rotationtxt
 
-PROVEN: Text deformation rotation argument.
+PROVEN: [sem_objs; display.c, luciole.c; PROVEN] Shared signed16 control used as text-deformation rotation and, during firefly scenes, as light-growth/drift angle.
+[sem_flow; display.c, worldmap.c; PROVEN] Text deformation rotation argument.
 
-Units: 512 units per turn. DOS layout/address: 2:3f7dc.
+Units: 512 units per turn; scene-dependent phase/amplitude. DOS layout/address: 2:3f7dc.
 
 Forwarded by save UI to DISPLAY_DEFORM_SPRITE through display_deform_text.
+
+Pass6: init_aff_luciole resets0. Ordinary light growth advances by2 toward128; death drift adds myRand54, wraps after512 and updates coeffktxt. Display/save-name paths retain their earlier text-deformation role. No universal angle/time unit is assigned across scenes.
 
 ### global:rvb_Vig
 
@@ -4530,11 +8160,13 @@ Controls ModeX swap edge waits and game-loop synchronization/extra-step policy. 
 
 ### global:word_CF7EE
 
-PROVEN: Calibrated world-map frame-wait interval.
+PROVEN: Adjusted retrace interval floor31*word_CF7F0/32;used for timing deadline and calibration.
 
-Units: clock_ticks units. DOS layout/address: 2:3f7ee.
+Units: clock_ticks units; clock ticks. DOS layout/address: 2:3f7ee.
 
 InitPcSoundCard stores(word_CF7F0*31U)/32;WORLD_CHOICE adds this to callback clock sample. Do not rename to milliseconds or assume60Hz.
+
+Pass6: Adjusted retrace interval floor31*word_CF7F0/32;used for timing deadline and calibration.
 
 ### global:xwldmapsave
 
@@ -4551,6 +8183,2772 @@ PROVEN: Saved world-map camera coordinate.
 Units: world-map pixels. DOS layout/address: 2:3f832.
 
 DO_SAVE_CHOICE clears both0;DO_WORLD_MAP uses both-zero to choose fresh scroll midpoint;FIN_WORLD_CHOICE stores current camera. Keep sentinel behavior,not merely an optional host pointer.
+
+### global:cptr_tab
+
+PROVEN: Three-callback object-command dispatch table with 34 records; fields are read, skip and handle.
+
+Units: opcode index; 12-byte records. DOS layout/address: 2:70e4.
+
+Three-callback object-command dispatch table with 34 records; fields are read, skip and handle.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:vignet_joe_affichee
+
+PROVEN: Joe dialogue latch set in state 0:10 and consumed/cleared in state 0:1 before persisting first help and starting the 100/101-tick vignette/exit sequence.
+
+Units: boolean latch. DOS layout/address: 2:3f780.
+
+Joe dialogue latch set in state 0:10 and consumed/cleared in state 0:1 before persisting first help and starting the 100/101-tick vignette/exit sequence.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:DecEau
+
+PROVEN: Four animation-index phase offsets into the 14-entry water-wave displacement table.
+
+Units: animation frames. DOS layout/address: 2:4d10.
+
+Four animation-index phase offsets into the 14-entry water-wave displacement table.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:EauDy
+
+PROVEN: Fourteen signed vertical water-wave displacement samples used by GetY.
+
+Units: pixels. DOS layout/address: 2:4cf4.
+
+Fourteen signed vertical water-wave displacement samples used by GetY.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Nb_total_cages
+
+PROVEN: [sem_objs; cage.c; PROVEN] Total rescued-cage counter incremented when a cage is broken; progression compares it with 102 to unlock the final map node.
+[sem_flow; worldmap.c; PROVEN] Byte total accumulated from24 stage cage counts at INIT_CHEMIN;>=102 marks final node17 pending.
+
+Units: cages. DOS layout/address: 2:3fa5b.
+
+Total rescued-cage counter incremented when a cage is broken; progression compares it with 102 to unlock the final map node.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+Byte total accumulated from24 stage cage counts at INIT_CHEMIN;>=102 marks final node17 pending.
+
+### global:angletab
+
+PROVEN: 65-byte ratio-to-angle table addressed by a 0..64 coordinate ratio in ANGLE_RAYMAN.
+
+Units: 512-step angular convention. DOS layout/address: 2:4d18.
+
+65-byte ratio-to-angle table addressed by a 0..64 coordinate ratio in ANGLE_RAYMAN.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:dword_BD96C
+
+PROVEN: Planting last-frame guard: DO_GROWING_PLATFORM permits one replacement/spawn while Rayman remains on the final animation frame, then clears on other frames.
+
+Units: boolean latch. DOS layout/address: 2:2d96c.
+
+Planting last-frame guard: DO_GROWING_PLATFORM permits one replacement/spawn while Rayman remains on the final animation frame, then clears on other frames.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:bossScrollEndX
+
+STRONG: [sem_objs; action.c; STRONG] Right bound of the boss camera range; initialized from scroll_end_x then clamped to mode-dependent map bounds.
+[sem_boss; meredenis.c, moskito.c, saxo.c; STRONG] Right encounter camera boundary calculated by setBossScrollLimits and tested by attack gates.
+
+Units: world/camera pixels; see observed computation and contract. DOS layout/address: 2:3f85a.
+
+Right bound of the boss camera range; initialized from scroll_end_x then clamped to mode-dependent map bounds.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Right encounter camera boundary calculated by setBossScrollLimits and tested by attack gates.
+
+### global:bossScrollEndY
+
+STRONG: [sem_objs; action.c; STRONG] Lower bound of the boss camera range initialized to ymapmax and clamped.
+[sem_boss; meredenis.c, moskito.c, saxo.c; STRONG] Bottom encounter camera boundary used for attack gating and target placement.
+
+Units: world/camera pixels; see observed computation and contract. DOS layout/address: 2:3f85c.
+
+Lower bound of the boss camera range initialized to ymapmax and clamped.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Bottom encounter camera boundary used for attack gating and target placement.
+
+### global:bossScrollStartX
+
+STRONG: [sem_objs; action.c; STRONG] Left bound of the boss camera range; initialized from scroll_start_x then clamped to mode-dependent map bounds.
+[sem_boss; meredenis.c, moskito.c, saxo.c; STRONG] Left encounter camera boundary calculated by setBossScrollLimits and tested by attack gates.
+
+Units: world/camera pixels; see observed computation and contract. DOS layout/address: 2:3f858.
+
+Left bound of the boss camera range; initialized from scroll_start_x then clamped to mode-dependent map bounds.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Left encounter camera boundary calculated by setBossScrollLimits and tested by attack gates.
+
+### global:bossScrollStartY
+
+STRONG: [sem_objs; action.c; STRONG] Upper bound of the boss camera range derived from floorLine minus viewport height minus 16 and then clamped.
+[sem_boss; meredenis.c, moskito.c, saxo.c; STRONG] Top encounter camera boundary calculated from the floor and viewport.
+
+Units: world/camera pixels; see observed computation and contract. DOS layout/address: 2:3f856.
+
+Upper bound of the boss camera range derived from floorLine minus viewport height minus 16 and then clamped.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Top encounter camera boundary calculated from the floor and viewport.
+
+### global:floorLine
+
+STRONG: [sem_objs; action.c; STRONG] Floor coordinate found by downward tile scan from the current boss feet; used to place the boss camera upper boundary.
+[sem_boss; meredenis.c, moskito.c; STRONG] Floor y from firstFloorBelow used by boss camera setup and Space Mama target placement.
+
+Units: world y pixels; see observed computation and contract. DOS layout/address: 2:3f820.
+
+Floor coordinate found by downward tile scan from the current boss feet; used to place the boss camera upper boundary.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Floor y from firstFloorBelow used by boss camera setup and Space Mama target placement.
+
+### global:calcbloc1
+
+PROVEN: First tile-height callback table indexed by the 64 tile types; CALC_MOV_ON_BLOC uses it to predict local floor height. The C callback return is provisionally signed16.
+
+Units: tile-local pixels. DOS layout/address: 2:32848.
+
+First tile-height callback table indexed by the 64 tile types; CALC_MOV_ON_BLOC uses it to predict local floor height. The C callback return is provisionally signed16.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:calcbloc2
+
+PROVEN: Second tile-height callback table used when continuing onto a horizontal tile while testing the tile above.
+
+Units: tile-local pixels. DOS layout/address: 2:32948.
+
+Second tile-height callback table used when continuing onto a horizontal tile while testing the tile above.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:calcblocfloor
+
+PROVEN: Floor-shape callback table used to compute signed floor distance.
+
+Units: tile-local pixels. DOS layout/address: 2:32a48.
+
+Floor-shape callback table used to compute signed floor distance.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:calcblocrecal
+
+PROVEN: Tile-floor recalibration callback table used to align object feet.
+
+Units: tile-local pixels. DOS layout/address: 2:32748.
+
+Tile-floor recalibration callback table used to align object feet.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:BufferNormalDeplt
+
+PROVEN: [sem_objs; map.c; PROVEN] Normal draw-buffer alignment displacement computed as 4 minus the visible tile-origin x low two bits.
+[sem_boss; skops.c; STRONG] Normal-mode destination alignment displacement derived from map x low bits.
+
+Units: bytes; observed 1..4; see observed computation and contract. DOS layout/address: 2:3d0fc.
+
+Normal draw-buffer alignment displacement computed as 4 minus the visible tile-origin x low two bits.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Normal-mode destination alignment displacement derived from map x low bits.
+
+### global:DrawBufferNormalIni
+
+PROVEN: [sem_objs; map.c; PROVEN] Saved unshifted Normal draw-buffer base used when recalculating alignment and leaving Normal map mode.
+[sem_flow; cheat.c; UNKNOWN] Observed storage used by cheat. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: DOS pointer; uninterpreted declared representation. DOS layout/address: 2:3d128.
+
+Saved unshifted Normal draw-buffer base used when recalculating alignment and leaving Normal map mode.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Scroll_Masque
+
+PROVEN: [sem_objs; map.c; PROVEN] Per-sprite transparency masks for differential-scroll sprites: zero source pixels map to 0xff, nonzero to zero.
+[sem_boss; skops.c; STRONG] Background sprite mask pointers prepared by map loading and consumed by DrawSpriteDiffNormal.
+
+Units: byte masks indexed by sprite; see observed computation and contract. DOS layout/address: 2:321f8.
+
+Per-sprite transparency masks for differential-scroll sprites: zero source pixels map to 0xff, nonzero to zero.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Background sprite mask pointers prepared by map loading and consumed by DrawSpriteDiffNormal.
+
+### global:xmapmaxini
+
+PROVEN: Original full-screen camera x maximum computed as map width*16-320 before viewport-margin expansion.
+
+Units: pixels. DOS layout/address: 2:3f758.
+
+Original full-screen camera x maximum computed as map width*16-320 before viewport-margin expansion.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:ymapmaxini
+
+PROVEN: Original full-screen camera y maximum computed as map height*16-200 before viewport-margin expansion.
+
+Units: pixels. DOS layout/address: 2:3f75c.
+
+Original full-screen camera y maximum computed as map height*16-200 before viewport-margin expansion.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Copy_Plan0_To_Buf
+
+PROVEN: [sem_objs; map_ngawe.c; PROVEN] Active Normal background-copy routine pointer; INIT_GAME_MODE_NORMAL selects Copy_Plan0Diff_To_Buf with the existing assembly register ABI.
+[sem_boss; skops.c; STRONG] Selected assembly background-copy function pointer; its register ABI is declared separately.
+
+Units: routine pointer; see observed computation and contract. DOS layout/address: 2:3d124.
+
+Active Normal background-copy routine pointer; INIT_GAME_MODE_NORMAL selects Copy_Plan0Diff_To_Buf with the existing assembly register ABI.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Selected assembly background-copy function pointer; its register ABI is declared separately.
+
+### global:bonus_perfect
+
+PROVEN: [sem_objs; bonus.c; PROVEN] 192-bit map of perfect-bonus completion, indexed by (world-1)*32+level-1 and cleared as 24 bytes.
+[sem_flow; save.c, worldmap.c; PROVEN] 24 bytes serialized after save_zone;INIT_NEW_GAME clears0..22 only. Existing gameplay consumers establish bonus completion;no meaning assigned to unused slot23.
+
+Units: bits; bonus completion state. DOS layout/address: 2:3bb40.
+
+192-bit map of perfect-bonus completion, indexed by (world-1)*32+level-1 and cleared as 24 bytes.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+24 bytes serialized after save_zone;INIT_NEW_GAME clears0..22 only. Existing gameplay consumers establish bonus completion;no meaning assigned to unused slot23.
+
+### global:bonus_time_display_text
+
+PROVEN: Text buffer holding the perfect-bonus elapsed-time display generated once at loop_time zero.
+
+Units: 8-bit game glyph text. DOS layout/address: 2:40014.
+
+Text buffer holding the perfect-bonus elapsed-time display generated once at loop_time zero.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:dword_D0028
+
+PROVEN: Pointer to the result-screen nova allocated at tick 15 for a first perfect completion and animated/drawn after tick 20.
+
+Units: object pointer. DOS layout/address: 2:40028.
+
+Pointer to the result-screen nova allocated at tick 15 for a first perfect completion and animated/drawn after tick 20.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:SNSEQ_len
+
+PROVEN: Duration indexed by weather sequence opcode; selecting a sequence overwrites that opcode duration and tick equality advances the list.
+
+Units: weather updates. DOS layout/address: 2:3aed0.
+
+Duration indexed by weather sequence opcode; selecting a sequence overwrites that opcode duration and tick equality advances the list.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:SNSEQ_list
+
+PROVEN: Weather sequence program of signed16 opcode/duration pairs plus its existing header/wrap value. Presets are built by set_SNSEQ_list.
+
+Units: signed16 program words. DOS layout/address: 2:397f8.
+
+Weather sequence program of signed16 opcode/duration pairs plus its existing header/wrap value. Presets are built by set_SNSEQ_list.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:SNSEQ_list_ptr
+
+PROVEN: Word cursor for the next weather opcode/duration pair; starts at 1, advances by two and wraps only at the exact list-header comparison.
+
+Units: word index. DOS layout/address: 2:3f7fa.
+
+Word cursor for the next weather opcode/duration pair; starts at 1, advances by two and wraps only at the exact list-header comparison.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:SNSEQ_no
+
+PROVEN: Current weather operation selector: 0 idle,1 clear wind,2 add particle,3 remove particle,4/5 change x each update,6/7 change x on clock2,8/9 change y on clock2,10 preset wind/particles.
+
+Units: opcode. DOS layout/address: 2:3f800.
+
+Current weather operation selector: 0 idle,1 clear wind,2 add particle,3 remove particle,4/5 change x each update,6/7 change x on clock2,8/9 change y on clock2,10 preset wind/particles.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:SNSEQ_ptr
+
+PROVEN: Elapsed update count for the selected weather operation; preincremented and compared for equality with SNSEQ_len[SNSEQ_no].
+
+Units: updates. DOS layout/address: 2:3f7fe.
+
+Elapsed update count for the selected weather operation; preincremented and compared for equality with SNSEQ_len[SNSEQ_no].
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:VENT_X
+
+STRONG: [sem_objs; neige.c; STRONG] Signed horizontal weather wind accumulator in quarter-pixel units; particles use phase-dithered division by four and non-Jungle player wind is derived by division by eight.
+[sem_flow; save.c; UNKNOWN] Observed storage used by save. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: quarter pixels/update; uninterpreted declared representation. DOS layout/address: 2:3f82a.
+
+Signed horizontal weather wind accumulator in quarter-pixel units; particles use phase-dithered division by four and non-Jungle player wind is derived by division by eight.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:VENT_Y
+
+STRONG: [sem_objs; neige.c; STRONG] Signed vertical weather wind accumulator in quarter-pixel units; do_flocons adds 4 temporarily for fall motion and restores the original stored value.
+[sem_flow; save.c; UNKNOWN] Observed storage used by save. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: quarter pixels/update; uninterpreted declared representation. DOS layout/address: 2:3f828.
+
+Signed vertical weather wind accumulator in quarter-pixel units; do_flocons adds 4 temporarily for fall motion and restores the original stored value.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:invpx0
+
+PROVEN: Eight inverse-projected left screen limits computed at x=0 for the weather depth groups.
+
+Units: unprojected x pixels. DOS layout/address: 2:3ae90.
+
+Eight inverse-projected left screen limits computed at x=0 for the weather depth groups.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:invpx320
+
+PROVEN: Eight inverse-projected right screen limits computed at x=320 for weather wrapping.
+
+Units: unprojected x pixels. DOS layout/address: 2:3aec0.
+
+Eight inverse-projected right screen limits computed at x=320 for weather wrapping.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:invpy0
+
+PROVEN: Eight inverse-projected top screen limits computed at y=0 for weather wrapping.
+
+Units: unprojected y pixels. DOS layout/address: 2:39a70.
+
+Eight inverse-projected top screen limits computed at y=0 for weather wrapping.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:invpy200
+
+PROVEN: Eight inverse-projected bottom screen limits computed at y=200 for weather wrapping.
+
+Units: unprojected y pixels. DOS layout/address: 2:3aea0.
+
+Eight inverse-projected bottom screen limits computed at y=200 for weather wrapping.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:tot_nb_flocs
+
+PROVEN: Capacity of each of the eight allocated weather groups: 20,30,50,60,70,80,96,106, totaling 512. Visible counts are separate.
+
+Units: particles per group. DOS layout/address: 2:3af68.
+
+Capacity of each of the eight allocated weather groups: 20,30,50,60,70,80,96,106, totaling 512. Visible counts are separate.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:ADDLUCLIP
+
+STRONG: Firefly black-clearing fringe: initially 15, later maximum absolute center movement plus 6.
+
+Units: pixels. DOS layout/address: 2:3f7b2.
+
+Firefly black-clearing fringe: initially 15, later maximum absolute center movement plus 6.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Bloc_lim_H1_Glob
+
+PROVEN: Saved general upper clipping bound restored after firefly clipping/rendering.
+
+Units: screen y pixels. DOS layout/address: 2:3d078.
+
+Saved general upper clipping bound restored after firefly clipping/rendering.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Bloc_lim_H2_Glob
+
+PROVEN: Saved general lower clipping bound restored after firefly clipping/rendering.
+
+Units: screen y pixels. DOS layout/address: 2:3d074.
+
+Saved general lower clipping bound restored after firefly clipping/rendering.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Bloc_lim_W1_Glob
+
+PROVEN: Saved general left clipping bound restored after firefly clipping/rendering.
+
+Units: screen x pixels. DOS layout/address: 2:3d080.
+
+Saved general left clipping bound restored after firefly clipping/rendering.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Bloc_lim_W2_Glob
+
+PROVEN: Saved general right clipping bound restored after firefly clipping/rendering.
+
+Units: screen x pixels. DOS layout/address: 2:3d07c.
+
+Saved general right clipping bound restored after firefly clipping/rendering.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:n_ray
+
+PROVEN: Four-slot firefly target-history ring cursor, incremented and masked with 3 each ordinary update.
+
+Units: index 0..3 after initialization. DOS layout/address: 2:3f7d4.
+
+Four-slot firefly target-history ring cursor, incremented and masked with 3 each ordinary update.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:old_x_luc
+
+STRONG: Previous firefly screen vertical coordinate, despite the existing x spelling; used to size the clearing fringe.
+
+Units: screen y pixels. DOS layout/address: 2:3f7a8.
+
+Previous firefly screen vertical coordinate, despite the existing x spelling; used to size the clearing fringe.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:old_y_luc
+
+STRONG: Previous firefly screen horizontal coordinate, despite the existing y spelling; used to size the clearing fringe.
+
+Units: screen x pixels. DOS layout/address: 2:3f7ae.
+
+Previous firefly screen horizontal coordinate, despite the existing y spelling; used to size the clearing fringe.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:rayon_luciole
+
+PROVEN: Firefly light radius: cosine-grown toward 54 and phase-oscillated during ordinary play, shrunk during death.
+
+Units: pixels. DOS layout/address: 2:3f7c6.
+
+Firefly light radius: cosine-grown toward 54 and phase-oscillated during ordinary play, shrunk during death.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:vx_luc
+
+PROVEN: Firefly horizontal world displacement, accelerated by signed unit steps toward the delayed target and clamped to -8..8 in ordinary tracking.
+
+Units: pixels/update. DOS layout/address: 2:3f7d2.
+
+Firefly horizontal world displacement, accelerated by signed unit steps toward the delayed target and clamped to -8..8 in ordinary tracking.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:vy_luc
+
+PROVEN: Firefly vertical world displacement with ordinary tracking clamp -8..8; death mode derives it from angular drift.
+
+Units: pixels/update. DOS layout/address: 2:3f7d6.
+
+Firefly vertical world displacement with ordinary tracking clamp -8..8; death mode derives it from angular drift.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:x_luc
+
+PROVEN: Firefly screen vertical coordinate computed from y_main_luc-ymap; actual role is opposite the current x spelling.
+
+Units: screen y pixels. DOS layout/address: 2:3f7c8.
+
+Firefly screen vertical coordinate computed from y_main_luc-ymap; actual role is opposite the current x spelling.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:x_main_luc
+
+PROVEN: Firefly light world horizontal position updated by vx_luc.
+
+Units: world x pixels. DOS layout/address: 2:3f7d0.
+
+Firefly light world horizontal position updated by vx_luc.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:x_ray
+
+PROVEN: Four saved horizontal target positions for delayed firefly tracking; targets come from Rayman sprite 2 or the active fist.
+
+Units: world x pixels. DOS layout/address: 2:32fa0.
+
+Four saved horizontal target positions for delayed firefly tracking; targets come from Rayman sprite 2 or the active fist.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:y_luc
+
+PROVEN: Firefly screen horizontal coordinate computed from x_main_luc-xmap+8; actual role is opposite the current y spelling.
+
+Units: screen x pixels. DOS layout/address: 2:3f7ca.
+
+Firefly screen horizontal coordinate computed from x_main_luc-xmap+8; actual role is opposite the current y spelling.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:y_main_luc
+
+PROVEN: Firefly light world vertical position updated by vy_luc.
+
+Units: world y pixels. DOS layout/address: 2:3f7ce.
+
+Firefly light world vertical position updated by vy_luc.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:y_ray
+
+PROVEN: Four saved vertical target positions for delayed firefly tracking; targets come from Rayman sprite 2 or the active fist.
+
+Units: world y pixels. DOS layout/address: 2:32f98.
+
+Four saved vertical target positions for delayed firefly tracking; targets come from Rayman sprite 2 or the active fist.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Toon_Speeds_x
+
+PROVEN: Seven signed launch horizontal speeds used in released-toon order: -3,-2,-1,0,1,1,3.
+
+Units: pixels/update. DOS layout/address: 2:62bc.
+
+Seven signed launch horizontal speeds used in released-toon order: -3,-2,-1,0,1,1,3.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:Toon_Speeds_y
+
+PROVEN: Seven signed launch vertical speeds used in released-toon order: -3,-5,-4,-6,-5,-3,-3.
+
+Units: pixels/update. DOS layout/address: 2:62ca.
+
+Seven signed launch vertical speeds used in released-toon order: -3,-5,-4,-6,-5,-3,-3.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:snd_flag_medaillon
+
+PROVEN: One-shot frozen-medallion sound latch: mute looping sounds once, then clear it when the medallion reaches substate 38.
+
+Units: boolean latch. DOS layout/address: 2:3f766.
+
+One-shot frozen-medallion sound latch: mute looping sounds once, then clear it when the medallion reaches substate 38.
+
+Keep existing shared spelling. Initial/file sample domains do not prove all runtime bounds or declaration capacities.
+
+### global:CBCollis
+
+STRONG: Single-record ball/brick contact scratch containing separation, reflection axes and brick index.
+
+Units: see observed computation and contract. DOS layout/address: 2:4e75c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Single-record ball/brick contact scratch containing separation, reflection axes and brick index.
+
+### global:NiveauDansPhase
+
+STRONG: Second Mr Sax encounter's within-phase progression counter used for multi-shot gates.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa92.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Second Mr Sax encounter's within-phase progression counter used for multi-shot gates.
+
+### global:PosPierre
+
+STRONG: Type-97 projectile-derived horizontal reference; 9999 disables normal positional matching.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fac2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Type-97 projectile-derived horizontal reference; 9999 disables normal positional matching.
+
+### global:RMrepere
+
+UNKNOWN: Only initialization to zero was found; no consuming reader in the full source/direct-fixup review.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fac0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Only initialization to zero was found; no consuming reader in the full source/direct-fixup review.
+
+### global:WaitForAnim
+
+STRONG: Intro/action animation-wait latch reused by Mr Stone and Mr Sax handlers.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa90.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Intro/action animation-wait latch reused by Mr Stone and Mr Sax handlers.
+
+### global:atak
+
+STRONG: Seven Mr Sax note launch descriptors containing type offset, speeds and split/lifetime operand.
+
+Units: see observed computation and contract. DOS layout/address: 2:7f7c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Seven Mr Sax note launch descriptors containing type offset, speeds and split/lifetime operand.
+
+### global:bat_nb_frap
+
+STRONG: Bat shot/strike counter incremented at substates 3/4 frame nineteen and reset after the third.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f812.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Bat shot/strike counter incremented at substates 3/4 frame nineteen and reset after the third.
+
+### global:bossReachingAccuracyX
+
+STRONG: Horizontal target tolerance/accuracy byte passed to setBossReachingSpeeds; 255 requests its special case.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa64.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Horizontal target tolerance/accuracy byte passed to setBossReachingSpeeds; 255 requests its special case.
+
+### global:bossReachingAccuracyY
+
+STRONG: Vertical target tolerance/accuracy byte passed to setBossReachingSpeeds; 255 requests its special case.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa65.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Vertical target tolerance/accuracy byte passed to setBossReachingSpeeds; 255 requests its special case.
+
+### global:bossReachingTimer
+
+STRONG: Timer operand passed to setBossReachingSpeeds by several boss handlers.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa6a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Timer operand passed to setBossReachingSpeeds by several boss handlers.
+
+### global:bossSafeTimer
+
+STRONG: Boss hit-safety countdown gating Mosquito/Space Mama damage; hit code assigns 255.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa6b.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Boss hit-safety countdown gating Mosquito/Space Mama damage; hit code assigns 255.
+
+### global:byte_CFA14
+
+STRONG: [sem_boss; bat.c; STRONG] Result flag set by detect_dos_version when DOS major version is ten or twenty; gates bat and CD paths.
+[sem_flow; cdsave.c; UNKNOWN] Observed storage used by cdsave. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: see observed computation and contract; uninterpreted declared representation. DOS layout/address: 2:3fa14.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Result flag set by detect_dos_version when DOS major version is ten or twenty; gates bat and CD paths.
+
+### global:dark_phase
+
+STRONG: [sem_boss; dark.c; STRONG] Dark encounter phase selector changed by phase-entry routines and command progression.
+[sem_flow; worldmap.c; UNKNOWN] Observed storage used by worldmap. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: see observed computation and contract; uninterpreted declared representation. DOS layout/address: 2:3fa8d.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark encounter phase selector changed by phase-entry routines and command progression.
+
+### global:droppedBombIds
+
+STRONG: Eight by eight recorded Space Mama bomb object IDs; -1 denotes an empty entry.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d00.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Eight by eight recorded Space Mama bomb object IDs; -1 denotes an empty entry.
+
+### global:ecroule_plat_index
+
+STRONG: Collapse-order cursor; demo/recording chooses eight, otherwise a random group of eight.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa91.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Collapse-order cursor; demo/recording chooses eight, otherwise a random group of eight.
+
+### global:ecroule_rubis_order
+
+STRONG: Index permutation table selecting the next member of the x-sorted collapse list.
+
+Units: see observed computation and contract. DOS layout/address: 2:2524.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Index permutation table selecting the next member of the x-sorted collapse list.
+
+### global:final_pass_f
+
+STRONG: Completion-text phase flag set after final_pass_x exceeds 66.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8c6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Completion-text phase flag set after final_pass_x exceeds 66.
+
+### global:final_pass_n
+
+STRONG: Cursor into expsin for final completion-text displacement.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8c0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Cursor into expsin for final completion-text displacement.
+
+### global:final_pass_x
+
+STRONG: Signed completion-text displacement initialized to -60, then advanced by fixed or expsin-derived steps.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8ca.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Signed completion-text displacement initialized to -60, then advanced by fixed or expsin-derived steps.
+
+### global:is_fee
+
+STRONG: [sem_boss; fee.c; STRONG] Whether the current world/level has the fairy dialogue prepared by init_fee.
+[sem_flow; menu.c, pcmain.c; UNKNOWN] Observed storage used by menu, pcmain. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: see observed computation and contract; uninterpreted declared representation. DOS layout/address: 2:3fa57.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Whether the current world/level has the fairy dialogue prepared by init_fee.
+
+### global:niveau
+
+UNKNOWN: Meaning remains unresolved. Exact DOS readers/writers and source computations for niveau are recorded; its existing name is retained.
+
+Units: see observed computation and contract. DOS layout/address: 2:5ec4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Meaning remains unresolved. Exact DOS readers/writers and source computations for niveau are recorded; its existing name is retained.
+
+### global:position_ray
+
+STRONG: Ceiling Spider dart target-height selector captured from Rayman's eta flag 0x40 at dart creation.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa9c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ceiling Spider dart target-height selector captured from Rayman's eta flag 0x40 at dart creation.
+
+### global:saveCurrentBossAction
+
+STRONG: Saved resumable action-stream cursor used during boss hit interruptions.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa67.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Saved resumable action-stream cursor used during boss hit interruptions.
+
+### global:sko_ecroule_plat
+
+STRONG: Selected collapse object ID used as the current platform-targeting ray destination.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f804.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Selected collapse object ID used as the current platform-targeting ray destination.
+
+### global:sko_final_x
+
+STRONG: Skops ray target x coordinate selected from a platform, Rayman or active fist.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8e0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray target x coordinate selected from a platform, Rayman or active fist.
+
+### global:sko_nb_frap
+
+STRONG: Within-phase Skops strike/launch progression counter, with phase-specific reset thresholds.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f80e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Within-phase Skops strike/launch progression counter, with phase-specific reset thresholds.
+
+### global:sko_nb_hit
+
+STRONG: Skops phase-1 hit counter used to terminate later scripted command repetitions.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f80a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops phase-1 hit counter used to terminate later scripted command repetitions.
+
+### global:sko_rayon_x
+
+STRONG: Skops ray x position used for trails and returned-ray collision; -32000 hides the terminal position.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8ee.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray x position used for trails and returned-ray collision; -32000 hides the terminal position.
+
+### global:BackgroundOptionOn
+
+PROVEN: User background preference;IsBackgroundOn forces background on at eight explicit special world/level pairs.
+
+Units: state / selector. DOS layout/address: 2:5e6d.
+
+User background preference;IsBackgroundOn forces background on at eight explicit special world/level pairs.
+
+### global:DeviceID
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3d044.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+### global:Dma
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3d050.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+### global:ExitMenu
+
+PROVEN: Post-frame continue/victory routing flag;cleared after route. Read in PcMain,not a synonym for fin_du_jeu.
+
+Units: state / selector. DOS layout/address: 2:5eb0.
+
+Post-frame continue/victory routing flag;cleared after route. Read in PcMain,not a synonym for fin_du_jeu.
+
+### global:GoMenu
+
+PROVEN: Normal-mode in-game menu entry handshake:1 requests clipping setup,2 runs options;reset0 on rejection/completion.
+
+Units: state / selector. DOS layout/address: 2:5e64.
+
+Normal-mode in-game menu entry handshake:1 requests clipping setup,2 runs options;reset0 on rejection/completion.
+
+### global:Irq
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3d048.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+### global:MapTimePause
+
+PROVEN: Gameplay frame idle counter;input resets0 then loop increments;>=21600 requests pause.
+
+Units: presented gameplay iterations. DOS layout/address: 2:3cfd8.
+
+Gameplay frame idle counter;input resets0 then loop increments;>=21600 requests pause.
+
+### global:MenuPalette
+
+PROVEN: Modal menu palette containing game-color subset,plasma/gauge/grayscale/blue ramps and map overrides.
+
+Units: 256 RGB entries. DOS layout/address: 2:4e43c.
+
+Modal menu palette containing game-color subset,plasma/gauge/grayscale/blue ramps and map overrides.
+
+### global:ModeNormalAutorise
+
+PROVEN: Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+Units: capability / bytes. DOS layout/address: 2:3fa33.
+
+Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+### global:Mode_Pad
+
+PROVEN: Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+Units: state / selector. DOS layout/address: 2:3fa1c.
+
+Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+### global:MusicCdActive
+
+PROVEN: Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+Units: state / selector. DOS layout/address: 2:3fa50.
+
+Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+### global:OptionMusicCdActive
+
+PROVEN: Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+Units: state / selector. DOS layout/address: 2:5eb6.
+
+Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+### global:Param
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3d04c.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+### global:Port
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3d040.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+### global:Port_Pad
+
+PROVEN: Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+Units: state / selector. DOS layout/address: 2:3fa1e.
+
+Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+### global:WindowsLance
+
+PROVEN: Windows/environment detection byte;zero chooses native-DOS timer/poller paths,nonzero Windows fallbacks. Specific codes printed in InitMemoryVariable.
+
+Units: detector result. DOS layout/address: 2:3fa12.
+
+Windows/environment detection byte;zero chooses native-DOS timer/poller paths,nonzero Windows fallbacks. Specific codes printed in InitMemoryVariable.
+
+### global:byte_E4CFE
+
+PROVEN: Maximum graphics frequency selector:2 for normal video,1 for ModeX;cycling wraps0..bound with special-rate handling.
+
+Units: frequency-selector bound. DOS layout/address: 2:54cfe.
+
+Maximum graphics frequency selector:2 for normal video,1 for ModeX;cycling wraps0..bound with special-rate handling.
+
+### global:cdTime
+
+PROVEN: Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+Units: state / selector. DOS layout/address: 2:3d85c.
+
+Current CD enable,capability/option enable,and audio timing state. Stop/reload branches reset cdTime;units differ and are not interchangeable.
+
+### global:choix_menu
+
+UNKNOWN: Observed storage used by menu. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3f7b0.
+
+### global:ecart_options
+
+PROVEN: Vertical spacing between current menu options,derived from percentage layout.
+
+Units: screen pixels. DOS layout/address: 2:3f7ba.
+
+Vertical spacing between current menu options,derived from percentage layout.
+
+### global:joy_buttonA1
+
+PROVEN: Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+Units: button state. DOS layout/address: 2:3f7f6.
+
+Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+### global:joyx0
+
+PROVEN: Current signed16 joystick axis samples from selected poll backend.
+
+Units: poller counts. DOS layout/address: 2:3f746.
+
+Current signed16 joystick axis samples from selected poll backend.
+
+### global:joyy0
+
+PROVEN: Current signed16 joystick axis samples from selected poll backend.
+
+Units: poller counts. DOS layout/address: 2:3f744.
+
+Current signed16 joystick axis samples from selected poll backend.
+
+### global:nbre_options
+
+PROVEN: Number of selectable/displayed rows in current menu; used with first_option and option_exit.
+
+Units: state / selector. DOS layout/address: 2:3f7a4.
+
+Number of selectable/displayed rows in current menu; used with first_option and option_exit.
+
+### global:notbut
+
+PROVEN: Four signed16 button-policy entries;only their low bytes serialize in CFG. Value1 suppresses ordinary joystick source for that button;demo fallback differs.
+
+Units: button policy. DOS layout/address: 2:397f0.
+
+Four signed16 button-policy entries;only their low bytes serialize in CFG. Value1 suppresses ordinary joystick source for that button;demo fallback differs.
+
+### global:repetition
+
+PROVEN: Held-input repetition divisor;menus commonly initialize6.
+
+Units: menu callback calls. DOS layout/address: 2:3f77e.
+
+Held-input repetition divisor;menus commonly initialize6.
+
+### global:something_with_cfg_25_default_00_joy
+
+PROVEN: Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+Units: state / selector. DOS layout/address: 2:3fa1d.
+
+Saved/current poller mode and game-port selection bytes;LoadOptions reads saved Mode_Pad/Port_Pad,save writes current two bytes. No generic controller-device ID is implied.
+
+### global:tRefRam2VramNormal
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5e80.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefRam2VramNormalFix
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5e70.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefRam2VramX
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5ea4.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefSpriteNormal
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5ea0.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefSpriteX
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5eac.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefTransFondNormal
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5e90.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tRefVram2VramX
+
+PROVEN: Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+Units: benchmark cost. DOS layout/address: 2:5ea8.
+
+Persisted16-bit benchmark cost tables used by CalcSpeed,not distances or velocities. Dimensions depend on video/frequency/clipping selectors.
+
+### global:tab_key
+
+PROVEN: Seven pointers to configured key bytes in order left,up,right,down,fist,jump,action. Menu defaults are75,72,77,80,29,56,45.
+
+Units: pointer table. DOS layout/address: 2:5e40.
+
+Seven pointers to configured key bytes in order left,up,right,down,fist,jump,action. Menu defaults are75,72,77,80,29,56,45.
+
+### global:xpadcentre
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f74e.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:xpadmax
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f748.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:xpadmin
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f750.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:ypadcentre
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f74c.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:ypadmax
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f74a.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:ypadmin
+
+PROVEN: Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+Units: poller counts / sentinel. DOS layout/address: 2:3f752.
+
+Signed16 joystick calibration endpoints/center;negative xpadmax sentinels distinguish uncalibrated/absent config states.
+
+### global:ChangeJumelleSizeOK
+
+PROVEN: Lens/camera state bits:1 vertical pending,2 horizontal pending,4 settled idle. Default3;zero v/h speed clears corresponding bit;movement/input clears4;exact value4 enters idle auto sequence.
+
+Units: bit flags. DOS layout/address: 2:3fa2f.
+
+Lens/camera state bits:1 vertical pending,2 horizontal pending,4 settled idle. Default3;zero v/h speed clears corresponding bit;movement/input clears4;exact value4 enters idle auto sequence.
+
+### global:HauteurJumelle
+
+PROVEN: Lens width=7*radius/2,height=2*radius. Defaults87/50 at radius25.
+
+Units: screen pixels. DOS layout/address: 2:3d0ac.
+
+Lens width=7*radius/2,height=2*radius. Defaults87/50 at radius25.
+
+### global:LargeurJumelle
+
+PROVEN: Lens width=7*radius/2,height=2*radius. Defaults87/50 at radius25.
+
+Units: screen pixels. DOS layout/address: 2:3d0b0.
+
+Lens width=7*radius/2,height=2*radius. Defaults87/50 at radius25.
+
+### global:ModeAutoJumelle
+
+PROVEN: Automatic lens controls:bit1 target-position motion,bit2 zoom-amplitude target,bit4 radius target. They combine;input clears entire mode.
+
+Units: bit flags. DOS layout/address: 2:3fa2e.
+
+Automatic lens controls:bit1 target-position motion,bit2 zoom-amplitude target,bit4 radius target. They combine;input clears entire mode.
+
+### global:positiony2
+
+UNKNOWN: Observed storage used by worldmap. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3f7a6.
+
+### global:wi_save_zone
+
+PROVEN: 24 packed save bytes:bit0 unlocked,bit1 pending unlock,cage count bits2..4. This differs from runtime world_info.state bit positions;high3 bits retained.
+
+Units: serialized world-map records. DOS layout/address: 2:3af88.
+
+24 packed save bytes:bit0 unlocked,bit1 pending unlock,cage count bits2..4. This differs from runtime world_info.state bit positions;high3 bits retained.
+
+### global:xmapinit
+
+PROVEN: Camera coordinates saved while map/continue/interstitial scene temporarily uses another camera,then restored.
+
+Units: world pixels. DOS layout/address: 2:3f844.
+
+Camera coordinates saved while map/continue/interstitial scene temporarily uses another camera,then restored.
+
+### global:JumAmpDefMul
+
+PROVEN: Default target amplitude coefficients:target=-radius*mul+plus. Lens cheat toggles0/0 versus26/32150.
+
+Units: amplitude coefficients. DOS layout/address: 2:5e30.
+
+Default target amplitude coefficients:target=-radius*mul+plus. Lens cheat toggles0/0 versus26/32150.
+
+### global:JumAmpDefPlus
+
+PROVEN: Default target amplitude coefficients:target=-radius*mul+plus. Lens cheat toggles0/0 versus26/32150.
+
+Units: amplitude coefficients. DOS layout/address: 2:5e34.
+
+Default target amplitude coefficients:target=-radius*mul+plus. Lens cheat toggles0/0 versus26/32150.
+
+### global:JumelleZoomActif
+
+PROVEN: Lens deformation enable/lookup-dirty flags,updated independently by zoom changes.
+
+Units: boolean. DOS layout/address: 2:3fa30.
+
+Lens deformation enable/lookup-dirty flags,updated independently by zoom changes.
+
+### global:MessageProgram
+
+PROVEN: Programmer-message overlay flag,toggled by encoded cheat and reset at startup.
+
+Units: boolean. DOS layout/address: 2:3fa10.
+
+Programmer-message overlay flag,toggled by encoded cheat and reset at startup.
+
+### global:ParamZoomChange
+
+PROVEN: Lens deformation enable/lookup-dirty flags,updated independently by zoom changes.
+
+Units: boolean. DOS layout/address: 2:3fa31.
+
+Lens deformation enable/lookup-dirty flags,updated independently by zoom changes.
+
+### global:TailleMainMemTmp
+
+PROVEN: Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+Units: capability / bytes. DOS layout/address: 2:3d86c.
+
+Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+### global:byte_CFA2A
+
+PROVEN: When CD detected,equality of executable argv0 first character and detected drive letter;gates loading-display branch.
+
+Units: boolean. DOS layout/address: 2:3fa2a.
+
+When CD detected,equality of executable argv0 first character and detected drive letter;gates loading-display branch.
+
+### global:cheat_codes
+
+PROVEN: 324 encoded scan-code bytes;PC_init_cheats chooses layout-specific slices. No plain-text or null-terminated interpretation.
+
+Units: encoded scan-code table. DOS layout/address: 2:6384.
+
+324 encoded scan-code bytes;PC_init_cheats chooses layout-specific slices. No plain-text or null-terminated interpretation.
+
+### global:drm_byte_CFA27
+
+PROVEN: Uppercase detected CD drive letter:AudioStatusByte()+A. Disk-free check converts letter-@ to DOS drive number.
+
+Units: drive letter. DOS layout/address: 2:3fa27.
+
+Uppercase detected CD drive letter:AudioStatusByte()+A. Disk-free check converts letter-@ to DOS drive number.
+
+### global:need_check_cheats
+
+PROVEN: Pending new make-scan-code flag. World-map/gameplay checker consumes it BEFORE eligibility gates;not a queued cheat count.
+
+Units: boolean. DOS layout/address: 2:3fa15.
+
+Pending new make-scan-code flag. World-map/gameplay checker consumes it BEFORE eligibility gates;not a queued cheat count.
+
+### global:text_input_buffer
+
+PROVEN: Nine newest-first scan codes XOR0x96;ISR shifts only on a new make code different from newest. memcmp cheats compare fixed-length prefixes,not terminated text.
+
+Units: encoded scan-code history. DOS layout/address: 2:5eb7.
+
+Nine newest-first scan codes XOR0x96;ISR shifts only on a new make code different from newest. memcmp cheats compare fixed-length prefixes,not terminated text.
+
+### global:word_CF7E6
+
+PROVEN: Frame deadline offset:word_CF7EE+low16(word_CF7F0*display_mode). Gameplay computes deadline=clock_ticks()+u16 value.
+
+Units: clock ticks. DOS layout/address: 2:3f7e6.
+
+Frame deadline offset:word_CF7EE+low16(word_CF7F0*display_mode). Gameplay computes deadline=clock_ticks()+u16 value.
+
+### global:nb_levels_in_world
+
+PROVEN: Seven world-indexed byte level counts;checkpoint progress bitmap sums32 bytes per prior level. Entry0 is not a playable world.
+
+Units: level counts. DOS layout/address: 2:4a74.
+
+Seven world-indexed byte level counts;checkpoint progress bitmap sums32 bytes per prior level. Entry0 is not a playable world.
+
+### global:sav_raw_count
+
+PROVEN: Encoder input count / decoder remaining decoded bytes. Decoder predecrements on each emitted byte.
+
+Units: signed32 bytes. DOS layout/address: 2:6328.
+
+Encoder input count / decoder remaining decoded bytes. Decoder predecrements on each emitted byte.
+
+### global:saved_argv
+
+PROVEN: 255-byte saved argv0 executable-path string,copied in main;first byte consumed by drive comparison. No stronger capacity guarantee.
+
+Units: DOS path bytes. DOS layout/address: 2:3f8f6.
+
+255-byte saved argv0 executable-path string,copied in main;first byte consumed by drive comparison. No stronger capacity guarantee.
+
+### global:joy_buttonA2
+
+PROVEN: Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+Units: button state. DOS layout/address: 2:3f7f8.
+
+Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+### global:joy_buttonB1
+
+PROVEN: Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+Units: button state. DOS layout/address: 2:3f7f2.
+
+Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+### global:joy_buttonB2
+
+PROVEN: Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+Units: button state. DOS layout/address: 2:3f7f4.
+
+Signed16 joystick button samples,accepted when==1. Playback mapping has two bits aliasing A2 and leaves B2 clear.
+
+### global:JumelleEffetAutorise
+
+PROVEN: Allocation/capability gate for lens deformation;failed table allocation clears it.
+
+Units: boolean. DOS layout/address: 2:3fa32.
+
+Allocation/capability gate for lens deformation;failed table allocation clears it.
+
+### global:pal
+
+PROVEN: 16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales.
+
+Units: RGB palette entries. DOS layout/address: 2:5fb2.
+
+16-entry source color tables for plasma/fire respectively;initialization applies distinct channel permutations/scales.
+
+### global:During_The_Menu
+
+PROVEN: Set0 immediately around gameplay frame loop and1 afterward;name alone is not a universal UI-active predicate.
+
+Units: state / selector. DOS layout/address: 2:5eb4.
+
+Set0 immediately around gameplay frame loop and1 afterward;name alone is not a universal UI-active predicate.
+
+### global:SonLimite
+
+PROVEN: Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+Units: capability / bytes. DOS layout/address: 2:3fa13.
+
+Memory-policy outputs selected at2MiB/3MiB startup thresholds;normal-mode permission,limited-sound flag and temporary pool size respectively.
+
+### global:TheProcesseur
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa26.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+### global:yp0
+
+UNKNOWN: Observed storage used by pcmain. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3f7e0.
+
+### global:temp_mem_buf
+
+PROVEN: Backing temporary arena;align tracks pooled live allocation accounting. Heap fallbacks are separate.
+
+Units: memory arena. DOS layout/address: 2:3d88c.
+
+Backing temporary arena;align tracks pooled live allocation accounting. Heap fallbacks are separate.
+
+### global:RandomIndex
+
+PROVEN: 32-bit random-table cursor;increment before read,wrap>=256 to0,initial/reset0 means first sample slot1.
+
+Units: table index0..255. DOS layout/address: 2:5548c.
+
+32-bit random-table cursor;increment before read,wrap>=256 to0,initial/reset0 means first sample slot1.
+
+## hybrid.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:allocateSTOSKO
+
+PROVEN: Activate the stored STOSKO object at the arena border, set its target and restore the fist ability.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f040.
+
+Activate the stored STOSKO object at the arena border, set its target and restore the fist ability.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:allocateMOSKITOMAMA
+
+STRONG: Activate the paired MOSKITOMAMA objects with their positions and movement/evasion scratch.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f0f4.
+
+Activate the paired MOSKITOMAMA objects with their positions and movement/evasion scratch.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:allocateMOSKITOSAXO
+
+PROVEN: Activate MOSKITOSAXO, make Rayman tiny if needed and enable run/fist abilities.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f2a0.
+
+Activate MOSKITOSAXO, make Rayman tiny if needed and enable run/fist abilities.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:doMOSAMScommand
+
+STRONG: Update MOSKITOMAMA/MOSKITOSAXO movement and target-reaching behavior.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f340.
+
+Update MOSKITOMAMA/MOSKITOSAXO movement and target-reaching behavior.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DoMOSAMSPoingCollision
+
+PROVEN: Apply one point of damage for vulnerable sprite-3/6 hits and mark completion at zero HP.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f4a4.
+
+Apply one point of damage for vulnerable sprite-3/6 hits and mark completion at zero HP.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:allocateStoskoClaw
+
+PROVEN: Allocate the first inactive STOSKO claw and store its object index in the owner's link.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f518.
+
+Allocate the first inactive STOSKO claw and store its object index in the owner's link.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:doSTOSKOcommand
+
+PROVEN: Run STOSKO's waiting, dodge, claw launch and claw-return states.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f598.
+
+Run STOSKO's waiting, dodge, claw launch and claw-return states.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DoSTOSKOPoingCollision
+
+PROVEN: Apply one point of STOSKO damage for outgoing fist sprite-6 hits and remove the claw on defeat.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f7ec.
+
+Apply one point of STOSKO damage for outgoing fist sprite-6 hits and remove the claw on defeat.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:doBBF2command
+
+STRONG: Update the paired BBF2 objects' vertical pursuit, evasion and shot timing.
+
+Units: see observed computation and contract. DOS layout/address: 1:2f8ac.
+
+Update the paired BBF2 objects' vertical pursuit, evasion and shot timing.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_HYB_BBF2_POING_COLLISION
+
+PROVEN: Share HP and hit/defeat states between the two linked BBF2 objects.
+
+Units: see observed computation and contract. DOS layout/address: 1:2fd78.
+
+Share HP and hit/defeat states between the two linked BBF2 objects.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:AllocateTirBBF2
+
+PROVEN: Activate the first inactive BBF2 laser and record its side-specific pointer and linked target.
+
+Units: see observed computation and contract. DOS layout/address: 1:2fe8c.
+
+Activate the first inactive BBF2 laser and record its side-specific pointer and linked target.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_HYB_BBF2_LAS
+
+PROVEN: Handle BBF2 laser impacts with linked bosses and other active lasers.
+
+Units: see observed computation and contract. DOS layout/address: 1:2ff5c.
+
+Handle BBF2 laser impacts with linked bosses and other active lasers.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DoHybBBF2LasRaymanCollision
+
+PROVEN: Deactivate a BBF2 laser on Rayman collision.
+
+Units: see observed computation and contract. DOS layout/address: 1:30168.
+
+Deactivate a BBF2 laser on Rayman collision.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:OBJ_IN_COL_ZDC
+
+PROVEN: Intersect the first sprite-relative collision zones of two objects, respecting flip_x.
+
+Units: see observed computation and contract. DOS layout/address: 1:30184.
+
+Intersect the first sprite-relative collision zones of two objects, respecting flip_x.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:AllocateDarkPhase2
+
+PROVEN: Activate a type-specific Dark phase-2 object and retire the previous Dark object.
+
+Units: see observed computation and contract. DOS layout/address: 1:302c0.
+
+Activate a type-specific Dark phase-2 object and retire the previous Dark object.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_DARK2_AFFICHE_TEXT
+
+STRONG: Draw Dark's sinusoidal text or advance the final completion-text displacement.
+
+Units: see observed computation and contract. DOS layout/address: 1:30364.
+
+Draw Dark's sinusoidal text or advance the final completion-text displacement.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_DARK_PHASE2_COMMAND
+
+STRONG: Run Dark phase 2's spell/flame/dialogue/fist-recovery sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:304b0.
+
+Run Dark phase 2's spell/flame/dialogue/fist-recovery sequence.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_DARK2_SORT_COMMAND
+
+STRONG: Advance Dark phase-2 sinusoidal or target-seeking spell objects and spawn their successors.
+
+Units: see observed computation and contract. DOS layout/address: 1:30e58.
+
+Advance Dark phase-2 sinusoidal or target-seeking spell objects and spawn their successors.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:allocate_DARK2_SORT
+
+PROVEN: Allocate a Dark phase-2 spell with supplied position, substate and lifetime.
+
+Units: see observed computation and contract. DOS layout/address: 1:31208.
+
+Allocate a Dark phase-2 spell with supplied position, substate and lifetime.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DoFlammeCommand
+
+PROVEN: Deactivate flames in state 0:5, otherwise execute one script command.
+
+Units: see observed computation and contract. DOS layout/address: 1:31328.
+
+Deactivate flames in state 0:5, otherwise execute one script command.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DoFlammeRaymanCollision
+
+PROVEN: Apply flame contact damage while preserving short iframes or resetting them to ten.
+
+Units: see observed computation and contract. DOS layout/address: 1:31354.
+
+Apply flame contact damage while preserving short iframes or resetting them to ten.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:AllocateFlammes
+
+PROVEN: Activate the selected left/right flame pool object for supplied launch mode 0/1.
+
+Units: see observed computation and contract. DOS layout/address: 1:313b4.
+
+Activate the selected left/right flame pool object for supplied launch mode 0/1.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:AllocateToons
+
+PROVEN: Activate the linked Toon pair with their stop coordinates and initial motion.
+
+Units: see observed computation and contract. DOS layout/address: 1:31510.
+
+Activate the linked Toon pair with their stop coordinates and initial motion.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:DO_DARK2_TOONS_COMMAND
+
+STRONG: Move linked Toons toward their targets, recover the fist and retire them above the screen.
+
+Units: see observed computation and contract. DOS layout/address: 1:31650.
+
+Move linked Toons toward their targets, recover the fist and retire them above the screen.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### function:ToonDonnePoing
+
+PROVEN: Restore the fist ability and advance the Toon handoff state.
+
+Units: see observed computation and contract. DOS layout/address: 1:319e4.
+
+Restore the fist ability and advance the Toon handoff state.
+
+Dark hybrids use links for object IDs and several paired state/HP contracts. STOSKO sprite 6 requires an outgoing fist and eta vulnerability; MOSAMS accepts sprites 3/6. Force fist damage to one at these sites. Dark phase 2 coordinates flame scripts, spell lifetimes, dialogue and Toon fist recovery. Flame contact preserves short existing iframes or resets them to ten; it is not a generic enemy hit rule.
+
+### global:BBF2DEsk
+
+STRONG: Right-side BBF2 evasion progression counter, with zero and 100 boundary cases.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c28.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Right-side BBF2 evasion progression counter, with zero and 100 boundary cases.
+
+### global:BBF2GEsk
+
+STRONG: Left-side BBF2 evasion progression counter, with zero and 100 boundary cases.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c29.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Left-side BBF2 evasion progression counter, with zero and 100 boundary cases.
+
+### global:NiveauSol
+
+STRONG: Floor coordinate used to establish hybrid vertical movement targets.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c20.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Floor coordinate used to establish hybrid vertical movement targets.
+
+### global:PosArXToon1
+
+STRONG: Target x coordinate for linked Toon 1; writers switch between fist and Rayman-relative positions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bfa.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Target x coordinate for linked Toon 1; writers switch between fist and Rayman-relative positions.
+
+### global:PosArXToon2
+
+STRONG: Target x coordinate for linked Toon 2; writers switch between fist and Rayman-relative positions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bf6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Target x coordinate for linked Toon 2; writers switch between fist and Rayman-relative positions.
+
+### global:PosArYToon1
+
+STRONG: Target y coordinate for linked Toon 1; writers switch between fist and Rayman-relative positions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bf8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Target y coordinate for linked Toon 1; writers switch between fist and Rayman-relative positions.
+
+### global:PosArYToon2
+
+STRONG: Target y coordinate for linked Toon 2; writers switch between fist and Rayman-relative positions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bf4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Target y coordinate for linked Toon 2; writers switch between fist and Rayman-relative positions.
+
+### global:PosXSin1
+
+STRONG: Dark sinusoidal spell 1 x position accumulator in whole pixels.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c10.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 1 x position accumulator in whole pixels.
+
+### global:PosXSin2
+
+STRONG: Dark sinusoidal spell 2 x position accumulator in whole pixels.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c0e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 2 x position accumulator in whole pixels.
+
+### global:PosYSin1
+
+STRONG: Dark sinusoidal spell 1 y position accumulator in whole pixels.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c18.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 1 y position accumulator in whole pixels.
+
+### global:PosYSin2
+
+STRONG: Dark sinusoidal spell 2 y position accumulator in whole pixels.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c16.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 2 y position accumulator in whole pixels.
+
+### global:TirBBF2D
+
+STRONG: Pointer to the most recently allocated right BBF2 laser, used by the opposite side's evasion checks.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bf0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Pointer to the most recently allocated right BBF2 laser, used by the opposite side's evasion checks.
+
+### global:TirBBF2G
+
+STRONG: Pointer to the most recently allocated left BBF2 laser, used by the opposite side's evasion checks.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bec.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Pointer to the most recently allocated left BBF2 laser, used by the opposite side's evasion checks.
+
+### global:ToonJustGivePoing
+
+STRONG: Fist handoff progression latch shared by ToonDonnePoing and Dark phase-2 command logic.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c22.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Fist handoff progression latch shared by ToonDonnePoing and Dark phase-2 command logic.
+
+### global:VitesseYText
+
+STRONG: Text vertical speed in sixteenths, shifted right four when applied to YText.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c12.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Text vertical speed in sixteenths, shifted right four when applied to YText.
+
+### global:XText
+
+STRONG: Horizontal coordinate passed to the Dark phase-2 text renderer, normally centered at 160.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bfe.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Horizontal coordinate passed to the Dark phase-2 text renderer, normally centered at 160.
+
+### global:YPosBBF2D
+
+STRONG: Right BBF2 vertical target adjusted by pursuit/evasion logic.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c1c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Right BBF2 vertical target adjusted by pursuit/evasion logic.
+
+### global:YPosBBF2G
+
+STRONG: Left BBF2 vertical target adjusted by pursuit/evasion logic.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c1e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Left BBF2 vertical target adjusted by pursuit/evasion logic.
+
+### global:YText
+
+STRONG: Dark phase-2 text y coordinate advanced using VitesseYText.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c04.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark phase-2 text y coordinate advanced using VitesseYText.
+
+### global:dark2_rayon_dx_1
+
+STRONG: Dark sinusoidal spell 1 x velocity operand applied after signed right shift by four.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c00.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 1 x velocity operand applied after signed right shift by four.
+
+### global:dark2_rayon_dx_2
+
+STRONG: Dark sinusoidal spell 2 x velocity operand applied after signed right shift by four.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c02.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 2 x velocity operand applied after signed right shift by four.
+
+### global:dark2_rayon_dy_1
+
+STRONG: Dark sinusoidal spell 1 y velocity operand applied after signed right shift by four.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c06.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 1 y velocity operand applied after signed right shift by four.
+
+### global:dark2_rayon_dy_2
+
+STRONG: Dark sinusoidal spell 2 y velocity operand applied after signed right shift by four.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c08.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark sinusoidal spell 2 y velocity operand applied after signed right shift by four.
+
+### global:dark_obj
+
+STRONG: Pointer to the original Dark object retained while the phase-2 replacement is active.
+
+Units: see observed computation and contract. DOS layout/address: 2:50b84.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Pointer to the original Dark object retained while the phase-2 replacement is active.
+
+### global:final_pass_a
+
+UNKNOWN: Written as zero then as final_pass_x; no consuming reader found in the source/direct-fixup review.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8c2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Written as zero then as final_pass_x; no consuming reader found in the source/direct-fixup review.
+
+### global:flamme_droite_id
+
+STRONG: Stored right flame object ID used to synchronize scripts and transitions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50bfc.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Stored right flame object ID used to synchronize scripts and transitions.
+
+### global:flamme_gauche_id
+
+STRONG: Stored left flame object ID used to synchronize scripts and transitions.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c0a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Stored left flame object ID used to synchronize scripts and transitions.
+
+### global:flammes_actives
+
+STRONG: Dark phase-2 flame creation coordination state, tested as zero/one/two.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c27.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark phase-2 flame creation coordination state, tested as zero/one/two.
+
+### global:num_dark2_phrase
+
+STRONG: Dark phase-2 dialogue cursor controlling which localized phrase is copied next.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c24.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark phase-2 dialogue cursor controlling which localized phrase is copied next.
+
+### global:phase_dark2
+
+STRONG: Numeric Dark phase-2 progression through flame/spell/text/fist-recovery steps.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c0c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Numeric Dark phase-2 progression through flame/spell/text/fist-recovery steps.
+
+### global:sens_sinus_1
+
+STRONG: Direction flag selecting increase/decrease of sinusoidal spell 1 vertical velocity at its +/-76 limits.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c25.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Direction flag selecting increase/decrease of sinusoidal spell 1 vertical velocity at its +/-76 limits.
+
+### global:sens_sinus_2
+
+STRONG: Direction flag selecting increase/decrease of sinusoidal spell 2 vertical velocity at its +/-76 limits.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c26.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Direction flag selecting increase/decrease of sinusoidal spell 2 vertical velocity at its +/-76 limits.
+
+### global:sinus_actif
+
+STRONG: Dark phase-2 sinusoidal spell coordination state, tested as zero/one/two.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c23.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Dark phase-2 sinusoidal spell coordination state, tested as zero/one/two.
+
+### global:temps_text
+
+STRONG: Sinusoidal text time/phase operand, advanced by three unless frozen.
+
+Units: see observed computation and contract. DOS layout/address: 2:50c14.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Sinusoidal text time/phase operand, advanced by three unless frozen.
+
+### global:txt_dark2
+
+STRONG: Raw localized dialogue buffer copied from language entries and drawn with the sinusoidal text routine.
+
+Units: see observed computation and contract. DOS layout/address: 2:50b88.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Raw localized dialogue buffer copied from language entries and drawn with the sinusoidal text routine.
+
+## input.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Original Watcom declarations and source-local records are retained. Approved local name changes preserve whole compiled object contributions; parser adaptation is confined to the checker.
+
+### function:POINTEUR_BOUTONS_OPTIONS_BIS
+
+PROVEN: Map configurable logical actions to button callbacks by selectors0..3. Jump/fist/action also replace per-button keyboard-test callbacks; field_14 selects test_button4. Invalid selectors keep previous callbacks.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31af0.
+
+Map configurable logical actions to button callbacks by selectors0..3. Jump/fist/action also replace per-button keyboard-test callbacks; field_14 selects test_button4. Invalid selectors keep previous callbacks.
+
+### function:TestKeyWeapon
+
+PROVEN: Return the pressed-state byte at configured fist scan code.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31ca8.
+
+Return the pressed-state byte at configured fist scan code.
+
+### function:TOUCHE
+
+PROVEN: Return raw keyboard state byte indexed by scan code; normal ISR writes0 or0x80, not boolean1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31cb0.
+
+Return raw keyboard state byte indexed by scan code; normal ISR writes0 or0x80, not boolean1.
+
+### function:TestKeyJump
+
+PROVEN: Return the pressed-state byte at configured jump scan code.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31cbc.
+
+Return the pressed-state byte at configured jump scan code.
+
+### function:TestKeyAction
+
+PROVEN: Return the pressed-state byte at configured action scan code.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31cd0.
+
+Return the pressed-state byte at configured action scan code.
+
+### function:leftjoy
+
+PROVEN: Combine joystick threshold (Main_Control==2) and keyboard left with opposite direction suppressed; replay overrides with joy_rec_left.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31ce4.
+
+Combine joystick threshold (Main_Control==2) and keyboard left with opposite direction suppressed; replay overrides with joy_rec_left.
+
+### function:rightjoy
+
+PROVEN: Combine joystick threshold (Main_Control==2) and keyboard right with opposite direction suppressed; replay overrides with joy_rec_right.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31d54.
+
+Combine joystick threshold (Main_Control==2) and keyboard right with opposite direction suppressed; replay overrides with joy_rec_right.
+
+### function:downjoy
+
+PROVEN: Combine joystick threshold (Main_Control==2) and keyboard down with opposite direction suppressed; replay overrides with joy_rec_down.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31dc4.
+
+Combine joystick threshold (Main_Control==2) and keyboard down with opposite direction suppressed; replay overrides with joy_rec_down.
+
+### function:upjoy
+
+PROVEN: Combine joystick threshold (Main_Control==2) and keyboard up with opposite direction suppressed; replay overrides with joy_rec_up.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31e34.
+
+Combine joystick threshold (Main_Control==2) and keyboard up with opposite direction suppressed; replay overrides with joy_rec_up.
+
+### function:but0pressed
+
+PROVEN: Fade-gated button0 predicate. Keyboard callback allowed only input_mode1; Main_Control/notbut select joystick use; demo additionally uses A1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31ea4.
+
+Fade-gated button0 predicate. Keyboard callback allowed only input_mode1; Main_Control/notbut select joystick use; demo additionally uses A1.
+
+### function:but1pressed
+
+PROVEN: Fade-gated button1 predicate; joystick A2 with keyboard callback, respecting Main_Control/notbut and demo fallback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31f30.
+
+Fade-gated button1 predicate; joystick A2 with keyboard callback, respecting Main_Control/notbut and demo fallback.
+
+### function:but2pressed
+
+PROVEN: Fade-gated button2 predicate; joystick B1 with keyboard callback, respecting Main_Control/notbut and demo fallback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:31fbc.
+
+Fade-gated button2 predicate; joystick B1 with keyboard callback, respecting Main_Control/notbut and demo fallback.
+
+### function:but3pressed
+
+PROVEN: Fade-gated button3 predicate. Ordinary joystick branch uses B2; keyboard-only/demo fallback unusually uses A1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32048.
+
+Fade-gated button3 predicate. Ordinary joystick branch uses B2; keyboard-only/demo fallback unusually uses A1.
+
+### function:butX0pressed
+
+PROVEN: When nb_fade==0 return bux01==1 OR configured keyboard button2 (input_mode1).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:320d4.
+
+When nb_fade==0 return bux01==1 OR configured keyboard button2 (input_mode1).
+
+### function:butX1pressed
+
+PROVEN: When nb_fade==0 return bux11==1; no keyboard branch.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3210c.
+
+When nb_fade==0 return bux11==1; no keyboard branch.
+
+### function:sub_4212C
+
+PROVEN: Store signed16 parameter in word_E0CD0. Whole-binary evidence has no live semantic reader; retain neutral spelling.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3212c.
+
+Store signed16 parameter in word_E0CD0. Whole-binary evidence has no live semantic reader; retain neutral spelling.
+
+### function:readinput
+
+PROVEN: Call the current Read_Input_Func callback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32134.
+
+Call the current Read_Input_Func callback.
+
+### function:readinput_calibrate_joystick
+
+PROVEN: Poll input once and widen the supplied signed16 axis minima/maxima to include current sample.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3213c.
+
+Poll input once and widen the supplied signed16 axis minima/maxima to include current sample.
+
+### function:readinput_center_joystick
+
+PROVEN: If Main_Control!=0 poll once, save centers and word_E0CD4/8 samples, then set Main_Control=2.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32184.
+
+If Main_Control!=0 poll once, save centers and word_E0CD4/8 samples, then set Main_Control=2.
+
+### function:update_pad_limits
+
+PROVEN: Set thresholds40 percent from each endpoint toward center (integer signed arithmetic); output globals auto_joy_left/right/up/down.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:321c0.
+
+Set thresholds40 percent from each endpoint toward center (integer signed arithmetic); output globals auto_joy_left/right/up/down.
+
+### function:sub_4225C
+
+PROVEN: Store percent remaining in word_E0CBA:100 at offset0; recording uses fixed20000 capacity, playback uses rec.length. No semantic reader establishes a broader UI purpose.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3225c.
+
+Store percent remaining in word_E0CBA:100 at offset0; recording uses fixed20000 capacity, playback uses rec.length. No semantic reader establishes a broader UI purpose.
+
+### function:read_record
+
+PROVEN: Open REC bytes, cast filelength through signed16, allocate exact promoted length, read and close. Missing file prints and waits for a key.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:322c8.
+
+Open REC bytes, cast filelength through signed16, allocate exact promoted length, read and close. Missing file prints and waits for a key.
+
+### function:load_record
+
+PROVEN: Interactive DOS text prompt for a REC filename, default DANY, then load bytes and restore ModeX/palette. No new filename-capacity guarantee is inferred.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32328.
+
+Interactive DOS text prompt for a REC filename, default DANY, then load bytes and restore ModeX/palette. No new filename-capacity guarantee is inferred.
+
+### function:sub_42408
+
+PROVEN: Unpack replay button byte: bit0->A1,bit1->B1,bits2 OR3->A2; B2 remains0. Bits4/5/6/7 set left/right/up/down replay flags. This alias is DOS behavior.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32408.
+
+Unpack replay button byte: bit0->A1,bit1->B1,bits2 OR3->A2; B2 remains0. Bits4/5/6/7 set left/right/up/down replay flags. This alias is DOS behavior.
+
+### function:do_record
+
+PROVEN: Snapshot physical A1/A2/B1/B2 into bux00/01/10/11, then service playback of (button byte,repeat length) pairs. At repeat equality advance by2 or finish. Demo1 ends as ModeDemo2,new_world1,fade out. No recording encoder occurs in this body.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32490.
+
+Snapshot physical A1/A2/B1/B2 into bux00/01/10/11, then service playback of (button byte,repeat length) pairs. At repeat equality advance by2 or finish. Demo1 ends as ModeDemo2,new_world1,fade out. No recording encoder occurs in this body.
+
+### function:PC_keyboard_interrupt_handler
+
+STRONG: Mask IRQ1, read scan code, update demo abort state and9-byte reverse-order XOR0x96 cheat history only for a new make code. Cancel world-map auto motion. Recognize E1,1D,45 pause sequence; ordinary make/break writes0x80/0. Acknowledge keyboard/PIC and unmask IRQ1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3259c.
+
+Mask IRQ1, read scan code, update demo abort state and9-byte reverse-order XOR0x96 cheat history only for a new make code. Cancel world-map auto motion. Recognize E1,1D,45 pause sequence; ordinary make/break writes0x80/0. Acknowledge keyboard/PIC and unmask IRQ1.
+
+### function:RESET_TOUCHE
+
+PROVEN: Clear one scan-code state byte without consuming the BIOS key queue.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3270c.
+
+Clear one scan-code state byte without consuming the BIOS key queue.
+
+### function:RESET_ALL_TOUCHE
+
+PROVEN: Clear128 scan-code state bytes.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3271c.
+
+Clear128 scan-code state bytes.
+
+### function:Init_Clavier
+
+PROVEN: Clear states, save INT9 vector, install game ISR only for input_mode1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32734.
+
+Clear states, save INT9 vector, install game ISR only for input_mode1.
+
+### function:Reset_Clavier
+
+PROVEN: Restore saved INT9 vector.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32774.
+
+Restore saved INT9 vector.
+
+### function:JoystickPresent
+
+PROVEN: Choose DOS/Windows and game-port polling callbacks from need_timer/WindowsLance and port probes; no device sets Main_Control0 and clears samples. Presence promotes Main_Control0->1; calibration later sets2. Retain exact channel-selection flag behavior.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32790.
+
+Choose DOS/Windows and game-port polling callbacks from need_timer/WindowsLance and port probes; no device sets Main_Control0 and clears samples. Presence promotes Main_Control0->1; calibration later sets2. Retain exact channel-selection flag behavior.
+
+### global:Read_Input_Func
+
+PROVEN: Current no-argument joystick poll callback selected by DOS/Windows/port detection. readinput calls it unconditionally.
+
+Units: function pointer. DOS layout/address: 2:50cb0.
+
+Current no-argument joystick poll callback selected by DOS/Windows/port detection. readinput calls it unconditionally.
+
+### global:TEST_KEY_BUTTON0
+
+PROVEN: No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+Units: function pointer. DOS layout/address: 2:67bc.
+
+No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+### global:TEST_KEY_BUTTON1
+
+PROVEN: No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+Units: function pointer. DOS layout/address: 2:67c0.
+
+No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+### global:TEST_KEY_BUTTON2
+
+PROVEN: No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+Units: function pointer. DOS layout/address: 2:67c4.
+
+No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+### global:TEST_KEY_BUTTON3
+
+PROVEN: No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+Units: function pointer. DOS layout/address: 2:67c8.
+
+No-argument keyboard predicate selected by action-to-button mapping;may be reused by directional/button wrappers.
+
+### global:Touche_Enfoncee
+
+PROVEN: 128 key states:ISR stores0x80 for make,0 for break;TOUCHE returns raw byte. Reset routines clear states.
+
+Units: scan-code states. DOS layout/address: 2:50c30.
+
+128 key states:ISR stores0x80 for make,0 for break;TOUCHE returns raw byte. Reset routines clear states.
+
+### global:auto_joy_down
+
+PROVEN: Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+Units: poller counts. DOS layout/address: 2:50cd2.
+
+Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+### global:auto_joy_left
+
+PROVEN: Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+Units: poller counts. DOS layout/address: 2:50cca.
+
+Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+### global:auto_joy_right
+
+PROVEN: Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+Units: poller counts. DOS layout/address: 2:50cd6.
+
+Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+### global:auto_joy_up
+
+PROVEN: Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+Units: poller counts. DOS layout/address: 2:50ccc.
+
+Signed16 direction thresholds40 percent from calibrated endpoint toward center;inclusive comparisons.
+
+### global:bux00
+
+PROVEN: Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+Units: button state. DOS layout/address: 2:50cc6.
+
+Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+### global:bux01
+
+PROVEN: Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+Units: button state. DOS layout/address: 2:50cc4.
+
+Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+### global:bux10
+
+PROVEN: Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+Units: button state. DOS layout/address: 2:50cc2.
+
+Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+### global:bux11
+
+PROVEN: Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+Units: button state. DOS layout/address: 2:50cbe.
+
+Physical A1/A2/B1/B2 snapshots captured before replay injection by do_record.
+
+### global:byte_967CC
+
+PROVEN: Keyboard E1 pause-prefix automaton:0 ordinary/E1 detection,1 expects1D,2 expects45 then toggles pause only in active gameplay.
+
+Units: state / selector. DOS layout/address: 2:67cc.
+
+Keyboard E1 pause-prefix automaton:0 ordinary/E1 detection,1 expects1D,2 expects45 then toggles pause only in active gameplay.
+
+### global:joy_rec_down
+
+PROVEN: Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+Units: boolean. DOS layout/address: 2:50cc8.
+
+Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+### global:joy_rec_left
+
+PROVEN: Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+Units: boolean. DOS layout/address: 2:50cce.
+
+Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+### global:joy_rec_right
+
+PROVEN: Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+Units: boolean. DOS layout/address: 2:50cc0.
+
+Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+### global:joy_rec_up
+
+PROVEN: Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+Units: boolean. DOS layout/address: 2:50cbc.
+
+Replay direction flags unpacked from bits4..7;override live direction predicates while record.is_playing.
+
+### global:key_action
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e3e.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_down
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e3b.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_fist
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e3c.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_jump
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e3d.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_left
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e3a.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_right
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e38.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:key_up
+
+PROVEN: Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+Units: keyboard scan code. DOS layout/address: 2:5e39.
+
+Configurable scan-code index into128-byte Touche_Enfoncee. tab_key order is left,up,right,down,fist,jump,action.
+
+### global:saved_keyboard_interrupt_handler
+
+PROVEN: Saved INT9 far interrupt pointer;restore on Reset_Clavier. Measured6 bytes on DOS,not a native near pointer.
+
+Units: far interrupt address. DOS layout/address: 2:50cb4.
+
+Saved INT9 far interrupt pointer;restore on Reset_Clavier. Measured6 bytes on DOS,not a native near pointer.
+
+### global:word_E0CBA
+
+PROVEN: Signed16 percent remaining written by sub_4225C from replay/record offset and length. No demonstrated live UI reader;neutral name retained.
+
+Units: percent. DOS layout/address: 2:50cba.
+
+Signed16 percent remaining written by sub_4225C from replay/record offset and length. No demonstrated live UI reader;neutral name retained.
+
+### global:word_E0CD0
+
+UNKNOWN: Signed16 storage written by sub_4212C;no live semantic reader established by prior whole-image audit. Neutral name retained.
+
+Units: uninterpreted signed16. DOS layout/address: 2:50cd0.
+
+Signed16 storage written by sub_4212C;no live semantic reader established by prior whole-image audit. Neutral name retained.
+
+### global:word_E0CD4
+
+PROVEN: Signed16 axis-center samples written with joystick center calibration. No independent broader meaning established.
+
+Units: poller counts. DOS layout/address: 2:50cd4.
+
+Signed16 axis-center samples written with joystick center calibration. No independent broader meaning established.
+
+### global:word_E0CD8
+
+PROVEN: Signed16 axis-center samples written with joystick center calibration. No independent broader meaning established.
+
+Units: poller counts. DOS layout/address: 2:50cd8.
+
+Signed16 axis-center samples written with joystick center calibration. No independent broader meaning established.
+
+## jumelle.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:plot2linejumelle
+
+STRONG: Copy symmetric horizontal binocular scanline spans from effect buffer to draw buffer with historical zoom displacement lookup and clipping. Integer positions/byte strides and overlap ordering are part of the renderer contract.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32930.
+
+Copy symmetric horizontal binocular scanline spans from effect buffer to draw buffer with historical zoom displacement lookup and clipping. Integer positions/byte strides and overlap ordering are part of the renderer contract.
+
+### function:DisplayJumellesNormal
+
+PROVEN: Generate symmetric binocular outline spans by guarded midpoint-circle recurrences and call plot2linejumelle; circle separation is an explicit parameter.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32e1c.
+
+Generate symmetric binocular outline spans by guarded midpoint-circle recurrences and call plot2linejumelle; circle separation is an explicit parameter.
+
+### function:InitMatriceJumelle
+
+PROVEN: Allocate x161,y65 squared-distance arrays,5120-entry exp(-i/1024)*65536 table and29025-entry deformation array. Any failure frees successful arrays, disables effect and calls FatalError; always reset defaults.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:32ec4.
+
+Allocate x161,y65 squared-distance arrays,5120-entry exp(-i/1024)*65536 table and29025-entry deformation array. Any failure frees successful arrays, disables effect and calls FatalError; always reset defaults.
+
+### function:DefaultJumelleVariable
+
+PROVEN: Set radius25, width87,height50,center160,100 and fixed-point center2560,1600. Clear auto/title state, set change flags3, recompute geometry; effect-enabled zoom amplitude32150-26*radius then prepare lookup.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33038.
+
+Set radius25, width87,height50,center160,100 and fixed-point center2560,1600. Clear auto/title state, set change flags3, recompute geometry; effect-enabled zoom amplitude32150-26*radius then prepare lookup.
+
+### function:ChangeDeltaSizeJumelle
+
+PROVEN: Clamp radius+delta to25..64, recompute geometry, and when zoom active adjust amplitude by -65 for positive size change else+65.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:330fc.
+
+Clamp radius+delta to25..64, recompute geometry, and when zoom active adjust amplitude by -65 for positive size change else+65.
+
+### function:CalculVitesseJumelle
+
+PROVEN: Compute narrowed signed16 target deltas and Manhattan distance; normalize to64, approach each target speed by sign1, clamp speeds to-16..16. These speeds are sixteenth-pixel increments.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3314c.
+
+Compute narrowed signed16 target deltas and Manhattan distance; normalize to64, approach each target speed by sign1, clamp speeds to-16..16. These speeds are sixteenth-pixel increments.
+
+### function:ChangeDeltaPosXJumelleWithoutLimit
+
+PROVEN: Clamp increment-16..16, update camera using fractional phase when auto bit1 set or delta>>4 otherwise; always advance fixed-point lens x and recompute geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33230.
+
+Clamp increment-16..16, update camera using fractional phase when auto bit1 set or delta>>4 otherwise; always advance fixed-point lens x and recompute geometry.
+
+### function:ChangeDeltaPosYJumelleWithoutLimit
+
+PROVEN: Vertical counterpart:camera clamp plus fixed-point lens update, using arithmetic>>4.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33300.
+
+Vertical counterpart:camera clamp plus fixed-point lens update, using arithmetic>>4.
+
+### function:ChangeDeltaPosXJumelleWithLimit
+
+STRONG: Apply x increment only when camera can move in its direction and lens center is inside radius/3 margins of320-pixel screen; return whether applied, then recompute geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:333d0.
+
+Apply x increment only when camera can move in its direction and lens center is inside radius/3 margins of320-pixel screen; return whether applied, then recompute geometry.
+
+### function:ChangeDeltaPosYJumelleWithLimit
+
+STRONG: Apply y increment only when camera direction permits and lens center is inside radius/3 margins of200-pixel screen; return whether applied.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33520.
+
+Apply y increment only when camera direction permits and lens center is inside radius/3 margins of200-pixel screen; return whether applied.
+
+### function:ChangeRealPosJumelle
+
+PROVEN: Set integer lens center and corresponding16x fixed-point center, then recompute geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33670.
+
+Set integer lens center and corresponding16x fixed-point center, then recompute geometry.
+
+### function:ChangeJumelleVariable
+
+PROVEN: Width=(7*radius)/2,height=2*radius; derive lens top-left and camera scroll bounds from world dimensions with+2/-4 margins.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3368c.
+
+Width=(7*radius)/2,height=2*radius; derive lens top-left and camera scroll bounds from world dimensions with+2/-4 margins.
+
+### function:ChangeDeltaZoomAmpJumelle
+
+PROVEN: When effect and target amplitude differ add delta and clamp0..32150-26*radius; set zoom/recompute flags. Otherwise select zoom-active/dirty state from current amplitude/effect capability.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33730.
+
+When effect and target amplitude differ add delta and clamp0..32150-26*radius; set zoom/recompute flags. Otherwise select zoom-active/dirty state from current amplitude/effect capability.
+
+### function:PrepareJumelleZoom
+
+STRONG: Clear29025 displacements, derive exponential lens deformation from squared distance with32-bit products,16-bit fractions and320-byte source stride, mirrored into224-stride table. ParamZoomChange clears on preparation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:337fc.
+
+Clear29025 displacements, derive exponential lens deformation from squared distance with32-bit products,16-bit fractions and320-byte source stride, mirrored into224-stride table. ParamZoomChange clears on preparation.
+
+### function:RecaleRayPosInJumelle
+
+STRONG: When scroll_y==-1,derive vertical camera speed from screen_y minus3*height/4-offset_by,quarter it and clamp to max(3,abs(ray.speed_y)),with special255 sentinel path. When scroll_x==-1,approach horizontal target about3/8 or5/8 lens width according to movement/facing,clamp dhspeed-4..4,add quarter-speed and conditional ray.speed_x. No radius/zoom update occurs here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33a50.
+
+When scroll_y==-1,derive vertical camera speed from screen_y minus3*height/4-offset_by,quarter it and clamp to max(3,abs(ray.speed_y)),with special255 sentinel path. When scroll_x==-1,approach horizontal target about3/8 or5/8 lens width according to movement/facing,clamp dhspeed-4..4,add quarter-speed and conditional ray.speed_x. No radius/zoom update occurs here.
+
+### function:DisplayJumellesFondNormal
+
+PROVEN: Set sprite clip0..(width+2),0..(height+2) and copy PLAN2BIT rectangle centered at xmap/ymap to EffetBufferNormal,using WidthNworld source stride. Does not draw the final binocular view here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33dbc.
+
+Set sprite clip0..(width+2),0..(height+2) and copy PLAN2BIT rectangle centered at xmap/ymap to EffetBufferNormal,using WidthNworld source stride. Does not draw the final binocular view here.
+
+### function:DoScrollInWorldMap
+
+STRONG: Unless ChangeJumelleSizeOK==4,center lens while stationary or track Rayman with limited lens moves;remaining camera motion clamps h/v speed to-1..1 and world bounds. Clear motion flags on zero speeds. At rest enlarge radius to64 and approach default amplitude by300;when settled set idle flag4/reset counter. At1800 idle calls enable auto zoom(bit2),at1830 enable radius target25(bit4);when small/settled enable random target motion(bit1) with16x coordinates. Approach auto amplitude by300 with snap,radius by1,renew random target on exact arrival. Keyboard/movement cancels idle state;no real-time unit is inferred.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:33e3c.
+
+Unless ChangeJumelleSizeOK==4,center lens while stationary or track Rayman with limited lens moves;remaining camera motion clamps h/v speed to-1..1 and world bounds. Clear motion flags on zero speeds. At rest enlarge radius to64 and approach default amplitude by300;when settled set idle flag4/reset counter. At1800 idle calls enable auto zoom(bit2),at1830 enable radius target25(bit4);when small/settled enable random target motion(bit1) with16x coordinates. Approach auto amplitude by300 with snap,radius by1,renew random target on exact arrival. Keyboard/movement cancels idle state;no real-time unit is inferred.
+
+### function:CalcObjPosInWorldMap
+
+PROVEN: screen_x=obj.x-xmap+8+JumellePosX-JumelleXMin;screen_y=obj.y-ymap+JumellePosY-JumelleYMin. Preserve horizontal+8 bias.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:344d4.
+
+screen_x=obj.x-xmap+8+JumellePosX-JumelleXMin;screen_y=obj.y-ymap+JumellePosY-JumelleYMin. Preserve horizontal+8 bias.
+
+### function:MoveRayInWorldMap
+
+PROVEN: Zero h/v scroll speeds, add ray.speed_x/y to ray.x/y, and set decalage_en_cours to ray.speed_x. Does not refresh screen coordinates here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:34524.
+
+Zero h/v scroll speeds, add ray.speed_x/y to ray.x/y, and set decalage_en_cours to ray.speed_x. Does not refresh screen coordinates here.
+
+### global:CompteurJumelle
+
+PROVEN: Settled-idle update counter;1800 enables auto zoom,1830 enables radius25 target. Reset when reaching radius64/default amplitude with cleared motion flags.
+
+Units: world-map update calls. DOS layout/address: 2:50d0c.
+
+Settled-idle update counter;1800 enables auto zoom,1830 enables radius25 target. Reset when reaching radius64/default amplitude with cleared motion flags.
+
+### global:DistPointX
+
+PROVEN: Allocated signed32 squared-coordinate arrays of161 and65 elements,covering x0..160/y0..64.
+
+Units: squared pixels. DOS layout/address: 2:50d08.
+
+Allocated signed32 squared-coordinate arrays of161 and65 elements,covering x0..160/y0..64.
+
+### global:DistPointY
+
+PROVEN: Allocated signed32 squared-coordinate arrays of161 and65 elements,covering x0..160/y0..64.
+
+Units: squared pixels. DOS layout/address: 2:50d04.
+
+Allocated signed32 squared-coordinate arrays of161 and65 elements,covering x0..160/y0..64.
+
+### global:ExpPoint
+
+PROVEN: 5120 signed32 samples trunc(exp(-i/1024)*65536).
+
+Units: 16-bit fraction. DOS layout/address: 2:50d10.
+
+5120 signed32 samples trunc(exp(-i/1024)*65536).
+
+### global:JumelleXMin
+
+PROVEN: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
+
+Units: screen pixels. DOS layout/address: 2:3d0e4.
+
+Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
+
+### global:JumelleYMin
+
+PROVEN: Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
+
+Units: screen pixels. DOS layout/address: 2:3d0dc.
+
+Integer lens center/top-left screen coordinates;paired positions and derived bounds are distinct from world camera.
+
+### global:JumelleZoomAmp
+
+PROVEN: Current/automatic-target deformation amplitude;normal cap32150-26*radius.
+
+Units: lookup amplitude. DOS layout/address: 2:3d0b4.
+
+Current/automatic-target deformation amplitude;normal cap32150-26*radius.
+
+### global:JumelleZoomDef
+
+PROVEN: 29025 signed32 source byte-offset displacements in mirrored224-stride deformation table.
+
+Units: framebuffer byte displacement. DOS layout/address: 2:3d0c8.
+
+29025 signed32 source byte-offset displacements in mirrored224-stride deformation table.
+
+### global:ModeAutoJumelleZoomAmp
+
+PROVEN: Current/automatic-target deformation amplitude;normal cap32150-26*radius.
+
+Units: lookup amplitude. DOS layout/address: 2:50cfc.
+
+Current/automatic-target deformation amplitude;normal cap32150-26*radius.
+
+### global:ModeAutoPosXJumelle
+
+PROVEN: Requested/automatic integer lens target positions used by bounded lens movement.
+
+Units: screen pixels. DOS layout/address: 2:50cf4.
+
+Requested/automatic integer lens target positions used by bounded lens movement.
+
+### global:ModeAutoPosYJumelle
+
+PROVEN: Requested/automatic integer lens target positions used by bounded lens movement.
+
+Units: screen pixels. DOS layout/address: 2:50cf8.
+
+Requested/automatic integer lens target positions used by bounded lens movement.
+
+### global:ModeAutoRayonJumelle
+
+PROVEN: Lens radius/current auto target;normal radius clamped25..64.
+
+Units: screen pixels. DOS layout/address: 2:50d00.
+
+Lens radius/current auto target;normal radius clamped25..64.
+
+### global:PositionJumelleDemandeX
+
+PROVEN: Requested/automatic integer lens target positions used by bounded lens movement.
+
+Units: screen pixels. DOS layout/address: 2:50ce0.
+
+Requested/automatic integer lens target positions used by bounded lens movement.
+
+### global:PositionJumelleDemandeY
+
+PROVEN: Requested/automatic integer lens target positions used by bounded lens movement.
+
+Units: screen pixels. DOS layout/address: 2:50cdc.
+
+Requested/automatic integer lens target positions used by bounded lens movement.
+
+### global:PositionJumelleX16
+
+PROVEN: Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+Units: sixteenths of pixel. DOS layout/address: 2:50ce8.
+
+Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+### global:PositionJumelleY16
+
+PROVEN: Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+Units: sixteenths of pixel. DOS layout/address: 2:50ce4.
+
+Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+### global:XSpeedJumelle
+
+PROVEN: Signed lens increments clamped-16..16,approached one unit per CalculVitesseJumelle call.
+
+Units: sixteenths of pixel per update. DOS layout/address: 2:67d0.
+
+Signed lens increments clamped-16..16,approached one unit per CalculVitesseJumelle call.
+
+### global:Xmap16
+
+PROVEN: Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+Units: sixteenths of pixel. DOS layout/address: 2:50cec.
+
+Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+### global:YSpeedJumelle
+
+PROVEN: Signed lens increments clamped-16..16,approached one unit per CalculVitesseJumelle call.
+
+Units: sixteenths of pixel per update. DOS layout/address: 2:67d4.
+
+Signed lens increments clamped-16..16,approached one unit per CalculVitesseJumelle call.
+
+### global:Ymap16
+
+PROVEN: Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
+
+Units: sixteenths of pixel. DOS layout/address: 2:50cf0.
+
+Signed32 fractional lens/camera coordinates with4 fractional bits;arithmetic>>4 produces integer position.
 
 ## load.json
 
@@ -4659,6 +11057,2100 @@ STRONG: Decode a VIGNET PCX entry into a caller-provided pixel buffer.
 Units: see parameter/result and side-effect contract. DOS layout/address: 1:38038.
 
 Same descriptor checksum/XOR/RLE/dimension rules as LoadPcxInVignet; no output allocation or supplied capacity. Does not retry fopen. Original header corruption retry writes128 one-byte reads at128-byte strides (DOS1:38248..38265); payload retry sequential. Returns the same buffer pointer.
+
+## luciole.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:get_luciole
+
+PROVEN: When firefly is enabled, save general clip bounds, install the display/firefly clip rectangle and update assembly sprite clipping.
+
+Units: see parameter/result contracts. DOS layout/address: 1:384c0.
+
+When firefly is enabled, save general clip bounds, install the display/firefly clip rectangle and update assembly sprite clipping.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:CLEAR_FIXE_LUCIOLE
+
+PROVEN: When firefly is enabled, clear the HUD boxes, choosing a larger left box once when id_Cling_Old is nonzero and then clearing that marker.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38538.
+
+When firefly is enabled, clear the HUD boxes, choosing a larger left box once when id_Cling_Old is nonzero and then clearing that marker.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_luciole
+
+PROVEN: Set display clipping to a radius square around the supplied screen center, clamped independently to saved global bounds.
+
+Units: see parameter/result contracts. DOS layout/address: 1:385ac.
+
+Set display clipping to a radius square around the supplied screen center, clamped independently to saved global bounds.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_aff_luciole
+
+PROVEN: Save general clip bounds, reset firefly radius/phase, initialize drift coefficient 5 and clearing fringe 15, then set the center clipping.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38650.
+
+Save general clip bounds, reset firefly radius/phase, initialize drift coefficient 5 and clearing fringe 15, then set the center clipping.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:plot2line
+
+STRONG: Black-fill clipped left/right scanline spans outside a supplied inner circle half-width at symmetric vertical offsets, using 320-byte screen pitch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:386b8.
+
+Black-fill clipped left/right scanline spans outside a supplied inner circle half-width at symmetric vertical offsets, using 320-byte screen pitch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:aff_luciole
+
+STRONG: Clear the firefly fringe and outside-circle spans using an integer symmetric-circle recurrence and plot2line.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38858.
+
+Clear the firefly fringe and outside-circle spans using an integer symmetric-circle recurrence and plot2line.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:Display_and_free_luciole
+
+STRONG: Size the clearing fringe by maximum center movement plus 6, render at radius minus 4 with the actual swapped x_luc/y_luc roles, and restore general clipping.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38914.
+
+Size the clearing fringe by maximum center movement plus 6, render at radius minus 4 with the actual swapped x_luc/y_luc roles, and restore general clipping.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:free_luciole
+
+PROVEN: Restore saved general clipping when firefly is enabled.
+
+Units: see parameter/result contracts. DOS layout/address: 1:389d8.
+
+Restore saved general clipping when firefly is enabled.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:INIT_LUCIOLE
+
+PROVEN: Initialize light world position near Rayman, zero velocity, seed a four-slot target history and set screen center with +8 horizontal bias.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38a0c.
+
+Initialize light world position near Rayman, zero velocity, seed a four-slot target history and set screen center with +8 horizontal bias.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_LUCIOLE
+
+PROVEN: Track a four-update-delayed Rayman sprite/fist target with signed unit acceleration and speed limits +/-8, animate radius near 54, or drift/shrink during death; publish the swapped-named screen coordinates.
+
+Units: see parameter/result contracts. DOS layout/address: 1:38ae0.
+
+Track a four-update-delayed Rayman sprite/fist target with signed unit acceleration and speed limits +/-8, animate radius near 54, or drift/shrink during death; publish the swapped-named screen coordinates.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## map.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:deter_vide_plein_panach
+
+PROVEN: Count zero palette-index pixels in a 16-by-16 tile at the supplied image pitch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c4a0.
+
+Count zero palette-index pixels in a 16-by-16 tile at the supplied image pitch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:deter_nb_blocks
+
+PROVEN: Skip atlas tile zero, count opaque versus mixed tiles, and stop at the first all-zero tile.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c4dc.
+
+Skip atlas tile zero, count opaque versus mixed tiles, and stop at the first all-zero tile.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:Copy_Blocks
+
+STRONG: Pack 16-by-16 atlas tiles into 288-byte full and 544-byte masked records, write zero-pixel masks and two-bit per-row flags, and publish byte offsets in block_add.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c564.
+
+Pack 16-by-16 atlas tiles into 288-byte full and 544-byte masked records, write zero-pixel masks and two-bit per-row flags, and publish byte offsets in block_add.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:construct_MAP
+
+PROVEN: Allocate tile texture pointers and a visible-map record, bind each texture through block_add, and derive transparency 0/1/2 from packed row flags.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c82c.
+
+Allocate tile texture pointers and a visible-map record, bind each texture through block_add, and derive transparency 0/1/2 from packed row flags.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_build_map
+
+PROVEN: Copy map dimensions from mp and prepare the visible tile rectangle; the map_blocks argument is unused.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c8fc.
+
+Copy map dimensions from mp and prepare the visible tile rectangle; the map_blocks argument is unused.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:update_display_map
+
+PROVEN: Compute first visible tile, partial-tile screen origin and ceiling-rounded counts; align the Normal draw pointer with displacement 4-(x&3).
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c914.
+
+Compute first visible tile, partial-tile screen origin and ceiling-rounded counts; align the Normal draw pointer with displacement 4-(x&3).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_default_Bloc_clipping
+
+PROVEN: Set Normal clip bounds to x [4,320] and y [0,200].
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c9f0.
+
+Set Normal clip bounds to x [4,320] and y [0,200].
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_xymapini
+
+PROVEN: Derive camera maxima and original fullscreen maxima from map dimensions and clip limits, then initialize scrolling limits with Normal x bias 8.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4ca24.
+
+Derive camera maxima and original fullscreen maxima from map dimensions and clip limits, then initialize scrolling limits with Normal x bias 8.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_xymap
+
+PROVEN: Clamp camera x/y to negative clip origins and current map maxima.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4cad0.
+
+Clamp camera x/y to negative clip origins and current map maxima.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_whmap
+
+PROVEN: Adjust viewport margins by symmetric deltas, extend camera/scroll limits within map dimensions and clamp camera position.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4cb40.
+
+Adjust viewport margins by symmetric deltas, extend camera/scroll limits within map dimensions and clamp camera position.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:recaleRaysurlesBords
+
+PROVEN: Constrain Rayman center to horizontal viewport margins and refresh screen x using the two existing DOS formulas.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4cd64.
+
+Constrain Rayman center to horizontal viewport margins and refresh screen x using the two existing DOS formulas.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_xywhmap
+
+PROVEN: Set absolute viewport bounds, update scrolling/maxima and boss limits, honor locked-scroll exceptions (world 3 level 10; world 2 level 15), publish display clips and optionally clamp Rayman.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4ce08.
+
+Set absolute viewport bounds, update scrolling/maxima and boss limits, honor locked-scroll exceptions (world 3 level 10; world 2 level 15), publish display clips and optionally clamp Rayman.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:MaskScrollDiffSprites
+
+PROVEN: Build zero-pixel masks for sprites 1 onward. The DOS odd-width word conversion produces zero allocation width while the pixel loop still uses outer_width.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d144.
+
+Build zero-pixel masks for sprites 1 onward. The DOS odd-width word conversion produces zero allocation width while the pixel loop still uses outer_width.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## map_ngawe.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:DRAW_MAP
+
+STRONG: Draw visible Normal tiles on a 320-byte pitch: clip the perimeter, use un-clipped interior routines, and select empty/full/masked paths from transparency; require both tile counts greater than one.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d230.
+
+Draw visible Normal tiles on a 320-byte pitch: clip the perimeter, use un-clipped interior routines, and select empty/full/masked paths from transparency; require both tile counts greater than one.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:INIT_GAME_MODE_NORMAL
+
+PROVEN: Set assembly sprite clipping, save and bias the draw pointer by four, select differential background copying, prepare BIG_MAP and clear display/draw buffers.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d5b0.
+
+Set assembly sprite clipping, save and bias the draw pointer by four, select differential background copying, prepare BIG_MAP and clear display/draw buffers.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:FIN_GAME_MODE_NORMAL
+
+PROVEN: Restore Normal draw and generic draw pointers from the saved base.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d620.
+
+Restore Normal draw and generic draw pointers from the saved base.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:ngaweFollowsShip
+
+PROVEN: With a valid ship id, attach the pirate to ship sprite 2 at offset (21,-51).
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d630.
+
+With a valid ship id, attach the pirate to ship sprite 2 at offset (21,-51).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:ngaweTriesToGrabShip
+
+PROVEN: Align pirate x to ship sprite 2 plus 21 and enter 2:2 when its y falls inside the speed-expanded ship grab band.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d670.
+
+Align pirate x to ship sprite 2 plus 21 and enter 2:2 when its y falls inside the speed-expanded ship grab band.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocatePirateNgaweRing
+
+PROVEN: Activate a type-73 ring from pirate sprite 6 with selected facing/vertical speed, set travel budget and owner id, clear return/test flags and decrement owner ammunition.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d714.
+
+Activate a type-73 ring from pirate sprite 6 with selected facing/vertical speed, set travel budget and owner id, clear return/test flags and decrement owner ammunition.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_NGW_TIR
+
+PROVEN: Fire once at animation frame 26 on a zero selected clock, using link as a per-animation shot latch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d8cc.
+
+Fire once at animation frame 26 on a zero selected clock, using link as a per-animation shot latch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:NGW_REACT_TO_RAY_IN_ZONE
+
+PROVEN: From idle/walk with positive ammunition select state 0:2.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d934.
+
+From idle/walk with positive ammunition select state 0:2.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_ONE_NGW_COMMAND
+
+PROVEN: Drive pirate idle/walk/shoot/guard/ship states from fist activity and ammunition; turn at walls/unsupported floor, preserve facing in guarded states, and decrement the byte hurt timer.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4d964.
+
+Drive pirate idle/walk/shoot/guard/ship states from fist activity and ammunition; turn at walls/unsupported floor, preserve facing in guarded states, and decrement the byte hurt timer.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_NGW_POING_COLLISION
+
+PROVEN: With timer zero force damage 1, enter hurt state 0:1 or death 0:3, face opposite the incoming fist, and advance the linked ship script on death.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4dc90.
+
+With timer zero force damage 1, enter hurt state 0:1 or death 0:3, face opposite the incoming fist, and advance the linked ship script on death.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_ONE_NGW_RING_COMMAND
+
+PROVEN: Remove the ring when its owner is inactive; switch outbound travel to return at budget exhaustion, aim its return at the owner, and restore ammunition when return completes.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4dd58.
+
+Remove the ring when its owner is inactive; switch outbound travel to return at budget exhaustion, aim its return at the owner, and restore ammunition when return completes.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## mathutil.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:set2bits
+
+PROVEN: Replace a two-bit slot indexed from the most significant end: shift2*(15-index). Value is not masked to2 bits; callers must supply valid index/value.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4def0.
+
+Replace a two-bit slot indexed from the most significant end: shift2*(15-index). Value is not masked to2 bits; callers must supply valid index/value.
+
+### function:read2bits
+
+PROVEN: Read the MSB-indexed two-bit slot and write high bit and low bit through separate output pointers; each output normalized0/1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4df24.
+
+Read the MSB-indexed two-bit slot and write high bit and low bit through separate output pointers; each output normalized0/1.
+
+### function:setbit
+
+PROVEN: Set an LSB-first bit in a byte array at index>>3,mask1<<(index&7).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4df58.
+
+Set an LSB-first bit in a byte array at index>>3,mask1<<(index&7).
+
+### function:clearbit
+
+PROVEN: Clear an LSB-first bit in a byte array at index>>3.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4df74.
+
+Clear an LSB-first bit in a byte array at index>>3.
+
+### function:getbit
+
+PROVEN: Return the LSB-first masked byte bit, not normalized boolean.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4df98.
+
+Return the LSB-first masked byte bit, not normalized boolean.
+
+### function:reflexion
+
+PROVEN: Return2*first parameter minus third; second parameter unused. No geometric interpretation beyond this reflection formula is required.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4dfb8.
+
+Return2*first parameter minus third; second parameter unused. No geometric interpretation beyond this reflection formula is required.
+
+### function:cosinus
+
+PROVEN: Add128 (quarter turn) then use the same512-unit folded lookup as sinus.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4dfc0.
+
+Add128 (quarter turn) then use the same512-unit folded lookup as sinus.
+
+### function:sinus
+
+PROVEN: Mask angle to9 bits (512 units/turn), fold into costab0..128, negate in second half. Table peak512 gives signed trigonometric scale512.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4e000.
+
+Mask angle to9 bits (512 units/turn), fold into costab0..128, negate in second half. Table peak512 gives signed trigonometric scale512.
+
+### function:sinus_cosinus
+
+PROVEN: Compute signed sine and cosine together from folded129-word costab, preserving quarter-turn signs.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4e03c.
+
+Compute signed sine and cosine together from folded129-word costab, preserving quarter-turn signs.
+
+### function:abs_sinus
+
+PROVEN: Fold low8 angle bits around128 and read nonnegative costab; period256.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4e0f0.
+
+Fold low8 angle bits around128 and read nonnegative costab; period256.
+
+### function:abs_cosinus
+
+PROVEN: Add128, narrow/fold low8 angle bits and read costab; period256.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4e10c.
+
+Add128, narrow/fold low8 angle bits and read costab; period256.
+
+### function:abs_sinus_cosinus
+
+PROVEN: Return nonnegative folded sine/cosine magnitudes using table index and128-index.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:4e12c.
+
+Return nonnegative folded sine/cosine magnitudes using table index and128-index.
+
+### global:costab
+
+PROVEN: 129 signed16 quarter-wave samples,initial range0..512;trigonometry uses512 angle units/turn and output scale512.
+
+Units: trigonometric scale512. DOS layout/address: 2:6fe0.
+
+129 signed16 quarter-wave samples,initial range0..512;trigonometry uses512 angle units/turn and output scale512.
+
+## menu.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:check_key_table
+
+PROVEN: Validate all7 scan-code bindings against83 and both128-entry name tables;any invalid binding resets all7 to left,up,right,down,control,alt,X.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39308.
+
+Validate all7 scan-code bindings against83 and both128-entry name tables;any invalid binding resets all7 to left,up,right,down,control,alt,X.
+
+### function:LOAD_CONFIG
+
+PROVEN: Load options or defaults,initialize sound/card/input and calibrate joystick when incompatible;force language0 and load text. Configure both key-description tables,special names and validate7 key bindings. Config load is not a verbatim persistent-language restore.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39388.
+
+Load options or defaults,initialize sound/card/input and calibrate joystick when incompatible;force language0 and load text. Configure both key-description tables,special names and validate7 key bindings. Config load is not a verbatim persistent-language restore.
+
+### function:NewFrequency
+
+PROVEN: Selector0 enables sync60Hz,1 sync50Hz,2 disables sync and sets60Hz;literal70/80/100 enable corresponding VGA rates. Most paths reset display_mode0 except selector2;all call InitPcSoundCard timing calibration,which may change cadence again.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39638.
+
+Selector0 enables sync60Hz,1 sync50Hz,2 disables sync and sets60Hz;literal70/80/100 enable corresponding VGA rates. Most paths reset display_mode0 except selector2;all call InitPcSoundCard timing calibration,which may change cadence again.
+
+### function:InitClipping
+
+PROVEN: Choose clipping rectangle from SizeScreen lookup arrays and game constraints,then update sprite/scroll clip state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39720.
+
+Choose clipping rectangle from SizeScreen lookup arrays and game constraints,then update sprite/scroll clip state.
+
+### function:IsBackgroundOn
+
+PROVEN: Return BackgroundOptionOn OR required special levels:(1,16),(2,16),(3,10),(4,4),(4,11),(5,3),(5,11),(6,4).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3980c.
+
+Return BackgroundOptionOn OR required special levels:(1,16),(2,16),(3,10),(4,4),(4,11),(5,3),(5,11),(6,4).
+
+### function:set_special_key_descriptions
+
+PROVEN: Replace localized special-key labels in currently selected128-pointer key-description table;letter/layout initial entries remain table-specific.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:398a4.
+
+Replace localized special-key labels in currently selected128-pointer key-description table;letter/layout initial entries remain table-specific.
+
+### function:DO_NEW_MENUS
+
+STRONG: Top-level menu dispatcher:stages0 general,3 save,4 options,7 keys,8 pad,9 graphics,10 video. Loop until demo/end/start;return flag resets stage0. Use menu key defaults while active,restore bindings and persist config on exit.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39998.
+
+Top-level menu dispatcher:stages0 general,3 save,4 options,7 keys,8 pad,9 graphics,10 video. Loop until demo/end/start;return flag resets stage0. Use menu key defaults while active,restore bindings and persist config on exit.
+
+### function:DO_OPTIONS_IN_GAME
+
+PROVEN: Handle GoMenu1/2 entry,save button state/palette,stop CD/freeze sound,run options/key/pad/graphics callbacks,restore clipping/keys/sound and clear pause/timing flags. Entry uses prior dead_time byte64 gate.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39b7c.
+
+Handle GoMenu1/2 entry,save button state/palette,stop CD/freeze sound,run options/key/pad/graphics callbacks,restore clipping/keys/sound and clear pause/timing flags. Entry uses prior dead_time byte64 gate.
+
+### function:INIT_GENERAL_CHOICE
+
+PROVEN: Run original self-modifying trampoline,install general-screen callbacks,set4 entries(start/options/credits/exit),selection0 and repeat parameters100/12/6.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:39e98.
+
+Run original self-modifying trampoline,install general-screen callbacks,set4 entries(start/options/credits/exit),selection0 and repeat parameters100/12/6.
+
+### function:AFFICHE_ECRAN_GENERAL
+
+PROVEN: Draw menu background and general menu text/selection using current text records.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3a0dc.
+
+Draw menu background and general menu text/selection using current text records.
+
+### function:DO_COMMANDE_GENERAL
+
+PROVEN: Process main-menu direction/repeat and confirmation selection,setting menu stages/start/credits/exit flags.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3a178.
+
+Process main-menu direction/repeat and confirmation selection,setting menu stages/start/credits/exit flags.
+
+### function:END_GENERAL_SCREEN
+
+PROVEN: Finish general-screen selection and transition/fade state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3a3d8.
+
+Finish general-screen selection and transition/fade state.
+
+### function:INIT_OPTIONS_CHOICE
+
+PROVEN: Outside Windows,read DR0..DR3 and terminate DOS if any nonzero. Install option callbacks,repeat settings and audio working values (restore from saved submenu bytes when byte_96883). Initialize capability/language-dependent layout and clear ExitMenu/sortie_options.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3a44c.
+
+Outside Windows,read DR0..DR3 and terminate DOS if any nonzero. Install option callbacks,repeat settings and audio working values (restore from saved submenu bytes when byte_96883). Initialize capability/language-dependent layout and clear ExitMenu/sortie_options.
+
+### function:INIT_AFFICHE_ECRAN_OPTIONS
+
+STRONG: Build localized option labels,positions,fonts/colors and panel geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3a628.
+
+Build localized option labels,positions,fonts/colors and panel geometry.
+
+### function:AFFICHE_ECRAN_OPTIONS
+
+STRONG: Render options panel values,selection and gauges using current options_jeu.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3ab34.
+
+Render options panel values,selection and gauges using current options_jeu.
+
+### function:DO_COMMANDE_OPTIONS
+
+PROVEN: Process option navigation and bounded audio/stereo adjustments or dispatch keys/pad/graphics submenus;repeat/release/fade gates retained.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3af28.
+
+Process option navigation and bounded audio/stereo adjustments or dispatch keys/pad/graphics submenus;repeat/release/fade gates retained.
+
+### function:END_OPTIONS_SCREEN
+
+PROVEN: Finalize options screen and route return/selection to parent menu.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3b334.
+
+Finalize options screen and route return/selection to parent menu.
+
+### function:INIT_KEY_SCREEN
+
+PROVEN: Install key-setup callbacks and initialize key selection/edit state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3b3ec.
+
+Install key-setup callbacks and initialize key selection/edit state.
+
+### function:INIT_AFFICHE_KEY_SCREEN
+
+STRONG: Build key-setup localized labels and binding display rows.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3b514.
+
+Build key-setup localized labels and binding display rows.
+
+### function:AFFICHE_KEY_SCREEN
+
+STRONG: Draw key-binding descriptions and current row/edit highlight.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3b8a4.
+
+Draw key-binding descriptions and current row/edit highlight.
+
+### function:DO_COMMANDE_KEY
+
+PROVEN: Navigate key rows and capture/validate scan-code changes with release/repeat handling.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3bacc.
+
+Navigate key rows and capture/validate scan-code changes with release/repeat handling.
+
+### function:END_KEY_SCREEN
+
+PROVEN: Finalize key setup and restore parent options state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3bd50.
+
+Finalize key setup and restore parent options state.
+
+### function:INIT_BUTTON_SCREEN
+
+PROVEN: Install button-detection callbacks and clear notbut[0..3] so all physical buttons can be polled.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3bda4.
+
+Install button-detection callbacks and clear notbut[0..3] so all physical buttons can be polled.
+
+### function:INIT_AFFICHE_BUTTON_SCREEN
+
+STRONG: Build joystick-button option labels/positions.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3be04.
+
+Build joystick-button option labels/positions.
+
+### function:AFFICHE_BUTTON_JOYSTICK
+
+PROVEN: Draw live button press indicators;notbut==2 marks a completed press/release with ok. Fifth row finishes the detection UI.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3bf60.
+
+Draw live button press indicators;notbut==2 marks a completed press/release with ok. Fifth row finishes the detection UI.
+
+### function:DO_BUTTON_COMMANDE
+
+STRONG: Navigate button-detection rows;temporarily disable keyboard mode while sampling four physical buttons. Latch pressed in but_options,mark notbut2 on release;restore input_mode1. No logical-action assignment occurs here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c138.
+
+Navigate button-detection rows;temporarily disable keyboard mode while sampling four physical buttons. Latch pressed in but_options,mark notbut2 on release;restore input_mode1. No logical-action assignment occurs here.
+
+### function:END_BUTTON_COMMAND
+
+PROVEN: Convert each notbut entry to(notbut==0),therefore detected2->0,never detected0->1. Clear menu-return/exit flags and end callback. Does not rebuild button callbacks.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c390.
+
+Convert each notbut entry to(notbut==0),therefore detected2->0,never detected0->1. Clear menu-return/exit flags and end callback. Does not rebuild button callbacks.
+
+### function:INIT_PAD_SCREEN
+
+PROVEN: Install pad/options callbacks,initialize controller settings and input UI state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c3d0.
+
+Install pad/options callbacks,initialize controller settings and input UI state.
+
+### function:INIT_AFFICHE_PAD_SCREEN
+
+STRONG: Build localized pad option text and geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c4d0.
+
+Build localized pad option text and geometry.
+
+### function:AFFICHE_PAD_SCREEN
+
+STRONG: Draw pad setup/status and calibration options.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c854.
+
+Draw pad setup/status and calibration options.
+
+### function:DO_COMMANDE_PAD
+
+PROVEN: Navigate pad options,change enable/assignment/calibration state and dispatch relevant setup screens.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3c9d8.
+
+Navigate pad options,change enable/assignment/calibration state and dispatch relevant setup screens.
+
+### function:END_PAD_SCREEN
+
+PROVEN: Finalize pad options and route back to parent screen.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3cd38.
+
+Finalize pad options and route back to parent screen.
+
+### function:InitParamGraphicsScreen
+
+PROVEN: Configure graphics option row bounds,selection,x origin and spacing according to options.sound_volume (video-mode working selector),ModeNormalAutorise,FondAutorise,in-game context and language. No snapshot occurs in this function.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3cd94.
+
+Configure graphics option row bounds,selection,x origin and spacing according to options.sound_volume (video-mode working selector),ModeNormalAutorise,FondAutorise,in-game context and language. No snapshot occurs in this function.
+
+### function:INIT_GRAPHIC_SCREEN
+
+PROVEN: Initialize graphics-detail callbacks,working settings,selection and performance indication.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3d094.
+
+Initialize graphics-detail callbacks,working settings,selection and performance indication.
+
+### function:INIT_AFFICHE_GRAPHIC_SCREEN
+
+STRONG: Build graphics option labels and panel geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3d178.
+
+Build graphics option labels and panel geometry.
+
+### function:AFFICHE_GRAPHIC_SCREEN
+
+STRONG: Render graphics settings and estimated-speed gauge.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3d55c.
+
+Render graphics settings and estimated-speed gauge.
+
+### function:DO_COMMANDE_GRAPHIC
+
+PROVEN: Change graphics working settings under capability constraints;recompute estimated speed and handle video-mode sub-selection.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3da8c.
+
+Change graphics working settings under capability constraints;recompute estimated speed and handle video-mode sub-selection.
+
+### function:END_GRAPHIC_SCREEN
+
+PROVEN: Apply graphics working settings,video/clipping/background choices and return/fade behavior.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3df88.
+
+Apply graphics working settings,video/clipping/background choices and return/fade behavior.
+
+### function:INIT_VIDEOMODE_SCREEN
+
+PROVEN: Initialize video-mode menu working state and callbacks.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e0a0.
+
+Initialize video-mode menu working state and callbacks.
+
+### function:INIT_AFFICHE_VIDEOMODE_SCREEN
+
+STRONG: Build mode/frequency option text and geometry.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e1cc.
+
+Build mode/frequency option text and geometry.
+
+### function:AFFICHE_VIDEOMODE_SCREEN
+
+PROVEN: Draw mode/frequency choices and selected value.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e470.
+
+Draw mode/frequency choices and selected value.
+
+### function:DO_COMMANDE_VIDEOMODE
+
+PROVEN: Navigate/update mode-frequency selection with controller/repeat gating.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e574.
+
+Navigate/update mode-frequency selection with controller/repeat gating.
+
+### function:END_VIDEOMODE_SCREEN
+
+PROVEN: Apply/restore video-mode selection and parent-menu transition.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e708.
+
+Apply/restore video-mode selection and parent-menu transition.
+
+### function:INIT_CALIBRATE_JOYSTICK
+
+PROVEN: Initialize supplied calibration extrema and instructional screen state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e790.
+
+Initialize supplied calibration extrema and instructional screen state.
+
+### function:AFFICHE_CALIBRATE_JOYSTICK
+
+PROVEN: Draw calibration instructions and current stick-extrema feedback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e804.
+
+Draw calibration instructions and current stick-extrema feedback.
+
+### function:calibrate_joystick_prg
+
+PROVEN: Poll/update joystick extrema,draw calibration scene and return completion/exit predicate;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e99c.
+
+Poll/update joystick extrema,draw calibration scene and return completion/exit predicate;scene-loop argument unused.
+
+### function:AFFICHE_CENTER_JOYSTICK
+
+PROVEN: Draw center-stick calibration instructions.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3e9e8.
+
+Draw center-stick calibration instructions.
+
+### function:center_joystick_prg
+
+PROVEN: Poll/draw center calibration and accept completion;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3eae8.
+
+Poll/draw center calibration and accept completion;scene-loop argument unused.
+
+### function:MAIN_CALIBRATE_JOYSTICK
+
+PROVEN: Run extrema then center calibration screens,update thresholds and controller mode/port state,restore menus and keys.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3eb28.
+
+Run extrema then center calibration screens,update thresholds and controller mode/port state,restore menus and keys.
+
+### function:menu_prg
+
+PROVEN: Poll input/CD,extend joystick calibration extrema,recompute limits if changed,draw callback/reinitialize plasma. Return entry exit predicate;only when false and no fade run command callback,then handle confirm-exit/MENU_RETURN. Exit changes can take next callback to return.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f17c.
+
+Poll input/CD,extend joystick calibration extrema,recompute limits if changed,draw callback/reinitialize plasma. Return entry exit predicate;only when false and no fade run command callback,then handle confirm-exit/MENU_RETURN. Exit changes can take next callback to return.
+
+### function:DO_INTER_MENU
+
+PROVEN: Run inter-menu transition and menu scene loop using selected callbacks.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f2e0.
+
+Run inter-menu transition and menu scene loop using selected callbacks.
+
+### function:DO_MENU
+
+PROVEN: Invoke screen load/init/display/command/end callback lifecycle around menu scene loop and fades.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f318.
+
+Invoke screen load/init/display/command/end callback lifecycle around menu scene loop and fades.
+
+### function:default_key
+
+PROVEN: Save configured7 key bytes and replace with menu navigation defaults.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f488.
+
+Save configured7 key bytes and replace with menu navigation defaults.
+
+### function:new_key
+
+PROVEN: Restore7 configured key bytes from saved values.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f4ec.
+
+Restore7 configured key bytes from saved values.
+
+### function:CalcSpeed
+
+STRONG: Estimate performance from video/blit benchmark tables and working options;return128 for VideoSpeed>256,256 for estimate<128,else384-estimate. Not gameplay velocity.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f50c.
+
+Estimate performance from video/blit benchmark tables and working options;return128 for VideoSpeed>256,256 for estimate<128,else384-estimate. Not gameplay velocity.
+
+### function:general_init_screen
+
+PROVEN: Convert three input percentages to200-pixel title/options/exit vertical layout;derive15-pixel option spacing from nbre_options;clear sortie_options.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f698.
+
+Convert three input percentages to200-pixel title/options/exit vertical layout;derive15-pixel option spacing from nbre_options;clear sortie_options.
+
+### function:TestCompteur
+
+PROVEN: Advance held-button repeat counter until max then wrap to delai_repetition+1;release resets0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f76c.
+
+Advance held-button repeat counter until max then wrap to delai_repetition+1;release resets0.
+
+### function:TestButtonReleased
+
+PROVEN: If no four directions or ValidButPressed,set release1/counter0,else release0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f7b0.
+
+If no four directions or ValidButPressed,set release1/counter0,else release0.
+
+### function:display_box_text_plasma
+
+PROVEN: Draw box plasma backdrop then its text;second byte controls phase advance.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f800.
+
+Draw box plasma backdrop then its text;second byte controls phase advance.
+
+### function:display_box_text_fire
+
+PROVEN: Draw fire backdrop for text box then text.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f878.
+
+Draw fire backdrop for text box then text.
+
+### function:display_box_msg_prg
+
+PROVEN: Per-frame message-box callback drawing and handling assigned command;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f8b4.
+
+Per-frame message-box callback drawing and handling assigned command;scene-loop argument unused.
+
+### function:display_box_msg
+
+PROVEN: Run modal text-box display with current message-box lifecycle.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f904.
+
+Run modal text-box display with current message-box lifecycle.
+
+### function:display_box_msg_commande
+
+PROVEN: Run modal box with supplied command callback,backing up/restoring menu box context.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f960.
+
+Run modal box with supplied command callback,backing up/restoring menu box context.
+
+### function:AfficheYesNo
+
+PROVEN: Draw current yes/no selection with localized text and selection color.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3f9f0.
+
+Draw current yes/no selection with localized text and selection color.
+
+### function:DO_YESNOBIS
+
+PROVEN: Process left/right and confirm/cancel for yes/no modal,updating pos_YN and yesno_finished.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3fac4.
+
+Process left/right and confirm/cancel for yes/no modal,updating pos_YN and yesno_finished.
+
+### function:confirmation_msg
+
+PROVEN: Build localized confirmation by message ID,run modal yes/no choice and return accepted decision;save/erase/exit callers supply IDs1..4.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3fb94.
+
+Build localized confirmation by message ID,run modal yes/no choice and return accepted decision;save/erase/exit callers supply IDs1..4.
+
+### function:SYNCHRO_LOOP_PALETTE
+
+PROVEN: Call supplied no-argument palette-step callback between retrace synchronization until it returns nonzero.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3fef0.
+
+Call supplied no-argument palette-step callback between retrace synchronization until it returns nonzero.
+
+### function:apparition_prg
+
+STRONG: Per-frame option appearance effect callback on configured rectangle;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:3ff3c.
+
+Per-frame option appearance effect callback on configured rectangle;scene-loop argument unused.
+
+### function:fondu_prg
+
+STRONG: Per-frame option fade effect callback on configured rectangle;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:400fc.
+
+Per-frame option fade effect callback on configured rectangle;scene-loop argument unused.
+
+### function:change_couleur_prg
+
+PROVEN: Step the configured rectangle/palette color transition and return completion.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:401e8.
+
+Step the configured rectangle/palette color transition and return completion.
+
+### function:FonduOption
+
+STRONG: Run mode-selected option rectangle appearance/fade/color effect with explicit x,y,width,height.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:402fc.
+
+Run mode-selected option rectangle appearance/fade/color effect with explicit x,y,width,height.
+
+### function:FonduPixel_prg
+
+STRONG: Per-frame pixel transition over configured rectangle using current effect buffers/counters;scene-loop argument unused.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:40a38.
+
+Per-frame pixel transition over configured rectangle using current effect buffers/counters;scene-loop argument unused.
+
+### function:FonduPixel
+
+PROVEN: Initialize rectangle pixel transition and execute it through the scene callback loop.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:40b0c.
+
+Initialize rectangle pixel transition and execute it through the scene callback loop.
+
+### global:EtapeFondu
+
+PROVEN: Overloaded transition phase counter:appearance expands/contracts,blend advances0..16,pixel dissolve counts16 down to0. Interpret with active callback.
+
+Units: effect callback steps. DOS layout/address: 2:54cea.
+
+Overloaded transition phase counter:appearance expands/contracts,blend advances0..16,pixel dissolve counts16 down to0. Interpret with active callback.
+
+### global:InOut
+
+PROVEN: Appearance-effect direction flag:nonzero decrements phase32->1,zero increments1->32 and begins fade-out at16.
+
+Units: boolean. DOS layout/address: 2:54cfb.
+
+Appearance-effect direction flag:nonzero decrements phase32->1,zero increments1->32 and begins fade-out at16.
+
+### global:MENU_SUITE
+
+PROVEN: Menu continuation state set/reset by top-level/options transitions;see assigning branches.
+
+Units: state / selector. DOS layout/address: 2:3fa38.
+
+Menu continuation state set/reset by top-level/options transitions;see assigning branches.
+
+### global:TabFreq
+
+PROVEN: Five menu frequency labels;selectors are distinct from literal VGA Hz values.
+
+Units: string-pointer table. DOS layout/address: 2:686c.
+
+Five menu frequency labels;selectors are distinct from literal VGA Hz values.
+
+### global:TabH1
+
+PROVEN: Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+Units: screen pixels. DOS layout/address: 2:685c.
+
+Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+### global:TabH2
+
+PROVEN: Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+Units: screen pixels. DOS layout/address: 2:6864.
+
+Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+### global:TabScreenSize
+
+PROVEN: Four display labels for clipping presets;not actual framebuffer allocation dimensions.
+
+Units: string-pointer table. DOS layout/address: 2:683c.
+
+Four display labels for clipping presets;not actual framebuffer allocation dimensions.
+
+### global:TabW1
+
+PROVEN: Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+Units: screen pixels. DOS layout/address: 2:684c.
+
+Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+### global:TabW2
+
+PROVEN: Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+Units: screen pixels. DOS layout/address: 2:6854.
+
+Four-entry clipping rectangle lookup indexed by SizeScreen. Names denote min/max horizontal/vertical coordinates;exact initial domains are retained.
+
+### global:VideoSpeed
+
+PROVEN: Graphics benchmark score shown by128..256 gauge and used by CalcSpeed;not gameplay movement speed.
+
+Units: performance score. DOS layout/address: 2:54cf2.
+
+Graphics benchmark score shown by128..256 gauge and used by CalcSpeed;not gameplay movement speed.
+
+### global:but_options
+
+PROVEN: Five-byte button-detection UI array;entries0..3 latch physical pressed state,entry4 is initialized with finish row. A release marks corresponding notbut2.
+
+Units: button press indicators. DOS layout/address: 2:54cf6.
+
+Five-byte button-detection UI array;entries0..3 latch physical pressed state,entry4 is initialized with finish row. A release marks corresponding notbut2.
+
+### global:byte_96883
+
+PROVEN: Submenu audio-working-copy valid flag;1 restores byte_E4CD8/9 into options on options-screen initialization,then clears.
+
+Units: boolean. DOS layout/address: 2:6883.
+
+Submenu audio-working-copy valid flag;1 restores byte_E4CD8/9 into options on options-screen initialization,then clears.
+
+### global:byte_96884
+
+PROVEN: Previous dead_time snapshot used to gate GoMenu1;initialized64,updated at each DO_OPTIONS_IN_GAME return. No broader meaning is asserted.
+
+Units: state / selector. DOS layout/address: 2:6884.
+
+Previous dead_time snapshot used to gate GoMenu1;initialized64,updated at each DO_OPTIONS_IN_GAME return. No broader meaning is asserted.
+
+### global:byte_E4CD8
+
+PROVEN: Audio working music-enable and sound-volume byte snapshots before entering key/pad/graphics submenus;restored when byte_96883.
+
+Units: audio option bytes. DOS layout/address: 2:54cd8.
+
+Audio working music-enable and sound-volume byte snapshots before entering key/pad/graphics submenus;restored when byte_96883.
+
+### global:byte_E4CD9
+
+PROVEN: Audio working music-enable and sound-volume byte snapshots before entering key/pad/graphics submenus;restored when byte_96883.
+
+Units: audio option bytes. DOS layout/address: 2:54cd9.
+
+Audio working music-enable and sound-volume byte snapshots before entering key/pad/graphics submenus;restored when byte_96883.
+
+### global:byte_E4CFC
+
+PROVEN: Language/screen-dependent panel half-width;basex=160-value and most panel widths=2*value.
+
+Units: screen pixels. DOS layout/address: 2:54cfc.
+
+Language/screen-dependent panel half-width;basex=160-value and most panel widths=2*value.
+
+### global:byte_E4CFD
+
+PROVEN: Initial options-panel appearance flag;set at menu entry,consumed/cleared after INIT_AFFICHE_ECRAN_OPTIONS.
+
+Units: boolean. DOS layout/address: 2:54cfd.
+
+Initial options-panel appearance flag;set at menu entry,consumed/cleared after INIT_AFFICHE_ECRAN_OPTIONS.
+
+### global:byte_E4CFF
+
+PROVEN: Key-binding capture mode;0 navigates rows,1 scans128 pressed codes with nonnull descriptions then stores selected key and clears.
+
+Units: boolean. DOS layout/address: 2:54cff.
+
+Key-binding capture mode;0 navigates rows,1 scans128 pressed codes with nonnull descriptions then stores selected key and clears.
+
+### global:delai_barre
+
+PROVEN: Sound-volume held-repeat divisor initialized3;used after initial delai_repetition.
+
+Units: menu callback calls. DOS layout/address: 2:3f792.
+
+Sound-volume held-repeat divisor initialized3;used after initial delai_repetition.
+
+### global:delai_stereo
+
+UNKNOWN: Observed storage used by menu. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3f77a.
+
+### global:dialog_display_item_ptr
+
+PROVEN: Current modal display-item pointer;used for fire-backed box text and yes/no labels relative to its measured bounds.
+
+Units: display-item address. DOS layout/address: 2:54cac.
+
+Current modal display-item pointer;used for fire-backed box text and yes/no labels relative to its measured bounds.
+
+### global:ecart_barre
+
+PROVEN: Volume indicator horizontal cell spacing initialized4;box width20*spacing+1.
+
+Units: screen pixels. DOS layout/address: 2:3f79c.
+
+Volume indicator horizontal cell spacing initialized4;box width20*spacing+1.
+
+### global:first_option
+
+PROVEN: First selectable row for current menu,especially capability-limited graphics screens.
+
+Units: state / selector. DOS layout/address: 2:6881.
+
+First selectable row for current menu,especially capability-limited graphics screens.
+
+### global:hFondu
+
+PROVEN: Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+Units: screen pixels. DOS layout/address: 2:54ce2.
+
+Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+### global:key_descriptions
+
+PROVEN: Current AZERTY/QWERTY128-pointer description table selected for binding UI.
+
+Units: string table pointer. DOS layout/address: 2:54cb0.
+
+Current AZERTY/QWERTY128-pointer description table selected for binding UI.
+
+### global:key_descriptions_azerty
+
+PROVEN: 128 scan-code-indexed mutable label pointers;special labels localized at setup,letter positions retain layout. Zero marks unsupported/no label.
+
+Units: string pointers / null. DOS layout/address: 2:6888.
+
+128 scan-code-indexed mutable label pointers;special labels localized at setup,letter positions retain layout. Zero marks unsupported/no label.
+
+### global:key_descriptions_qwerty
+
+PROVEN: 128 scan-code-indexed mutable label pointers;special labels localized at setup,letter positions retain layout. Zero marks unsupported/no label.
+
+Units: string pointers / null. DOS layout/address: 2:6a88.
+
+128 scan-code-indexed mutable label pointers;special labels localized at setup,letter positions retain layout. Zero marks unsupported/no label.
+
+### global:max_sound
+
+PROVEN: Sound working-volume upper bound initialized20;also drives indicator color/width conditions.
+
+Units: volume setting. DOS layout/address: 2:3f798.
+
+Sound working-volume upper bound initialized20;also drives indicator color/width conditions.
+
+### global:menu_rvb
+
+PROVEN: Palette snapshot saved/restored around menu/calibration loops;special levels capture rvb_special selection.
+
+Units: 256 RGB entries. DOS layout/address: 2:543ac.
+
+Palette snapshot saved/restored around menu/calibration loops;special levels capture rvb_special selection.
+
+### global:msg_box_being_displayed
+
+PROVEN: Modal message/yes-no lifecycle flags;confirmation_msg returns pos_YN==0.
+
+Units: UI flag. DOS layout/address: 2:6880.
+
+Modal message/yes-no lifecycle flags;confirmation_msg returns pos_YN==0.
+
+### global:msg_to_display
+
+PROVEN: Modal text records:slot0 no-controller/duplicate-key message,slot1 confirmation box;initialized positions160,100,font2.
+
+Units: display records. DOS layout/address: 2:3bb58.
+
+Modal text records:slot0 no-controller/duplicate-key message,slot1 confirmation box;initialized positions160,100,font2.
+
+### global:options
+
+PROVEN: Overlaid20-byte menu working record. Same members hold audio,button or graphics settings by active screen; legacy member names are not universal meanings.
+
+Units: state / selector. DOS layout/address: 2:3d7a4.
+
+Overlaid20-byte menu working record. Same members hold audio,button or graphics settings by active screen; legacy member names are not universal meanings.
+
+### global:pAFFICHE_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cc8.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pCOMMANDE_BOX
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cd4.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pDO_COMMANDE
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cc4.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pEND_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54ccc.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pINIT_AFFICHE_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cb8.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pINIT_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cbc.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pINIT_SCROLL
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cb4.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:pLOAD_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cd0.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:rvb_E40AC
+
+PROVEN: Working palette for option-transition color morph;change_couleur_prg approaches rvb_menu_save componentwise by2 or final snap.
+
+Units: 256 RGB entries. DOS layout/address: 2:540ac.
+
+Working palette for option-transition color morph;change_couleur_prg approaches rvb_menu_save componentwise by2 or final snap.
+
+### global:rvb_menu_save
+
+PROVEN: Saved/target palette reused by confirmation and option transition modes;exact save/restore order is mode-dependent.
+
+Units: 256 RGB entries. DOS layout/address: 2:549ac.
+
+Saved/target palette reused by confirmation and option transition modes;exact save/restore order is mode-dependent.
+
+### global:rvb_options_in_game
+
+PROVEN: Snapshot of rvb0 on in-game option entry;restored by FonduOption mode2 when current_pal_id!=0.
+
+Units: 256 RGB entries. DOS layout/address: 2:546ac.
+
+Snapshot of rvb0 on in-game option entry;restored by FonduOption mode2 when current_pal_id!=0.
+
+### global:sEND_SCREEN
+
+PROVEN: Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+Units: function address / null. DOS layout/address: 2:54cc0.
+
+Menu or modal callback slot;actual function signature and each assignment/call are retained in evidence. Null skips optional lifecycle stage.
+
+### global:sortie_options
+
+PROVEN: Current menu loop exit flag;distinct from global fin_du_jeu and MENU_RETURN.
+
+Units: state / selector. DOS layout/address: 2:3f78e.
+
+Current menu loop exit flag;distinct from global fin_du_jeu and MENU_RETURN.
+
+### global:tab_key_sav
+
+PROVEN: Seven saved configured key bytes while menus use navigation defaults.
+
+Units: scan-code bytes. DOS layout/address: 2:5e5c.
+
+Seven saved configured key bytes while menus use navigation defaults.
+
+### global:title
+
+PROVEN: Localized key/pad/graphics/video menu title character buffer;key screen surrounds title with slash delimiters.
+
+Units: text bytes. DOS layout/address: 2:67d8.
+
+Localized key/pad/graphics/video menu title character buffer;key screen surrounds title with slash delimiters.
+
+### global:wFondu
+
+PROVEN: Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+Units: screen pixels. DOS layout/address: 2:54ce8.
+
+Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+### global:word_CF79E
+
+UNKNOWN: Observed storage used by menu. Read/write operations are retained; intended meaning beyond them is UNKNOWN.
+
+Units: uninterpreted declared representation. DOS layout/address: 2:3f79e.
+
+### global:word_E4CEC_x
+
+PROVEN: Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+Units: screen pixels. DOS layout/address: 2:54cec.
+
+Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+### global:word_E4CEE_h
+
+PROVEN: Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+Units: screen pixels. DOS layout/address: 2:54cee.
+
+Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+### global:word_E4CF0_y
+
+PROVEN: Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+Units: screen pixels. DOS layout/address: 2:54cf0.
+
+Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+### global:word_E4CF4_w
+
+PROVEN: Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+Units: screen pixels. DOS layout/address: 2:54cf4.
+
+Current in-game menu panel x,y,width,height respectively. Screen transitions compute union of old/new rectangles then replace these bounds.
+
+### global:xFondu
+
+PROVEN: Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+Units: screen pixels. DOS layout/address: 2:54ce4.
+
+Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+### global:yFondu
+
+PROVEN: Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+Units: screen pixels. DOS layout/address: 2:54ce6.
+
+Current effect rectangle x,y,width,height. FonduOption moves x/width to next4-byte boundary and expands dimensions;FonduPixel uses supplied rectangle unchanged.
+
+### global:yesno_finished
+
+PROVEN: Modal message/yes-no lifecycle flags;confirmation_msg returns pos_YN==0.
+
+Units: UI flag. DOS layout/address: 2:6882.
+
+Modal message/yes-no lifecycle flags;confirmation_msg returns pos_YN==0.
+
+## meredenis.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:findMereDenisWeapon
+
+PROVEN: Find and store the Space Mama weapon object index.
+
+Units: see observed computation and contract. DOS layout/address: 1:40b60.
+
+Find and store the Space Mama weapon object index.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:mereDenisCanAttak
+
+PROVEN: Acquire the boss camera lock and gate attacks on its half-rate timer.
+
+Units: see observed computation and contract. DOS layout/address: 1:40bb8.
+
+Acquire the boss camera lock and gate attacks on its half-rate timer.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:setMereDenisAtScrollBorder
+
+PROVEN: Position Space Mama at a selected camera border and return the side displacement.
+
+Units: see observed computation and contract. DOS layout/address: 1:40cc8.
+
+Position Space Mama at a selected camera border and return the side displacement.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:setCirclePointToReach
+
+PROVEN: Set an elliptical target (radii 100/60) and advance circle_index by four to sentinel -32000.
+
+Units: see observed computation and contract. DOS layout/address: 1:40da4.
+
+Set an elliptical target (radii 100/60) and advance circle_index by four to sentinel -32000.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:allocateMereDenisBombChips
+
+PROVEN: Replace a Space Mama bomb with explosion/chip objects and sound.
+
+Units: see observed computation and contract. DOS layout/address: 1:40e5c.
+
+Replace a Space Mama bomb with explosion/chip objects and sound.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:mereDenisExplodeBombs
+
+STRONG: Set every recorded dropped bomb's timer to 70 and clear its ID slot to -1.
+
+Units: see observed computation and contract. DOS layout/address: 1:41010.
+
+Set every recorded dropped bomb's timer to 70 and clear its ID slot to -1.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:mereDenisDropBomb
+
+STRONG: Drop pooled type-193 bombs according to the selected per-lane sequence and spacing rules.
+
+Units: see observed computation and contract. DOS layout/address: 1:4108c.
+
+Drop pooled type-193 bombs according to the selected per-lane sequence and spacing rules.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:swapWeaponAnimState
+
+PROVEN: Set a weapon's substate/frame/index consistently with its eta entry.
+
+Units: see observed computation and contract. DOS layout/address: 1:41470.
+
+Set a weapon's substate/frame/index consistently with its eta entry.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:swapMereDenisCollZones
+
+PROVEN: Switch Space Mama object type 98/213 and reload its collision-zone descriptor.
+
+Units: see observed computation and contract. DOS layout/address: 1:4149c.
+
+Switch Space Mama object type 98/213 and reload its collision-zone descriptor.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:prepareNewMereDenisAttack
+
+STRONG: Interpret Space Mama's action sequence, including weapon/machine phases, bombs, lasers and completion.
+
+Units: see observed computation and contract. DOS layout/address: 1:415ac.
+
+Interpret Space Mama's action sequence, including weapon/machine phases, bombs, lasers and completion.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:snapLaserToWeapon
+
+PROVEN: Anchor a laser to its weapon sprite and optionally change weapon animation and launch direction.
+
+Units: see observed computation and contract. DOS layout/address: 1:425fc.
+
+Anchor a laser to its weapon sprite and optionally change weapon animation and launch direction.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:allocateSpaceMamaLaser
+
+PROVEN: Activate an inactive Space Mama laser and bind its source object/sprite.
+
+Units: see observed computation and contract. DOS layout/address: 1:42718.
+
+Activate an inactive Space Mama laser and bind its source object/sprite.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:doMereDenisCommand
+
+PROVEN: Run Space Mama movement, laser/bomb emission and action-sequence progression.
+
+Units: see observed computation and contract. DOS layout/address: 1:42870.
+
+Run Space Mama movement, laser/bomb emission and action-sequence progression.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:changeMereDenisPhase
+
+PROVEN: Advance encounter 1 after two hits and more than two steps, or encounter 2 after three hits.
+
+Units: see observed computation and contract. DOS layout/address: 1:429a8.
+
+Advance encounter 1 after two hits and more than two steps, or encounter 2 after three hits.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:fitSaveCurrentAction
+
+PROVEN: Skip control/setup actions to choose a resumable saved encounter/action position.
+
+Units: see observed computation and contract. DOS layout/address: 1:42a28.
+
+Skip control/setup actions to choose a resumable saved encounter/action position.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:doMereDenisHit
+
+PROVEN: Apply vulnerability/safety-gated Space Mama damage and enter hit or defeat action sequences.
+
+Units: see observed computation and contract. DOS layout/address: 1:42af4.
+
+Apply vulnerability/safety-gated Space Mama damage and enter hit or defeat action sequences.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:mereDenisBigLaserCommand
+
+PROVEN: Keep the growing laser attached for its initial frames, then restore the weapon animation.
+
+Units: see observed computation and contract. DOS layout/address: 1:42c54.
+
+Keep the growing laser attached for its initial frames, then restore the weapon animation.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### function:mereDenisBombCommand
+
+PROVEN: Decrement a bomb timer and explode into chips when it reaches zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:42d10.
+
+Decrement a bomb timer and explode into chips when it reaches zero.
+
+Space Mama uses shared encounter/action cursors, separately saved interruption cursors, weapon/machine object IDs and type 98/213 collision-zone switching. Bomb IDs are an 8x8 table with -1 empty; mass explosion sets timer=70, not an immediate explosion call. Encounter 1 advances after >=2 phase hits and stepsForward>2; encounter 2 after >=3. Circle target advances by four and ends at -32000. Preserve action-byte controls and sentinel 254/255 bomb sequence cases.
+
+### global:bombSequences
+
+STRONG: Space Mama bomb sequence pointer table indexed by sequence, lane and position.
+
+Units: see observed computation and contract. DOS layout/address: 2:6e28.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama bomb sequence pointer table indexed by sequence, lane and position.
+
+### global:circle_index
+
+STRONG: Space Mama ellipse angle cursor, incremented by four until replaced by -32000 after 512.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d96.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama ellipse angle cursor, incremented by four until replaced by -32000 after 512.
+
+### global:circle_x
+
+STRONG: Space Mama elliptical-target x center.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d92.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama elliptical-target x center.
+
+### global:circle_y
+
+STRONG: Space Mama elliptical-target y center.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d94.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama elliptical-target y center.
+
+### global:currentBombSequence
+
+STRONG: Selected Space Mama bomb pattern; 254/255 are control/sentinel cases.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d9c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Selected Space Mama bomb pattern; 254/255 are control/sentinel cases.
+
+### global:currentLaserSize
+
+STRONG: Space Mama laser selector read from an action-stream parameter and used during allocation.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d99.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama laser selector read from an action-stream parameter and used during allocation.
+
+### global:currentPhaseHitCounter
+
+STRONG: Count of accepted Space Mama hits in the current encounter phase.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d9b.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Count of accepted Space Mama hits in the current encounter phase.
+
+### global:lastDroppedBombIdInSequence
+
+STRONG: Per-lane bomb sequence cursor; 255 is a wrap/start sentinel.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d80.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Per-lane bomb sequence cursor; 255 is a wrap/start sentinel.
+
+### global:lastDroppedBombXCenterPos
+
+STRONG: Last bomb drop center x for spacing tests; -32000 marks no position.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d8e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Last bomb drop center x for spacing tests; -32000 marks no position.
+
+### global:machine_obj_id
+
+STRONG: Space Mama washing-machine object index found by type scan; -1 is the unfound sentinel.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d8c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama washing-machine object index found by type scan; -1 is the unfound sentinel.
+
+### global:mereDenisActionSequences
+
+STRONG: Encounter-indexed Space Mama action-byte streams, including inline parameter bytes.
+
+Units: see observed computation and contract. DOS layout/address: 2:6ef8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Encounter-indexed Space Mama action-byte streams, including inline parameter bytes.
+
+### global:mereDenis_weapon_id
+
+STRONG: Space Mama weapon object index found by type scan; -1 is the unfound sentinel.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d90.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama weapon object index found by type scan; -1 is the unfound sentinel.
+
+### global:mere_denis_wait_time
+
+STRONG: Space Mama action wait countdown, decremented by doMereDenisCommand.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d88.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama action wait countdown, decremented by doMereDenisCommand.
+
+### global:stepsForward
+
+STRONG: Space Mama forward-step count used with the encounter-1 hit threshold.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d9a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama forward-step count used with the encounter-1 hit threshold.
+
+### global:timerBeforeFirstBomb
+
+STRONG: Space Mama first-drop delay, initialized to 41 for the relevant action.
+
+Units: see observed computation and contract. DOS layout/address: 2:54d98.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Space Mama first-drop delay, initialized to 41 for the relevant action.
+
+## mite.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:mite_esquive_poing
+
+PROVEN: Compute fist/Rayman relative offsets and adjust Mite vertical evasion speed.
+
+Units: see observed computation and contract. DOS layout/address: 1:42d30.
+
+Compute fist/Rayman relative offsets and adjust Mite vertical evasion speed.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:HAS_MIT_JUMP
+
+PROVEN: Initialize a Mite jump at state 2:1 frame zero and report whether its airborne continuation is ready.
+
+Units: see observed computation and contract. DOS layout/address: 1:42e64.
+
+Initialize a Mite jump at state 2:1 frame zero and report whether its airborne continuation is ready.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:ray_over_mit
+
+PROVEN: Test the supplied horizontal separation against Mite facing.
+
+Units: see observed computation and contract. DOS layout/address: 1:42ed0.
+
+Test the supplied horizontal separation against Mite facing.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:fix_mit_Xspeed
+
+PROVEN: Select Mite horizontal tracking/retreat speed, reverse animation when needed and clamp to [-4,4].
+
+Units: see observed computation and contract. DOS layout/address: 1:42ef4.
+
+Select Mite horizontal tracking/retreat speed, reverse animation when needed and clamp to [-4,4].
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DO_MIT_ATTAK
+
+PROVEN: Run Mite attack travel/return states using follow_id>=500, follow_x and config distance.
+
+Units: see observed computation and contract. DOS layout/address: 1:43068.
+
+Run Mite attack travel/return states using follow_id>=500, follow_x and config distance.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:IS_MIT_PAF
+
+PROVEN: Handle Mite hit/defeat states and report whether normal command logic should be suppressed.
+
+Units: see observed computation and contract. DOS layout/address: 1:43320.
+
+Handle Mite hit/defeat states and report whether normal command logic should be suppressed.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DO_MIT_COMMAND
+
+STRONG: Run Mite normal pursuit/evasion, reserving follow_id>=500 for the attack path.
+
+Units: see observed computation and contract. DOS layout/address: 1:4342c.
+
+Run Mite normal pursuit/evasion, reserving follow_id>=500 for the attack path.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DoMitePoingCollision
+
+PROVEN: Handle Mite fist contact and nonlethal/terminal reactions.
+
+Units: see observed computation and contract. DOS layout/address: 1:43838.
+
+Handle Mite fist contact and nonlethal/terminal reactions.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DO_MITE2_COMMAND
+
+PROVEN: Run second Mite script movement and obstacle turns.
+
+Units: see observed computation and contract. DOS layout/address: 1:4387c.
+
+Run second Mite script movement and obstacle turns.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DoMite2PoingCollision
+
+PROVEN: Accept second-Mite fist damage only on sprite 1.
+
+Units: see observed computation and contract. DOS layout/address: 1:43a04.
+
+Accept second-Mite fist damage only on sprite 1.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+### function:DO_MITE2_ESQUIVE
+
+PROVEN: Enter second-Mite evasion based on active/charging fist distance, facing and motion.
+
+Units: see observed computation and contract. DOS layout/address: 1:43a68.
+
+Enter second-Mite evasion based on active/charging fist distance, facing and motion.
+
+follow_id>=500 selects attack/evasion state, with 500/501 transition values; it is not an object ID here. follow_x stores the attack origin and config the travel bound (initially 140). Horizontal speed clamps to [-4,4]. Eta animation-reverse bits can be mutated at runtime. Unused compiler-steering locals retain their names and no gameplay meaning.
+
+## moskito.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:getIdealStingCoords
+
+PROVEN: Return a facing-dependent sting target around Rayman's collision-box center.
+
+Units: see observed computation and contract. DOS layout/address: 1:43bc0.
+
+Return a facing-dependent sting target around Rayman's collision-box center.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:closeEnoughToSting
+
+PROVEN: Compare absolute sting-target separations against strict x/y tolerances.
+
+Units: see observed computation and contract. DOS layout/address: 1:43c2c.
+
+Compare absolute sting-target separations against strict x/y tolerances.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:moskitoCanAttak
+
+PROVEN: Acquire camera lock, decrease object timer/scale and gate Mosquito attacks on timer zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:43cac.
+
+Acquire camera lock, decrease object timer/scale and gate Mosquito attacks on timer zero.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:setMoskitoAtScrollBorder
+
+STRONG: Place Mosquito at a chosen camera border and return its side displacement.
+
+Units: see observed computation and contract. DOS layout/address: 1:43dc4.
+
+Place Mosquito at a chosen camera border and return its side displacement.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:prepareNewMoskitoAttack
+
+STRONG: Interpret the Mosquito action sequence, selecting motion targets, waits, fruit, exit and completion behavior.
+
+Units: see observed computation and contract. DOS layout/address: 1:43f04.
+
+Interpret the Mosquito action sequence, selecting motion targets, waits, fruit, exit and completion behavior.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:allocateMoskitoFruit
+
+PROVEN: Allocate the first inactive type-51/52 fruit from Mosquito sprite 3.
+
+Units: see observed computation and contract. DOS layout/address: 1:44aec.
+
+Allocate the first inactive type-51/52 fruit from Mosquito sprite 3.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:moskitoDropFruitOnRay
+
+STRONG: Test a predicted vertical drop region around Rayman and release fruit when it contains his center.
+
+Units: see observed computation and contract. DOS layout/address: 1:44c9c.
+
+Test a predicted vertical drop region around Rayman and release fruit when it contains his center.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:doMoskitoCommand
+
+PROVEN: Run Mosquito target motion, low-HP fist evasion, fruit attacks and action completion.
+
+Units: see observed computation and contract. DOS layout/address: 1:44e1c.
+
+Run Mosquito target motion, low-HP fist evasion, fruit attacks and action completion.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:tellNextMoskitoAction
+
+PROVEN: Resolve the next Mosquito action through restart/next-encounter/resume/jump control codes.
+
+Units: see observed computation and contract. DOS layout/address: 1:45054.
+
+Resolve the next Mosquito action through restart/next-encounter/resume/jump control codes.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:changeMoskitoPhase
+
+PROVEN: Select the 12-HP Mosquito encounter from remaining-HP thresholds, preserving hit-interruption state.
+
+Units: see observed computation and contract. DOS layout/address: 1:450d8.
+
+Select the 12-HP Mosquito encounter from remaining-HP thresholds, preserving hit-interruption state.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:doMoskitoHit
+
+PROVEN: Apply one damage point when safe timer is zero, compute speed factor and enter hit/defeat encounter.
+
+Units: see observed computation and contract. DOS layout/address: 1:45144.
+
+Apply one damage point when safe timer is zero, compute speed factor and enter hit/defeat encounter.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:DO_MST_SCROLL_COMMAND
+
+PROVEN: Move the Mosquito scrolling object through numeric timer stages 0/1/2.
+
+Units: see observed computation and contract. DOS layout/address: 1:45230.
+
+Move the Mosquito scrolling object through numeric timer stages 0/1/2.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:DO_MST_CHANGE_COMMAND
+
+PROVEN: Change the scrolling Mosquito target offsets from hit_points selectors unless param is 500.
+
+Units: see observed computation and contract. DOS layout/address: 1:453e0.
+
+Change the scrolling Mosquito target offsets from hit_points selectors unless param is 500.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### function:DoMstShakyFruitRaymanZDD
+
+PROVEN: Start the shaky fruit's scripted falling response on Rayman detection.
+
+Units: see observed computation and contract. DOS layout/address: 1:4544c.
+
+Start the shaky fruit's scripted falling response on Rayman detection.
+
+For initial HP=12, remaining HP >9/>7/>4/>0 selects encounter 3/5/6/7; zero selects 9. Encounter 8 saves/resumes interruption state. Safe timer gates one-point damage and is set to 255. Target sentinel is -32000; speed factor has a 0x4000 base. Low-HP fist evasion is suppressed in demo/recording paths. Do not replace the actor-specific double scale decrement with a generic timer service.
+
+### global:MsAnimIndex
+
+STRONG: Previous Mosquito animation index used to detect animation 14 to 15 transitions.
+
+Units: see observed computation and contract. DOS layout/address: 2:6fdc.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Previous Mosquito animation index used to detect animation 14 to 15 transitions.
+
+### global:curAct
+
+STRONG: Current Mosquito action byte loaded and interpreted by prepareNewMoskitoAttack, then consulted by doMoskitoCommand.
+
+Units: see observed computation and contract. DOS layout/address: 2:54da0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current Mosquito action byte loaded and interpreted by prepareNewMoskitoAttack, then consulted by doMoskitoCommand.
+
+### global:fistAvoided
+
+STRONG: Per-action Mosquito evasion latch: clear on the relevant action setup, set after the low-HP fist-triggered speed change.
+
+Units: see observed computation and contract. DOS layout/address: 2:54da1.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Per-action Mosquito evasion latch: clear on the relevant action setup, set after the low-HP fist-triggered speed change.
+
+### global:moskitoActionSequences
+
+STRONG: Encounter-indexed Mosquito action-byte streams, interpreted using shared action cursors.
+
+Units: see observed computation and contract. DOS layout/address: 2:6fb4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Encounter-indexed Mosquito action-byte streams, interpreted using shared action cursors.
+
+### global:mstMustLeaveScreenToProceed
+
+STRONG: Mosquito hit-response latch selecting a screen-leaving continuation before the next attack; set for the specified next-action ranges and consumed by the action interpreter.
+
+Units: see observed computation and contract. DOS layout/address: 2:54da2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mosquito hit-response latch selecting a screen-leaving continuation before the next attack; set for the specified next-action ranges and consumed by the action interpreter.
 
 ## moteur.json
 
@@ -5610,13 +14102,15 @@ Engine initialization clears boss_mort/fin_boss; fin_du_jeu suppresses level ini
 
 ### global:button_released
 
-PROVEN: Rayman jump/helicopter press-release phase latch.
+PROVEN: Menu held-input release predicate;TestButtonReleased requires no directions and no confirm.
 
-Units: phase code. DOS layout/address: 2:3fa7d.
+Units: phase code; state / selector. DOS layout/address: 2:3fa7d.
 
 Other ray.c readers/writers retain the input-release contract; this engine site forces1 then calls ray_jump.
 
 Pass3 refinement: Normal grounded release writes1; jumping writes0; airborne unpressed even value increments to odd. Helicopter activation1->2, later release2->3 and pressed stop3->4. ray_jump tests odd parity, not equality with1; do not reduce to boolean.
+
+Pass6: Menu held-input release predicate;TestButtonReleased requires no directions and no confirm.
 
 ### global:compteur_attente
 
@@ -6498,6 +14992,110 @@ Units: pixels. DOS layout/address: 2:2ba2.
 
 in_action_zone adds60 to local margins for a previously active object; special_flags_init changes table entries by world/level.
 
+## neige.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:DoFirstFlocons
+
+PROVEN: With weather enabled, save1.is_just_saved nonzero, save_obj_id -1 and fin_continue zero, preadvance weather 100 times with randomized camera inputs and zero clock advance.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4b7a0.
+
+With weather enabled, save1.is_just_saved nonzero, save_obj_id -1 and fin_continue zero, preadvance weather 100 times with randomized camera inputs and zero clock advance.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:add_one_floc
+
+PROVEN: Randomly choose a weather depth group through cumulative start indices and increment its visible count without exceeding its capacity.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4b848.
+
+Randomly choose a weather depth group through cumulative start indices and increment its visible count without exceeding its capacity.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:add_256_flocs
+
+PROVEN: Set the eight visible weather counts to 10,15,25,30,35,40,43,53: total 251 despite the inherited function name.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4b8a4.
+
+Set the eight visible weather counts to 10,15,25,30,35,40,43,53: total 251 despite the inherited function name.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:sub_one_floc
+
+PROVEN: Remove one visible weather particle using weighted depth choice and a nonempty-group fallback scan.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4b910.
+
+Remove one visible weather particle using weighted depth choice and a nonempty-group fallback scan.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_flocons
+
+PROVEN: Allocate values within eight pre-existing weather groups: capacities 20,30,50,60,70,80,96,106; scales -64 through 160 by 32; initialize inverse screen bounds and rejection-sampled visible positions.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4b9a0.
+
+Allocate values within eight pre-existing weather groups: capacities 20,30,50,60,70,80,96,106; scales -64 through 160 by 32; initialize inverse screen bounds and rejection-sampled visible positions.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:do_flocons
+
+STRONG: Move visible weather particles by camera delta and quarter-unit wind with phase dithering, wrap through inverse-projected group bounds, restore stored wind and derive non-Jungle ray wind from VENT_X/8.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4bb78.
+
+Move visible weather particles by camera delta and quarter-unit wind with phase dithering, wrap through inverse-projected group bounds, restore stored wind and derive non-Jungle ray wind from VENT_X/8.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_snow_sequence
+
+PROVEN: Select a weather opcode, reset its tick counter and store its signed duration in the per-opcode table.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4be74.
+
+Select a weather opcode, reset its tick counter and store its signed duration in the per-opcode table.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:set_SNSEQ_list
+
+PROVEN: Build a preset weather opcode/duration list, enable weather and select its first pair; presets ramp particle count or horizontal/vertical wind toward requested values.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c43c.
+
+Build a preset weather opcode/duration list, enable weather and select its first pair; presets ramp particle count or horizontal/vertical wind toward requested values.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_SNOW_SEQUENCE
+
+PROVEN: Execute the selected wind/count opcode each update, advance only at exact duration equality, and load the next pair with the existing list-pointer wrap rule.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c278.
+
+Execute the selected wind/count opcode each update, advance only at exact duration equality, and load the next pair with the existing list-pointer wrap rule.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoNeigeRaymanCollision
+
+PROVEN: Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.
+
+Units: see parameter/result contracts. DOS layout/address: 1:4c3dc.
+
+Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
 ## objinit.json
 
 Meaning confidence is independent of STRICT. DOS reads/writes/callers are primary; external names corroborate. Neutral/overloaded storage is not renamed. Source/displacement candidates are not typed proofs. Full serialized records do not make producer pointers runtime pointers.
@@ -6557,6 +15155,1796 @@ PROVEN: Apply world/level exceptions to type-level activation/collision tables.
 Units: see parameter/result and side-effect contract. DOS layout/address: 1:502c4.
 
 For all262 type slots: zonediffx[0]=-120 if num_level==3 else0, independently of num_world. For types16,17,24 set flags1 bit3 in world1 and clear elsewhere. No other type flag bits are changed.
+
+## objupdate1.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:popCmdContext
+
+PROVEN: Restore the current script offset from the context at the unsigned depth, then decrement depth.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ad0.
+
+Restore the current script offset from the context at the unsigned depth, then decrement depth.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:char2short
+
+PROVEN: Sign-extend an encoded command byte to a signed 16-bit value using the 128 boundary.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ae4.
+
+Sign-extend an encoded command byte to a signed 16-bit value using the 128 boundary.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readNoArg
+
+PROVEN: Consume no command arguments and return zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50afc.
+
+Consume no command arguments and return zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipNoArg
+
+PROVEN: Skip no command arguments and return zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50afc.
+
+Skip no command arguments and return zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readOneArg
+
+PROVEN: Advance one command byte and store its unsigned value in nb_cmd.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50b00.
+
+Advance one command byte and store its unsigned value in nb_cmd.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readTestArgs
+
+PROVEN: Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50b20.
+
+Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readGoXYargs
+
+PROVEN: Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50b5c.
+
+Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readSpeedArgs
+
+PROVEN: Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ba8.
+
+Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readInvalidArg
+
+PROVEN: Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c14.
+
+Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipOneArg
+
+PROVEN: Advance the command offset by one without loading an argument.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c24.
+
+Advance the command offset by one without loading an argument.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipTestArgs
+
+PROVEN: Skip a test selector and its extra byte only for selectors 0..4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c2c.
+
+Skip a test selector and its extra byte only for selectors 0..4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipGoXYArgs
+
+PROVEN: Advance the command offset by two.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c4c.
+
+Advance the command offset by two.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipSpeedArgs
+
+PROVEN: Advance the command offset by three.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c54.
+
+Advance the command offset by three.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_SELF_HANDLED
+
+PROVEN: Stop immediate command handling by returning zero; the object-specific updater handles the stored command.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c5c.
+
+Stop immediate command handling by returning zero; the object-specific updater handles the stored command.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipInvalidArg
+
+PROVEN: Restart skip decoding at byte zero and return one.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c60.
+
+Restart skip decoding at byte zero and return one.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_11_GO_LABEL
+
+PROVEN: Continue immediate command processing after a label.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c6c.
+
+Continue immediate command processing after a label.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_19_GO_WAITSTATE
+
+PROVEN: Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c70.
+
+Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_25_RESERVED_GO_GOSUB
+
+PROVEN: Push a one-count return context, then jump directly through cmd_labels[nb_cmd].
+
+Units: see parameter/result contracts. DOS layout/address: 1:50c90.
+
+Push a one-count return context, then jump directly through cmd_labels[nb_cmd].
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO
+
+PROVEN: Jump directly through cmd_labels[nb_cmd] and continue immediate handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50cbc.
+
+Jump directly through cmd_labels[nb_cmd] and continue immediate handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_26_RESERVED_GO_BRANCHTRUE
+
+PROVEN: Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50cdc.
+
+Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_27_RESERVED_GO_BRANCHFALSE
+
+PROVEN: Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50d04.
+
+Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_28_RESERVED_GO_SKIPTRUE
+
+PROVEN: Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50d2c.
+
+Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_29_RESERVED_GO_SKIPFALSE
+
+PROVEN: Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50d54.
+
+Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_21_GO_X
+
+PROVEN: Set object x to signed nb_cmd*100+link and continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50d7c.
+
+Set object x to signed nb_cmd*100+link and continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_22_GO_Y
+
+PROVEN: Set object y to signed nb_cmd*100+link and continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50da8.
+
+Set object y to signed nb_cmd*100+link and continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_12_GO_GOTO
+
+PROVEN: Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50dd4.
+
+Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_8_GO_STATE
+
+PROVEN: Set the main state from nb_cmd, clear both speeds, and continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50dec.
+
+Set the main state from nb_cmd, clear both speeds, and continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_5_GO_SUBSTATE
+
+PROVEN: Set the substate from nb_cmd, clear both speeds, and continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e0c.
+
+Set the substate from nb_cmd, clear both speeds, and continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_6_GO_SKIP
+
+PROVEN: Skip nb_cmd complete encoded commands and continue handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e2c.
+
+Skip nb_cmd complete encoded commands and continue handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_9_GO_PREPARELOOP
+
+PROVEN: Push the current offset and the nb_cmd loop count.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e50.
+
+Push the current offset and the nb_cmd loop count.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_13_GO_GOSUB
+
+PROVEN: Push a one-count return context and scan to the requested label.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e60.
+
+Push a one-count return context and scan to the requested label.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_14_GO_RETURN
+
+PROVEN: Pop the script return context and continue immediate handling.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e88.
+
+Pop the script return context and continue immediate handling.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_10_GO_DOLOOP
+
+PROVEN: Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50e90.
+
+Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_33_INVALID_CMD
+
+PROVEN: Set command offset to -1 so the next decode restarts at the beginning.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ec4.
+
+Set command offset to -1 so the next decode restarts at the beginning.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_15_GO_BRANCHTRUE
+
+PROVEN: Scan to the requested label only when command_test is set; return zero on the taken branch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ed0.
+
+Scan to the requested label only when command_test is set; return zero on the taken branch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_16_GO_BRANCHFALSE
+
+PROVEN: Scan to the requested label only when command_test is clear; return zero on the taken branch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50ef4.
+
+Scan to the requested label only when command_test is clear; return zero on the taken branch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_31_GO_SKIPTRUE
+
+PROVEN: Skip nb_cmd complete commands only when command_test is set.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50f18.
+
+Skip nb_cmd complete commands only when command_test is set.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_32_GO_SKIPFALSE
+
+PROVEN: Skip nb_cmd complete commands only when command_test is clear.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50f44.
+
+Skip nb_cmd complete commands only when command_test is clear.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_18_GO_SETTEST
+
+PROVEN: Assign the low bit of nb_cmd to the one-bit command-test latch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50f70.
+
+Assign the low bit of nb_cmd to the one-bit command-test latch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:handle_17_GO_TEST
+
+PROVEN: Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.
+
+Units: see parameter/result contracts. DOS layout/address: 1:50f98.
+
+Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:readOneCommand
+
+PROVEN: Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51154.
+
+Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipOneCommand
+
+PROVEN: Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51180.
+
+Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:GET_OBJ_CMD
+
+PROVEN: For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.
+
+Units: see parameter/result contracts. DOS layout/address: 1:511ac.
+
+For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:pushCmdContext
+
+PROVEN: Increment signed context depth and store current script offset and byte count through its unsigned index.
+
+Units: see parameter/result contracts. DOS layout/address: 1:511f4.
+
+Increment signed context depth and store current script offset and byte count through its unsigned index.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:skipToLabel
+
+PROVEN: Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51220.
+
+Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:pushToLabel
+
+PROVEN: Push a one-count context and perform the ordinary label scan.
+
+Units: see parameter/result contracts. DOS layout/address: 1:512c0.
+
+Push a one-count context and perform the ordinary label scan.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## objupdate2.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:ObjectUTurnDefault
+
+PROVEN: Invert the object facing bit.
+
+Units: see parameter/result contracts. DOS layout/address: 1:512f0.
+
+Invert the object facing bit.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_WIZARD
+
+PROVEN: Run the wizard payment/entry substates: require ten Tings, deduct ten on clock 2, control Rayman states, then save return flags/palette and fade to the selected bonus level.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51320.
+
+Run the wizard payment/entry substates: require ten Tings, deduct ten on clock 2, control Rayman states, then save return flags/palette and fade to the selected bonus level.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:get_next_bonus_level
+
+PROVEN: Return the world-specific bonus map for a level, or zero when this lookup has no entry.
+
+Units: see parameter/result contracts. DOS layout/address: 1:514b4.
+
+Return the world-specific bonus map for a level, or zero when this lookup has no entry.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:TEST_WIZARD
+
+PROVEN: Gate wizard detection by Rayman state/size/Ting transfer, manage the return delay, align Rayman to either side within 16 horizontal and 8 vertical pixels, and advance the payment sequence.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5154c.
+
+Gate wizard detection by Rayman state/size/Ting transfer, manage the return delay, align Rayman to either side within 16 horizontal and 8 vertical pixels, and advance the payment sequence.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_TARZAN
+
+PROVEN: Run the script; in state 0:4 activate the first inactive type-38 seed with speeds (1,-2), request the vignette, move Tarzan to substate 3 and give him vertical speed -8.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51894.
+
+Run the script; in state 0:4 activate the first inactive type-38 seed with speeds (1,-2), request the vignette, move Tarzan to substate 3 and give him vertical speed -8.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoTarzanPoingCollision
+
+PROVEN: On fist contact select Tarzan state 0:1 and GO_LEFT.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51968.
+
+On fist contact select Tarzan state 0:1 and GO_LEFT.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocate_badguy
+
+PROVEN: Activate the first inactive type-0 or type-9 enemy whose initial x is nonpositive, selected by which_enemy 1/2; position at the generator, face Rayman, and set caller-provided speeds.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51980.
+
+Activate the first inactive type-0 or type-9 enemy whose initial x is nonpositive, selected by which_enemy 1/2; position at the generator, face Rayman, and set caller-provided speeds.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_PTI_ESQUIVE
+
+PROVEN: Run the object command, then enter substate 15 and a facing-dependent dodge label for a nearby opposed fist; leave substate 16 for 17 when the threat goes away.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51a90.
+
+Run the object command, then enter substate 15 and a facing-dependent dodge label for a nearby opposed fist; leave substate 16 for 17 when the threat goes away.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPrisePoingCollision
+
+PROVEN: For an idle socket hit from the accepted screen side, select label 2 and persist the plugged-in/second-Joe-help flags and initial substate 2.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51bb0.
+
+For an idle socket hit from the accepted screen side, select label 2 and persist the plugged-in/second-Joe-help flags and initial substate 2.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_PETIT_COUTEAU_COMMAND
+
+PROVEN: Map hit-point values 1..4 to the two animation-frame values using the two health ranges.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51c08.
+
+Map hit-point values 1..4 to the two animation-frame values using the two health ranges.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPetitCouteauPoingCollision
+
+PROVEN: Decrement the small knife hit-point selector only at values 2 and 4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51c20.
+
+Decrement the small knife hit-point selector only at values 2 and 4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_TIRE_BOUCHON_COMMAND
+
+PROVEN: Run the object command then force both speeds to zero.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51c34.
+
+Run the object command then force both speeds to zero.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoOneUpPoingCollision
+
+PROVEN: When grabbing is enabled and Rayman is not in death mode 3, attach the one-up object to the fist and play sound 194.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51c4c.
+
+When grabbing is enabled and Rayman is not in death mode 3, attach the one-up object to the fist and play sound 194.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoOneUpRaymanCollision
+
+PROVEN: Spawn a nova, settle any pending one-up reward, start or immediately grant the next extra life, remove the pickup and record collection.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51c84.
+
+Spawn a nova, settle any pending one-up reward, start or immediately grant the next extra life, remove the pickup and record collection.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoMorningStarPoingCollision
+
+PROVEN: Only sprite 4 in substate 5 responds; select substate 9 or 6 from fist horizontal speed and facing, including a special zero-speed facing test.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51d10.
+
+Only sprite 4 in substate 5 responds; select substate 9 or 6 from fist horizontal speed and facing, including a special zero-speed facing test.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoGrapBonusRaymanCollision
+
+PROVEN: Spawn a nova, enable the grabbing ability and clear the pickup alive flag.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51d54.
+
+Spawn a nova, enable the grabbing ability and clear the pickup alive flag.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPoingPowerupRaymanCollision
+
+PROVEN: Apply gold/speed fist upgrades in the 1/3/5 and 8/10/12 substate families, enable fist ability, update the checkpoint fist substate and remove the pickup.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51db0.
+
+Apply gold/speed fist upgrades in the 1/3/5 and 8/10/12 substate families, enable fist ability, update the checkpoint fist substate and remove the pickup.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPowerupRaymanCollision
+
+PROVEN: Add pickup hit points to Rayman, clamp to status-bar maximum, spawn a nova, clear alive and play sound 8.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51ea0.
+
+Add pickup hit points to Rayman, clamp to status-bar maximum, spawn a nova, clear alive and play sound 8.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoSuperHelicoRaymanCollision
+
+PROVEN: Enable super helicopter, spawn a nova, clear pickup alive and play sound 213.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51ee4.
+
+Enable super helicopter, spawn a nova, clear pickup alive and play sound 213.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoGraineRaymanCollision
+
+PROVEN: Enable magic-seed ability, deactivate and kill the seed pickup, and play sound 10.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51f20.
+
+Enable magic-seed ability, deactivate and kill the seed pickup, and play sound 10.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoWizRaymanCollision
+
+PROVEN: Collect a Ting, update remaining/collected bonus counters or ordinary HUD count, begin perfect-bonus fade at zero remaining, convert each hundred to a life, and start pixel particles.
+
+Units: see parameter/result contracts. DOS layout/address: 1:51f50.
+
+Collect a Ting, update remaining/collected bonus counters or ordinary HUD count, begin perfect-bonus fade at zero remaining, convert each hundred to a life, and start pixel particles.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoJaugeUpRaymanCollision
+
+PROVEN: Settle a pending health-gauge reward and start its nova; grant maximum/current health 4 immediately unless deferred by the specified death modes.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52024.
+
+Settle a pending health-gauge reward and start its nova; grant maximum/current health 4 immediately unless deferred by the specified death modes.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoGeneratingDoorRaymanCollision
+
+PROVEN: Deactivate and kill the generating door, then release its linked monster group.
+
+Units: see parameter/result contracts. DOS layout/address: 1:520c4.
+
+Deactivate and kill the generating door, then release its linked monster group.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_REDUCTEUR
+
+PROVEN: Cycle the reducer hit-point cooldown down to below 1, then reload its initial hit-point value.
+
+Units: see parameter/result contracts. DOS layout/address: 1:520e4.
+
+Cycle the reducer hit-point cooldown down to below 1, then reload its initial hit-point value.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoReducteurRaymanCollision
+
+PROVEN: When a reduced-Rayman template exists and the reducer is ready, spawn a nova, stop it, decrement its cooldown and invoke the size transformation.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52104.
+
+When a reduced-Rayman template exists and the reducer is ready, spawn a nova, stop it, decrement its cooldown and invoke the size transformation.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoSignPostRaymanCollision
+
+PROVEN: Run level-exit handling and clear the life-from-Tings marker.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52140.
+
+Run level-exit handling and clear the life-from-Tings marker.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:TEST_SIGNPOST
+
+PROVEN: Stop or land Rayman into the exit animation, settle fist/pending rewards, freeze camera motion, and change level at animation completion; mounted and final-boss paths have separate exit rules.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52150.
+
+Stop or land Rayman into the exit animation, settle fist/pending rewards, freeze camera motion, and change level at animation completion; mounted and final-boss paths have separate exit rules.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPancarteRaymanCollision
+
+PROVEN: Leave a bonus by restoring saved Tings, or restore save2 and request world reload outside bonus while undoing a provisional Ting life when required.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5252c.
+
+Leave a bonus by restoring saved Tings, or restore save2 and request world reload outside bonus while undoing a provisional Ting life when required.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_MUSICIEN
+
+PROVEN: On completion of state 0:4, persist musician help once, allocate the super-helicopter pickup at the musician and request a vignette.
+
+Units: see parameter/result contracts. DOS layout/address: 1:525e8.
+
+On completion of state 0:4, persist musician help once, allocate the super-helicopter pickup at the musician and request a vignette.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoMusicienRaymanInZDD
+
+PROVEN: Change musician substate 1 to 5 when Rayman enters its detection zone.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52644.
+
+Change musician substate 1 to 5 when Rayman enters its detection zone.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_TEN_COMMAND
+
+PROVEN: Drive the generator from command/facing and state: alternate one/two enemies, emit a four-enemy fan, trigger its linked platform at timer 253, and run floor movement with timeout 254.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52658.
+
+Drive the generator from command/facing and state: alternate one/two enemies, emit a four-enemy fan, trigger its linked platform at timer 253, and run floor movement with timeout 254.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoGeneBadGuyPoingCollision
+
+PROVEN: For vulnerable sprite 0 force fist damage 1 and choose surviving/dead script labels 3/4; other contacts select label 2.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52854.
+
+For vulnerable sprite 0 force fist damage 1 and choose surviving/dead script labels 3/4; other contacts select label 2.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoGeneBadGuyRaymanZDD
+
+PROVEN: Set the generator link scratch to 1 on detection.
+
+Units: see parameter/result contracts. DOS layout/address: 1:528b8.
+
+Set the generator link scratch to 1 on detection.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoChasseurPoingCollision
+
+PROVEN: When eta vulnerability bit 1 is set, apply damage, choose hurt/dead substates 1/3, stop surviving motion, and set the facing command.
+
+Units: see parameter/result contracts. DOS layout/address: 1:528c0.
+
+When eta vulnerability bit 1 is set, apply damage, choose hurt/dead substates 1/3, stop surviving motion, and set the facing command.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoChasseurRaymanZDD
+
+PROVEN: For stationary substates 0/2 stop movement, enter substate 2, disable script reads and face Rayman through GO_LEFT/GO_RIGHT.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52928.
+
+For stationary substates 0/2 stop movement, enter substate 2, disable script reads and face Rayman through GO_LEFT/GO_RIGHT.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_CHASSEUR_COMMAND
+
+PROVEN: Run the command and leave substate 21 for idle after its final frame when Rayman is outside detection.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52988.
+
+Run the command and leave substate 21 for idle after its final frame when Rayman is outside detection.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoBadGuy23PoingCollision
+
+PROVEN: Accept sprite sentinel 255 or vulnerable eta; on death select 0:3 and label 2, otherwise select knockback script by fist direction, launch upward at -4 and play sound 28.
+
+Units: see parameter/result contracts. DOS layout/address: 1:529d8.
+
+Accept sprite sentinel 255 or vulnerable eta; on death select 0:3 and label 2, otherwise select knockback script by fist direction, launch upward at -4 and play sound 28.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoBadGuy23RaymanZDD
+
+PROVEN: Enter the facing-dependent approach script from ordinary idle/walk, or advance active approach substate 11 to 14.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52ad4.
+
+Enter the facing-dependent approach script from ordinary idle/walk, or advance active approach substate 11 to 14.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoBadGuy1PoingCollision
+
+PROVEN: Apply damage and facing-dependent script label; launch a surviving enemy at -4 or a dead one at -8, selecting alternate substates from eta bit 0x40.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52b54.
+
+Apply damage and facing-dependent script label; launch a surviving enemy at -4 or a dead one at -8, selecting alternate substates from eta bit 0x40.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoBadGuy1RaymanZDD
+
+PROVEN: React to Rayman tongue state 0:18 when oppositely facing in idle/walk, stopping motion and selecting label 7 or 8.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52c40.
+
+React to Rayman tongue state 0:18 when oppositely facing in idle/walk, stopping motion and selecting label 7 or 8.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_CCL_COMMAND
+
+PROVEN: Set facing for left/right commands, apply horizontal state speed and floor motion, and restore stored facing from hit_points in stationary substate 2.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52cd4.
+
+Set facing for left/right commands, apply horizontal state speed and floor motion, and restore stored facing from hit_points in stationary substate 2.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoCaisseClairePoingCollision
+
+PROVEN: Outside stationary substate 2, enter state 1:1, reverse facing and jump to label 2 or 3.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52d68.
+
+Outside stationary substate 2, enter state 1:1, reverse facing and jump to label 2 or 3.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoCaisseClaireRaymanZDD
+
+PROVEN: From state 0:0 enter 1:0 and select label 2/3 by facing.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52dc4.
+
+From state 0:0 enter 1:0 and select label 2/3 by facing.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoStalagRaymanZDD
+
+PROVEN: Select script label 99 only from substate 4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52e10.
+
+Select script label 99 only from substate 4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_ENSEIGNE_COMMAND
+
+PROVEN: Run the sign command and cycle labels 1/2 while the socket is plugged, otherwise force label 0.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52e2c.
+
+Run the sign command and cycle labels 1/2 while the socket is plugged, otherwise force label 0.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_JOE_COMMAND
+
+PROVEN: Lock the level-3 camera, time Joe vignette at 100 and level exit/firefly grant at 101, persist first help, and gate level-8 Joe visibility by socket state.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52ed0.
+
+Lock the level-3 camera, time Joe vignette at 100 and level exit/firefly grant at 101, persist first help, and gate level-8 Joe visibility by socket state.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoJoeRaymanZDD
+
+PROVEN: Start the first Joe explanation via label 2 and a one-shot global, or select label 4 from substate 2.
+
+Units: see parameter/result contracts. DOS layout/address: 1:52fcc.
+
+Start the first Joe explanation via label 2 and a one-shot global, or select label 4 from substate 2.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_BOUEE_JOE_COMMAND
+
+PROVEN: Place the buoy at sampled water height minus 43 plus its displacement; ease that displacement toward 13 when ridden and zero otherwise.
+
+Units: see parameter/result contracts. DOS layout/address: 1:53030.
+
+Place the buoy at sampled water height minus 43 plus its displacement; ease that displacement toward 13 when ridden and zero otherwise.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_PHOTOGRAPHE_CMD
+
+PROVEN: Run checkpoint animation/sound, latch the photo interval in timer, save state when it ends, and begin a photo only for stationary untiny Rayman in the small interaction rectangle.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5309c.
+
+Run checkpoint animation/sound, latch the photo interval in timer, save state when it ends, and begin a photo only for stationary untiny Rayman in the small interaction rectangle.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoAudioStartRaymanCollision
+
+PROVEN: Delegate contact to the audio-event manager.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5323c.
+
+Delegate contact to the audio-event manager.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_SLOPEY_PLAT_CMD
+
+PROVEN: Interpret hit_points as signed tilt: relax it toward zero on clock 10 when unoccupied, otherwise update from rider displacement on clock 8 and limit magnitude with the saved sign.
+
+Units: see parameter/result contracts. DOS layout/address: 1:53244.
+
+Interpret hit_points as signed tilt: relax it toward zero on clock 10 when unoccupied, otherwise update from rider displacement on clock 8 and limit magnitude with the saved sign.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## objupdate3.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:DO_PIRATE_POELLE
+
+PROVEN: Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.
+
+Units: see parameter/result contracts. DOS layout/address: 1:53340.
+
+Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_PIRATE_POELLE_POING_COLLISION
+
+PROVEN: Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.
+
+Units: see parameter/result contracts. DOS layout/address: 1:53610.
+
+Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:PIRATE_POELLE_REACT
+
+PROVEN: From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5374c.
+
+From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## objupdate4.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:DO_SPECIAL_PLATFORM
+
+STRONG: Update damaging, delayed-jump, knife, crumble, spring, on/off and boss platforms from rider attachment, object timers and world-specific state rules.
+
+Units: see parameter/result contracts. DOS layout/address: 1:53800.
+
+Update damaging, delayed-jump, knife, crumble, spring, on/off and boss platforms from rider attachment, object timers and world-specific state rules.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DoPlatformPoingCollision
+
+PROVEN: For the hit sprite select substate 25/26 from strictly positive/negative fist speed; zero speed leaves state unchanged.
+
+Units: see parameter/result contracts. DOS layout/address: 1:543bc.
+
+For the hit sprite select substate 25/26 from strictly positive/negative fist speed; zero speed leaves state unchanged.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## pcmain.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:InitData
+
+STRONG: Prepare planar drawing origins from low4 camera bits, source background plane/row offsets and a single-plane mask. Pointer-shaped values use32-bit arithmetic; source and destination layouts are separate.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:06f80.
+
+Prepare planar drawing origins from low4 camera bits, source background plane/row offsets and a single-plane mask. Pointer-shaped values use32-bit arithmetic; source and destination layouts are separate.
+
+### function:DO_GROS_MOTEUR_NORMAL
+
+PROVEN: Manage sound unless gele1, service replay, dispatch normal or frozen engine, update firefly, optionally update normal display map (parameter0 performs update).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:07084.
+
+Manage sound unless gele1, service replay, dispatch normal or frozen engine, update firefly, optionally update normal display map (parameter0 performs update).
+
+### function:DO_MAIN_LOOP_PC_NORMAL
+
+STRONG: Normal-mode gameplay frame loop while dead_time!=0,no new level/world,ModeDemo!=2. Present previous frame, poll input, simulate display_mode+1 ticks with transition checks, draw ordered layers/HUD, handle menu/pause/keys. Deadline catch-up may run one extra engine update and increment non--1 iframes_timer. Idle pause threshold21600; fade65 permits pause effect.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:070e0.
+
+Normal-mode gameplay frame loop while dead_time!=0,no new level/world,ModeDemo!=2. Present previous frame, poll input, simulate display_mode+1 ticks with transition checks, draw ordered layers/HUD, handle menu/pause/keys. Deadline catch-up may run one extra engine update and increment non--1 iframes_timer. Idle pause threshold21600; fade65 permits pause effect.
+
+### function:DO_GROS_MOTEUR_X
+
+PROVEN: Manage sound/replay and engine, update tile map unless frozen, compute background offset and planar InitData, then update ModeX scroll state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:076a8.
+
+Manage sound/replay and engine, update tile map unless frozen, compute background offset and planar InitData, then update ModeX scroll state.
+
+### function:DO_MAIN_LOOP_PC_X
+
+STRONG: ModeX gameplay frame loop with same transition sentinels and display_mode+1 simulation ticks. Planar draw/present, optional background reload after menu/vignette, pause threshold21600 and deadline catch-up. Preserve its distinct reload policy and draw order, not just normal-loop presentation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:077e0.
+
+ModeX gameplay frame loop with same transition sentinels and display_mode+1 simulation ticks. Planar draw/present, optional background reload after menu/vignette, pause threshold21600 and deadline catch-up. Preserve its distinct reload policy and draw order, not just normal-loop presentation.
+
+### function:init_arg
+
+PROVEN: Initialize save prefix to .\; uppercase argv in place. SAVE prefix requires '=' then copies suffix and appends backslash; FREQ70 sets Frequence70. Existing array limits are retained, no new safe capacity inferred.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:07cb8.
+
+Initialize save prefix to .\; uppercase argv in place. SAVE prefix requires '=' then copies suffix and appends backslash; FREQ70 sets Frequence70. Existing array limits are retained, no new safe capacity inferred.
+
+### function:PrintDosInfo
+
+PROVEN: Print manufacturer/version labels from detected DOS byte codes, including OS/2 special versions.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:07dd8.
+
+Print manufacturer/version labels from detected DOS byte codes, including OS/2 special versions.
+
+### function:InitMemoryVariable
+
+PROVEN: Select memory/features by available bytes:<2MiB FatalError,<3MiB low-memory ModeX/background2/limited sound pools,else full configuration. Print capabilities and poll40x100ms or Escape before allocating shared variables.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:07f00.
+
+Select memory/features by available bytes:<2MiB FatalError,<3MiB low-memory ModeX/background2/limited sound pools,else full configuration. Print capabilities and poll40x100ms or Escape before allocating shared variables.
+
+### function:AllocVariablesAutorisee
+
+PROVEN: Allocate16 special palettes and512 weather particles; fail through FatalError if missing. Initialize MessageProgram0,GameModeVideo=!ModeNormalAutorise,MenuCredits0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:08228.
+
+Allocate16 special palettes and512 weather particles; fail through FatalError if missing. Initialize MessageProgram0,GameModeVideo=!ModeNormalAutorise,MenuCredits0.
+
+### function:AfficheEntete
+
+STRONG: Initialize text mode and write title/copyright characters and attributes directly to0xB8000; version string identifiesUS1.21.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:08290.
+
+Initialize text mode and write title/copyright characters and attributes directly to0xB8000; version string identifiesUS1.21.
+
+### function:main
+
+STRONG: Delete c:\raytmp.tmp, print header, detect DOS/Windows, snapshot exception vectors, clear/debug-register state, parse arguments, save executable argv0, enter PcMain. Hardware operations are explicit platform effects.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:0836c.
+
+Delete c:\raytmp.tmp, print header, detect DOS/Windows, snapshot exception vectors, clear/debug-register state, parse arguments, save executable argv0, enter PcMain. Hardware operations are explicit platform effects.
+
+### function:PcMain
+
+STRONG: Perform CPU/BIOS-tick debug watch, CD/input/arena/logo/config initialization, then nested menu->world-map->world-load->level-load->death/retry gameplay loops. new_world/new_level/fin_du_jeu and signed lives control scope exit; finalize sound, resources and exit. Startup debug watch omission is an existing PORT_DECISION in PLATFORM_OPEN.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:08420.
+
+Perform CPU/BIOS-tick debug watch, CD/input/arena/logo/config initialization, then nested menu->world-map->world-load->level-load->death/retry gameplay loops. new_world/new_level/fin_du_jeu and signed lives control scope exit; finalize sound, resources and exit. Startup debug watch omission is an existing PORT_DECISION in PLATFORM_OPEN.
+
+### global:DosDetect
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa11.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+### global:HVerDos
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa16.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+### global:HVersionWindows
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa0e.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+### global:LVerDos
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa1b.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+### global:NVersionWindows
+
+PROVEN: DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+Units: detector codes. DOS layout/address: 2:3fa0f.
+
+DOS/Windows/CPU detector outputs displayed and used by startup capability branches;exact detector-specific domains retained in source.
+
+## pmama.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:pmamaFollowsShip
+
+PROVEN: Attach Pirate Mama to ship sprite 6 at (-165,-94), or stop if the ship ID is -1.
+
+Units: see observed computation and contract. DOS layout/address: 1:543f0.
+
+Attach Pirate Mama to ship sprite 6 at (-165,-94), or stop if the ship ID is -1.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:init_couteaux
+
+PROVEN: Register up to five type-190 knives, deactivate them and assign their table indices to param.
+
+Units: see observed computation and contract. DOS layout/address: 1:54440.
+
+Register up to five type-190 knives, deactivate them and assign their table indices to param.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:reset_couteaux
+
+PROVEN: Clear all five knife arrival flags.
+
+Units: see observed computation and contract. DOS layout/address: 1:54500.
+
+Clear all five knife arrival flags.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:check_couteaux
+
+PROVEN: Compare the number of arrived knives with the current sequence's required count.
+
+Units: see observed computation and contract. DOS layout/address: 1:5451c.
+
+Compare the number of arrived knives with the current sequence's required count.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:find_couteau
+
+PROVEN: Return the byte knife-table index from param, or 255 when it is at least five.
+
+Units: see observed computation and contract. DOS layout/address: 1:54568.
+
+Return the byte knife-table index from param, or 255 when it is at least five.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:x_pos
+
+PROVEN: Compute a knife slot's horizontal staging coordinate, adding 80 for Mama's flipped orientation.
+
+Units: see observed computation and contract. DOS layout/address: 1:54574.
+
+Compute a knife slot's horizontal staging coordinate, adding 80 for Mama's flipped orientation.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:y_pos
+
+PROVEN: Return staging y=44 or 44+16*row according to the second argument.
+
+Units: see observed computation and contract. DOS layout/address: 1:545cc.
+
+Return staging y=44 or 44+16*row according to the second argument.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:y_floor
+
+STRONG: Scan downward by 16 pixels until a solid tile, then use the tile's floor profile.
+
+Units: see observed computation and contract. DOS layout/address: 1:545e0.
+
+Scan downward by 16 pixels until a solid tile, then use the tile's floor profile.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:init_move_couteau
+
+STRONG: Set a knife's target coordinates and per-knife delays for the current attack pattern.
+
+Units: see observed computation and contract. DOS layout/address: 1:54650.
+
+Set a knife's target coordinates and per-knife delays for the current attack pattern.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:init_lance_couteau
+
+STRONG: Activate the selected knife group with attack-specific staging coordinates and states.
+
+Units: see observed computation and contract. DOS layout/address: 1:547cc.
+
+Activate the selected knife group with attack-specific staging coordinates and states.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:couteau_frame
+
+PROVEN: Quantize a velocity vector to the knife's directional animation frame.
+
+Units: see observed computation and contract. DOS layout/address: 1:54a80.
+
+Quantize a velocity vector to the knife's directional animation frame.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:update_couteau
+
+PROVEN: Update a knife's animation frame from its velocity.
+
+Units: see observed computation and contract. DOS layout/address: 1:54b14.
+
+Update a knife's animation frame from its velocity.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:get_cou_zdc
+
+PROVEN: Return an orientation-dependent knife collision rectangle.
+
+Units: see observed computation and contract. DOS layout/address: 1:54b70.
+
+Return an orientation-dependent knife collision rectangle.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:pma_attaque_suivante
+
+PROVEN: Advance the two-action/four-group knife sequence, reduce delays to lower bounds and deactivate knives.
+
+Units: see observed computation and contract. DOS layout/address: 1:54ea4.
+
+Advance the two-action/four-group knife sequence, reduce delays to lower bounds and deactivate knives.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:convertspeed
+
+PROVEN: Convert a signed speed to sixteenths using the original 16-bit shift helper.
+
+Units: see observed computation and contract. DOS layout/address: 1:54ff8.
+
+Convert a signed speed to sixteenths using the original 16-bit shift helper.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:lance_couteau_parabolique
+
+PROVEN: Initialize and update the knife's parabolic trajectory toward its table target.
+
+Units: see observed computation and contract. DOS layout/address: 1:55000.
+
+Initialize and update the knife's parabolic trajectory toward its table target.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:lance_couteau_droit
+
+PROVEN: Move a knife directly to its staging target and synchronize the group on arrival.
+
+Units: see observed computation and contract. DOS layout/address: 1:55120.
+
+Move a knife directly to its staging target and synchronize the group on arrival.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:retour_couteau
+
+STRONG: Return knives in table order after their countdowns, synchronizing the group when all arrive.
+
+Units: see observed computation and contract. DOS layout/address: 1:552ec.
+
+Return knives in table order after their countdowns, synchronizing the group when all arrive.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:lance_couteau_lineaire
+
+STRONG: Run the multi-stage linear knife attack, delay, flicker and velocity restoration logic.
+
+Units: see observed computation and contract. DOS layout/address: 1:554f8.
+
+Run the multi-stage linear knife attack, delay, flicker and velocity restoration logic.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:DO_COU_COMMAND
+
+PROVEN: Dispatch knife motion by state and pma_phase, including landing preparation.
+
+Units: see observed computation and contract. DOS layout/address: 1:55b10.
+
+Dispatch knife motion by state and pma_phase, including landing preparation.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:calc_pma_dir
+
+PROVEN: Face Pirate Mama toward Rayman's horizontal center, keeping direction at zero separation.
+
+Units: see observed computation and contract. DOS layout/address: 1:55d00.
+
+Face Pirate Mama toward Rayman's horizontal center, keeping direction at zero separation.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:DO_PMA_COMMAND
+
+PROVEN: Run Pirate Mama's ship, knife, landing, hit and completion phases.
+
+Units: see observed computation and contract. DOS layout/address: 1:55d90.
+
+Run Pirate Mama's ship, knife, landing, hit and completion phases.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:init_mama_pirate
+
+PROVEN: Initialize Pirate Mama with six HP, group zero, delays 150/70 and state 2:6.
+
+Units: see observed computation and contract. DOS layout/address: 1:56170.
+
+Initialize Pirate Mama with six HP, group zero, delays 150/70 and state 2:6.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:PMA_SORT_DU_CANON
+
+PROVEN: Initialize Pirate Mama after the cannon and lock both scroll axes to the current camera.
+
+Units: see observed computation and contract. DOS layout/address: 1:56218.
+
+Initialize Pirate Mama after the cannon and lock both scroll axes to the current camera.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:DO_PMA_POING_COLLISION
+
+PROVEN: On sprite-5 contact in vulnerable state 2:3, enter 2:9 and start vertical knockback.
+
+Units: see observed computation and contract. DOS layout/address: 1:56244.
+
+On sprite-5 contact in vulnerable state 2:3, enter 2:9 and start vertical knockback.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:pma_get_eject_sens
+
+PROVEN: Set Rayman's iframes to 40 and return eject direction -1.
+
+Units: see observed computation and contract. DOS layout/address: 1:5628c.
+
+Set Rayman's iframes to 40 and return eject direction -1.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:DO_COU_ATTER
+
+PROVEN: Handle knife landings, group synchronization and state-2:14 bounce animation speed.
+
+Units: see observed computation and contract. DOS layout/address: 1:562a0.
+
+Handle knife landings, group synchronization and state-2:14 bounce animation speed.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### function:DO_PMA_ATTER
+
+PROVEN: Handle Pirate Mama landing states 2:7 and 2:5 with shake/smoke and knife-phase progression.
+
+Units: see observed computation and contract. DOS layout/address: 1:563b0.
+
+Handle Pirate Mama landing states 2:7 and 2:5 with shake/smoke and knife-phase progression.
+
+Five type-190 knives use 20-byte table records and obj.param as a table index (255 invalid). active means target-arrival synchronization, not obj.is_active. Speeds use sixteenths; exact shifts/narrowing matter. Four groups each contain two attacks; group wrap reduces pma_tempo/cou_tempo by ten to minima 100/50. Initial HP=6; delays=150/70. Knife target x/y are camera-relative in the motion readers.
+
+### global:CouteauxInfos
+
+STRONG: Five 20-byte knife coordination records addressed by type-190 objects' param values.
+
+Units: see observed computation and contract. DOS layout/address: 2:54dac.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Five 20-byte knife coordination records addressed by type-190 objects' param values.
+
+### global:cou_place
+
+STRONG: Rotating staging-pattern index, wrapped at five for attack types one/two.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e18.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Rotating staging-pattern index, wrapped at five for attack types one/two.
+
+### global:cou_tempo
+
+STRONG: Knife launch delay, initialized to seventy and reduced by ten on group wrap with minimum fifty.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e10.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Knife launch delay, initialized to seventy and reduced by ten on group wrap with minimum fifty.
+
+### global:place_sequence
+
+STRONG: Five-entry knife staging split table indexed by cou_place.
+
+Units: see observed computation and contract. DOS layout/address: 2:728a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Five-entry knife staging split table indexed by cou_place.
+
+### global:pma_attaque
+
+STRONG: Entry index within a two-action Pirate Mama group.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e17.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Entry index within a two-action Pirate Mama group.
+
+### global:pma_couteaux
+
+STRONG: Required knife count indexed by Pirate Mama attack type.
+
+Units: see observed computation and contract. DOS layout/address: 2:727c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Required knife count indexed by Pirate Mama attack type.
+
+### global:pma_groupe
+
+STRONG: Pirate Mama attack group cursor, wrapped at four.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e19.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Pirate Mama attack group cursor, wrapped at four.
+
+### global:pma_nb_couteau
+
+STRONG: Number of knives selected from pma_couteaux for the current attack.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e15.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Number of knives selected from pma_couteaux for the current attack.
+
+### global:pma_phase
+
+STRONG: Numeric knife/Mama coordination phase; individual arrival/landing/exit writers select values 0..4.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e16.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Numeric knife/Mama coordination phase; individual arrival/landing/exit writers select values 0..4.
+
+### global:pma_sequence
+
+STRONG: Four groups of two Pirate Mama attack selectors.
+
+Units: see observed computation and contract. DOS layout/address: 2:7282.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Four groups of two Pirate Mama attack selectors.
+
+### global:pma_tempo
+
+STRONG: Pirate Mama between-attack delay, initialized to 150 and reduced to minimum 100.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e12.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Pirate Mama between-attack delay, initialized to 150 and reduced to minimum 100.
+
+### global:pma_touched
+
+STRONG: Latch set by the Pirate Mama hit sequence and cleared on advancing the knife attack.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e14.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Latch set by the Pirate Mama hit sequence and cleared on advancing the knife attack.
+
+### global:pma_type_attaque
+
+STRONG: Current Pirate Mama knife pattern selected from pma_sequence.
+
+Units: see observed computation and contract. DOS layout/address: 2:54e1a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current Pirate Mama knife pattern selected from pma_sequence.
+
+## poing.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:fist_U_turn
+
+PROVEN: Convert outbound fist substates 1/3/5/8/10/12 to their paired return substates; optionally force animation frame 7.
+
+Units: see parameter/result contracts. DOS layout/address: 1:566a0.
+
+Convert outbound fist substates 1/3/5/8/10/12 to their paired return substates; optionally force animation frame 7.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:CALC_FIST_POS
+
+PROVEN: Convert Q4 fist y to screen pixels and set fist screen x with the Normal +8 bias.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56700.
+
+Convert Q4 fist y to screen pixels and set fist screen x with the Normal +8 bias.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:RAY_THROW_FIST
+
+PROVEN: Select Rayman throw state, apply charged recoil, activate/reset fist, derive damage and capped speed from upgrade/charge, initialize its outbound budget/decrement and Q4 vertical position.
+
+Units: see parameter/result contracts. DOS layout/address: 1:5676c.
+
+Select Rayman throw state, apply charged recoil, activate/reset fist, derive damage and capped speed from upgrade/charge, initialize its outbound budget/decrement and Q4 vertical position.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:RAY_PREPARE_FIST
+
+PROVEN: When eta permits throwing, either launch an airborne charge-32 fist with matched animation timing or enter ground preparation with charge 5 and charging flag set.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56af0.
+
+When eta permits throwing, either launch an airborne charge-32 fist with matched animation timing or enter ground preparation with charge 5 and charging flag set.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:RAY_GROW_FIST
+
+PROVEN: Increment charge and clamp at 63.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56bd0.
+
+Increment charge and clamp at 63.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:fin_poing_follow
+
+PROVEN: Release a carried object, zero its speeds and either place it at Rayman when forced/fist dead or restore its initial position.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56bf4.
+
+Release a carried object, zero its speeds and either place it at Rayman when forced/fist dead or restore its initial position.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:POING_FOLLOW
+
+PROVEN: Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56ca0.
+
+Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:alter_fist_speed
+
+PROVEN: Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56cec.
+
+Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:switch_off_fist
+
+PROVEN: Clear fist activity/collision/return flags, reset charge 5 and initial substate, kill/deactivate the object and release any carried object.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56d54.
+
+Clear fist activity/collision/return flags, reset charge 5 and initial substate, kill/deactivate the object and release any carried object.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_POING
+
+PROVEN: Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56da4.
+
+Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocatePoingBoum
+
+PROVEN: Activate an inactive type-11 fist-impact animation at the fist sprite edge/vertical center, resetting animation and screen position.
+
+Units: see parameter/result contracts. DOS layout/address: 1:56ff8.
+
+Activate an inactive type-11 fist-impact animation at the fist sprite edge/vertical center, resetting animation and screen position.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## poisson.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_POISSON_VERT_CMD
+
+PROVEN: Run green-fish commands and turn at permitted direction-change tiles, then test collisions.
+
+Units: see observed computation and contract. DOS layout/address: 1:57100.
+
+Run green-fish commands and turn at permitted direction-change tiles, then test collisions.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DO_POISSON_BLEU_CMD
+
+PROVEN: Run blue-fish turning, jump return and terminal sinking animation.
+
+Units: see observed computation and contract. DOS layout/address: 1:571f8.
+
+Run blue-fish turning, jump return and terminal sinking animation.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DoPoissonBleuPoingCollision
+
+PROVEN: Send a blue fish into script label 12 with zero HP/speed unless already in state 2:18.
+
+Units: see observed computation and contract. DOS layout/address: 1:57380.
+
+Send a blue fish into script label 12 with zero HP/speed unless already in state 2:18.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:can_free_fish
+
+PROVEN: Allow a new type-10 fish only when none with the same initial x is active with timer<100.
+
+Units: see observed computation and contract. DOS layout/address: 1:573b4.
+
+Allow a new type-10 fish only when none with the same initial x is active with timer<100.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DESACTIVE_FISH_COLLIS
+
+PROVEN: Deactivate up to two linked objects whose y equals the hit fish's y.
+
+Units: see observed computation and contract. DOS layout/address: 1:57410.
+
+Deactivate up to two linked objects whose y equals the hit fish's y.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DO_PYRANHA
+
+PROVEN: Recycle type-10 fish sharing initial x after the delay or screen/map exit.
+
+Units: see observed computation and contract. DOS layout/address: 1:574c8.
+
+Recycle type-10 fish sharing initial x after the delay or screen/map exit.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DoFishPoingCollision
+
+PROVEN: Apply fish fist damage, select hit/terminal state and disable linked collision objects.
+
+Units: see observed computation and contract. DOS layout/address: 1:576ec.
+
+Apply fish fist damage, select hit/terminal state and disable linked collision objects.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+### function:DoPoissonBleuRaymanZDD
+
+PROVEN: Launch blue-fish state 2:16 toward Rayman with speed +/-3,-5 when its facing gate passes.
+
+Units: see observed computation and contract. DOS layout/address: 1:5773c.
+
+Launch blue-fish state 2:16 toward Rayman with speed +/-3,-5 when its facing gate passes.
+
+Type-10 recycling is grouped by init_x. A living peer with timer<100 blocks another spawn; timer 100 or leaving the screen can trigger reuse. Blue-fish attack begins at 2:16 with (+/-3,-5); terminal animation 2:18 changes to sinking speed 5 before deactivation. Up to two link_init successors can be disabled on fist contact.
+
+## rand.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:myRand
+
+PROVEN: Increment RandomIndex before reading; wrap at256, then return signed RandArray[index]%(max+1). Range0..max requires nonnegative table values and max>=0. DOS does not accumulate a PS1 random sum.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bf60.
+
+Increment RandomIndex before reading; wrap at256, then return signed RandArray[index]%(max+1). Range0..max requires nonnegative table values and max>=0. DOS does not accumulate a PS1 random sum.
+
+### function:MakeMyRand
+
+PROVEN: If requested call srand(time(NULL)); fill256 signed16 entries with rand()&0xEFFF and reset index0. Every call regenerates the entire table even when not reseeding.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5bf98.
+
+If requested call srand(time(NULL)); fill256 signed16 entries with rand()&0xEFFF and reset index0. Every call regenerates the entire table even when not reseeding.
+
+### global:RandArray
+
+PROVEN: 256 signed16 random entries regenerated by MakeMyRand as rand()&0xEFFF. DOS samples table modulo max+1;no PS1 running sum.
+
+Units: random integers. DOS layout/address: 2:7344.
+
+256 signed16 random entries regenerated by MakeMyRand as rand()&0xEFFF. DOS samples table modulo max+1;no PS1 running sum.
 
 ## ray.json
 
@@ -6978,6 +17366,2020 @@ Units: see parameter/result and side-effect contract. DOS layout/address: 1:6133
 
 Death check precedes tile hazards/input. Hurt2:8 and cliff2:31 bypass ordinary inputs. Scripted main3 has separate handling. Fist charge grows in sub12 and release throws. Swing skips DO_ANIM. Collisions follow motion; stackRay runs even when death check fails.
 
+## ray_pc.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:INIT_PC
+
+PROVEN: Allocate logo temporary arena of0x2EE00 bytes.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61920.
+
+Allocate logo temporary arena of0x2EE00 bytes.
+
+### function:FIN_PC
+
+PROVEN: Free the logo temporary arena.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61934.
+
+Free the logo temporary arena.
+
+### function:updateLogo
+
+PROVEN: Present PLAN2BIT at320x200, fade in, then wait two signed16 countdown phases. Count -1 skips a phase; first phase cannot be skipped by input, second accepts Space/button0/button1. Fade out afterward.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61940.
+
+Present PLAN2BIT at320x200, fade in, then wait two signed16 countdown phases. Count -1 skips a phase; first phase cannot be skipped by input, second accepts Space/button0/button1. Fade out afterward.
+
+### function:LOAD_SCREEN
+
+PROVEN: Load logo/vignette resource29 into main_mem_tmp.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61a70.
+
+Load logo/vignette resource29 into main_mem_tmp.
+
+### function:sub_71A84
+
+PROVEN: Load vignette resource31 into main_mem_tmp; no external historical purpose name is established.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61a84.
+
+Load vignette resource31 into main_mem_tmp; no external historical purpose name is established.
+
+### function:sub_71A98
+
+PROVEN: Swap PLAN2BIT/PLAN3BIT pointers, their byte lengths, and the768-byte rvb_pres/rvb_plan3 palettes.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61a98.
+
+Swap PLAN2BIT/PLAN3BIT pointers, their byte lengths, and the768-byte rvb_pres/rvb_plan3 palettes.
+
+### function:DO_UBI_LOGO
+
+PROVEN: Allocate temporary arena, reset audio clock/palette, load resource29, initialize fade and logo music, run updateLogo(60,-1,8), free arena, stop CD.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:61b34.
+
+Allocate temporary arena, reset audio clock/palette, load resource29, initialize fade and logo music, run updateLogo(60,-1,8), free arena, stop CD.
+
+## save.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:initGameSave
+
+PROVEN: Clear the checkpoint-valid flag; this does not clear the serialized progress bitmap.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:63b80.
+
+Clear the checkpoint-valid flag; this does not clear the serialized progress bitmap.
+
+### function:doneGameSave
+
+PROVEN: Invalidate the checkpoint by clearing is_just_saved.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:63b80.
+
+Invalidate the checkpoint by clearing is_just_saved.
+
+### function:saveGameState
+
+STRONG: Capture Rayman, camera, collision samples, wind, weather counts, fist state and link table. Save an optional save-object ID (-1 if absent). For object types 141/164/179/242 capture alive bits at object_index>>5, mask 1<<(index&31). Mark checkpoint valid last, then capture dead_time and palette.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:63b8c.
+
+Capture Rayman, camera, collision samples, wind, weather counts, fist state and link table. Save an optional save-object ID (-1 if absent). For object types 141/164/179/242 capture alive bits at object_index>>5, mask 1<<(index&31). Mark checkpoint valid last, then capture dead_time and palette.
+
+### function:restoreGameState
+
+STRONG: Only restore a valid checkpoint. Undo tiny Rayman, restore positions/state and optional save object; reverse and fist powers restore only in world6 level3. Only save1 restores links and degrades fist states 5/12->3, 1/3/8/10->1. Zero speeds/scroll, set iframes_timer=-1, alive/active=1. Kill types3/13/15/59/36/66/62/99; restore alive bits for141/164/179/242 and set field_1C=1 on179/242. Reapply saved palette with current_pal_id first set saved+1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:63dc4.
+
+Only restore a valid checkpoint. Undo tiny Rayman, restore positions/state and optional save object; reverse and fist powers restore only in world6 level3. Only save1 restores links and degrades fist states 5/12->3, 1/3/8/10->1. Zero speeds/scroll, set iframes_timer=-1, alive/active=1. Kill types3/13/15/59/36/66/62/99; restore alive bits for141/164/179/242 and set field_1C=1 on179/242. Reapply saved palette with current_pal_id first set saved+1.
+
+### function:get_offset_in_safe_zone
+
+PROVEN: Return signed16 byte offset:32 bytes for each preceding level in prior worlds and current world, then arithmetic event_index>>3. World/level numbering starts1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:641c8.
+
+Return signed16 byte offset:32 bytes for each preceding level in prior worlds and current world, then arithmetic event_index>>3. World/level numbering starts1.
+
+### function:reset_save_zone_level
+
+PROVEN: Clear exactly32 bytes of progress bits for the current level.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:64250.
+
+Clear exactly32 bytes of progress bits for the current level.
+
+### function:take_bonus
+
+PROVEN: Set the current event bit with MSB-first mask0x80>>(event_index&7).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:64270.
+
+Set the current event bit with MSB-first mask0x80>>(event_index&7).
+
+### function:bonus_taken
+
+PROVEN: Return the masked current event bit; result is zero or its bit mask, not normalized1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:642a8.
+
+Return the masked current event bit; result is zero or its bit mask, not normalized1.
+
+### function:storeWorldInfoAcces
+
+PROVEN: Pack unlocked/unlocking/cage-count fields from each of24 world-map records into the24-byte save view; unrelated packed bits are retained.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:642e0.
+
+Pack unlocked/unlocking/cage-count fields from each of24 world-map records into the24-byte save view; unrelated packed bits are retained.
+
+### function:retrieveWorldInfoAccess
+
+PROVEN: Restore only unlocked/unlocking/cage-count fields from24 packed save bytes to world-map records.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6435c.
+
+Restore only unlocked/unlocking/cage-count fields from24 packed save bytes to world-map records.
+
+### function:file_size
+
+PROVEN: Open in text read mode, seek end and return ftell; failed open returns0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:643c8.
+
+Open in text read mode, seek end and return ftell; failed open returns0.
+
+### function:SaveGameOnDisk
+
+PROVEN: Serialize0xA7A bytes to a temporary file then differential-encode RAYMAN<slot>.SAV under demo_video_mem. Returns0 success/1 error. Layout and cleanup quirks are recorded in PORT_NOTES; this is not a dump of save_state_t.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:64400.
+
+Serialize0xA7A bytes to a temporary file then differential-encode RAYMAN<slot>.SAV under demo_video_mem. Returns0 success/1 error. Layout and cleanup quirks are recorded in PORT_NOTES; this is not a dump of save_state_t.
+
+### function:LoadGameOnDisk
+
+PROVEN: Decode slot file, require exactly0xA7A bytes, restore progress/HUD/powers/fist/world selection/boss flags, expand world-map access and clear saved camera pair. Returns0 success/1 error; writes over the temporary file before unlinking it.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:646d0.
+
+Decode slot file, require exactly0xA7A bytes, restore progress/HUD/powers/fist/world selection/boss flags, expand world-map access and clear saved camera pair. Returns0 success/1 error; writes over the temporary file before unlinking it.
+
+### function:LoadInfoGame
+
+PROVEN: Decode and length-check a slot then read its prefix into shared gameplay globals. Derive the selected slot preview (continues, sum24 cage counts, lives, tings). This has side effects beyond LoadInfoRay; JeuCracker clears the name.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:649c8.
+
+Decode and length-check a slot then read its prefix into shared gameplay globals. Derive the selected slot preview (continues, sum24 cage counts, lives, tings). This has side effects beyond LoadInfoRay; JeuCracker clears the name.
+
+### function:SaveOptionsOnDisk
+
+PROVEN: Write132-byte RAYMAN.CFG field stream. Narrow control/config fields to the specified1/2/4-byte widths; clamp saved Frequence to selector0/1/2. Returns1 success/0 failure, unlike save-game APIs.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:64cc8.
+
+Write132-byte RAYMAN.CFG field stream. Narrow control/config fields to the specified1/2/4-byte widths; clamp saved Frequence to selector0/1/2. Returns1 success/0 failure, unlike save-game APIs.
+
+### function:LoadOptionsOnDisk
+
+PROVEN: Require132-byte CFG and restore fields sequentially. Frequence==70 consumes its saved byte into fixon, then reads fixon again. Low-byte writes into wider SizeScreen/fixon/notbut retain other bytes. Returns1 success/0 failure.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:65268.
+
+Require132-byte CFG and restore fields sequentially. Frequence==70 consumes its saved byte into fixon, then reads fixon again. Low-byte writes into wider SizeScreen/fixon/notbut retain other bytes. Returns1 success/0 failure.
+
+### global:NumCard
+
+PROVEN: Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+Units: driver configuration. DOS layout/address: 2:3fa25.
+
+Persisted sound-driver configuration fields;Port/Irq/Dma/Param/DeviceID are32-bit CFG words,NumCard one byte.
+
+## savecodec.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:sub_21840
+
+PROVEN: Return sav_error_status; normal stream termination uses the separate sav_codec_error flag.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21840.
+
+Return sav_error_status; normal stream termination uses the separate sav_codec_error flag.
+
+### function:reverse_save_byte
+
+PROVEN: Reverse the order of all8 bits of one byte.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21848.
+
+Reverse the order of all8 bits of one byte.
+
+### function:read_save_header_byte
+
+PROVEN: Read one byte at current position and XOR0x53; the read count is not checked.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21884.
+
+Read one byte at current position and XOR0x53; the read count is not checked.
+
+### function:write_save_header_byte
+
+PROVEN: Seek absolute offset0 and write one byte XOR0x53.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:218ac.
+
+Seek absolute offset0 and write one byte XOR0x53.
+
+### function:read_save_header_size
+
+PROVEN: Read a little-endian32-bit word and XOR0x54555657.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:218e0.
+
+Read a little-endian32-bit word and XOR0x54555657.
+
+### function:write_save_header_size
+
+PROVEN: Write the32-bit length XOR0x54555657 at current stream position.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21910.
+
+Write the32-bit length XOR0x54555657 at current stream position.
+
+### function:read_save_raw_byte
+
+PROVEN: Read getc; increment raw count only when not EOF(-1).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:2193c.
+
+Read getc; increment raw count only when not EOF(-1).
+
+### function:write_save_encoded_byte
+
+PROVEN: XOR the byte with bitreverse(key++) XOR0xB9; add plaintext byte to modulo256 checksum, increment encoded count, and putc. Reset key is0x57.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21984.
+
+XOR the byte with bitreverse(key++) XOR0xB9; add plaintext byte to modulo256 checksum, increment encoded count, and putc. Reset key is0x57.
+
+### function:read_save_encoded_byte
+
+PROVEN: Read getc; unless EOF, XOR with bitreverse(key++) XOR0xB9, subtract decoded byte from modulo256 checksum and increment encoded count.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21a10.
+
+Read getc; unless EOF, XOR with bitreverse(key++) XOR0xB9, subtract decoded byte from modulo256 checksum and increment encoded count.
+
+### function:write_save_raw_byte
+
+PROVEN: Decrement remaining raw length before putc; negative remainder sets sav_codec_error. This does not itself set sav_error_status.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21a8c.
+
+Decrement remaining raw length before putc; negative remainder sets sav_codec_error. This does not itself set sav_error_status.
+
+### function:reset_save_codec
+
+PROVEN: Initialize dictionary row r to eight copies of byte r for256 rows, reset counts/loop flag, set byte key0x57. Does not clear sav_error_status or checksum.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21afc.
+
+Initialize dictionary row r to eight copies of byte r for256 rows, reset counts/loop flag, set byte key0x57. Does not clear sav_error_status or checksum.
+
+### function:sub_21b48
+
+PROVEN: Differential-encode8-byte blocks. Choose lowest dictionary row with maximal equal positions; emit row, LSB-first change mask, changed bytes. Full blocks update that row; short final block emits its length after changes. Rewrite checksum/decoded length in5-byte header; all payload bytes use rolling XOR.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21b48.
+
+Differential-encode8-byte blocks. Choose lowest dictionary row with maximal equal positions; emit row, LSB-first change mask, changed bytes. Full blocks update that row; short final block emits its length after changes. Rewrite checksum/decoded length in5-byte header; all payload bytes use rolling XOR.
+
+### function:sub_21d28
+
+PROVEN: Decode rolling-XOR dictionary stream with one block delayed. EOF after row index distinguishes full pending block from short-block length marker. Validate remaining raw length==0 and checksum==0; report errors through sav_error_status.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21d28.
+
+Decode rolling-XOR dictionary stream with one block delayed. EOF after row index distinguishes full pending block from short-block length marker. Validate remaining raw length==0 and checksum==0; report errors through sav_error_status.
+
+### function:report_save_codec_error
+
+PROVEN: Print fatal-error prefix and variadic message; set sav_error_status=1 without terminating the process.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:21ec0.
+
+Print fatal-error prefix and variadic message; set sav_error_status=1 without terminating the process.
+
+### global:sav_big_window
+
+PROVEN: 256 dictionary rows of8 bytes;reset row r to eight copies r. Encoder best-match ties favor lowest row.
+
+Units: byte dictionary. DOS layout/address: 2:4ef04.
+
+256 dictionary rows of8 bytes;reset row r to eight copies r. Encoder best-match ties favor lowest row.
+
+### global:sav_checksum
+
+PROVEN: Modulo256 sum of decoded payload during encode;decode starts stored checksum and subtracts decoded payload,success residual0.
+
+Units: byte modulo256. DOS layout/address: 2:4f70c.
+
+Modulo256 sum of decoded payload during encode;decode starts stored checksum and subtracts decoded payload,success residual0.
+
+### global:sav_codec_error
+
+PROVEN: Codec loop-stop flag;normal EOF/short-block completion also sets1. Not equivalent to externally reported corruption.
+
+Units: boolean. DOS layout/address: 2:6320.
+
+Codec loop-stop flag;normal EOF/short-block completion also sets1. Not equivalent to externally reported corruption.
+
+### global:sav_codec_key
+
+PROVEN: Rolling XOR key byte;reset0x57,postincrement per encoded/decoded payload byte and wrap256.
+
+Units: byte modulo256. DOS layout/address: 2:6321.
+
+Rolling XOR key byte;reset0x57,postincrement per encoded/decoded payload byte and wrap256.
+
+### global:sav_codec_method
+
+PROVEN: Initialized pointer to literal Differential method. No in-scope code consumer establishes any algorithm-selection role.
+
+Units: string pointer. DOS layout/address: 2:631c.
+
+Initialized pointer to literal Differential method. No in-scope code consumer establishes any algorithm-selection role.
+
+### global:sav_encoded_count
+
+PROVEN: Number of encoded payload bytes read/written,excluding5-byte header.
+
+Units: signed32 bytes. DOS layout/address: 2:6324.
+
+Number of encoded payload bytes read/written,excluding5-byte header.
+
+### global:sav_error_status
+
+PROVEN: Codec public error flag:reset0 at encode/decode entry,set1 only by report_save_codec_error. Distinct from normal EOF loop termination.
+
+Units: boolean. DOS layout/address: 2:6318.
+
+Codec public error flag:reset0 at encode/decode entry,set1 only by report_save_codec_error. Distinct from normal EOF loop termination.
+
+### global:sav_window
+
+PROVEN: Eight-byte pending codec block;decoder emits it only after reading next row/EOF/short marker.
+
+Units: bytes. DOS layout/address: 2:4f704.
+
+Eight-byte pending codec block;decoder emits it only after reading next row/EOF/short marker.
+
+## saxo.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:saxoCanAttak
+
+PROVEN: Lock the boss camera when inside its bounds and return whether the encounter can proceed.
+
+Units: see observed computation and contract. DOS layout/address: 1:65840.
+
+Lock the boss camera when inside its bounds and return whether the encounter can proceed.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:INIT_SAXO
+
+PROVEN: Place Mr Sax on the floor and reset attack/phase scratch, restoring saved HP for type 74.
+
+Units: see observed computation and contract. DOS layout/address: 1:65928.
+
+Place Mr Sax on the floor and reset attack/phase scratch, restoring saved HP for type 74.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:allocateNote2
+
+PROVEN: Spawn a type-92 child note on one side when the parent's split count is positive.
+
+Units: see observed computation and contract. DOS layout/address: 1:659b4.
+
+Spawn a type-92 child note on one side when the parent's split count is positive.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_EXPLOSE_NOTE2
+
+PROVEN: Stop a type-92 note, enter 0:1 and initialize its splitting count/delay to 3/10.
+
+Units: see observed computation and contract. DOS layout/address: 1:65ac0.
+
+Stop a type-92 note, enter 0:1 and initialize its splitting count/delay to 3/10.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_NOTE_CMD
+
+PROVEN: Update type-182 shaking notes, type-92 splitting timers and type-93 contact with Mr Sax's note box.
+
+Units: see observed computation and contract. DOS layout/address: 1:65b0c.
+
+Update type-182 shaking notes, type-92 splitting timers and type-93 contact with Mr Sax's note box.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:Cree_Eclat_Note
+
+PROVEN: Activate a type-102 note fragment with one of eight indexed velocity patterns.
+
+Units: see observed computation and contract. DOS layout/address: 1:65d20.
+
+Activate a type-102 note fragment with one of eight indexed velocity patterns.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_EXPLOSE_NOTE1
+
+PROVEN: Replace a type-91 note by eight fragment launches and deactivate the source.
+
+Units: see observed computation and contract. DOS layout/address: 1:65e88.
+
+Replace a type-91 note by eight fragment launches and deactivate the source.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:BonneNote
+
+PROVEN: Replace a struck note with type 93, selecting a thrown or bouncing trajectory.
+
+Units: see observed computation and contract. DOS layout/address: 1:65f98.
+
+Replace a struck note with type 93, selecting a thrown or bouncing trajectory.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_NOTE_TOUCHEE
+
+PROVEN: Dispatch note fist collisions by numeric object type.
+
+Units: see observed computation and contract. DOS layout/address: 1:660cc.
+
+Dispatch note fist collisions by numeric object type.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_NOTE_REBOND
+
+PROVEN: Bounce ordinary/good notes or initialize type-92 splitting on floor contact.
+
+Units: see observed computation and contract. DOS layout/address: 1:66124.
+
+Bounce ordinary/good notes or initialize type-92 splitting on floor contact.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:allocateNote
+
+PROVEN: Spawn the selected note using atak[NextNote], clipping NextNote to six.
+
+Units: see observed computation and contract. DOS layout/address: 1:6619c.
+
+Spawn the selected note using atak[NextNote], clipping NextNote to six.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:PrepareAtak
+
+PROVEN: Load the current attack-table entry and advance or wrap its index according to end.
+
+Units: see observed computation and contract. DOS layout/address: 1:66334.
+
+Load the current attack-table entry and advance or wrap its index according to end.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:SAXO_TIRE
+
+PROVEN: Fire a note and advance the type-74 attack sequence and wait timer.
+
+Units: see observed computation and contract. DOS layout/address: 1:66388.
+
+Fire a note and advance the type-74 attack sequence and wait timer.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO_COUP
+
+STRONG: Apply Mr Sax damage, save interrupted states and advance the attack series.
+
+Units: see observed computation and contract. DOS layout/address: 1:663bc.
+
+Apply Mr Sax damage, save interrupted states and advance the attack series.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO2_COUP
+
+PROVEN: Apply second-encounter Mr Sax damage according to Phase.
+
+Units: see observed computation and contract. DOS layout/address: 1:66450.
+
+Apply second-encounter Mr Sax damage according to Phase.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:SetSaxoEventPos
+
+PROVEN: Cache adjusted sprite-2 coordinates for subsequent note spawning.
+
+Units: see observed computation and contract. DOS layout/address: 1:664f0.
+
+Cache adjusted sprite-2 coordinates for subsequent note spawning.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:SetSaxoCollNoteBox
+
+PROVEN: Cache the Mr Sax collision box used by reflected good notes.
+
+Units: see observed computation and contract. DOS layout/address: 1:66564.
+
+Cache the Mr Sax collision box used by reflected good notes.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO_COMMAND
+
+PROVEN: Run the main Mr Sax intro, shooting, movement, damage and phase-100 completion sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:66614.
+
+Run the main Mr Sax intro, shooting, movement, damage and phase-100 completion sequence.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO_ATTER
+
+STRONG: Handle main Mr Sax landing and camera shake.
+
+Units: see observed computation and contract. DOS layout/address: 1:67134.
+
+Handle main Mr Sax landing and camera shake.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO2_COMMAND
+
+STRONG: Run the second Mr Sax encounter's shooting/jumping/scroll sequence.
+
+Units: see observed computation and contract. DOS layout/address: 1:671b8.
+
+Run the second Mr Sax encounter's shooting/jumping/scroll sequence.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO2_ATTER
+
+PROVEN: Handle the second Mr Sax encounter's landing and shake.
+
+Units: see observed computation and contract. DOS layout/address: 1:676a0.
+
+Handle the second Mr Sax encounter's landing and shake.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO_MARCHE
+
+PROVEN: Apply Mr Sax horizontal and ground movement.
+
+Units: see observed computation and contract. DOS layout/address: 1:676f4.
+
+Apply Mr Sax horizontal and ground movement.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO3_COMMAND
+
+PROVEN: Run the third Mr Sax encounter's animation-driven shooting and departure.
+
+Units: see observed computation and contract. DOS layout/address: 1:67704.
+
+Run the third Mr Sax encounter's animation-driven shooting and departure.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:DO_SAXO3_DEBUT
+
+PROVEN: Initialize the third Mr Sax encounter's numeric phase and animation state.
+
+Units: see observed computation and contract. DOS layout/address: 1:678a4.
+
+Initialize the third Mr Sax encounter's numeric phase and animation state.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### function:saxo2_get_eject_sens
+
+PROVEN: Return eject direction -1 before Phase 2, otherwise +1.
+
+Units: see observed computation and contract. DOS layout/address: 1:678cc.
+
+Return eject direction -1 before Phase 2, otherwise +1.
+
+Types 90/91/92/93/102/182 have separate note, fragment, splitting, reflected-note and shaking behaviors. A type-93 collision with the cached 20x140 boss box requests damage. Attack table entries are 4 bytes, launch entries 10 bytes; next-note values 7..9 can select boss actions rather than note objects. Main defeat uses Phase=100 and writes finBosslevel.mr_sax. Shared Phase scratch is not a universal boss-state enum.
+
+### global:IndexAtak
+
+STRONG: Mr Sax attack-entry cursor, reset by an entry whose end field is nonzero.
+
+Units: see observed computation and contract. DOS layout/address: 2:5577c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Sax attack-entry cursor, reset by an entry whose end field is nonzero.
+
+### global:IndexSerie
+
+STRONG: Mr Sax attack row, incremented by damage and capped at three.
+
+Units: see observed computation and contract. DOS layout/address: 2:5577a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Sax attack row, incremented by damage and capped at three.
+
+### global:NextNote
+
+STRONG: Next Mr Sax note/action selector; note allocation clips it to six.
+
+Units: see observed computation and contract. DOS layout/address: 2:55780.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Next Mr Sax note/action selector; note allocation clips it to six.
+
+### global:Sax
+
+STRONG: Mr Sax encounter scratch: note box, firing sprite anchor, damage latch and interrupted states.
+
+Units: see observed computation and contract. DOS layout/address: 2:55768.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Mr Sax encounter scratch: note box, firing sprite anchor, damage latch and interrupted states.
+
+### global:SaxMarche
+
+UNKNOWN: Only initialization to zero was found; no gameplay role established.
+
+Units: see observed computation and contract. DOS layout/address: 2:5577e.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Only initialization to zero was found; no gameplay role established.
+
+### global:SerieDatak
+
+STRONG: Four rows of Mr Sax next-note/wait/end attack records.
+
+Units: see observed computation and contract. DOS layout/address: 2:7fc2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Four rows of Mr Sax next-note/wait/end attack records.
+
+### global:attaque
+
+STRONG: Current Mr Sax attack record copied from SerieDatak by PrepareAtak.
+
+Units: see observed computation and contract. DOS layout/address: 2:55764.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current Mr Sax attack record copied from SerieDatak by PrepareAtak.
+
+## skops.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:Init_Bande
+
+PROVEN: Initialize background bands and sprites from the selected world/background definitions, with the Skops heat special case.
+
+Units: see observed computation and contract. DOS layout/address: 1:678f0.
+
+Initialize background bands and sprites from the selected world/background definitions, with the Skops heat special case.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Display_Back_Screen
+
+STRONG: Draw the scrolling background bands and clipped background sprites inside supplied limits.
+
+Units: see observed computation and contract. DOS layout/address: 1:67ba0.
+
+Draw the scrolling background bands and clipped background sprites inside supplied limits.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Display_Sprite_On_Front
+
+STRONG: Draw foreground sprites belonging to bands whose length is zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:684a8.
+
+Draw foreground sprites belonging to bands whose length is zero.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Calcul_Deplacement_Bande
+
+PROVEN: Advance band scroll offsets according to each mode and apply the level-5:10 heat effect.
+
+Units: see observed computation and contract. DOS layout/address: 1:687e8.
+
+Advance band scroll offsets according to each mode and apply the level-5:10 heat effect.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Init_Effet_Chaleur
+
+PROVEN: Create one-pixel-high heat bands and bind source/destination row pointers.
+
+Units: see observed computation and contract. DOS layout/address: 1:68c14.
+
+Create one-pixel-high heat bands and bind source/destination row pointers.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Do_Effet_Chaleur
+
+PROVEN: Apply a 16-phase heat-wave horizontal distortion over up to 90 rows near the lava line.
+
+Units: see observed computation and contract. DOS layout/address: 1:68ca8.
+
+Apply a 16-phase heat-wave horizontal distortion over up to 90 rows near the lava line.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:swap
+
+PROVEN: Exchange two entries of the collapse-object ID list.
+
+Units: see observed computation and contract. DOS layout/address: 1:68db0.
+
+Exchange two entries of the collapse-object ID list.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:set_rubis_list
+
+STRONG: Collect collapse/lava/claw IDs, sort collapse objects by x and select a predefined order group.
+
+Units: see observed computation and contract. DOS layout/address: 1:68dd0.
+
+Collect collapse/lava/claw IDs, sort collapse objects by x and select a predefined order group.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:allocate_rayon
+
+PROVEN: Activate the first inactive type-170 ray object at the supplied position.
+
+Units: see observed computation and contract. DOS layout/address: 1:68f94.
+
+Activate the first inactive type-170 ray object at the supplied position.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:allocate_8_petits_rayons
+
+PROVEN: Create the ray-hit effects and eight consecutive small ray objects using velocity tables.
+
+Units: see observed computation and contract. DOS layout/address: 1:6903c.
+
+Create the ray-hit effects and eight consecutive small ray objects using velocity tables.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:do_sko_rayon
+
+PROVEN: Advance the platform-targeting ray, steer periodically and emit trail objects.
+
+Units: see observed computation and contract. DOS layout/address: 1:69114.
+
+Advance the platform-targeting ray, steer periodically and emit trail objects.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:do_sko_rayon2
+
+PROVEN: Advance the ray that targets Rayman or his active fist.
+
+Units: see observed computation and contract. DOS layout/address: 1:692ac.
+
+Advance the ray that targets Rayman or his active fist.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:start_sko_rayon
+
+PROVEN: Select the next collapse object and initialize a 60-tick platform-targeting ray.
+
+Units: see observed computation and contract. DOS layout/address: 1:694d4.
+
+Select the next collapse object and initialize a 60-tick platform-targeting ray.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:start_sko_rayon2
+
+PROVEN: Initialize a 120-tick ray aimed at the active fist, otherwise Rayman.
+
+Units: see observed computation and contract. DOS layout/address: 1:695a0.
+
+Initialize a 120-tick ray aimed at the active fist, otherwise Rayman.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:lance_pince
+
+PROVEN: Launch the stored claw object horizontally at speed -128.
+
+Units: see observed computation and contract. DOS layout/address: 1:69638.
+
+Launch the stored claw object horizontally at speed -128.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:sko_get_eject_sens
+
+PROVEN: Set Rayman's iframes to 40 and return eject direction -1.
+
+Units: see observed computation and contract. DOS layout/address: 1:69688.
+
+Set Rayman's iframes to 40 and return eject direction -1.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SOL_ENFONCE
+
+STRONG: Shrink the Skops map/scroll floor by 96 or 196 pixels while moving lava and applying screen shake.
+
+Units: see observed computation and contract. DOS layout/address: 1:6969c.
+
+Shrink the Skops map/scroll floor by 96 or 196 pixels while moving lava and applying screen shake.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_PHASE_0
+
+PROVEN: Run Skops phase 0 state and animation transitions.
+
+Units: see observed computation and contract. DOS layout/address: 1:69904.
+
+Run Skops phase 0 state and animation transitions.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_PHASE_1
+
+PROVEN: Count three frame-27 strikes, detach hanging Rayman and advance to phase 2.
+
+Units: see observed computation and contract. DOS layout/address: 1:69a90.
+
+Count three frame-27 strikes, detach hanging Rayman and advance to phase 2.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_PHASE_2
+
+PROVEN: Run floor strikes and five platform-targeting ray launches before phase 3.
+
+Units: see observed computation and contract. DOS layout/address: 1:69b5c.
+
+Run floor strikes and five platform-targeting ray launches before phase 3.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_PHASE_3
+
+PROVEN: Continue floor collapse and move Skops horizontally after the specified state transitions.
+
+Units: see observed computation and contract. DOS layout/address: 1:69c98.
+
+Continue floor collapse and move Skops horizontally after the specified state transitions.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_PINCE
+
+PROVEN: Launch, accelerate and retire the claw at the specified animation frames.
+
+Units: see observed computation and contract. DOS layout/address: 1:69d48.
+
+Launch, accelerate and retire the claw at the specified animation frames.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SCORPION_COLLISION
+
+PROVEN: Test the current ray against Skops, emit eight rays, reduce HP and enter defeat state at zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:69e18.
+
+Test the current ray against Skops, emit eight rays, reduce HP and enter defeat state at zero.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SCORPION_MORT
+
+PROVEN: Record the Skops completion bit and trigger signpost completion after defeat frame 127.
+
+Units: see observed computation and contract. DOS layout/address: 1:69f24.
+
+Record the Skops completion bit and trigger signpost completion after defeat frame 127.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO
+
+PROVEN: Dispatch Skops by level and phase, coordinating rays, claw, collapse and Rayman collision.
+
+Units: see observed computation and contract. DOS layout/address: 1:69f64.
+
+Dispatch Skops by level and phase, coordinating rays, claw, collapse and Rayman collision.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:SKO_ray_in_zone
+
+PROVEN: Start Skops phase-0 reactions when Rayman enters the detection zone.
+
+Units: see observed computation and contract. DOS layout/address: 1:6a1dc.
+
+Start Skops phase-0 reactions when Rayman enters the detection zone.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:DO_SKO_HIT
+
+PROVEN: Apply phase-specific fist reactions without universally decrementing Skops HP.
+
+Units: see observed computation and contract. DOS layout/address: 1:6a264.
+
+Apply phase-specific fist reactions without universally decrementing Skops HP.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### function:Get_PosLave_Y
+
+PROVEN: Return the current lava y coordinate.
+
+Units: see observed computation and contract. DOS layout/address: 1:6a338.
+
+Return the current lava y coordinate.
+
+Level 10 uses phases 0..3 and collapse platforms; level 11 uses fist/Rayman-directed rays and the stored claw. Skops HP is reduced by returned-ray collision, not by the ordinary phase-specific fist callback. Ray timers 60/120, coordinate sentinel -32000, and clock-gated steering/trail emission are distinct. The first six functions also own scrolling background rendering; keep horizontal/vertical scroll mode branches and heat-wrap arithmetic.
+
+### global:Bande
+
+STRONG: Runtime scrolling-band records, initialized from Def_Bande and consumed by background drawing/motion.
+
+Units: see observed computation and contract. DOS layout/address: 2:55784.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Runtime scrolling-band records, initialized from Def_Bande and consumed by background drawing/motion.
+
+### global:D_801E4E10
+
+STRONG: Ray direction normalization shift exponent; both Skops steering paths assign three before use.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8e6.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Ray direction normalization shift exponent; both Skops steering paths assign three before use.
+
+### global:Def_Bande
+
+STRONG: World/background-indexed source band definitions copied by Init_Bande.
+
+Units: see observed computation and contract. DOS layout/address: 2:80fc.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. World/background-indexed source band definitions copied by Init_Bande.
+
+### global:Def_Sprite
+
+STRONG: World/background-indexed source background-sprite placements copied by Init_Bande.
+
+Units: see observed computation and contract. DOS layout/address: 2:2b3b8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. World/background-indexed source background-sprite placements copied by Init_Bande.
+
+### global:NbBande
+
+STRONG: Active band count selected from Tab_NbBande, or the source height in heat mode.
+
+Units: see observed computation and contract. DOS layout/address: 2:5744a.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Active band count selected from Tab_NbBande, or the source height in heat mode.
+
+### global:NbSprite
+
+STRONG: Active background-sprite count; heat initialization sets it to zero.
+
+Units: see observed computation and contract. DOS layout/address: 2:57446.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Active background-sprite count; heat initialization sets it to zero.
+
+### global:Num_Fond
+
+STRONG: Selected background index within the world's ten-entry scroll tables.
+
+Units: see observed computation and contract. DOS layout/address: 2:5744c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Selected background index within the world's ten-entry scroll tables.
+
+### global:PosLave_Y
+
+STRONG: Current Skops lava y reference returned by Get_PosLave_Y and used by the heat effect.
+
+Units: see observed computation and contract. DOS layout/address: 2:57454.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Current Skops lava y reference returned by Get_PosLave_Y and used by the heat effect.
+
+### global:SinTabFeu
+
+STRONG: Sixteen-entry nonnegative waveform used for the lava heat distortion.
+
+Units: see observed computation and contract. DOS layout/address: 2:2d938.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Sixteen-entry nonnegative waveform used for the lava heat distortion.
+
+### global:Sprite
+
+STRONG: Runtime background-sprite placements and associated band indices.
+
+Units: see observed computation and contract. DOS layout/address: 2:573a4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Runtime background-sprite placements and associated band indices.
+
+### global:Tab_NbBande
+
+STRONG: Per-world/background band counts indexed by 10*(world-1)+background.
+
+Units: see observed computation and contract. DOS layout/address: 2:80c0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Per-world/background band counts indexed by 10*(world-1)+background.
+
+### global:Tab_NbSprite
+
+STRONG: Per-world/background sprite counts indexed by 10*(world-1)+background.
+
+Units: see observed computation and contract. DOS layout/address: 2:2b37c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Per-world/background sprite counts indexed by 10*(world-1)+background.
+
+### global:Type_Scroll
+
+STRONG: Background scroll-mode bytes; consumers distinguish modes 0/2 from 1.
+
+Units: see observed computation and contract. DOS layout/address: 2:8084.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Background scroll-mode bytes; consumers distinguish modes 0/2 from 1.
+
+### global:Val_Add_Scroll_Y
+
+STRONG: Vertical parallax bias added to ymap/Val_Div_Scroll_Y.
+
+Units: see observed computation and contract. DOS layout/address: 2:57448.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Vertical parallax bias added to ymap/Val_Div_Scroll_Y.
+
+### global:Val_Div_Scroll_Y
+
+STRONG: Nonzero vertical camera-parallax divisor calculated from source/map heights.
+
+Units: see observed computation and contract. DOS layout/address: 2:57444.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Nonzero vertical camera-parallax divisor calculated from source/map heights.
+
+### global:data_22d948
+
+STRONG: Heat-effect phase incremented when not frozen and wrapped at sixteen.
+
+Units: see observed computation and contract. DOS layout/address: 2:2d948.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Heat-effect phase incremented when not frozen and wrapped at sixteen.
+
+### global:ecroule_rubis_list
+
+STRONG: Skops collapse object IDs collected by type and sorted by increasing object x.
+
+Units: see observed computation and contract. DOS layout/address: 2:3ce00.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops collapse object IDs collected by type and sorted by increasing object x.
+
+### global:rayon_speed_x
+
+STRONG: Eight x velocities assigned to the small rays spawned after Skops ray collision.
+
+Units: see observed computation and contract. DOS layout/address: 2:2d94c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Eight x velocities assigned to the small rays spawned after Skops ray collision.
+
+### global:rayon_speed_y
+
+STRONG: Eight y velocities assigned to the small rays spawned after Skops ray collision.
+
+Units: see observed computation and contract. DOS layout/address: 2:2d95c.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Eight y velocities assigned to the small rays spawned after Skops ray collision.
+
+### global:sko_ecran_tremble
+
+STRONG: Skops post-floor-sink shake countdown, set to sixty and decremented while alternating camera x displacement.
+
+Units: see observed computation and contract. DOS layout/address: 2:57450.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops post-floor-sink shake countdown, set to sixty and decremented while alternating camera x displacement.
+
+### global:sko_final_y
+
+STRONG: Skops ray target y coordinate selected from a platform, Rayman or active fist.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8e2.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray target y coordinate selected from a platform, Rayman or active fist.
+
+### global:sko_lave_obj
+
+STRONG: IDs of lava objects collected by the Skops type scan.
+
+Units: see observed computation and contract. DOS layout/address: 2:3eee0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. IDs of lava objects collected by the Skops type scan.
+
+### global:sko_nb_lave
+
+STRONG: Count of collected Skops lava objects.
+
+Units: see observed computation and contract. DOS layout/address: 2:3fa96.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Count of collected Skops lava objects.
+
+### global:sko_pince_obj_id
+
+STRONG: Stored Skops claw object index found by type scan.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8e4.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Stored Skops claw object index found by type scan.
+
+### global:sko_rayon_dx
+
+STRONG: Skops ray x velocity adjusted by clock-gated unit steering steps.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8e8.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray x velocity adjusted by clock-gated unit steering steps.
+
+### global:sko_rayon_dy
+
+STRONG: Skops ray y velocity adjusted by clock-gated unit steering steps.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8ea.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray y velocity adjusted by clock-gated unit steering steps.
+
+### global:sko_rayon_y
+
+STRONG: Skops ray y position used for trails and returned-ray collision; -32000 hides the terminal position.
+
+Units: see observed computation and contract. DOS layout/address: 2:3f8f0.
+
+No rename or declaration/ABI/ownership change is proposed. Preserve the observed consumer-specific numeric operations. Skops ray y position used for trails and returned-ray collision; -32000 hides the terminal position.
+
+## special.json
+
+Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.
+
+### function:new_level_init
+
+PROVEN: Snapshot Rayman and camera start positions and set the level-departure flag.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6a340.
+
+Snapshot Rayman and camera start positions and set the level-departure flag.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:fix_numlevel
+
+PROVEN: Resolve progression and bonus return routes from world, level, trigger type, abilities and boss bits; unlock map nodes, gate final node at 102 cages, request new_level and set ending flags in world 6 level 4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6a474.
+
+Resolve progression and bonus return routes from world, level, trigger type, abilities and boss bits; unlock map nodes, gate final node at 102 cages, request new_level and set ending flags in world 6 level 4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocate_splash
+
+STRONG: Reuse the first inactive type-19 splash; place it at water contact or the map bottom, initialize state/frame and set the source water-entry latch.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6ad20.
+
+Reuse the first inactive type-19 splash; place it at water contact or the map bottom, initialize state/frame and set the source water-entry latch.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_BALLE
+
+PROVEN: Modify the current projectile eta horizontal speeds and gravity/timing high nibble according to projectile type 13 or 15.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6ae1c.
+
+Modify the current projectile eta horizontal speeds and gravity/timing high nibble according to projectile type 13 or 15.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_TIR
+
+STRONG: Fire once per hunter state-0:11 interval using an inactive projectile, set facing/position/script, and for hunter type 14 calculate a distance-dependent vertical trajectory.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6ae78.
+
+Fire once per hunter state-0:11 interval using an inactive projectile, set facing/position/script, and for hunter type 14 calculate a distance-dependent vertical trajectory.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_INTERACT_PLAT
+
+PROVEN: Convert a linked object to interactive platform type 24, disable its script reads and set up/down command plus absolute vertical distance.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b060.
+
+Convert a linked object to interactive platform type 24, disable its script reads and set up/down command plus absolute vertical distance.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:oldest_planted
+
+STRONG: Inspect the first two type-39 platforms, age active ones and mark inactive ones with age 10, select the greater age with first-on-tie behavior, reset its age to 1 and return it.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b0e0.
+
+Inspect the first two type-39 platforms, age active ones and mark inactive ones with age 10, select the greater age with first-on-tie behavior, reset its age to 1 and return it.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_GROWING_PLATFORM
+
+PROVEN: On the final Rayman animation frame plant once using the selected type-39 object; replace active contents with a nova, activate state 0:38 at Rayman feet and guard repetition with dword_BD96C.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b1a0.
+
+On the final Rayman animation frame plant once using the selected type-39 object; replace active contents with a nova, activate state 0:38 at Rayman feet and guard repetition with dword_BD96C.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocateExplosion
+
+STRONG: Return the first inactive type-83 explosion after activation/state reset and positioning at source feet plus 10, or NULL when no slot exists.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b29c.
+
+Return the first inactive type-83 explosion after activation/state reset and positioning at source feet plus 10, or NULL when no slot exists.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:BombExplosion
+
+PROVEN: Attempt to allocate an explosion then deactivate and kill the bomb even if the effect allocation failed.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b370.
+
+Attempt to allocate an explosion then deactivate and kill the bomb even if the effect allocation failed.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:MARACAS_GO
+
+PROVEN: Activate an inactive lower-maracas piece at the source, then select source label 99, consume its GO_SPEED operands and enter state 0:12.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b390.
+
+Activate an inactive lower-maracas piece at the source, then select source label 99, consume its GO_SPEED operands and enter state 0:12.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:ANGLE_RAYMAN
+
+PROVEN: Compute a Rayman-relative table angle in the 512-step convention using absolute coordinate ratios, with horizontal-axis special cases and word arithmetic.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b470.
+
+Compute a Rayman-relative table angle in the 512-step convention using absolute coordinate ratios, with horizontal-axis special cases and word arithmetic.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocateNOVA
+
+PROVEN: Find an inactive type-143 object in level_alw, initialize state 5:20 and animation, mark alive and add it to the always list; return NULL on exhaustion.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b56c.
+
+Find an inactive type-143 object in level_alw, initialize state 5:20 and animation, mark alive and add it to the always list; return NULL on exhaustion.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_NOVA
+
+PROVEN: Activate a nova centered on the source animation bounds with priority 1 and delay param 0.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b628.
+
+Activate a nova centered on the source animation bounds with priority 1 and delay param 0.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_NOVA2
+
+STRONG: Attempt five novas at four corners and center of source animation bounds, priority 0, with param delays 0,5,10,15,20.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b708.
+
+Attempt five novas at four corners and center of source animation bounds, priority 0, with param delays 0,5,10,15,20.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:NOVA_STATUS_BAR
+
+PROVEN: Create a priority-zero reward nova with timer 10 and param 255; return its object id, or -1 on allocation failure.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b838.
+
+Create a priority-zero reward nova with timer 10 and param 255; return its object id, or -1 on allocation failure.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_REDEYE_FIRE
+
+PROVEN: Spawn an inactive type-146 flash at caller coordinates using one of 36 vector pairs scaled by 256; store the vector in iframes_timer/follow_id and init_x/init_y, the direction selector in hit_points, activate and play sound 205.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6b920.
+
+Spawn an inactive type-146 flash at caller coordinates using one of 36 vector pairs scaled by 256; store the vector in iframes_timer/follow_id and init_x/init_y, the direction selector in hit_points, activate and play sound 205.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:calc_esquive_poing
+
+PROVEN: Return signed horizontal and absolute vertical threat separation from the fist when active or Rayman otherwise, and a horizontal threshold of detect_zone*4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bc60.
+
+Return signed horizontal and absolute vertical threat separation from the fist when active or Rayman otherwise, and a horizontal threshold of detect_zone*4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocate_gerbe
+
+PROVEN: Claim the first inactive one of eight pixel-particle groups and return its index; return -1 when full.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bd04.
+
+Claim the first inactive one of eight pixel-particle groups and return its index; return -1 when full.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:start_pix_gerbe
+
+PROVEN: Initialize 64 minus eight times group-index particles in Q6 screen coordinates with randomized speeds, vertical acceleration 8..15 and active marker 128.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bd40.
+
+Initialize 64 minus eight times group-index particles in Q6 screen coordinates with randomized speeds, vertical acceleration 8..15 and active marker 128.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:do_pix_gerbes
+
+PROVEN: Advance active pixel particles in Q6 coordinates with camera compensation and byte acceleration, kill them beyond clipping limits and retain each group only while a particle remains active.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6be44.
+
+Advance active pixel particles in Q6 coordinates with camera compensation and byte acceleration, kill them beyond clipping limits and retain each group only while a particle remains active.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:START_2_PARTS_CYMBAL_ACTION
+
+PROVEN: Select label 4 and link latch 1 on this cymbal and its linked type-168 partner.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bf40.
+
+Select label 4 and link latch 1 on this cymbal and its linked type-168 partner.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:ChangeLevel
+
+PROVEN: Resolve the next map through fix_numlevel(ray) and request a new level.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bfb0.
+
+Resolve the next map through fix_numlevel(ray) and request a new level.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:init_moustique
+
+PROVEN: Outside the ending, record whether the mounted-Rayman object exists and clear the previous-mounted marker.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bfcc.
+
+Outside the ending, record whether the mounted-Rayman object exists and clear the previous-mounted marker.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_CORDE_CASSE
+
+PROVEN: Switch the rope to substate 21, advance the attached stone health/phase selector and activate one lower-rope object with vertical speed 1 and gravity selector 4.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6bff4.
+
+Switch the rope to substate 21, advance the attached stone health/phase selector and activate one lower-rope object with vertical speed 1 and gravity selector 4.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:DO_FUMEE_CORDE
+
+PROVEN: Activate the first inactive type-221 rope smoke at caller coordinates minus (142,128).
+
+Units: see parameter/result contracts. DOS layout/address: 1:6c0a4.
+
+Activate the first inactive type-221 rope smoke at caller coordinates minus (142,128).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:GetY
+
+PROVEN: Return zero without a water object; otherwise choose one of five 101-pixel water sections and sample its animation-dependent wave height through EauDy/DecEau.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6c10c.
+
+Return zero without a water object; otherwise choose one of five 101-pixel water sections and sample its animation-dependent wave height through EauDy/DecEau.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocateSupHelico
+
+PROVEN: Activate the first inactive type-133 pickup at the musician, state 2:18 with speeds (1,-2).
+
+Units: see parameter/result contracts. DOS layout/address: 1:6c1c4.
+
+Activate the first inactive type-133 pickup at the musician, state 2:18 with speeds (1,-2).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:allocatePaillette
+
+PROVEN: Reuse an inactive type-75 sparkle or the first type-75 fallback, reset its activation/animation/state and place it at source minus (40,20).
+
+Units: see parameter/result contracts. DOS layout/address: 1:6c274.
+
+Reuse an inactive type-75 sparkle or the first type-75 fallback, reset its activation/animation/state and place it at source minus (40,20).
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+### function:test_fin_cling
+
+PROVEN: Settle pending life/health reward indicators and clear their ids; the existing DOS sequence uses the cleared -1 id in its following alive-bit write.
+
+Units: see parameter/result contracts. DOS layout/address: 1:6c328.
+
+Settle pending life/health reward indicators and clear their ids; the existing DOS sequence uses the cleared -1 id in its following alive-bit write.
+
+Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied.
+
+## stoneman.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_STONEMAN_COMMAND
+
+PROVEN: Run Stoneman script motion and floor movement.
+
+Units: see observed computation and contract. DOS layout/address: 1:6ca90.
+
+Run Stoneman script motion and floor movement.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEDOG_COMMAND
+
+PROVEN: Run Stone Dog script motion, turns, type-specific jumps and out-of-bounds retirement.
+
+Units: see observed computation and contract. DOS layout/address: 1:6cb48.
+
+Run Stone Dog script motion, turns, type-specific jumps and out-of-bounds retirement.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DoStoneDogPoingCollision
+
+PROVEN: Apply Stone Dog fist damage and select hit or defeat behavior.
+
+Units: see observed computation and contract. DOS layout/address: 1:6ccf0.
+
+Apply Stone Dog fist damage and select hit or defeat behavior.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEBOMB_COMMAND
+
+PROVEN: Update Stone Bomb motion and collision response.
+
+Units: see observed computation and contract. DOS layout/address: 1:6cd54.
+
+Update Stone Bomb motion and collision response.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:IS_STONEWOMAN_WAIT
+
+PROVEN: Test whether Stone Woman is in one of the specified waiting states.
+
+Units: see observed computation and contract. DOS layout/address: 1:6cde0.
+
+Test whether Stone Woman is in one of the specified waiting states.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEWOMAN_COMMAND
+
+PROVEN: Run mobile Stone Woman tracking, distance-triggered attacks and wall/edge responses.
+
+Units: see observed computation and contract. DOS layout/address: 1:6ce04.
+
+Run mobile Stone Woman tracking, distance-triggered attacks and wall/edge responses.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_NOMOVE_STONEWOMAN_COMMAND
+
+PROVEN: Run stationary Stone Woman's direction and attack logic.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d070.
+
+Run stationary Stone Woman's direction and attack logic.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_ONE_STONECHIP_COMMAND
+
+PROVEN: Set a stone chip's x/y velocities from script direction and substates 9..14.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d0f0.
+
+Set a stone chip's x/y velocities from script direction and substates 9..14.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:setStoneChipPos
+
+PROVEN: Place a stone chip relative to source object offsets and its chip substate, using a one-shot placement flag.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d1c8.
+
+Place a stone chip relative to source object offsets and its chip substate, using a one-shot placement flag.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:allocateStoneChips
+
+PROVEN: Allocate stone-chip objects from the inactive pool.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d37c.
+
+Allocate stone-chip objects from the inactive pool.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONE_EXPLOSION
+
+PROVEN: Spawn the stone explosion effects and retire the source.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d43c.
+
+Spawn the stone explosion effects and retire the source.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:allocateStonemanStone
+
+STRONG: Allocate a Stoneman projectile or clash effect using launch mode and animation sprite.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d4e4.
+
+Allocate a Stoneman projectile or clash effect using launch mode and animation sprite.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEMAN1_TIR
+
+PROVEN: Fire the first Stoneman variant's projectile at the prescribed animation point.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d83c.
+
+Fire the first Stoneman variant's projectile at the prescribed animation point.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEMAN2_TIR
+
+PROVEN: Fire the second Stoneman variant's projectile at the prescribed animation point.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d908.
+
+Fire the second Stoneman variant's projectile at the prescribed animation point.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:allocateStonewomanStone
+
+PROVEN: Allocate a Stone Woman projectile with mode-specific motion and sprite anchoring.
+
+Units: see observed computation and contract. DOS layout/address: 1:6d9c0.
+
+Allocate a Stone Woman projectile with mode-specific motion and sprite anchoring.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_STONEWOMAN_TIR
+
+PROVEN: Run Stone Woman and emit each attack projectile once at its gated animation frame.
+
+Units: see observed computation and contract. DOS layout/address: 1:6dc5c.
+
+Run Stone Woman and emit each attack projectile once at its gated animation frame.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:allocateEclatPS
+
+PROVEN: Activate a stone explosion fragment using its supplied indexed motion.
+
+Units: see observed computation and contract. DOS layout/address: 1:6dd78.
+
+Activate a stone explosion fragment using its supplied indexed motion.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_PI_EXPLOSION
+
+PROVEN: Allocate up to five consecutive type-110 explosion pieces with indexed trajectories.
+
+Units: see observed computation and contract. DOS layout/address: 1:6de68.
+
+Allocate up to five consecutive type-110 explosion pieces with indexed trajectories.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DoPiMusPoingCollision
+
+PROVEN: Handle fist collision for the music-stone object.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e000.
+
+Handle fist collision for the music-stone object.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DoPiPoingCollision
+
+PROVEN: Handle fist collision for the stone object.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e120.
+
+Handle fist collision for the stone object.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_PNG_COLL_STONEMAN
+
+PROVEN: Apply state-gated Stoneman fist damage, emit stones and reset HP to initial HP at zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e190.
+
+Apply state-gated Stoneman fist damage, emit stones and reset HP to initial HP at zero.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DO_PNG_COLL_STONEWOMAN
+
+PROVEN: Apply Stone Woman fist damage, emit a stone, select a reaction and reset HP to initial HP at zero.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e258.
+
+Apply Stone Woman fist damage, emit a stone, select a reaction and reset HP to initial HP at zero.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DoStoneMan1et2RaymanZDD
+
+PROVEN: Trigger Stoneman 1/2 attacks when Rayman enters the detection zone.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e2fc.
+
+Trigger Stoneman 1/2 attacks when Rayman enters the detection zone.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+### function:DoStoneDogRaymanZDD
+
+PROVEN: Trigger Stone Dog reactions when Rayman enters the detection zone.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e33c.
+
+Trigger Stone Dog reactions when Rayman enters the detection zone.
+
+Keep type-specific pooled allocation, exact animation-frame fire gates and link latches. Stone Woman pursuit uses config, timer and distance thresholds; Stone Dog movement differs by type. DO_PI_EXPLOSION finds a consecutive type-110 run; chip placement instead scans by type/substate. Shared field names do not impose generic gravity/timer/link meaning on every actor.
+
+## sysutils.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Original Watcom declarations and source-local records are retained. Approved local name changes preserve whole compiled object contributions; parser adaptation is confined to the checker.
+
+### function:get_avail_memory
+
+PROVEN: Zero DPMI register records, invoke INT31h AX0500h with ES:EDI pointing to48-byte mem_32190, return largest_free_block. Platform allocation query, not total arena usage.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f3b0.
+
+Zero DPMI register records, invoke INT31h AX0500h with ES:EDI pointing to48-byte mem_32190, return largest_free_block. Platform allocation query, not total arena usage.
+
+### function:PrintMemInfo
+
+PROVEN: Print fixed/world/level/sprite capacities and peak cursor/world/level records, temporary capacity/peak and available memory. Statistics do not control gameplay here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f410.
+
+Print fixed/world/level/sprite capacities and peak cursor/world/level records, temporary capacity/peak and available memory. Statistics do not control gameplay here.
+
+### function:block_malloc
+
+PROVEN: Bump-allocate from selected arena, updating cursor and diagnostic peaks. Historical adjustment is size+=size&3, not round-up-to4; reject zero or overflow of capacity via FatalError. Returned address is data+old align.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f5b0.
+
+Bump-allocate from selected arena, updating cursor and diagnostic peaks. Historical adjustment is size+=size&3, not round-up-to4; reject zero or overflow of capacity via FatalError. Returned address is data+old align.
+
+### function:sub_6F740
+
+PROVEN: Free temporary pool backing storage, null it and zero all30 descriptors.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f740.
+
+Free temporary pool backing storage, null it and zero all30 descriptors.
+
+### function:init_all_memory
+
+PROVEN: Allocate temporary backing arena and initialize30 descriptors:slot0 is entire free pool,others zero-sized at pool end. Record temp capacity.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f768.
+
+Allocate temporary backing arena and initialize30 descriptors:slot0 is entire free pool,others zero-sized at pool end. Record temp capacity.
+
+### function:init_memory
+
+PROVEN: Allocate adjusted capacity (capacity+=capacity&3), FatalError on failure; set cursor to low2 address bits and record capacity. Returns adjusted capacity.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f7d0.
+
+Allocate adjusted capacity (capacity+=capacity&3), FatalError on failure; set cursor to low2 address bits and record capacity. Returns adjusted capacity.
+
+### function:pack_temp_zone
+
+PROVEN: Coalesce physically adjacent unallocated descriptors, repeatedly adding forward-neighbor capacity; clear merged descriptors to pool end. Does not relocate allocated payloads.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f824.
+
+Coalesce physically adjacent unallocated descriptors, repeatedly adding forward-neighbor capacity; clear merged descriptors to pool end. Does not relocate allocated payloads.
+
+### function:temp_malloc
+
+STRONG: Best-fit search in30 descriptors with historical size adjustment; split/extend neighbor and account cursor/peak. Fall back to malloc if no suitable block. Descriptor searches can run out of bounds; prior PLATFORM_OPEN documents counterexample, not a shipped occurrence.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6f8d8.
+
+Best-fit search in30 descriptors with historical size adjustment; split/extend neighbor and account cursor/peak. Fall back to malloc if no suitable block. Descriptor searches can run out of bounds; prior PLATFORM_OPEN documents counterexample, not a shipped occurrence.
+
+### function:temp_free
+
+PROVEN: Find matching pool descriptor, mark free/decrement cursor/coalesce; if no allocated descriptor was freed, pass pointer through JumelleFreeArray to heap free.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fa70.
+
+Find matching pool descriptor, mark free/decrement cursor/coalesce; if no allocated descriptor was freed, pass pointer through JumelleFreeArray to heap free.
+
+### function:free_main_mem
+
+PROVEN: For fixed arena first call fix_free; free backing allocation and clear pointer/capacity/cursor.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fadc.
+
+For fixed arena first call fix_free; free backing allocation and clear pointer/capacity/cursor.
+
+### function:world_free
+
+PROVEN: Clear loaded_eta entries from nb_fix_eta to nb_loaded_eta-1, reset eta count and descriptor count to fixed baselines.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb04.
+
+Clear loaded_eta entries from nb_fix_eta to nb_loaded_eta-1, reset eta count and descriptor count to fixed baselines.
+
+### function:SpriteFixeOffset
+
+PROVEN: Snapshot fixed-sprite cursor plus current-address low2 bits in OffsetSpriteFixe; no sprite-pointer relocation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb48.
+
+Snapshot fixed-sprite cursor plus current-address low2 bits in OffsetSpriteFixe; no sprite-pointer relocation.
+
+### function:SpriteWorldOffset
+
+PROVEN: Snapshot world-sprite cursor plus current-address low2 bits in OffsetSpriteWorld.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb60.
+
+Snapshot world-sprite cursor plus current-address low2 bits in OffsetSpriteWorld.
+
+### function:SpriteFixeBlocksFree
+
+PROVEN: Reset supplied sprite arena cursor to OffsetSpriteFixe without freeing its allocation.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb78.
+
+Reset supplied sprite arena cursor to OffsetSpriteFixe without freeing its allocation.
+
+### function:SpriteWorldBlocksFree
+
+PROVEN: Reset supplied sprite arena cursor to OffsetSpriteWorld.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb84.
+
+Reset supplied sprite arena cursor to OffsetSpriteWorld.
+
+### function:block_free
+
+PROVEN: Reset shared world descriptor/eta counts through world_free, then reset supplied arena cursor to data-address low2 bits.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fb90.
+
+Reset shared world descriptor/eta counts through world_free, then reset supplied arena cursor to data-address low2 bits.
+
+### function:align_mem_desc
+
+PROVEN: Reset arena cursor to low2 bits of data pointer; retains allocation and capacity.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fba4.
+
+Reset arena cursor to low2 bits of data pointer; retains allocation and capacity.
+
+### function:fix_free
+
+PROVEN: Empty function; fixed-resource release is performed elsewhere.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fbb0.
+
+Empty function; fixed-resource release is performed elsewhere.
+
+### function:sub_6FBB4
+
+PROVEN: Return malloc(size) directly.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fbb4.
+
+Return malloc(size) directly.
+
+### function:JumelleCalloc
+
+PROVEN: Return calloc(count,size); source parameter order is size then count.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fbbc.
+
+Return calloc(count,size); source parameter order is size then count.
+
+### function:JumelleFreeArray
+
+PROVEN: Free a nonnull pointed-to allocation and clear the caller's pointer; null is a no-op.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:6fbcc.
+
+Free a nonnull pointed-to allocation and clear the caller's pointer; null is a no-op.
+
+### global:OffsetSpriteFixe
+
+PROVEN: Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.
+
+Units: arena byte offset. DOS layout/address: 2:57474.
+
+Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.
+
+### global:OffsetSpriteWorld
+
+PROVEN: Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.
+
+Units: arena byte offset. DOS layout/address: 2:57470.
+
+Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.
+
+### global:data_22d970
+
+PROVEN: 40-byte diagnostic memory statistics:temp capacity,four8-byte arena peaks(world/level attached),temp peak. Does not establish heap fallback live total.
+
+Units: bytes / world+level indices. DOS layout/address: 2:2d970.
+
+40-byte diagnostic memory statistics:temp capacity,four8-byte arena peaks(world/level attached),temp peak. Does not establish heap fallback live total.
+
+### global:mem_32190
+
+PROVEN: 48-byte DPMI0500 output;only largest_free_block first dword is consumed here. Remaining11 dwords retain neutral description.
+
+Units: DPMI memory record. DOS layout/address: 2:32190.
+
+48-byte DPMI0500 output;only largest_free_block first dword is consumed here. Remaining11 dwords retain neutral description.
+
+### global:temp_mem
+
+PROVEN: Thirty12-byte temporary pool descriptors:capacity+0,data+4,allocated+8. No spare-descriptor guarantee;see PLATFORM_OPEN.
+
+Units: allocator descriptors. DOS layout/address: 2:39688.
+
+Thirty12-byte temporary pool descriptors:capacity+0,data+4,allocated+8. No spare-descriptor guarantee;see PLATFORM_OPEN.
+
+## trumpet.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:DO_TRP_COMMAND
+
+PROVEN: Execute trumpet movement commands, terminal rise and per-frame attack processing.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e420.
+
+Execute trumpet movement commands, terminal rise and per-frame attack processing.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
+### function:trompetteWind
+
+PROVEN: Apply facing/mode-dependent wind +/-7 when Rayman's collision box overlaps the expanded trumpet rectangle.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e4c8.
+
+Apply facing/mode-dependent wind +/-7 when Rayman's collision box overlaps the expanded trumpet rectangle.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
+### function:DO_TRP_ATTAK
+
+PROVEN: Decrement the cooldown and emit wind in the selected attack substates/animation frames.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e650.
+
+Decrement the cooldown and emit wind in the selected attack substates/animation frames.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
+### function:trompetteAtter
+
+PROVEN: Resume trumpet script label 8 and recalculate its floor position on landing.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e69c.
+
+Resume trumpet script label 8 and recalculate its floor position on landing.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
+### function:DoTrumpetPoingCollision
+
+PROVEN: Apply fist damage and select knockback or terminal state 0:1.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e6bc.
+
+Apply fist damage and select knockback or terminal state 0:1.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
+### function:DoTrompetteRaymanZDD
+
+PROVEN: Start trumpet attack label 5 only when its cooldown is zero and it is in state 0:0 or 1:0.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e72c.
+
+Start trumpet attack label 5 only when its cooldown is zero and it is in state 0:0 or 1:0.
+
+Wind rectangle is expanded from the animation box and contributes +/-7 to ray_wind_force. Substates 2(frame>=10)/4 versus 6(frame>=10)/7 choose opposite modes. Every wind call reloads timer=100; detection attacks require timer zero. decalage_en_cours receives a shift by eight except while Rayman main state is 5.
+
 ## types.json
 
 Meaning confidence is separate from compiler layout and STRICT status. UNKNOWN retains neutral names. Raw source/displacement/external token hits are candidates, not type proofs.
@@ -7061,6 +19463,8 @@ STRONG: Object script stream/context member cmd_contexts.
 Units: script dependent. DOS layout/address: +0x18, 4 B.
 
 Keep widths and stack-depth sentinels; exact per-opcode interpretation belongs in the script pilot.
+
+Pass6: Saved signed16 offset/count context at index (u8)depth; loops decrement count before positive test, gosub pushes count1. Existing declaration extent is retained without capacity inference.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -7256,6 +19660,8 @@ Keep widths and stack-depth sentinels; exact per-opcode interpretation belongs i
 
 Pass3 refinement: Rayman sets1 when wind/nonordinary departure preserves inertia and0 on hit/wall or ordinary supported jump. Interactive platforms decrement this as remaining command updates. Keep the per-type interpretation.
 
+Pass6: Script counter/operand: readOneArg loads unsigned duration, readGoXYargs loads a signed base-100 coordinate component, readTestArgs loads a selector, GET_OBJ_CMD uses postdecrement old-value-zero. Context-specific roles remain separate.
+
 Shipped initial sample: 11837 records, 17 values, 0..254. This does not bound runtime values.
 
 ### field:obj_t.follow_id
@@ -7269,6 +19675,10 @@ Units: type dependent. DOS layout/address: +0x4a, 2 B.
 Pass3 refinement: Rayman -1 means no support; rayMayLandOnAnObject acquires from active list, RAY_FOLLOW adds carrier motion, and jump/hit detach. Moving-platform GO_SPEED and flash motion interpret the same field as a vertical speed, so retain the shared spelling.
 
 Pass4: Common reset-1; platform types28/25 use100/15, types29/34/152/237/243 use1; type190 uses1, type217 and Blacktoon selector5 use0. These constants are not universal object references.
+
+Pass6: GO_SPEED vertical operand, platform delay/amplitude source, or actual carried/ridden-object id depending on type/caller; -1 is an id sentinel only in the applicable paths.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 14 values, -32..32. This does not bound runtime values.
 
@@ -7294,6 +19704,8 @@ No universal target_x/delta_x rename: ray swing also uses follow_x as an angle; 
 
 Pass3 refinement: RAY_FOLLOW adds it directly to pixel movement. Grapple objects instead store angle here and use512-scaled trig products; live object type determines interpretation.
 
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
+
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.param
@@ -7303,6 +19715,10 @@ PROVEN: Type-specific signed scratch parameter, including Rayman edge classifica
 Units: context dependent. DOS layout/address: +0x50, 2 B.
 
 Rayman edge values -1/0/1 do not describe all object types.
+
+Pass6: Script comparison operand; for pirate rings it is owner id, crumble platforms use lifetime countdown and HUD novas use255. Preserve per-type roles and signed16 stores.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 3 values, 0..5. This does not bound runtime values.
 
@@ -7319,6 +19735,10 @@ The live circular successor array is link_init, not obj.link. Do not rename this
 Pass3 refinement: Rayman RAY_IN_THE_AIR sums speed_y while link!=-1, resets at apex, and compares>=200 on tile landing (>200 on object landing) for smoke. -1 suppresses accumulation. Grapple objects use+-1 swing direction; doors hold detached id; spike posts use one-time initialization0/1. A single universal name remains unsupported.
 
 Pass4: first_obj_init usually clears0; type26 sets20; type173 clears0 whileparam=-1; type231/232 get each other's ids after the scan. This is not the separate link_init successor array.
+
+Pass6: Script second signed coordinate byte; generator shot latch; crumble timer; pirate-ring travel budget; linked-platform movement scratch. No universal linked-object-id meaning or shared rename.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -7345,6 +19765,10 @@ Units: type dependent. DOS layout/address: +0x56, 2 B.
 Pass3 refinement: Rayman dispatch accepts damage at-1; DO_COLLISIONS decrements nonnegative values after callbacks, including0->-1. RAY_HURT writes120 normally or60 under blocked crouch; hurt landing clamps to90. Moving commands and flashes reuse this field as horizontal speed; killing eyes use a firing delay. It is not universally an invulnerability timer.
 
 Pass4: Common obj_init reset-1 is overridden by many types: platform delays100/15/1, crumble vblToEOA-2 or20, killing-eyes40, guard0. Retain actor-specific contracts; do not impose a universal real-time unit.
+
+Pass6: GO_SPEED horizontal operand; platform countdown/amplitude; type39 age; buoy displacement. The generic invulnerability spelling is not a universal object contract.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 14 values, -128..32. This does not bound runtime values.
 
@@ -7588,6 +20012,8 @@ Units: hit points or type-specific state. DOS layout/address: +0x76, 1 B.
 
 u8 storage; damage subtraction clamps at0. Type254 rendering and collision explicitly reinterpret it as s8 for slope/deformation; do not impose a universal nonnegative-health interpretation.
 
+Pass6: Ordinary health, but small knives use1..4 frame selectors, reducers use a cooldown and slope platforms reinterpret the byte as signed tilt. No global health-only interpretation.
+
 Shipped initial sample: 11837 records, 17 values, 0..255. This does not bound runtime values.
 
 ### field:obj_t.init_hit_points
@@ -7656,6 +20082,8 @@ Units: script dependent. DOS layout/address: +0x7c, 1 B.
 
 Keep widths and stack-depth sentinels; exact per-opcode interpretation belongs in the script pilot.
 
+Pass6: Signed byte empty-stack sentinel -1; pushes increment before access and pops read before decrement. Context indexing explicitly casts to u8. No stack capacity beyond the existing declaration is inferred.
+
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
 ### field:obj_t.config
@@ -7665,6 +20093,10 @@ PROVEN: Type-specific byte configuration tested for Blacktoon edge-turning.
 Units: context dependent. DOS layout/address: +0x7d, 1 B.
 
 Known local value2 here does not imply a shared enum.
+
+Pass6: Generator alternates variants1/2 (3 marks platform trigger completed); pirate rings decrement owner ammunition at spawn and restore it on completed return. Blacktoon meanings from earlier passes remain actor-specific.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -7693,6 +20125,10 @@ INIT_RAY clears it; DO_CLING_ANIMS uses a positive countdown before DO_ANIM. Thi
 Pass3 refinement: Rayman uses10 calls to suppress vine reattachment; grapple objects use5-call endpoint pauses. DO_RAY_POS_CMD uses255 disabled and decrements0 to255 after activation. Ship uses50 half-clock counts; other objects keep their own contracts. No universal timer unit/name is assigned.
 
 Pass4: obj_init resets0, bosses get100 or180; INIT_OBJECTS type99 state5 gets30. Earlier Rayman/collision roles remain valid; no universal timing or meaning rename.
+
+Pass6: Generator emission/phase latch, photographer nonzero in-photo latch, Joe dialogue ticks and pirate hurt countdown all share this unsigned byte. Preserve wraparound and exact equality checks.
+
+Pass6: type-dependent reuse is explicit in boss/enemy contracts. Do not impose a universal timer, object-ID or velocity interpretation; see the per-unit actor contracts and typed accesses.
 
 Shipped initial sample: 11837 records, 1 values, 0..0. This does not bound runtime values.
 
@@ -8860,11 +21296,15 @@ MOVE_OBJECT adds ashl16(speed_y,4), then uses signed >>4 for obj.y. The shift is
 
 ### field:poing_t.field_4
 
-UNKNOWN: Neutral poing_t.field_4 storage/view; its intended meaning is not established by this pilot.
+PROVEN: Launch-time snapshot of charge shifted left eight, written alongside the outbound charge budget. A further live consumer is not established.
 
-Units: unknown. DOS layout/address: +0x4, 2 B.
+Units: unknown; charge times 256. DOS layout/address: +0x4, 2 B.
 
 Retain current neutral name. Layout, source-token candidates and basic typed accesses are observations only. 15 source member-token matches are retained for review, including possible other types.
+
+RAY_THROW_FIST stores the same narrowed charge<<8 value in field_4 and charge. This describes the observed writer; it does not claim a return/collision algorithm for the snapshot. Keep the neutral shared name.
+
+Preserve current shared spelling in this pass; previous uncertainty remains in meaning_history.
 
 ### field:poing_t.speed_x
 
@@ -9118,11 +21558,13 @@ Add_One_RAY_lives restores4 only for exactly4, otherwise2; do not treat arbitrar
 
 ### field:save_state_t.triggered_objects
 
-PROVEN: Alive-bit snapshot for object types141,164,179,242 indexed by object id bit.
+PROVEN: Eight32-bit alive masks for types141/164/179/242 only;index object ID>>5,bit1<<(ID&31). Other bits are not cleared by capture.
 
-Units: object bitset. DOS layout/address: +0x0, 32 B.
+Units: object bitset; object-index bitset. DOS layout/address: +0x0, 32 B.
 
 Eight u32 words; shift is id&31 and index id>>5, distinct from basic saveobj two-bit packing.
+
+Pass6: Eight32-bit alive masks for types141/164/179/242 only;index object ID>>5,bit1<<(ID&31). Other bits are not cleared by capture.
 
 ### field:save_state_t.nb_floc
 
@@ -9230,11 +21672,13 @@ Other checkpoint-object fields are not refreshed in the null-object branch.
 
 ### field:save_state_t.link_init
 
-PROVEN: Snapshot of live circular successor ids, stored as u16.
+PROVEN: Snapshot of level.nb_objects successor IDs;restore applies only when save_state==&save1 and sets link_has_gendoor by successor!=self.
 
-Units: object ids. DOS layout/address: +0x48, 512 B.
+Units: object ids; object IDs. DOS layout/address: +0x48, 512 B.
 
 Copied for level.nb_objects entries. restore_gendoor_link uses a u8 intermediate in the dead-door branch.
+
+Pass6: Snapshot of level.nb_objects successor IDs;restore applies only when save_state==&save1 and sets link_has_gendoor by successor!=self.
 
 ### field:save_state_t.save_obj_detect_zone_flag
 
@@ -9294,11 +21738,14 @@ Direct byte copy.
 
 ### field:save_state_t.poing_sub_etat
 
-PROVEN: Saved fist power/substate selection.
+PROVEN: [sem_objs; moteur.c; PROVEN] Saved fist power/substate selection.
+[sem_flow; moteur.c; PROVEN] Checkpoint fist state;restoring save1 degrades5/12->3 and1/3/8/10->1 by mutating saved value before applying to fist.
 
-Units: fist state. DOS layout/address: +0x253, 1 B.
+Units: fist state; fist substate. DOS layout/address: +0x253, 1 B.
 
 Restore maps selected values and writes poing_obj.init_sub_etat as well as poing.sub_etat.
+
+Pass6: Checkpoint fist state;restoring save1 degrades5/12->3 and1/3/8/10->1 by mutating saved value before applying to fist.
 
 ### field:save_state_t.rayevts_reverse
 
@@ -9366,43 +21813,53 @@ Record extent is604 bytes; no padding or persistence meaning is inferred.
 
 ### field:record_t.current_offset
 
-STRONG: Current byte cursor into the recorded demo stream.
+PROVEN: Byte offset of current repeat-length byte after startup;first frame consumes data0 buttons and leaves offset1. Subsequent runs advance2.
 
-Units: bytes. DOS layout/address: +0x0, 4 B.
+Units: bytes; stream byte offset. DOS layout/address: +0x0, 4 B.
 
 Corroborated by typed input.c consumers; not advanced in moteur.
 
+Pass6: Byte offset of current repeat-length byte after startup;first frame consumes data0 buttons and leaves offset1. Subsequent runs advance2.
+
 ### field:record_t.repeat_length
 
-STRONG: Length of the current repeated demo-input run.
+PROVEN: Second byte of current input pair;repeat_index equality ends run. Zero length is not automatically treated as immediate termination.
 
-Units: input updates. DOS layout/address: +0x4, 4 B.
+Units: input updates; playback update count. DOS layout/address: +0x4, 4 B.
 
 input.c run decoding supplies the interpretation; moteur only reads is_recording/is_playing.
 
+Pass6: Second byte of current input pair;repeat_index equality ends run. Zero length is not automatically treated as immediate termination.
+
 ### field:record_t.repeat_index
 
-STRONG: Progress within the current repeated demo-input run.
+PROVEN: Incrementing32-bit index into current repeated run;startup/new run resets0.
 
-Units: input updates. DOS layout/address: +0x8, 4 B.
+Units: input updates; playback updates. DOS layout/address: +0x8, 4 B.
 
 Preserve the original input decoder comparison/order.
 
+Pass6: Incrementing32-bit index into current repeated run;startup/new run resets0.
+
 ### field:record_t.length
 
-STRONG: Recorded demo stream length used by input playback.
+PROVEN: REC file length narrowed through signed16 by read_record then stored in record;used to bound next pair.
 
-Units: bytes. DOS layout/address: +0xc, 4 B.
+Units: bytes; stream bytes. DOS layout/address: +0xc, 4 B.
 
 This is storage/decoder extent, not RunTimeDemo.
 
+Pass6: REC file length narrowed through signed16 by read_record then stored in record;used to bound next pair.
+
 ### field:record_t.data
 
-STRONG: Demo stream byte buffer pointer.
+PROVEN: Allocated packed input pairs(button byte,repeat-length byte);no native pointer is serialized by read_record.
 
-Units: pointer. DOS layout/address: +0x10, 4 B.
+Units: pointer; byte buffer address. DOS layout/address: +0x10, 4 B.
 
 Owned by the loader/input path; moteur does not allocate or free it.
+
+Pass6: Allocated packed input pairs(button byte,repeat-length byte);no native pointer is serialized by read_record.
 
 ### field:record_t.is_recording
 
@@ -9606,11 +22063,15 @@ Pass5: init_flocons stores random y accepted by get_proj_y;update adds vertical 
 
 ### field:flocon_t.field_4
 
-UNKNOWN: Declared flocon_t.field_4 storage; moteur only clears its enclosing storage or never accesses it.
+PROVEN: Perspective depth/scale parameter stored per weather particle and passed to projection by the drawing readers.
 
-Units: unknown. DOS layout/address: +0x4, 2 B.
+Units: unknown; projection parameter. DOS layout/address: +0x4, 2 B.
 
 Layout is measured; no per-particle/snow field meaning is inferred from this unused declaration. Retain its existing name.
+
+init_flocons stores group scale -64,-32,0,32,64,96,128,160. Rendering uses the value with denominator depth+256; unprojected coordinate updates wrap through group-specific inverse bounds. Shared field remains field_4; proposed later spelling projection_scale.
+
+Preserve current shared spelling in this pass; previous uncertainty remains in meaning_history.
 
 ### field:flocon_t.field_6
 
@@ -9742,27 +22203,33 @@ POINTEUR_BOUTONS_OPTIONS_BIS dispatches0..3 to but0pressed..but3pressed; other v
 
 ### field:options_jeu_t.music_enabled
 
-UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope.
+PROVEN: Persistent music enable value;menu toggles logical zero/nonzero and controls MusicCdActive only when OptionMusicCdActive permits. Historical default13 is retained rather than normalized.
 
-Units: unknown. DOS layout/address: +0x18, 2 B.
+Units: unknown; logical option value. DOS layout/address: +0x18, 2 B.
 
 Layout and source declaration measured; no new meaning or rename assigned by this pass. Do not infer meaning from spelling alone; input/menu semantics are deferred.
+
+Pass6: Persistent music enable value;menu toggles logical zero/nonzero and controls MusicCdActive only when OptionMusicCdActive permits. Historical default13 is retained rather than normalized.
 
 ### field:options_jeu_t.sound_volume
 
-UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope.
+PROVEN: Persistent sound-volume value passed to raj_env_sound;menu working copy adjusts0..max_sound. CFG stores16 bits;historical default18.
 
-Units: unknown. DOS layout/address: +0x1a, 2 B.
+Units: unknown; sound volume setting. DOS layout/address: +0x1a, 2 B.
 
 Layout and source declaration measured; no new meaning or rename assigned by this pass. Do not infer meaning from spelling alone; input/menu semantics are deferred.
+
+Pass6: Persistent sound-volume value passed to raj_env_sound;menu working copy adjusts0..max_sound. CFG stores16 bits;historical default18.
 
 ### field:options_jeu_t.is_stereo
 
-UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope.
+PROVEN: Persistent stereo setting passed to raj_env_stereo;CFG stores16 bits,default1.
 
-Units: unknown. DOS layout/address: +0x1c, 2 B.
+Units: unknown; logical option value. DOS layout/address: +0x1c, 2 B.
 
 Layout and source declaration measured; no new meaning or rename assigned by this pass. Do not infer meaning from spelling alone; input/menu semantics are deferred.
+
+Pass6: Persistent stereo setting passed to raj_env_stereo;CFG stores16 bits,default1.
 
 ### field:options_jeu_t.unknown_1e
 
@@ -9886,83 +22353,104 @@ Writer narrows live u16 scale to byte; replay zero-extends it to live u16. Tiny 
 
 ### field:world_info_t.xpos
 
-UNKNOWN: Declared world_info_t.xpos storage; no intended meaning is assigned from its spelling alone.
+PROVEN: World-map node center coordinate;used to place medallions and compute path interpolation.
 
-Units: unknown. DOS layout/address: +0x0, 2 B.
+Units: unknown; world-map pixels. DOS layout/address: +0x0, 2 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: World-map node center coordinate;used to place medallions and compute path interpolation.
 
 ### field:world_info_t.ypos
 
-UNKNOWN: Declared world_info_t.ypos storage; no intended meaning is assigned from its spelling alone.
+PROVEN: World-map node center coordinate;used to place medallions and compute path interpolation.
 
-Units: unknown. DOS layout/address: +0x2, 2 B.
+Units: unknown; world-map pixels. DOS layout/address: +0x2, 2 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: World-map node center coordinate;used to place medallions and compute path interpolation.
 
 ### field:world_info_t.index_up
 
-UNKNOWN: Declared world_info_t.index_up storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
-Units: unknown. DOS layout/address: +0x4, 1 B.
+Units: unknown; node index0..23. DOS layout/address: +0x4, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
 ### field:world_info_t.index_down
 
-UNKNOWN: Declared world_info_t.index_down storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
-Units: unknown. DOS layout/address: +0x5, 1 B.
+Units: unknown; node index0..23. DOS layout/address: +0x5, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
 ### field:world_info_t.index_left
 
-UNKNOWN: Declared world_info_t.index_left storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
-Units: unknown. DOS layout/address: +0x6, 1 B.
+Units: unknown; node index0..23. DOS layout/address: +0x6, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
 ### field:world_info_t.index_right
 
-UNKNOWN: Declared world_info_t.index_right storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
-Units: unknown. DOS layout/address: +0x7, 1 B.
+Units: unknown; node index0..23. DOS layout/address: +0x7, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23.
 
 ### field:world_info_t.state
 
-UNKNOWN: Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone.
+PROVEN: [sem_objs; special.c; UNKNOWN] Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone.
+[sem_flow; bit flags; PROVEN] Access/animation byte:bit0 accessible,bit1 drawing traversal/neighbor mark,bit2 pending unlock;high5 retained. Runtime bit2 is serialized as save-byte bit1.
 
-Units: unknown. DOS layout/address: +0x8, 1 B.
+Units: unknown; bit flags. DOS layout/address: +0x8, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Access/animation byte:bit0 accessible,bit1 drawing traversal/neighbor mark,bit2 pending unlock;high5 retained. Runtime bit2 is serialized as save-byte bit1.
 
 ### field:world_info_t.is_unlocked
 
-UNKNOWN: Declared world_info_t.is_unlocked storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Bit0 allows navigation/entry and ordinary medallion/path drawing.
 
-Units: unknown. DOS layout/address: +0x8, 1 B.
+Units: unknown; boolean. DOS layout/address: +0x8, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Bit0 allows navigation/entry and ordinary medallion/path drawing.
 
 ### field:world_info_t.state_bit1
 
-UNKNOWN: Declared world_info_t.state_bit1 storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Bit1 scratch traversal/neighbor mark:DISPLAY_PTS_WAY clears all then marks processed accessible nodes;DO_MEDAILLONS also marks accessible nodes after unlock. Not a separate persistent completion flag.
 
-Units: unknown. DOS layout/address: +0x8, 1 B.
+Units: unknown; boolean. DOS layout/address: +0x8, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Bit1 scratch traversal/neighbor mark:DISPLAY_PTS_WAY clears all then marks processed accessible nodes;DO_MEDAILLONS also marks accessible nodes after unlock. Not a separate persistent completion flag.
 
 ### field:world_info_t.is_unlocking
 
-UNKNOWN: Declared world_info_t.is_unlocking storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Bit2 pending unlock;at progress128 and marked neighbor,convert to accessible and clear bits1/2. Saved in packed save bit1.
 
-Units: unknown. DOS layout/address: +0x8, 1 B.
+Units: unknown; boolean. DOS layout/address: +0x8, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Bit2 pending unlock;at progress128 and marked neighbor,convert to accessible and clear bits1/2. Saved in packed save bit1.
 
 ### field:world_info_t.state_rest
 
@@ -9982,27 +22470,33 @@ INIT_OBJECTS tests exactly6 then disables type58 objects and calls take_bonus; D
 
 ### field:world_info_t.world
 
-UNKNOWN: Declared world_info_t.world storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Actual game world selected by node;shipped playable nodes1..6,save nodes18..23 carry7.
 
-Units: unknown. DOS layout/address: +0xa, 1 B.
+Units: unknown; world number / save-node marker. DOS layout/address: +0xa, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Actual game world selected by node;shipped playable nodes1..6,save nodes18..23 carry7.
 
 ### field:world_info_t.level
 
-UNKNOWN: Declared world_info_t.level storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Actual starting level selected by node;save nodes carry20 and take separate save UI route.
 
-Units: unknown. DOS layout/address: +0xb, 1 B.
+Units: unknown; level number. DOS layout/address: +0xb, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Actual starting level selected by node;save nodes carry20 and take separate save UI route.
 
 ### field:world_info_t.color
 
-UNKNOWN: Declared world_info_t.color storage; no intended meaning is assigned from its spelling alone.
+STRONG: Signed stage-title text color copied to text display state;exact uses retained.
 
-Units: unknown. DOS layout/address: +0xc, 1 B.
+Units: unknown; text color selector. DOS layout/address: +0xc, 1 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Signed stage-title text color copied to text display state;exact uses retained.
 
 ### field:world_info_t.field_D
 
@@ -10030,11 +22524,13 @@ Layout is measured. This member has no value-consuming typed access in the scope
 
 ### field:world_info_t.text
 
-UNKNOWN: Declared world_info_t.text storage; no intended meaning is assigned from its spelling alone.
+PROVEN: Localized node label pointer assigned from language_txt;save nodes replace it with150/151/152 status strings.
 
-Units: unknown. DOS layout/address: +0x10, 4 B.
+Units: unknown; string pointer. DOS layout/address: +0x10, 4 B.
 
 Layout is measured. This member has no value-consuming typed access in the scoped units; whole-header copies/opaque callees are not an intended-meaning proof.
+
+Pass6: Localized node label pointer assigned from language_txt;save nodes replace it with150/151/152 status strings.
 
 ### field:rgb_t.r
 
@@ -10747,4 +23243,1862 @@ PROVEN: Full background data length across all four planes.
 Units: bytes. DOS layout/address: +0x1c, 4 B.
 
 plan0bit_length;distinct from per-plane length and per-row stride.
+
+### field:ngawe_byte_pair_t.x
+
+UNKNOWN: Unused unsigned byte member x; coordinate meaning is not established.
+
+Units: unknown. DOS layout/address: +0x0, 1 B.
+
+Do not infer an object position/vector role from member spellings alone.
+
+### field:ngawe_byte_pair_t.y
+
+UNKNOWN: Unused unsigned byte member y; coordinate meaning is not established.
+
+Units: unknown. DOS layout/address: +0x1, 1 B.
+
+Do not infer an object position/vector role from member spellings alone.
+
+### field:cptr_t.read
+
+PROVEN: Decode and store the arguments of this opcode.
+
+Units: callback pointer. DOS layout/address: +0x0, 4 B.
+
+Decode and store the arguments of this opcode.
+
+### field:cptr_t.skip
+
+PROVEN: Skip the arguments of this opcode without applying its handler.
+
+Units: callback pointer. DOS layout/address: +0x4, 4 B.
+
+Skip the arguments of this opcode without applying its handler.
+
+### field:cptr_t.handle
+
+PROVEN: Handle the decoded command; nonzero continues immediate decoding, zero yields to the object updater.
+
+Units: callback pointer. DOS layout/address: +0x8, 4 B.
+
+Handle the decoded command; nonzero continues immediate decoding, zero yields to the object updater.
+
+### field:display_map_t.x
+
+PROVEN: Screen x of the first visible tile, including its partially clipped portion.
+
+Units: see contract. DOS layout/address: +0x0, 2 B.
+
+Screen x of the first visible tile, including its partially clipped portion.
+
+### field:display_map_t.y
+
+PROVEN: Screen y of the first visible tile, including its partially clipped portion.
+
+Units: see contract. DOS layout/address: +0x2, 2 B.
+
+Screen y of the first visible tile, including its partially clipped portion.
+
+### field:display_map_t.width_in_tiles
+
+PROVEN: Ceiling-rounded number of visible tile columns.
+
+Units: see contract. DOS layout/address: +0x4, 1 B.
+
+Ceiling-rounded number of visible tile columns.
+
+### field:display_map_t.height_in_tiles
+
+PROVEN: Ceiling-rounded number of visible tile rows.
+
+Units: see contract. DOS layout/address: +0x5, 1 B.
+
+Ceiling-rounded number of visible tile rows.
+
+### field:display_map_t.tile_index
+
+PROVEN: Row-major index of the first visible map tile, stored as unsigned16.
+
+Units: see contract. DOS layout/address: +0x6, 2 B.
+
+Row-major index of the first visible map tile, stored as unsigned16.
+
+### field:big_map_t.map
+
+PROVEN: Map tile record array shared with mp.map.
+
+Units: see contract. DOS layout/address: +0x0, 4 B.
+
+Map tile record array shared with mp.map.
+
+### field:big_map_t.tile_texture_offsets
+
+PROVEN: Per-map-cell Normal texture pointers, despite the offsets spelling.
+
+Units: see contract. DOS layout/address: +0x4, 4 B.
+
+Per-map-cell Normal texture pointers, despite the offsets spelling.
+
+### field:big_map_t.display_map
+
+PROVEN: Pointer to the prepared visible tile rectangle.
+
+Units: see contract. DOS layout/address: +0x8, 4 B.
+
+Pointer to the prepared visible tile rectangle.
+
+### field:big_map_t.map_blocks
+
+PROVEN: Base of the packed Normal tile texture storage.
+
+Units: see contract. DOS layout/address: +0xc, 4 B.
+
+Base of the packed Normal tile texture storage.
+
+### field:big_map_t.field_10
+
+UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units.
+
+Units: see contract. DOS layout/address: +0x10, 4 B.
+
+Retain the neutral field spelling; no additional runtime purpose is assigned.
+
+### field:big_map_t.field_14
+
+UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units.
+
+Units: see contract. DOS layout/address: +0x14, 2 B.
+
+Retain the neutral field spelling; no additional runtime purpose is assigned.
+
+### field:big_map_t.width
+
+PROVEN: Map width in 16-pixel tiles.
+
+Units: see contract. DOS layout/address: +0x16, 2 B.
+
+Map width in 16-pixel tiles.
+
+### field:big_map_t.height
+
+PROVEN: Map height in 16-pixel tiles.
+
+Units: see contract. DOS layout/address: +0x18, 2 B.
+
+Map height in 16-pixel tiles.
+
+### field:big_map_t.field_1a
+
+UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units.
+
+Units: see contract. DOS layout/address: +0x1a, 2 B.
+
+Retain the neutral field spelling; no additional runtime purpose is assigned.
+
+### field:big_map_t.field_1c
+
+UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units.
+
+Units: see contract. DOS layout/address: +0x1c, 2 B.
+
+Retain the neutral field spelling; no additional runtime purpose is assigned.
+
+### field:big_map_t.field_1e
+
+UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units.
+
+Units: see contract. DOS layout/address: +0x1e, 2 B.
+
+Retain the neutral field spelling; no additional runtime purpose is assigned.
+
+### field:bb_data_t.speed_x
+
+STRONG: Walking-animation selector and encounter movement scratch; 2/3 select walking substates 1/2.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Walking-animation selector and encounter movement scratch; 2/3 select walking substates 1/2.
+
+### field:bb_data_t.field1_0x2
+
+STRONG: Signed per-encounter progress/countdown scratch; initialized to -1 and tested by movement/landing phases.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Signed per-encounter progress/countdown scratch; initialized to -1 and tested by movement/landing phases.
+
+### field:bb_data_t.field2_0x4
+
+STRONG: Mr Stone/totem damage phase: zero normal, one requested, two reacting, three defeated.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 1 B.
+
+Keep exact offset/stride, width and signedness. Mr Stone/totem damage phase: zero normal, one requested, two reacting, three defeated.
+
+### field:bb_data_t.saved_main_etat
+
+STRONG: Saved interrupted main state in the damage response.
+
+Units: see observed computation and contract. DOS layout/address: +0x5, 1 B.
+
+Keep exact offset/stride, width and signedness. Saved interrupted main state in the damage response.
+
+### field:bb_data_t.saved_sub_etat
+
+STRONG: Saved interrupted substate in the damage response.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 1 B.
+
+Keep exact offset/stride, width and signedness. Saved interrupted substate in the damage response.
+
+### field:bb_data_t._pad_7
+
+UNKNOWN: No intended meaning established for bb_data_t._pad_7. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x7, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bb_data_t._pad_7. Observed layout and typed accesses are retained without a rename.
+
+### field:bb_data_t.saved_cmd
+
+STRONG: Saved script command during damage, also reused as a signed defeat countdown.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. Saved script command during damage, also reused as a signed defeat countdown.
+
+### field:bb_data_t.sprite6_x
+
+STRONG: Sprite-6 contact x in the main fight; reused as phase scratch in later encounters.
+
+Units: see observed computation and contract. DOS layout/address: +0xa, 2 B.
+
+Keep exact offset/stride, width and signedness. Sprite-6 contact x in the main fight; reused as phase scratch in later encounters.
+
+### field:bb_data_t.sprite6_y
+
+STRONG: Sprite-6 contact y in the main fight; reused as scroll/phase scratch in later encounters.
+
+Units: see observed computation and contract. DOS layout/address: +0xc, 2 B.
+
+Keep exact offset/stride, width and signedness. Sprite-6 contact y in the main fight; reused as scroll/phase scratch in later encounters.
+
+### field:bb_data_t.field8_0xe
+
+STRONG: Multipurpose attack/intro counter, including successive overhead projectile positions.
+
+Units: see observed computation and contract. DOS layout/address: +0xe, 1 B.
+
+Keep exact offset/stride, width and signedness. Multipurpose attack/intro counter, including successive overhead projectile positions.
+
+### field:bb_data_t._pad_15
+
+UNKNOWN: No intended meaning established for bb_data_t._pad_15. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xf, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bb_data_t._pad_15. Observed layout and typed accesses are retained without a rename.
+
+### field:bb_attack_entry_t.attack
+
+STRONG: Mr Stone attack selector; 255 terminates the row.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Mr Stone attack selector; 255 terminates the row.
+
+### field:bb_attack_entry_t.wait_for_fin_atan
+
+STRONG: Wait/repetition count loaded into WaitForFinAtan for the selected attack.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 1 B.
+
+Keep exact offset/stride, width and signedness. Wait/repetition count loaded into WaitForFinAtan for the selected attack.
+
+### field:bb_attack_entry_t.reserved
+
+UNKNOWN: No intended meaning established for bb_attack_entry_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x3, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bb_attack_entry_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+### field:couteaux_info_t.x_pos
+
+STRONG: Knife target horizontal coordinate; staging readers can add camera x and attack aiming writers use Rayman coordinates.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Knife target horizontal coordinate; staging readers can add camera x and attack aiming writers use Rayman coordinates.
+
+### field:couteaux_info_t.y_pos
+
+STRONG: Knife target vertical coordinate; staging readers can add camera y and attack aiming writers use Rayman coordinates.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Knife target vertical coordinate; staging readers can add camera y and attack aiming writers use Rayman coordinates.
+
+### field:couteaux_info_t.field2_0x4
+
+STRONG: Knife launch delay/state latch, counting down to one for preparation and zero for travel.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. Knife launch delay/state latch, counting down to one for preparation and zero for travel.
+
+### field:couteaux_info_t.field3_0x6
+
+STRONG: Knife return delay; the next knife waits for the preceding entry to reach zero.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. Knife return delay; the next knife waits for the preceding entry to reach zero.
+
+### field:couteaux_info_t.field4_0x8
+
+STRONG: Fifteen-step preparation/flicker countdown used before restoring launch velocity.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. Fifteen-step preparation/flicker countdown used before restoring launch velocity.
+
+### field:couteaux_info_t.field5_0xa
+
+STRONG: Saved horizontal knife launch velocity restored after the preparation pause.
+
+Units: see observed computation and contract. DOS layout/address: +0xa, 2 B.
+
+Keep exact offset/stride, width and signedness. Saved horizontal knife launch velocity restored after the preparation pause.
+
+### field:couteaux_info_t.field6_0xc
+
+STRONG: Saved vertical knife launch velocity restored after the preparation pause.
+
+Units: see observed computation and contract. DOS layout/address: +0xc, 2 B.
+
+Keep exact offset/stride, width and signedness. Saved vertical knife launch velocity restored after the preparation pause.
+
+### field:couteaux_info_t.field7_0xe
+
+STRONG: Index of the level object bound to this knife slot.
+
+Units: see observed computation and contract. DOS layout/address: +0xe, 2 B.
+
+Keep exact offset/stride, width and signedness. Index of the level object bound to this knife slot.
+
+### field:couteaux_info_t.record_flag
+
+STRONG: Saved directional animation frame restored during the preparation pause.
+
+Units: see observed computation and contract. DOS layout/address: +0x10, 1 B.
+
+Keep exact offset/stride, width and signedness. Saved directional animation frame restored during the preparation pause.
+
+### field:couteaux_info_t.active
+
+STRONG: Knife arrival/completion flag counted by check_couteaux; distinct from object activation.
+
+Units: see observed computation and contract. DOS layout/address: +0x11, 1 B.
+
+Keep exact offset/stride, width and signedness. Knife arrival/completion flag counted by check_couteaux; distinct from object activation.
+
+### field:couteaux_info_t.field9_0x12
+
+STRONG: Numeric per-knife launch-mode selector; 0/1/2/3 choose different directional/ballistic setup.
+
+Units: see observed computation and contract. DOS layout/address: +0x12, 1 B.
+
+Keep exact offset/stride, width and signedness. Numeric per-knife launch-mode selector; 0/1/2/3 choose different directional/ballistic setup.
+
+### field:couteaux_info_t.dos_tail
+
+UNKNOWN: No intended meaning established for couteaux_info_t.dos_tail. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x13, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for couteaux_info_t.dos_tail. Observed layout and typed accesses are retained without a rename.
+
+### field:pma_block_flags_t.raw
+
+UNKNOWN: No intended meaning established for pma_block_flags_t.raw. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for pma_block_flags_t.raw. Observed layout and typed accesses are retained without a rename.
+
+### field:pma_block_flags_t.bits
+
+UNKNOWN: No intended meaning established for pma_block_flags_t.bits. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for pma_block_flags_t.bits. Observed layout and typed accesses are retained without a rename.
+
+### field:pma_block_flags_t.bits.unused0
+
+UNKNOWN: No intended meaning established for pma_block_flags_t.bits.unused0. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for pma_block_flags_t.bits.unused0. Observed layout and typed accesses are retained without a rename.
+
+### field:pma_block_flags_t.bits.solid
+
+UNKNOWN: No intended meaning established for pma_block_flags_t.bits.solid. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for pma_block_flags_t.bits.solid. Observed layout and typed accesses are retained without a rename.
+
+### field:pma_block_flags_t.bits.unused1
+
+UNKNOWN: No intended meaning established for pma_block_flags_t.bits.unused1. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for pma_block_flags_t.bits.unused1. Observed layout and typed accesses are retained without a rename.
+
+### field:bande_t.length
+
+STRONG: Band extent along the splitting axis; zero marks the foreground-sprite band.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Band extent along the splitting axis; zero marks the foreground-sprite band.
+
+### field:bande_t.offset
+
+STRONG: Cumulative band starting offset along the splitting axis.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Cumulative band starting offset along the splitting axis.
+
+### field:bande_t.field_4
+
+STRONG: Scroll update mode: zero parallax, 1/2 autonomous signs, 4/5 combined parallax and autonomous motion.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 1 B.
+
+Keep exact offset/stride, width and signedness. Scroll update mode: zero parallax, 1/2 autonomous signs, 4/5 combined parallax and autonomous motion.
+
+### field:bande_t._pad_5
+
+UNKNOWN: No intended meaning established for bande_t._pad_5. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x5, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bande_t._pad_5. Observed layout and typed accesses are retained without a rename.
+
+### field:bande_t.field_6
+
+STRONG: Current wrapped scroll displacement in pixels.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. Current wrapped scroll displacement in pixels.
+
+### field:bande_t.field_8
+
+STRONG: Camera parallax divisor copied from def_bande_t.field_2.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 1 B.
+
+Keep exact offset/stride, width and signedness. Camera parallax divisor copied from def_bande_t.field_2.
+
+### field:bande_t.field_9
+
+STRONG: Autonomous scroll increment in sixteenths copied from def_bande_t.field_4.
+
+Units: see observed computation and contract. DOS layout/address: +0x9, 1 B.
+
+Keep exact offset/stride, width and signedness. Autonomous scroll increment in sixteenths copied from def_bande_t.field_4.
+
+### field:bande_t._pad_0a
+
+UNKNOWN: No intended meaning established for bande_t._pad_0a. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xa, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bande_t._pad_0a. Observed layout and typed accesses are retained without a rename.
+
+### field:bande_t.source_buffer_pos
+
+STRONG: Source band-start pointer, with row/column addressing selected by scroll mode.
+
+Units: see observed computation and contract. DOS layout/address: +0xc, 4 B.
+
+Keep exact offset/stride, width and signedness. Source band-start pointer, with row/column addressing selected by scroll mode.
+
+### field:bande_t.draw_buffer_pos
+
+STRONG: Destination band-start pointer, using 320-byte screen rows in horizontal mode.
+
+Units: see observed computation and contract. DOS layout/address: +0x10, 4 B.
+
+Keep exact offset/stride, width and signedness. Destination band-start pointer, using 320-byte screen rows in horizontal mode.
+
+### field:bande_t.field_14
+
+STRONG: Autonomous scroll accumulator in sixteenths, wrapped by sixteen times the plane extent.
+
+Units: see observed computation and contract. DOS layout/address: +0x14, 2 B.
+
+Keep exact offset/stride, width and signedness. Autonomous scroll accumulator in sixteenths, wrapped by sixteen times the plane extent.
+
+### field:bande_t._pad_16
+
+UNKNOWN: No intended meaning established for bande_t._pad_16. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x16, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for bande_t._pad_16. Observed layout and typed accesses are retained without a rename.
+
+### field:def_bande_t.length
+
+STRONG: Initial band extent copied to the runtime band.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Initial band extent copied to the runtime band.
+
+### field:def_bande_t.field_2
+
+STRONG: Initial camera parallax divisor copied to bande_t.field_8.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 1 B.
+
+Keep exact offset/stride, width and signedness. Initial camera parallax divisor copied to bande_t.field_8.
+
+### field:def_bande_t._pad_3
+
+UNKNOWN: No intended meaning established for def_bande_t._pad_3. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x3, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for def_bande_t._pad_3. Observed layout and typed accesses are retained without a rename.
+
+### field:def_bande_t.field_4
+
+STRONG: Initial autonomous scroll increment copied to bande_t.field_9.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 1 B.
+
+Keep exact offset/stride, width and signedness. Initial autonomous scroll increment copied to bande_t.field_9.
+
+### field:def_bande_t._pad_5
+
+UNKNOWN: No intended meaning established for def_bande_t._pad_5. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x5, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for def_bande_t._pad_5. Observed layout and typed accesses are retained without a rename.
+
+### field:def_bande_t.field_6
+
+STRONG: Initial scroll update mode copied to bande_t.field_4.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 1 B.
+
+Keep exact offset/stride, width and signedness. Initial scroll update mode copied to bande_t.field_4.
+
+### field:def_bande_t._pad_7
+
+UNKNOWN: No intended meaning established for def_bande_t._pad_7. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x7, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for def_bande_t._pad_7. Observed layout and typed accesses are retained without a rename.
+
+### field:def_sprite_t.x
+
+STRONG: Background sprite horizontal placement copied into the runtime Sprite table.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Background sprite horizontal placement copied into the runtime Sprite table.
+
+### field:def_sprite_t.y
+
+STRONG: Background sprite vertical placement copied into the runtime Sprite table.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Background sprite vertical placement copied into the runtime Sprite table.
+
+### field:def_sprite_t.bande_index
+
+STRONG: Index of the scrolling band whose displacement and layering apply to the sprite.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. Index of the scrolling band whose displacement and layering apply to the sprite.
+
+### field:def_sprite_t._pad_6
+
+UNKNOWN: No intended meaning established for def_sprite_t._pad_6. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for def_sprite_t._pad_6. Observed layout and typed accesses are retained without a rename.
+
+### field:sax_attack_entry_t.next_note
+
+STRONG: Next note or boss-action selector returned by PrepareAtak.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. Next note or boss-action selector returned by PrepareAtak.
+
+### field:sax_attack_entry_t.time
+
+STRONG: Delay loaded as time+1 after a type-74 note shot.
+
+Units: see observed computation and contract. DOS layout/address: +0x1, 1 B.
+
+Keep exact offset/stride, width and signedness. Delay loaded as time+1 after a type-74 note shot.
+
+### field:sax_attack_entry_t.end
+
+STRONG: Nonzero attack-row terminator that resets IndexAtak.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Nonzero attack-row terminator that resets IndexAtak.
+
+### field:sax_note_entry_t.type
+
+STRONG: Note type offset added to ninety; also initializes the note substate.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 1 B.
+
+Keep exact offset/stride, width and signedness. Note type offset added to ninety; also initializes the note substate.
+
+### field:sax_note_entry_t.dos_alignment
+
+UNKNOWN: No intended meaning established for sax_note_entry_t.dos_alignment. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x1, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for sax_note_entry_t.dos_alignment. Observed layout and typed accesses are retained without a rename.
+
+### field:sax_note_entry_t.speed_x
+
+STRONG: Horizontal launch magnitude, negated for the opposite facing.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Horizontal launch magnitude, negated for the opposite facing.
+
+### field:sax_note_entry_t.speed_y
+
+STRONG: Initial vertical launch velocity.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. Initial vertical launch velocity.
+
+### field:sax_note_entry_t.initial_iframes
+
+STRONG: Value assigned to note iframes_timer; type 92 uses it as a split count.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. Value assigned to note iframes_timer; type 92 uses it as a split count.
+
+### field:sax_note_entry_t.field4_0x8
+
+UNKNOWN: No intended meaning established for sax_note_entry_t.field4_0x8. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for sax_note_entry_t.field4_0x8. Observed layout and typed accesses are retained without a rename.
+
+### field:sax_data_t.x_pos
+
+STRONG: Mr Sax horizontal position scratch used by encounter code.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Mr Sax horizontal position scratch used by encounter code.
+
+### field:sax_data_t.y_pos
+
+STRONG: Mr Sax vertical position scratch used by encounter code.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Mr Sax vertical position scratch used by encounter code.
+
+### field:sax_data_t.note_box_coll_x
+
+STRONG: World x of the twenty-pixel-wide reflected-note hit box derived from sprite 2.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. World x of the twenty-pixel-wide reflected-note hit box derived from sprite 2.
+
+### field:sax_data_t.note_box_coll_y
+
+STRONG: World y of the 140-pixel-high reflected-note hit box derived from sprite 5 plus twenty.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. World y of the 140-pixel-high reflected-note hit box derived from sprite 5 plus twenty.
+
+### field:sax_data_t.sprite2_x
+
+STRONG: Adjusted sprite-2 horizontal firing anchor.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. Adjusted sprite-2 horizontal firing anchor.
+
+### field:sax_data_t.sprite2_y
+
+STRONG: Adjusted sprite-2 vertical firing anchor.
+
+Units: see observed computation and contract. DOS layout/address: +0xa, 2 B.
+
+Keep exact offset/stride, width and signedness. Adjusted sprite-2 vertical firing anchor.
+
+### field:sax_data_t.coup
+
+STRONG: Damage coordination latch: one requests a hit, two denotes a reaction, zero clears it.
+
+Units: see observed computation and contract. DOS layout/address: +0xc, 1 B.
+
+Keep exact offset/stride, width and signedness. Damage coordination latch: one requests a hit, two denotes a reaction, zero clears it.
+
+### field:sax_data_t.saved_hp
+
+STRONG: HP value restored by INIT_SAXO for type 74.
+
+Units: see observed computation and contract. DOS layout/address: +0xd, 1 B.
+
+Keep exact offset/stride, width and signedness. HP value restored by INIT_SAXO for type 74.
+
+### field:sax_data_t.field8_0xe
+
+STRONG: Interrupted main state restored after the hit animation.
+
+Units: see observed computation and contract. DOS layout/address: +0xe, 1 B.
+
+Keep exact offset/stride, width and signedness. Interrupted main state restored after the hit animation.
+
+### field:sax_data_t.field9_0xf
+
+STRONG: Interrupted substate restored after the hit animation.
+
+Units: see observed computation and contract. DOS layout/address: +0xf, 1 B.
+
+Keep exact offset/stride, width and signedness. Interrupted substate restored after the hit animation.
+
+### field:sax_data_t.field10_0x10
+
+STRONG: Signed encounter countdown/action scratch, including main-fight defeat timing.
+
+Units: see observed computation and contract. DOS layout/address: +0x10, 2 B.
+
+Keep exact offset/stride, width and signedness. Signed encounter countdown/action scratch, including main-fight defeat timing.
+
+### field:vitraux_info_t.x_pos
+
+STRONG: Window object's horizontal center captured by init_vitraux.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Window object's horizontal center captured by init_vitraux.
+
+### field:vitraux_info_t.y_pos
+
+STRONG: Window object's bottom position captured by init_vitraux.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Window object's bottom position captured by init_vitraux.
+
+### field:vitraux_info_t.obj_id
+
+STRONG: Byte level-object index bound to the window slot.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 1 B.
+
+Keep exact offset/stride, width and signedness. Byte level-object index bound to the window slot.
+
+### field:vitraux_info_t.index
+
+STRONG: Slot index written during window registration.
+
+Units: see observed computation and contract. DOS layout/address: +0x5, 1 B.
+
+Keep exact offset/stride, width and signedness. Slot index written during window registration.
+
+### field:vitraux_info_t.field_6
+
+UNKNOWN: No intended meaning established for vitraux_info_t.field_6. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for vitraux_info_t.field_6. Observed layout and typed accesses are retained without a rename.
+
+### field:vitraux_info_t.mode
+
+STRONG: Remaining display repeats, decremented whenever the 100-tick period expires.
+
+Units: see observed computation and contract. DOS layout/address: +0x7, 1 B.
+
+Keep exact offset/stride, width and signedness. Remaining display repeats, decremented whenever the 100-tick period expires.
+
+### field:vitraux_info_t.value
+
+STRONG: Window display countdown, reloaded to one hundred on each repeat.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. Window display countdown, reloaded to one hundred on each repeat.
+
+### field:mite_poing_local_t.y_16
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.y_16. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 4 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.y_16. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.field_4
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.field_4. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.field_4. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.speed_x
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.speed_x. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.speed_x. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.charge
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.charge. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x8, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.charge. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.field_A
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.field_A. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xa, 2 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.field_A. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.sub_etat
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.sub_etat. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xc, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.sub_etat. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.is_returning
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.is_returning. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xd, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.is_returning. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.is_active
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.is_active. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xe, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.is_active. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.damage
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.damage. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0xf, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.damage. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.is_charging
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.is_charging. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x10, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.is_charging. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.is_boum
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.is_boum. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x11, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.is_boum. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.field_12
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.field_12. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x12, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.field_12. Observed layout and typed accesses are retained without a rename.
+
+### field:mite_poing_local_t.field_13
+
+UNKNOWN: No intended meaning established for mite_poing_local_t.field_13. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x13, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for mite_poing_local_t.field_13. Observed layout and typed accesses are retained without a rename.
+
+### field:cb_collision_t.dx
+
+STRONG: Horizontal ball-to-brick separation retained for the chosen contact.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Horizontal ball-to-brick separation retained for the chosen contact.
+
+### field:cb_collision_t.dy
+
+STRONG: Vertical ball-to-brick separation retained for the chosen contact.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Vertical ball-to-brick separation retained for the chosen contact.
+
+### field:cb_collision_t.reflect_x
+
+STRONG: Whether the chosen contact reflects the ball's horizontal velocity.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 1 B.
+
+Keep exact offset/stride, width and signedness. Whether the chosen contact reflects the ball's horizontal velocity.
+
+### field:cb_collision_t.reflect_y
+
+STRONG: Whether the chosen contact reflects the ball's vertical velocity.
+
+Units: see observed computation and contract. DOS layout/address: +0x5, 1 B.
+
+Keep exact offset/stride, width and signedness. Whether the chosen contact reflects the ball's vertical velocity.
+
+### field:cb_collision_t.index
+
+STRONG: Index of the contacted runtime brick slot.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 1 B.
+
+Keep exact offset/stride, width and signedness. Index of the contacted runtime brick slot.
+
+### field:cb_collision_t.reserved
+
+UNKNOWN: No intended meaning established for cb_collision_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x7, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for cb_collision_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+### field:casse_brique_entry_t.x
+
+STRONG: Brick x offset within its formation, read from animation layout.
+
+Units: see observed computation and contract. DOS layout/address: +0x0, 2 B.
+
+Keep exact offset/stride, width and signedness. Brick x offset within its formation, read from animation layout.
+
+### field:casse_brique_entry_t.y
+
+STRONG: Brick y offset within its formation, read from animation layout.
+
+Units: see observed computation and contract. DOS layout/address: +0x2, 2 B.
+
+Keep exact offset/stride, width and signedness. Brick y offset within its formation, read from animation layout.
+
+### field:casse_brique_entry_t.object_index
+
+STRONG: Index of the pooled level object used by this brick slot.
+
+Units: see observed computation and contract. DOS layout/address: +0x4, 2 B.
+
+Keep exact offset/stride, width and signedness. Index of the pooled level object used by this brick slot.
+
+### field:casse_brique_entry_t.kind
+
+STRONG: Saved layout brick kind derived from the animation sprite ID.
+
+Units: see observed computation and contract. DOS layout/address: +0x6, 1 B.
+
+Keep exact offset/stride, width and signedness. Saved layout brick kind derived from the animation sprite ID.
+
+### field:casse_brique_entry_t.reserved
+
+UNKNOWN: No intended meaning established for casse_brique_entry_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+Units: see observed computation and contract. DOS layout/address: +0x7, 1 B.
+
+Keep exact offset/stride, width and signedness. No intended meaning established for casse_brique_entry_t.reserved. Observed layout and typed accesses are retained without a rename.
+
+### field:options_t.music_enabled
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0x0, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.sound_volume
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0x2, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.SizeScreen
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0x4, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.Frequence
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0x6, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.fixon
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0x8, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.BackgroundOn
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0xa, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.ScrollDiffOn
+
+PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+Units: screen-dependent selector. DOS layout/address: +0xc, 2 B.
+
+Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context.
+
+### field:options_t.field_E
+
+UNKNOWN: Declared signed16 working-record storage;no value-consuming use established.
+
+Units: uninterpreted signed16. DOS layout/address: +0xe, 2 B.
+
+Declared signed16 working-record storage;no value-consuming use established.
+
+### field:options_t.field_10
+
+UNKNOWN: Declared signed16 working-record storage;no value-consuming use established.
+
+Units: uninterpreted signed16. DOS layout/address: +0x10, 2 B.
+
+Declared signed16 working-record storage;no value-consuming use established.
+
+### field:options_t.field_12
+
+UNKNOWN: Declared signed16 working-record storage;no value-consuming use established.
+
+Units: uninterpreted signed16. DOS layout/address: +0x12, 2 B.
+
+Declared signed16 working-record storage;no value-consuming use established.
+
+### field:world_info_save_t.raw
+
+PROVEN: Whole serialized byte;field writes preserve unrelated high3 bits.
+
+Units: byte. DOS layout/address: +0x0, 1 B.
+
+Whole serialized byte;field writes preserve unrelated high3 bits.
+
+### field:world_info_save_t.is_unlocked
+
+PROVEN: Packed bit0 copies runtime accessible flag.
+
+Units: packed save field. DOS layout/address: +0x0, 1 B.
+
+Packed bit0 copies runtime accessible flag.
+
+### field:world_info_save_t.is_unlocking
+
+PROVEN: Packed bit1 copies runtime pending bit2;not runtime scratch bit1.
+
+Units: packed save field. DOS layout/address: +0x0, 1 B.
+
+Packed bit1 copies runtime pending bit2;not runtime scratch bit1.
+
+### field:world_info_save_t.nb_cages
+
+PROVEN: Packed bits2..4 store low3 cage-count bits,ordinary game count0..6.
+
+Units: packed save field. DOS layout/address: +0x0, 1 B.
+
+Packed bits2..4 store low3 cage-count bits,ordinary game count0..6.
+
+### field:world_info_save_t.unused
+
+UNKNOWN: High3 bits retained by store/retrieve field operations;no semantic consumer established.
+
+Units: uninterpreted bits. DOS layout/address: +0x0, 1 B.
+
+High3 bits retained by store/retrieve field operations;no semantic consumer established.
+
+### field:temp_mem_entry_t.capacity
+
+PROVEN: Block byte capacity;zero for unused descriptor.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Block byte capacity;zero for unused descriptor.
+
+### field:temp_mem_entry_t.data
+
+PROVEN: Block start pointer;unused descriptor points to pool end.
+
+Units: address. DOS layout/address: +0x4, 4 B.
+
+Block start pointer;unused descriptor points to pool end.
+
+### field:temp_mem_entry_t.allocated
+
+PROVEN: Nonzero means live block;zero allows best-fit allocation/coalescing.
+
+Units: boolean. DOS layout/address: +0x8, 1 B.
+
+Nonzero means live block;zero allows best-fit allocation/coalescing.
+
+### field:dpmi_memory_info_t.largest_free_block
+
+PROVEN: First output dword of INT31h0500h;returned by get_avail_memory.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+First output dword of INT31h0500h;returned by get_avail_memory.
+
+### field:dpmi_memory_info_t.remaining_info
+
+UNKNOWN: Remaining11 DPMI output dwords;not consumed by this unit. Do not invent per-element names.
+
+Units: uninterpreted DPMI output. DOS layout/address: +0x4, 44 B.
+
+Remaining11 DPMI output dwords;not consumed by this unit. Do not invent per-element names.
+
+### field:mem_peak_t.used
+
+PROVEN: Largest observed arena cursor.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Largest observed arena cursor.
+
+### field:mem_peak_t.world
+
+PROVEN: Current num_world when cursor peak was replaced.
+
+Units: world/level index. DOS layout/address: +0x4, 2 B.
+
+Current num_world when cursor peak was replaced.
+
+### field:mem_peak_t.level
+
+PROVEN: Current num_level when cursor peak was replaced.
+
+Units: world/level index. DOS layout/address: +0x6, 2 B.
+
+Current num_level when cursor peak was replaced.
+
+### field:mem_usage_stats_t.temp_capacity
+
+PROVEN: Adjusted capacity of pooled temporary arena.
+
+Units: bytes. DOS layout/address: +0x0, 4 B.
+
+Adjusted capacity of pooled temporary arena.
+
+### field:mem_usage_stats_t.fix
+
+PROVEN: Peak cursor plus world/level location for the named arena.
+
+Units: peak record. DOS layout/address: +0x4, 8 B.
+
+Peak cursor plus world/level location for the named arena.
+
+### field:mem_usage_stats_t.world
+
+PROVEN: Peak cursor plus world/level location for the named arena.
+
+Units: peak record. DOS layout/address: +0xc, 8 B.
+
+Peak cursor plus world/level location for the named arena.
+
+### field:mem_usage_stats_t.level
+
+PROVEN: Peak cursor plus world/level location for the named arena.
+
+Units: peak record. DOS layout/address: +0x14, 8 B.
+
+Peak cursor plus world/level location for the named arena.
+
+### field:mem_usage_stats_t.sprite
+
+PROVEN: Peak cursor plus world/level location for the named arena.
+
+Units: peak record. DOS layout/address: +0x1c, 8 B.
+
+Peak cursor plus world/level location for the named arena.
+
+### field:mem_usage_stats_t.temp_peak
+
+PROVEN: Historical diagnostic high-water value;fallback updates compare pool capacity+single request,not sum of all live heap fallbacks.
+
+Units: bytes. DOS layout/address: +0x24, 4 B.
+
+Historical diagnostic high-water value;fallback updates compare pool capacity+single request,not sum of all live heap fallbacks.
+
+## ufo.json
+
+Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.
+
+### function:test_block_chdir
+
+PROVEN: Compute and gate the direction-change map-cell index used by indicator-controlled motion.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e760.
+
+Compute and gate the direction-change map-cell index used by indicator-controlled motion.
+
+On a newly entered in-bounds tile_type 1, match the first active indicator in the same map cell. Subtypes 0/1/2/3 select right/down/left/up; 4 maps vertical to right and horizontal to up,5 vertical to right and horizontal to down,6 vertical to left and horizontal to up,7 vertical to left and horizontal to down. Subtype8 reverses. 9/10 adjust an already horizontal nonzero speed;11/12 adjust an already vertical nonzero speed, with adjusted magnitudes limited to2..4. Lever cycles linked indicator0..3 only in state5:53. Start changes0:13 to0:14 at(2,0).
+
+### function:DO_MOVING_WITH_INDICATOR_COMMAND
+
+PROVEN: Apply the matching active indicator's direction/speed operation to state-0:14 motion.
+
+Units: see observed computation and contract. DOS layout/address: 1:6e838.
+
+Apply the matching active indicator's direction/speed operation to state-0:14 motion.
+
+On a newly entered in-bounds tile_type 1, match the first active indicator in the same map cell. Subtypes 0/1/2/3 select right/down/left/up; 4 maps vertical to right and horizontal to up,5 vertical to right and horizontal to down,6 vertical to left and horizontal to up,7 vertical to left and horizontal to down. Subtype8 reverses. 9/10 adjust an already horizontal nonzero speed;11/12 adjust an already vertical nonzero speed, with adjusted magnitudes limited to2..4. Lever cycles linked indicator0..3 only in state5:53. Start changes0:13 to0:14 at(2,0).
+
+### function:DO_IDC_COMMAND
+
+PROVEN: Display indicator substates 0..3 at priority 4 and hide the rest.
+
+Units: see observed computation and contract. DOS layout/address: 1:6eb84.
+
+Display indicator substates 0..3 at priority 4 and hide the rest.
+
+On a newly entered in-bounds tile_type 1, match the first active indicator in the same map cell. Subtypes 0/1/2/3 select right/down/left/up; 4 maps vertical to right and horizontal to up,5 vertical to right and horizontal to down,6 vertical to left and horizontal to up,7 vertical to left and horizontal to down. Subtype8 reverses. 9/10 adjust an already horizontal nonzero speed;11/12 adjust an already vertical nonzero speed, with adjusted magnitudes limited to2..4. Lever cycles linked indicator0..3 only in state5:53. Start changes0:13 to0:14 at(2,0).
+
+### function:DO_LEV_POING_COLLISION
+
+PROVEN: On lever state 5:53 fist contact, enter 5:54 and rotate a linked indicator through 0..3.
+
+Units: see observed computation and contract. DOS layout/address: 1:6ebb8.
+
+On lever state 5:53 fist contact, enter 5:54 and rotate a linked indicator through 0..3.
+
+On a newly entered in-bounds tile_type 1, match the first active indicator in the same map cell. Subtypes 0/1/2/3 select right/down/left/up; 4 maps vertical to right and horizontal to up,5 vertical to right and horizontal to down,6 vertical to left and horizontal to up,7 vertical to left and horizontal to down. Subtype8 reverses. 9/10 adjust an already horizontal nonzero speed;11/12 adjust an already vertical nonzero speed, with adjusted magnitudes limited to2..4. Lever cycles linked indicator0..3 only in state5:53. Start changes0:13 to0:14 at(2,0).
+
+### function:START_UFO
+
+PROVEN: Start a stationary UFO from state 0:13 as 0:14 with horizontal speed two.
+
+Units: see observed computation and contract. DOS layout/address: 1:6ec50.
+
+Start a stationary UFO from state 0:13 as 0:14 with horizontal speed two.
+
+On a newly entered in-bounds tile_type 1, match the first active indicator in the same map cell. Subtypes 0/1/2/3 select right/down/left/up; 4 maps vertical to right and horizontal to up,5 vertical to right and horizontal to down,6 vertical to left and horizontal to up,7 vertical to left and horizontal to down. Subtype8 reverses. 9/10 adjust an already horizontal nonzero speed;11/12 adjust an already vertical nonzero speed, with adjusted magnitudes limited to2..4. Lever cycles linked indicator0..3 only in state5:53. Start changes0:13 to0:14 at(2,0).
+
+## worldmap.json
+
+DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.
+
+### function:TEST_DISPLAY_PTS_WAY
+
+PROVEN: Draw path segment toward connected node only when current/neighbor access state and path progress permit; delegates sampled path drawing to DISPLAY_PTS_TO_PLAN2.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:57860.
+
+Draw path segment toward connected node only when current/neighbor access state and path progress permit; delegates sampled path drawing to DISPLAY_PTS_TO_PLAN2.
+
+### function:DISPLAY_PTS_WAY
+
+PROVEN: Traverse24 nodes and four neighbor indices to draw connecting world-map paths.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:578e8.
+
+Traverse24 nodes and four neighbor indices to draw connecting world-map paths.
+
+### function:DISPLAY_PLAT_WAY
+
+PROVEN: Update/draw world-map medallion platforms according to map object/state data and current palette context.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5799c.
+
+Update/draw world-map medallion platforms according to map object/state data and current palette context.
+
+### function:DO_MEDAILLONS
+
+PROVEN: Advance path progress to128 on horloge2 phase or ALL_WORLD. Pending bit4 nodes unlock only beside bit2 nodes at progress128,then clear bits2/4,set bit1 and sub46. Cage EOA transitions47->48->49->50->51->52;special node17 uses59,save nodes18..23 use58. Unlock resets progress and marks unlocked nodes bit2.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:57b2c.
+
+Advance path progress to128 on horloge2 phase or ALL_WORLD. Pending bit4 nodes unlock only beside bit2 nodes at progress128,then clear bits2/4,set bit1 and sub46. Cage EOA transitions47->48->49->50->51->52;special node17 uses59,save nodes18..23 use58. Unlock resets progress and marks unlocked nodes bit2.
+
+### function:INIT_LEVEL_STAGE_NAME
+
+PROVEN: Initialize displayed selected-node level text and dimensions from world-info selection.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:57d50.
+
+Initialize displayed selected-node level text and dimensions from world-info selection.
+
+### function:INIT_WORLD_STAGE_NAME
+
+PROVEN: Select current world-title text and display settings from selected map node/world; preserve distinct stage/world labels.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:57e40.
+
+Select current world-title text and display settings from selected map node/world; preserve distinct stage/world labels.
+
+### function:INIT_STAGE_NAME
+
+PROVEN: Initialize both stage-name text records and their transition state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58120.
+
+Initialize both stage-name text records and their transition state.
+
+### function:CHANGE_STAGE_NAMES
+
+PROVEN: Move old labels/new selected titles through the stage-name transition setup; preserve retained text records.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5817c.
+
+Move old labels/new selected titles through the stage-name transition setup; preserve retained text records.
+
+### function:DO_STAGE_NAMES
+
+STRONG: Animate title glyphs in16x coordinates. State0 initializes particles;1 bounces with floor3200 and gravity1;2 computes outward velocities from center2560,1600;3 advances until all leave bounds then0. '/' and spaces are nonparticles; divisor assumptions are not universal type bounds.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58208.
+
+Animate title glyphs in16x coordinates. State0 initializes particles;1 bounces with floor3200 and gravity1;2 computes outward velocities from center2560,1600;3 advances until all leave bounds then0. '/' and spaces are nonparticles; divisor assumptions are not universal type bounds.
+
+### function:INIT_WORLD_INFO
+
+PROVEN: Assign24 localized node labels;reset world/level,transition flags,world_index,camera sentinels,facing,victory/end state and save-node labels. Does not erase all collected cage/access bits.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58bc0.
+
+Assign24 localized node labels;reset world/level,transition flags,world_index,camera sentinels,facing,victory/end state and save-node labels. Does not erase all collected cage/access bits.
+
+### function:INIT_LITTLE_RAY
+
+PROVEN: Snapshot whole ray into raytmp, set scale256 and replace sprite/pixel pointers with raylittle resources.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58c44.
+
+Snapshot whole ray into raytmp, set scale256 and replace sprite/pixel pointers with raylittle resources.
+
+### function:RESTORE_RAY
+
+PROVEN: Set scale0 and restore only sprites/img_buffer/nb_sprites from raytmp, not whole object.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58c8c.
+
+Set scale0 and restore only sprites/img_buffer/nb_sprites from raytmp, not whole object.
+
+### function:INIT_CHEMIN
+
+PROVEN: Initialize world-map Rayman and24 type54 medallions using main5/substate/cage/access data;sum cages and mark node17 pending at102. Restore saved camera,initialize lens,face/scroll state;new game optionally writes selected slot.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58cb8.
+
+Initialize world-map Rayman and24 type54 medallions using main5/substate/cage/access data;sum cages and mark node17 pending at102. Restore saved camera,initialize lens,face/scroll state;new game optionally writes selected slot.
+
+### function:RESPOND_TO_UP
+
+PROVEN: Follow selected node index_up;cancel lens auto bit4/mode and move title state1->2.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58f38.
+
+Follow selected node index_up;cancel lens auto bit4/mode and move title state1->2.
+
+### function:RESPOND_TO_DOWN
+
+PROVEN: Follow selected node index_down;cancel lens auto and initiate title dispersion when state1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58f88.
+
+Follow selected node index_down;cancel lens auto and initiate title dispersion when state1.
+
+### function:RESPOND_TO_RIGHT
+
+PROVEN: Follow selected node index_right;cancel lens auto and initiate title dispersion when state1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:58fd8.
+
+Follow selected node index_right;cancel lens auto and initiate title dispersion when state1.
+
+### function:RESPOND_TO_LEFT
+
+PROVEN: Follow selected node index_left;cancel lens auto and initiate title dispersion when state1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59028.
+
+Follow selected node index_left;cancel lens auto and initiate title dispersion when state1.
+
+### function:DO_RAYMAN_IN_WLD_MAP
+
+STRONG: At a node,confirm either saves at nodes18..23 or requests world entry;direction priority right,left,down,up. Reject inaccessible targets. Between nodes use ray.timer as increasing path displacement,dominant-axis integer ratio and signed speeds;arrival snaps center and sets0:0. All50 nonself edges of pinned24-node graph have both deltas nonzero,so unassigned axis-branch speed locals are outside that observed domain.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59078.
+
+At a node,confirm either saves at nodes18..23 or requests world entry;direction priority right,left,down,up. Reject inaccessible targets. Between nodes use ray.timer as increasing path displacement,dominant-axis integer ratio and signed speeds;arrival snaps center and sets0:0. All50 nonself edges of pinned24-node graph have both deltas nonzero,so unassigned axis-branch speed locals are outside that observed domain.
+
+### function:DO_CHEMIN
+
+PROVEN: Advance clocks,adjust lens/scroll,move Rayman,set projection center identically for both facing branches,animate ray and medallions.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5947c.
+
+Advance clocks,adjust lens/scroll,move Rayman,set projection center identically for both facing branches,animate ray and medallions.
+
+### function:INIT_PASTILLES_SAUVE
+
+PROVEN: Set save-node labels18..23 to text150 when save slots available else152.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59518.
+
+Set save-node labels18..23 to text150 when save slots available else152.
+
+### function:PASTILLES_SAUVE_SAVED
+
+PROVEN: Reset all save-node labels then mark supplied node with text151 (saved).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5954c.
+
+Reset all save-node labels then mark supplied node with text151 (saved).
+
+### function:FIN_WORLD_CHOICE
+
+PROVEN: Fade out,save camera/facing,restore prior camera and large sprite resources,reset labels/PROC_EXIT;convert ray hitpoints255 sentinel to0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59570.
+
+Fade out,save camera/facing,restore prior camera and large sprite resources,reset labels/PROC_EXIT;convert ray hitpoints255 sentinel to0.
+
+### function:DETER_WORLD_AND_LEVEL
+
+PROVEN: Save selected node in world_index,translate to actual world/level outside demo,apply breakout;helped-Joe Cave3 skips to4 with firefly,completed world6 sets victory/end/world/dark flags.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:595dc.
+
+Save selected node in world_index,translate to actual world/level outside demo,apply breakout;helped-Joe Cave3 skips to4 with firefly,completed world6 sets victory/end/world/dark flags.
+
+### function:INIT_NEW_GAME
+
+PROVEN: Initialize3 lives,hitpoints2,fist1,continues9,powers/save zones and boss flags. Unlock only node0 and clear access/cages of1..23;clear bonus_perfect indices0..22 only,then INIT_WORLD_INFO.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:596cc.
+
+Initialize3 lives,hitpoints2,fist1,continues9,powers/save zones and boss flags. Unlock only node0 and clear access/cages of1..23;clear bonus_perfect indices0..22 only,then INIT_WORLD_INFO.
+
+### function:DO_NOT_SAVE_CHOICE
+
+PROVEN: Set selected/existing/available save slots0 and new-game flag1,then initialize new game.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:597dc.
+
+Set selected/existing/available save slots0 and new-game flag1,then initialize new game.
+
+### function:INIT_SAVE_CHOICE
+
+PROVEN: Optionally perform CD save probe;initialize3-column slot UI,repeat timing and preview each available save.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5980c.
+
+Optionally perform CD save probe;initialize3-column slot UI,repeat timing and preview each available save.
+
+### function:INIT_SAVE_CONTINUE
+
+PROVEN: Reset slot action/copy/name-entry state,blink counters and initial character position1.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:598f0.
+
+Reset slot action/copy/name-entry state,blink counters and initial character position1.
+
+### function:DO_COMMANDE_SAVE
+
+PROVEN: Navigate3 action columns and1..NBRE_SAVE slot rows with exclusive directions/repeat gating;copy source freezes horizontal movement. Escape sets MENU_RETURN after release.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59944.
+
+Navigate3 action columns and1..NBRE_SAVE slot rows with exclusive directions/repeat gating;copy source freezes horizontal movement. Escape sets MENU_RETURN after release.
+
+### function:SELECTION_SAVE_OPTION
+
+PROVEN: Set action1/2/3 from selected column and confirm/repeat predicates;action3 waits20 retraces.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59c1c.
+
+Set action1/2/3 from selected column and confirm/repeat predicates;action3 waits20 retraces.
+
+### function:INIT_AFFICHE_ECRAN_SAVE
+
+PROVEN: Set save-screen text geometry/options and font/color fields.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59d54.
+
+Set save-screen text geometry/options and font/color fields.
+
+### function:SAISIE_NOM
+
+PROVEN: Edit three-character slot name with up/down alphabet cycle a..z,space,~;~ moves cursor backward on confirm. Confirm advances cursor/finishes;Escape returns. Uses joystick/text UI,not arbitrary keyboard string input.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:59dcc.
+
+Edit three-character slot name with up/down alphabet cycle a..z,space,~;~ moves cursor backward on confirm. Confirm advances cursor/finishes;Escape returns. Uses joystick/text UI,not arbitrary keyboard string input.
+
+### function:REALISATION_ACTION
+
+PROVEN: Action1 chooses copy source/destination with overwrite confirmation;2 confirms removal;3 starts new game for empty slot or loads existing and sets new_world. Copy intentionally loads source gameplay globals before later completion/save logic.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5a0f4.
+
+Action1 chooses copy source/destination with overwrite confirmation;2 confirms removal;3 starts new game for empty slot or loads existing and sets new_world. Copy intentionally loads source gameplay globals before later completion/save logic.
+
+### function:DISPLAY_SYMBOLE
+
+PROVEN: Render button symbol using localized/button mapping and supplied position/font;unused final byte has no observed role.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5a3a0.
+
+Render button symbol using localized/button mapping and supplied position/font;unused final byte has no observed role.
+
+### function:INIT_CONTINUE
+
+PROVEN: Prepare Rayman main3 and clock/map UI:available continues starts sub24/countdown10;none selects51/52 and timing255 sentinel. Reset ray/medallion,save camera and clear exit.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5a3ec.
+
+Prepare Rayman main3 and clock/map UI:available continues starts sub24/countdown10;none selects51/52 and timing255 sentinel. Reset ray/medallion,save camera and clear exit.
+
+### function:CHEAT_MODE_CONTINUE
+
+PROVEN: Recognize up,down,right,left accumulation1,3,7,15 when continues<=3;on completion set continues10 and spawn map medallion with timer128 (suppresses decrement).
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5a5e8.
+
+Recognize up,down,right,left accumulation1,3,7,15 when continues<=3;on completion set continues10 and spawn map medallion with timer128 (suppresses decrement).
+
+### function:MAIN_CONTINUE_PRG
+
+PROVEN: Continue state logic for sub25/26/27/31/29/30/28;confirm selects3:31 or3:29,clock0:1. Countdown decrements every60 updates in27. EOA medallion decrements continues unless timer128. Sub28 frame>40 finishes and clears checkpoint save-object ID.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5a798.
+
+Continue state logic for sub25/26/27/31/29/30/28;confirm selects3:31 or3:29,clock0:1. Countdown decrements every60 updates in27. EOA medallion decrements continues unless timer128. Sub28 frame>40 finishes and clears checkpoint save-object ID.
+
+### function:FIN_CONTINUE_PRG
+
+PROVEN: Timing255 means no continues ->end game/menu0;other non--1 timing replenishes lives3,HP/max2;timing-1 returns menu0. Restore camera pair.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5aaa8.
+
+Timing255 means no continues ->end game/menu0;other non--1 timing replenishes lives3,HP/max2;timing-1 returns menu0. Restore camera pair.
+
+### function:INIT_NO_MORE_CONTINUE
+
+PROVEN: Set Rayman screen position/main3,choose sub51/52 from horloge20>10,clear exit and set no-more-continue callback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ab24.
+
+Set Rayman screen position/main3,choose sub51/52 from horloge20>10,clear exit and set no-more-continue callback.
+
+### function:MAIN_NO_MORE_CONTINUE_PRG
+
+PROVEN: Exit on Select or EOA;set fin_continue and checkpoint save_obj_id=-1 when leaving.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ab98.
+
+Exit on Select or EOA;set fin_continue and checkpoint save_obj_id=-1 when leaving.
+
+### function:INIT_VIGNET
+
+PROVEN: Initialize vignette/interstitial scene state and callback-specific text/object setup from current world/level/context.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5abec.
+
+Initialize vignette/interstitial scene state and callback-specific text/object setup from current world/level/context.
+
+### function:INIT_CREDITS
+
+PROVEN: Clear map flag;save current game unless MenuCredits. Copy credit records through cmd255 sentinel,interpret nonzero template y_pos as language-text index,then set every y_pos220. Reset first/last/line/exit/vignette/menu state.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5af40.
+
+Clear map flag;save current game unless MenuCredits. Copy credit records through cmd255 sentinel,interpret nonzero template y_pos as language-text index,then set every y_pos220. Reset first/last/line/exit/vignette/menu state.
+
+### function:DO_CREDITS
+
+PROVEN: Only when You_Win advance clocks and scroll one pixel on horloge2==0. Next-row spacing:font0/1/2->36/23/15,cmd255->160,cmd>100->cmd-85,elsecmd*15. Exit at sentinel or each15th admitted row;retire first row below-4.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b000.
+
+Only when You_Win advance clocks and scroll one pixel on horloge2==0. Next-row spacing:font0/1/2->36/23/15,cmd255->160,cmd>100->cmd-85,elsecmd*15. Exit at sentinel or each15th admitted row;retire first row below-4.
+
+### function:INIT_ANIM_VICTOIRE
+
+PROVEN: Clear PROC_EXIT,set Rayman3:39,screen_x=160-offset_bx,and fin_dark0.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b138.
+
+Clear PROC_EXIT,set Rayman3:39,screen_x=160-offset_bx,and fin_dark0.
+
+### function:DO_RAYMAN_WINS
+
+PROVEN: Draw two fixed victory strings above Rayman and set PROC_EXIT when anim_frame>128.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b178.
+
+Draw two fixed victory strings above Rayman and set PROC_EXIT when anim_frame>128.
+
+### function:INIT_LOADER_ANIM
+
+PROVEN: Set bigray offsets200/240,screen120/-72,facing0,state1:0 and command0. No callback assignment occurs here.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b1ec.
+
+Set bigray offsets200/240,screen120/-72,facing0,state1:0 and command0. No callback assignment occurs here.
+
+### function:DO_LOADER_ANIM
+
+PROVEN: Large-Rayman command phases0..5 traverse screen (-100/400 bounds),change1:1/1:2/1:3 and0:1/0:2 animations. PROC_EXIT request starts phase5/timer2 and clears request;phase5 in0:2 decrements timer then exits. X speed only samples on nonzero eta clock phase0;DO_ANIM last.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b258.
+
+Large-Rayman command phases0..5 traverse screen (-100/400 bounds),change1:1/1:2/1:3 and0:1/0:2 animations. PROC_EXIT request starts phase5/timer2 and clears request;phase5 in0:2 decrements timer then exits. X speed only samples on nonzero eta clock phase0;DO_ANIM last.
+
+### function:SPECIAL_INIT
+
+PROVEN: Reset dark_phase0;when ray_on_poelle==1 restore RayEvts from SauveRayEvts and clear mount flag.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b550.
+
+Reset dark_phase0;when ray_on_poelle==1 restore RayEvts from SauveRayEvts and clear mount flag.
+
+### function:INIT_LEVEL_ANIM
+
+PROVEN: Choose command sequence by world/level/new-level/new-world and dontdoit for Jungle7;absent sequence or ended game exits. Otherwise snapshot whole Rayman,clear command/speed,set screen_y168-offset_by and DO_LEVEL_ANIM callback.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b590.
+
+Choose command sequence by world/level/new-level/new-world and dontdoit for Jungle7;absent sequence or ended game exits. Otherwise snapshot whole Rayman,clear command/speed,set screen_y168-offset_by and DO_LEVEL_ANIM callback.
+
+### function:DO_LEVEL_ANIM
+
+PROVEN: Interpret sequence opcodes0/1 facing,8 main/sub and eta speed,21 screen x,19 wait EOA/matching anim,17 wait frame,18 wait x threshold,20 speed,14 idle. Consume immediate commands until ray.cmd stops changing;move screen x only on packed animation-period phase0;idle0:0 exits.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5b73c.
+
+Interpret sequence opcodes0/1 facing,8 main/sub and eta speed,21 screen x,19 wait EOA/matching anim,17 wait frame,18 wait x threshold,20 speed,14 idle. Consume immediate commands until ray.cmd stops changing;move screen x only on packed animation-period phase0;idle0:0 exits.
+
+### function:FIN_LEVEL_ANIM
+
+PROVEN: Clear PROC_EXIT,restore whole Rayman from raytmp,fade out then initialize fade-in.
+
+Units: see parameters/result and side-effect contract. DOS layout/address: 1:5ba34.
+
+Clear PROC_EXIT,restore whole Rayman from raytmp,fade out then initialize fade-in.
+
+### global:VitesseXStageNameLevel
+
+PROVEN: Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+Units: sixteenths of pixel per title update. DOS layout/address: 2:32338.
+
+Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+### global:VitesseXStageNameWorld
+
+PROVEN: Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+Units: sixteenths of pixel per title update. DOS layout/address: 2:322c0.
+
+Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+### global:VitesseYStageNameLevel
+
+PROVEN: Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+Units: sixteenths of pixel per title update. DOS layout/address: 2:32248.
+
+Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+### global:VitesseYStageNameWorld
+
+PROVEN: Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+Units: sixteenths of pixel per title update. DOS layout/address: 2:32478.
+
+Per-glyph signed velocities for level/world title particles;16x coordinate updates,vertical gravity1,bounce/dispersion modes.
+
+### global:affiche_bon_ecran
+
+PROVEN: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
+
+Units: UI phase flag. DOS layout/address: 2:3f790.
+
+Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
+
+### global:anim_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:54e78.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:byte_CFA3E
+
+PROVEN: Continue-secret automaton0..3,recognizing accumulated up/down/right/left pattern1,3,7,15.
+
+Units: sequence phase. DOS layout/address: 2:3fa3e.
+
+Continue-secret automaton0..3,recognizing accumulated up/down/right/left pattern1,3,7,15.
+
+### global:car_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:7300.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:credits_init
+
+PROVEN: Credit template records through cmd255. Nonzero template y_pos selects language_txt index;runtime copy replaces y_pos with220. Capacity beyond sentinel is not inferred.
+
+Units: credit records. DOS layout/address: 2:51d4.
+
+Credit template records through cmd255. Nonzero template y_pos selects language_txt index;runtime copy replaces y_pos with220. Capacity beyond sentinel is not inferred.
+
+### global:dir_on_wldmap
+
+PROVEN: Saved world-map Rayman facing;low bit copied to ray.flags.flip_x on entry.
+
+Units: facing bit. DOS layout/address: 2:3fa5a.
+
+Saved world-map Rayman facing;low bit copied to ray.flags.flip_x on entry.
+
+### global:moust1_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:72aa.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:moust2_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:72bc.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:nb_credits_lines
+
+PROVEN: Pixel distance since last credit-row admission;compared with font/cmd-dependent spacing.
+
+Units: screen pixels. DOS layout/address: 2:3f764.
+
+Pixel distance since last credit-row admission;compared with font/cmd-dependent spacing.
+
+### global:nouvelle_partie
+
+PROVEN: New-game flag;INIT_CHEMIN creates a slot save when enabled then clears it.
+
+Units: boolean. DOS layout/address: 2:3fa3f.
+
+New-game flag;INIT_CHEMIN creates a slot save when enabled then clears it.
+
+### global:old_num_world
+
+PROVEN: Previous/current reached map-node index while num_world_choice can be a movement target. Movement completes by setting it to target.
+
+Units: node index0..23. DOS layout/address: 2:3fa5f.
+
+Previous/current reached map-node index while num_world_choice can be a movement target. Movement completes by setting it to target.
+
+### global:pst1_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:72ce.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:pst2_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:7290.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:selection_effectuee
+
+PROVEN: Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
+
+Units: UI phase flag. DOS layout/address: 2:3f77c.
+
+Save-slot UI phase flags;their exact writer/consumer conditions are recorded under INIT_SAVE_CONTINUE,SAISIE_NOM,REALISATION_ACTION.
+
+### global:worry_sequence
+
+PROVEN: Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+Units: sequence words / pointer. DOS layout/address: 2:72e8.
+
+Signed16 level-interstitial command stream(s). Opcodes0/1/8/14/17/18/19/20/21 are interpreted by DO_LEVEL_ANIM;stream pointer null means no interstitial.
+
+### global:ymapinit
+
+PROVEN: Camera coordinates saved while map/continue/interstitial scene temporarily uses another camera,then restored.
+
+Units: world pixels. DOS layout/address: 2:3f83e.
+
+Camera coordinates saved while map/continue/interstitial scene temporarily uses another camera,then restored.
 

@@ -100,22 +100,23 @@ void sub_71A84(void)
     LoadPlan2InVignet(&main_mem_tmp, 31);
 }
 
+/* Local meanings: docs/semantics/ray_pc.json, function:sub_71A98. */
 void sub_71A98(void)
 {
-    u8 temp[0x300];
-    u8 *temp_ptr;
-    s32 temp_size;
+    u8 palette_swap[0x300];
+    u8 *buffer_swap;
+    s32 length_swap;
 
-    temp_ptr = PLAN2BIT;
+    buffer_swap = PLAN2BIT;
     PLAN2BIT = PLAN3BIT;
-    PLAN3BIT = temp_ptr;
-    temp_size = plan2bit_length;
+    PLAN3BIT = buffer_swap;
+    length_swap = plan2bit_length;
     plan2bit_length = plan3bit_length;
-    plan3bit_length = temp_size;
+    plan3bit_length = length_swap;
 
-    memcpy(temp, &rvb_pres, 0x300);
+    memcpy(palette_swap, &rvb_pres, 0x300);
     memcpy(&rvb_pres, &rvb_plan3, 0x300);
-    memcpy(&rvb_plan3, temp, 0x300);
+    memcpy(&rvb_plan3, palette_swap, 0x300);
 }
 
 void DO_UBI_LOGO(void)

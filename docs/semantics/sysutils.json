@@ -1,0 +1,3522 @@
+{
+ "schema_version": 1,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "sysutils.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/init_data_state.h"
+  ],
+  "local_headers": [
+   "sysutils_local.h"
+  ],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:OffsetSpriteFixe",
+   "global:OffsetSpriteWorld",
+   "global:data_22d970",
+   "global:loaded_eta",
+   "global:main_mem_fix",
+   "global:main_mem_level",
+   "global:main_mem_sprite",
+   "global:main_mem_world",
+   "global:mem_32190",
+   "global:nb_des",
+   "global:nb_fix_des",
+   "global:nb_fix_eta",
+   "global:nb_loaded_eta",
+   "global:num_level",
+   "global:num_world",
+   "global:temp_mem",
+   "global:temp_mem_buf"
+  ],
+  "layout_local_types": [
+   "mem_peak_t",
+   "mem_usage_stats_t"
+  ]
+ },
+ "artifact_root": "build/workers/sem_flow",
+ "proof_boundary": "DOS evidence establishes the stated meanings; STRICT status is separately recorded. Original Watcom declarations and source-local records are retained. Approved local name changes preserve whole compiled object contributions; parser adaptation is confined to the checker.",
+ "restructuring": "Original Watcom declarations stay in their owning C unit. No function/global/field symbol, data ownership or TU boundary is changed. sysutils statistics records remain inside sysutils.c; parsing adaptations belong only to the checker.",
+ "entities": [
+  {
+   "id": "function:get_avail_memory",
+   "kind": "function",
+   "current_name": "get_avail_memory",
+   "proposed_name": null,
+   "c_type": "u32 get_avail_memory(void)",
+   "meaning": "Zero DPMI register records, invoke INT31h AX0500h with ES:EDI pointing to48-byte mem_32190, return largest_free_block. Platform allocation query, not total arena usage.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Zero DPMI register records, invoke INT31h AX0500h with ES:EDI pointing to48-byte mem_32190, return largest_free_block. Platform allocation query, not total arena usage."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f3b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "get_avail_memory"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "get_avail_memory",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Zero DPMI register records, invoke INT31h AX0500h with ES:EDI pointing to48-byte mem_32190, return largest_free_block. Platform allocation query, not total arena usage."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6f3b0",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "16239dad9e88ed35227de87c48d19d2c18c07e2a8035abb9cba6e055fa10a15a",
+   "baseline_parser_body_sha256": "38b62db2cb1ae18220b8c706ac4fa965c0b975a679948456cd13a849517f6655",
+   "readers_writers": {
+    "globals": [
+     "mem_32190"
+    ],
+    "callees": [
+     "FP_SEG",
+     "clear_memory",
+     "int386x"
+    ],
+    "members": [
+     "mem_32190.largest_free_block",
+     "regs.x",
+     "regs.x.eax",
+     "regs.x.edi",
+     "segments.es"
+    ]
+   }
+  },
+  {
+   "id": "local:get_avail_memory:regs:1",
+   "kind": "local",
+   "current_name": "regs",
+   "proposed_name": null,
+   "c_type": "union REGS",
+   "meaning": "Local value in get_avail_memory: union REGS regs;; clear_memory(&regs, 0, sizeof(regs));; regs.x.eax = 0x500;; regs.x.edi = (u32) (&mem_32190);; int386x(0x31, &regs, &regs, &segments);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "union REGS",
+    "observed_uses": [
+     "union REGS regs;",
+     "clear_memory(&regs, 0, sizeof(regs));",
+     "regs.x.eax = 0x500;",
+     "regs.x.edi = (u32) (&mem_32190);",
+     "int386x(0x31, &regs, &regs, &segments);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "get_avail_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "get_avail_memory",
+     "ordinal": 1,
+     "uses": [
+      "union REGS regs;",
+      "clear_memory(&regs, 0, sizeof(regs));",
+      "regs.x.eax = 0x500;",
+      "regs.x.edi = (u32) (&mem_32190);",
+      "int386x(0x31, &regs, &regs, &segments);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "get_avail_memory",
+   "role": "local",
+   "declarator": "union REGS $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (aggregate)"
+  },
+  {
+   "id": "local:get_avail_memory:segments:2",
+   "kind": "local",
+   "current_name": "segments",
+   "proposed_name": null,
+   "c_type": "struct SREGS",
+   "meaning": "Local value in get_avail_memory: struct SREGS segments;; clear_memory(&segments, 0, sizeof(segments));; segments.es = FP_SEG((void *) (&mem_32190));; int386x(0x31, &regs, &regs, &segments);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "struct SREGS",
+    "observed_uses": [
+     "struct SREGS segments;",
+     "clear_memory(&segments, 0, sizeof(segments));",
+     "segments.es = FP_SEG((void *) (&mem_32190));",
+     "int386x(0x31, &regs, &regs, &segments);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "get_avail_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "get_avail_memory",
+     "ordinal": 2,
+     "uses": [
+      "struct SREGS segments;",
+      "clear_memory(&segments, 0, sizeof(segments));",
+      "segments.es = FP_SEG((void *) (&mem_32190));",
+      "int386x(0x31, &regs, &regs, &segments);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "get_avail_memory",
+   "role": "local",
+   "declarator": "struct SREGS $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (aggregate)"
+  },
+  {
+   "id": "function:PrintMemInfo",
+   "kind": "function",
+   "current_name": "PrintMemInfo",
+   "proposed_name": null,
+   "c_type": "void PrintMemInfo(void)",
+   "meaning": "Print fixed/world/level/sprite capacities and peak cursor/world/level records, temporary capacity/peak and available memory. Statistics do not control gameplay here.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Print fixed/world/level/sprite capacities and peak cursor/world/level records, temporary capacity/peak and available memory. Statistics do not control gameplay here."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f410",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "PrintMemInfo"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "PrintMemInfo",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Print fixed/world/level/sprite capacities and peak cursor/world/level records, temporary capacity/peak and available memory. Statistics do not control gameplay here."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6f410",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "f91ff4e7a73adb0034bcd13fb5277e9c8b3562f9af303351444af381450a0dde",
+   "baseline_parser_body_sha256": "f91ff4e7a73adb0034bcd13fb5277e9c8b3562f9af303351444af381450a0dde",
+   "readers_writers": {
+    "globals": [
+     "data_22d970",
+     "main_mem_fix",
+     "main_mem_level",
+     "main_mem_sprite",
+     "main_mem_world"
+    ],
+    "callees": [
+     "get_avail_memory",
+     "printf"
+    ],
+    "members": [
+     "data_22d970.fix",
+     "data_22d970.fix.level",
+     "data_22d970.fix.used",
+     "data_22d970.fix.world",
+     "data_22d970.level",
+     "data_22d970.level.level",
+     "data_22d970.level.used",
+     "data_22d970.level.world",
+     "data_22d970.sprite",
+     "data_22d970.sprite.level",
+     "data_22d970.sprite.used",
+     "data_22d970.sprite.world",
+     "data_22d970.temp_capacity",
+     "data_22d970.temp_peak",
+     "data_22d970.world",
+     "data_22d970.world.level",
+     "data_22d970.world.used",
+     "data_22d970.world.world",
+     "main_mem_fix.capacity",
+     "main_mem_level.capacity",
+     "main_mem_sprite.capacity",
+     "main_mem_world.capacity"
+    ]
+   }
+  },
+  {
+   "id": "function:block_malloc",
+   "kind": "function",
+   "current_name": "block_malloc",
+   "proposed_name": null,
+   "c_type": "u8 *block_malloc(mem_t *mem, u32 size)",
+   "meaning": "Bump-allocate from selected arena, updating cursor and diagnostic peaks. Historical adjustment is size+=size&3, not round-up-to4; reject zero or overflow of capacity via FatalError. Returned address is data+old align.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Bump-allocate from selected arena, updating cursor and diagnostic peaks. Historical adjustment is size+=size&3, not round-up-to4; reject zero or overflow of capacity via FatalError. Returned address is data+old align."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f5b0",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "block_malloc"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "block_malloc",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Bump-allocate from selected arena, updating cursor and diagnostic peaks. Historical adjustment is size+=size&3, not round-up-to4; reject zero or overflow of capacity via FatalError. Returned address is data+old align."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6f5b0",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "ff01ec19fd987e0dea0712d498d3599c43f031f680a112731878cdd4c3f78a96",
+   "baseline_parser_body_sha256": "ff01ec19fd987e0dea0712d498d3599c43f031f680a112731878cdd4c3f78a96",
+   "readers_writers": {
+    "globals": [
+     "data_22d970",
+     "main_mem_fix",
+     "main_mem_level",
+     "main_mem_sprite",
+     "main_mem_world",
+     "num_level",
+     "num_world"
+    ],
+    "callees": [
+     "FatalError",
+     "sprintf",
+     "strcpy",
+     "temp_free",
+     "temp_malloc"
+    ],
+    "members": [
+     "data_22d970.fix",
+     "data_22d970.fix.level",
+     "data_22d970.fix.used",
+     "data_22d970.fix.world",
+     "data_22d970.level",
+     "data_22d970.level.level",
+     "data_22d970.level.used",
+     "data_22d970.level.world",
+     "data_22d970.sprite",
+     "data_22d970.sprite.level",
+     "data_22d970.sprite.used",
+     "data_22d970.sprite.world",
+     "data_22d970.world",
+     "data_22d970.world.level",
+     "data_22d970.world.used",
+     "data_22d970.world.world",
+     "main_mem_fix.align",
+     "main_mem_level.align",
+     "main_mem_sprite.align",
+     "main_mem_world.align",
+     "mem->align",
+     "mem->capacity",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:block_malloc:new_cursor:1",
+   "kind": "local",
+   "current_name": "new_cursor",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in block_malloc: u32 new_cursor;; if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity)); mem->align = new_cursor;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "u32 new_cursor;",
+     "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+     "mem->align = new_cursor;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 1,
+     "uses": [
+      "u32 new_cursor;",
+      "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+      "mem->align = new_cursor;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "local",
+   "declarator": "u32 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "local:block_malloc:result:2",
+   "kind": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Typed address used by block_malloc for u8 *result;; result = mem->data;; result += mem->align;; return result;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 *",
+    "observed_uses": [
+     "u8 *result;",
+     "result = mem->data;",
+     "result += mem->align;",
+     "return result;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 2,
+     "uses": [
+      "u8 *result;",
+      "result = mem->data;",
+      "result += mem->align;",
+      "return result;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "local",
+   "declarator": "u8 *$",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:block_malloc:mem_name:3",
+   "kind": "local",
+   "current_name": "mem_name",
+   "proposed_name": null,
+   "c_type": "char [12]",
+   "meaning": "Local value in block_malloc: char mem_name[12];; strcpy(mem_name, \"fix\");; strcpy(mem_name, \"world\");; strcpy(mem_name, \"level\");; strcpy(mem_name, \"sprite\");. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "char [12]",
+    "observed_uses": [
+     "char mem_name[12];",
+     "strcpy(mem_name, \"fix\");",
+     "strcpy(mem_name, \"world\");",
+     "strcpy(mem_name, \"level\");",
+     "strcpy(mem_name, \"sprite\");",
+     "strcpy(mem_name, \"unknown mem\");",
+     "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 3,
+     "uses": [
+      "char mem_name[12];",
+      "strcpy(mem_name, \"fix\");",
+      "strcpy(mem_name, \"world\");",
+      "strcpy(mem_name, \"level\");",
+      "strcpy(mem_name, \"sprite\");",
+      "strcpy(mem_name, \"unknown mem\");",
+      "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "local",
+   "declarator": "char $[12]",
+   "declaration_ordinal": 3,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned (plain char; pinned game profile)"
+  },
+  {
+   "id": "local:block_malloc:message:4",
+   "kind": "local",
+   "current_name": "message",
+   "proposed_name": null,
+   "c_type": "char *",
+   "meaning": "Typed address used by block_malloc for char *message;; message = (char *) temp_malloc(100);; sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);; FatalError(message);. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "char *",
+    "observed_uses": [
+     "char *message;",
+     "message = (char *) temp_malloc(100);",
+     "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);",
+     "FatalError(message);",
+     "temp_free(message);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 4,
+     "uses": [
+      "char *message;",
+      "message = (char *) temp_malloc(100);",
+      "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);",
+      "FatalError(message);",
+      "temp_free(message);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "local",
+   "declarator": "char *$",
+   "declaration_ordinal": 4,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:block_malloc:mem:5",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by block_malloc for if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity)); if (mem == (&main_mem_fix)); if (mem == (&main_mem_world)); if (mem == (&main_mem_level)). Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+     "if (mem == (&main_mem_fix))",
+     "if (mem == (&main_mem_world))",
+     "if (mem == (&main_mem_level))",
+     "if (mem == (&main_mem_sprite))",
+     "strcpy(mem_name, \"unknown mem\");",
+     "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);",
+     "result = mem->data;",
+     "result += mem->align;",
+     "mem->align = new_cursor;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 5,
+     "uses": [
+      "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+      "if (mem == (&main_mem_fix))",
+      "if (mem == (&main_mem_world))",
+      "if (mem == (&main_mem_level))",
+      "if (mem == (&main_mem_sprite))",
+      "strcpy(mem_name, \"unknown mem\");",
+      "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);",
+      "result = mem->data;",
+      "result += mem->align;",
+      "mem->align = new_cursor;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 5,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:block_malloc:size:6",
+   "kind": "local",
+   "current_name": "size",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in block_malloc: size += size & 3;; if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity)); sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "size += size & 3;",
+     "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+     "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_malloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_malloc",
+     "ordinal": 6,
+     "uses": [
+      "size += size & 3;",
+      "if ((size == 0) || ((new_cursor = mem->align + size) > mem->capacity))",
+      "sprintf(message, \"Memory error in block_malloc : %s = %p, size = %ul.\\n\", mem_name, mem, size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_malloc",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 6,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:sub_6F740",
+   "kind": "function",
+   "current_name": "sub_6F740",
+   "proposed_name": null,
+   "c_type": "void sub_6F740(void)",
+   "meaning": "Free temporary pool backing storage, null it and zero all30 descriptors.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Free temporary pool backing storage, null it and zero all30 descriptors."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f740",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "sub_6F740"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "sub_6F740",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Free temporary pool backing storage, null it and zero all30 descriptors."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6f740",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "f11fefb3e09e8cac3441d6ca3e03a603cf3bfc32648740fcaa862c07ccc94556",
+   "baseline_parser_body_sha256": "f11fefb3e09e8cac3441d6ca3e03a603cf3bfc32648740fcaa862c07ccc94556",
+   "readers_writers": {
+    "globals": [
+     "temp_mem",
+     "temp_mem_buf"
+    ],
+    "callees": [
+     "JumelleFreeArray",
+     "clear_memory"
+    ],
+    "members": [
+     "temp_mem_buf.data"
+    ]
+   }
+  },
+  {
+   "id": "function:init_all_memory",
+   "kind": "function",
+   "current_name": "init_all_memory",
+   "proposed_name": null,
+   "c_type": "void init_all_memory(u32 capacity)",
+   "meaning": "Allocate temporary backing arena and initialize30 descriptors:slot0 is entire free pool,others zero-sized at pool end. Record temp capacity.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Allocate temporary backing arena and initialize30 descriptors:slot0 is entire free pool,others zero-sized at pool end. Record temp capacity."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f768",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "init_all_memory"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "init_all_memory",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Allocate temporary backing arena and initialize30 descriptors:slot0 is entire free pool,others zero-sized at pool end. Record temp capacity."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6f768",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "ab7c999dc7770f51de571a1bdad759da100c19126ddc6de7bd75de670505a095",
+   "baseline_parser_body_sha256": "ab7c999dc7770f51de571a1bdad759da100c19126ddc6de7bd75de670505a095",
+   "readers_writers": {
+    "globals": [
+     "data_22d970",
+     "temp_mem",
+     "temp_mem_buf"
+    ],
+    "callees": [
+     "init_memory"
+    ],
+    "members": [
+     "data_22d970.temp_capacity",
+     "temp_mem[0].allocated",
+     "temp_mem[0].capacity",
+     "temp_mem[0].data",
+     "temp_mem[i].allocated",
+     "temp_mem[i].capacity",
+     "temp_mem[i].data",
+     "temp_mem_buf.capacity",
+     "temp_mem_buf.data"
+    ]
+   }
+  },
+  {
+   "id": "local:init_all_memory:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in init_all_memory: s16 i;; for (i = 1; i < 30; i++); temp_mem[i].data = temp_mem_buf.data + capacity;; temp_mem[i].capacity = 0;; temp_mem[i].allocated = 0;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "for (i = 1; i < 30; i++)",
+     "temp_mem[i].data = temp_mem_buf.data + capacity;",
+     "temp_mem[i].capacity = 0;",
+     "temp_mem[i].allocated = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_all_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_all_memory",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "for (i = 1; i < 30; i++)",
+      "temp_mem[i].data = temp_mem_buf.data + capacity;",
+      "temp_mem[i].capacity = 0;",
+      "temp_mem[i].allocated = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_all_memory",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:init_all_memory:capacity:2",
+   "kind": "local",
+   "current_name": "capacity",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in init_all_memory: capacity = init_memory(&temp_mem_buf, capacity);; data_22d970.temp_capacity = capacity;; temp_mem[0].capacity = temp_mem_buf.capacity;; temp_mem[i].data = temp_mem_buf.data + capacity;; temp_mem[i].capacity = 0;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "capacity = init_memory(&temp_mem_buf, capacity);",
+     "data_22d970.temp_capacity = capacity;",
+     "temp_mem[0].capacity = temp_mem_buf.capacity;",
+     "temp_mem[i].data = temp_mem_buf.data + capacity;",
+     "temp_mem[i].capacity = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_all_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_all_memory",
+     "ordinal": 2,
+     "uses": [
+      "capacity = init_memory(&temp_mem_buf, capacity);",
+      "data_22d970.temp_capacity = capacity;",
+      "temp_mem[0].capacity = temp_mem_buf.capacity;",
+      "temp_mem[i].data = temp_mem_buf.data + capacity;",
+      "temp_mem[i].capacity = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_all_memory",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:init_memory",
+   "kind": "function",
+   "current_name": "init_memory",
+   "proposed_name": null,
+   "c_type": "u32 init_memory(mem_t *mem, u32 capacity)",
+   "meaning": "Allocate adjusted capacity (capacity+=capacity&3), FatalError on failure; set cursor to low2 address bits and record capacity. Returns adjusted capacity.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Allocate adjusted capacity (capacity+=capacity&3), FatalError on failure; set cursor to low2 address bits and record capacity. Returns adjusted capacity."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f7d0",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "init_memory"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "init_memory",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Allocate adjusted capacity (capacity+=capacity&3), FatalError on failure; set cursor to low2 address bits and record capacity. Returns adjusted capacity."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6f7d0",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "d92e0520744be0010cbcf52af09b5e2b5e0c0027477402fa6d7bb2ca8d6eef7d",
+   "baseline_parser_body_sha256": "d92e0520744be0010cbcf52af09b5e2b5e0c0027477402fa6d7bb2ca8d6eef7d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "FatalError",
+     "malloc",
+     "sprintf",
+     "temp_free",
+     "temp_malloc"
+    ],
+    "members": [
+     "mem->align",
+     "mem->capacity",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:init_memory:message:1",
+   "kind": "local",
+   "current_name": "message",
+   "proposed_name": null,
+   "c_type": "char *",
+   "meaning": "Typed address used by init_memory for char *message;; message = (char *) temp_malloc(100);; sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);; FatalError(message);. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "char *",
+    "observed_uses": [
+     "char *message;",
+     "message = (char *) temp_malloc(100);",
+     "sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);",
+     "FatalError(message);",
+     "temp_free(message);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_memory",
+     "ordinal": 1,
+     "uses": [
+      "char *message;",
+      "message = (char *) temp_malloc(100);",
+      "sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);",
+      "FatalError(message);",
+      "temp_free(message);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_memory",
+   "role": "local",
+   "declarator": "char *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:init_memory:data:2",
+   "kind": "local",
+   "current_name": "data",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Unused local;no value-consuming meaning established.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 *",
+    "observed_uses": [
+     "u8 *data;",
+     "mem->data = (u8 *) malloc(capacity);",
+     "if (mem->data == 0)",
+     "mem->align = ((u32) mem->data) & 3;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_memory",
+     "ordinal": 2,
+     "uses": [
+      "u8 *data;",
+      "mem->data = (u8 *) malloc(capacity);",
+      "if (mem->data == 0)",
+      "mem->align = ((u32) mem->data) & 3;"
+     ]
+    }
+   ],
+   "port_notes": [],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_memory",
+   "role": "local",
+   "declarator": "u8 *$",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:init_memory:mem:3",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by init_memory for mem->data = (u8 *) malloc(capacity);; if (mem->data == 0); mem->align = ((u32) mem->data) & 3;; mem->capacity = capacity;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "mem->data = (u8 *) malloc(capacity);",
+     "if (mem->data == 0)",
+     "mem->align = ((u32) mem->data) & 3;",
+     "mem->capacity = capacity;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_memory",
+     "ordinal": 3,
+     "uses": [
+      "mem->data = (u8 *) malloc(capacity);",
+      "if (mem->data == 0)",
+      "mem->align = ((u32) mem->data) & 3;",
+      "mem->capacity = capacity;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_memory",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 3,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:init_memory:capacity:4",
+   "kind": "local",
+   "current_name": "capacity",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in init_memory: capacity += capacity & 3;; mem->data = (u8 *) malloc(capacity);; sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);; mem->capacity = capacity;; return capacity;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "capacity += capacity & 3;",
+     "mem->data = (u8 *) malloc(capacity);",
+     "sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);",
+     "mem->capacity = capacity;",
+     "return capacity;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "init_memory",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "init_memory",
+     "ordinal": 4,
+     "uses": [
+      "capacity += capacity & 3;",
+      "mem->data = (u8 *) malloc(capacity);",
+      "sprintf(message, \"Can not allocate %d bytes in memory.\\n\", capacity);",
+      "mem->capacity = capacity;",
+      "return capacity;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "init_memory",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 4,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:pack_temp_zone",
+   "kind": "function",
+   "current_name": "pack_temp_zone",
+   "proposed_name": null,
+   "c_type": "void pack_temp_zone(void)",
+   "meaning": "Coalesce physically adjacent unallocated descriptors, repeatedly adding forward-neighbor capacity; clear merged descriptors to pool end. Does not relocate allocated payloads.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Coalesce physically adjacent unallocated descriptors, repeatedly adding forward-neighbor capacity; clear merged descriptors to pool end. Does not relocate allocated payloads."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f824",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "pack_temp_zone"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "pack_temp_zone",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Coalesce physically adjacent unallocated descriptors, repeatedly adding forward-neighbor capacity; clear merged descriptors to pool end. Does not relocate allocated payloads."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6f824",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "3c8d20b8b20af7033e97b245a71b2b9df42d13d1d0f8c8721143eadb7d1a977c",
+   "baseline_parser_body_sha256": "3c8d20b8b20af7033e97b245a71b2b9df42d13d1d0f8c8721143eadb7d1a977c",
+   "readers_writers": {
+    "globals": [
+     "temp_mem",
+     "temp_mem_buf"
+    ],
+    "callees": [],
+    "members": [
+     "temp_mem[i].allocated",
+     "temp_mem[i].capacity",
+     "temp_mem[i].data",
+     "temp_mem[j].allocated",
+     "temp_mem[j].capacity",
+     "temp_mem[j].data",
+     "temp_mem_buf.capacity",
+     "temp_mem_buf.data"
+    ]
+   }
+  },
+  {
+   "id": "local:pack_temp_zone:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in pack_temp_zone: s16 i;; for (i = 0; i < 30; i++); if ((temp_mem[i].allocated == 0) && (temp_mem[i].capacity != 0)); if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0)); temp_mem[i].capacity += merged_size;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "for (i = 0; i < 30; i++)",
+     "if ((temp_mem[i].allocated == 0) && (temp_mem[i].capacity != 0))",
+     "if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0))",
+     "temp_mem[i].capacity += merged_size;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "pack_temp_zone",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "pack_temp_zone",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "for (i = 0; i < 30; i++)",
+      "if ((temp_mem[i].allocated == 0) && (temp_mem[i].capacity != 0))",
+      "if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0))",
+      "temp_mem[i].capacity += merged_size;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "pack_temp_zone",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:pack_temp_zone:j:2",
+   "kind": "local",
+   "current_name": "j",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in pack_temp_zone: s16 j;; for (j = 0; j < 30; j++); if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0)); if (j < 30); merged_size = temp_mem[j].capacity;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 j;",
+     "for (j = 0; j < 30; j++)",
+     "if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0))",
+     "if (j < 30)",
+     "merged_size = temp_mem[j].capacity;",
+     "temp_mem[j].capacity = 0;",
+     "temp_mem[j].data = end;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "pack_temp_zone",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "pack_temp_zone",
+     "ordinal": 2,
+     "uses": [
+      "s16 j;",
+      "for (j = 0; j < 30; j++)",
+      "if (((temp_mem[i].data + temp_mem[i].capacity) == temp_mem[j].data) && (temp_mem[j].allocated == 0))",
+      "if (j < 30)",
+      "merged_size = temp_mem[j].capacity;",
+      "temp_mem[j].capacity = 0;",
+      "temp_mem[j].data = end;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "pack_temp_zone",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:pack_temp_zone:merged_size:3",
+   "kind": "local",
+   "current_name": "merged_size",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in pack_temp_zone: u32 merged_size;; merged_size = 0;; merged_size = temp_mem[j].capacity;; temp_mem[i].capacity += merged_size;; while (merged_size != 0);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "u32 merged_size;",
+     "merged_size = 0;",
+     "merged_size = temp_mem[j].capacity;",
+     "temp_mem[i].capacity += merged_size;",
+     "while (merged_size != 0);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "pack_temp_zone",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "pack_temp_zone",
+     "ordinal": 3,
+     "uses": [
+      "u32 merged_size;",
+      "merged_size = 0;",
+      "merged_size = temp_mem[j].capacity;",
+      "temp_mem[i].capacity += merged_size;",
+      "while (merged_size != 0);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "pack_temp_zone",
+   "role": "local",
+   "declarator": "u32 $",
+   "declaration_ordinal": 3,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "local:pack_temp_zone:end:4",
+   "kind": "local",
+   "current_name": "end",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Typed address used by pack_temp_zone for u8 *end;; end = temp_mem_buf.data + temp_mem_buf.capacity;; temp_mem[j].data = end;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 *",
+    "observed_uses": [
+     "u8 *end;",
+     "end = temp_mem_buf.data + temp_mem_buf.capacity;",
+     "temp_mem[j].data = end;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "pack_temp_zone",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "pack_temp_zone",
+     "ordinal": 4,
+     "uses": [
+      "u8 *end;",
+      "end = temp_mem_buf.data + temp_mem_buf.capacity;",
+      "temp_mem[j].data = end;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "pack_temp_zone",
+   "role": "local",
+   "declarator": "u8 *$",
+   "declaration_ordinal": 4,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:temp_malloc",
+   "kind": "function",
+   "current_name": "temp_malloc",
+   "proposed_name": null,
+   "c_type": "void *temp_malloc(u32 size)",
+   "meaning": "Best-fit search in30 descriptors with historical size adjustment; split/extend neighbor and account cursor/peak. Fall back to malloc if no suitable block. Descriptor searches can run out of bounds; prior PLATFORM_OPEN documents counterexample, not a shipped occurrence.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Best-fit search in30 descriptors with historical size adjustment; split/extend neighbor and account cursor/peak. Fall back to malloc if no suitable block. Descriptor searches can run out of bounds; prior PLATFORM_OPEN documents counterexample, not a shipped occurrence."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6f8d8",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "temp_malloc"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "temp_malloc",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Best-fit search in30 descriptors with historical size adjustment; split/extend neighbor and account cursor/peak. Fall back to malloc if no suitable block. Descriptor searches can run out of bounds; prior PLATFORM_OPEN documents counterexample, not a shipped occurrence."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6f8d8",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "0af13e56cee22484368a2c02a5b516c6e1caa08fcf419f820696436f6712bd90",
+   "baseline_parser_body_sha256": "0af13e56cee22484368a2c02a5b516c6e1caa08fcf419f820696436f6712bd90",
+   "readers_writers": {
+    "globals": [
+     "data_22d970",
+     "temp_mem",
+     "temp_mem_buf"
+    ],
+    "callees": [
+     "FatalError",
+     "inrange",
+     "malloc",
+     "sprintf"
+    ],
+    "members": [
+     "data_22d970.temp_capacity",
+     "data_22d970.temp_peak",
+     "temp_mem[best].allocated",
+     "temp_mem[best].capacity",
+     "temp_mem[best].data",
+     "temp_mem[i].allocated",
+     "temp_mem[i].capacity",
+     "temp_mem[i].data",
+     "temp_mem_buf.align",
+     "temp_mem_buf.capacity",
+     "temp_mem_buf.data"
+    ]
+   }
+  },
+  {
+   "id": "local:temp_malloc:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in temp_malloc: s16 i;; for (i = 0; i < 30; i++); if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest)); best = i;; smallest = temp_mem[i].capacity;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "for (i = 0; i < 30; i++)",
+     "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+     "best = i;",
+     "smallest = temp_mem[i].capacity;",
+     "for (i = 0; i < 30; i++)",
+     "if ((temp_mem[best].data + temp_mem[best].capacity) == temp_mem[i].data)",
+     "if (temp_mem[i].allocated)",
+     "for (i = 0; i < 30; i++)",
+     "if ((temp_mem_buf.data + temp_mem_buf.capacity) == temp_mem[i].data)",
+     "temp_mem[i].data = temp_mem[best].data + size;",
+     "temp_mem[i].capacity += temp_mem[best].capacity - size;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "for (i = 0; i < 30; i++)",
+      "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+      "best = i;",
+      "smallest = temp_mem[i].capacity;",
+      "for (i = 0; i < 30; i++)",
+      "if ((temp_mem[best].data + temp_mem[best].capacity) == temp_mem[i].data)",
+      "if (temp_mem[i].allocated)",
+      "for (i = 0; i < 30; i++)",
+      "if ((temp_mem_buf.data + temp_mem_buf.capacity) == temp_mem[i].data)",
+      "temp_mem[i].data = temp_mem[best].data + size;",
+      "temp_mem[i].capacity += temp_mem[best].capacity - size;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:temp_malloc:best:2",
+   "kind": "local",
+   "current_name": "best",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in temp_malloc: s16 best;; best = 30;; best = i;; if (best < 30); if ((temp_mem[best].data + temp_mem[best].capacity) == temp_mem[i].data). Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 best;",
+     "best = 30;",
+     "best = i;",
+     "if (best < 30)",
+     "if ((temp_mem[best].data + temp_mem[best].capacity) == temp_mem[i].data)",
+     "temp_mem[i].data = temp_mem[best].data + size;",
+     "temp_mem[i].capacity += temp_mem[best].capacity - size;",
+     "temp_mem[best].capacity = size;",
+     "temp_mem[best].allocated = 1;",
+     "result = temp_mem[best].data;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 2,
+     "uses": [
+      "s16 best;",
+      "best = 30;",
+      "best = i;",
+      "if (best < 30)",
+      "if ((temp_mem[best].data + temp_mem[best].capacity) == temp_mem[i].data)",
+      "temp_mem[i].data = temp_mem[best].data + size;",
+      "temp_mem[i].capacity += temp_mem[best].capacity - size;",
+      "temp_mem[best].capacity = size;",
+      "temp_mem[best].allocated = 1;",
+      "result = temp_mem[best].data;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:temp_malloc:smallest:3",
+   "kind": "local",
+   "current_name": "smallest",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in temp_malloc: u32 smallest;; smallest = temp_mem_buf.capacity;; if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest)); smallest = temp_mem[i].capacity;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "u32 smallest;",
+     "smallest = temp_mem_buf.capacity;",
+     "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+     "smallest = temp_mem[i].capacity;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 3,
+     "uses": [
+      "u32 smallest;",
+      "smallest = temp_mem_buf.capacity;",
+      "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+      "smallest = temp_mem[i].capacity;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "local",
+   "declarator": "u32 $",
+   "declaration_ordinal": 3,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "local:temp_malloc:result:4",
+   "kind": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Typed address used by temp_malloc for u8 *result;; result = temp_mem[best].data;; result = malloc(size);; if (result == 0). Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 *",
+    "observed_uses": [
+     "u8 *result;",
+     "result = temp_mem[best].data;",
+     "result = malloc(size);",
+     "if (result == 0)",
+     "return result;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 4,
+     "uses": [
+      "u8 *result;",
+      "result = temp_mem[best].data;",
+      "result = malloc(size);",
+      "if (result == 0)",
+      "return result;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "local",
+   "declarator": "u8 *$",
+   "declaration_ordinal": 4,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "local:temp_malloc:message:5",
+   "kind": "local",
+   "current_name": "message",
+   "proposed_name": null,
+   "c_type": "char [100]",
+   "meaning": "Local value in temp_malloc: char message[100];; sprintf(message, \"not enough memory in pool.\\nMemory error in tmp_malloc : size = %ul.\\n\", size);; FatalError(message);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "char [100]",
+    "observed_uses": [
+     "char message[100];",
+     "sprintf(message, \"not enough memory in pool.\\nMemory error in tmp_malloc : size = %ul.\\n\", size);",
+     "FatalError(message);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 5,
+     "uses": [
+      "char message[100];",
+      "sprintf(message, \"not enough memory in pool.\\nMemory error in tmp_malloc : size = %ul.\\n\", size);",
+      "FatalError(message);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "local",
+   "declarator": "char $[100]",
+   "declaration_ordinal": 5,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned (plain char; pinned game profile)"
+  },
+  {
+   "id": "local:temp_malloc:size:6",
+   "kind": "local",
+   "current_name": "size",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in temp_malloc: size += size & 3;; if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest)); temp_mem[i].data = temp_mem[best].data + size;; temp_mem[i].capacity += temp_mem[best].capacity - size;; temp_mem[best].capacity = size;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "size += size & 3;",
+     "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+     "temp_mem[i].data = temp_mem[best].data + size;",
+     "temp_mem[i].capacity += temp_mem[best].capacity - size;",
+     "temp_mem[best].capacity = size;",
+     "temp_mem_buf.align += size;",
+     "result = malloc(size);",
+     "if ((data_22d970.temp_capacity + size) > data_22d970.temp_peak)",
+     "data_22d970.temp_peak = data_22d970.temp_capacity + size;",
+     "sprintf(message, \"not enough memory in pool.\\nMemory error in tmp_malloc : size = %ul.\\n\", size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_malloc",
+     "verification_status": "NEAR_MATCH"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_malloc",
+     "ordinal": 6,
+     "uses": [
+      "size += size & 3;",
+      "if ((temp_mem[i].allocated == 0) && inrange(temp_mem[i].capacity, size, smallest))",
+      "temp_mem[i].data = temp_mem[best].data + size;",
+      "temp_mem[i].capacity += temp_mem[best].capacity - size;",
+      "temp_mem[best].capacity = size;",
+      "temp_mem_buf.align += size;",
+      "result = malloc(size);",
+      "if ((data_22d970.temp_capacity + size) > data_22d970.temp_peak)",
+      "data_22d970.temp_peak = data_22d970.temp_capacity + size;",
+      "sprintf(message, \"not enough memory in pool.\\nMemory error in tmp_malloc : size = %ul.\\n\", size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_malloc",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 6,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:temp_free",
+   "kind": "function",
+   "current_name": "temp_free",
+   "proposed_name": null,
+   "c_type": "void temp_free(void *ptr)",
+   "meaning": "Find matching pool descriptor, mark free/decrement cursor/coalesce; if no allocated descriptor was freed, pass pointer through JumelleFreeArray to heap free.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Find matching pool descriptor, mark free/decrement cursor/coalesce; if no allocated descriptor was freed, pass pointer through JumelleFreeArray to heap free."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fa70",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "temp_free"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "temp_free",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Find matching pool descriptor, mark free/decrement cursor/coalesce; if no allocated descriptor was freed, pass pointer through JumelleFreeArray to heap free."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fa70",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "050bad033b2b648805f0b128ddbe191d75c5666a2ad84c55a42a9961fd1b3926",
+   "baseline_parser_body_sha256": "050bad033b2b648805f0b128ddbe191d75c5666a2ad84c55a42a9961fd1b3926",
+   "readers_writers": {
+    "globals": [
+     "temp_mem",
+     "temp_mem_buf"
+    ],
+    "callees": [
+     "JumelleFreeArray",
+     "pack_temp_zone"
+    ],
+    "members": [
+     "temp_mem[i].allocated",
+     "temp_mem[i].capacity",
+     "temp_mem[i].data",
+     "temp_mem_buf.align"
+    ]
+   }
+  },
+  {
+   "id": "local:temp_free:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in temp_free: s16 i;; for (i = 0; i < 30; i++); if (temp_mem[i].data == ptr); if (temp_mem[i].allocated); temp_mem[i].allocated = 0;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "for (i = 0; i < 30; i++)",
+     "if (temp_mem[i].data == ptr)",
+     "if (temp_mem[i].allocated)",
+     "temp_mem[i].allocated = 0;",
+     "temp_mem_buf.align -= temp_mem[i].capacity;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_free",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_free",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "for (i = 0; i < 30; i++)",
+      "if (temp_mem[i].data == ptr)",
+      "if (temp_mem[i].allocated)",
+      "temp_mem[i].allocated = 0;",
+      "temp_mem_buf.align -= temp_mem[i].capacity;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_free",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:temp_free:found:2",
+   "kind": "local",
+   "current_name": "found",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Local value in temp_free: u8 found;; found = 0;; found = 1;; if (!found). Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8",
+    "observed_uses": [
+     "u8 found;",
+     "found = 0;",
+     "found = 1;",
+     "if (!found)"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_free",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_free",
+     "ordinal": 2,
+     "uses": [
+      "u8 found;",
+      "found = 0;",
+      "found = 1;",
+      "if (!found)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_free",
+   "role": "local",
+   "declarator": "u8 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "local:temp_free:ptr:3",
+   "kind": "local",
+   "current_name": "ptr",
+   "proposed_name": null,
+   "c_type": "void *",
+   "meaning": "Typed address used by temp_free for if (temp_mem[i].data == ptr); JumelleFreeArray(&ptr);. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "void *",
+    "observed_uses": [
+     "if (temp_mem[i].data == ptr)",
+     "JumelleFreeArray(&ptr);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "temp_free",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "temp_free",
+     "ordinal": 3,
+     "uses": [
+      "if (temp_mem[i].data == ptr)",
+      "JumelleFreeArray(&ptr);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "temp_free",
+   "role": "parameter",
+   "declarator": "void *$",
+   "declaration_ordinal": 3,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:free_main_mem",
+   "kind": "function",
+   "current_name": "free_main_mem",
+   "proposed_name": null,
+   "c_type": "void free_main_mem(mem_t *mem)",
+   "meaning": "For fixed arena first call fix_free; free backing allocation and clear pointer/capacity/cursor.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "For fixed arena first call fix_free; free backing allocation and clear pointer/capacity/cursor."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fadc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "free_main_mem"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "free_main_mem",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "For fixed arena first call fix_free; free backing allocation and clear pointer/capacity/cursor."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6fadc",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "ec4077dd2b54a2815a6d6989d3a9d86f088d87145293d16d87d62c18ab548f28",
+   "baseline_parser_body_sha256": "ec4077dd2b54a2815a6d6989d3a9d86f088d87145293d16d87d62c18ab548f28",
+   "readers_writers": {
+    "globals": [
+     "main_mem_fix"
+    ],
+    "callees": [
+     "JumelleFreeArray",
+     "fix_free"
+    ],
+    "members": [
+     "mem->align",
+     "mem->capacity",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:free_main_mem:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by free_main_mem for if (mem == (&main_mem_fix)); JumelleFreeArray((void **) (&mem->data));; mem->data = 0;; mem->capacity = 0;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "if (mem == (&main_mem_fix))",
+     "JumelleFreeArray((void **) (&mem->data));",
+     "mem->data = 0;",
+     "mem->capacity = 0;",
+     "mem->align = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "free_main_mem",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "free_main_mem",
+     "ordinal": 1,
+     "uses": [
+      "if (mem == (&main_mem_fix))",
+      "JumelleFreeArray((void **) (&mem->data));",
+      "mem->data = 0;",
+      "mem->capacity = 0;",
+      "mem->align = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "free_main_mem",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:world_free",
+   "kind": "function",
+   "current_name": "world_free",
+   "proposed_name": null,
+   "c_type": "void world_free(void)",
+   "meaning": "Clear loaded_eta entries from nb_fix_eta to nb_loaded_eta-1, reset eta count and descriptor count to fixed baselines.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Clear loaded_eta entries from nb_fix_eta to nb_loaded_eta-1, reset eta count and descriptor count to fixed baselines."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb04",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "world_free"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "world_free",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Clear loaded_eta entries from nb_fix_eta to nb_loaded_eta-1, reset eta count and descriptor count to fixed baselines."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fb04",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "ccb16d503e3bea050142a8552805b377d7d78e13d6d4eaf8eab114c284fbc362",
+   "baseline_parser_body_sha256": "ccb16d503e3bea050142a8552805b377d7d78e13d6d4eaf8eab114c284fbc362",
+   "readers_writers": {
+    "globals": [
+     "loaded_eta",
+     "nb_des",
+     "nb_fix_des",
+     "nb_fix_eta",
+     "nb_loaded_eta"
+    ],
+    "callees": [],
+    "members": []
+   }
+  },
+  {
+   "id": "local:world_free:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in world_free: s16 i;; for (i = nb_fix_eta; i < nb_loaded_eta; i++); loaded_eta[i] = 0;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "for (i = nb_fix_eta; i < nb_loaded_eta; i++)",
+     "loaded_eta[i] = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "world_free",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "world_free",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "for (i = nb_fix_eta; i < nb_loaded_eta; i++)",
+      "loaded_eta[i] = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "world_free",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "function:SpriteFixeOffset",
+   "kind": "function",
+   "current_name": "SpriteFixeOffset",
+   "proposed_name": null,
+   "c_type": "void SpriteFixeOffset(mem_t *mem)",
+   "meaning": "Snapshot fixed-sprite cursor plus current-address low2 bits in OffsetSpriteFixe; no sprite-pointer relocation.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Snapshot fixed-sprite cursor plus current-address low2 bits in OffsetSpriteFixe; no sprite-pointer relocation."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb48",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "SpriteFixeOffset"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "SpriteFixeOffset",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Snapshot fixed-sprite cursor plus current-address low2 bits in OffsetSpriteFixe; no sprite-pointer relocation."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fb48",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "90342013d8b94c71ff043c164d69660726d2d3dc77af06dc1f8a6b9e944a9a93",
+   "baseline_parser_body_sha256": "90342013d8b94c71ff043c164d69660726d2d3dc77af06dc1f8a6b9e944a9a93",
+   "readers_writers": {
+    "globals": [
+     "OffsetSpriteFixe"
+    ],
+    "callees": [],
+    "members": [
+     "mem->align",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:SpriteFixeOffset:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by SpriteFixeOffset for OffsetSpriteFixe = mem->align + (((u32) (mem->data + mem->align)) & 3);. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "OffsetSpriteFixe = mem->align + (((u32) (mem->data + mem->align)) & 3);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "SpriteFixeOffset",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "SpriteFixeOffset",
+     "ordinal": 1,
+     "uses": [
+      "OffsetSpriteFixe = mem->align + (((u32) (mem->data + mem->align)) & 3);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "SpriteFixeOffset",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:SpriteWorldOffset",
+   "kind": "function",
+   "current_name": "SpriteWorldOffset",
+   "proposed_name": null,
+   "c_type": "void SpriteWorldOffset(mem_t *mem)",
+   "meaning": "Snapshot world-sprite cursor plus current-address low2 bits in OffsetSpriteWorld.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Snapshot world-sprite cursor plus current-address low2 bits in OffsetSpriteWorld."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb60",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "SpriteWorldOffset"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "SpriteWorldOffset",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Snapshot world-sprite cursor plus current-address low2 bits in OffsetSpriteWorld."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fb60",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "0e64729df27d4820d86eac021972408508b9c7d4f75bba32fe099e7a2e718f35",
+   "baseline_parser_body_sha256": "0e64729df27d4820d86eac021972408508b9c7d4f75bba32fe099e7a2e718f35",
+   "readers_writers": {
+    "globals": [
+     "OffsetSpriteWorld"
+    ],
+    "callees": [],
+    "members": [
+     "mem->align",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:SpriteWorldOffset:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by SpriteWorldOffset for OffsetSpriteWorld = mem->align + (((u32) (mem->data + mem->align)) & 3);. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "OffsetSpriteWorld = mem->align + (((u32) (mem->data + mem->align)) & 3);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "SpriteWorldOffset",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "SpriteWorldOffset",
+     "ordinal": 1,
+     "uses": [
+      "OffsetSpriteWorld = mem->align + (((u32) (mem->data + mem->align)) & 3);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "SpriteWorldOffset",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:SpriteFixeBlocksFree",
+   "kind": "function",
+   "current_name": "SpriteFixeBlocksFree",
+   "proposed_name": null,
+   "c_type": "void SpriteFixeBlocksFree(mem_t *mem)",
+   "meaning": "Reset supplied sprite arena cursor to OffsetSpriteFixe without freeing its allocation.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Reset supplied sprite arena cursor to OffsetSpriteFixe without freeing its allocation."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb78",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "SpriteFixeBlocksFree"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "SpriteFixeBlocksFree",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Reset supplied sprite arena cursor to OffsetSpriteFixe without freeing its allocation."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fb78",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "25ec10c192d7ead85432306bb858ed9f52b273180567dac949695040ed1207f8",
+   "baseline_parser_body_sha256": "25ec10c192d7ead85432306bb858ed9f52b273180567dac949695040ed1207f8",
+   "readers_writers": {
+    "globals": [
+     "OffsetSpriteFixe"
+    ],
+    "callees": [],
+    "members": [
+     "mem->align"
+    ]
+   }
+  },
+  {
+   "id": "local:SpriteFixeBlocksFree:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by SpriteFixeBlocksFree for mem->align = OffsetSpriteFixe;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "mem->align = OffsetSpriteFixe;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "SpriteFixeBlocksFree",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "SpriteFixeBlocksFree",
+     "ordinal": 1,
+     "uses": [
+      "mem->align = OffsetSpriteFixe;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "SpriteFixeBlocksFree",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:SpriteWorldBlocksFree",
+   "kind": "function",
+   "current_name": "SpriteWorldBlocksFree",
+   "proposed_name": null,
+   "c_type": "void SpriteWorldBlocksFree(mem_t *mem)",
+   "meaning": "Reset supplied sprite arena cursor to OffsetSpriteWorld.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Reset supplied sprite arena cursor to OffsetSpriteWorld."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb84",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "SpriteWorldBlocksFree"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "SpriteWorldBlocksFree",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Reset supplied sprite arena cursor to OffsetSpriteWorld."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fb84",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "fc64508253f2d71e354b07b69cbfc13619006fbf9ef4108022f1e2600f837a8a",
+   "baseline_parser_body_sha256": "fc64508253f2d71e354b07b69cbfc13619006fbf9ef4108022f1e2600f837a8a",
+   "readers_writers": {
+    "globals": [
+     "OffsetSpriteWorld"
+    ],
+    "callees": [],
+    "members": [
+     "mem->align"
+    ]
+   }
+  },
+  {
+   "id": "local:SpriteWorldBlocksFree:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by SpriteWorldBlocksFree for mem->align = OffsetSpriteWorld;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "mem->align = OffsetSpriteWorld;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "SpriteWorldBlocksFree",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "SpriteWorldBlocksFree",
+     "ordinal": 1,
+     "uses": [
+      "mem->align = OffsetSpriteWorld;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "SpriteWorldBlocksFree",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:block_free",
+   "kind": "function",
+   "current_name": "block_free",
+   "proposed_name": null,
+   "c_type": "void block_free(mem_t *mem)",
+   "meaning": "Reset shared world descriptor/eta counts through world_free, then reset supplied arena cursor to data-address low2 bits.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Reset shared world descriptor/eta counts through world_free, then reset supplied arena cursor to data-address low2 bits."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fb90",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "block_free"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "block_free",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Reset shared world descriptor/eta counts through world_free, then reset supplied arena cursor to data-address low2 bits."
+   ],
+   "name_provenance": "RAYVERSE",
+   "oracle_address": "1:6fb90",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "6b7f9aacacac75e0f8aa183f8fec635827c5454f61392adc524b6965ff978325",
+   "baseline_parser_body_sha256": "6b7f9aacacac75e0f8aa183f8fec635827c5454f61392adc524b6965ff978325",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "world_free"
+    ],
+    "members": [
+     "mem->align",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:block_free:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by block_free for mem->align = ((u32) mem->data) & 3;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "mem->align = ((u32) mem->data) & 3;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "block_free",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "block_free",
+     "ordinal": 1,
+     "uses": [
+      "mem->align = ((u32) mem->data) & 3;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "block_free",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:align_mem_desc",
+   "kind": "function",
+   "current_name": "align_mem_desc",
+   "proposed_name": null,
+   "c_type": "void align_mem_desc(mem_t *mem)",
+   "meaning": "Reset arena cursor to low2 bits of data pointer; retains allocation and capacity.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Reset arena cursor to low2 bits of data pointer; retains allocation and capacity."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fba4",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "align_mem_desc"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "align_mem_desc",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Reset arena cursor to low2 bits of data pointer; retains allocation and capacity."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6fba4",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "d8aa8127e9694ca28d87257f5d2c128fce7c23e5dfd9f66fef0cdb04dba31e8e",
+   "baseline_parser_body_sha256": "d8aa8127e9694ca28d87257f5d2c128fce7c23e5dfd9f66fef0cdb04dba31e8e",
+   "readers_writers": {
+    "globals": [],
+    "callees": [],
+    "members": [
+     "mem->align",
+     "mem->data"
+    ]
+   }
+  },
+  {
+   "id": "local:align_mem_desc:mem:1",
+   "kind": "local",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "meaning": "Typed address used by align_mem_desc for mem->align = ((u32) mem->data) & 3;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "mem_t *",
+    "observed_uses": [
+     "mem->align = ((u32) mem->data) & 3;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "align_mem_desc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "align_mem_desc",
+     "ordinal": 1,
+     "uses": [
+      "mem->align = ((u32) mem->data) & 3;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "align_mem_desc",
+   "role": "parameter",
+   "declarator": "mem_t *$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "function:fix_free",
+   "kind": "function",
+   "current_name": "fix_free",
+   "proposed_name": null,
+   "c_type": "void fix_free(void)",
+   "meaning": "Empty function; fixed-resource release is performed elsewhere.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Empty function; fixed-resource release is performed elsewhere."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fbb0",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "fix_free"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "fix_free",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Empty function; fixed-resource release is performed elsewhere."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:6fbb0",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "baseline_parser_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "readers_writers": {
+    "globals": [],
+    "callees": [],
+    "members": []
+   }
+  },
+  {
+   "id": "function:sub_6FBB4",
+   "kind": "function",
+   "current_name": "sub_6FBB4",
+   "proposed_name": null,
+   "c_type": "void *sub_6FBB4(u32 size)",
+   "meaning": "Return malloc(size) directly.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Return malloc(size) directly."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fbb4",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "sub_6FBB4"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "sub_6FBB4",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Return malloc(size) directly."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6fbb4",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "6ea8918661a589be2af6f934233e4c269949b0a399a69fc1c5a7da8db1513d8d",
+   "baseline_parser_body_sha256": "6ea8918661a589be2af6f934233e4c269949b0a399a69fc1c5a7da8db1513d8d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "malloc"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:sub_6FBB4:size:1",
+   "kind": "local",
+   "current_name": "size",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in sub_6FBB4: return malloc(size);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "return malloc(size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "sub_6FBB4",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "sub_6FBB4",
+     "ordinal": 1,
+     "uses": [
+      "return malloc(size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "sub_6FBB4",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:JumelleCalloc",
+   "kind": "function",
+   "current_name": "JumelleCalloc",
+   "proposed_name": null,
+   "c_type": "void *JumelleCalloc(u32 size, u32 count)",
+   "meaning": "Return calloc(count,size); source parameter order is size then count.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Return calloc(count,size); source parameter order is size then count."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fbbc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "JumelleCalloc"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "JumelleCalloc",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Return calloc(count,size); source parameter order is size then count."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6fbbc",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "a69672eda5e89bf6aaf5b63144c918210cf635103237d9ca6436e98a73a0829e",
+   "baseline_parser_body_sha256": "a69672eda5e89bf6aaf5b63144c918210cf635103237d9ca6436e98a73a0829e",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "calloc"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:JumelleCalloc:size:1",
+   "kind": "local",
+   "current_name": "size",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in JumelleCalloc: return calloc(count, size);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "return calloc(count, size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "JumelleCalloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "JumelleCalloc",
+     "ordinal": 1,
+     "uses": [
+      "return calloc(count, size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "JumelleCalloc",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "local:JumelleCalloc:count:2",
+   "kind": "local",
+   "current_name": "count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Local value in JumelleCalloc: return calloc(count, size);. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u32",
+    "observed_uses": [
+     "return calloc(count, size);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "JumelleCalloc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "JumelleCalloc",
+     "ordinal": 2,
+     "uses": [
+      "return calloc(count, size);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "JumelleCalloc",
+   "role": "parameter",
+   "declarator": "u32 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/sysutils.c",
+   "signedness": "unsigned"
+  },
+  {
+   "id": "function:JumelleFreeArray",
+   "kind": "function",
+   "current_name": "JumelleFreeArray",
+   "proposed_name": null,
+   "c_type": "void JumelleFreeArray(void **ptr)",
+   "meaning": "Free a nonnull pointed-to allocation and clear the caller's pointer; null is a no-op.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Free a nonnull pointed-to allocation and clear the caller's pointer; null is a no-op."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:6fbcc",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "JumelleFreeArray"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "JumelleFreeArray",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Free a nonnull pointed-to allocation and clear the caller's pointer; null is a no-op."
+   ],
+   "name_provenance": "INVENTED",
+   "oracle_address": "1:6fbcc",
+   "source_file": "src/sysutils.c",
+   "source_body_sha256": "3c4005b4942dd00fd70954533b214da13e6d9a1f6ad2c27c2030e540caca5369",
+   "baseline_parser_body_sha256": "3c4005b4942dd00fd70954533b214da13e6d9a1f6ad2c27c2030e540caca5369",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "free"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:JumelleFreeArray:ptr:1",
+   "kind": "local",
+   "current_name": "ptr",
+   "proposed_name": null,
+   "c_type": "void **",
+   "meaning": "Typed address used by JumelleFreeArray for if ((*ptr) != 0); free(*ptr);; *ptr = 0;. Lifetime and side effects follow the function contract.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "void **",
+    "observed_uses": [
+     "if ((*ptr) != 0)",
+     "free(*ptr);",
+     "*ptr = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/sysutils.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "JumelleFreeArray",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_sysutils.json",
+     "kind": "declaration_and_use",
+     "function": "JumelleFreeArray",
+     "ordinal": 1,
+     "uses": [
+      "if ((*ptr) != 0)",
+      "free(*ptr);",
+      "*ptr = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "JumelleFreeArray",
+   "role": "parameter",
+   "declarator": "void **$",
+   "declaration_ordinal": 1,
+   "source_file": "src/sysutils.c",
+   "signedness": "not applicable (pointer)"
+  },
+  {
+   "id": "global:OffsetSpriteFixe",
+   "kind": "global",
+   "current_name": "OffsetSpriteFixe",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.",
+   "unit": "arena byte offset",
+   "value_domain": {
+    "contract": "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_DOS_call_fixup_and_source_scan",
+     "key": "OffsetSpriteFixe",
+     "detail": "2061 bound game/vendor/runtime starts;negative widened/adjacent candidates are separate,not proven typed readers."
+    },
+    {
+     "kind": "binding",
+     "binding": {
+      "addr": "2:57474",
+      "type": "u32",
+      "name": "ANDROID",
+      "evidence": "Android .bss object size 4; DOS writes dword at 2:57474 in SpriteFixeOffset and reads it in SpriteFixeBlocksFree"
+     },
+     "supplied_by": "pass6 game flow/UI"
+    }
+   ],
+   "port_notes": [
+    "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses."
+   ],
+   "name_provenance": "ANDROID",
+   "declarator": "u32 $",
+   "oracle_address": "2:57474",
+   "binding_kind": "game_data",
+   "evidence_units": [
+    "sysutils.c"
+   ]
+  },
+  {
+   "id": "global:OffsetSpriteWorld",
+   "kind": "global",
+   "current_name": "OffsetSpriteWorld",
+   "proposed_name": null,
+   "c_type": "u32",
+   "meaning": "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses.",
+   "unit": "arena byte offset",
+   "value_domain": {
+    "contract": "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_DOS_call_fixup_and_source_scan",
+     "key": "OffsetSpriteWorld",
+     "detail": "2061 bound game/vendor/runtime starts;negative widened/adjacent candidates are separate,not proven typed readers."
+    },
+    {
+     "kind": "binding",
+     "binding": {
+      "addr": "2:57470",
+      "type": "u32",
+      "name": "ANDROID",
+      "evidence": "Android .bss object size 4; DOS writes dword at 2:57470 in SpriteWorldOffset and reads it in SpriteWorldBlocksFree"
+     },
+     "supplied_by": "pass6 game flow/UI"
+    }
+   ],
+   "port_notes": [
+    "Arena cursor checkpoints for fixed/world sprite resources;free helpers reset cursor without rewriting sprite addresses."
+   ],
+   "name_provenance": "ANDROID",
+   "declarator": "u32 $",
+   "oracle_address": "2:57470",
+   "binding_kind": "game_data",
+   "evidence_units": [
+    "sysutils.c"
+   ]
+  },
+  {
+   "id": "global:data_22d970",
+   "kind": "global",
+   "current_name": "data_22d970",
+   "proposed_name": null,
+   "c_type": "mem_usage_stats_t",
+   "meaning": "40-byte diagnostic memory statistics:temp capacity,four8-byte arena peaks(world/level attached),temp peak. Does not establish heap fallback live total.",
+   "unit": "bytes / world+level indices",
+   "value_domain": {
+    "contract": "40-byte diagnostic memory statistics:temp capacity,four8-byte arena peaks(world/level attached),temp peak. Does not establish heap fallback live total."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_DOS_call_fixup_and_source_scan",
+     "key": "data_22d970",
+     "detail": "2061 bound game/vendor/runtime starts;negative widened/adjacent candidates are separate,not proven typed readers."
+    },
+    {
+     "kind": "binding",
+     "binding": {
+      "addr": "2:2d970",
+      "type": "s16[20]",
+      "name": "INVENTED",
+      "evidence": "INVENTED: twenty zero s16 entries inferred from DOS indexed dword accesses at 2-byte offsets"
+     },
+     "supplied_by": "pass6 game flow/UI"
+    }
+   ],
+   "port_notes": [
+    "40-byte diagnostic memory statistics:temp capacity,four8-byte arena peaks(world/level attached),temp peak. Does not establish heap fallback live total."
+   ],
+   "name_provenance": "INVENTED",
+   "declarator": "mem_usage_stats_t $",
+   "oracle_address": "2:2d970",
+   "binding_kind": "game_data",
+   "evidence_units": [
+    "sysutils.c"
+   ]
+  },
+  {
+   "id": "global:mem_32190",
+   "kind": "global",
+   "current_name": "mem_32190",
+   "proposed_name": null,
+   "c_type": "dpmi_memory_info_t",
+   "meaning": "48-byte DPMI0500 output;only largest_free_block first dword is consumed here. Remaining11 dwords retain neutral description.",
+   "unit": "DPMI memory record",
+   "value_domain": {
+    "contract": "48-byte DPMI0500 output;only largest_free_block first dword is consumed here. Remaining11 dwords retain neutral description."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_DOS_call_fixup_and_source_scan",
+     "key": "mem_32190",
+     "detail": "2061 bound game/vendor/runtime starts;negative widened/adjacent candidates are separate,not proven typed readers."
+    },
+    {
+     "kind": "binding",
+     "binding": {
+      "addr": "2:32190",
+      "name": "INVENTED",
+      "type": "dpmi_memory_info_t",
+      "evidence": "48-byte DPMI 0500h output record, not an allocated pointer. Existing INVENTED name retained to avoid duplicate-address aliases. Original Android identifier DPMIMemoryInfo; exact DOS identifier spelling and defining historical TU remain OPEN. See build/workers/dt_cells/NOTES.md.",
+      "size": 48,
+      "original_name": "DPMIMemoryInfo",
+      "dos_size_evidence": "DOS get_avail_memory 1:6f3d8 sets AX=0500h; 1:6f3dd/6f3e7 supplies DS:32190 to int386x at 1:6f3fe; DPMI 0500h requires 48 bytes; +0 dword read at 1:6f403. Android 1.txt and 2.txt DPMIMemoryInfo .bss size 0x30. End 321c0 equals independently bound init_data_state."
+     },
+     "supplied_by": "pass6 game flow/UI"
+    }
+   ],
+   "port_notes": [
+    "48-byte DPMI0500 output;only largest_free_block first dword is consumed here. Remaining11 dwords retain neutral description."
+   ],
+   "name_provenance": "INVENTED",
+   "declarator": "dpmi_memory_info_t $",
+   "oracle_address": "2:32190",
+   "binding_kind": "game_data",
+   "evidence_units": [
+    "sysutils.c"
+   ]
+  },
+  {
+   "id": "global:temp_mem",
+   "kind": "global",
+   "current_name": "temp_mem",
+   "proposed_name": null,
+   "c_type": "temp_mem_entry_t [30]",
+   "meaning": "Thirty12-byte temporary pool descriptors:capacity+0,data+4,allocated+8. No spare-descriptor guarantee;see PLATFORM_OPEN.",
+   "unit": "allocator descriptors",
+   "value_domain": {
+    "contract": "Thirty12-byte temporary pool descriptors:capacity+0,data+4,allocated+8. No spare-descriptor guarantee;see PLATFORM_OPEN."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_DOS_call_fixup_and_source_scan",
+     "key": "temp_mem",
+     "detail": "2061 bound game/vendor/runtime starts;negative widened/adjacent candidates are separate,not proven typed readers."
+    },
+    {
+     "kind": "binding",
+     "binding": {
+      "addr": "2:39688",
+      "name": "ANDROID",
+      "evidence": "DOS 1:6f747 clears 0x168 bytes at 2:39688; 1:6f7a4 uses stride 12, 1:6f7c6 stops at 30; fields capacity+0, buffer+4, allocated+8. Android temp_mem is .bss size 360; allocator-table identity independent of BSS ordering.",
+      "type": "temp_mem_entry_t [30]"
+     },
+     "supplied_by": "pass6 game flow/UI"
+    }
+   ],
+   "port_notes": [
+    "Thirty12-byte temporary pool descriptors:capacity+0,data+4,allocated+8. No spare-descriptor guarantee;see PLATFORM_OPEN."
+   ],
+   "name_provenance": "ANDROID",
+   "declarator": "temp_mem_entry_t $[30]",
+   "oracle_address": "2:39688",
+   "binding_kind": "game_data",
+   "evidence_units": [
+    "sysutils.c"
+   ]
+  }
+ ],
+ "unit_local_type_aliases": [],
+ "parser_abi_view": {
+  "checker": "staging/tools/semantics.py",
+  "detail": "Original Watcom declarations remain in the unit. Only checker input is sanitized: far/near use distinct standard-C qualifier placeholders, and calling-convention/ISR keywords are stripped. Pinned probes compile actual headers and original source-local declarations."
+ },
+ "source_fingerprints": {
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
+  "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
+  "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/include/map.h": "e6ecfc28c926ae4f18c71f1a2ccdf1199253c7bc0887e08715bc335456789f17",
+  "src/include/type_island_abi.h": "08f0103a45b8cad235165e57cd03c312b13eb60dcbfaff3ab0908d1fe8e94094",
+  "src/include/init_data_state.h": "1f6d46eb3a29c303ce37dd64041396065124bd511d7bc9b29253fc8580924577",
+  "src/sysutils_local.h": "295d003e6d7c639f1d2966115363dc45ce9b63c11a650486050a38e3e8276e58"
+ },
+ "proposal_fingerprints": {
+  "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
+  "box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
+  "cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
+  "input.c": "5c0c0b729e4043ac713f79ce0a68e750eed5063c14b761faea72934d0fa6d2cd",
+  "jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "mathutil.c": "c597394578c5b7642f6a3a532085faddbc727cc8c042c0d7c65daabb9346df75",
+  "menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "menu_inline.h": "69c059f454d951c97c524554332167a94005d55b58685a313732e461a691a56f",
+  "menu_keys_local.h": "0e58dc6d67fada5077de5dda4279b863c8d2d07fec2cbc6132b66d580d8dd394",
+  "menu_local.h": "c689ccb9f469353ade55119678539f1dbfffe4333bb6b7c9ef8819542ac57b24",
+  "original_inline.h": "1220e5385e2ce07476a73b85cbcd2c822f3d1acac54d1d3312d99e19698dbefb",
+  "pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "rand.c": "e0b57934471d7d330eac7870d64d0d542a463cbdddd62ba6b51cc1ba250d2aa3",
+  "ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "savecodec.c": "f5a1bbddace7847ea77d6326052f1fa6070385790409f685ea802b81c603e20a",
+  "sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "sysutils_local.h": "295d003e6d7c639f1d2966115363dc45ce9b63c11a650486050a38e3e8276e58",
+  "worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "evidence_source_fingerprints": {
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_32190.c": "3de8d11a8b8ecc5e2c518b5a86434eb33ddc8d977a1876679eb163c9d3c7aee7",
+  "src/bss/bss_39688.c": "71419780ccd2ce8ced5e7792f1edb06f67c2e0d5802ef3fba74968382297a5b3",
+  "src/bss/bss_3ce48.c": "ea2e01450d24061853e9f9463d57c519b2133f73d15d7a14965cc7a672ffd0ca",
+  "src/bss/bss_3d84c.c": "b1b557e5db1605c4e195cd5393842ebd62063efde1a1bff39be741d1595e8e11",
+  "src/bss/bss_3f878.c": "649d13776df696b9f37606009d6f78d48cd347e409b8a07ce0965ab02856b337",
+  "src/bss/bss_3fa97.c": "73902d394bcac047017aa243b4cae71d078e50aa423c666906c8a2c6b56b4d87",
+  "src/bss/bss_57470.c": "a996bc33706873c0266fb0c2c27c7609a831c82a81d4c702a8f6915b9f92f2f1",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/data/blk_2d96c.c": "6a7c9df626fb6d3ac8b2fb4b5d726da3dffcb51c81fe0a845e5f2de583545d3a",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/sysutils_local.h": "295d003e6d7c639f1d2966115363dc45ce9b63c11a650486050a38e3e8276e58",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/RAYMAN.CFG": "3bf294ba76bc8794fbb91421a71a543e651d24d148f259085042e4a0b6fcfea7"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/box.dos.txt": "df2250b596ffda8b22effb28d9d2e4c28d3cb3c10db20a571e90e0eef8e7f815",
+  "evidence/box_typed_accesses.json": "c68e0e3139ab7e64ca16647993603ccdeda86c776d7af4873f0d4eea1fcea915",
+  "evidence/canonical_input_hashes.json": "0b06e44e47315294fc00a88f8d2193e749dfa9588a5c421ba75ea6f00b624903",
+  "evidence/cdsave.dos.txt": "84f432dedabe5f79766a279575305bd3da741a7f58e9e9a274672962724d2e58",
+  "evidence/cdsave_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/cheat.dos.txt": "6d64afbdc62b52e6127951378ede64bb887b3fce5c92f5f19e2902bc56960266",
+  "evidence/cheat_typed_accesses.json": "0d3a2bcd692e11af82911c35fd3e21c93757a1390483b21ab1a005bc596db601",
+  "evidence/data_domains.json": "6921e5abef079e3cd4cf91dac314284073f105b2161d64fe46adaa54f5e4adab",
+  "evidence/displacement_candidates.json": "d10ee3791b47905dc1ce8fd6e9a778ea68155b17f5bfed86ddfddd282d8c076f",
+  "evidence/global_declared_extents.json": "f445924469fe8fead8d0fc6e39dacfd0a691d728f9a20171a0d089812d1b7aac",
+  "evidence/input.dos.txt": "d64165bad5fb1f9aa7046989318a357f9ae3be3ee38131906d466cde21eeed92",
+  "evidence/input_typed_accesses.json": "f4d30248acb349763c1a070f82ec5c974e23e600d8737ac2eb8cb58ddc4e8481",
+  "evidence/inventory.json": "d983e69d8a882d01ec8f254cb0eff069cb17a9f17a2bfa2d8b0f5c92d2544f9b",
+  "evidence/inventory_box.json": "7961a9de0209640694cde532b3308e3b8295c8d8a8930c0e63c100843dc1114f",
+  "evidence/inventory_cdsave.json": "42e551609cc8bf0053ddad8e79801e2ebc49c4ef0e085681d338d74594deac79",
+  "evidence/inventory_cheat.json": "099bddcf827bf059ef7a14a7e16741ae1766b9f8a1c48129cde28f887bdf1c95",
+  "evidence/inventory_input.json": "8f24e0fadc00b635a68a7c8669e9ea52d0ee626eb6759876d7ee7ece5767520c",
+  "evidence/inventory_jumelle.json": "b152cf69d2ea720a2f51b8622e84b0236bc88ade1b30b12bddea9e05389f5ed3",
+  "evidence/inventory_mathutil.json": "b394a0d160e639cc6efd84d3cdf57684ff3e8af3df4984faa59e5d0f2b6cca76",
+  "evidence/inventory_menu.json": "07cc2870db0766b95d74439038cc100d732346dd806c71aa95a7402e412f8df4",
+  "evidence/inventory_pcmain.json": "446c7940aebcc9311f409fa93ae4df6d28098986a37d9d7711d24676bed40e69",
+  "evidence/inventory_rand.json": "12633ab7063e9a1114d12e96bb2477fb80cbc5132cdeaab991087aa3d2884394",
+  "evidence/inventory_ray_pc.json": "04796c15d1380817aa9b562ff2e5c866b7d8578a3bd42ac8bb4f260be57d23a2",
+  "evidence/inventory_save.json": "615c9f05df2402cd7040de40101f723df8711a9e75dd7b2822858b8f6f596a60",
+  "evidence/inventory_savecodec.json": "756cb383700ae903c8f0133cdf46ff07aaeaee00dfaa63e7eceac6f4c3f12e1b",
+  "evidence/inventory_sysutils.json": "1c98e20e4496db62a3cabe58de451f4794df3921950d5eae7e74230bb9fc4b76",
+  "evidence/inventory_worldmap.json": "0fcea41f0a3dce75f70024356a6ff597ff3a1306be22de323380a59439b6a2c0",
+  "evidence/jumelle.dos.txt": "a0fb7ca7672e364f0adf14b648a85dba6f0e50ea2ef6cf239110cb8f3bf78cf0",
+  "evidence/jumelle_typed_accesses.json": "2af0900bc8ced35d2efb5a177eb9f41b4820765b95d679c2b2dc91ce0016c79f",
+  "evidence/layout.json": "a17c8b32794a3a2401390bf2ba90a6ae640faa43a6ffdcc3a75987e9f923d64a",
+  "evidence/mathutil.dos.txt": "60c911e5e591b814b36e0c6d24982c6239b065fa22cc6a65457c937885d82222",
+  "evidence/mathutil_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/menu.dos.txt": "038aa0caea08047e662eaf6b64d963d1ab110dec2d6de3aba01df90d002d459e",
+  "evidence/menu_typed_accesses.json": "ffc2642400b2bbecddaf88eebb6ae3d3ddd1349ee4424f6f74a4457693d5b5c1",
+  "evidence/naming_audit.json": "276900dc1353f03eeeccff4a82b82d383297c706d6864a718934181df000eed4",
+  "evidence/negative_results.json": "95281cfe61347562aaa0cff78edd556f5147558335806b931462b44aaca2e16e",
+  "evidence/parse_errors.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/pcmain.dos.txt": "ce70b87cd14f11ac015f347faa2b33030b053cd391c8d458269d7563301857c9",
+  "evidence/pcmain_typed_accesses.json": "a4c1816cb22ebd67d322859080d771392b3fcd7f0b431a4392d903109a0406c8",
+  "evidence/proposal_scopes.json": "05e7d944562be5ae69456f672c3739d7c757e204214d95082e191acf1a7628cb",
+  "evidence/rand.dos.txt": "0295e9c9050fef5d4b63663d5704bef71780d3a41215a79fcdf4b92f455c7cfa",
+  "evidence/rand_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/ray_pc.dos.txt": "11d92a1fe0f9d96ee89824dbbb6627965b6fcef3d52021738d395d1dfb82dbe7",
+  "evidence/ray_pc_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/read_manifest.json": "427562257d33e7d109c138324fbd8c4fb9c23b306c16f2fbaadf632564ed65d2",
+  "evidence/save.dos.txt": "d5a303d7688f8bc2d48d7fc2ca4d199b42a8435ab83e9aa923077e36ffa47a2c",
+  "evidence/savecodec.dos.txt": "46c75f2a53a06b36bab785b471d1ef64650ac03211341ebeae1a1a5d909da2b0",
+  "evidence/savecodec_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/save_formats.json": "83dfb7a7a76794213ca55162028be973706f2695039f7a67ddff39b8e375e00c",
+  "evidence/save_typed_accesses.json": "a42a8de1e7110f286212307e53ee06026f9dc137f92e4311deea57fdba94cd4b",
+  "evidence/scopes.json": "f6fcf670caf9ae8ba47faf3ae247d8fee4fe3030500525439ad1ff42d5bf32fe",
+  "evidence/symbols.json": "bec95c3a024cd74fc7d4146d4d7eabfa253964dcce262d52ee1497f8070a0263",
+  "evidence/sysutils.dos.txt": "6d35855936f53b95e3489b8f84ee7573dd7d1027632419417e8bee1a5ba48042",
+  "evidence/sysutils_typed_accesses.json": "0c7d8490e1331d904d1d1322ee8701a7bfc5effcf088051a1ad8d9905cd7047c",
+  "evidence/worldmap.dos.txt": "17a0d6b207249fb14443bdc39b0e2346f1357e360f88ed3e75d39de3b241e35a",
+  "evidence/worldmap_typed_accesses.json": "397a3244b8f8b98e4250768483eb719c32390aa22331cdd55990266b4b3dcd20",
+  "evidence/world_graph.json": "1b06a20cf89f914c1404f90fcb029bd25b4798287eff3ff0ab4a98b8fd3df078",
+  "evidence/xref_names.json": "2f881b2ca7c1a61a3978b9508b71a7e249a5a9a62271b7b7d821461a93905b1a"
+ }
+}

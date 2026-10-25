@@ -440,15 +440,16 @@ void allocate_badguy(obj_t *tentacle_obj, s16 which_enemy, s16 xspeed, s16 yspee
     }
 }
 
+/* Names and meanings: docs/semantics/objupdate2.json. */
 void DO_PTI_ESQUIVE(obj_t *bg3_obj)
 {
-    s16 unk_1; s16 diff_y; s16 diff_x;
+    s16 threat_range_x; s16 diff_y; s16 diff_x;
 
     DO_ONE_CMD(bg3_obj);
     if (poing.is_active || poing.is_charging)
     {
-        calc_esquive_poing(bg3_obj, &diff_x, &diff_y, &unk_1);
-        if (iabs(diff_x) <= unk_1 && diff_y < 15)
+        calc_esquive_poing(bg3_obj, &diff_x, &diff_y, &threat_range_x);
+        if (iabs(diff_x) <= threat_range_x && diff_y < 15)
         {
             if (
                 (
@@ -825,11 +826,12 @@ void DoMusicienRaymanInZDD(obj_t* obj) {
     }
 }
 
+/* Names and meanings: docs/semantics/objupdate2.json. */
 void DO_TEN_COMMAND(obj_t *obj)
 {
     u8 i;
-    s16 unk_1;
-    u8 unk_2;
+    s16 spawn_speed_x;
+    u8 spawn_variant;
 
     if (obj->cmd == GO_LEFT)
         obj->flags.flip_x = 0;
@@ -859,17 +861,17 @@ void DO_TEN_COMMAND(obj_t *obj)
     {
         if (obj->anim_frame >= 5 && obj->timer == 0)
         {
-            unk_1 = -4;
+            spawn_speed_x = -4;
             i = 0;
             obj->timer++;
             while (i < 4)
             {
-                unk_2 = (i % 2) + 1;
-                allocate_badguy(obj, 3 - unk_2, unk_1, -unk_2);
+                spawn_variant = (i % 2) + 1;
+                allocate_badguy(obj, 3 - spawn_variant, spawn_speed_x, -spawn_variant);
 
-                unk_1++;
-                if (unk_1 == -2)
-                    unk_1 = 3;
+                spawn_speed_x++;
+                if (spawn_speed_x == -2)
+                    spawn_speed_x = 3;
                 i++;
             }
         }

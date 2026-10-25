@@ -685,12 +685,13 @@ void LOAD_OPTIONS_SCREEN(void) {
     LoadPcxPaletteInVignet(12, (u8*)&rvb_plan3);
 }
 
-void HANDLE_KEY(u8* a1) {
+/* Local meanings: docs/semantics/cheat.json, function:HANDLE_KEY. */
+void HANDLE_KEY(u8* key_result) {
     if (input_mode != 1) {
         if (kbhit() && !ModeDemo) {
-            *a1 = (u8)getch();
+            *key_result = (u8)getch();
         } else {
-            *a1 = 255;
+            *key_result = 255;
         }
     }
     return;

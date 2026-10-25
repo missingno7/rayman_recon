@@ -53,6 +53,10 @@ extern const char **key_descriptions;
 /* Definitions whose literal initializers precede the key-table literals.
  * Android: TabScreenSize 16 B, TabFreq 20 B; DOS pointer fixups prove targets.
  * Other definitions are the existing verified src/data/blk_684c.c and blk_6880.c. */
+extern const char *key_descriptions_azerty[128];
+extern const char *key_descriptions_qwerty[128];
+extern char *TabScreenSize[4];
+extern char *TabFreq[5];
 char *TabScreenSize[4] = {"320x200", "312x196", "304x192", "300x188"};
 s16 TabW1[4] = {4, 12, 20, 24};
 s16 TabW2[4] = {320, 312, 304, 300};
@@ -2970,11 +2974,12 @@ s16 CalcSpeed(void) {
 
 
 /* DOS 1:3f698; menu.c:1189 */
-void general_init_screen(s16 a1, s16 a2, s16 a3) {
-    debut_titre = ((a1 * 200 / 100) / 2) + 11;
-    ecart_options = ((a2 * 200 / 100) - 15 * nbre_options) / (nbre_options + 1);
-    debut_options = ecart_options + 15 + (a1 * 200 / 100);
-    debut_sortie = ((a3 * 200 / 100) / 2) + 11 + (a1 * 200 / 100) + (a2 * 200 / 100);
+/* Local meanings: docs/semantics/menu.json, function:general_init_screen. */
+void general_init_screen(s16 title_percent, s16 options_percent, s16 exit_percent) {
+    debut_titre = ((title_percent * 200 / 100) / 2) + 11;
+    ecart_options = ((options_percent * 200 / 100) - 15 * nbre_options) / (nbre_options + 1);
+    debut_options = ecart_options + 15 + (title_percent * 200 / 100);
+    debut_sortie = ((exit_percent * 200 / 100) / 2) + 11 + (title_percent * 200 / 100) + (options_percent * 200 / 100);
     sortie_options = 0;
 }
 
@@ -3000,9 +3005,10 @@ void TestButtonReleased(void) {
 }
 
 /* DOS 1:3f800; menu.c:1221 */
-void display_box_text_plasma(display_item_t* box, u8 a2) {
+/* Local meanings: docs/semantics/menu.json, function:display_box_text_plasma. */
+void display_box_text_plasma(display_item_t* box, u8 advance_phases) {
     if (!msg_box_being_displayed) {
-        PlasmaBox(box->centered_x_pos, box->centered_y_pos, box->width, box->height, a2);
+        PlasmaBox(box->centered_x_pos, box->centered_y_pos, box->width, box->height, advance_phases);
         display_box_text(box);
     } else {
         display_text(box->text, box->xpos, box->ypos, box->font_size, box->color);
@@ -3010,9 +3016,10 @@ void display_box_text_plasma(display_item_t* box, u8 a2) {
 }
 
 /* DOS 1:3f878; menu.c:1231 */
-void display_box_text_fire(display_item_t* a1) {
-    FireBox(a1->centered_x_pos, a1->centered_y_pos, a1->width, a1->height);
-    display_box_text(a1);
+/* Local meanings: docs/semantics/menu.json, function:display_box_text_fire. */
+void display_box_text_fire(display_item_t* box) {
+    FireBox(box->centered_x_pos, box->centered_y_pos, box->width, box->height);
+    display_box_text(box);
 }
 
 /* DOS 1:3f8b4; menu.c:1237 */

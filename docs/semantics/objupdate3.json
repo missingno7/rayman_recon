@@ -1,0 +1,919 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "objupdate3.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:horloge",
+   "global:level"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:DO_PIRATE_POELLE",
+   "kind": "function",
+   "current_name": "DO_PIRATE_POELLE",
+   "proposed_name": null,
+   "c_type": "void DO_PIRATE_POELLE(obj_t *pirp_obj)",
+   "oracle_address": "1:53340",
+   "meaning": "Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.",
+    "operations_artifact": "evidence/objupdate3_operations.json",
+    "operations_key": "DO_PIRATE_POELLE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_PIRATE_POELLE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_PIRATE_POELLE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c",
+   "source_body_sha256": "6131d64079256e17c611d8b9a547b08e46dfbbbf45857d31804610a60b9443d5",
+   "readers_writers": {
+    "globals": [
+     "horloge",
+     "level"
+    ],
+    "callees": [
+     "GET_SPRITE_POS",
+     "add_alwobj",
+     "get_center_x",
+     "get_center_y",
+     "on_block_chdir",
+     "set_main_and_sub_etat",
+     "test_allowed"
+    ]
+   },
+   "evidence_units": [
+    "objupdate3.c"
+   ]
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:cen_x:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "cen_x",
+   "proposed_name": null,
+   "c_type": "s16 = get_center_x(pirp_obj)",
+   "declarator": "s16 $ = get_center_x(pirp_obj)",
+   "meaning": "Local initialized as get_center_x(pirp_obj); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 cen_x = get_center_x(pirp_obj)",
+     "on_block_chdir(pirp_obj, cen_x, cen_y) && (!((((pirp_obj->sub_etat == 13) || (pirp_obj->sub_etat == 28)) || (pirp_obj->sub_etat == 14)) || (pirp_obj->sub_etat == 29)))",
+     "on_block_chdir(pirp_obj, cen_x, cen_y)",
+     "test_allowed(pirp_obj, cen_x, cen_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:cen_y:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "cen_y",
+   "proposed_name": null,
+   "c_type": "s16 = get_center_y(pirp_obj)",
+   "declarator": "s16 $ = get_center_y(pirp_obj)",
+   "meaning": "Local initialized as get_center_y(pirp_obj); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 cen_y = get_center_y(pirp_obj)",
+     "on_block_chdir(pirp_obj, cen_x, cen_y) && (!((((pirp_obj->sub_etat == 13) || (pirp_obj->sub_etat == 28)) || (pirp_obj->sub_etat == 14)) || (pirp_obj->sub_etat == 29)))",
+     "on_block_chdir(pirp_obj, cen_x, cen_y)",
+     "test_allowed(pirp_obj, cen_x, cen_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:i:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in DO_PIRATE_POELLE computed/consumed by i = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0",
+     "cur_obj = &level.objects[i]",
+     "&level.objects[i]",
+     "i < nb_objs",
+     "i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:cur_obj:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "cur_obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object pointer selected or traversed by DO_PIRATE_POELLE. Observed selection/use: cur_obj = &level.objects[i]",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "cur_obj = &level.objects[i]",
+     "(cur_obj->type == TYPE_POELLE_ALWAYS) && (!cur_obj->is_active)",
+     "!cur_obj->is_active",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13",
+     "cur_obj->speed_x = 13",
+     "cur_obj->flags.flip_x = 1",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13",
+     "cur_obj->speed_x = -13",
+     "cur_obj->init_y = (cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2)",
+     "cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2",
+     "cur_obj->speed_y = 2",
+     "cur_obj->is_active = 1",
+     "cur_obj->flags.alive = 1",
+     "add_alwobj(cur_obj)",
+     "cur_obj->flags.read_commands = 0",
+     "cur_obj++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:nb_objs:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "nb_objs",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in DO_PIRATE_POELLE computed/consumed by nb_objs = level.nb_objects",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "nb_objs = level.nb_objects",
+     "i < nb_objs"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:pirp_x:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "pirp_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation horizontal origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h)",
+     "&pirp_x",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:pirp_y:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "pirp_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation vertical origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h)",
+     "&pirp_y",
+     "cur_obj->init_y = (cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2)",
+     "cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:pirp_w:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "pirp_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation width output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h)",
+     "&pirp_w",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) + 13",
+     "cur_obj->init_x = (cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13)",
+     "cur_obj->x = ((pirp_x - cur_obj->offset_bx) + (pirp_w >> 1)) - 13"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:pirp_h:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "local",
+   "current_name": "pirp_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation height output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h)",
+     "&pirp_h",
+     "cur_obj->init_y = (cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2)",
+     "cur_obj->y = ((pirp_y - cur_obj->offset_by) + pirp_h) + 2"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE:pirp_obj:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE",
+   "role": "parameter",
+   "current_name": "pirp_obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to DO_PIRATE_POELLE; Update the pan pirate motion at direction tiles; states 13/28 emit one inactive type-186 pan at frame 6 on the nonzero clock-2 phase, while 14/29 rise at -8 with scripts disabled.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "s16 cen_x = get_center_x(pirp_obj)",
+     "get_center_x(pirp_obj)",
+     "s16 cen_y = get_center_y(pirp_obj)",
+     "get_center_y(pirp_obj)",
+     "on_block_chdir(pirp_obj, cen_x, cen_y) && (!((((pirp_obj->sub_etat == 13) || (pirp_obj->sub_etat == 28)) || (pirp_obj->sub_etat == 14)) || (pirp_obj->sub_etat == 29)))",
+     "on_block_chdir(pirp_obj, cen_x, cen_y)",
+     "!((((pirp_obj->sub_etat == 13) || (pirp_obj->sub_etat == 28)) || (pirp_obj->sub_etat == 14)) || (pirp_obj->sub_etat == 29))",
+     "pirp_obj->speed_y > 0",
+     "pirp_obj->speed_y--",
+     "(pirp_obj->type == TYPE_PIRATE_POELLE) || (pirp_obj->type == TYPE_PIRATE_P_45)",
+     "pirp_obj->speed_x = -36",
+     "pirp_obj->speed_x = 36",
+     "test_allowed(pirp_obj, cen_x, cen_y)",
+     "pirp_obj->speed_y = -1",
+     "pirp_obj->speed_x = -16",
+     "pirp_obj->speed_x = 16",
+     "pirp_obj->sub_etat == 6",
+     "set_main_and_sub_etat(pirp_obj, 1, 7)",
+     "pirp_obj->sub_etat == 21",
+     "set_main_and_sub_etat(pirp_obj, 1, 22)",
+     "(((pirp_obj->sub_etat == 13) || (pirp_obj->sub_etat == 28)) && (pirp_obj->anim_frame == 6)) && (horloge[2] != 0)",
+     "GET_SPRITE_POS(pirp_obj, 0, &pirp_x, &pirp_y, &pirp_w, &pirp_h)",
+     "pirp_obj->flags.flip_x",
+     "(pirp_obj->sub_etat == 14) || (pirp_obj->sub_etat == 29)",
+     "pirp_obj->speed_y = -8",
+     "pirp_obj->speed_x = 0",
+     "pirp_obj->flags.read_commands = 0",
+     "pirp_obj->speed_y == (-1)",
+     "(pirp_obj->sub_etat == 11) && (pirp_obj->anim_frame == 54)",
+     "set_main_and_sub_etat(pirp_obj, 1, 2)",
+     "(pirp_obj->sub_etat == 26) && (pirp_obj->anim_frame == 54)",
+     "set_main_and_sub_etat(pirp_obj, 1, 19)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53340",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "function:DO_PIRATE_POELLE_POING_COLLISION",
+   "kind": "function",
+   "current_name": "DO_PIRATE_POELLE_POING_COLLISION",
+   "proposed_name": null,
+   "c_type": "void DO_PIRATE_POELLE_POING_COLLISION(obj_t *obj, s16 sprite)",
+   "oracle_address": "1:53610",
+   "meaning": "Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.",
+    "operations_artifact": "evidence/objupdate3_operations.json",
+    "operations_key": "DO_PIRATE_POELLE_POING_COLLISION"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:53610",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_PIRATE_POELLE_POING_COLLISION",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_PIRATE_POELLE_POING_COLLISION",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c",
+   "source_body_sha256": "c5bf411758719780baef3913057890a3f6862197dc67243138b8b17578644f8d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "set_main_and_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "objupdate3.c"
+   ]
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE_POING_COLLISION:obj:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE_POING_COLLISION",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to DO_PIRATE_POELLE_POING_COLLISION; Decrement health only in listed pan-pirate substates and select the corresponding hurt/death substate, preserving the second family offset of 15.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "(obj->sub_etat == 0) || (obj->sub_etat == 1)",
+     "(--obj->hit_points) == 0",
+     "--obj->hit_points",
+     "set_main_and_sub_etat(obj, 0, 13)",
+     "set_main_and_sub_etat(obj, 0, 10)",
+     "(((obj->sub_etat == 7) || (obj->sub_etat == 2)) || (obj->sub_etat == 3)) || (obj->sub_etat == 4)",
+     "set_main_and_sub_etat(obj, 0, 12)",
+     "(obj->sub_etat == 5) || (obj->sub_etat == 6)",
+     "set_main_and_sub_etat(obj, 0, 11)",
+     "(obj->sub_etat == 15) || (obj->sub_etat == 16)",
+     "set_main_and_sub_etat(obj, 0, 28)",
+     "set_main_and_sub_etat(obj, 0, 25)",
+     "(((obj->sub_etat == 22) || (obj->sub_etat == 17)) || (obj->sub_etat == 18)) || (obj->sub_etat == 19)",
+     "set_main_and_sub_etat(obj, 0, 27)",
+     "(obj->sub_etat == 20) || (obj->sub_etat == 21)",
+     "set_main_and_sub_etat(obj, 0, 26)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53610",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE_POING_COLLISION",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "local:DO_PIRATE_POELLE_POING_COLLISION:sprite:1",
+   "kind": "local",
+   "function": "DO_PIRATE_POELLE_POING_COLLISION",
+   "role": "parameter",
+   "current_name": "sprite",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:53610",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "DO_PIRATE_POELLE_POING_COLLISION",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  },
+  {
+   "id": "function:PIRATE_POELLE_REACT",
+   "kind": "function",
+   "current_name": "PIRATE_POELLE_REACT",
+   "proposed_name": null,
+   "c_type": "void PIRATE_POELLE_REACT(obj_t *obj)",
+   "oracle_address": "1:5374c",
+   "meaning": "From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.",
+    "operations_artifact": "evidence/objupdate3_operations.json",
+    "operations_key": "PIRATE_POELLE_REACT"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:5374c",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "PIRATE_POELLE_REACT",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "PIRATE_POELLE_REACT",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c",
+   "source_body_sha256": "c79abb2a1d6fec9ec82637c0bdac52639a233fc933717e2d00b3c9e0fc0844f3",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "set_main_and_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "objupdate3.c"
+   ]
+  },
+  {
+   "id": "local:PIRATE_POELLE_REACT:obj:1",
+   "kind": "local",
+   "function": "PIRATE_POELLE_REACT",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to PIRATE_POELLE_REACT; From the idle pan-pirate families enter moving substates 5/20 and set type-specific signed horizontal and vertical speeds.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->main_etat == 0",
+     "(((obj->sub_etat == 0) || (obj->sub_etat == 1)) || (obj->sub_etat == 15)) || (obj->sub_etat == 16)",
+     "(obj->sub_etat == 0) || (obj->sub_etat == 1)",
+     "set_main_and_sub_etat(obj, 1, 5)",
+     "(obj->sub_etat == 15) || (obj->sub_etat == 16)",
+     "set_main_and_sub_etat(obj, 1, 20)",
+     "(obj->type == TYPE_PIRATE_POELLE) || (obj->type == TYPE_PIRATE_POELLE_D)",
+     "obj->speed_y = 3",
+     "obj->type == TYPE_PIRATE_POELLE",
+     "obj->speed_x = -24",
+     "obj->speed_x = 24",
+     "obj->speed_y = 2",
+     "obj->type == TYPE_PIRATE_P_45",
+     "obj->speed_x = -36",
+     "obj->speed_x = 36"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:5374c",
+     "artifact": "evidence/objupdate3.dos.txt",
+     "function": "PIRATE_POELLE_REACT",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate3.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0"
+ },
+ "proposal_fingerprints": {
+  "objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/obj/pirate_poelle.c": "e5c893b2a360dabb57d7fb294bf4668c21a6a7b3da89eea80ee36f5ce5bb55fe",
+  "external/rayverse/src/objupdate.c": "5a73e1fb25b960628970dace2cabe939fad970396e75f2d4186e20c99afedac8"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/objupdate3.dos.txt": "367cf8c4950f5dd5205d624c4695ad2732d1c29461ddd0d017973b8d8baf3021",
+  "evidence/objupdate3_operations.json": "5fe92d38ed00a7bed9175c2dba0b6a124a9c2629aa7db8e52c953ea7a48f116d",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_3cde8.c": "02b52e2e052caa50f35ded463db216400c965380ed0ea50bdac56d4fae11d368",
+  "src/bss/bss_3f9f5.c": "46233a930e5d026e220105a35871c6a6699b4c5bda5cc0b321dae86fc6008433",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/lowlevel_02640.asm": "f4378b646f1aa46640623a6acb47bc78d756241b71bbbd0e66607fa03e0731f8",
+  "src/lowlevel_04430.asm": "af37b2102b6c222f70339bfb31494dcba5859503d154596f495a64bec18b17af",
+  "src/lowlevel_data.asm": "6acd7010d9846ddf4f4d71bf1c1e45065059a23ef9abfa633ed244901c1e1925",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Pan-pirate type variants select signed horizontal speeds and two substate families separated by15. Pan spawn requires substate13/28, frame6 and NONZERO horloge[2], reuses the first inactive type186, sets alive/active and disables its script. Fist damage accepts only the explicitly listed substates; health-zero selects13/28. Rising death states14/29 force (0,-8)."
+}

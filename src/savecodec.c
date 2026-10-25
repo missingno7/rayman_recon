@@ -19,6 +19,12 @@ enum {
 /* DOS CONST 2:30bac, _DATA 2:06318. The method literal precedes
  * the code-referenced formats in this object. Both segments VERIFIED;
  * all 14 existing functions stay STRICT. See worker NOTES.md. */
+extern u8 sav_error_status;
+extern char *sav_codec_method;
+extern u8 sav_codec_error;
+extern u8 sav_codec_key;
+extern s32 sav_encoded_count;
+extern s32 sav_raw_count;
 u8 sav_error_status = 0;
 char *sav_codec_method = "Differential method";
 u8 sav_codec_error = 0;

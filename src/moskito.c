@@ -142,11 +142,12 @@ u8 moskitoCanAttak(obj_t* obj) {
 }
 
 //53DC4
-s16 setMoskitoAtScrollBorder(obj_t* obj, u8 a2) {
+/* Local names: docs/semantics/moskito.json (DOS dataflow; compiler output unchanged). */
+s16 setMoskitoAtScrollBorder(obj_t* obj, u8 border_selector) {
     /* 6FCCC 801944CC -O2 -msoft-float */
     s16 res;
 
-    switch (a2) {
+    switch (border_selector) {
         case 0:
             obj->x = scroll_start_x - obj->offset_bx;
             res = -1;
@@ -538,6 +539,7 @@ void prepareNewMoskitoAttack(obj_t* mst_obj) {
 }
 
 //54AEC
+/* Local names: docs/semantics/moskito.json (DOS dataflow; compiler output unchanged). */
 obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
     /* 70C64 80195464 -O2 -msoft-float */
     u8 spr_ind;
@@ -545,7 +547,7 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
     s16 i;
     obj_t* cur_obj;
     s16 nb_objs;
-    s16 unk_h; s16 unk_w; s16 unk_y; s16 unk_x;
+    s16 sprite_height; s16 sprite_width; s16 sprite_y; s16 sprite_x;
     obj_t* res = NULL;
 
     switch (mst2_obj->sub_etat)
@@ -568,9 +570,9 @@ obj_t* allocateMoskitoFruit(obj_t* mst2_obj) {
             cur_obj->flags.alive = true;
             cur_obj->is_active = true;
             add_alwobj(cur_obj);
-            GET_SPRITE_POS(mst2_obj, spr_ind, &unk_x, &unk_y, &unk_w, &unk_h);
-            cur_obj->x = unk_x - cur_obj->offset_bx + (unk_w >> 1);
-            cur_obj->y = unk_y - cur_obj->offset_hy;
+            GET_SPRITE_POS(mst2_obj, spr_ind, &sprite_x, &sprite_y, &sprite_width, &sprite_height);
+            cur_obj->x = sprite_x - cur_obj->offset_bx + (sprite_width >> 1);
+            cur_obj->y = sprite_y - cur_obj->offset_hy;
             cur_obj->init_x = cur_obj->x;
             cur_obj->init_y = cur_obj->y;
             switch (type_check)
@@ -827,9 +829,10 @@ void doMoskitoHit(obj_t* obj, s16 sprite) {
 }
 
 //55230
+/* Local names: docs/semantics/moskito.json (DOS dataflow; compiler output unchanged). */
 void DO_MST_SCROLL_COMMAND(obj_t* obj) {
     /* 4D354 80171B54 -O2 -msoft-float */
-    s16 unk_x; s16 unk_y;
+    s16 maximum_speed_x; s16 maximum_speed_y;
 
     if (obj->hit_points == 0)
     {
@@ -838,23 +841,23 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
             case 0:
                 obj->follow_id = ray.x - 50;
                 obj->iframes_timer = ray.y - 80;
-                unk_x = 1;
-                unk_y = 1;
+                maximum_speed_x = 1;
+                maximum_speed_y = 1;
                 break;
             case 1:
                 if (ray_mode <= 0)
                     obj->timer = 2;
                 obj->follow_id = xmap + obj->param - 100;
                 obj->iframes_timer = ymap + obj->link - 10;
-                unk_x = h_scroll_speed + 1;
-                unk_y = 2;
+                maximum_speed_x = h_scroll_speed + 1;
+                maximum_speed_y = 2;
                 break;
             case 2:
                 obj->param = 500;
                 obj->follow_id = xmap + 1000;
                 obj->iframes_timer = ray.y - 125;
-                unk_y = 1;
-                unk_x = 3;
+                maximum_speed_y = 1;
+                maximum_speed_x = 3;
                 break;
         }
 
@@ -866,10 +869,10 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
             if (obj->follow_id > obj->x)
             {
                 obj->speed_x++;
-                MIN_2(obj->speed_x, unk_x);
+                MIN_2(obj->speed_x, maximum_speed_x);
 
                 if (obj->x + obj->speed_x > obj->follow_id)
-                    obj->speed_x = unk_x - 1;
+                    obj->speed_x = maximum_speed_x - 1;
             }
             else
             {
@@ -880,12 +883,12 @@ void DO_MST_SCROLL_COMMAND(obj_t* obj) {
             if (obj->iframes_timer > obj->y + obj->speed_y)
             {
                 obj->speed_y++;
-                MIN_2(obj->speed_y, unk_y);
+                MIN_2(obj->speed_y, maximum_speed_y);
             }
-            else if (obj->iframes_timer < obj->y + obj->speed_y - unk_y)
+            else if (obj->iframes_timer < obj->y + obj->speed_y - maximum_speed_y)
             {
                 obj->speed_y--;
-                MAX_2(obj->speed_y, -unk_y);
+                MAX_2(obj->speed_y, -maximum_speed_y);
             }
             else
                 obj->speed_y = 0;

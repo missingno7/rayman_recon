@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import collections
 import hashlib
+import functools
 import json
 import re
 import struct
@@ -29,9 +30,84 @@ PROPOSAL = (HERE / 'registries').is_dir()
 DEFAULT_REGISTRIES = HERE / 'registries' if PROPOSAL else ROOT / 'docs/semantics'
 DEFAULT_SOURCE = HERE / 'units' if PROPOSAL else ROOT / 'src'
 DEFAULT_WORK = HERE / 'checks' if PROPOSAL else ROOT / 'build/semantics'
+STAGING = HERE != ROOT and (HERE / 'docs/semantics').is_dir() and (HERE / 'src').is_dir()
+if STAGING:
+    DEFAULT_REGISTRIES = HERE / 'docs/semantics'
+    DEFAULT_SOURCE = HERE / 'src'
+    DEFAULT_WORK = HERE.parent / 'checks/semantics'
+
+# Parser-only translations, following permute_source.sanitize. They never
+# touch game source or the text compiled by the pinned layout probes.
+from permute_source import LEX
+WATCOM = re.compile(r'\b(?:__far|_far|far|__near|_near|near|__interrupt|_interrupt|__loadds|_loadds|__saveregs|_saveregs|__cdecl|_cdecl|__pascal|_pascal|__watcall|_watcall|__stdcall|_stdcall|__inline)\b')
+FAR_WORDS = {'__far', '_far', 'far'}
+NEAR_WORDS = {'__near', '_near', 'near'}
+
+def sanitize(text):
+    """Accept Watcom declarators without erasing far/near distinctions.
+
+    restrict/_Atomic are parser placeholders, never generated game C. Watcom
+    permits a distance qualifier before a pointer star inside parentheses;
+    standard C requires its placeholder after that star. Calling conventions
+    and ISR modifiers have no C-parser counterpart and are stripped here only.
+    Strings/comments and ordinary identifiers are preserved token-for-token.
+    """
+    def fix(m):
+        t = m[0]
+        if t in FAR_WORDS: return 'restrict'
+        if t in NEAR_WORDS: return '_Atomic'
+        return '' if WATCOM.fullmatch(t) else t
+    text = LEX.sub(fix, text)
+    # Work on lexical spans, so a string mentioning '__far *' stays literal.
+    tokens = list(LEX.finditer(text)); edits = []
+    for i,t in enumerate(tokens[:-1]):
+        if t[0] in ('restrict','_Atomic') and tokens[i+1][0] == '*':
+            edits.append((t.start(),tokens[i+1].end(),'* '+t[0]+' '+'\n'*text[t.start():tokens[i+1].end()].count('\n')))
+    for a,b,value in reversed(edits): text = text[:a]+value+text[b:]
+    return text
+
+def typedef_names(ast):
+    return tuple(sorted({td.name for td in ast.ext if isinstance(td,ca.Typedef)}))
+
+@functools.lru_cache(maxsize=4096)
+def normalized_declaration(text, names=()):
+    """Canonicalize both original and parsed spellings in the same type scope."""
+    text = sanitize(text).replace('$','sem_declaration_placeholder')
+    # Typedef-name stubs supply grammar only, not size/layout/ABI evidence.
+    prefix = ''.join('typedef int '+n+';\n' for n in names)
+    ast = c_parser.CParser().parse(prefix+text.rstrip(';')+';')
+    return GEN.visit(ast.ext[-1]).rstrip(';')
+
+def declarations_equal(actual, expected, names=()):
+    if actual == expected: return True
+    if not (WATCOM.search(actual+' '+expected) or re.search(r'\b(?:restrict|_Atomic)\b',actual+' '+expected)):
+        return False
+    try: return normalized_declaration(actual,names) == normalized_declaration(expected,names)
+    except (ValueError, c_parser.ParseError): return False
+
+def declared_types(ast):
+    """Typedefs and original named aggregate tags; do not invent typedef aliases."""
+    result = {}
+    for d in ast.ext:
+        if isinstance(d,ca.Typedef): result[d.name] = d
+        elif isinstance(d,ca.Decl) and d.name is None and isinstance(d.type,(ca.Struct,ca.Union)) and d.type.name and d.type.decls:
+            result[d.type.name] = d.type
+    return result
+
+def type_expression(entity):
+    tag = entity.get('declaration_kind')
+    return tag.removesuffix('_tag')+' '+entity['current_name'] if tag in ('struct_tag','union_tag') else entity['current_name']
 
 def sha(b):
     return hashlib.sha256(b).hexdigest()
+
+def file_sha(p):
+    """Fingerprint of an evidence file; text files hash with CR LF normalised to LF so a checkout's line-ending
+    convention never shows up as evidence drift (binary assets hash unchanged)."""
+    b = Path(p).read_bytes()
+    if Path(p).suffix.lower() in ('.c', '.h', '.asm', '.md', '.json', '.txt', '.inc'):
+        b = b.replace(b'\r\n', b'\n')
+    return sha(b)
 
 def load(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
@@ -112,7 +188,7 @@ def parse_source(base, scope):
     text = '\n'.join(parts)
     for alias, target in scope.get('type_aliases', {}).items():
         text = re.sub(r'\b'+re.escape(alias)+r'\b', target, text)
-    return c_parser.CParser().parse(text, filename=scope.get('source') or 'shared headers')
+    return c_parser.CParser().parse(sanitize(text), filename=scope.get('source') or 'shared headers')
 
 def source_contexts(scope):
     if scope.get('kind') == 'globals': return scope.get('contexts', [])
@@ -132,6 +208,8 @@ def field_declarations(ast):
     for td in ast.ext:
         if isinstance(td, ca.Typedef) and isinstance(td.type, ca.TypeDecl) and isinstance(td.type.type, (ca.Struct, ca.Union)):
             walk(td.type.type, td.name)
+        elif isinstance(td, ca.Decl) and td.name is None and isinstance(td.type,(ca.Struct,ca.Union)) and td.type.name and td.type.decls:
+            walk(td.type,td.type.name)
     return out
 
 def reverse_names(s, entities, function=None):
@@ -244,6 +322,7 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
     scope = reg['scope']; entities = reg['entities']; all_entities = list(entities) + list(shared_entities)
     contexts = source_contexts(scope)
     asts = [parse_source(base, c) for c in contexts]
+    names = tuple(sorted({n for a in asts for n in typedef_names(a)}))
     ast = asts[0]; fds = {key:d for a in asts for key,d in field_declarations(a).items()}
     funcs = function_declarations(ast) if scope['kind'] == 'unit' else {}
     globs_by_context = [global_declarations(a) for a in asts]
@@ -264,15 +343,21 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
         if kind == 'field':
             d = fds.get((e['struct'], n))
             if d is None: errors.append(label + ': field declaration missing'); continue
-            if reverse_names(canonical_type(d), all_entities) != e['declarator']: errors.append(label + ': field declaration type drift')
+            if not declarations_equal(reverse_names(canonical_type(d), all_entities), e['declarator'],names): errors.append(label + ': field declaration type drift')
             bits = int(d.bitsize.value) if d.bitsize else None
             if bits != e.get('bit_width'): errors.append(label + ': bit width drift')
         elif kind == 'type':
-            if n not in {td.name for a in asts for td in a.ext if isinstance(td,ca.Typedef)}: errors.append(label + ': type declaration missing')
+            types = {key:d for a in asts for key,d in declared_types(a).items()}
+            if n not in types: errors.append(label + ': type declaration missing')
+            elif e.get('declaration_kind') in ('struct_tag','union_tag'):
+                expected_kind = ca.Struct if e['declaration_kind']=='struct_tag' else ca.Union
+                if not isinstance(types[n],expected_kind): errors.append(label + ': aggregate tag declaration kind drift')
+            elif WATCOM.search(e['c_type']) and not declarations_equal(GEN.visit(types[n]),e['c_type'],names):
+                errors.append(label + ': Watcom type declaration drift')
         elif kind == 'function':
             if n not in funcs: errors.append(label + ': source definition missing'); continue
             if b['functions'].get(e['current_name'],{}).get('addr') != e['oracle_address']: errors.append(label + ': symbol address drift')
-            if reverse_names(GEN.visit(funcs[n].decl), all_entities, n) != e['c_type']: errors.append(label + ': function declaration drift')
+            if not declarations_equal(reverse_names(GEN.visit(funcs[n].decl), all_entities, n), e['c_type'],names): errors.append(label + ': function declaration drift')
             body = reverse_names(GEN.visit(funcs[n].body), all_entities, n)
             if sha(body.encode()) != e['source_body_sha256']: errors.append(label + ': function body drift; re-evidence required')
         elif kind == 'global':
@@ -281,7 +366,7 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
                 if n not in g: continue
                 found = True
                 expected_decl = e.get('context_declarators', {}).get(c.get('source'), e['declarator'])
-                if reverse_names(canonical_type(g[n]), all_entities) != expected_decl: errors.append(label + ': global type drift in ' + str(c.get('source')))
+                if not declarations_equal(reverse_names(canonical_type(g[n]), all_entities), expected_decl,names): errors.append(label + ': global type drift in ' + str(c.get('source')))
             if not found: errors.append(label + ': declaration missing'); continue
             if e.get('binding_kind') == 'game_data':
                 if b['data'].get(e['current_name'],{}).get('addr') != e['oracle_address']: errors.append(label + ': global binding drift')
@@ -296,7 +381,7 @@ def check_source(reg, source_root=None, check_fingerprints=False, artifact_root=
         expected = [e for e in entities if e['kind'] == 'local' and e['function'] == fn]
         if len(actual) != len(expected): errors.append(fn + ': local declaration coverage drift'); continue
         for (role,d),e in zip(actual,expected):
-            if role != e['role'] or reverse_names(d.name, all_entities, fn) != e['current_name'] or reverse_names(canonical_type(d), all_entities, fn) != e['declarator']:
+            if role != e['role'] or reverse_names(d.name, all_entities, fn) != e['current_name'] or not declarations_equal(reverse_names(canonical_type(d), all_entities, fn),e['declarator'],names):
                 errors.append(e['id'] + ': local declaration drift')
     # Compatibility for programmatic callers requesting the old combined diagnostic.
     # CLI uses check_evidence separately so reported drift never becomes enforcement.
@@ -337,6 +422,7 @@ def check_collection(registries, source_root=None):
     for name,reg in registries.items():
         if reg['scope']['kind'] != 'unit': continue
         ast = parse_source(Path(source_root or DEFAULT_SOURCE),reg['scope'])
+        names = typedef_names(ast)
         # Enforce a shared global in every consuming unit, including globals
         # whose semantic ownership remains in an earlier unit registry.
         declarations = global_declarations(ast)
@@ -346,10 +432,10 @@ def check_collection(registries, source_root=None):
             member = e.get('proposed_name') or e['current_name']
             if member not in declarations: continue
             expected = e.get('context_declarators', {}).get(reg['scope']['source'], e['declarator'])
-            if reverse_names(canonical_type(declarations[member]),by_id.values()) != expected:
+            if not declarations_equal(reverse_names(canonical_type(declarations[member]),by_id.values()),expected,names):
                 errors.append(name + ': shared global declaration drift: ' + member)
         declared = field_declarations(ast)
-        owners = {td.name for td in ast.ext if isinstance(td,ca.Typedef)}
+        owners = set(declared_types(ast))
         for owner,expected in shared_fields.items():
             if owner not in owners: continue
             actual = {member:d for (typ,member),d in declared.items() if typ == owner}
@@ -365,7 +451,7 @@ def check_collection(registries, source_root=None):
             for member in actual.keys() & expected.keys():
                 e = expected[member]; d = actual[member]
                 bits = int(d.bitsize.value) if d.bitsize else None
-                if reverse_names(canonical_type(d),by_id.values()) != e['declarator'] or bits != e.get('bit_width'):
+                if not declarations_equal(reverse_names(canonical_type(d),by_id.values()),e['declarator'],names) or bits != e.get('bit_width'):
                     errors.append(name + ': shared declaration drift: ' + owner + '.' + member)
     return errors
 
@@ -382,7 +468,7 @@ def check_evidence(reg, source_root=None, artifact_root=None):
             p = artifact_base / path if key == 'evidence_artifact_fingerprints' else dependency_path(path,base,artifact_base)
             if path.startswith('src/') and base != ROOT/'src' and (base/path[4:]).exists():
                 want = reg.get('proposal_fingerprints',{}).get(path[4:],want)
-            if not p.is_file() or sha(p.read_bytes()) != want: drift.append(path + ': ' + key + ' drift (re-review evidence)')
+            if not p.is_file() or file_sha(p) != want: drift.append(path + ': ' + key + ' drift (re-review evidence)')
     return drift
 
 def assertion_source(reg, proposal=False, source_root=None):
@@ -391,22 +477,38 @@ def assertion_source(reg, proposal=False, source_root=None):
     lines = ['#include <stddef.h>'] + ['#include "' + h.removeprefix('include/') + '"' for h in scope['headers']]
     lines += ['#include "' + h + '"' for h in scope.get('local_headers', [])]
     emitted = set()
+    def original_qualified_typedef(context, name):
+        # Recover the actual declaration, not a registry-provided declaration.
+        # These callback typedefs have no aggregate field semicolons. Never
+        # compile parser placeholders: the Watcom spelling supplies real ABI.
+        paths = context['headers']+context.get('local_headers',[])+([context['source']] if context.get('source') else [])
+        for rel in paths:
+            text = clean(source_path(Path(source_root or DEFAULT_SOURCE),rel).read_text(encoding='latin-1'))
+            for match in re.finditer(r'\btypedef\b[^;]*;',text):
+                original = match[0]
+                if re.search(r'\b'+re.escape(name)+r'\b',original) and WATCOM.search(original):
+                    return original
+        raise ValueError('Original qualified typedef not found for layout probe: '+name)
     for context in source_contexts(scope):
         if context.get('layout_local_types'):
             ast = parse_source(Path(source_root or DEFAULT_SOURCE),context)
-            for td in ast.ext:
-                if isinstance(td,ca.Typedef) and td.name in context['layout_local_types'] and td.name not in emitted:
-                    lines.append(GEN.visit(td) + ';'); emitted.add(td.name)
+            for name,td in declared_types(ast).items():
+                if name in context['layout_local_types'] and name not in emitted:
+                    declaration = GEN.visit(td)
+                    if re.search(r'\b(?:restrict|_Atomic)\b',declaration):
+                        declaration = original_qualified_typedef(context,name)
+                    lines.append(declaration.rstrip(';') + ';'); emitted.add(name)
     lines += ['typedef char sem_pointer_width[(sizeof(void*) == 4) ? 1 : -1];',
               'typedef char sem_int_width[(sizeof(int) == 4) ? 1 : -1];',
               'typedef char sem_short_width[(sizeof(short) == 2) ? 1 : -1];',
               'typedef char sem_char_unsigned[(((char)-1) > 0) ? 1 : -1];']
     for owner,view in scope.get('shared_type_views',{}).items():
         lines.append(f'typedef char sem_view_{owner}[(sizeof({owner}) == {view["size_bytes"]}) ? 1 : -1];')
+    types = {e['current_name']:type_expression(e) for e in reg['entities'] if e['kind']=='type'}
     for i,e in enumerate(reg['entities']):
-        if e['kind'] == 'type': lines.append(f'typedef char sem_type_{i}[(sizeof({e["current_name"]}) == {e["size"]}) ? 1 : -1];')
+        if e['kind'] == 'type': lines.append(f'typedef char sem_type_{i}[(sizeof({type_expression(e)}) == {e["size"]}) ? 1 : -1];')
         if e['kind'] != 'field': continue
-        t = e['struct']; n = e.get('proposed_name') if proposal and e.get('proposed_name') else e['current_name']
+        t = types.get(e['struct'],e['struct']); n = e.get('proposed_name') if proposal and e.get('proposed_name') else e['current_name']
         if e.get('bit_width'):
             lines.append(f'void sem_bit_{i}({t}* p) {{ p->{n} = {(1<<e["bit_width"])-1}; }}')
         else:
@@ -492,11 +594,11 @@ def refresh(reg,path,source_root=None,artifact_root=None,shared_entities=()):
     for key in ('source_fingerprints','evidence_source_fingerprints','asset_input_fingerprints','reference_input_fingerprints','evidence_artifact_fingerprints'):
         for rel in list(reg.get(key,{})):
             p = artifact_base/rel if key=='evidence_artifact_fingerprints' else dependency_path(rel,base,artifact_base)
-            h = sha(p.read_bytes()) if p.exists() else None
+            h = file_sha(p) if p.exists() else None
             if h != reg[key][rel]: changed.append(key+': '+rel); reg[key][rel] = h
     # Proposal hashes are meaningful only for an overlay; refresh them too.
     for rel in reg.get('proposal_fingerprints',{}):
-        p = source_path(base,rel); h = sha(p.read_bytes())
+        p = source_path(base,rel); h = file_sha(p)
         if reg['proposal_fingerprints'][rel] != h: changed.append('proposal: '+rel); reg['proposal_fingerprints'][rel] = h
     Path(path).write_text(json.dumps(reg,indent=1,ensure_ascii=False)+'\n',encoding='utf-8')
     print(str(path)+': refreshed; changed '+str(len(changed)))

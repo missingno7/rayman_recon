@@ -1,0 +1,2536 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "neige.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:MapAvecPluieOuNeige",
+   "global:SNSEQ_len",
+   "global:SNSEQ_list",
+   "global:SNSEQ_list_ptr",
+   "global:SNSEQ_no",
+   "global:SNSEQ_ptr",
+   "global:VENT_X",
+   "global:VENT_Y",
+   "global:fin_continue",
+   "global:floc_ind",
+   "global:flocon_tab",
+   "global:horloge",
+   "global:invpx0",
+   "global:invpx320",
+   "global:invpy0",
+   "global:invpy200",
+   "global:nb_floc",
+   "global:num_world",
+   "global:save1",
+   "global:tot_nb_flocs",
+   "global:weather_wind",
+   "global:xmap",
+   "global:xmap_old",
+   "global:ymap",
+   "global:ymap_old"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:flocon_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_procs_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:pix_gerbe_item_t",
+   "type:pix_gerbe_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ],
+  "shared_type_views": {
+   "pix_gerbe_t": {
+    "omitted_fields": [
+     "words"
+    ],
+    "size_bytes": 642,
+    "evidence": "This TU repeats the same physical record without the compatibility union alias. No member is moved; pinned layout verifies the full byte size."
+   }
+  },
+  "layout_local_types": [
+   "pix_gerbe_item_t",
+   "pix_gerbe_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:DoFirstFlocons",
+   "kind": "function",
+   "current_name": "DoFirstFlocons",
+   "proposed_name": null,
+   "c_type": "void DoFirstFlocons(void)",
+   "oracle_address": "1:4b7a0",
+   "meaning": "With weather enabled, save1.is_just_saved nonzero, save_obj_id -1 and fin_continue zero, preadvance weather 100 times with randomized camera inputs and zero clock advance.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "With weather enabled, save1.is_just_saved nonzero, save_obj_id -1 and fin_continue zero, preadvance weather 100 times with randomized camera inputs and zero clock advance.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "DoFirstFlocons"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4b7a0",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DoFirstFlocons",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DoFirstFlocons",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "With weather enabled, save1.is_just_saved nonzero, save_obj_id -1 and fin_continue zero, preadvance weather 100 times with randomized camera inputs and zero clock advance.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "3100bd95f2288f638014b7ca214d65fd34b5252f93237bdabb60976125975a4c",
+   "readers_writers": {
+    "globals": [
+     "MapAvecPluieOuNeige",
+     "fin_continue",
+     "save1",
+     "xmap",
+     "xmap_old",
+     "ymap",
+     "ymap_old"
+    ],
+    "callees": [
+     "DO_SNOW_SEQUENCE",
+     "do_flocons",
+     "horloges",
+     "myRand"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:DoFirstFlocons:i:1",
+   "kind": "local",
+   "function": "DoFirstFlocons",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in DoFirstFlocons computed/consumed by i = 0; i < 100; ++i",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < 100; ++i",
+     "i = 0",
+     "++i",
+     "do_flocons(xmap + myRand(i), ymap + myRand(i), xmap_old, ymap_old)",
+     "myRand(i)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b7a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "DoFirstFlocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:add_one_floc",
+   "kind": "function",
+   "current_name": "add_one_floc",
+   "proposed_name": null,
+   "c_type": "void add_one_floc(void)",
+   "oracle_address": "1:4b848",
+   "meaning": "Randomly choose a weather depth group through cumulative start indices and increment its visible count without exceeding its capacity.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Randomly choose a weather depth group through cumulative start indices and increment its visible count without exceeding its capacity.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "add_one_floc"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4b848",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "add_one_floc",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "add_one_floc",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Randomly choose a weather depth group through cumulative start indices and increment its visible count without exceeding its capacity.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "68e5c73113d2fee0d8669b018789d490217623aa37116af3182238533d1dfeeb",
+   "readers_writers": {
+    "globals": [
+     "floc_ind",
+     "nb_floc",
+     "tot_nb_flocs"
+    ],
+    "callees": [
+     "LEN",
+     "myRand"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:add_one_floc:i:1",
+   "kind": "local",
+   "function": "add_one_floc",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in add_one_floc computed/consumed by i = LEN(floc_ind) - 1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = LEN(floc_ind) - 1",
+     "floc_ind[i] < random_slot",
+     "nb_floc[i]++",
+     "i--",
+     "nb_floc[i + 1] > tot_nb_flocs[i + 1]",
+     "nb_floc[i + 1]--"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b848",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "add_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:add_one_floc:unk_1:1",
+   "kind": "local",
+   "function": "add_one_floc",
+   "role": "local",
+   "current_name": "random_slot",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in add_one_floc computed/consumed by random_slot = myRand(511)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "random_slot = myRand(511)",
+     "floc_ind[i] < random_slot"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b848",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "add_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:add_one_floc:done:1",
+   "kind": "local",
+   "function": "add_one_floc",
+   "role": "local",
+   "current_name": "done",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in add_one_floc computed/consumed by done = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "done = 0",
+     "!done",
+     "done = 1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b848",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "add_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:add_256_flocs",
+   "kind": "function",
+   "current_name": "add_256_flocs",
+   "proposed_name": null,
+   "c_type": "void add_256_flocs(void)",
+   "oracle_address": "1:4b8a4",
+   "meaning": "Set the eight visible weather counts to 10,15,25,30,35,40,43,53: total 251 despite the inherited function name.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set the eight visible weather counts to 10,15,25,30,35,40,43,53: total 251 despite the inherited function name.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "add_256_flocs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4b8a4",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "add_256_flocs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "add_256_flocs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set the eight visible weather counts to 10,15,25,30,35,40,43,53: total 251 despite the inherited function name.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "1eeb40abe8b033a332d71928e801c92efdcce04073e546664523b09eddcdcc2a",
+   "readers_writers": {
+    "globals": [
+     "nb_floc"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "function:sub_one_floc",
+   "kind": "function",
+   "current_name": "sub_one_floc",
+   "proposed_name": null,
+   "c_type": "void sub_one_floc(void)",
+   "oracle_address": "1:4b910",
+   "meaning": "Remove one visible weather particle using weighted depth choice and a nonempty-group fallback scan.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Remove one visible weather particle using weighted depth choice and a nonempty-group fallback scan.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "sub_one_floc"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4b910",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "sub_one_floc",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "sub_one_floc",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Remove one visible weather particle using weighted depth choice and a nonempty-group fallback scan.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "4d105ab249c28680090a38223490ec70c5754e373aa95f3a0556c72dbad2112b",
+   "readers_writers": {
+    "globals": [
+     "floc_ind",
+     "nb_floc"
+    ],
+    "callees": [
+     "LEN",
+     "myRand"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:sub_one_floc:unk_1:1",
+   "kind": "local",
+   "function": "sub_one_floc",
+   "role": "local",
+   "current_name": "random_slot",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in sub_one_floc computed/consumed by random_slot = myRand(511)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "random_slot = myRand(511)",
+     "(floc_ind[i] <= random_slot) && (nb_floc[i] > 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b910",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "sub_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:sub_one_floc:i:1",
+   "kind": "local",
+   "function": "sub_one_floc",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in sub_one_floc computed/consumed by i = LEN(nb_floc) - 1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = LEN(nb_floc) - 1",
+     "(!done) && (i >= 0)",
+     "(floc_ind[i] <= random_slot) && (nb_floc[i] > 0)",
+     "nb_floc[i]--",
+     "i--",
+     "i == (-1)",
+     "nb_floc[i] > 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b910",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "sub_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:sub_one_floc:done:1",
+   "kind": "local",
+   "function": "sub_one_floc",
+   "role": "local",
+   "current_name": "done",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in sub_one_floc computed/consumed by done = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "done = 0",
+     "(!done) && (i >= 0)",
+     "!done",
+     "done = 1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b910",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "sub_one_floc",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:init_flocons",
+   "kind": "function",
+   "current_name": "init_flocons",
+   "proposed_name": null,
+   "c_type": "void init_flocons(void)",
+   "oracle_address": "1:4b9a0",
+   "meaning": "Allocate values within eight pre-existing weather groups: capacities 20,30,50,60,70,80,96,106; scales -64 through 160 by 32; initialize inverse screen bounds and rejection-sampled visible positions.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Allocate values within eight pre-existing weather groups: capacities 20,30,50,60,70,80,96,106; scales -64 through 160 by 32; initialize inverse screen bounds and rejection-sampled visible positions.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "init_flocons"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "init_flocons",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "init_flocons",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Allocate values within eight pre-existing weather groups: capacities 20,30,50,60,70,80,96,106; scales -64 through 160 by 32; initialize inverse screen bounds and rejection-sampled visible positions.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "0801c5d979c2e08751e30996243a724fcb74ad09217394b983cf913055626026",
+   "readers_writers": {
+    "globals": [
+     "VENT_X",
+     "VENT_Y",
+     "floc_ind",
+     "flocon_tab",
+     "invpx0",
+     "invpx320",
+     "invpy0",
+     "invpy200",
+     "nb_floc",
+     "tot_nb_flocs"
+    ],
+    "callees": [
+     "get_proj_x",
+     "get_proj_y",
+     "inverse_proj_x",
+     "inverse_proj_y",
+     "myRand"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:init_flocons:flc_i:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "flc_i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by flc_i = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "flc_i = 0",
+     "floc_ind[i] = flc_i",
+     "flocon_tab[flc_i].unprojected_x = candidate_x",
+     "flocon_tab[flc_i].unprojected_y = candidate_y",
+     "flocon_tab[flc_i].field_4 = scale",
+     "flc_i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:init_flocons:i:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by i = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0",
+     "i < 8",
+     "nb_floc[i] = 0",
+     "floc_ind[i] = flc_i",
+     "invpy0[i] = inverse_proj_y(group_scale, 0)",
+     "invpy200[i] = inverse_proj_y(group_scale, SCREEN_HEIGHT)",
+     "invpx0[i] = inverse_proj_x(group_scale, 0)",
+     "invpx320[i] = inverse_proj_x(group_scale, SCREEN_WIDTH)",
+     "j = 0; j < tot_nb_flocs[i]; j++",
+     "i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:init_flocons:unk_2:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "group_scale",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by group_scale = -64",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "group_scale = -64",
+     "s16 scale = group_scale",
+     "invpy0[i] = inverse_proj_y(group_scale, 0)",
+     "inverse_proj_y(group_scale, 0)",
+     "invpy200[i] = inverse_proj_y(group_scale, SCREEN_HEIGHT)",
+     "inverse_proj_y(group_scale, SCREEN_HEIGHT)",
+     "invpx0[i] = inverse_proj_x(group_scale, 0)",
+     "inverse_proj_x(group_scale, 0)",
+     "invpx320[i] = inverse_proj_x(group_scale, SCREEN_WIDTH)",
+     "inverse_proj_x(group_scale, SCREEN_WIDTH)",
+     "group_scale += 32"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:init_flocons:j:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "j",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by j = 0; j < tot_nb_flocs[i]; j++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "j = 0; j < tot_nb_flocs[i]; j++",
+     "j = 0",
+     "j++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:init_flocons:unk_3:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "candidate_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by candidate_x = myRand(700)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "candidate_x = myRand(700)",
+     "projected_x = get_proj_x(scale, candidate_x)",
+     "get_proj_x(scale, candidate_x)",
+     "flocon_tab[flc_i].unprojected_x = candidate_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_3",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:init_flocons:unk_4:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "candidate_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by candidate_y = myRand(400) - 150",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "candidate_y = myRand(400) - 150",
+     "projected_y = get_proj_y(scale, candidate_y)",
+     "get_proj_y(scale, candidate_y)",
+     "flocon_tab[flc_i].unprojected_y = candidate_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_4",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:init_flocons:unk_5:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "projected_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by (((projected_x >= 320) || (projected_x <= 0)) || (projected_y >= 200)) || (projected_y <= 0)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(((projected_x >= 320) || (projected_x <= 0)) || (projected_y >= 200)) || (projected_y <= 0)",
+     "projected_x = get_proj_x(scale, candidate_x)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_5",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:init_flocons:unk_6:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "projected_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in init_flocons computed/consumed by (((projected_x >= 320) || (projected_x <= 0)) || (projected_y >= 200)) || (projected_y <= 0)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(((projected_x >= 320) || (projected_x <= 0)) || (projected_y >= 200)) || (projected_y <= 0)",
+     "projected_y = get_proj_y(scale, candidate_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_6",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:init_flocons:scale:1",
+   "kind": "local",
+   "function": "init_flocons",
+   "role": "local",
+   "current_name": "scale",
+   "proposed_name": null,
+   "c_type": "s16 = group_scale",
+   "declarator": "s16 $ = group_scale",
+   "meaning": "Local initialized as group_scale; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 scale = group_scale",
+     "projected_x = get_proj_x(scale, candidate_x)",
+     "get_proj_x(scale, candidate_x)",
+     "projected_y = get_proj_y(scale, candidate_y)",
+     "get_proj_y(scale, candidate_y)",
+     "flocon_tab[flc_i].field_4 = scale"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4b9a0",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "init_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:do_flocons",
+   "kind": "function",
+   "current_name": "do_flocons",
+   "proposed_name": null,
+   "c_type": "void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old)",
+   "oracle_address": "1:4bb78",
+   "meaning": "Move visible weather particles by camera delta and quarter-unit wind with phase dithering, wrap through inverse-projected group bounds, restore stored wind and derive non-Jungle ray wind from VENT_X/8.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Move visible weather particles by camera delta and quarter-unit wind with phase dithering, wrap through inverse-projected group bounds, restore stored wind and derive non-Jungle ray wind from VENT_X/8.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "do_flocons"
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "NEAR_MATCH",
+     "byte_diffs": 503,
+     "first_diff": 9,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "do_flocons",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "do_flocons",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Move visible weather particles by camera delta and quarter-unit wind with phase dithering, wrap through inverse-projected group bounds, restore stored wind and derive non-Jungle ray wind from VENT_X/8.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "855d401e1fd4bb6762d3f68f4047a4dfa771b15cb9ae771bab4a59ebe6ff6a00",
+   "readers_writers": {
+    "globals": [
+     "VENT_X",
+     "VENT_Y",
+     "floc_ind",
+     "flocon_tab",
+     "horloge",
+     "invpx0",
+     "invpx320",
+     "invpy0",
+     "invpy200",
+     "nb_floc",
+     "num_world",
+     "weather_wind"
+    ],
+    "callees": [
+     "Abs",
+     "set_proj_center",
+     "sgn"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:do_flocons:unk_x_1:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "wind_step_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by wind_step_x = VENT_X / 4",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "wind_step_x = VENT_X / 4",
+     "wind_step_x += sgn(VENT_X)",
+     "step_x = (x_old - x) + wind_step_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_x_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:unk_y_1:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "wind_step_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by wind_step_y = VENT_Y / 4",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "wind_step_y = VENT_Y / 4",
+     "wind_step_y += sgn(VENT_Y)",
+     "step_y += wind_step_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_y_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:unk_x_2:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "wind_remainder_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in do_flocons computed/consumed by wind_remainder_x = VENT_X % 4",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "wind_remainder_x = VENT_X % 4",
+     "(Abs(wind_remainder_x) == 1) && (horloge[4] == 0)",
+     "Abs(wind_remainder_x)",
+     "(Abs(wind_remainder_x) == 2) && (horloge[2] == 0)",
+     "(Abs(wind_remainder_x) == 3) && (horloge[4] < 3)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_x_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:unk_y_2:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "wind_remainder_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in do_flocons computed/consumed by wind_remainder_y = VENT_Y % 4",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "wind_remainder_y = VENT_Y % 4",
+     "(Abs(wind_remainder_y) == 1) && (horloge[4] == 0)",
+     "Abs(wind_remainder_y)",
+     "(Abs(wind_remainder_y) == 2) && (horloge[2] == 0)",
+     "(Abs(wind_remainder_y) == 3) && (horloge[4] < 3)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_y_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:i:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by group_scale = -64, i = 0; group_scale < (32 * 6); i++, group_scale += 32",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "group_scale = -64, i = 0; group_scale < (32 * 6); i++, group_scale += 32",
+     "i = 0",
+     "i++",
+     "flc_i_1 = floc_ind[i]",
+     "y_0 = invpy0[i]",
+     "y_200 = invpy200[i]",
+     "x_0 = invpx0[i]",
+     "x_320 = invpx320[i]",
+     "group_end = flc_i_1 + nb_floc[i]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:unk_1:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "group_scale",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by group_scale = -64, i = 0; group_scale < (32 * 6); i++, group_scale += 32",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "group_scale = -64, i = 0; group_scale < (32 * 6); i++, group_scale += 32",
+     "group_scale = -64",
+     "group_scale += 32"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:flc_i_1:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "flc_i_1",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by flc_i_1 = floc_ind[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "flc_i_1 = floc_ind[i]",
+     "cur_floc = &flocon_tab[flc_i_1]",
+     "&flocon_tab[flc_i_1]",
+     "group_end = flc_i_1 + nb_floc[i]",
+     "flc_i_2 = flc_i_1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:unk_x_3:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "step_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by step_x = (x_old - x) + wind_step_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_x = (x_old - x) + wind_step_x",
+     "cur_floc->unprojected_x += step_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_x_3",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:unk_y_3:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "step_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by step_y = y_old - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_y = y_old - y",
+     "step_y += wind_step_y",
+     "cur_floc->unprojected_y += step_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_y_3",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:x_0:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "x_0",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by x_0 = invpx0[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x_0 = invpx0[i]",
+     "cur_floc->unprojected_x = x_0",
+     "cur_floc->unprojected_x < x_0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:x_320:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "x_320",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by x_320 = invpx320[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x_320 = invpx320[i]",
+     "cur_floc->unprojected_x > x_320",
+     "cur_floc->unprojected_x = x_320"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:y_0:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "y_0",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by y_0 = invpy0[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y_0 = invpy0[i]",
+     "cur_floc->unprojected_y = y_0",
+     "cur_floc->unprojected_y < y_0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:y_200:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "y_200",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by y_200 = invpy200[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y_200 = invpy200[i]",
+     "cur_floc->unprojected_y > y_200",
+     "cur_floc->unprojected_y = y_200"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:cur_floc:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "cur_floc",
+   "proposed_name": null,
+   "c_type": "flocon_t *",
+   "declarator": "flocon_t *$",
+   "meaning": "Local value in do_flocons computed/consumed by cur_floc = &flocon_tab[flc_i_1]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "cur_floc = &flocon_tab[flc_i_1]",
+     "cur_floc->unprojected_x += step_x",
+     "cur_floc->unprojected_y += step_y",
+     "cur_floc->unprojected_x > x_320",
+     "cur_floc->unprojected_x = x_0",
+     "cur_floc->unprojected_x < x_0",
+     "cur_floc->unprojected_x = x_320",
+     "cur_floc->unprojected_y > y_200",
+     "cur_floc->unprojected_y = y_0",
+     "cur_floc->unprojected_y < y_0",
+     "cur_floc->unprojected_y = y_200",
+     "cur_floc++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:unk_2:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "group_end",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by group_end = flc_i_1 + nb_floc[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "group_end = flc_i_1 + nb_floc[i]",
+     "flc_i_2 < group_end"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "unk_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:do_flocons:flc_i_2:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "flc_i_2",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by flc_i_2 = flc_i_1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "flc_i_2 = flc_i_1",
+     "flc_i_2 < group_end",
+     "flc_i_2++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:prev_vy:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "prev_vy",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in do_flocons computed/consumed by prev_vy = VENT_Y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "prev_vy = VENT_Y",
+     "VENT_Y = prev_vy"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:prev_vx:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "local",
+   "current_name": "prev_vx",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_flocons computed/consumed by prev_vx = VENT_X",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "prev_vx = VENT_X",
+     "VENT_X = prev_vx"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:x:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by do_flocons: step_x = (x_old - x) + wind_step_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_x = (x_old - x) + wind_step_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:y:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by do_flocons: step_y = y_old - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_y = y_old - y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:x_old:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "parameter",
+   "current_name": "x_old",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by do_flocons: step_x = (x_old - x) + wind_step_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_x = (x_old - x) + wind_step_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:do_flocons:y_old:1",
+   "kind": "local",
+   "function": "do_flocons",
+   "role": "parameter",
+   "current_name": "y_old",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by do_flocons: step_y = y_old - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step_y = y_old - y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4bb78",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "do_flocons",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:set_snow_sequence",
+   "kind": "function",
+   "current_name": "set_snow_sequence",
+   "proposed_name": null,
+   "c_type": "void set_snow_sequence(s16 sequence_opcode, s16 duration_ticks)",
+   "oracle_address": "1:4be74",
+   "meaning": "Select a weather opcode, reset its tick counter and store its signed duration in the per-opcode table.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Select a weather opcode, reset its tick counter and store its signed duration in the per-opcode table.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "set_snow_sequence"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4be74",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_snow_sequence",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_snow_sequence",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Select a weather opcode, reset its tick counter and store its signed duration in the per-opcode table.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "7e5ccba092e4b28480f01026a5b21ed35c8ac5d126eed49c1633ea44542e70f7",
+   "readers_writers": {
+    "globals": [
+     "SNSEQ_len",
+     "SNSEQ_no",
+     "SNSEQ_ptr"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:set_snow_sequence:param_1:1",
+   "kind": "local",
+   "function": "set_snow_sequence",
+   "role": "parameter",
+   "current_name": "sequence_opcode",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_snow_sequence: SNSEQ_no = sequence_opcode",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "SNSEQ_no = sequence_opcode",
+     "SNSEQ_len[(s16) sequence_opcode] = duration_ticks"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4be74",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "set_snow_sequence",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "param_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:set_snow_sequence:param_2:1",
+   "kind": "local",
+   "function": "set_snow_sequence",
+   "role": "parameter",
+   "current_name": "duration_ticks",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_snow_sequence: SNSEQ_len[(s16) sequence_opcode] = duration_ticks",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "SNSEQ_len[(s16) sequence_opcode] = duration_ticks"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4be74",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "set_snow_sequence",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "param_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "function:set_SNSEQ_list",
+   "kind": "function",
+   "current_name": "set_SNSEQ_list",
+   "proposed_name": null,
+   "c_type": "void set_SNSEQ_list(s16 preset_index)",
+   "oracle_address": "1:4c43c",
+   "meaning": "Build a preset weather opcode/duration list, enable weather and select its first pair; presets ramp particle count or horizontal/vertical wind toward requested values.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Build a preset weather opcode/duration list, enable weather and select its first pair; presets ramp particle count or horizontal/vertical wind toward requested values.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "set_SNSEQ_list"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c43c",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_SNSEQ_list",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_SNSEQ_list",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Build a preset weather opcode/duration list, enable weather and select its first pair; presets ramp particle count or horizontal/vertical wind toward requested values.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "f147e473fbfa6902fd249104daf79099281cfa58f35d221fcc0003cfcc59002f",
+   "readers_writers": {
+    "globals": [
+     "MapAvecPluieOuNeige",
+     "SNSEQ_list",
+     "SNSEQ_list_ptr",
+     "VENT_X",
+     "VENT_Y"
+    ],
+    "callees": [
+     "set_snow_sequence"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:set_SNSEQ_list:cur_sn:1",
+   "kind": "local",
+   "function": "set_SNSEQ_list",
+   "role": "local",
+   "current_name": "cur_sn",
+   "proposed_name": null,
+   "c_type": "s16 *",
+   "declarator": "s16 *$",
+   "meaning": "Local value in set_SNSEQ_list computed/consumed by cur_sn = SNSEQ_list",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "cur_sn = SNSEQ_list",
+     "*(cur_sn++) = 4",
+     "*(cur_sn++)",
+     "cur_sn++",
+     "*(cur_sn++) = 2",
+     "*(cur_sn++) = 0x80",
+     "*(cur_sn++) = 0",
+     "*(cur_sn++) = 0x7FFF",
+     "*(cur_sn++) = 3",
+     "*(cur_sn++) = 0x0200",
+     "*(cur_sn++) = 8",
+     "*(cur_sn++) = (VENT_Y * 2) - 0x10",
+     "*(cur_sn++) = 9",
+     "*(cur_sn++) = 0x10 - (VENT_Y * 2)",
+     "*(cur_sn++) = VENT_Y * 2",
+     "*(cur_sn++) = (-VENT_Y) * 2",
+     "*(cur_sn++) = 6",
+     "*(cur_sn++) = (VENT_X * 2) + 0x10",
+     "*(cur_sn++) = 7",
+     "*(cur_sn++) = (-0x10) - (VENT_X * 2)",
+     "*(cur_sn++) = (VENT_X * 2) - 0x10",
+     "*(cur_sn++) = 0x10 - (VENT_X * 2)",
+     "*(cur_sn++) = (VENT_X * 2) + 0x20",
+     "*(cur_sn++) = (-0x20) - (VENT_X * 2)",
+     "*(cur_sn++) = (VENT_X * 2) - 0x20",
+     "*(cur_sn++) = 0x20 - (VENT_X * 2)",
+     "*(cur_sn++) = ((u16) VENT_X) * 2",
+     "*(cur_sn++) = (-((u16) VENT_X)) * 2",
+     "*(cur_sn++) = (VENT_Y * 2) + 0x20",
+     "*(cur_sn++) = (-0x20) - (VENT_Y * 2)",
+     "*(cur_sn++) = 0x0080",
+     "*(cur_sn++) = 0x0020",
+     "*(cur_sn++) = 10",
+     "*(cur_sn++) = 1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c43c",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "set_SNSEQ_list",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:set_SNSEQ_list:param_1:1",
+   "kind": "local",
+   "function": "set_SNSEQ_list",
+   "role": "parameter",
+   "current_name": "preset_index",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_SNSEQ_list: preset_index == 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "preset_index == 0",
+     "preset_index == 1",
+     "preset_index == 2",
+     "preset_index == 3",
+     "preset_index == 4",
+     "preset_index == 5",
+     "preset_index == 6",
+     "preset_index == 7",
+     "preset_index == 8",
+     "preset_index == 9",
+     "preset_index == 10",
+     "preset_index == 11"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c43c",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "set_SNSEQ_list",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "previous_name": "param_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "function:DO_SNOW_SEQUENCE",
+   "kind": "function",
+   "current_name": "DO_SNOW_SEQUENCE",
+   "proposed_name": null,
+   "c_type": "void DO_SNOW_SEQUENCE(void)",
+   "oracle_address": "1:4c278",
+   "meaning": "Execute the selected wind/count opcode each update, advance only at exact duration equality, and load the next pair with the existing list-pointer wrap rule.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Execute the selected wind/count opcode each update, advance only at exact duration equality, and load the next pair with the existing list-pointer wrap rule.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "DO_SNOW_SEQUENCE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c278",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_SNOW_SEQUENCE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_SNOW_SEQUENCE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Execute the selected wind/count opcode each update, advance only at exact duration equality, and load the next pair with the existing list-pointer wrap rule.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "47351f6c4df7da946e3739d1af22e71ea6485211cdf2fd5cad381ea73c9322a8",
+   "readers_writers": {
+    "globals": [
+     "SNSEQ_len",
+     "SNSEQ_list",
+     "SNSEQ_list_ptr",
+     "SNSEQ_no",
+     "SNSEQ_ptr",
+     "VENT_X",
+     "VENT_Y",
+     "horloge"
+    ],
+    "callees": [
+     "add_256_flocs",
+     "add_one_floc",
+     "set_snow_sequence",
+     "sub_one_floc"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:DO_SNOW_SEQUENCE:first:1",
+   "kind": "local",
+   "function": "DO_SNOW_SEQUENCE",
+   "role": "local",
+   "current_name": "first",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in DO_SNOW_SEQUENCE computed/consumed by first = SNSEQ_list[SNSEQ_list_ptr]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "first = SNSEQ_list[SNSEQ_list_ptr]",
+     "set_snow_sequence(first, second)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c278",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "DO_SNOW_SEQUENCE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "local:DO_SNOW_SEQUENCE:second:1",
+   "kind": "local",
+   "function": "DO_SNOW_SEQUENCE",
+   "role": "local",
+   "current_name": "second",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in DO_SNOW_SEQUENCE computed/consumed by second = SNSEQ_list[SNSEQ_list_ptr]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "second = SNSEQ_list[SNSEQ_list_ptr]",
+     "set_snow_sequence(first, second)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c278",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "DO_SNOW_SEQUENCE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  },
+  {
+   "id": "function:DoNeigeRaymanCollision",
+   "kind": "function",
+   "current_name": "DoNeigeRaymanCollision",
+   "proposed_name": null,
+   "c_type": "void DoNeigeRaymanCollision(obj_t *obj)",
+   "oracle_address": "1:4c3dc",
+   "meaning": "Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.",
+    "operations_artifact": "evidence/neige_operations.json",
+    "operations_key": "DoNeigeRaymanCollision"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c3dc",
+     "artifact": "evidence/neige.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DoNeigeRaymanCollision",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DoNeigeRaymanCollision",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c",
+   "source_body_sha256": "b152eec324c24229591a3ca377adf5858c9e9696e4f0f35db23067e33f9158ae",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "set_SNSEQ_list"
+    ]
+   },
+   "evidence_units": [
+    "neige.c"
+   ]
+  },
+  {
+   "id": "local:DoNeigeRaymanCollision:obj:1",
+   "kind": "local",
+   "function": "DoNeigeRaymanCollision",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to DoNeigeRaymanCollision; Kill the weather trigger and map substates 32 and 21..30 to preset sequences 0..10.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.alive = 0",
+     "obj->sub_etat"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c3dc",
+     "artifact": "evidence/neige.dos.txt",
+     "function": "DoNeigeRaymanCollision",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/neige.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b"
+ },
+ "proposal_fingerprints": {
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/snow.c": "cfcb0f619bb594a3d4fcffffc1ab72dc6009705eebc9baa64fd5bafae298a44a",
+  "external/rayverse/src/neige.c": "c82539b842d5bfb010a113f189ef18c624b25dd26a550827a5d3ba9ec0907cc2"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/neige.dos.txt": "b938e79f7407410a8ba0a054ecc0becf8da3e5a37db0d01c4999271c75f43fbb",
+  "evidence/neige_operations.json": "39d99763d29777d43458ff7c8745c1c9cfe30f0d0fe51d9899a6f06a87106b04",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_397f8.c": "6730c0fe477ec64903efb4406b966413af62a7f9e7d8c643af71902f86f9b2ad",
+  "src/bss/bss_3af68.c": "0984c474de6f6bff72e91698fcf8055836fd4e79c480039bbbf972b2fcf37a66",
+  "src/bss/bss_3af78.c": "bb0d11fd98e0d1aa8bb9da22b3ef6073d756a317d71f2a7fa1e6e5f6ae97cabe",
+  "src/bss/bss_3d8ac.c": "03f917dd7646e4d699b62cd8c3e7d2cfbfad6b854402007063a522e9c8b037b8",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/bss/bss_3f7fa.c": "23a5ac9c3caf45e60c50f1341353f84933feb1504adc564e978154016ce1dc4c",
+  "src/bss/bss_3f802.c": "8bade527f55333291e6d543e8c9eca7eca2576c380f46556a8af08a8cc0c737e",
+  "src/bss/bss_3f818.c": "8da1eec0fdd2b1ea195988a3b0c88cdd8ee43789a0d5e027347849c7ec6cf256",
+  "src/bss/bss_3f86e.c": "0991681a969d9627a47f91dcf2f6e62387c237cf5522a725ce2ee65a208021c9",
+  "src/bss/bss_3f878.c": "649d13776df696b9f37606009d6f78d48cd347e409b8a07ce0965ab02856b337",
+  "src/bss/bss_3f89a.c": "0e58145042c6c4b3abccc6901b2abd627716a54775981345c569c965af246125",
+  "src/bss/bss_3f9f5.c": "46233a930e5d026e220105a35871c6a6699b4c5bda5cc0b321dae86fc6008433",
+  "src/bss/bss_3fa57.c": "f1e6c451cc5d4bbc56a9c6491c702149baa6eaf4c60afd7e131a65038695de92",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Eight weather groups have capacities20,30,50,60,70,80,96,106 (512 total) and scales -64..160 by32. add_256_flocs deliberately sets251 visible particles. Particle coordinates are integer pre-projection pixels, separate from Q6 pixel sparks. Wind division by4 uses explicit clock dithering; vertical +4 is temporary, then VENT values are restored. Wrap through inverse-projected bounds and keep projection center(160,170). Sequence opcode/duration pairs advance at exact equality; preserve list header/cursor wrap and trigger substate mapping. No enum meaning is assigned to unused flocon tail bytes."
+}

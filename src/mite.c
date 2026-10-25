@@ -7,6 +7,8 @@
 #include "inline_helpers.h"
 
 /* Rayverse layout; Android symbol reports 20 bytes, DOS accesses confirm fields at +0x0e and +0x10. */
+/* Local compatibility type: docs/semantics/mite.json; unsigned words retained. */
+#define poing_t mite_poing_local_t
 typedef struct poing_t {
     s32 y_16;
     u16 field_4;
@@ -55,45 +57,46 @@ u8 BTYP(s16 tile_x, s16 tile_y);
 void DO_MITE2_ESQUIVE(obj_t *obj);
 void calc_esquive_poing(obj_t *obj, s16 *diff_x, s16 *diff_y, s16 *unk);
 //52D30
+/* Local names: docs/semantics/mite.json (DOS dataflow; compiler output unchanged). */
 void mite_esquive_poing(obj_t* mit_obj, s16* out_diff_x) {
     /* 4A85C 8016F05C -O2 -msoft-float */
-    s16 unk_x_1; s16 unk_y_1;
-    s16 unk_y_2;
+    s16 target_center_x; s16 target_center_y;
+    s16 vertical_separation;
 
     if (!poing_obj->is_active) {
-        unk_x_1 = ray.x + ray.offset_bx;
-        unk_y_1 = ray.y + ((ray.offset_by + ray.offset_hy) >> 1) - 10;
+        target_center_x = ray.x + ray.offset_bx;
+        target_center_y = ray.y + ((ray.offset_by + ray.offset_hy) >> 1) - 10;
         poing_obj->speed_x = 0;
         poing_obj->speed_y = 0;
     } else {
-        unk_x_1 = poing_obj->x + poing_obj->offset_bx;
-        unk_y_1 = poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1) - 3;
+        target_center_x = poing_obj->x + poing_obj->offset_bx;
+        target_center_y = poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_hy) >> 1) - 3;
     }
-    unk_y_2 = mit_obj->y + ((mit_obj->offset_hy + mit_obj->offset_by) >> 1) - unk_y_1;
-    *out_diff_x = unk_x_1 - mit_obj->x - mit_obj->offset_bx;
+    vertical_separation = mit_obj->y + ((mit_obj->offset_hy + mit_obj->offset_by) >> 1) - target_center_y;
+    *out_diff_x = target_center_x - mit_obj->x - mit_obj->offset_bx;
 
-    if (unk_y_2 < 0) {
+    if (vertical_separation < 0) {
         if (poing_obj->speed_y > 0) {
-            if (unk_y_2 > -30)
+            if (vertical_separation > -30)
                 mit_obj->speed_y += 2;
-            else if (unk_y_2 > -48)
+            else if (vertical_separation > -48)
                 mit_obj->speed_y += 1;
         } else {
-            if (unk_y_2 > -30)
+            if (vertical_separation > -30)
                 mit_obj->speed_y -= 2;
-            else if (unk_y_2 > -48)
+            else if (vertical_separation > -48)
                 mit_obj->speed_y -= 1;
         }
     } else {
         if (poing_obj->speed_y >= 0) {
-            if (unk_y_2 < 30)
+            if (vertical_separation < 30)
                 mit_obj->speed_y += 2;
-            else if (unk_y_2 < 48)
+            else if (vertical_separation < 48)
                 mit_obj->speed_y += 1;
         } else {
-            if (unk_y_2 < 30)
+            if (vertical_separation < 30)
                 mit_obj->speed_y -= 2;
-            else if (unk_y_2 < 48)
+            else if (vertical_separation < 48)
                 mit_obj->speed_y -= 1;
         }
     }
@@ -125,20 +128,22 @@ u8 HAS_MIT_JUMP(obj_t* obj) {
 }
 
 //52ED0
-u8 ray_over_mit(obj_t* obj, s16 a2) {
+/* Local names: docs/semantics/mite.json (DOS dataflow; compiler output unchanged). */
+u8 ray_over_mit(obj_t* obj, s16 horizontal_separation) {
     /* 4AACC 8016F2CC -O2 -msoft-float */
-    return (!(obj->flags.flip_x) && a2 > 0) || (obj->flags.flip_x && a2 < 0);
+    return (!(obj->flags.flip_x) && horizontal_separation > 0) || (obj->flags.flip_x && horizontal_separation < 0);
 }
 
 //52EF4
-void fix_mit_Xspeed(obj_t* obj, s16 a2) {
+/* Local names: docs/semantics/mite.json (DOS dataflow; compiler output unchanged). */
+void fix_mit_Xspeed(obj_t* obj, s16 horizontal_separation) {
     /* 4AB0C 8016F30C -O2 -msoft-float */
     s16 spd_x;
     eta_t* eta;
     s32 unk_1;
 
     if (obj->main_etat == 2 || obj->main_etat == 1) {
-        if (ray_over_mit(obj, a2)) {
+        if (ray_over_mit(obj, horizontal_separation)) {
             if (obj->main_etat == 2 && obj->speed_y < -2 && (obj->sub_etat != 0 ? true : false))
                 obj->speed_y++;
             else
@@ -501,9 +506,10 @@ void DoMitePoingCollision(obj_t* obj, s16 sprite) {
 }
 
 //5387C
+/* Local names: docs/semantics/mite.json (DOS dataflow; compiler output unchanged). */
 void DO_MITE2_COMMAND(obj_t* obj) {
     /* 4BA08 80170208 -O2 -msoft-float */
-    s16 unk_1;
+    s16 tile_type;
 
     if (obj->main_etat == 0 && obj->sub_etat == 3)
     {
@@ -533,7 +539,7 @@ void DO_MITE2_COMMAND(obj_t* obj) {
             CALC_MOV_ON_BLOC(obj);
         }
 
-        unk_1 = calc_typ_travd(obj, false);
+        tile_type = calc_typ_travd(obj, false);
         if (obj->main_etat == 2)
         {
             if (
@@ -553,7 +559,7 @@ void DO_MITE2_COMMAND(obj_t* obj) {
             }
         }
 
-        if (block_flags[unk_1].bits.unused0)
+        if (block_flags[tile_type].bits.unused0)
         {
             if (obj->main_etat == 1)
                 makeUturn(obj);

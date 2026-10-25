@@ -1,0 +1,3223 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "bat.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/map.h",
+   "include/game.h",
+   "include/type_island_abi.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t;",
+  "statement_macros": [],
+  "types": [
+   "type:rgb_t",
+   "type:rgb_palette_t",
+   "type:eta_t",
+   "type:sprite_t",
+   "type:anim_layer_t",
+   "type:anim_frame_t",
+   "type:anim_t",
+   "type:obj_flags_t",
+   "type:cmd_context_t",
+   "type:obj_t",
+   "type:zdc_t",
+   "type:level_t",
+   "type:level_obj_t",
+   "type:active_objects_t",
+   "type:map_tile_t",
+   "type:map_data_t",
+   "type:block_flags_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:finbosslevel_t",
+   "type:save_state_t",
+   "type:display_item_t",
+   "type:options_jeu_t",
+   "type:loadinforay_t",
+   "type:credit_t",
+   "type:record_t",
+   "type:mem_t",
+   "type:obj_type_flags_t",
+   "type:font_t"
+  ],
+  "globals": [
+   "global:N_anim",
+   "global:bat_nb_frap",
+   "global:byte_CFA14",
+   "global:horloge",
+   "global:ray",
+   "global:ray_zdc_h",
+   "global:ray_zdc_w",
+   "global:ray_zdc_x",
+   "global:ray_zdc_y"
+  ],
+  "layout_local_types": []
+ },
+ "artifact_root": "build/workers/sem_boss",
+ "proof_boundary": "Meaning confidence is separate from STRICT matching and compiled layout. DOS instructions, fixups, callers and typed writers/readers are primary. External names only corroborate. Numeric actor states are local to their consumers. Raw token/displacement hits are candidates, not typed identity or reachability proofs. UNKNOWN is retained without renaming.",
+ "related_contracts": [
+  "docs/semantics/README.md",
+  "docs/semantics/RAY_STATES.md",
+  "docs/port/FILE_FORMATS.md",
+  "docs/port/OBJECT_DEFAULTS.md",
+  "docs/port/RENDERING.md"
+ ],
+ "actor_contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+ "callback_bindings": [
+  {
+   "type": 120,
+   "callback": "command",
+   "function": "DO_BAT_COMMAND",
+   "site": "2:03f5c",
+   "target": "1:0fd9c"
+  },
+  {
+   "type": 120,
+   "callback": "poing_collision",
+   "function": "DO_BAT_POING_COLLISION",
+   "site": "2:03f60",
+   "target": "1:10088"
+  },
+  {
+   "type": 120,
+   "callback": "rayman_in_zone",
+   "function": "BAT_ray_in_zone",
+   "site": "2:03f68",
+   "target": "1:10058"
+  }
+ ],
+ "shipped_initial_domains": {
+  "120": {
+   "count": 2,
+   "levels": [
+    "assets/GOG/PCMAP/MUSIC/RAY6.LEV"
+   ],
+   "fields": {
+    "sprites": {
+     "values": [
+      21
+     ],
+     "histogram": {
+      "21": 2
+     }
+    },
+    "animations": {
+     "values": [
+      21
+     ],
+     "histogram": {
+      "21": 2
+     }
+    },
+    "img_buffer": {
+     "values": [
+      21
+     ],
+     "histogram": {
+      "21": 2
+     }
+    },
+    "eta": {
+     "values": [
+      18
+     ],
+     "histogram": {
+      "18": 2
+     }
+    },
+    "cmds": {
+     "values": [
+      9497530,
+      9497634
+     ],
+     "histogram": {
+      "9497530": 1,
+      "9497634": 1
+     }
+    },
+    "cmd_labels": {
+     "values": [
+      9497614,
+      9497718
+     ],
+     "histogram": {
+      "9497614": 1,
+      "9497718": 1
+     }
+    },
+    "cmd_contexts": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "field_1C": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "link_has_gendoor": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "is_active": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "x": {
+     "values": [
+      184,
+      1280
+     ],
+     "histogram": {
+      "1280": 1,
+      "184": 1
+     }
+    },
+    "y": {
+     "values": [
+      219,
+      404
+     ],
+     "histogram": {
+      "219": 1,
+      "404": 1
+     }
+    },
+    "active_flag": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "id": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "screen_x": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "screen_y": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "sub_speed": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "init_x": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "init_y": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "speed_x": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "speed_y": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "nb_sprites": {
+     "values": [
+      15
+     ],
+     "histogram": {
+      "15": 2
+     }
+    },
+    "cmd_offset": {
+     "values": [
+      1
+     ],
+     "histogram": {
+      "1": 2
+     }
+    },
+    "nb_cmd": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "follow_id": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "follow_y": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "follow_x": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "param": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "link": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "ray_dist": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "iframes_timer": {
+     "values": [
+      -4
+     ],
+     "histogram": {
+      "-4": 2
+     }
+    },
+    "test_block_index": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "scale": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "zdc": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "active_timer": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "type": {
+     "values": [
+      120
+     ],
+     "histogram": {
+      "120": 2
+     }
+    },
+    "unused_padding": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "offset_bx": {
+     "values": [
+      160
+     ],
+     "histogram": {
+      "160": 2
+     }
+    },
+    "offset_by": {
+     "values": [
+      248
+     ],
+     "histogram": {
+      "248": 2
+     }
+    },
+    "anim_index": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "anim_frame": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "sub_etat": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "main_etat": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "init_sub_etat": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "init_main_etat": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "cmd": {
+     "values": [
+      11
+     ],
+     "histogram": {
+      "11": 2
+     }
+    },
+    "gravity_value_1": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "gravity_value_2": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "change_anim_mode": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "offset_hy": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "follow_sprite": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "hit_points": {
+     "values": [
+      200
+     ],
+     "histogram": {
+      "200": 2
+     }
+    },
+    "init_hit_points": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "init_flag": {
+     "values": [
+      1
+     ],
+     "histogram": {
+      "1": 2
+     }
+    },
+    "hit_sprite": {
+     "values": [
+      255
+     ],
+     "histogram": {
+      "255": 2
+     }
+    },
+    "detect_zone": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "detect_zone_flag": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "cmd_context_depth": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "config": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "display_prio": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "timer": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "anim_count": {
+     "values": [
+      15
+     ],
+     "histogram": {
+      "15": 2
+     }
+    },
+    "flags": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    },
+    "field_83": {
+     "values": [
+      0
+     ],
+     "histogram": {
+      "0": 2
+     }
+    }
+   }
+  }
+ },
+ "entities": [
+  {
+   "id": "function:DO_BAT_FLASH",
+   "kind": "function",
+   "current_name": "DO_BAT_FLASH",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_FLASH(s16 in_x, s16 in_y)",
+   "meaning": "Aim a projectile using collision-box separation and the N_anim ratio lookup.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  s16 fire_par_3;\n  s16 unk_1;\n  s16 diff_x;\n  s16 diff_y;\n  u8 x_gt_0;\n  u8 y_gt_0;\n  diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;\n  diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;\n  x_gt_0 = diff_x > 0;\n  y_gt_0 = diff_y > 0;\n  if (!x_gt_0)\n    diff_x = -diff_x;\n  if (!y_gt_0)\n    diff_y = -diff_y;\n  if (diff_x > 200)\n  {\n    diff_x = ashr16(diff_x, 1);\n    diff_y = ashr16(diff_y, 1);\n  }\n  if (diff_y == 0)\n  {\n    if (x_gt_0)\n      fire_par_3 = 27;\n    else\n      if (diff_x != 0)\n      fire_par_3 = 9;\n    else\n      fire_par_3 = -1;\n  }\n  else\n  {\n    unk_1 = (diff_x * 45) / diff_y;\n    if (x_gt_0)\n    {\n      if (y_gt_0)\n      {\n        if (unk_1 > 255)\n          fire_par_3 = 27;\n        else\n          fire_par_3 = 27 + N_anim[unk_1];\n      }\n      else\n      {\n        if (unk_1 > 255)\n          fire_par_3 = 0;\n        else\n          fire_par_3 = N_anim[unk_1];\n      }\n    }\n    else\n      if (y_gt_0)\n    {\n      if (unk_1 > 255)\n        fire_par_3 = 18;\n      else\n        fire_par_3 = 18 + N_anim[unk_1];\n    }\n    else\n    {\n      if (unk_1 > 255)\n        fire_par_3 = 9;\n      else\n        fire_par_3 = 9 + N_anim[unk_1];\n    }\n  }\n  DO_REDEYE_FIRE(in_x, in_y, fire_par_3);\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fa40",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_FLASH"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_FLASH",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Aim a projectile using collision-box separation and the N_anim ratio lookup.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fa40",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "786db9da135f54d155d19552c8f59ffa154d2d8644b6880de5dc2f09a7636469",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [
+     "N_anim",
+     "ray_zdc_h",
+     "ray_zdc_w",
+     "ray_zdc_x",
+     "ray_zdc_y"
+    ],
+    "callees": [
+     "DO_REDEYE_FIRE",
+     "ashr16"
+    ]
+   }
+  },
+  {
+   "id": "local:DO_BAT_FLASH:fire_par_3:1",
+   "kind": "local",
+   "current_name": "fire_direction",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Evidenced fire direction computation in DO_BAT_FLASH: fire_par_3 = 27;; fire_par_3 = 9;; fire_par_3 = -1;; fire_par_3 = 27;; fire_par_3 = 27 + N_anim[unk_1];",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 fire_par_3;",
+     "fire_par_3 = 27;",
+     "fire_par_3 = 9;",
+     "fire_par_3 = -1;",
+     "fire_par_3 = 27;",
+     "fire_par_3 = 27 + N_anim[unk_1];",
+     "fire_par_3 = 0;",
+     "fire_par_3 = N_anim[unk_1];",
+     "fire_par_3 = 18;",
+     "fire_par_3 = 18 + N_anim[unk_1];",
+     "fire_par_3 = 9;",
+     "fire_par_3 = 9 + N_anim[unk_1];",
+     "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 fire_par_3",
+     "uses": [
+      "s16 fire_par_3;",
+      "fire_par_3 = 27;",
+      "fire_par_3 = 9;",
+      "fire_par_3 = -1;",
+      "fire_par_3 = 27;",
+      "fire_par_3 = 27 + N_anim[unk_1];",
+      "fire_par_3 = 0;",
+      "fire_par_3 = N_anim[unk_1];",
+      "fire_par_3 = 18;",
+      "fire_par_3 = 18 + N_anim[unk_1];",
+      "fire_par_3 = 9;",
+      "fire_par_3 = 9 + N_anim[unk_1];",
+      "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+     ]
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/name_provenance_checks.json",
+     "kind": "name_query",
+     "key": "DO_BAT_FLASH:fire_direction"
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 1,
+   "name_provenance": "INVENTED editorial description of DOS dataflow; not a historical local symbol",
+   "previous_name": "fire_par_3"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:unk_1:1",
+   "kind": "local",
+   "current_name": "ratio_index",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Evidenced ratio index computation in DO_BAT_FLASH: unk_1 = (diff_x * 45) / diff_y;; if (unk_1 > 255); fire_par_3 = 27 + N_anim[unk_1];; if (unk_1 > 255); fire_par_3 = N_anim[unk_1];",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 unk_1;",
+     "unk_1 = (diff_x * 45) / diff_y;",
+     "if (unk_1 > 255)",
+     "fire_par_3 = 27 + N_anim[unk_1];",
+     "if (unk_1 > 255)",
+     "fire_par_3 = N_anim[unk_1];",
+     "if (unk_1 > 255)",
+     "fire_par_3 = 18 + N_anim[unk_1];",
+     "if (unk_1 > 255)",
+     "fire_par_3 = 9 + N_anim[unk_1];"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 unk_1",
+     "uses": [
+      "s16 unk_1;",
+      "unk_1 = (diff_x * 45) / diff_y;",
+      "if (unk_1 > 255)",
+      "fire_par_3 = 27 + N_anim[unk_1];",
+      "if (unk_1 > 255)",
+      "fire_par_3 = N_anim[unk_1];",
+      "if (unk_1 > 255)",
+      "fire_par_3 = 18 + N_anim[unk_1];",
+      "if (unk_1 > 255)",
+      "fire_par_3 = 9 + N_anim[unk_1];"
+     ]
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/name_provenance_checks.json",
+     "kind": "name_query",
+     "key": "DO_BAT_FLASH:ratio_index"
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 2,
+   "name_provenance": "INVENTED editorial description of DOS dataflow; not a historical local symbol",
+   "previous_name": "unk_1"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:diff_x:1",
+   "kind": "local",
+   "current_name": "diff_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_FLASH: diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;; x_gt_0 = diff_x > 0;; diff_x = -diff_x;; if (diff_x > 200); diff_x = ashr16(diff_x, 1);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 diff_x;",
+     "diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;",
+     "x_gt_0 = diff_x > 0;",
+     "diff_x = -diff_x;",
+     "if (diff_x > 200)",
+     "diff_x = ashr16(diff_x, 1);",
+     "if (diff_x != 0)",
+     "unk_1 = (diff_x * 45) / diff_y;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 diff_x",
+     "uses": [
+      "s16 diff_x;",
+      "diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;",
+      "x_gt_0 = diff_x > 0;",
+      "diff_x = -diff_x;",
+      "if (diff_x > 200)",
+      "diff_x = ashr16(diff_x, 1);",
+      "if (diff_x != 0)",
+      "unk_1 = (diff_x * 45) / diff_y;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 3,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:diff_y:1",
+   "kind": "local",
+   "current_name": "diff_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_FLASH: diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;; y_gt_0 = diff_y > 0;; diff_y = -diff_y;; diff_y = ashr16(diff_y, 1);; if (diff_y == 0)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 diff_y;",
+     "diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;",
+     "y_gt_0 = diff_y > 0;",
+     "diff_y = -diff_y;",
+     "diff_y = ashr16(diff_y, 1);",
+     "if (diff_y == 0)",
+     "unk_1 = (diff_x * 45) / diff_y;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 diff_y",
+     "uses": [
+      "s16 diff_y;",
+      "diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;",
+      "y_gt_0 = diff_y > 0;",
+      "diff_y = -diff_y;",
+      "diff_y = ashr16(diff_y, 1);",
+      "if (diff_y == 0)",
+      "unk_1 = (diff_x * 45) / diff_y;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 4,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:x_gt_0:1",
+   "kind": "local",
+   "current_name": "x_gt_0",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Observed local in DO_BAT_FLASH: x_gt_0 = diff_x > 0;; if (!x_gt_0); if (x_gt_0); if (x_gt_0)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "u8 x_gt_0;",
+     "x_gt_0 = diff_x > 0;",
+     "if (!x_gt_0)",
+     "if (x_gt_0)",
+     "if (x_gt_0)"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "u8 x_gt_0",
+     "uses": [
+      "u8 x_gt_0;",
+      "x_gt_0 = diff_x > 0;",
+      "if (!x_gt_0)",
+      "if (x_gt_0)",
+      "if (x_gt_0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "u8 $",
+   "signedness": "unsigned",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 5,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:y_gt_0:1",
+   "kind": "local",
+   "current_name": "y_gt_0",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Observed local in DO_BAT_FLASH: y_gt_0 = diff_y > 0;; if (!y_gt_0); if (y_gt_0); if (y_gt_0)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "u8 y_gt_0;",
+     "y_gt_0 = diff_y > 0;",
+     "if (!y_gt_0)",
+     "if (y_gt_0)",
+     "if (y_gt_0)"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "u8 y_gt_0",
+     "uses": [
+      "u8 y_gt_0;",
+      "y_gt_0 = diff_y > 0;",
+      "if (!y_gt_0)",
+      "if (y_gt_0)",
+      "if (y_gt_0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "u8 $",
+   "signedness": "unsigned",
+   "role": "local",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 6,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:in_x:1",
+   "kind": "local",
+   "current_name": "in_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed parameter in DO_BAT_FLASH: diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;; DO_REDEYE_FIRE(in_x, in_y, fire_par_3);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;",
+     "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 in_x",
+     "uses": [
+      "diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - in_x;",
+      "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "parameter",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 7,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_FLASH:in_y:1",
+   "kind": "local",
+   "current_name": "in_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed parameter in DO_BAT_FLASH: diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;; DO_REDEYE_FIRE(in_x, in_y, fire_par_3);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;",
+     "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fa40"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 in_y",
+     "uses": [
+      "diff_y = (ray_zdc_h + (ray_zdc_y >> 1)) - in_y;",
+      "DO_REDEYE_FIRE(in_x, in_y, fire_par_3);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "parameter",
+   "function": "DO_BAT_FLASH",
+   "declaration_ordinal": 8,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:DO_BAT_LEFT_FLASH",
+   "kind": "function",
+   "current_name": "DO_BAT_LEFT_FLASH",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_LEFT_FLASH(obj_t *obj)",
+   "meaning": "Fire from the center of sprite 14.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  s16 spr_x;\n  s16 spr_y;\n  s16 spr_w;\n  s16 spr_h;\n  GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);\n  DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fbc0",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_LEFT_FLASH"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_LEFT_FLASH",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Fire from the center of sprite 14.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fbc0",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "6a894da6b2d99e5ba7ab286144a4e6587adcb190726cc4d09aa8adbc4d2678ec",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "DO_BAT_FLASH",
+     "GET_SPRITE_POS"
+    ]
+   }
+  },
+  {
+   "id": "local:DO_BAT_LEFT_FLASH:spr_x:1",
+   "kind": "local",
+   "current_name": "spr_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_x;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fbc0"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_x",
+     "uses": [
+      "s16 spr_x;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_FLASH",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_FLASH:spr_y:1",
+   "kind": "local",
+   "current_name": "spr_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_y;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fbc0"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_y",
+     "uses": [
+      "s16 spr_y;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_FLASH",
+   "declaration_ordinal": 2,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_FLASH:spr_w:1",
+   "kind": "local",
+   "current_name": "spr_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_w;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fbc0"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_w",
+     "uses": [
+      "s16 spr_w;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_FLASH",
+   "declaration_ordinal": 3,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_FLASH:spr_h:1",
+   "kind": "local",
+   "current_name": "spr_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_h;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fbc0"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_h",
+     "uses": [
+      "s16 spr_h;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_FLASH",
+   "declaration_ordinal": 4,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_FLASH:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in DO_BAT_LEFT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fbc0"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_FLASH"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "DO_BAT_LEFT_FLASH",
+   "declaration_ordinal": 5,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:DO_BAT_RIGHT_FLASH",
+   "kind": "function",
+   "current_name": "DO_BAT_RIGHT_FLASH",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_RIGHT_FLASH(obj_t *obj)",
+   "meaning": "Fire from the center of sprite 14, using the same DOS sprite index as the left entry.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  s16 spr_x;\n  s16 spr_y;\n  s16 spr_w;\n  s16 spr_h;\n  GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);\n  DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fc18",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_RIGHT_FLASH"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_RIGHT_FLASH",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Fire from the center of sprite 14, using the same DOS sprite index as the left entry.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fc18",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "6a894da6b2d99e5ba7ab286144a4e6587adcb190726cc4d09aa8adbc4d2678ec",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "DO_BAT_FLASH",
+     "GET_SPRITE_POS"
+    ]
+   }
+  },
+  {
+   "id": "local:DO_BAT_RIGHT_FLASH:spr_x:1",
+   "kind": "local",
+   "current_name": "spr_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_RIGHT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_x;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc18"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_x",
+     "uses": [
+      "s16 spr_x;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_RIGHT_FLASH",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_RIGHT_FLASH:spr_y:1",
+   "kind": "local",
+   "current_name": "spr_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_RIGHT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_y;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc18"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_y",
+     "uses": [
+      "s16 spr_y;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_RIGHT_FLASH",
+   "declaration_ordinal": 2,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_RIGHT_FLASH:spr_w:1",
+   "kind": "local",
+   "current_name": "spr_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_RIGHT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_w;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc18"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_w",
+     "uses": [
+      "s16 spr_w;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_RIGHT_FLASH",
+   "declaration_ordinal": 3,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_RIGHT_FLASH:spr_h:1",
+   "kind": "local",
+   "current_name": "spr_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_RIGHT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_h;",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc18"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_h",
+     "uses": [
+      "s16 spr_h;",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_RIGHT_FLASH",
+   "declaration_ordinal": 4,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_RIGHT_FLASH:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in DO_BAT_RIGHT_FLASH: GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc18"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_RIGHT_FLASH"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "DO_BAT_RIGHT_FLASH",
+   "declaration_ordinal": 5,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:DO_BAT_LEFT_RIGHT_FLASH",
+   "kind": "function",
+   "current_name": "DO_BAT_LEFT_RIGHT_FLASH",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_LEFT_RIGHT_FLASH(obj_t *obj)",
+   "meaning": "Fire from sprite 15 followed by sprite 14.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  s16 spr_x;\n  s16 spr_y;\n  s16 spr_w;\n  s16 spr_h;\n  GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);\n  DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));\n  GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);\n  DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fc70",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_LEFT_RIGHT_FLASH"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_LEFT_RIGHT_FLASH",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Fire from sprite 15 followed by sprite 14.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fc70",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "78a15bee98783349a78d843e52b886ed565bb15079701aa15ff088102d599ffc",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "DO_BAT_FLASH",
+     "GET_SPRITE_POS"
+    ]
+   }
+  },
+  {
+   "id": "local:DO_BAT_LEFT_RIGHT_FLASH:spr_x:1",
+   "kind": "local",
+   "current_name": "spr_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_RIGHT_FLASH: GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));; GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_x;",
+     "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc70"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_x",
+     "uses": [
+      "s16 spr_x;",
+      "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_RIGHT_FLASH",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_RIGHT_FLASH:spr_y:1",
+   "kind": "local",
+   "current_name": "spr_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_RIGHT_FLASH: GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));; GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_y;",
+     "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc70"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_y",
+     "uses": [
+      "s16 spr_y;",
+      "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_RIGHT_FLASH",
+   "declaration_ordinal": 2,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_RIGHT_FLASH:spr_w:1",
+   "kind": "local",
+   "current_name": "spr_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_RIGHT_FLASH: GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));; GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_w;",
+     "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc70"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_w",
+     "uses": [
+      "s16 spr_w;",
+      "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_RIGHT_FLASH",
+   "declaration_ordinal": 3,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_RIGHT_FLASH:spr_h:1",
+   "kind": "local",
+   "current_name": "spr_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_LEFT_RIGHT_FLASH: GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));; GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);; DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_h;",
+     "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc70"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 spr_h",
+     "uses": [
+      "s16 spr_h;",
+      "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "DO_BAT_FLASH(spr_x + (spr_w >> 1), spr_y + (spr_h >> 1));"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_RIGHT_FLASH"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_LEFT_RIGHT_FLASH",
+   "declaration_ordinal": 4,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_LEFT_RIGHT_FLASH:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in DO_BAT_LEFT_RIGHT_FLASH: GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);; GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fc70"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "GET_SPRITE_POS(obj, 15, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "GET_SPRITE_POS(obj, 14, &spr_x, &spr_y, &spr_w, &spr_h);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_LEFT_RIGHT_FLASH"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "DO_BAT_LEFT_RIGHT_FLASH",
+   "declaration_ordinal": 5,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:bat_dir",
+   "kind": "function",
+   "current_name": "bat_dir",
+   "proposed_name": null,
+   "c_type": "s16 bat_dir(obj_t *obj)",
+   "meaning": "Return whether Rayman's horizontal center lies right of the bat's center.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  return (((ray.x + ray.offset_bx) - obj->x) - obj->offset_bx) > 0;\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fd14",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "bat_dir"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "bat_dir",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Return whether Rayman's horizontal center lies right of the bat's center.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fd14",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "9f002b0d3ddefbf0d2d97d7fbe9a0187cb070bd46d1ddcb50a7e77f0307fbe28",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [
+     "ray"
+    ],
+    "callees": []
+   }
+  },
+  {
+   "id": "local:bat_dir:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in bat_dir: return (((ray.x + ray.offset_bx) - obj->x) - obj->offset_bx) > 0;",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "return (((ray.x + ray.offset_bx) - obj->x) - obj->offset_bx) > 0;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd14"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "return (((ray.x + ray.offset_bx) - obj->x) - obj->offset_bx) > 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:bat_dir"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "bat_dir",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:DO_BAT_COMMAND",
+   "kind": "function",
+   "current_name": "DO_BAT_COMMAND",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_COMMAND(obj_t *obj)",
+   "meaning": "Run bat animation-frame-gated fire, strike-count, script-choice and movement-turn logic.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  s16 obj_sub_etat;\n  s32 speed;\n  u8 horl_0;\n  s16 offs_bx;\n  s16 offs_by;\n  {\n    s16 state_snapshot;\n    s16 *state_ptr = &state_snapshot;\n    *state_ptr = obj->sub_etat;\n    obj_sub_etat = state_snapshot;\n  }\n  {\n    u8 clock_tick;\n    clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];\n    horl_0 = clock_tick == 0;\n  }\n  switch (obj_sub_etat)\n  {\n    default:\n      break;\n\n    case 2:\n      if ((obj->anim_frame == 14) && horl_0)\n      DO_BAT_LEFT_RIGHT_FLASH(obj);\n      break;\n\n    case 5:\n      if (obj->anim_frame == 22)\n    {\n      if (myRand(1) == 0)\n        skipToLabel(obj, 2, 1);\n      else\n        skipToLabel(obj, 3, 1);\n      return;\n    }\n      break;\n\n    case 3:\n\n    case 4:\n      if ((obj->anim_frame == 19) && horl_0)\n    {\n      bat_nb_frap++;\n      if (obj_sub_etat == 4)\n        DO_BAT_RIGHT_FLASH(obj);\n      if (obj_sub_etat == 3)\n        DO_BAT_LEFT_FLASH(obj);\n    }\n      break;\n\n    case 6:\n\n    case 7:\n      if (obj->anim_frame == 20)\n    {\n      switch (bat_nb_frap)\n      {\n        case 1:\n          set_sub_etat(obj, 11);\n          break;\n\n        case 3:\n          set_sub_etat(obj, 11);\n          bat_nb_frap = 0;\n          break;\n\n        default:\n          if (obj_sub_etat == 6)\n          skipToLabel(obj, 3, 1);\n        else\n          skipToLabel(obj, 2, 1);\n          break;\n\n      }\n\n    }\n      break;\n\n    case 8:\n      if (bat_dir(obj))\n      skipToLabel(obj, 4, 1);\n    else\n      skipToLabel(obj, 5, 1);\n      break;\n\n    case 11:\n      if (bat_dir(obj))\n      skipToLabel(obj, 6, 1);\n    else\n      skipToLabel(obj, 7, 1);\n      break;\n\n    case 9:\n\n    case 10:\n\n    case 12:\n\n    case 13:\n      if (obj->cmd == GO_SPEED)\n    {\n      switch (obj_sub_etat)\n      {\n        case 10:\n\n        case 13:\n          speed = obj->iframes_timer;\n          obj->speed_x = Abs(speed);\n          obj->speed_x = -obj->speed_x;\n          break;\n\n        case 12:\n\n        case 9:\n          speed = obj->iframes_timer;\n          obj->speed_x = Abs(speed);\n          break;\n\n      }\n\n      obj->speed_y = obj->follow_id;\n    }\n      offs_bx = obj->offset_bx;\n      offs_by = obj->offset_by;\n      if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))\n    {\n      switch (obj_sub_etat)\n      {\n        case 10:\n          obj->sub_etat = 9;\n          break;\n\n        case 9:\n          obj->sub_etat = 10;\n          break;\n\n        case 13:\n          obj->sub_etat = 12;\n          break;\n\n        case 12:\n          obj->sub_etat = 13;\n          break;\n\n      }\n\n    }\n      break;\n\n  }\n\n}\n",
+    "callback_types": [
+     {
+      "type": 120,
+      "callback": "command",
+      "function": "DO_BAT_COMMAND",
+      "site": "2:03f5c",
+      "target": "1:0fd9c"
+     }
+    ],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:0fd9c",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_COMMAND"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_COMMAND",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Run bat animation-frame-gated fire, strike-count, script-choice and movement-turn logic.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:0fd9c",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "01959937f49b97c279ff496a8b54d11026c60b95ca34effa767e91d41fed7dca",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [
+     "bat_nb_frap",
+     "horloge"
+    ],
+    "callees": [
+     "Abs",
+     "DO_BAT_LEFT_FLASH",
+     "DO_BAT_LEFT_RIGHT_FLASH",
+     "DO_BAT_RIGHT_FLASH",
+     "bat_dir",
+     "myRand",
+     "on_block_chdir",
+     "set_sub_etat",
+     "skipToLabel",
+     "test_allowed"
+    ]
+   }
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:obj_sub_etat:1",
+   "kind": "local",
+   "current_name": "obj_sub_etat",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_COMMAND: obj_sub_etat = state_snapshot;; switch (obj_sub_etat); if (obj_sub_etat == 4); if (obj_sub_etat == 3); if (obj_sub_etat == 6)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 obj_sub_etat;",
+     "obj_sub_etat = state_snapshot;",
+     "switch (obj_sub_etat)",
+     "if (obj_sub_etat == 4)",
+     "if (obj_sub_etat == 3)",
+     "if (obj_sub_etat == 6)",
+     "switch (obj_sub_etat)",
+     "switch (obj_sub_etat)"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 obj_sub_etat",
+     "uses": [
+      "s16 obj_sub_etat;",
+      "obj_sub_etat = state_snapshot;",
+      "switch (obj_sub_etat)",
+      "if (obj_sub_etat == 4)",
+      "if (obj_sub_etat == 3)",
+      "if (obj_sub_etat == 6)",
+      "switch (obj_sub_etat)",
+      "switch (obj_sub_etat)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:speed:1",
+   "kind": "local",
+   "current_name": "speed",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Observed local in DO_BAT_COMMAND: speed = obj->iframes_timer;; obj->speed_x = Abs(speed);; speed = obj->iframes_timer;; obj->speed_x = Abs(speed);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s32 speed;",
+     "speed = obj->iframes_timer;",
+     "obj->speed_x = Abs(speed);",
+     "speed = obj->iframes_timer;",
+     "obj->speed_x = Abs(speed);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 speed",
+     "uses": [
+      "s32 speed;",
+      "speed = obj->iframes_timer;",
+      "obj->speed_x = Abs(speed);",
+      "speed = obj->iframes_timer;",
+      "obj->speed_x = Abs(speed);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s32 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 2,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:horl_0:1",
+   "kind": "local",
+   "current_name": "horl_0",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Observed local in DO_BAT_COMMAND: horl_0 = clock_tick == 0;; if ((obj->anim_frame == 14) && horl_0); if ((obj->anim_frame == 19) && horl_0)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "u8 horl_0;",
+     "horl_0 = clock_tick == 0;",
+     "if ((obj->anim_frame == 14) && horl_0)",
+     "if ((obj->anim_frame == 19) && horl_0)"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "u8 horl_0",
+     "uses": [
+      "u8 horl_0;",
+      "horl_0 = clock_tick == 0;",
+      "if ((obj->anim_frame == 14) && horl_0)",
+      "if ((obj->anim_frame == 19) && horl_0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "u8 $",
+   "signedness": "unsigned",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 3,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:offs_bx:1",
+   "kind": "local",
+   "current_name": "offs_bx",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_COMMAND: offs_bx = obj->offset_bx;; if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 offs_bx;",
+     "offs_bx = obj->offset_bx;",
+     "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 offs_bx",
+     "uses": [
+      "s16 offs_bx;",
+      "offs_bx = obj->offset_bx;",
+      "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 4,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:offs_by:1",
+   "kind": "local",
+   "current_name": "offs_by",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_COMMAND: offs_by = obj->offset_by;; if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 offs_by;",
+     "offs_by = obj->offset_by;",
+     "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 offs_by",
+     "uses": [
+      "s16 offs_by;",
+      "offs_by = obj->offset_by;",
+      "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 5,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:state_snapshot:1",
+   "kind": "local",
+   "current_name": "state_snapshot",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_BAT_COMMAND: s16 *state_ptr = &state_snapshot;; obj_sub_etat = state_snapshot;",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 state_snapshot;",
+     "s16 *state_ptr = &state_snapshot;",
+     "obj_sub_etat = state_snapshot;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 state_snapshot",
+     "uses": [
+      "s16 state_snapshot;",
+      "s16 *state_ptr = &state_snapshot;",
+      "obj_sub_etat = state_snapshot;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 6,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:state_ptr:1",
+   "kind": "local",
+   "current_name": "state_ptr",
+   "proposed_name": null,
+   "c_type": "s16 * = &state_snapshot",
+   "meaning": "Observed local in DO_BAT_COMMAND: *state_ptr = obj->sub_etat;",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 *state_ptr = &state_snapshot;",
+     "*state_ptr = obj->sub_etat;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 *state_ptr = &state_snapshot",
+     "uses": [
+      "s16 *state_ptr = &state_snapshot;",
+      "*state_ptr = obj->sub_etat;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "s16 *$ = &state_snapshot",
+   "signedness": "not applicable (pointer)",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 7,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:clock_tick:1",
+   "kind": "local",
+   "current_name": "clock_tick",
+   "proposed_name": null,
+   "c_type": "u8",
+   "meaning": "Observed local in DO_BAT_COMMAND: clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];; horl_0 = clock_tick == 0;",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "u8 clock_tick;",
+     "clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];",
+     "horl_0 = clock_tick == 0;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "u8 clock_tick",
+     "uses": [
+      "u8 clock_tick;",
+      "clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];",
+      "horl_0 = clock_tick == 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "u8 $",
+   "signedness": "unsigned",
+   "role": "local",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 8,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_COMMAND:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in DO_BAT_COMMAND: *state_ptr = obj->sub_etat;; clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];; if ((obj->anim_frame == 14) && horl_0); DO_BAT_LEFT_RIGHT_FLASH(obj);; if (obj->anim_frame == 22)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "*state_ptr = obj->sub_etat;",
+     "clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];",
+     "if ((obj->anim_frame == 14) && horl_0)",
+     "DO_BAT_LEFT_RIGHT_FLASH(obj);",
+     "if (obj->anim_frame == 22)",
+     "skipToLabel(obj, 2, 1);",
+     "skipToLabel(obj, 3, 1);",
+     "if ((obj->anim_frame == 19) && horl_0)",
+     "DO_BAT_RIGHT_FLASH(obj);",
+     "DO_BAT_LEFT_FLASH(obj);",
+     "if (obj->anim_frame == 20)",
+     "set_sub_etat(obj, 11);",
+     "set_sub_etat(obj, 11);",
+     "skipToLabel(obj, 3, 1);",
+     "skipToLabel(obj, 2, 1);",
+     "if (bat_dir(obj))",
+     "skipToLabel(obj, 4, 1);",
+     "skipToLabel(obj, 5, 1);",
+     "if (bat_dir(obj))",
+     "skipToLabel(obj, 6, 1);",
+     "skipToLabel(obj, 7, 1);",
+     "if (obj->cmd == GO_SPEED)",
+     "speed = obj->iframes_timer;",
+     "obj->speed_x = Abs(speed);",
+     "obj->speed_x = -obj->speed_x;",
+     "speed = obj->iframes_timer;",
+     "obj->speed_x = Abs(speed);",
+     "obj->speed_y = obj->follow_id;",
+     "offs_bx = obj->offset_bx;",
+     "offs_by = obj->offset_by;",
+     "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))",
+     "obj->sub_etat = 9;",
+     "obj->sub_etat = 10;",
+     "obj->sub_etat = 12;",
+     "obj->sub_etat = 13;"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:0fd9c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "*state_ptr = obj->sub_etat;",
+      "clock_tick = horloge[obj->eta[obj->main_etat][obj->sub_etat].anim_speed & 0x0f];",
+      "if ((obj->anim_frame == 14) && horl_0)",
+      "DO_BAT_LEFT_RIGHT_FLASH(obj);",
+      "if (obj->anim_frame == 22)",
+      "skipToLabel(obj, 2, 1);",
+      "skipToLabel(obj, 3, 1);",
+      "if ((obj->anim_frame == 19) && horl_0)",
+      "DO_BAT_RIGHT_FLASH(obj);",
+      "DO_BAT_LEFT_FLASH(obj);",
+      "if (obj->anim_frame == 20)",
+      "set_sub_etat(obj, 11);",
+      "set_sub_etat(obj, 11);",
+      "skipToLabel(obj, 3, 1);",
+      "skipToLabel(obj, 2, 1);",
+      "if (bat_dir(obj))",
+      "skipToLabel(obj, 4, 1);",
+      "skipToLabel(obj, 5, 1);",
+      "if (bat_dir(obj))",
+      "skipToLabel(obj, 6, 1);",
+      "skipToLabel(obj, 7, 1);",
+      "if (obj->cmd == GO_SPEED)",
+      "speed = obj->iframes_timer;",
+      "obj->speed_x = Abs(speed);",
+      "obj->speed_x = -obj->speed_x;",
+      "speed = obj->iframes_timer;",
+      "obj->speed_x = Abs(speed);",
+      "obj->speed_y = obj->follow_id;",
+      "offs_bx = obj->offset_bx;",
+      "offs_by = obj->offset_by;",
+      "if (test_allowed(obj, offs_bx, offs_by) && on_block_chdir(obj, offs_bx, offs_by))",
+      "obj->sub_etat = 9;",
+      "obj->sub_etat = 10;",
+      "obj->sub_etat = 12;",
+      "obj->sub_etat = 13;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_COMMAND"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "DO_BAT_COMMAND",
+   "declaration_ordinal": 9,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:BAT_ray_in_zone",
+   "kind": "function",
+   "current_name": "BAT_ray_in_zone",
+   "proposed_name": null,
+   "c_type": "void BAT_ray_in_zone(obj_t *obj)",
+   "meaning": "Start the bat script only from substate zero while byte_CFA14 is zero.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  if ((obj->sub_etat == 0) && (byte_CFA14 == 0))\n  {\n    bat_nb_frap = 0;\n    obj->flags.flip_x = 0;\n    skipToLabel(obj, 1, 1);\n  }\n}\n",
+    "callback_types": [
+     {
+      "type": 120,
+      "callback": "rayman_in_zone",
+      "function": "BAT_ray_in_zone",
+      "site": "2:03f68",
+      "target": "1:10058"
+     }
+    ],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:10058",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "BAT_ray_in_zone"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "BAT_ray_in_zone",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Start the bat script only from substate zero while byte_CFA14 is zero.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:10058",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "392e5868f033bdf626c2991d0c1905c6e163025ab4f4965ccf523819044d3050",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [
+     "bat_nb_frap",
+     "byte_CFA14"
+    ],
+    "callees": [
+     "skipToLabel"
+    ]
+   }
+  },
+  {
+   "id": "local:BAT_ray_in_zone:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in BAT_ray_in_zone: if ((obj->sub_etat == 0) && (byte_CFA14 == 0)); obj->flags.flip_x = 0;; skipToLabel(obj, 1, 1);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "if ((obj->sub_etat == 0) && (byte_CFA14 == 0))",
+     "obj->flags.flip_x = 0;",
+     "skipToLabel(obj, 1, 1);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:10058"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "if ((obj->sub_etat == 0) && (byte_CFA14 == 0))",
+      "obj->flags.flip_x = 0;",
+      "skipToLabel(obj, 1, 1);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:BAT_ray_in_zone"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "BAT_ray_in_zone",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:DO_BAT_POING_COLLISION",
+   "kind": "function",
+   "current_name": "DO_BAT_POING_COLLISION",
+   "proposed_name": null,
+   "c_type": "void DO_BAT_POING_COLLISION(obj_t *bat_obj, s16 sprite)",
+   "meaning": "Perform no operation on bat fist collision.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n}\n",
+    "callback_types": [
+     {
+      "type": 120,
+      "callback": "poing_collision",
+      "function": "DO_BAT_POING_COLLISION",
+      "site": "2:03f60",
+      "target": "1:10088"
+     }
+    ],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:10088",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "DO_BAT_POING_COLLISION"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_BAT_POING_COLLISION",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Perform no operation on bat fist collision.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:10088",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "d914176fd50bd7f565700006a31aa97b79d3ad17cee20c8e5ff2061d5cb74817",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   }
+  },
+  {
+   "id": "local:DO_BAT_POING_COLLISION:bat_obj:1",
+   "kind": "local",
+   "current_name": "bat_obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Unused parameter; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_code_uses": [],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:10088"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *bat_obj",
+     "uses": []
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_POING_COLLISION"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "DO_BAT_POING_COLLISION",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_BAT_POING_COLLISION:sprite:1",
+   "kind": "local",
+   "current_name": "sprite",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Unused parameter; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_code_uses": [],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:10088"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 sprite",
+     "uses": []
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:DO_BAT_POING_COLLISION"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "parameter",
+   "function": "DO_BAT_POING_COLLISION",
+   "declaration_ordinal": 2,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "function:bat_get_eject_sens",
+   "kind": "function",
+   "current_name": "bat_get_eject_sens",
+   "proposed_name": null,
+   "c_type": "s32 bat_get_eject_sens(obj_t *obj)",
+   "meaning": "Set Rayman's iframes to 40 and return the side-dependent eject direction.",
+   "unit": "see observed computation and contract",
+   "value_domain": {
+    "contract": "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage.",
+    "observed_algorithm": "{\n  ray.iframes_timer = 40;\n  return (bat_dir(obj)) ? (1) : (-1);\n}\n",
+    "callback_types": [],
+    "limitation": "Normalized source algorithm is checked separately from meaning; NEAR functions remain STRONG. Shipped initial domains do not bound runtime writes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:1008c",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_references",
+     "key": "bat_get_eject_sens"
+    },
+    {
+     "artifact": "build/workers/sem_boss/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "bat_get_eject_sens",
+     "authority": "corroboration only"
+    }
+   ],
+   "port_notes": [
+    "Set Rayman's iframes to 40 and return the side-dependent eject direction.",
+    "Single-left and single-right fire entries both read sprite 14 in DOS; combined fire reads 15 then 14. The fire direction uses N_anim[abs(dx)*45/abs(dy)], quadrant bases 0/9/18/27 and -1 for coincident horizontal aim. Preserve the literal collision-global usage despite historically confusing names. Fist collision callback is empty; do not introduce damage."
+   ],
+   "oracle_address": "1:1008c",
+   "source_file": "src/bat.c",
+   "source_body_sha256": "e5dccb2a796830286bc851e57a6655164f4133d0c8b5b7107367e560243a794c",
+   "name_provenance": "ANDROID original symbol",
+   "evidence_units": [
+    "bat.c"
+   ],
+   "readers_writers": {
+    "globals": [
+     "ray"
+    ],
+    "callees": [
+     "bat_dir"
+    ]
+   }
+  },
+  {
+   "id": "local:bat_get_eject_sens:obj:1",
+   "kind": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "meaning": "Observed parameter in bat_get_eject_sens: return (bat_dir(obj)) ? (1) : (-1);",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "return (bat_dir(obj)) ? (1) : (-1);"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/bat.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:1008c"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "obj_t *obj",
+     "uses": [
+      "return (bat_dir(obj)) ? (1) : (-1);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/bat.json#function:bat_get_eject_sens"
+   ],
+   "declarator": "obj_t *$",
+   "signedness": "not applicable (pointer)",
+   "role": "parameter",
+   "function": "bat_get_eject_sens",
+   "declaration_ordinal": 1,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  }
+ ],
+ "source_fingerprints": {
+  "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
+  "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
+  "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
+  "src/include/map.h": "e6ecfc28c926ae4f18c71f1a2ccdf1199253c7bc0887e08715bc335456789f17",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/include/type_island_abi.h": "08f0103a45b8cad235165e57cd03c312b13eb60dcbfaff3ab0908d1fe8e94094",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c"
+ },
+ "evidence_source_fingerprints": {
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/cdaudio.c": "b81b651081993cd63e3ef26840672ad810afad2ddb5643e0734725e97a257c3e",
+  "src/include/inline_helpers.h": "23933215bcc5f19c958245611e0e352bc3997f935ce2473dfa8f670a5dee08c8",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/dosprobe.c": "e8258005a1455b33e638fc6b2db7beed112e0a1de5ad13231fcf34ff80e126ef",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/bss/bss_3f876.c": "1772dbe3a3561f34cca4d414fa4beec154b67064c7538461c05496a5a118f0e1",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/bss/bss_3f864.c": "50dd65633cbaaeb54005c5918f6a13f68a930c2aa9fb7e8d6753d0d64a0f9e38",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/bss/bss_3f9f5.c": "46233a930e5d026e220105a35871c6a6699b4c5bda5cc0b321dae86fc6008433",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bss/bss_3fa14.c": "371b6d13b73ffda57ff978391cdafd533423d3dc29f1f32c32246ccc449a7b33",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/bss/bss_3f802.c": "8bade527f55333291e6d543e8c9eca7eca2576c380f46556a8af08a8cc0c737e",
+  "src/bss/bss_3f860.c": "e8c92425fc17a3757d493a2b24b9b20bb863c95ea66aab163abeebf7fd357bca"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/actor_effects.json": "5cbc173bd10485942b322aa44db805f03aa74d792270ef4e374cb2ad6383fbaf",
+  "evidence/actor_table_domains.json": "0430b77d905c8ebf7b6dac15cd24cd958de0b26140b13eb1fe7cd324425f282a",
+  "evidence/araignee.dos.txt": "c1fbc9237a20a261466e62417a671ebcda8ac59a7d68cf8d7b7d4aa0bd00647f",
+  "evidence/araignee_extent.json": "6978d39257b95cdf691c3c87e8bd64d35e2e672599ff92fef539e4bfe36542c1",
+  "evidence/araignee_typed_accesses.json": "5307316ac1552245984afade5ff30ba47031f22c1ce7b97a886ca06af7b4a75b",
+  "evidence/archive_formats.json": "63c67b57463d6e5a5ec75fbc904eb3f473f569486608fa3cff9bce4fbed37949",
+  "evidence/bat.dos.txt": "d59d653578a98de964b6c8605d770f3dc6f7aa09f5008da10d159ce16980a04c",
+  "evidence/bat_extent.json": "ffb8f2d31a02ec80d83cc383b4e6a0f0486b90c297e621946a49f4cfaa1876d6",
+  "evidence/bat_typed_accesses.json": "1e5c171542d556fe6bfb2783d5a402cf51f1f43939d87613a541081993d1332a",
+  "evidence/bbmont.dos.txt": "bd64138b05ad30e17f66fba2ae36fa1fccd93909fb4bda974b96db5d6c77b5e0",
+  "evidence/bbmont_extent.json": "fcad1eace46fff7dbdbe4c3f511a3c1bb2e1f911c9b1b385bfb7ba327cdff134",
+  "evidence/bbmont_typed_accesses.json": "350d63bcfece772968ee7fb66e1474afafa92ce1b7030cbd6030e878e4c799d3",
+  "evidence/blacktoon.dos.txt": "e0b6ac4b46d615ec5612ac3281c85719a3eb7110a4ea3b0b42e12d5ea2a6ae01",
+  "evidence/blacktoon_extent.json": "bf426c970c77c4c199cf795795a282f296f758912f1efae9594b6ddcff3c3f65",
+  "evidence/blacktoon_typed_accesses.json": "00c87f0ed3d1508b9a93344cd108fe3ecf6a31ed32b4e8471140eb396f42a853",
+  "evidence/breakout.dos.txt": "0932f20658dda2eac297e5f2a249480c265cea15649db7fdfe7688ae9b1033a0",
+  "evidence/breakout_extent.json": "f66b699f241caf6c1a1c3745b69a65b141ab0b232f85992e984f09766919339a",
+  "evidence/breakout_typed_accesses.json": "7169404c59f3c8d36d77154218ff8cd84d12ff5a4ea3f792d5c47806947407bb",
+  "evidence/canonical_input_hashes.json": "e3377a854911f4315166c9dbece70f41ad87a0aababb7a1a3b627d54cc8389d7",
+  "evidence/clown.dos.txt": "1d3fe348f9200c174f680d4f26d48e0465be877472ebbefbdbe443f2f940dd58",
+  "evidence/clown_extent.json": "998ff85e94fd8044f4f25e538a780b313529abffe27ced788da56d03d3ddd508",
+  "evidence/clown_typed_accesses.json": "9cfe6d80fc90a145f64092b1be3dbc742e0c081a4b41bd7ec33adec4fa40ed1d",
+  "evidence/cymbal.dos.txt": "fed8df8e3c2c15aa23e775225b2295c348fa5a741a1758eeba0f2e0be8cf275b",
+  "evidence/cymbal_extent.json": "27cba25d234b93e244d517a682f0c3efa8a2097429bea8b527b12c467020b325",
+  "evidence/cymbal_typed_accesses.json": "f90ad4b9d5afc5c8211fb099b38f095c6541cd7a7f63aaa05ea408c9457642ca",
+  "evidence/dark.dos.txt": "e18e8da188db53fe1847514d50d1b3d4892f37175a695d59219e111be7906af8",
+  "evidence/dark_extent.json": "59956f8904d32aea587013c0925847b514620e8e4fa5a0d28c8aefe5ed5c6a45",
+  "evidence/dark_typed_accesses.json": "294ddc65a3cf3e8f7360112abe564e1c243a65d14c00758ac59d3ffddde12342",
+  "evidence/dispatch_contracts.json": "85c51ed37778d8cab20b2cf36d08ea8023deb619186d0df2a7579e7d4765fca7",
+  "evidence/displacement_candidates.json": "6eb876b14ed6cf3772f750478cf83c73f26ba409ebc8340a4a25cd48ca6d0f95",
+  "evidence/external_fields.json": "648284f1d8a5662c5164b1284554ac220800cd42db862ca46beca4a56d1adf37",
+  "evidence/fee.dos.txt": "7998d3c5e0f50d447dba907a4ee943366c3dc8ac2f81e7e4c6639cd08df06e40",
+  "evidence/fee_extent.json": "3fe0dac339e52c3fd0b5ce01107933f64173c66ee9854a7e2f5804529f0581fa",
+  "evidence/fee_typed_accesses.json": "1c6a04215e8eeff3e752e2a7107c08301385a7e2ff5c480bf2a8dfc2e3d704bc",
+  "evidence/field_source_candidates.json": "aba9445f5b0eced01e5bef76a0ba490e9a977b2b97704cd41b6802e4819f16ea",
+  "evidence/file_formats.json": "4d8400de144a4b3d7466bf561d15c24c88fd9bfced0a31dca60aa62916f385e2",
+  "evidence/final_input_audit.json": "a559fccb5bc35b89e636853665b7949c61bc51186576fe1923bbdc33e81de654",
+  "evidence/hybrid.dos.txt": "2092a9c184492d9cf1406b4d0b44284ceef43ab9ade5e76c31378e356d4dfff7",
+  "evidence/hybrid_extent.json": "77c62098f94c686d42097e67b2c3f0826a4b85050300247a45e411baff2edbf1",
+  "evidence/hybrid_typed_accesses.json": "bb688987f0448eb79ef9e1a32f70eedcaa88295c39816f86f98b8f4edb006e21",
+  "evidence/meredenis.dos.txt": "ec75b65763086d2d618965814ae21d0133c2a8d5ec06b656e65c7f7d9273ff74",
+  "evidence/meredenis_extent.json": "e159b0f7a24572fd2eeac4b1415da7065490492eec12890f611439d08299ae13",
+  "evidence/meredenis_typed_accesses.json": "48b43e659fbe1ea1388ab227696fa41a900f3bcec1655e7fd4706db52297f611",
+  "evidence/mite.dos.txt": "14dbbe21ad56e43a76fc8c0ba21915436f93216827358eafc8ade7e25aa92c03",
+  "evidence/mite_extent.json": "0356ffa7b2e450ce74ec42ec04b876a201387e145a4250970f4996ee85f98ebe",
+  "evidence/mite_typed_accesses.json": "efe972b5a45c9e06182fe28e63117a5759e00f193677cc8847facc99c0d2e66c",
+  "evidence/moskito.dos.txt": "b65ff077f3b104227b417898cced9b0777d4c6a4aa47e09807c2f839c8ee94f5",
+  "evidence/moskito_extent.json": "417562c9345af78674fc7d3cbc0661b42d3e81dd8babbaacbd612adc42abe54b",
+  "evidence/moskito_typed_accesses.json": "e71498a3ca1359371d13bed3a8e6725cefbdcd3b8e5cb4b1d8911660cba4068e",
+  "evidence/name_provenance_checks.json": "120667f0d2cab299e9a50c048e8adcd4e9f8686a37d74d32291800f3d4d08142",
+  "evidence/negative_results.json": "14cc6f03d1a1f585948f093f155a8a7bd4e471675a3a0cbee69c0acddcdcc2ad",
+  "evidence/new_layouts.json": "fe16fae2f3a902fbf2de277d53c55113b03c8e981966b787fcfa66dde5622fd5",
+  "evidence/oracle_table_domains.json": "21b4a2fb30e70d9ba5eb12ecac77ed70b932f184abb5ad03dd8c459f346bc232",
+  "evidence/other_readers_writers.dos.txt": "1bfc9b8e80c43985853b3df3ebe43725a228538ae7863028d1e2eb2e7ed14869",
+  "evidence/pmama.dos.txt": "ef50a6177deea98552d30c0d1801f910e611cf5951dde0cce62b64a1c75dec32",
+  "evidence/pmama_extent.json": "19a9e7f81c44098dea19b8e25fa681d962b682db37006c1f009e3ff676874d4f",
+  "evidence/pmama_typed_accesses.json": "b80ce192cba7cfaaa3d4da26cf9feafc3a824e3e37a30920838121cf2ad5eeac",
+  "evidence/poisson.dos.txt": "5c5057e01ece2d58f16fae6231bbbf375e67c537520cec8ac92e8a4dec1ba6df",
+  "evidence/poisson_extent.json": "7113b4e1eb213fe7be61c1aeb6121d13e3051d58496d8327e0e9ebee61646003",
+  "evidence/poisson_typed_accesses.json": "2e8a5a465c1d97fe5692b43a4149328ea02826b3e04eeaeeb1f7a9cb4316a13c",
+  "evidence/prior_contract_review.json": "f7fe33ab36e29b05cb8aa39afecc5c59e007c158e8411846c70537c63b05b159",
+  "evidence/prior_registry_review.json": "5d05a33f356ad850006ccd16254fd539a1b14eb39ddc6dcd9f0f4ebe1f99fdbf",
+  "evidence/reference_input_hashes.json": "bc10b21cf52470ea28ebfcd39f642819e4155bcc5949b57852a3ce0cc6938ba2",
+  "evidence/saxo.dos.txt": "99e4377953f4a5dafc2553947c3978bbd99ea107b2dfc3ec5150bc556eee5a5b",
+  "evidence/saxo_extent.json": "6f0b23f0e4da974f379834857313bae71b65680542c455597db02ee0b3ef4bb3",
+  "evidence/saxo_typed_accesses.json": "3ba7c06b1de0d01275f30df92b86d152f35f741dec9ff0fd200034d3b973ad66",
+  "evidence/secondary_functions.json": "d84d802fda8c199d115dcc95167ffa20f893519a1c1fd5417deb48efc28bfec2",
+  "evidence/shipped_map_domains.json": "0553c3b7e9fabb20b7c3dc640323b2b579b43b12fdf21ecb1aa5d5e5bf0c8898",
+  "evidence/shipped_object_type_domains.json": "4e808a9e4385bfe67e00c5ac3aba9a97a8a4b0f8c96620765b2a271effe9191b",
+  "evidence/skops.dos.txt": "68eaf94804505ee043137d4477793f4af858074f7d4e1a5858ab88f7c39df8ed",
+  "evidence/skops_extent.json": "b594f9412dea3ec05a51833b02c507249129c4bd346fdaca27eb0923b8861447",
+  "evidence/skops_typed_accesses.json": "45df7547a30eacea2e0541b8f4b68b20438991916d37a04030db0913a7c35818",
+  "evidence/stoneman.dos.txt": "da84c0f0d501d8c4cff07598970f45579c3732cb715ef1e5983fba3d1db9e1d4",
+  "evidence/stoneman_extent.json": "48912e7500e391d3fdc9547c7ac70e2e6d278d8d330a52f20991061ed31e0c30",
+  "evidence/stoneman_typed_accesses.json": "0e93f183184ca0fc738fd31b59983011afc805633d452eacb16d3d77c75e8b93",
+  "evidence/symbols.json": "43a14066a98437c8661f4b9029491d5c775ea6c96f60ff47a539e1800ea78b3c",
+  "evidence/trumpet.dos.txt": "6ec297d7ab82107cabd43cc6f75c91ce020443abb0bbfa7ff585ff33f3df4b25",
+  "evidence/trumpet_extent.json": "966a83dfca1aa9d1869b70aa508d601f3d6bd6e7bd26b18411bc88e154bb713d",
+  "evidence/trumpet_typed_accesses.json": "66c25f2797ac5920a2fda50e1619196f24ca855a1930b0b349f2816ea8712768",
+  "evidence/ufo.dos.txt": "c2cee8ee616a7cc22ca7598b8fd2c4f971779c3b3974a56d6d07131604e437dd",
+  "evidence/ufo_extent.json": "b6e15c4461695cb24e8b5273a8e88400344e64b3585ffd831558b45b6aabd0fc",
+  "evidence/ufo_typed_accesses.json": "12b5c3419fbda454ead841a6476dd096422681e8b412fe0fa78940d6f6dd2819",
+  "evidence/xref_names.json": "b90f1b9d9e32c64710967ae49868023e103fb32ba4ed206cdf41ffad5c4c9b23"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2",
+  "assets/GOG/PCMAP/RAY1.WLD": "e9c604505394bcf887db4a5c2b084a430a1a148f4ab86d499e820e11e6f84e5e",
+  "assets/GOG/PCMAP/RAY2.WLD": "031e7b3b8756efa2dfcd0b6b721af80a0423d4af5a8d85f5c1a0cea5e22563c3",
+  "assets/GOG/PCMAP/RAY3.WLD": "43e5b7cd5d031d5a6310c479436457fd55f46b3ea6a72e944c762d8be7eb0133",
+  "assets/GOG/PCMAP/RAY4.WLD": "868f57d1442c08e65827ad4158f47b188722a1f3681451036decc680050b3662",
+  "assets/GOG/PCMAP/RAY5.WLD": "d09b440f3cd60835865e805ad421fcfe7b8ca940d5a3e1bfa1baf42caaea8b1d",
+  "assets/GOG/PCMAP/RAY6.WLD": "298e15445ec6a1b4ddc712ebb6f21be40d681e3508ef89cf250e36ff1a6c3909",
+  "assets/GOG/PCMAP/ALLFIX.DAT": "d622245c0011fe8d716de419d1e6a7aa53f3b40c93a9a937857425bd38ac83bf",
+  "assets/GOG/PCMAP/BRAY.DAT": "6f96c18aeafde5293df095b5d80d2c51fbe009e183280853f83f44e6118c1684",
+  "assets/GOG/VIGNET.DAT": "d238bb802aeff602528bdaaac5ef38f24df98e5b24b602330d3e21ff88d99bc9",
+  "assets/GOG/RAY.LNG": "b5f812d00f3d1f47f81ddd795333292578f9aa2faa60aded4c46ba0a8d500035"
+ },
+ "non_object_type_entities": [],
+ "proposal_fingerprints": {
+  "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
+  "araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "fee_types.h": "ce85a8b655b9b2a53c96381fe9df8aa599aa554b21f7061ccb07b478f3c9da8c",
+  "hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "screen_types.h": "17c210dff11da882350ee2a77b7a9227874e12f69ebcc767dd0454d22314c6e9",
+  "skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/funcs-u.txt": "c1409e1d459ed6319e894da23c9063b3a7bf3e7c38bd4af63fa4baa15e796403",
+  "external/rayman-ps1-decomp/src/collision/collision.c": "7b90d0977d6771a7f3d7ef0db3086793f1ad5cc503c98d814acb1692e5dcb1bf",
+  "external/rayman-ps1-decomp/src/draw/fond_10B3C.c": "ea25b61567886517e5e790920b47afd434f1c4d1e7de996916f895592e2bad80",
+  "external/rayman-ps1-decomp/src/obj/batteur_fou.c": "2256f2f7099d0d7a720771a6d7481ad30f442044e3cb98be327ee28c542a2eab",
+  "external/rayman-ps1-decomp/src/obj/bb1.c": "aa49468bc2a425ed51c125024371a0cdf153cba50c91e3c17b779be8502131ec",
+  "external/rayman-ps1-decomp/src/obj/bb1_plat_command.c": "4dd155e6d912ac51963fadcfd3b26a22b941fa849399f6545c3b505764f33cb2",
+  "external/rayman-ps1-decomp/src/obj/big_clown.c": "822eadbe9f8c69442db899d769a6b867af22cca10cc052ac1c0239467613d33a",
+  "external/rayman-ps1-decomp/src/obj/blacktoon1.c": "70c279b1c8f960ba8acfc27a48df384d36c00cc42f7c2abd801fac46c0e71eda",
+  "external/rayman-ps1-decomp/src/obj/clown_tnt.c": "3ea4af3c8f8ab6f007be50c854b6a44a8b45f12e9ddba5fd055ba871078681f0",
+  "external/rayman-ps1-decomp/src/obj/clown_tnt_command.c": "001c6fc0d37dbac66af581a376458c7be6b6c0434b2d0b372b3297f4d2e3351d",
+  "external/rayman-ps1-decomp/src/obj/cymbal.c": "431f634fcbb6819b875903eec903ad17a629275c519b3a283fedb38a3628aa22",
+  "external/rayman-ps1-decomp/src/obj/dark2_pink_fly.c": "3bbd750b266d5963dcc36ee93eae763068f28c7e69b6b6597017eaeca81324f8",
+  "external/rayman-ps1-decomp/src/obj/dark_729F0.c": "6f6046b1685acb830586933089722fe0b260d9e1feaebc96488b908c0b247c4d",
+  "external/rayman-ps1-decomp/src/obj/dark_74FEC.c": "0f11461a2ba7f2ff384c84b79754bcdd851ae72bc317de7904d9777bb4249a74",
+  "external/rayman-ps1-decomp/src/obj/dark_phase2.c": "1da5bcdac39f48c949f80046c4db8688ed217e3a6a1e10a8bab50ca08a593045",
+  "external/rayman-ps1-decomp/src/obj/eclair_command.c": "611666f10caac199a46b9fee26caa0a2814312068ec8a57bfec2be2d53fedfa8",
+  "external/rayman-ps1-decomp/src/obj/fee_3D76C.c": "5bca35f5a4f7c3b88a98e6ece4f5792b36f42d429251ae3cec103914b19f6150",
+  "external/rayman-ps1-decomp/src/obj/fee_4DFD0.c": "12b8c1875224ab033d6d1069393affd58229b54ce3751f1d129783642c7196e6",
+  "external/rayman-ps1-decomp/src/obj/fire.c": "67b240c951458f949a076a22028b1be1c771f020f9cd8ec7df4ea6381725633d",
+  "external/rayman-ps1-decomp/src/obj/fish.c": "86304b6f7d29aeeecb35fded53feb40f6657a0ff1fc6c1d18732577cc3e77a8c",
+  "external/rayman-ps1-decomp/src/obj/hyb_bbf2.c": "f2248eb4a912ae6724a2ee6f67df9ced31913c2c419c84eecdd5a54a05d2f361",
+  "external/rayman-ps1-decomp/src/obj/hybride_mosams_command.c": "221f79facfe33ae80ec82093b5e816075a045ea96cb2ee0b5e549fa3aee50b51",
+  "external/rayman-ps1-decomp/src/obj/hybride_stosko.c": "57d16003faca2ecf565f3f456021b55f5330dfe3a4d6c74fa55cb2b5ce796921",
+  "external/rayman-ps1-decomp/src/obj/mama_pirate.c": "c1bedd749e7b91e4c434bf028f56d114df6068837055346a02b59333895e621e",
+  "external/rayman-ps1-decomp/src/obj/mite.c": "e6272359044df8bb50f6f905ecb4a03d5866baeecef0423d627116905b9bcc38",
+  "external/rayman-ps1-decomp/src/obj/mite_badguy.c": "a6d0585b187f0e1460cad65c236ec84ae6740a2f810ba29849c7e80da8d90ece",
+  "external/rayman-ps1-decomp/src/obj/moskito.c": "f057a1b81b78437dc42ebc0e3abcabb59d30cb2258d67b87fdedcc9638e40aa7",
+  "external/rayman-ps1-decomp/src/obj/mst_scroll.c": "c657df706570bc631d35615b1e93316d6600e15be57628dd85ced25161fb6f5d",
+  "external/rayman-ps1-decomp/src/obj/pi_boum.c": "3b164a8f86a4bd21164f9fe31ab1742b09158314cefe8dc5132506e7c2e201f1",
+  "external/rayman-ps1-decomp/src/obj/poi_command.c": "672f55b8396f7fb5863f4b0f2a0a795e887df5ff11deb4fa8ef5069200c5b564",
+  "external/rayman-ps1-decomp/src/obj/saxo.c": "3a6d8db8b711685643bbb43bccab807cd9e177171d29549e3a16e5160ab8e472",
+  "external/rayman-ps1-decomp/src/obj/scorpion.c": "bace2751c30c285de245ca2f216489fd67fb5e6c35c2c9448e1de43d90042b47",
+  "external/rayman-ps1-decomp/src/obj/space_mama.c": "c35f22828d8d4a3edc6afb3dc8a1275f7afe7dc6cc5b73180e865c16c50defc1",
+  "external/rayman-ps1-decomp/src/obj/spider_395B0.c": "f67fcc0229b636a8dfdf7a8bc951790724b57eee505e3660c8fcd38820c72d61",
+  "external/rayman-ps1-decomp/src/obj/spider_command.c": "8eaf54cd567e8ef0174b7e26da9959cfc699e8935b1f6d349775d48108a3e92e",
+  "external/rayman-ps1-decomp/src/obj/spider_plafond.c": "7d65b6492df77b4bae466264ba599bcc943690c103a081f6f21a95039289b3d8",
+  "external/rayman-ps1-decomp/src/obj/stonebomb.c": "4f797320516a6c5ebbcf285c6e42fd23e515c0b62e08defc2c6a04ed4c9b9fae",
+  "external/rayman-ps1-decomp/src/obj/stonebomb_command.c": "5bcbf4a4cd2545f61b871e7c06139e8524253f2c1ed5636cc952bba4ce144a38",
+  "external/rayman-ps1-decomp/src/obj/stonedog_command.c": "b2a3ae122c99b5b3a4982601cea78481d5a45aa91615084cc49b85622de5bcc8",
+  "external/rayman-ps1-decomp/src/obj/stoneman_command.c": "7762b9f08ab4300a4acdec18264044752833594c12cb02d3975c9e43d9765761",
+  "external/rayman-ps1-decomp/src/obj/stonewoman.c": "dae9a9bc9b209efb1ac4b6b533440497c09e61d0c4cea5b21ebac0b4606b9934",
+  "external/rayman-ps1-decomp/src/obj/trompette.c": "61752166727eb64f3f186de3ce74ee14c7bdf17b3dd3c53a9fda6418995f540b",
+  "external/rayman-ps1-decomp/src/obj/trompette_command.c": "9d6d042e53d2295b174d270520e87bf2ed61ec8f447db824e742c2797d8f016b",
+  "external/rayman-ps1-decomp/src/obj/ufo_idc.c": "0f33bebdadcb047007bdc1cdd19c67c056131033ca775f5071904a36412f4ae4",
+  "external/rayman-ps1-decomp/src/obj/vitrail.c": "9d812a659fbf94610538c3fc74688a23bf93b6cc8bfa682c1a371484323e7a0a",
+  "external/rayman-ps1-decomp/src/obj/wat_clown.c": "dcfe9504be2eec1734d5be7fd02949e0ec4cd5e78b2ed4a69258a874ba5191cf",
+  "external/rayman-ps1-decomp/src/obj_update.c": "ad058f5cc097227a40a6d42b030e4c6a7a2a9c96b915523ddc7865bad6eb0957",
+  "external/rayverse/src/araignee.c": "215025cc038d6511c452ad469fe9ee46afa7e69bbe94cdd080208d09c4d1bc69",
+  "external/rayverse/src/bat.c": "edda9f610e58390e8944bd44898a5da2097be643ea023c718d4fce05250749ba",
+  "external/rayverse/src/bbmont.c": "f60f3717bbd594201f6781574cf85c4b56565afddce4dd206c9bcca3c51cb398",
+  "external/rayverse/src/blacktoon.c": "1012e8a7adb35e100a2d86b65d67ead1a9da6f478f908a89b81a804b229cf46d",
+  "external/rayverse/src/breakout.c": "ff48c460c06407a03fec5f51835513815c5b367e5e756bc20744b4790b6664e6",
+  "external/rayverse/src/clown.c": "cda9b27206c5a7f3f784b652297ea9389c2560219b018c7db076067bedf4fbb1",
+  "external/rayverse/src/cymbal.c": "a00efa1df1fe4cc9f136c361dfccc53637e305b6e0001bff1e65d1d5deaf8e73",
+  "external/rayverse/src/dark.c": "eae5f9285f2e5597ad91141789b8406d55b778cbc2837dcec81a055e7d7c653e",
+  "external/rayverse/src/fee.c": "36a7b253431da20edc67adf404a2f2a77f6d9bc24c871ff6f16fd9d73ea21103",
+  "external/rayverse/src/hybrid.c": "dca0920d7353f430a0cc1585022b5fb85b5529f15bd54868665e454ddbee50a3",
+  "external/rayverse/src/meredenis.c": "da7608bbb778f0e8a06e55b6b24efbff32d85068e4635794a4bb2c6fe6a9d06e",
+  "external/rayverse/src/mite.c": "26dab9afb6b65e6ecf0a2f8e3c2d410f5b1fdb867d035005fb6b86031c5f59d4",
+  "external/rayverse/src/moskito.c": "aab3a4ae40239da5ab20fe7b488fa33f162b4390bad3c9940b3b49edf2390e4f",
+  "external/rayverse/src/pmama.c": "37d24af3ef9574c4763005433bbbf255e75946ee2a42243fbbb470129c62dcc0",
+  "external/rayverse/src/poisson.c": "d8d13579abcc61fa7da47f6d4d58b4732e93b98bb8cc8e9aa5804c1d469eb39a",
+  "external/rayverse/src/saxo.c": "57d1e2792cb8f5efd33cae910f5312dfa94a33b8e01ce5d2372453d360cb377c",
+  "external/rayverse/src/screen.c": "c98654eb4d0ac797cf7d8fc727b9ec6758f6b3fa095684d3e58b057d301a3209",
+  "external/rayverse/src/skops.c": "3f8eb2d986c074976fdf277e522d868054b5897f2bdd3ccb01b6481579b5d133",
+  "external/rayverse/src/stoneman.c": "2cb31ec879155231e363e0fe2528666354cd42e958a78c03d8fa3d653cf2c09a",
+  "external/rayverse/src/trumpet.c": "3f25db93d1848ce1c9e11a488b9054883dcd499568b23567076eade72ef07877",
+  "external/rayverse/src/ufo.c": "960e77743b097ee3768c9cfa5fa84bd6fda684c7a5689d3f14d790aa826c58e5"
+ },
+ "effect_index": {
+  "artifact": "build/workers/sem_boss/evidence/actor_effects.json",
+  "key": "bat",
+  "proof_boundary": "Lexical effect index; full checked algorithm defines switch fallthrough and cross-function effects."
+ }
+}

@@ -13,8 +13,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-/* Rayverse's bool/enum aliases are adapted to Watcom C; constants retain DOS values. */
-typedef s32 bool;
+/* Rayverse's special_bool_t/enum aliases are adapted to Watcom C; constants retain DOS values. */
+typedef s32 special_bool_t;
 #define true 1
 #define false 0
 #define LEN(x) (sizeof(x) / sizeof((x)[0]))
@@ -753,48 +753,49 @@ void DO_INTERACT_PLAT(obj_t* obj) {
 }
 
 //7B0E0
+/* Names and meanings: docs/semantics/special.json. */
 obj_t* oldest_planted(void) {
     /* 39A14 8015E214 -O2 -msoft-float */
-    s16 ng_ids[2];
-    s16 unk_1;
-    u8 cnt_2 = 0;
-    s16 cnt_1 = 0;
+    s16 seed_ids[2];
+    s16 oldest_id;
+    u8 seed_index = 0;
+    s16 object_index = 0;
     obj_t* cur_obj = &level.objects[0];
     s16 nb_objs = level.nb_objects;
 
-    while (cnt_1 < nb_objs) {
+    while (object_index < nb_objs) {
         if (cur_obj->type == TYPE_39_NEN_GRAINE) {
-            ng_ids[cnt_2++] = cur_obj->id;
+            seed_ids[seed_index++] = cur_obj->id;
             if (!cur_obj->is_active) {
                 cur_obj->iframes_timer = 10;
             } else {
                 cur_obj->iframes_timer++;
             }
 
-            if (cnt_2 >= LEN(ng_ids)) {
+            if (seed_index >= LEN(seed_ids)) {
                 break;
             }
         }
         cur_obj++;
-        cnt_1++;
+        object_index++;
     }
 
-    unk_1 = ng_ids[0];
-    cur_obj = &level.objects[unk_1];
-    cnt_1 = unk_1;
-    cnt_2 = 0;
-    while (cnt_2 < LEN(ng_ids)) {
-        if (level.objects[cnt_1].iframes_timer > level.objects[unk_1].iframes_timer) {
-            unk_1 = cnt_1;
-            cur_obj = &level.objects[unk_1];
+    oldest_id = seed_ids[0];
+    cur_obj = &level.objects[oldest_id];
+    object_index = oldest_id;
+    seed_index = 0;
+    while (seed_index < LEN(seed_ids)) {
+        if (level.objects[object_index].iframes_timer > level.objects[oldest_id].iframes_timer) {
+            oldest_id = object_index;
+            cur_obj = &level.objects[oldest_id];
         }
-        cnt_2++;
+        seed_index++;
         /* B19: DOS 1:6b17f..6b18b loads the next id BEFORE the bound test (inc al; movzx edx,al;
          * mov bx,[esp+edx*2]; cmp al,2; jb), so the last pass reads [esp+4] - the saved EBP, past the
          * 4-byte frame (sub esp,4 at 1:6b0e6; a 3-element array compiles to sub esp,8). The value is dead.
          * That read is undefined in C, so the load is guarded: same behaviour, function stays NEAR. */
-        if (cnt_2 < LEN(ng_ids))
-            cnt_1 = ng_ids[cnt_2];
+        if (seed_index < LEN(seed_ids))
+            object_index = seed_ids[seed_index];
     }
 
     cur_obj->iframes_timer = 1;
@@ -1067,7 +1068,8 @@ s16 NOVA_STATUS_BAR(void) {
 }
 
 //7B920
-void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
+/* Names and meanings: docs/semantics/special.json. */
+void DO_REDEYE_FIRE(s16 x, s16 y, s16 direction_index) {
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
     s16 nb_objs = level.nb_objects;
@@ -1075,7 +1077,7 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
     while (i < nb_objs) {
         if (cur_obj->type == TYPE_FLASH && !(cur_obj->is_active)) {
             cur_obj->flags.flip_x = 0;
-            switch (a3 % 36) {
+            switch (direction_index % 36) {
                 case 1:
                     cur_obj->iframes_timer = 252;
                     cur_obj->follow_id = -44;
@@ -1223,7 +1225,7 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
                     break;
 
             }
-            cur_obj->hit_points = a3 % 36;
+            cur_obj->hit_points = direction_index % 36;
             cur_obj->x = x;
             cur_obj->y = y;
             cur_obj->speed_x = 0;
@@ -1243,22 +1245,23 @@ void DO_REDEYE_FIRE(s16 x, s16 y, s16 a3) {
 }
 
 //7BC60
-void calc_esquive_poing(obj_t* mit_obj, s16* out_diff_x, s16* out_diff_y, s16* out_unk) {
+/* Names and meanings: docs/semantics/special.json. */
+void calc_esquive_poing(obj_t* mit_obj, s16* out_diff_x, s16* out_diff_y, s16* out_range_x) {
     /* 3C6E4 80160EE4 -O2 -msoft-float */
-    s16 unk_x; s16 unk_y;
+    s16 threat_x; s16 threat_y;
 
     if (!poing_obj->is_active) {
-        unk_x = ray_zdc_x + (ray_zdc_w >> 1);
-        unk_y = ray_zdc_h + (ray_zdc_y >> 1);
+        threat_x = ray_zdc_x + (ray_zdc_w >> 1);
+        threat_y = ray_zdc_h + (ray_zdc_y >> 1);
     } else {
-        unk_x = (s16)poing_obj->x + poing_obj->offset_bx;
+        threat_x = (s16)poing_obj->x + poing_obj->offset_bx;
         /* Repeated sum reproduces DOS scheduling at 1:6bcb0..6bcb7. */
-        unk_y = poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_by) >> 1);
+        threat_y = poing_obj->y + ((poing_obj->offset_by + poing_obj->offset_by) >> 1);
     }
 
-    *out_diff_x = unk_x - (s16)mit_obj->x - mit_obj->offset_bx;
-    *out_diff_y = Abs(mit_obj->y + ((mit_obj->offset_hy + mit_obj->offset_by) >> 1) - unk_y);
-    *out_unk = mit_obj->detect_zone * 4;
+    *out_diff_x = threat_x - (s16)mit_obj->x - mit_obj->offset_bx;
+    *out_diff_y = Abs(mit_obj->y + ((mit_obj->offset_hy + mit_obj->offset_by) >> 1) - threat_y);
+    *out_range_x = mit_obj->detect_zone * 4;
 }
 
 //7BD04
@@ -1434,27 +1437,28 @@ void DO_FUMEE_CORDE(s16 x, s16 y) {
 }
 
 //7C10C
+/* Names and meanings: docs/semantics/special.json. */
 s32 GetY(s16 x) {
     /* COMPILER_STEERED: Bounded ABS argument and DecEau operand order reproduce DOS allocation. */
     /* 3ED10 80163510 -O2 -msoft-float */
-    s16 unk_1;
-    s32 unk_2;
-    s16 unk_obj_id;
-    s16 unk_3;
-    obj_t* unk_obj;
+    s16 section_index;
+    s32 section_x;
+    s16 water_id;
+    s16 wave_weight;
+    obj_t* water_obj;
 
     s32 result;
     if (eau_obj_id == -1) {
         result = 0;
     } else {
 
-    unk_1 = (x + 50) / 101;
-    unk_obj_id = eau_obj_id + unk_1 % 5;
-    unk_2 = unk_1 * 101;
-    unk_3 = 51 - abs32_inline(x - unk_2);
-    unk_obj = &level.objects[unk_obj_id];
+    section_index = (x + 50) / 101;
+    water_id = eau_obj_id + section_index % 5;
+    section_x = section_index * 101;
+    wave_weight = 51 - abs32_inline(x - section_x);
+    water_obj = &level.objects[water_id];
 
-    result = unk_obj->y - EauDy[(s16)((DecEau[unk_obj->anim_index] + unk_obj->anim_frame) % 14)] * unk_3 / 50;
+    result = water_obj->y - EauDy[(s16)((DecEau[water_obj->anim_index] + water_obj->anim_frame) % 14)] * wave_weight / 50;
     }
     return result;
 }

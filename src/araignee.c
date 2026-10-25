@@ -364,28 +364,29 @@ void DO_SPIDER_TIR(obj_t *obj);
 void DoSpiderPoingCollision(obj_t* other_obj, s16 sprite);
 void DoSpiderRaymanZDD(obj_t* obj);
 
-void get_spi_zdc(obj_t *param_1, s16 *param_2, s16 *param_3, s16 *param_4, s16 *param_5)
+/* Local names: docs/semantics/araignee.json (DOS dataflow; compiler output unchanged). */
+void get_spi_zdc(obj_t *obj, s16 *out_x, s16 *out_y, s16 *out_width, s16 *out_height)
 {
-    if (param_1->eta[param_1->main_etat][param_1->sub_etat].flags & 0x40)
+    if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x40)
     {
-        *param_2 = param_1->x + 69;
-        *param_3 = param_1->y + 38;
-        *param_4 = 21;
-        *param_5 = 30;
+        *out_x = obj->x + 69;
+        *out_y = obj->y + 38;
+        *out_width = 21;
+        *out_height = 30;
     }
-    else if (param_1->eta[param_1->main_etat][param_1->sub_etat].flags & 0x80)
+    else if (obj->eta[obj->main_etat][obj->sub_etat].flags & 0x80)
     {
-        *param_2 = param_1->x + 69;
-        *param_3 = param_1->y + 86;
-        *param_4 = 34;
-        *param_5 = 10;
+        *out_x = obj->x + 69;
+        *out_y = obj->y + 86;
+        *out_width = 34;
+        *out_height = 10;
     }
     else
     {
-        *param_2 = param_1->x + 71;
-        *param_3 = param_1->y + 71;
-        *param_4 = 29;
-        *param_5 = 19;
+        *out_x = obj->x + 71;
+        *out_y = obj->y + 71;
+        *out_width = 29;
+        *out_height = 19;
     }
 }
 

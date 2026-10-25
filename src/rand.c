@@ -8,6 +8,7 @@
 #include <time.h>
 
 extern short RandArray[256];
+extern int RandomIndex;
 int RandomIndex;          /* defined here: alone in its own _BSS object at 2:5548c (BSS link order) */
 
 short myRand(short max)

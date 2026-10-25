@@ -52,7 +52,8 @@ void allocatePoingBoum(void);
 #define true 1
 #define TYPE_11_BOUM 11
 
-void fist_U_turn(u8 a1)
+/* Names and meanings: docs/semantics/poing.json. */
+void fist_U_turn(u8 force_return_frame)
 {
     switch (poing_obj->sub_etat) {
     case 1:
@@ -75,7 +76,7 @@ void fist_U_turn(u8 a1)
         break;
     }
 
-    if (a1)
+    if (force_return_frame)
         poing_obj->anim_frame = 7;
 }
 
@@ -91,9 +92,10 @@ void CALC_FIST_POS(void)
     poing_obj->screen_x = poing_obj->x - xmap + 8;
 }
 
+/* Names and meanings: docs/semantics/poing.json. */
 void RAY_THROW_FIST(void)
 {
-    s16 unk_2;
+    s16 charge_q8;
 
     if (ray.main_etat == 2 && (ray.sub_etat == 25 || ray.sub_etat == 26))
         set_sub_etat(&ray, 29);
@@ -162,10 +164,10 @@ void RAY_THROW_FIST(void)
         poing_obj->x -= 11;
     }
     poing.field_A = (poing.charge * 130 / 64) + 40 - poing.speed_x * 3;
-    unk_2 = ashl16(poing.charge, 8);
-    poing.field_4 = unk_2;
-    poing.charge = unk_2;
-    poing.field_A = unk_2 * poing.speed_x / poing.field_A;
+    charge_q8 = ashl16(poing.charge, 8);
+    poing.field_4 = charge_q8;
+    poing.charge = charge_q8;
+    poing.field_A = charge_q8 * poing.speed_x / poing.field_A;
     poing_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - ((poing_obj->offset_by + poing_obj->offset_hy) >> 1);
     poing.y_16 = ashl16(poing_obj->y, 4);
     CALC_FIST_POS();
@@ -201,24 +203,25 @@ void RAY_GROW_FIST(void)
         poing.charge = 63;
 }
 
-void fin_poing_follow(u8 a1)
+/* Names and meanings: docs/semantics/poing.json. */
+void fin_poing_follow(u8 place_at_ray)
 {
     if (poing_obj->follow_id != -1) {
-        obj_t *unk_obj = level.objects + poing_obj->follow_id;
-        unk_obj->speed_x = 0;
-        unk_obj->speed_y = 0;
+        obj_t *carried_obj = level.objects + poing_obj->follow_id;
+        carried_obj->speed_x = 0;
+        carried_obj->speed_y = 0;
         poing_obj->follow_id = -1;
-        if (a1 || !(poing_obj->flags.alive)) {
+        if (place_at_ray || !(poing_obj->flags.alive)) {
             s32 ray_y;
             s32 unk_y;
 
-            unk_obj->x = ray.x + ray.offset_bx - unk_obj->offset_bx;
+            carried_obj->x = ray.x + ray.offset_bx - carried_obj->offset_bx;
             /* DOS 1:56c66/1:56c6c: these bound names have reversed vertical roles. */
-            unk_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - 5 -
-                ((unk_obj->offset_by + unk_obj->offset_hy) >> 1);
-        } else if (!a1) {
-            unk_obj->x = unk_obj->init_x;
-            unk_obj->y = unk_obj->init_y;
+            carried_obj->y = ray_zdc_h + (ray_zdc_y >> 1) - 5 -
+                ((carried_obj->offset_by + carried_obj->offset_hy) >> 1);
+        } else if (!place_at_ray) {
+            carried_obj->x = carried_obj->init_x;
+            carried_obj->y = carried_obj->init_y;
         }
     }
 }
@@ -264,13 +267,14 @@ void switch_off_fist(void)
     fin_poing_follow(0);
 }
 
+/* Names and meanings: docs/semantics/poing.json. */
 void DO_POING(obj_t *obj)
 {
     s32 ray_diff_x;
     s32 ray_diff_y;
-    s16 unk_x_1;
-    s32 unk_y_1;
-    s32 unk_1;
+    s16 return_gap_x;
+    s32 return_slope_q4;
+    s32 next_y_q4;
 
     if (poing.is_active) {
         if (obj->speed_x != 0) {
@@ -318,16 +322,16 @@ void DO_POING(obj_t *obj)
                     (!obj->flags.flip_x && ray_diff_x <= obj->x))
                     switch_off_fist();
                 else {
-                    unk_y_1 = ray_diff_y - poing.y_16;
+                    return_slope_q4 = ray_diff_y - poing.y_16;
                     /* DOS 1:56efa..56f03 subtracts the low coordinate words. */
-                    unk_x_1 = (s16)ray_diff_x - (s16)obj->x;
-                    if (unk_x_1 != 0)
-                        unk_y_1 = unk_y_1 / unk_x_1;
-                    obj->speed_y = unk_y_1 * obj->speed_x;
+                    return_gap_x = (s16)ray_diff_x - (s16)obj->x;
+                    if (return_gap_x != 0)
+                        return_slope_q4 = return_slope_q4 / return_gap_x;
+                    obj->speed_y = return_slope_q4 * obj->speed_x;
 
                     {
-                        unk_1 = obj->speed_y + poing.y_16;
-                        if (inrange(unk_1, min32(poing.y_16, ray_diff_y), max32(poing.y_16, ray_diff_y)))
+                        next_y_q4 = obj->speed_y + poing.y_16;
+                        if (inrange(next_y_q4, min32(poing.y_16, ray_diff_y), max32(poing.y_16, ray_diff_y)))
                             obj->speed_y >>= 4;
                         else
                             obj->speed_y = (ray_diff_y - poing.y_16) >> 4;

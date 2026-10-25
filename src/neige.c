@@ -712,19 +712,20 @@ void DoFirstFlocons(void) {
     }
 }
 
+/* Names and meanings: docs/semantics/neige.json. */
 void add_one_floc(void)
 {
     s16 i;
-    s16 unk_1;
+    s16 random_slot;
     s16 done;
 
-    unk_1 = myRand(511);
+    random_slot = myRand(511);
     i = LEN(floc_ind) - 1;
     done = 0;
 
     while (!done)
     {
-        if (floc_ind[i] < unk_1)
+        if (floc_ind[i] < random_slot)
         {
             done = 1;
             nb_floc[i]++;
@@ -749,19 +750,20 @@ void add_256_flocs(void)
     nb_floc[7] = 53;
 }
 
+/* Names and meanings: docs/semantics/neige.json. */
 void sub_one_floc(void)
 {
-    s16 unk_1;
+    s16 random_slot;
     s16 i;
     s16 done;
 
-    unk_1 = myRand(511);
+    random_slot = myRand(511);
     i = LEN(nb_floc) - 1;
     done = 0;
 
     do
     {
-        if (floc_ind[i] <= unk_1 && nb_floc[i] > 0)
+        if (floc_ind[i] <= random_slot && nb_floc[i] > 0)
         {
             nb_floc[i]--;
             done = 1;
@@ -787,15 +789,16 @@ void sub_one_floc(void)
 
 /* Names/meaning: 1:4b9a0; docs/semantics/types.json.
    Weather positions are integer coordinates before projection; field spellings are editorial. */
+/* Names and meanings: docs/semantics/neige.json. */
 void init_flocons(void) {
     s16 flc_i;
     s16 i;
-    s16 unk_2;
+    s16 group_scale;
     s16 j;
-    s16 unk_3;
-    s16 unk_4;
-    s16 unk_5;
-    s16 unk_6;
+    s16 candidate_x;
+    s16 candidate_y;
+    s16 projected_x;
+    s16 projected_y;
 
     /* 3B488 8015FC88 -O2 -msoft-float */
 
@@ -811,35 +814,35 @@ void init_flocons(void) {
     tot_nb_flocs[7] = 106;
     flc_i = 0;
     i = 0;
-    unk_2 = -64;
+    group_scale = -64;
     while (i < 8)
     {
         nb_floc[i] = 0;
         floc_ind[i] = flc_i;
         {
         /* DOS 4ba3d..4ba43 keeps a word scale snapshot for the retry loop. */
-        s16 scale = unk_2;
+        s16 scale = group_scale;
 
-        invpy0[i] = inverse_proj_y(unk_2, 0);
-        invpy200[i] = inverse_proj_y(unk_2, SCREEN_HEIGHT);
-        invpx0[i] = inverse_proj_x(unk_2, 0);
-        invpx320[i] = inverse_proj_x(unk_2, SCREEN_WIDTH);
+        invpy0[i] = inverse_proj_y(group_scale, 0);
+        invpy200[i] = inverse_proj_y(group_scale, SCREEN_HEIGHT);
+        invpx0[i] = inverse_proj_x(group_scale, 0);
+        invpx320[i] = inverse_proj_x(group_scale, SCREEN_WIDTH);
         for (j = 0; j < tot_nb_flocs[i]; j++)
         {
             do {
-                    unk_3 = myRand(700);
-                    unk_4 = myRand(400) - 150;
-                    unk_5 = get_proj_x(scale, unk_3);
-                    unk_6 = get_proj_y(scale, unk_4);
+                    candidate_x = myRand(700);
+                    candidate_y = myRand(400) - 150;
+                    projected_x = get_proj_x(scale, candidate_x);
+                    projected_y = get_proj_y(scale, candidate_y);
                 
-            } while (unk_5 >= 320 || unk_5 <= 0 || unk_6 >= 200 || unk_6 <= 0);
-            flocon_tab[flc_i].unprojected_x = unk_3;
-            flocon_tab[flc_i].unprojected_y = unk_4;
+            } while (projected_x >= 320 || projected_x <= 0 || projected_y >= 200 || projected_y <= 0);
+            flocon_tab[flc_i].unprojected_x = candidate_x;
+            flocon_tab[flc_i].unprojected_y = candidate_y;
             flocon_tab[flc_i].field_4 = scale;
             flc_i++;
         }
         }
-        unk_2 += 32;
+        group_scale += 32;
         i++;
     }
     VENT_X = 0;
@@ -848,22 +851,23 @@ void init_flocons(void) {
 
 /* Names/meaning: 1:4bb78; docs/semantics/types.json.
    Weather positions are integer coordinates before projection; field spellings are editorial. */
+/* Names and meanings: docs/semantics/neige.json. */
 void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
-    s16 unk_x_1;
-    s16 unk_y_1;
-    s32 unk_x_2;
-    s32 unk_y_2;
+    s16 wind_step_x;
+    s16 wind_step_y;
+    s32 wind_remainder_x;
+    s32 wind_remainder_y;
     s16 i;
-    s16 unk_1;
+    s16 group_scale;
     s16 flc_i_1;
-    s16 unk_x_3;
-    s16 unk_y_3;
+    s16 step_x;
+    s16 step_y;
     s16 x_0;
     s16 x_320;
     s16 y_0;
     s16 y_200;
     flocon_t *cur_floc;
-    s16 unk_2;
+    s16 group_end;
     s16 flc_i_2;
     s32 prev_vy;
     s16 prev_vx;
@@ -876,47 +880,47 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
     prev_vx = VENT_X;
 
     VENT_Y += 4;
-    unk_x_1 = VENT_X / 4;
-    unk_y_1 = VENT_Y / 4;
-    unk_x_2 = VENT_X % 4;
-    unk_y_2 = VENT_Y % 4;
-    if (Abs(unk_x_2) == 1 && horloge[4] == 0)
-        unk_x_1 += sgn(VENT_X);
+    wind_step_x = VENT_X / 4;
+    wind_step_y = VENT_Y / 4;
+    wind_remainder_x = VENT_X % 4;
+    wind_remainder_y = VENT_Y % 4;
+    if (Abs(wind_remainder_x) == 1 && horloge[4] == 0)
+        wind_step_x += sgn(VENT_X);
 
-    if (Abs(unk_x_2) == 2 && horloge[2] == 0)
-        unk_x_1 += sgn(VENT_X);
+    if (Abs(wind_remainder_x) == 2 && horloge[2] == 0)
+        wind_step_x += sgn(VENT_X);
 
-    if (Abs(unk_x_2) == 3 && horloge[4] < 3)
-        unk_x_1 += sgn(VENT_X);
+    if (Abs(wind_remainder_x) == 3 && horloge[4] < 3)
+        wind_step_x += sgn(VENT_X);
 
-    if (Abs(unk_y_2) == 1 && horloge[4] == 0)
-        unk_y_1 += sgn(VENT_Y);
+    if (Abs(wind_remainder_y) == 1 && horloge[4] == 0)
+        wind_step_y += sgn(VENT_Y);
 
-    if (Abs(unk_y_2) == 2 && horloge[2] == 0)
-        unk_y_1 += sgn(VENT_Y);
+    if (Abs(wind_remainder_y) == 2 && horloge[2] == 0)
+        wind_step_y += sgn(VENT_Y);
 
-    if (Abs(unk_y_2) == 3 && horloge[4] < 3)
-        unk_y_1 += sgn(VENT_Y);
+    if (Abs(wind_remainder_y) == 3 && horloge[4] < 3)
+        wind_step_y += sgn(VENT_Y);
 
     set_proj_center(SCREEN_WIDTH / 2, 170);
-    for (unk_1 = -64, i = 0; unk_1 < 32 * 6; i++, unk_1 += 32)
+    for (group_scale = -64, i = 0; group_scale < 32 * 6; i++, group_scale += 32)
     {
         flc_i_1 = floc_ind[i];
-        unk_y_3 = y_old - y;
-        unk_y_3 += unk_y_1;
-        unk_x_3 = x_old - x + unk_x_1;
+        step_y = y_old - y;
+        step_y += wind_step_y;
+        step_x = x_old - x + wind_step_x;
         y_0 = invpy0[i];
         y_200 = invpy200[i];
         x_0 = invpx0[i];
         x_320 = invpx320[i];
 
         cur_floc = &flocon_tab[flc_i_1];
-        unk_2 = flc_i_1 + nb_floc[i];
+        group_end = flc_i_1 + nb_floc[i];
         flc_i_2 = flc_i_1;
-        while (flc_i_2 < unk_2)
+        while (flc_i_2 < group_end)
         {
-            cur_floc->unprojected_x += unk_x_3;
-            cur_floc->unprojected_y += unk_y_3;
+            cur_floc->unprojected_x += step_x;
+            cur_floc->unprojected_y += step_y;
 
             if (cur_floc->unprojected_x > x_320)
                 cur_floc->unprojected_x = x_0;
@@ -939,21 +943,23 @@ void do_flocons(s16 x, s16 y, s16 x_old, s16 y_old) {
         weather_wind = VENT_X / 8;
 }
 
-void set_snow_sequence(s16 param_1, s16 param_2)
+/* Names and meanings: docs/semantics/neige.json. */
+void set_snow_sequence(s16 sequence_opcode, s16 duration_ticks)
 {
-    SNSEQ_no = param_1;
+    SNSEQ_no = sequence_opcode;
     SNSEQ_ptr = 0;
-    SNSEQ_len[(s16) param_1] = param_2;
+    SNSEQ_len[(s16) sequence_opcode] = duration_ticks;
 }
 
-void set_SNSEQ_list(s16 param_1)
+/* Names and meanings: docs/semantics/neige.json. */
+void set_SNSEQ_list(s16 preset_index)
 {
     s16 *cur_sn;
 
     cur_sn = SNSEQ_list;
     MapAvecPluieOuNeige = 1; /* TODO: can't tell if this should be in dec or hex (flags?) */
 
-    if (param_1 == 0)
+    if (preset_index == 0)
     {
         *cur_sn++ = 4;
         *cur_sn++ = 2;
@@ -961,7 +967,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 1)
+    else if (preset_index == 1)
     {
         *cur_sn++ = 4;
         *cur_sn++ = 3;
@@ -969,7 +975,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 2)
+    else if (preset_index == 2)
     {
         *cur_sn++ = 4;
         *cur_sn++ = 3;
@@ -977,7 +983,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 3)
+    else if (preset_index == 3)
     {
         if (VENT_Y != 8)
             *cur_sn++ = 4;
@@ -997,7 +1003,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 4)
+    else if (preset_index == 4)
     {
         if (VENT_Y != 0)
             *cur_sn++ = 4;
@@ -1017,7 +1023,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 5)
+    else if (preset_index == 5)
     {
         if (VENT_X != -8)
             *cur_sn++ = 4;
@@ -1037,7 +1043,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 6)
+    else if (preset_index == 6)
     {
         if (VENT_X != 8)
             *cur_sn++ = 4;
@@ -1057,7 +1063,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 7)
+    else if (preset_index == 7)
     {
         if (VENT_X != -16)
             *cur_sn++ = 4;
@@ -1077,7 +1083,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 8)
+    else if (preset_index == 8)
     {
         if (VENT_X != 16)
             *cur_sn++ = 4;
@@ -1097,7 +1103,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 9)
+    else if (preset_index == 9)
     {
         if (VENT_X != 0)
             *cur_sn++ = 4;
@@ -1117,7 +1123,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 0;
         *cur_sn++ = 0x7FFF;
     }
-    else if (param_1 == 10)
+    else if (preset_index == 10)
     {
         if (VENT_Y != -16)
             *cur_sn++ = 6;
@@ -1139,7 +1145,7 @@ void set_SNSEQ_list(s16 param_1)
         *cur_sn++ = 9;
         *cur_sn++ = 0x0020;
     }
-    else if (param_1 == 11)
+    else if (preset_index == 11)
     {
         *cur_sn++ = 4;
         *cur_sn++ = 10;

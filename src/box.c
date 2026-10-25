@@ -89,26 +89,27 @@ void InitPlasma(u8 need_set_palette)
         BOX_SET_PALETTE(plasma_palette_color_index, plasma_palette_color_index + 15);
 }
 
+/* Local meanings: docs/semantics/box.json, function:Plasma. */
 void Plasma(s16 x, s16 y, s16 width, s16 height,
-            s16 a5, s16 a6, s16 a7, s16 a8, s16 a9, s16 a10, s16 a11, s16 a12, s16 a13)
+            s16 phase_x0, s16 phase_y0, s16 phase_x1, s16 phase_y1, s16 phase_x2, s16 phase_y2, s16 phase_x3, s16 phase_y3, s16 phase_bias)
 {
     u8 yy[4];
     u8 xx[4];
     u8 *pos = draw_buffer + x + SCREEN_WIDTH * y;
     u16 skip = SCREEN_WIDTH - width;
     u16 j;
-    yy[0] = a6; yy[1] = a8; yy[2] = a10; yy[3] = a12;
+    yy[0] = phase_y0; yy[1] = phase_y1; yy[2] = phase_y2; yy[3] = phase_y3;
     for (j = 0; j < height; ++j) {
         u16 i;
         *(u32 *)yy += 0x01010101;
         *(u32 *)yy &= 0x7f7f7f7f;
-        xx[0] = a5; xx[1] = a7; xx[2] = a9; xx[3] = a11;
+        xx[0] = phase_x0; xx[1] = phase_x1; xx[2] = phase_x2; xx[3] = phase_x3;
         for (i = 0; i < width; ++i) {
             u8 value;
             s32 color;
             *(u32 *)xx += 0x01010101;
             *(u32 *)xx &= 0x7f7f7f7f;
-            value = byte_DA43C[128 * yy[0] + xx[0]] + a13;
+            value = byte_DA43C[128 * yy[0] + xx[0]] + phase_bias;
             value += byte_DA43C[128 * yy[1] + xx[1]];
             value += byte_DA43C[128 * yy[2] + xx[2]];
             value += byte_DA43C[128 * yy[3] + xx[3]];
@@ -119,9 +120,10 @@ void Plasma(s16 x, s16 y, s16 width, s16 height,
     }
 }
 
-void PlasmaBox(s16 x, s16 y, s16 width, s16 height, u8 a5)
+/* Local meanings: docs/semantics/box.json, function:PlasmaBox. */
+void PlasmaBox(s16 x, s16 y, s16 width, s16 height, u8 advance_phases)
 {
-    if (a5 != 0) {
+    if (advance_phases != 0) {
         word_95FA0 += 1;
         word_95FA2 -= 2;
         word_95FA4 += 1;
@@ -342,10 +344,11 @@ void CadreTrans(s16 x, s16 y, s16 w, s16 h)
     DrawBorderBoxNormal(draw_buffer, x, y, h, old_w, 0x2026);
 }
 
-void DrawBlackBorderBox(s16 x, s16 y, s16 width, s16 height, u8 a5)
+/* Local meanings: docs/semantics/box.json, function:DrawBlackBorderBox. */
+void DrawBlackBorderBox(s16 x, s16 y, s16 width, s16 height, u8 border_color_order)
 {
     s16 colors;
-    if (a5)
+    if (border_color_order)
         colors = 0x2026;
     else
         colors = 0x2620;

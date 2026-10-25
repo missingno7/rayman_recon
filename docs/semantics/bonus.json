@@ -1,0 +1,1307 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "bonus.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:CarteSonAutorisee",
+   "global:ModeVideoActuel",
+   "global:VGA_FREQ",
+   "global:allowed_time",
+   "global:bonus_map",
+   "global:bonus_perfect",
+   "global:bonus_time_display_text",
+   "global:departlevel",
+   "global:dword_D0028",
+   "global:horloge",
+   "global:id_Cling_1up",
+   "global:language_txt",
+   "global:left_time",
+   "global:loop_time",
+   "global:main_mem_tmp",
+   "global:map_time",
+   "global:nb_fade",
+   "global:nb_wiz",
+   "global:nb_wiz_collected",
+   "global:nb_wiz_save",
+   "global:num_level",
+   "global:num_world",
+   "global:ray",
+   "global:rvb_plan3",
+   "global:status_bar"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:get_allowed_time",
+   "kind": "function",
+   "current_name": "get_allowed_time",
+   "proposed_name": null,
+   "c_type": "s16 get_allowed_time(void)",
+   "oracle_address": "1:13a00",
+   "meaning": "Read the signed allowed-time table at (world-1)*32+level-1.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Read the signed allowed-time table at (world-1)*32+level-1.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "get_allowed_time"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13a00",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "get_allowed_time",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "get_allowed_time",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Read the signed allowed-time table at (world-1)*32+level-1.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "71ddd07570bb3fc510b2a4f7effd4c2ea098e54363544b935122c366b9a3ee09",
+   "readers_writers": {
+    "globals": [
+     "allowed_time",
+     "num_level",
+     "num_world"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:get_allowed_time:level_index:1",
+   "kind": "local",
+   "function": "get_allowed_time",
+   "role": "local",
+   "current_name": "level_index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in get_allowed_time computed/consumed by level_index = num_level",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "level_index = num_level",
+     "--level_index",
+     "return allowed_time[world_index + level_index];"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13a00",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "get_allowed_time",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:get_allowed_time:world_index:1",
+   "kind": "local",
+   "function": "get_allowed_time",
+   "role": "local",
+   "current_name": "world_index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in get_allowed_time computed/consumed by world_index = num_world",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "world_index = num_world",
+     "world_index = (world_index << 5) - 32",
+     "return allowed_time[world_index + level_index];"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13a00",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "get_allowed_time",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:calc_left_time",
+   "kind": "function",
+   "current_name": "calc_left_time",
+   "proposed_name": null,
+   "c_type": "void calc_left_time(void)",
+   "oracle_address": "1:13a28",
+   "meaning": "Initialize bonus time on map_time 1, preserve -2 untimed sentinel, wait 120 ticks before countdown at 60 ticks/second, and return on exact timeout with uncollected Tings.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Initialize bonus time on map_time 1, preserve -2 untimed sentinel, wait 120 ticks before countdown at 60 ticks/second, and return on exact timeout with uncollected Tings.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "calc_left_time"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13a28",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "calc_left_time",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "calc_left_time",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Initialize bonus time on map_time 1, preserve -2 untimed sentinel, wait 120 ticks before countdown at 60 ticks/second, and return on exact timeout with uncollected Tings.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "c93f8dffa498851fcadd42634bf230461f9c5211276f406fab10d932f0c380c1",
+   "readers_writers": {
+    "globals": [
+     "allowed_time",
+     "bonus_map",
+     "departlevel",
+     "left_time",
+     "map_time",
+     "nb_wiz",
+     "nb_wiz_save",
+     "num_level",
+     "num_world",
+     "ray",
+     "status_bar"
+    ],
+    "callees": [
+     "DO_FADE_OUT",
+     "fix_numlevel"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:calc_left_time:world_index:1",
+   "kind": "local",
+   "function": "calc_left_time",
+   "role": "local",
+   "current_name": "world_index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in calc_left_time computed/consumed by world_index = num_world",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "world_index = num_world",
+     "world_index = (world_index << 5) - 32",
+     "index = level_index + world_index"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13a28",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "calc_left_time",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:calc_left_time:level_index:1",
+   "kind": "local",
+   "function": "calc_left_time",
+   "role": "local",
+   "current_name": "level_index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in calc_left_time computed/consumed by level_index = num_level",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "level_index = num_level",
+     "--level_index",
+     "index = level_index + world_index"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13a28",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "calc_left_time",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:calc_left_time:index:1",
+   "kind": "local",
+   "function": "calc_left_time",
+   "role": "local",
+   "current_name": "index",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in calc_left_time computed/consumed by index = level_index + world_index",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "index = level_index + world_index",
+     "left_time = allowed_time[index]",
+     "((allowed_time[index] != (-2)) && (left_time != 0)) && (map_time > 120)",
+     "left_time = (60 * allowed_time[index]) - (map_time - 120)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13a28",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "calc_left_time",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:get_bonus_map_complete",
+   "kind": "function",
+   "current_name": "get_bonus_map_complete",
+   "proposed_name": null,
+   "c_type": "u8 get_bonus_map_complete(s32 world, s32 lvl)",
+   "oracle_address": "1:13af8",
+   "meaning": "Read the perfect-bonus bit at the 32-level-per-world index.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Read the perfect-bonus bit at the 32-level-per-world index.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "get_bonus_map_complete"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13af8",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "get_bonus_map_complete",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "get_bonus_map_complete",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Read the perfect-bonus bit at the 32-level-per-world index.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "8cc49cdd9b9c1a4bfdddcd9a9bbd64eaecc364f0926dd046ffe733697837843d",
+   "readers_writers": {
+    "globals": [
+     "bonus_perfect"
+    ],
+    "callees": [
+     "getbit"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:get_bonus_map_complete:world:1",
+   "kind": "local",
+   "function": "get_bonus_map_complete",
+   "role": "parameter",
+   "current_name": "world",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by get_bonus_map_complete: return getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)));",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)));",
+     "getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13af8",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "get_bonus_map_complete",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:get_bonus_map_complete:lvl:1",
+   "kind": "local",
+   "function": "get_bonus_map_complete",
+   "role": "parameter",
+   "current_name": "lvl",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by get_bonus_map_complete: return getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)));",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)));",
+     "getbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13af8",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "get_bonus_map_complete",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:set_bonus_map_complete",
+   "kind": "function",
+   "current_name": "set_bonus_map_complete",
+   "proposed_name": null,
+   "c_type": "void set_bonus_map_complete(s32 world, s32 lvl)",
+   "oracle_address": "1:13b10",
+   "meaning": "Set the perfect-bonus bit at the 32-level-per-world index.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set the perfect-bonus bit at the 32-level-per-world index.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "set_bonus_map_complete"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13b10",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_bonus_map_complete",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_bonus_map_complete",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set the perfect-bonus bit at the 32-level-per-world index.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "6db758897393306aa648d696a6ff3f14c0b06d9e7c65867652ae0a1b920af56f",
+   "readers_writers": {
+    "globals": [
+     "bonus_perfect"
+    ],
+    "callees": [
+     "setbit"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:set_bonus_map_complete:world:1",
+   "kind": "local",
+   "function": "set_bonus_map_complete",
+   "role": "parameter",
+   "current_name": "world",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by set_bonus_map_complete: setbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "setbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13b10",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "set_bonus_map_complete",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:set_bonus_map_complete:lvl:1",
+   "kind": "local",
+   "function": "set_bonus_map_complete",
+   "role": "parameter",
+   "current_name": "lvl",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by set_bonus_map_complete: setbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "setbit(bonus_perfect, (u16) ((lvl - 1) + ((world - 1) << 5)))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13b10",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "set_bonus_map_complete",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:DO_WIZ_AFTER_BONUS_MAP",
+   "kind": "function",
+   "current_name": "DO_WIZ_AFTER_BONUS_MAP",
+   "proposed_name": null,
+   "c_type": "void DO_WIZ_AFTER_BONUS_MAP(void)",
+   "oracle_address": "1:13b28",
+   "meaning": "Outside bonus, move one collected Ting into the HUD on clock 4 and convert each hundred into a pending or immediate life.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Outside bonus, move one collected Ting into the HUD on clock 4 and convert each hundred into a pending or immediate life.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "DO_WIZ_AFTER_BONUS_MAP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13b28",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_WIZ_AFTER_BONUS_MAP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_WIZ_AFTER_BONUS_MAP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Outside bonus, move one collected Ting into the HUD on clock 4 and convert each hundred into a pending or immediate life.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "720c83708f4203fb65a1a3f17ccf5d30662b53298ea5ef11d0427ebb831efd0f",
+   "readers_writers": {
+    "globals": [
+     "bonus_map",
+     "horloge",
+     "id_Cling_1up",
+     "nb_wiz_collected",
+     "status_bar"
+    ],
+    "callees": [
+     "Add_One_RAY_lives",
+     "NOVA_STATUS_BAR"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "function:init_bonus_perfect",
+   "kind": "function",
+   "current_name": "init_bonus_perfect",
+   "proposed_name": null,
+   "c_type": "void init_bonus_perfect(void)",
+   "oracle_address": "1:13b8c",
+   "meaning": "Clear all 24 bytes of the 192-bit bonus-perfect map.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Clear all 24 bytes of the 192-bit bonus-perfect map.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "init_bonus_perfect"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13b8c",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "init_bonus_perfect",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "init_bonus_perfect",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Clear all 24 bytes of the 192-bit bonus-perfect map.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "c3209db3eb65332838c1370153126da80d9a2f48730641f843bf2a6862fdd79e",
+   "readers_writers": {
+    "globals": [
+     "bonus_perfect"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:init_bonus_perfect:i:1",
+   "kind": "local",
+   "function": "init_bonus_perfect",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in init_bonus_perfect computed/consumed by i = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0",
+     "i < 24",
+     "++i",
+     "bonus_perfect[i - 1] = 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13b8c",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "init_bonus_perfect",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:do_perfect_bonus",
+   "kind": "function",
+   "current_name": "do_perfect_bonus",
+   "proposed_name": null,
+   "c_type": "s16 do_perfect_bonus(u32 a1)",
+   "oracle_address": "1:13ba0",
+   "meaning": "Animate the perfect-bonus result screen, display time for repeat completions or award a life at tick 15, and finish at exactly tick 500 or a button after tick 50.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Animate the perfect-bonus result screen, display time for repeat completions or award a life at tick 15, and finish at exactly tick 500 or a button after tick 50.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "do_perfect_bonus"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13ba0",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "do_perfect_bonus",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "do_perfect_bonus",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Animate the perfect-bonus result screen, display time for repeat completions or award a life at tick 15, and finish at exactly tick 500 or a button after tick 50.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "40c264e1853e8b930c707f2293e8fbfc5219ede8460f52a2ace2034f390caf56",
+   "readers_writers": {
+    "globals": [
+     "allowed_time",
+     "bonus_time_display_text",
+     "dword_D0028",
+     "horloge",
+     "language_txt",
+     "left_time",
+     "loop_time",
+     "map_time",
+     "nb_fade",
+     "num_level",
+     "num_world",
+     "ray"
+    ],
+    "callees": [
+     "Add_One_RAY_lives",
+     "DISPLAY_FOND3",
+     "DO_ANIM",
+     "INIT_FADE_IN",
+     "allocateNOVA",
+     "but0pressed",
+     "but1pressed",
+     "but2pressed",
+     "but3pressed",
+     "cyclage_palette",
+     "display2",
+     "display_text",
+     "fix_numlevel",
+     "get_bonus_map_complete",
+     "horloges",
+     "readinput",
+     "sprintf",
+     "switchOff"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:do_perfect_bonus:nova:1",
+   "kind": "local",
+   "function": "do_perfect_bonus",
+   "role": "local",
+   "current_name": "nova",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object pointer selected or traversed by do_perfect_bonus. Observed selection/use: nova = allocateNOVA()",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "nova = allocateNOVA()",
+     "nova->screen_x = 75",
+     "nova->screen_y = 50",
+     "dword_D0028 = nova",
+     "nova->is_active = 1",
+     "DO_ANIM(nova)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13ba0",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "do_perfect_bonus",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:do_perfect_bonus:done:1",
+   "kind": "local",
+   "function": "do_perfect_bonus",
+   "role": "local",
+   "current_name": "done",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_perfect_bonus computed/consumed by done = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "done = 0",
+     "done = 1",
+     "return done;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13ba0",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "do_perfect_bonus",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:do_perfect_bonus:index:1",
+   "kind": "local",
+   "function": "do_perfect_bonus",
+   "role": "local",
+   "current_name": "index",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in do_perfect_bonus computed/consumed by index = (s16) (((num_world - 1) * 32) + (num_level - 1))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "index = (s16) (((num_world - 1) * 32) + (num_level - 1))",
+     "sprintf(bonus_time_display_text, \"/%2d : %02d/\", (allowed_time[index] - 1) - (left_time / 60), (map_time - 120) % 60)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13ba0",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "do_perfect_bonus",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "local:do_perfect_bonus:a1:1",
+   "kind": "local",
+   "function": "do_perfect_bonus",
+   "role": "parameter",
+   "current_name": "a1",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13ba0",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "do_perfect_bonus",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  },
+  {
+   "id": "function:DO_PERFECT_BONUS_MAP",
+   "kind": "function",
+   "current_name": "DO_PERFECT_BONUS_MAP",
+   "proposed_name": null,
+   "c_type": "void DO_PERFECT_BONUS_MAP(void)",
+   "oracle_address": "1:13df0",
+   "meaning": "After the negative exit delay reaches -1, load/show the perfect result scene, restore saved Tings, mark the perfect bit and restore the prior video mode/palette.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "After the negative exit delay reaches -1, load/show the perfect result scene, restore saved Tings, mark the perfect bit and restore the prior video mode/palette.",
+    "operations_artifact": "evidence/bonus_operations.json",
+    "operations_key": "DO_PERFECT_BONUS_MAP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:13df0",
+     "artifact": "evidence/bonus.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_PERFECT_BONUS_MAP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_PERFECT_BONUS_MAP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "After the negative exit delay reaches -1, load/show the perfect result scene, restore saved Tings, mark the perfect bit and restore the prior video mode/palette.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c",
+   "source_body_sha256": "78598f82890924439515894006a3d5f8ffb9117e7078927856eaa7e3737c16d5",
+   "readers_writers": {
+    "globals": [
+     "CarteSonAutorisee",
+     "ModeVideoActuel",
+     "VGA_FREQ",
+     "departlevel",
+     "loop_time",
+     "main_mem_tmp",
+     "nb_wiz_save",
+     "num_level",
+     "num_world",
+     "rvb_plan3",
+     "status_bar"
+    ],
+    "callees": [
+     "DO_FADE_OUT",
+     "EFFACE_VIDEO",
+     "FreeTchatchVignette",
+     "InitModeNormalWithFrequency",
+     "InitModeXWithFrequency",
+     "LOAD_PERFECT_SCREEN",
+     "LOAD_PERFTIME_SCREEN",
+     "PlayTchatchVignette",
+     "RESTORE_PALETTE",
+     "SAVE_PALETTE",
+     "SYNCHRO_LOOP",
+     "free_main_mem",
+     "get_bonus_map_complete",
+     "init_memory",
+     "set_bonus_map_complete",
+     "start_cd_gros_rayman",
+     "stop_all_snd"
+    ]
+   },
+   "evidence_units": [
+    "bonus.c"
+   ]
+  },
+  {
+   "id": "local:DO_PERFECT_BONUS_MAP:is_mode_x:1",
+   "kind": "local",
+   "function": "DO_PERFECT_BONUS_MAP",
+   "role": "local",
+   "current_name": "is_mode_x",
+   "proposed_name": null,
+   "c_type": "s32 = 0",
+   "declarator": "s32 $ = 0",
+   "meaning": "Local initialized as 0; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 is_mode_x = 0",
+     "is_mode_x = 1",
+     "is_mode_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:13df0",
+     "artifact": "evidence/bonus.dos.txt",
+     "function": "DO_PERFECT_BONUS_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/bonus.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49"
+ },
+ "proposal_fingerprints": {
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/bonus_343EC.c": "580142cf23640a24b3c3f5652174a3eeeee14baa77b8f975329a2bc08c17fabd",
+  "external/rayman-ps1-decomp/src/bonus_35FB4.c": "6a1ccc3c1d95c3f2b9d96230251712d84870e902d1e70468000ea3c9379cec7d",
+  "external/rayman-ps1-decomp/src/timers.c": "05ff67c955bd6490e01bf935e2a54d519667684b091dbd69389d7c4752c28387",
+  "external/rayverse/src/bonus.c": "a00ec53b536586b4e68308d803bcef29fe51585ce18ef498d763772af1c07bcb"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/bonus.dos.txt": "384652a7178146c8806dea3f1945df1933b27eeaa8839c36ceaa68e9a6c45fe2",
+  "evidence/bonus_operations.json": "d0394dbf7c7bfe3082abc542fbb9fffe5cdb5d8a8197c44580dea29afd0d2b43",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/audiocd.c": "0db68f333d9002e5c8afe8e2b71d045eac46fee1caf38505563f19ebddc124a3",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_3b9c0.c": "04b36b9ef68fc4496784b812fc9d0c79bfb0ae7dd161b79d3dc1172af8535609",
+  "src/bss/bss_3d84c.c": "b1b557e5db1605c4e195cd5393842ebd62063efde1a1bff39be741d1595e8e11",
+  "src/bss/bss_3d8ac.c": "03f917dd7646e4d699b62cd8c3e7d2cfbfad6b854402007063a522e9c8b037b8",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/bss/bss_3ef52.c": "e1ee30f4a3bfef0e1f0419b6e5cb93e5a222e291c6be45541822f16f145b1e5d",
+  "src/bss/bss_3f802.c": "8bade527f55333291e6d543e8c9eca7eca2576c380f46556a8af08a8cc0c737e",
+  "src/bss/bss_3f82c.c": "03cc211aca27a8ca2c9502c35bd7e2c1f4720aba027ad02eadbb4d136c940c7f",
+  "src/bss/bss_3f878.c": "649d13776df696b9f37606009d6f78d48cd347e409b8a07ce0965ab02856b337",
+  "src/bss/bss_3f89a.c": "0e58145042c6c4b3abccc6901b2abd627716a54775981345c569c965af246125",
+  "src/bss/bss_3f8cc.c": "74977c6f099c48f53ca7ce487701c138cafe4c2d229cdc0703e68d235bb4f14a",
+  "src/bss/bss_3f9f5.c": "46233a930e5d026e220105a35871c6a6699b4c5bda5cc0b321dae86fc6008433",
+  "src/bss/bss_3fa16.c": "5c69bc5971a34136583f847d4d6142292905b49b9f13582e0641be9cf6678ff8",
+  "src/bss/bss_3fa4c.c": "844593744ce67b4faf37c2b1008936331ee753bc002a4bd425914411845a52c6",
+  "src/bss/bss_3fa53.c": "3755060248941aa89e6d84c42c31e212b20f331b9ad9df2c72a839161a71ac4d",
+  "src/bss/bss_40014.c": "0bb2ea7f81d86bb7e571987a8b44ffafde783efafc7551d85f0c1ccd7bca89b4",
+  "src/bss/bss_language_txt.c": "4eac844878924cc507e56962f94658a233bbb10c08f07c68ae52ca79f65fb396",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/data/bss_palettes.c": "9bfcd0be66c70bf318fc9bb9dcaded7e128f54dba61b2426c41e25a8718aa9aa",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/effect1.c": "6aa0b532fa19c31f02b1dbb885dce33d0f3ce31c75553ac390c996873b5bf2d7",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hifi.c": "4b617784c1af8fd843cbbf6b80993f5a65802203c09a2f532bfae74169280ebb",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/input.c": "5c0c0b729e4043ac713f79ce0a68e750eed5063c14b761faea72934d0fa6d2cd",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/movie.c": "cf17158fd0425314fb207bc55ee5264ef2f72c97ea07eb4d34d61405c976c2a4",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Bonus time uses60 ticks/second, a120-tick opening allowance and -2 untimed sentinel. Timeout tests exact zero. Perfect completion is a192-bit world*32+level map, separate from current remaining Tings. Result screen awards the first-completion life at tick15, animates it after20, permits buttons only after50 and ends at EXACTLY500. The negative transition timer reaches -1 before setup; restore prior video mode, palette and saved Ting count. Post-bonus Ting transfer occurs one per clock4 zero phase."
+}

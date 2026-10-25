@@ -524,10 +524,11 @@ void ChangeJumelleVariable(void) {
     scroll_end_y = HeightNworld - HauteurJumelle / 2 - 4;
 }
 
-void ChangeDeltaZoomAmpJumelle(s32 a1) {
+/* Local meanings: docs/semantics/jumelle.json, function:ChangeDeltaZoomAmpJumelle. */
+void ChangeDeltaZoomAmpJumelle(s32 delta_amplitude) {
     if ((-RayonJumelle * JumAmpDefMul + JumAmpDefPlus != JumelleZoomAmp ||
          ((ModeAutoJumelle & 2) && JumelleZoomAmp != ModeAutoJumelleZoomAmp)) && JumelleEffetAutorise) {
-        s32 amplitude = a1 + JumelleZoomAmp;
+        s32 amplitude = delta_amplitude + JumelleZoomAmp;
         s32 bound = 26 * -RayonJumelle + 32150;
         JumelleZoomAmp = max32(0, min32(bound, amplitude));
         JumelleZoomActif = 1;

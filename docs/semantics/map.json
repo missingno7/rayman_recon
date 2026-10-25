@@ -1,0 +1,3971 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "map.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:Bloc_lim_H1",
+   "global:Bloc_lim_H1_Aff",
+   "global:Bloc_lim_H2",
+   "global:Bloc_lim_H2_Aff",
+   "global:Bloc_lim_W1",
+   "global:Bloc_lim_W1_Aff",
+   "global:Bloc_lim_W2",
+   "global:Bloc_lim_W2_Aff",
+   "global:BufferNormalDeplt",
+   "global:DrawBufferNormal",
+   "global:DrawBufferNormalIni",
+   "global:OptionGame",
+   "global:ScrollDiffSprites",
+   "global:Scroll_Masque",
+   "global:block_add",
+   "global:bossScrollEndX",
+   "global:bossScrollStartX",
+   "global:draw_buffer",
+   "global:mp",
+   "global:nb_blocks_plein",
+   "global:nb_total_blocks",
+   "global:num_level",
+   "global:num_world",
+   "global:ray",
+   "global:scrollLocked",
+   "global:scroll_end_x",
+   "global:scroll_end_y",
+   "global:scroll_start_x",
+   "global:scroll_start_y",
+   "global:xmap",
+   "global:xmapmax",
+   "global:xmapmaxini",
+   "global:ymap",
+   "global:ymapmax",
+   "global:ymapmaxini"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:big_map_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:display_map_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:deter_vide_plein_panach",
+   "kind": "function",
+   "current_name": "deter_vide_plein_panach",
+   "proposed_name": null,
+   "c_type": "u32 deter_vide_plein_panach(u8 *blocks, u16 width)",
+   "oracle_address": "1:4c4a0",
+   "meaning": "Count zero palette-index pixels in a 16-by-16 tile at the supplied image pitch.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Count zero palette-index pixels in a 16-by-16 tile at the supplied image pitch.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "deter_vide_plein_panach"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "deter_vide_plein_panach",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "deter_vide_plein_panach",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Count zero palette-index pixels in a 16-by-16 tile at the supplied image pitch.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "08adc99be1e4beab4297ab66c9b71fc1f443b887f1faf4202546405843802e5b",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:deter_vide_plein_panach:empty_count:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "local",
+   "current_name": "empty_count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in deter_vide_plein_panach computed/consumed by empty_count = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "empty_count = 0",
+     "empty_count++",
+     "return empty_count;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:y:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in deter_vide_plein_panach computed/consumed by y = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = 0",
+     "y < 16",
+     "(empty_pixel = *(column + (y * width))) == 0",
+     "empty_pixel = *(column + (y * width))",
+     "*(column + (y * width))",
+     "y++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:column:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "local",
+   "current_name": "column",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in deter_vide_plein_panach computed/consumed by column = blocks",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "column = blocks",
+     "column != end",
+     "(empty_pixel = *(column + (y * width))) == 0",
+     "empty_pixel = *(column + (y * width))",
+     "*(column + (y * width))",
+     "column++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:end:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "local",
+   "current_name": "end",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in deter_vide_plein_panach computed/consumed by end = blocks + 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "end = blocks + 16",
+     "column != end"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:empty_pixel:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "local",
+   "current_name": "empty_pixel",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in deter_vide_plein_panach computed/consumed by (empty_pixel = *(column + (y * width))) == 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(empty_pixel = *(column + (y * width))) == 0",
+     "empty_pixel = *(column + (y * width))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:blocks:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "parameter",
+   "current_name": "blocks",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Caller-supplied u8 * argument used by deter_vide_plein_panach: end = blocks + 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "end = blocks + 16",
+     "column = blocks"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_vide_plein_panach:width:1",
+   "kind": "local",
+   "function": "deter_vide_plein_panach",
+   "role": "parameter",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Caller-supplied u16 argument used by deter_vide_plein_panach: (empty_pixel = *(column + (y * width))) == 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(empty_pixel = *(column + (y * width))) == 0",
+     "empty_pixel = *(column + (y * width))",
+     "*(column + (y * width))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4a0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_vide_plein_panach",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:deter_nb_blocks",
+   "kind": "function",
+   "current_name": "deter_nb_blocks",
+   "proposed_name": null,
+   "c_type": "void deter_nb_blocks(u8 *blocks, u16 width, u16 height, u32 *full_count, u32 *partial_count)",
+   "oracle_address": "1:4c4dc",
+   "meaning": "Skip atlas tile zero, count opaque versus mixed tiles, and stop at the first all-zero tile.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip atlas tile zero, count opaque versus mixed tiles, and stop at the first all-zero tile.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "deter_nb_blocks"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "deter_nb_blocks",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "deter_nb_blocks",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip atlas tile zero, count opaque versus mixed tiles, and stop at the first all-zero tile.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "f94a2d79ae5ce17f228f31086b89fa921f7aca0ff056987751f2b48568d878d6",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "deter_vide_plein_panach"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:deter_nb_blocks:y:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in deter_nb_blocks computed/consumed by y = 0; y < height; y += 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = 0; y < height; y += 16",
+     "y = 0",
+     "y += 16",
+     "(x == 0) && (y == 0)",
+     "empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+     "deter_vide_plein_panach((blocks + x) + (y * width), width)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:x:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in deter_nb_blocks computed/consumed by x = 0; x < width; x += 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x = 0; x < width; x += 16",
+     "x = 0",
+     "x += 16",
+     "(x == 0) && (y == 0)",
+     "empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+     "deter_vide_plein_panach((blocks + x) + (y * width), width)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:empty_count:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "local",
+   "current_name": "empty_count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in deter_nb_blocks computed/consumed by empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+     "empty_count == 256",
+     "empty_count == 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:blocks:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "parameter",
+   "current_name": "blocks",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Caller-supplied u8 * argument used by deter_nb_blocks: empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+     "deter_vide_plein_panach((blocks + x) + (y * width), width)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:width:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "parameter",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Caller-supplied u16 argument used by deter_nb_blocks: x = 0; x < width; x += 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x = 0; x < width; x += 16",
+     "empty_count = deter_vide_plein_panach((blocks + x) + (y * width), width)",
+     "deter_vide_plein_panach((blocks + x) + (y * width), width)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:height:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "parameter",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Caller-supplied u16 argument used by deter_nb_blocks: y = 0; y < height; y += 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = 0; y < height; y += 16"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:full_count:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "parameter",
+   "current_name": "full_count",
+   "proposed_name": null,
+   "c_type": "u32 *",
+   "declarator": "u32 *$",
+   "meaning": "Caller-supplied u32 * argument used by deter_nb_blocks: (*full_count)++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(*full_count)++",
+     "*full_count"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:deter_nb_blocks:partial_count:1",
+   "kind": "local",
+   "function": "deter_nb_blocks",
+   "role": "parameter",
+   "current_name": "partial_count",
+   "proposed_name": null,
+   "c_type": "u32 *",
+   "declarator": "u32 *$",
+   "meaning": "Caller-supplied u32 * argument used by deter_nb_blocks: (*partial_count)++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(*partial_count)++",
+     "*partial_count"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c4dc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "deter_nb_blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:Copy_Blocks",
+   "kind": "function",
+   "current_name": "Copy_Blocks",
+   "proposed_name": null,
+   "c_type": "u8 *Copy_Blocks(mem_t *mem, u8 *blocks, u16 width, u16 height)",
+   "oracle_address": "1:4c564",
+   "meaning": "Pack 16-by-16 atlas tiles into 288-byte full and 544-byte masked records, write zero-pixel masks and two-bit per-row flags, and publish byte offsets in block_add.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Pack 16-by-16 atlas tiles into 288-byte full and 544-byte masked records, write zero-pixel masks and two-bit per-row flags, and publish byte offsets in block_add.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "Copy_Blocks"
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "NEAR_MATCH",
+     "byte_diffs": 429,
+     "first_diff": 5,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "Copy_Blocks",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "Copy_Blocks",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Pack 16-by-16 atlas tiles into 288-byte full and 544-byte masked records, write zero-pixel masks and two-bit per-row flags, and publish byte offsets in block_add.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "aa8374ce60970604df90fa778fad7449a263a5fa7d0790e1497e341f044ef19f",
+   "readers_writers": {
+    "globals": [
+     "block_add",
+     "nb_blocks_plein",
+     "nb_total_blocks"
+    ],
+    "callees": [
+     "block_malloc",
+     "deter_nb_blocks",
+     "deter_vide_plein_panach"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:Copy_Blocks:width_in_tiles:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "width_in_tiles",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by width_in_tiles = width / 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "width_in_tiles = width / 16",
+     "tile_x = 0; tile_x < width_in_tiles; tile_x++",
+     "block_add[tile_x + (tile_y * width_in_tiles)] = dest - result"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:height_in_tiles:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "height_in_tiles",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by height_in_tiles = height / 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height_in_tiles = height / 16",
+     "tile_y = 0; tile_y < height_in_tiles; tile_y++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:partial_count:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "partial_count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by partial_count = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "partial_count = 0",
+     "deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count)",
+     "&partial_count",
+     "nb_total_blocks = nb_blocks_plein + partial_count",
+     "result = block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)",
+     "block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:tile_x:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "tile_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by tile_x = 0; tile_x < width_in_tiles; tile_x++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "tile_x = 0; tile_x < width_in_tiles; tile_x++",
+     "tile_x = 0",
+     "tile_x++",
+     "empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "block_add[tile_x + (tile_y * width_in_tiles)] = dest - result",
+     "end = (blocks + (tile_x * 16)) + 16",
+     "source = blocks + (tile_x * 16)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:tile_y:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "tile_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by tile_y = 0; tile_y < height_in_tiles; tile_y++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "tile_y = 0; tile_y < height_in_tiles; tile_y++",
+     "tile_y = 0",
+     "tile_y++",
+     "empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "block_add[tile_x + (tile_y * width_in_tiles)] = dest - result",
+     "pixel = source[(row + (tile_y * 16)) * width]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:tile_count:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "tile_count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by tile_count = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "tile_count = 0",
+     "tile_count > nb_total_blocks",
+     "tile_count++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:row:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "row",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by row = 0; row < 16; row++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "row = 0; row < 16; row++",
+     "row = 0",
+     "row++",
+     "pixel = source[(row + (tile_y * 16)) * width]",
+     "row < 15"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:empty_count:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "empty_count",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "(empty_count == 0) || (empty_count == 256)",
+     "(empty_count < 256) && (empty_count != 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:nonzero_count:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "nonzero_count",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by nonzero_count = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "nonzero_count = 0",
+     "nonzero_count++",
+     "nonzero_count == 0",
+     "nonzero_count == 16"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:pixel:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "pixel",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by pixel = source[(row + (tile_y * 16)) * width]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "pixel = source[(row + (tile_y * 16)) * width]",
+     "*dest = pixel",
+     "pixel == 0",
+     "pixel != 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:row_flags:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "row_flags",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in Copy_Blocks computed/consumed by row_flags = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "row_flags = 0",
+     "row_flags++",
+     "row_flags += 2",
+     "row_flags <<= 2",
+     "*flags = row_flags"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:result:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by result = block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "result = block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)",
+     "full_block = result",
+     "partial_block = result + (nb_blocks_plein * 288)",
+     "block_add[tile_x + (tile_y * width_in_tiles)] = dest - result",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:full_block:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "full_block",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by full_block = result",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "full_block = result",
+     "dest = full_block",
+     "full_block += 288"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:partial_block:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "partial_block",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by partial_block = result + (nb_blocks_plein * 288)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "partial_block = result + (nb_blocks_plein * 288)",
+     "dest = partial_block",
+     "partial_block += 544"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:dest:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "dest",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by dest = full_block",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "dest = full_block",
+     "flags = (u32 *) (dest + 256)",
+     "dest = partial_block",
+     "mask = dest + 256",
+     "flags = (u32 *) (dest + 512)",
+     "block_add[tile_x + (tile_y * width_in_tiles)] = dest - result",
+     "*dest = pixel",
+     "*dest",
+     "dest++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:mask:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "mask",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by mask = dest + 256",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "mask = dest + 256",
+     "*mask = 0xff",
+     "*mask",
+     "*mask = 0",
+     "mask++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:source:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "source",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by source = blocks + (tile_x * 16)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "source = blocks + (tile_x * 16)",
+     "source != end",
+     "pixel = source[(row + (tile_y * 16)) * width]",
+     "source++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:end:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "end",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by end = (blocks + (tile_x * 16)) + 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "end = (blocks + (tile_x * 16)) + 16",
+     "source != end"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:flags:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "local",
+   "current_name": "flags",
+   "proposed_name": null,
+   "c_type": "u32 *",
+   "declarator": "u32 *$",
+   "meaning": "Local value in Copy_Blocks computed/consumed by flags = (u32 *) (dest + 256)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "flags = (u32 *) (dest + 256)",
+     "flags = (u32 *) (dest + 512)",
+     "*flags = row_flags",
+     "*flags"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:mem:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "parameter",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "declarator": "mem_t *$",
+   "meaning": "Caller-supplied mem_t * argument used by Copy_Blocks: result = block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "result = block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)",
+     "block_malloc(mem, ((nb_blocks_plein * 288) + (partial_count * 544)) + 32)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:blocks:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "parameter",
+   "current_name": "blocks",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Caller-supplied u8 * argument used by Copy_Blocks: deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count)",
+     "empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "end = (blocks + (tile_x * 16)) + 16",
+     "source = blocks + (tile_x * 16)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:width:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "parameter",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Caller-supplied u16 argument used by Copy_Blocks: width_in_tiles = width / 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "width_in_tiles = width / 16",
+     "deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count)",
+     "empty_count = deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "deter_vide_plein_panach((blocks + (tile_x * 16)) + ((tile_y * 16) * width), width)",
+     "pixel = source[(row + (tile_y * 16)) * width]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:Copy_Blocks:height:1",
+   "kind": "local",
+   "function": "Copy_Blocks",
+   "role": "parameter",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Caller-supplied u16 argument used by Copy_Blocks: height_in_tiles = height / 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height_in_tiles = height / 16",
+     "deter_nb_blocks(blocks, width, height, &nb_blocks_plein, &partial_count)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c564",
+     "artifact": "evidence/map.dos.txt",
+     "function": "Copy_Blocks",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:construct_MAP",
+   "kind": "function",
+   "current_name": "construct_MAP",
+   "proposed_name": null,
+   "c_type": "void construct_MAP(mem_t *mem, big_map_t *map, u8 *map_blocks)",
+   "oracle_address": "1:4c82c",
+   "meaning": "Allocate tile texture pointers and a visible-map record, bind each texture through block_add, and derive transparency 0/1/2 from packed row flags.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Allocate tile texture pointers and a visible-map record, bind each texture through block_add, and derive transparency 0/1/2 from packed row flags.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "construct_MAP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "construct_MAP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "construct_MAP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Allocate tile texture pointers and a visible-map record, bind each texture through block_add, and derive transparency 0/1/2 from packed row flags.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "65593ec27583c1b615c278cbeee8bbd17658d6cc7ac55d24d3c9b9e91480ab4b",
+   "readers_writers": {
+    "globals": [
+     "block_add",
+     "mp",
+     "nb_blocks_plein"
+    ],
+    "callees": [
+     "block_malloc"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:construct_MAP:i:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in construct_MAP computed/consumed by i = 0; i < mp.length; i++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < mp.length; i++",
+     "i = 0",
+     "i++",
+     "texture_offset = block_add[map->map[i].texture_id]",
+     "map->tile_texture_offsets[i] = map->map_blocks + texture_offset",
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 256))",
+     "*((u32 *) (map->tile_texture_offsets[i] + 256))",
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 512))",
+     "*((u32 *) (map->tile_texture_offsets[i] + 512))",
+     "map->map[i].transparency = transparency"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:texture_offset:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "local",
+   "current_name": "texture_offset",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in construct_MAP computed/consumed by texture_offset = block_add[map->map[i].texture_id]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "texture_offset = block_add[map->map[i].texture_id]",
+     "map->tile_texture_offsets[i] = map->map_blocks + texture_offset",
+     "texture_offset <= (288 * nb_blocks_plein)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:sample:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "local",
+   "current_name": "sample",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in construct_MAP computed/consumed by sample = *((u32 *) (map->tile_texture_offsets[i] + 256))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 256))",
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 512))",
+     "sample == 0xaaaaaaaa",
+     "sample == 0x55555555"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:transparency:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "local",
+   "current_name": "transparency",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in construct_MAP computed/consumed by transparency = 1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "transparency = 1",
+     "transparency = 0",
+     "transparency = 2",
+     "map->map[i].transparency = transparency"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:mem:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "parameter",
+   "current_name": "mem",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "declarator": "mem_t *$",
+   "meaning": "Caller-supplied mem_t * argument used by construct_MAP: map->tile_texture_offsets = (u8 **) block_malloc(mem, mp.length * (sizeof(u8 *)))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "map->tile_texture_offsets = (u8 **) block_malloc(mem, mp.length * (sizeof(u8 *)))",
+     "block_malloc(mem, mp.length * (sizeof(u8 *)))",
+     "map->display_map = (display_map_t *) block_malloc(mem, sizeof(display_map_t))",
+     "block_malloc(mem, sizeof(display_map_t))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:map:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "parameter",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "big_map_t *",
+   "declarator": "big_map_t *$",
+   "meaning": "Caller-supplied big_map_t * argument used by construct_MAP: map->map = mp.map",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "map->map = mp.map",
+     "map->map_blocks = map_blocks",
+     "map->tile_texture_offsets = (u8 **) block_malloc(mem, mp.length * (sizeof(u8 *)))",
+     "map->display_map = (display_map_t *) block_malloc(mem, sizeof(display_map_t))",
+     "texture_offset = block_add[map->map[i].texture_id]",
+     "map->tile_texture_offsets[i] = map->map_blocks + texture_offset",
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 256))",
+     "*((u32 *) (map->tile_texture_offsets[i] + 256))",
+     "sample = *((u32 *) (map->tile_texture_offsets[i] + 512))",
+     "*((u32 *) (map->tile_texture_offsets[i] + 512))",
+     "map->map[i].transparency = transparency"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:construct_MAP:map_blocks:1",
+   "kind": "local",
+   "function": "construct_MAP",
+   "role": "parameter",
+   "current_name": "map_blocks",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Caller-supplied u8 * argument used by construct_MAP: map->map_blocks = map_blocks",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "map->map_blocks = map_blocks",
+     "map->tile_texture_offsets[i] = map->map_blocks + texture_offset"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c82c",
+     "artifact": "evidence/map.dos.txt",
+     "function": "construct_MAP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:init_build_map",
+   "kind": "function",
+   "current_name": "init_build_map",
+   "proposed_name": null,
+   "c_type": "void init_build_map(big_map_t *map, u8 *map_blocks)",
+   "oracle_address": "1:4c8fc",
+   "meaning": "Copy map dimensions from mp and prepare the visible tile rectangle; the map_blocks argument is unused.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Copy map dimensions from mp and prepare the visible tile rectangle; the map_blocks argument is unused.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "init_build_map"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c8fc",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "init_build_map",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "init_build_map",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Copy map dimensions from mp and prepare the visible tile rectangle; the map_blocks argument is unused.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "8c4a8a6ddfac5d48a66802a358a61c646262f682018bb20ca85857e2cb0aed37",
+   "readers_writers": {
+    "globals": [
+     "mp"
+    ],
+    "callees": [
+     "update_display_map"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:init_build_map:map:1",
+   "kind": "local",
+   "function": "init_build_map",
+   "role": "parameter",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "big_map_t *",
+   "declarator": "big_map_t *$",
+   "meaning": "Caller-supplied big_map_t * argument used by init_build_map: map->width = mp.width",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "map->width = mp.width",
+     "map->height = mp.height",
+     "update_display_map(map)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c8fc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "init_build_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:init_build_map:map_blocks:1",
+   "kind": "local",
+   "function": "init_build_map",
+   "role": "parameter",
+   "current_name": "map_blocks",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c8fc",
+     "artifact": "evidence/map.dos.txt",
+     "function": "init_build_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:update_display_map",
+   "kind": "function",
+   "current_name": "update_display_map",
+   "proposed_name": null,
+   "c_type": "void update_display_map(big_map_t *map)",
+   "oracle_address": "1:4c914",
+   "meaning": "Compute first visible tile, partial-tile screen origin and ceiling-rounded counts; align the Normal draw pointer with displacement 4-(x&3).",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Compute first visible tile, partial-tile screen origin and ceiling-rounded counts; align the Normal draw pointer with displacement 4-(x&3).",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "update_display_map"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "update_display_map",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "update_display_map",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Compute first visible tile, partial-tile screen origin and ceiling-rounded counts; align the Normal draw pointer with displacement 4-(x&3).",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "484d9c4045117654e95f7b0691062b5df0a41fbfa09960e08ace238cefc4dabc",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_H2",
+     "Bloc_lim_W1",
+     "Bloc_lim_W2",
+     "BufferNormalDeplt",
+     "DrawBufferNormal",
+     "DrawBufferNormalIni",
+     "draw_buffer",
+     "xmap",
+     "ymap"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:update_display_map:display_map:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "display_map",
+   "proposed_name": null,
+   "c_type": "display_map_t *",
+   "declarator": "display_map_t *$",
+   "meaning": "Local value in update_display_map computed/consumed by display_map = map->display_map",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "display_map = map->display_map",
+     "display_map->tile_index = (map->width * (y >> 4)) + (x >> 4)",
+     "display_map->x = clip_x - (x & 0xf)",
+     "display_map->y = clip_y - (y & 0xf)",
+     "visible_width = Bloc_lim_W2 - display_map->x",
+     "visible_height = Bloc_lim_H2 - display_map->y",
+     "display_map->width_in_tiles = (visible_width >> 4) + ((visible_width & 0xf) != 0)",
+     "display_map->height_in_tiles = (visible_height >> 4) + ((visible_height & 0xf) != 0)",
+     "BufferNormalDeplt = 4 - (display_map->x & 3)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:update_display_map:y:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in update_display_map computed/consumed by y = ymap + Bloc_lim_H1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = ymap + Bloc_lim_H1",
+     "display_map->tile_index = (map->width * (y >> 4)) + (x >> 4)",
+     "display_map->y = clip_y - (y & 0xf)",
+     "visible_height = Bloc_lim_H2 - display_map->y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:update_display_map:x:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in update_display_map computed/consumed by x = (xmap + Bloc_lim_W1) - 8",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x = (xmap + Bloc_lim_W1) - 8",
+     "display_map->tile_index = (map->width * (y >> 4)) + (x >> 4)",
+     "display_map->x = clip_x - (x & 0xf)",
+     "visible_width = Bloc_lim_W2 - display_map->x",
+     "BufferNormalDeplt = 4 - (display_map->x & 3)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:update_display_map:v6:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "visible_width",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in update_display_map computed/consumed by visible_width = Bloc_lim_W2 - display_map->x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "visible_width = Bloc_lim_W2 - display_map->x",
+     "display_map->width_in_tiles = (visible_width >> 4) + ((visible_width & 0xf) != 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "previous_name": "v6",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:update_display_map:v7:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "visible_height",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in update_display_map computed/consumed by visible_height = Bloc_lim_H2 - display_map->y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "visible_height = Bloc_lim_H2 - display_map->y",
+     "display_map->height_in_tiles = (visible_height >> 4) + ((visible_height & 0xf) != 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "previous_name": "v7",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:update_display_map:clip_x:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "clip_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in update_display_map computed/consumed by clip_x = Bloc_lim_W1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_x = Bloc_lim_W1",
+     "display_map->x = clip_x - (x & 0xf)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:update_display_map:clip_y:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "local",
+   "current_name": "clip_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in update_display_map computed/consumed by clip_y = Bloc_lim_H1",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_y = Bloc_lim_H1",
+     "display_map->y = clip_y - (y & 0xf)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:update_display_map:map:1",
+   "kind": "local",
+   "function": "update_display_map",
+   "role": "parameter",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "big_map_t *",
+   "declarator": "big_map_t *$",
+   "meaning": "Caller-supplied big_map_t * argument used by update_display_map: display_map = map->display_map",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "display_map = map->display_map",
+     "display_map->tile_index = (map->width * (y >> 4)) + (x >> 4)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4c914",
+     "artifact": "evidence/map.dos.txt",
+     "function": "update_display_map",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:set_default_Bloc_clipping",
+   "kind": "function",
+   "current_name": "set_default_Bloc_clipping",
+   "proposed_name": null,
+   "c_type": "void set_default_Bloc_clipping(void)",
+   "oracle_address": "1:4c9f0",
+   "meaning": "Set Normal clip bounds to x [4,320] and y [0,200].",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set Normal clip bounds to x [4,320] and y [0,200].",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "set_default_Bloc_clipping"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4c9f0",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_default_Bloc_clipping",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_default_Bloc_clipping",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set Normal clip bounds to x [4,320] and y [0,200].",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "3c3247c491f1ef4b26a0455c9f59e1eb237b4f65cd98fab37ab1f3ee7d3b23f5",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_H2",
+     "Bloc_lim_W1",
+     "Bloc_lim_W2"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "function:set_xymapini",
+   "kind": "function",
+   "current_name": "set_xymapini",
+   "proposed_name": null,
+   "c_type": "void set_xymapini(void)",
+   "oracle_address": "1:4ca24",
+   "meaning": "Derive camera maxima and original fullscreen maxima from map dimensions and clip limits, then initialize scrolling limits with Normal x bias 8.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Derive camera maxima and original fullscreen maxima from map dimensions and clip limits, then initialize scrolling limits with Normal x bias 8.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "set_xymapini"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4ca24",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_xymapini",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_xymapini",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Derive camera maxima and original fullscreen maxima from map dimensions and clip limits, then initialize scrolling limits with Normal x bias 8.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "41d2fea35e1562ae13f2fff9b912e51f81aa4614678f09f38707678b461eeeea",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_H2",
+     "Bloc_lim_W1",
+     "Bloc_lim_W2",
+     "mp",
+     "scroll_end_x",
+     "scroll_end_y",
+     "scroll_start_x",
+     "scroll_start_y",
+     "xmapmax",
+     "xmapmaxini",
+     "ymapmax",
+     "ymapmaxini"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "function:set_xymap",
+   "kind": "function",
+   "current_name": "set_xymap",
+   "proposed_name": null,
+   "c_type": "void set_xymap(void)",
+   "oracle_address": "1:4cad0",
+   "meaning": "Clamp camera x/y to negative clip origins and current map maxima.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Clamp camera x/y to negative clip origins and current map maxima.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "set_xymap"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4cad0",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_xymap",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_xymap",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Clamp camera x/y to negative clip origins and current map maxima.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "e85bc5d0ee4b4847d511318c253f57be8a7d0fc35d337584a61f40b3cdd4da86",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_W1",
+     "xmap",
+     "xmapmax",
+     "ymap",
+     "ymapmax"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:set_xymap:v0:1",
+   "kind": "local",
+   "function": "set_xymap",
+   "role": "local",
+   "current_name": "v0",
+   "proposed_name": null,
+   "c_type": "s32 = xmap",
+   "declarator": "s32 $ = xmap",
+   "meaning": "Local initialized as xmap; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 v0 = xmap"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cad0",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xymap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:set_whmap",
+   "kind": "function",
+   "current_name": "set_whmap",
+   "proposed_name": null,
+   "c_type": "void set_whmap(s32 delta_w, s32 delta_h, big_map_t *map)",
+   "oracle_address": "1:4cb40",
+   "meaning": "Adjust viewport margins by symmetric deltas, extend camera/scroll limits within map dimensions and clamp camera position.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Adjust viewport margins by symmetric deltas, extend camera/scroll limits within map dimensions and clamp camera position.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "set_whmap"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_whmap",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_whmap",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Adjust viewport margins by symmetric deltas, extend camera/scroll limits within map dimensions and clamp camera position.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "e9364e46e92150806a30cf96988305c4d37a092ab8e67307fb208dbc4307c884",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_H2",
+     "Bloc_lim_W1",
+     "Bloc_lim_W2",
+     "scroll_end_x",
+     "scroll_end_y",
+     "scroll_start_x",
+     "scroll_start_y",
+     "xmap",
+     "xmapmax",
+     "xmapmaxini",
+     "ymap",
+     "ymapmax",
+     "ymapmaxini"
+    ],
+    "callees": [
+     "set_xymap"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:set_whmap:clip_w:1",
+   "kind": "local",
+   "function": "set_whmap",
+   "role": "local",
+   "current_name": "clip_w",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Local value in set_whmap computed/consumed by clip_w = Bloc_lim_W2",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_w = Bloc_lim_W2",
+     "(xmapmax + clip_w) > (16 * map->width)",
+     "xmapmax = (16 * map->width) - clip_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_whmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_whmap:clip_h:1",
+   "kind": "local",
+   "function": "set_whmap",
+   "role": "local",
+   "current_name": "clip_h",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Local value in set_whmap computed/consumed by clip_h = Bloc_lim_H2",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_h = Bloc_lim_H2",
+     "(ymapmax + clip_h) > (16 * map->height)",
+     "ymapmax = (16 * map->height) - clip_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_whmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_whmap:delta_w:1",
+   "kind": "local",
+   "function": "set_whmap",
+   "role": "parameter",
+   "current_name": "delta_w",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by set_whmap: Bloc_lim_W1 += delta_w",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "Bloc_lim_W1 += delta_w",
+     "Bloc_lim_W2 -= delta_w",
+     "scroll_start_x -= delta_w",
+     "scroll_end_x += delta_w",
+     "xmapmax += delta_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_whmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_whmap:delta_h:1",
+   "kind": "local",
+   "function": "set_whmap",
+   "role": "parameter",
+   "current_name": "delta_h",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by set_whmap: Bloc_lim_H1 += delta_h",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "Bloc_lim_H1 += delta_h",
+     "Bloc_lim_H2 -= delta_h",
+     "scroll_start_y -= delta_h",
+     "scroll_end_y += delta_h",
+     "ymapmax += delta_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_whmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_whmap:map:1",
+   "kind": "local",
+   "function": "set_whmap",
+   "role": "parameter",
+   "current_name": "map",
+   "proposed_name": null,
+   "c_type": "big_map_t *",
+   "declarator": "big_map_t *$",
+   "meaning": "Caller-supplied big_map_t * argument used by set_whmap: (xmapmax + clip_w) > (16 * map->width)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(xmapmax + clip_w) > (16 * map->width)",
+     "xmapmax = (16 * map->width) - clip_w",
+     "(ymapmax + clip_h) > (16 * map->height)",
+     "ymapmax = (16 * map->height) - clip_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4cb40",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_whmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:recaleRaysurlesBords",
+   "kind": "function",
+   "current_name": "recaleRaysurlesBords",
+   "proposed_name": null,
+   "c_type": "void recaleRaysurlesBords(void)",
+   "oracle_address": "1:4cd64",
+   "meaning": "Constrain Rayman center to horizontal viewport margins and refresh screen x using the two existing DOS formulas.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Constrain Rayman center to horizontal viewport margins and refresh screen x using the two existing DOS formulas.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "recaleRaysurlesBords"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4cd64",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "recaleRaysurlesBords",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "recaleRaysurlesBords",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Constrain Rayman center to horizontal viewport margins and refresh screen x using the two existing DOS formulas.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "968b1718d6fb26c29471e0f64875fb5419c389b8324b7b2fd0feea84d6ae975c",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_W1",
+     "Bloc_lim_W2",
+     "ray",
+     "scroll_start_x",
+     "xmap"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "function:set_xywhmap",
+   "kind": "function",
+   "current_name": "set_xywhmap",
+   "proposed_name": null,
+   "c_type": "void set_xywhmap(s16 xmin, s16 xmax, s16 ymin, s16 ymax)",
+   "oracle_address": "1:4ce08",
+   "meaning": "Set absolute viewport bounds, update scrolling/maxima and boss limits, honor locked-scroll exceptions (world 3 level 10; world 2 level 15), publish display clips and optionally clamp Rayman.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set absolute viewport bounds, update scrolling/maxima and boss limits, honor locked-scroll exceptions (world 3 level 10; world 2 level 15), publish display clips and optionally clamp Rayman.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "set_xywhmap"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "set_xywhmap",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "set_xywhmap",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set absolute viewport bounds, update scrolling/maxima and boss limits, honor locked-scroll exceptions (world 3 level 10; world 2 level 15), publish display clips and optionally clamp Rayman.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "6c95fdf78de137bc7effb56594c983c36bd8b6bc87776b87eee06f4f7d272684",
+   "readers_writers": {
+    "globals": [
+     "Bloc_lim_H1",
+     "Bloc_lim_H1_Aff",
+     "Bloc_lim_H2",
+     "Bloc_lim_H2_Aff",
+     "Bloc_lim_W1",
+     "Bloc_lim_W1_Aff",
+     "Bloc_lim_W2",
+     "Bloc_lim_W2_Aff",
+     "OptionGame",
+     "bossScrollEndX",
+     "bossScrollStartX",
+     "mp",
+     "num_level",
+     "num_world",
+     "scrollLocked",
+     "scroll_end_x",
+     "scroll_end_y",
+     "scroll_start_x",
+     "scroll_start_y",
+     "xmap",
+     "xmapmax",
+     "xmapmaxini",
+     "ymap",
+     "ymapmax",
+     "ymapmaxini"
+    ],
+    "callees": [
+     "recaleRaysurlesBords",
+     "set_xymap"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:set_xywhmap:may_lock:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "may_lock",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in set_xywhmap computed/consumed by may_lock = (num_world != world_3_mountain) || (num_level != 10)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "may_lock = (num_world != world_3_mountain) || (num_level != 10)",
+     "may_lock",
+     "may_lock = (num_world != world_2_music) || (num_level != 15)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:clip_w:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "clip_w",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Local value in set_xywhmap computed/consumed by clip_w = Bloc_lim_W2",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_w = Bloc_lim_W2",
+     "(xmapmax + clip_w) > (16 * mp.width)",
+     "xmapmax = (16 * mp.width) - clip_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:clip_h:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "clip_h",
+   "proposed_name": null,
+   "c_type": "u16",
+   "declarator": "u16 $",
+   "meaning": "Local value in set_xywhmap computed/consumed by clip_h = Bloc_lim_H2",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "clip_h = Bloc_lim_H2",
+     "(ymapmax + clip_h) > (16 * mp.height)",
+     "ymapmax = (16 * mp.height) - clip_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:delta_W1:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "delta_W1",
+   "proposed_name": null,
+   "c_type": "s16 = xmin - ((s16) Bloc_lim_W1)",
+   "declarator": "s16 $ = xmin - ((s16) Bloc_lim_W1)",
+   "meaning": "Local initialized as xmin - ((s16) Bloc_lim_W1); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_W1 = xmin - ((s16) Bloc_lim_W1)",
+     "scroll_start_x -= delta_W1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:delta_W2:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "delta_W2",
+   "proposed_name": null,
+   "c_type": "s16 = ((s16) Bloc_lim_W2) - xmax",
+   "declarator": "s16 $ = ((s16) Bloc_lim_W2) - xmax",
+   "meaning": "Local initialized as ((s16) Bloc_lim_W2) - xmax; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_W2 = ((s16) Bloc_lim_W2) - xmax",
+     "scroll_end_x += delta_W2",
+     "xmapmax += delta_W2"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:delta_H1:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "delta_H1",
+   "proposed_name": null,
+   "c_type": "s16 = ymin - ((s16) Bloc_lim_H1)",
+   "declarator": "s16 $ = ymin - ((s16) Bloc_lim_H1)",
+   "meaning": "Local initialized as ymin - ((s16) Bloc_lim_H1); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_H1 = ymin - ((s16) Bloc_lim_H1)",
+     "scroll_start_y -= delta_H1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:delta_H2:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "local",
+   "current_name": "delta_H2",
+   "proposed_name": null,
+   "c_type": "s16 = ((s16) Bloc_lim_H2) - ymax",
+   "declarator": "s16 $ = ((s16) Bloc_lim_H2) - ymax",
+   "meaning": "Local initialized as ((s16) Bloc_lim_H2) - ymax; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_H2 = ((s16) Bloc_lim_H2) - ymax",
+     "scroll_end_y += delta_H2",
+     "ymapmax += delta_H2"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:xmin:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "parameter",
+   "current_name": "xmin",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_xywhmap: s16 delta_W1 = xmin - ((s16) Bloc_lim_W1)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_W1 = xmin - ((s16) Bloc_lim_W1)",
+     "Bloc_lim_W1 = xmin"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:xmax:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "parameter",
+   "current_name": "xmax",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_xywhmap: s16 delta_W2 = ((s16) Bloc_lim_W2) - xmax",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_W2 = ((s16) Bloc_lim_W2) - xmax",
+     "Bloc_lim_W2 = xmax"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:ymin:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "parameter",
+   "current_name": "ymin",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_xywhmap: s16 delta_H1 = ymin - ((s16) Bloc_lim_H1)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_H1 = ymin - ((s16) Bloc_lim_H1)",
+     "Bloc_lim_H1 = ymin"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:set_xywhmap:ymax:1",
+   "kind": "local",
+   "function": "set_xywhmap",
+   "role": "parameter",
+   "current_name": "ymax",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by set_xywhmap: s16 delta_H2 = ((s16) Bloc_lim_H2) - ymax",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 delta_H2 = ((s16) Bloc_lim_H2) - ymax",
+     "Bloc_lim_H2 = ymax"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4ce08",
+     "artifact": "evidence/map.dos.txt",
+     "function": "set_xywhmap",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "function:MaskScrollDiffSprites",
+   "kind": "function",
+   "current_name": "MaskScrollDiffSprites",
+   "proposed_name": null,
+   "c_type": "void MaskScrollDiffSprites(mem_t *buffer)",
+   "oracle_address": "1:4d144",
+   "meaning": "Build zero-pixel masks for sprites 1 onward. The DOS odd-width word conversion produces zero allocation width while the pixel loop still uses outer_width.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Build zero-pixel masks for sprites 1 onward. The DOS odd-width word conversion produces zero allocation width while the pixel loop still uses outer_width.",
+    "operations_artifact": "evidence/map_operations.json",
+    "operations_key": "MaskScrollDiffSprites"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "MaskScrollDiffSprites",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "MaskScrollDiffSprites",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Build zero-pixel masks for sprites 1 onward. The DOS odd-width word conversion produces zero allocation width while the pixel loop still uses outer_width.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c",
+   "source_body_sha256": "fd698f12a82eb792e984427238f1468d3ea26c994243bf7e5326474423501c22",
+   "readers_writers": {
+    "globals": [
+     "ScrollDiffSprites",
+     "Scroll_Masque"
+    ],
+    "callees": [
+     "block_malloc"
+    ]
+   },
+   "evidence_units": [
+    "map.c"
+   ]
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:i:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by i = 1; i < nb_sprites; i++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 1; i < nb_sprites; i++",
+     "i = 1",
+     "i++",
+     "sprite_t *sprite = ScrollDiffSprites->sprites + i",
+     "Scroll_Masque[i] = block_malloc(buffer, width * height)",
+     "mask = Scroll_Masque[i]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:y:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by y = 0; y < height; y++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = 0; y < height; y++",
+     "y = 0",
+     "y++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:x:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "u32",
+   "declarator": "u32 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by x = 0; x < sprite->outer_width; x++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x = 0; x < sprite->outer_width; x++",
+     "x = 0",
+     "x++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:nb_sprites:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "nb_sprites",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by nb_sprites = ScrollDiffSprites->nb_sprites",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "nb_sprites = ScrollDiffSprites->nb_sprites",
+     "i = 1; i < nb_sprites; i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:mask:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "mask",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by mask = Scroll_Masque[i]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "mask = Scroll_Masque[i]",
+     "*mask = 0xff",
+     "*mask",
+     "*mask = 0",
+     "mask++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:image:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "image",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "declarator": "u8 *$",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by image = ScrollDiffSprites->img_buffer + sprite->offset_in_atlas",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "image = ScrollDiffSprites->img_buffer + sprite->offset_in_atlas",
+     "(pixel = *image) == 0",
+     "pixel = *image",
+     "*image",
+     "image++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:pixel:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "pixel",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by (pixel = *image) == 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(pixel = *image) == 0",
+     "pixel = *image"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:sprite:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "sprite",
+   "proposed_name": null,
+   "c_type": "sprite_t * = ScrollDiffSprites->sprites + i",
+   "declarator": "sprite_t *$ = ScrollDiffSprites->sprites + i",
+   "meaning": "Local initialized as ScrollDiffSprites->sprites + i; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "sprite_t *sprite = ScrollDiffSprites->sprites + i",
+     "s16 width = sprite->outer_width",
+     "height = sprite->outer_height",
+     "image = ScrollDiffSprites->img_buffer + sprite->offset_in_atlas",
+     "x = 0; x < sprite->outer_width; x++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:height:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in MaskScrollDiffSprites computed/consumed by height = sprite->outer_height",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height = sprite->outer_height",
+     "Scroll_Masque[i] = block_malloc(buffer, width * height)",
+     "block_malloc(buffer, width * height)",
+     "y = 0; y < height; y++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:width:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "local",
+   "current_name": "width",
+   "proposed_name": null,
+   "c_type": "s16 = sprite->outer_width",
+   "declarator": "s16 $ = sprite->outer_width",
+   "meaning": "Local initialized as sprite->outer_width; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 width = sprite->outer_width",
+     "width & 1",
+     "width &= 0x10000",
+     "Scroll_Masque[i] = block_malloc(buffer, width * height)",
+     "block_malloc(buffer, width * height)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  },
+  {
+   "id": "local:MaskScrollDiffSprites:buffer:1",
+   "kind": "local",
+   "function": "MaskScrollDiffSprites",
+   "role": "parameter",
+   "current_name": "buffer",
+   "proposed_name": null,
+   "c_type": "mem_t *",
+   "declarator": "mem_t *$",
+   "meaning": "Caller-supplied mem_t * argument used by MaskScrollDiffSprites: Scroll_Masque[i] = block_malloc(buffer, width * height)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "Scroll_Masque[i] = block_malloc(buffer, width * height)",
+     "block_malloc(buffer, width * height)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:4d144",
+     "artifact": "evidence/map.dos.txt",
+     "function": "MaskScrollDiffSprites",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/map.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28"
+ },
+ "proposal_fingerprints": {
+  "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayverse/src/map.c": "477acc36fede40e77971a1e04a71a15c5c72e81e5f3b55b1bbd3e49ccda6a616"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/map.dos.txt": "bf0aaf4aca560b01c770bf9da626cfe59a6abae4bec50ca28956968bee08ca61",
+  "evidence/map_operations.json": "8875bdeb6407982ef5d9f68038bc63319edbfd9bb2cce51073c60b5a285f6a3a",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/blood.c": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_321d8.c": "27cfa3bd2ed579896e6bfd7fcbc39e5686d67d029917e768d2e36db499e56954",
+  "src/bss/bss_32f98.c": "aaee5226cc3ba14bcd989767f5c826684f5d0489430e8dd95565ba8fdb73a45d",
+  "src/bss/bss_3d054.c": "f8e3036b6606ad1130823a9aa59dce018ec9caaeec9a7b27b7997a4990330b5d",
+  "src/bss/bss_3d074.c": "488288853b80e297b301df79e55d49be68d8c4e7abf5ef13cc4314c8d46dcda9",
+  "src/bss/bss_3d0f4.c": "82ac55c33e223668d2a5092e760f6a5e6e70dcce6e8a9470fd75fbcf925a1630",
+  "src/bss/bss_3d110.c": "947d62e5ef7d11fe19db342e62b782bdfc4c4d549a4e9eed57881e597f8c69ed",
+  "src/bss/bss_3d130.c": "27e0458769606b5c822b0f35e516a78673b22eff0e71a2cd1d5273e2323dac55",
+  "src/bss/bss_3d7b8.c": "b56b8c04b7ecda7c33b0cde74edc3c1b568c0adbf561bba62976be1109bc16d4",
+  "src/bss/bss_3e634.c": "d34fbee7eb9205e67b2b5f2a8b45a19e653cb46c7fb669ce2d5ff989a3e140ec",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/bss/bss_3f756.c": "5b8df77e6adb22b6f7a07dd5450a141c6c026d0cb4096e1cb83f7f348e8b44e3",
+  "src/bss/bss_3f84a.c": "b5a8ce233b74d8ff0a4909705fb320df393d2e2530eb23c36b8c05a9b31bcff9",
+  "src/bss/bss_3f86e.c": "0991681a969d9627a47f91dcf2f6e62387c237cf5522a725ce2ee65a208021c9",
+  "src/bss/bss_3f878.c": "649d13776df696b9f37606009d6f78d48cd347e409b8a07ce0965ab02856b337",
+  "src/bss/bss_3f89a.c": "0e58145042c6c4b3abccc6901b2abd627716a54775981345c569c965af246125",
+  "src/bss/bss_3fa64.c": "08d3589060ee1056f617381e60198866b54a57baea4fa418ab20e8c7e280496f",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/effect1.c": "6aa0b532fa19c31f02b1dbb885dce33d0f3ce31c75553ac390c996873b5bf2d7",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/movie.c": "cf17158fd0425314fb207bc55ee5264ef2f72c97ea07eb4d34d61405c976c2a4",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Normal textures pack full tiles in288-byte records and mixed tiles in544-byte records, including transparency masks and two-bit row flags. Atlas tile0 is special, and counting stops at the first all-zero tile. Preserve the source's exact boundary comparisons when classifying texture records. Visible rectangle coordinates include partial tiles; tile_index narrows to16bits and tile counts to8bits. Draw alignment displacement is4-(x&3), giving1..4. Camera/scroll clamping includes bias8, small-map behavior and two locked-scroll level exceptions. Odd-width scrolling-sprite allocation behavior is an observed DOS quirk, not a new valid-input guarantee."
+}

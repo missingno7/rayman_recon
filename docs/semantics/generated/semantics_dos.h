@@ -640,7 +640,7 @@
 /* PROVEN: Fist signed32 vertical position accumulator scaled by16, separately maintained from integer obj.y. */
 #define DOS_POING_T_Y_16_OFFSET 0x0
 #define DOS_POING_T_Y_16_SIZE 4
-/* UNKNOWN: Neutral poing_t.field_4 storage/view; its intended meaning is not established by this pilot. */
+/* PROVEN: Launch-time snapshot of charge shifted left eight, written alongside the outbound charge budget. A further live consumer is not established. */
 #define DOS_POING_T_FIELD_4_OFFSET 0x4
 #define DOS_POING_T_FIELD_4_SIZE 2
 /* PROVEN: Stored positive horizontal fist speed used to launch and constrain return speed. */
@@ -744,7 +744,7 @@
 /* PROVEN: HUD maximum health class, normally2 or4. */
 #define DOS_STATUS_BAR_T_MAX_HITP_OFFSET 0x9
 #define DOS_STATUS_BAR_T_MAX_HITP_SIZE 1
-/* PROVEN: Alive-bit snapshot for object types141,164,179,242 indexed by object id bit. */
+/* PROVEN: Eight32-bit alive masks for types141/164/179/242 only;index object ID>>5,bit1<<(ID&31). Other bits are not cleared by capture. */
 #define DOS_SAVE_STATE_T_TRIGGERED_OBJECTS_OFFSET 0x0
 #define DOS_SAVE_STATE_T_TRIGGERED_OBJECTS_SIZE 32
 /* PROVEN: Saved eight weather-layer flake counts. */
@@ -786,7 +786,7 @@
 /* PROVEN: Checkpoint-object id, with-1 when saveGameState receives no object. */
 #define DOS_SAVE_STATE_T_SAVE_OBJ_ID_OFFSET 0x46
 #define DOS_SAVE_STATE_T_SAVE_OBJ_ID_SIZE 2
-/* PROVEN: Snapshot of live circular successor ids, stored as u16. */
+/* PROVEN: Snapshot of level.nb_objects successor IDs;restore applies only when save_state==&save1 and sets link_has_gendoor by successor!=self. */
 #define DOS_SAVE_STATE_T_LINK_INIT_OFFSET 0x48
 #define DOS_SAVE_STATE_T_LINK_INIT_SIZE 512
 /* PROVEN: Saved checkpoint-object detection-zone classification. */
@@ -810,7 +810,8 @@
 /* PROVEN: Saved Rayman substate. */
 #define DOS_SAVE_STATE_T_RAY_SUB_ETAT_OFFSET 0x252
 #define DOS_SAVE_STATE_T_RAY_SUB_ETAT_SIZE 1
-/* PROVEN: Saved fist power/substate selection. */
+/* PROVEN: [sem_objs; moteur.c; PROVEN] Saved fist power/substate selection.
+[sem_flow; moteur.c; PROVEN] Checkpoint fist state;restoring save1 degrades5/12->3 and1/3/8/10->1 by mutating saved value before applying to fist. */
 #define DOS_SAVE_STATE_T_POING_SUB_ETAT_OFFSET 0x253
 #define DOS_SAVE_STATE_T_POING_SUB_ETAT_SIZE 1
 /* PROVEN: Saved two-bit RayEvts.reverse value widened to a byte. */
@@ -837,19 +838,19 @@
 /* UNKNOWN: Trailing checkpoint byte with no typed reader/writer found. */
 #define DOS_SAVE_STATE_T_FIELD_25B_OFFSET 0x25b
 #define DOS_SAVE_STATE_T_FIELD_25B_SIZE 1
-/* STRONG: Current byte cursor into the recorded demo stream. */
+/* PROVEN: Byte offset of current repeat-length byte after startup;first frame consumes data0 buttons and leaves offset1. Subsequent runs advance2. */
 #define DOS_RECORD_T_CURRENT_OFFSET_OFFSET 0x0
 #define DOS_RECORD_T_CURRENT_OFFSET_SIZE 4
-/* STRONG: Length of the current repeated demo-input run. */
+/* PROVEN: Second byte of current input pair;repeat_index equality ends run. Zero length is not automatically treated as immediate termination. */
 #define DOS_RECORD_T_REPEAT_LENGTH_OFFSET 0x4
 #define DOS_RECORD_T_REPEAT_LENGTH_SIZE 4
-/* STRONG: Progress within the current repeated demo-input run. */
+/* PROVEN: Incrementing32-bit index into current repeated run;startup/new run resets0. */
 #define DOS_RECORD_T_REPEAT_INDEX_OFFSET 0x8
 #define DOS_RECORD_T_REPEAT_INDEX_SIZE 4
-/* STRONG: Recorded demo stream length used by input playback. */
+/* PROVEN: REC file length narrowed through signed16 by read_record then stored in record;used to bound next pair. */
 #define DOS_RECORD_T_LENGTH_OFFSET 0xc
 #define DOS_RECORD_T_LENGTH_SIZE 4
-/* STRONG: Demo stream byte buffer pointer. */
+/* PROVEN: Allocated packed input pairs(button byte,repeat-length byte);no native pointer is serialized by read_record. */
 #define DOS_RECORD_T_DATA_OFFSET 0x10
 #define DOS_RECORD_T_DATA_SIZE 4
 /* PROVEN: Nonzero while demo input recording is enabled. */
@@ -921,7 +922,7 @@
 /* PROVEN: Weather particle y coordinate before perspective projection. */
 #define DOS_FLOCON_T_UNPROJECTED_Y_OFFSET 0x2
 #define DOS_FLOCON_T_UNPROJECTED_Y_SIZE 2
-/* UNKNOWN: Declared flocon_t.field_4 storage; moteur only clears its enclosing storage or never accesses it. */
+/* PROVEN: Perspective depth/scale parameter stored per weather particle and passed to projection by the drawing readers. */
 #define DOS_FLOCON_T_FIELD_4_OFFSET 0x4
 #define DOS_FLOCON_T_FIELD_4_SIZE 2
 /* UNKNOWN: Declared flocon_t.field_6 storage; moteur only clears its enclosing storage or never accesses it. */
@@ -975,13 +976,13 @@
 /* PROVEN: Physical/logical button selector for test_button3. */
 #define DOS_OPTIONS_JEU_T_ACTION_OFFSET 0x16
 #define DOS_OPTIONS_JEU_T_ACTION_SIZE 2
-/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+/* PROVEN: Persistent music enable value;menu toggles logical zero/nonzero and controls MusicCdActive only when OptionMusicCdActive permits. Historical default13 is retained rather than normalized. */
 #define DOS_OPTIONS_JEU_T_MUSIC_ENABLED_OFFSET 0x18
 #define DOS_OPTIONS_JEU_T_MUSIC_ENABLED_SIZE 2
-/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+/* PROVEN: Persistent sound-volume value passed to raj_env_sound;menu working copy adjusts0..max_sound. CFG stores16 bits;historical default18. */
 #define DOS_OPTIONS_JEU_T_SOUND_VOLUME_OFFSET 0x1a
 #define DOS_OPTIONS_JEU_T_SOUND_VOLUME_SIZE 2
-/* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
+/* PROVEN: Persistent stereo setting passed to raj_env_stereo;CFG stores16 bits,default1. */
 #define DOS_OPTIONS_JEU_T_IS_STEREO_OFFSET 0x1c
 #define DOS_OPTIONS_JEU_T_IS_STEREO_SIZE 2
 /* UNKNOWN: Unsigned16 option slot outside the Rayman/collision field-access scope. */
@@ -1039,36 +1040,37 @@
 #define DOS_LEVEL_OBJ_LOCAL_T_SIZE 6
 #define DOS_DISPLAY_MAP_LOCAL_T_SIZE 8
 #define DOS_BIG_MAP_LOCAL_T_SIZE 30
-/* UNKNOWN: Declared world_info_t.xpos storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: World-map node center coordinate;used to place medallions and compute path interpolation. */
 #define DOS_WORLD_INFO_T_XPOS_OFFSET 0x0
 #define DOS_WORLD_INFO_T_XPOS_SIZE 2
-/* UNKNOWN: Declared world_info_t.ypos storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: World-map node center coordinate;used to place medallions and compute path interpolation. */
 #define DOS_WORLD_INFO_T_YPOS_OFFSET 0x2
 #define DOS_WORLD_INFO_T_YPOS_SIZE 2
-/* UNKNOWN: Declared world_info_t.index_up storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23. */
 #define DOS_WORLD_INFO_T_INDEX_UP_OFFSET 0x4
 #define DOS_WORLD_INFO_T_INDEX_UP_SIZE 1
-/* UNKNOWN: Declared world_info_t.index_down storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23. */
 #define DOS_WORLD_INFO_T_INDEX_DOWN_OFFSET 0x5
 #define DOS_WORLD_INFO_T_INDEX_DOWN_SIZE 1
-/* UNKNOWN: Declared world_info_t.index_left storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23. */
 #define DOS_WORLD_INFO_T_INDEX_LEFT_OFFSET 0x6
 #define DOS_WORLD_INFO_T_INDEX_LEFT_SIZE 1
-/* UNKNOWN: Declared world_info_t.index_right storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Neighbor node index for the named direction;self index means no movement. Shipped table stays0..23. */
 #define DOS_WORLD_INFO_T_INDEX_RIGHT_OFFSET 0x7
 #define DOS_WORLD_INFO_T_INDEX_RIGHT_SIZE 1
-/* UNKNOWN: Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: [sem_objs; special.c; UNKNOWN] Declared world_info_t.state storage; no intended meaning is assigned from its spelling alone.
+[sem_flow; bit flags; PROVEN] Access/animation byte:bit0 accessible,bit1 drawing traversal/neighbor mark,bit2 pending unlock;high5 retained. Runtime bit2 is serialized as save-byte bit1. */
 #define DOS_WORLD_INFO_T_STATE_OFFSET 0x8
 #define DOS_WORLD_INFO_T_STATE_SIZE 1
-/* UNKNOWN: Declared world_info_t.is_unlocked storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Bit0 allows navigation/entry and ordinary medallion/path drawing. */
 #define DOS_WORLD_INFO_T_IS_UNLOCKED_OFFSET 0x8
 #define DOS_WORLD_INFO_T_IS_UNLOCKED_SIZE 1
 #define DOS_WORLD_INFO_T_IS_UNLOCKED_MASK 0x01
-/* UNKNOWN: Declared world_info_t.state_bit1 storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Bit1 scratch traversal/neighbor mark:DISPLAY_PTS_WAY clears all then marks processed accessible nodes;DO_MEDAILLONS also marks accessible nodes after unlock. Not a separate persistent completion flag. */
 #define DOS_WORLD_INFO_T_STATE_BIT1_OFFSET 0x8
 #define DOS_WORLD_INFO_T_STATE_BIT1_SIZE 1
 #define DOS_WORLD_INFO_T_STATE_BIT1_MASK 0x02
-/* UNKNOWN: Declared world_info_t.is_unlocking storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Bit2 pending unlock;at progress128 and marked neighbor,convert to accessible and clear bits1/2. Saved in packed save bit1. */
 #define DOS_WORLD_INFO_T_IS_UNLOCKING_OFFSET 0x8
 #define DOS_WORLD_INFO_T_IS_UNLOCKING_SIZE 1
 #define DOS_WORLD_INFO_T_IS_UNLOCKING_MASK 0x04
@@ -1079,13 +1081,13 @@
 /* PROVEN: Collected-cage count of one world-map stage record. */
 #define DOS_WORLD_INFO_T_NB_CAGES_OFFSET 0x9
 #define DOS_WORLD_INFO_T_NB_CAGES_SIZE 1
-/* UNKNOWN: Declared world_info_t.world storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Actual game world selected by node;shipped playable nodes1..6,save nodes18..23 carry7. */
 #define DOS_WORLD_INFO_T_WORLD_OFFSET 0xa
 #define DOS_WORLD_INFO_T_WORLD_SIZE 1
-/* UNKNOWN: Declared world_info_t.level storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Actual starting level selected by node;save nodes carry20 and take separate save UI route. */
 #define DOS_WORLD_INFO_T_LEVEL_OFFSET 0xb
 #define DOS_WORLD_INFO_T_LEVEL_SIZE 1
-/* UNKNOWN: Declared world_info_t.color storage; no intended meaning is assigned from its spelling alone. */
+/* STRONG: Signed stage-title text color copied to text display state;exact uses retained. */
 #define DOS_WORLD_INFO_T_COLOR_OFFSET 0xc
 #define DOS_WORLD_INFO_T_COLOR_SIZE 1
 /* UNKNOWN: Declared world_info_t.field_D storage; no intended meaning is assigned from its spelling alone. */
@@ -1097,7 +1099,7 @@
 /* UNKNOWN: Declared world_info_t.field_F storage; no intended meaning is assigned from its spelling alone. */
 #define DOS_WORLD_INFO_T_FIELD_F_OFFSET 0xf
 #define DOS_WORLD_INFO_T_FIELD_F_SIZE 1
-/* UNKNOWN: Declared world_info_t.text storage; no intended meaning is assigned from its spelling alone. */
+/* PROVEN: Localized node label pointer assigned from language_txt;save nodes replace it with150/151/152 status strings. */
 #define DOS_WORLD_INFO_T_TEXT_OFFSET 0x10
 #define DOS_WORLD_INFO_T_TEXT_SIZE 4
 /* STRONG: First component in each three-byte RGB palette entry. */
@@ -1373,5 +1375,515 @@
 /* PROVEN: Full background data length across all four planes. */
 #define DOS_FRAME_CONTEXT_T_BACKGROUND_LENGTH_OFFSET 0x1c
 #define DOS_FRAME_CONTEXT_T_BACKGROUND_LENGTH_SIZE 4
+#define DOS_SPECIAL_BOOL_T_SIZE 4
+#define DOS_PLATFORM_OBJECT_TYPE_T_SIZE 4
+#define DOS_PLATFORM_BOOL_T_SIZE 1
+#define DOS_CALCBLOC_FUNC_T_SIZE 4
+#define DOS_CALCBLOC1_FUNC_T_SIZE 4
+#define DOS_NGAWE_BYTE_PAIR_T_SIZE 2
+/* UNKNOWN: Unused unsigned byte member x; coordinate meaning is not established. */
+#define DOS_NGAWE_BYTE_PAIR_T_X_OFFSET 0x0
+#define DOS_NGAWE_BYTE_PAIR_T_X_SIZE 1
+/* UNKNOWN: Unused unsigned byte member y; coordinate meaning is not established. */
+#define DOS_NGAWE_BYTE_PAIR_T_Y_OFFSET 0x1
+#define DOS_NGAWE_BYTE_PAIR_T_Y_SIZE 1
+#define DOS_CPTR_T_SIZE 12
+/* PROVEN: Decode and store the arguments of this opcode. */
+#define DOS_CPTR_T_READ_OFFSET 0x0
+#define DOS_CPTR_T_READ_SIZE 4
+/* PROVEN: Skip the arguments of this opcode without applying its handler. */
+#define DOS_CPTR_T_SKIP_OFFSET 0x4
+#define DOS_CPTR_T_SKIP_SIZE 4
+/* PROVEN: Handle the decoded command; nonzero continues immediate decoding, zero yields to the object updater. */
+#define DOS_CPTR_T_HANDLE_OFFSET 0x8
+#define DOS_CPTR_T_HANDLE_SIZE 4
+#define DOS_DISPLAY_MAP_T_SIZE 8
+/* PROVEN: Screen x of the first visible tile, including its partially clipped portion. */
+#define DOS_DISPLAY_MAP_T_X_OFFSET 0x0
+#define DOS_DISPLAY_MAP_T_X_SIZE 2
+/* PROVEN: Screen y of the first visible tile, including its partially clipped portion. */
+#define DOS_DISPLAY_MAP_T_Y_OFFSET 0x2
+#define DOS_DISPLAY_MAP_T_Y_SIZE 2
+/* PROVEN: Ceiling-rounded number of visible tile columns. */
+#define DOS_DISPLAY_MAP_T_WIDTH_IN_TILES_OFFSET 0x4
+#define DOS_DISPLAY_MAP_T_WIDTH_IN_TILES_SIZE 1
+/* PROVEN: Ceiling-rounded number of visible tile rows. */
+#define DOS_DISPLAY_MAP_T_HEIGHT_IN_TILES_OFFSET 0x5
+#define DOS_DISPLAY_MAP_T_HEIGHT_IN_TILES_SIZE 1
+/* PROVEN: Row-major index of the first visible map tile, stored as unsigned16. */
+#define DOS_DISPLAY_MAP_T_TILE_INDEX_OFFSET 0x6
+#define DOS_DISPLAY_MAP_T_TILE_INDEX_SIZE 2
+#define DOS_BIG_MAP_T_SIZE 32
+/* PROVEN: Map tile record array shared with mp.map. */
+#define DOS_BIG_MAP_T_MAP_OFFSET 0x0
+#define DOS_BIG_MAP_T_MAP_SIZE 4
+/* PROVEN: Per-map-cell Normal texture pointers, despite the offsets spelling. */
+#define DOS_BIG_MAP_T_TILE_TEXTURE_OFFSETS_OFFSET 0x4
+#define DOS_BIG_MAP_T_TILE_TEXTURE_OFFSETS_SIZE 4
+/* PROVEN: Pointer to the prepared visible tile rectangle. */
+#define DOS_BIG_MAP_T_DISPLAY_MAP_OFFSET 0x8
+#define DOS_BIG_MAP_T_DISPLAY_MAP_SIZE 4
+/* PROVEN: Base of the packed Normal tile texture storage. */
+#define DOS_BIG_MAP_T_MAP_BLOCKS_OFFSET 0xc
+#define DOS_BIG_MAP_T_MAP_BLOCKS_SIZE 4
+/* UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units. */
+#define DOS_BIG_MAP_T_FIELD_10_OFFSET 0x10
+#define DOS_BIG_MAP_T_FIELD_10_SIZE 4
+/* UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units. */
+#define DOS_BIG_MAP_T_FIELD_14_OFFSET 0x14
+#define DOS_BIG_MAP_T_FIELD_14_SIZE 2
+/* PROVEN: Map width in 16-pixel tiles. */
+#define DOS_BIG_MAP_T_WIDTH_OFFSET 0x16
+#define DOS_BIG_MAP_T_WIDTH_SIZE 2
+/* PROVEN: Map height in 16-pixel tiles. */
+#define DOS_BIG_MAP_T_HEIGHT_OFFSET 0x18
+#define DOS_BIG_MAP_T_HEIGHT_SIZE 2
+/* UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units. */
+#define DOS_BIG_MAP_T_FIELD_1A_OFFSET 0x1a
+#define DOS_BIG_MAP_T_FIELD_1A_SIZE 2
+/* UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units. */
+#define DOS_BIG_MAP_T_FIELD_1C_OFFSET 0x1c
+#define DOS_BIG_MAP_T_FIELD_1C_SIZE 2
+/* UNKNOWN: No value-consuming role for this declared tail member is established by the assigned map units. */
+#define DOS_BIG_MAP_T_FIELD_1E_OFFSET 0x1e
+#define DOS_BIG_MAP_T_FIELD_1E_SIZE 2
+#define DOS_BB_DATA_T_SIZE 16
+#define DOS_BB_ATTACK_ENTRY_T_SIZE 4
+/* STRONG: Walking-animation selector and encounter movement scratch; 2/3 select walking substates 1/2. */
+#define DOS_BB_DATA_T_SPEED_X_OFFSET 0x0
+#define DOS_BB_DATA_T_SPEED_X_SIZE 2
+/* STRONG: Signed per-encounter progress/countdown scratch; initialized to -1 and tested by movement/landing phases. */
+#define DOS_BB_DATA_T_FIELD1_0X2_OFFSET 0x2
+#define DOS_BB_DATA_T_FIELD1_0X2_SIZE 2
+/* STRONG: Mr Stone/totem damage phase: zero normal, one requested, two reacting, three defeated. */
+#define DOS_BB_DATA_T_FIELD2_0X4_OFFSET 0x4
+#define DOS_BB_DATA_T_FIELD2_0X4_SIZE 1
+/* STRONG: Saved interrupted main state in the damage response. */
+#define DOS_BB_DATA_T_SAVED_MAIN_ETAT_OFFSET 0x5
+#define DOS_BB_DATA_T_SAVED_MAIN_ETAT_SIZE 1
+/* STRONG: Saved interrupted substate in the damage response. */
+#define DOS_BB_DATA_T_SAVED_SUB_ETAT_OFFSET 0x6
+#define DOS_BB_DATA_T_SAVED_SUB_ETAT_SIZE 1
+/* UNKNOWN: No intended meaning established for bb_data_t._pad_7. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BB_DATA_T__PAD_7_OFFSET 0x7
+#define DOS_BB_DATA_T__PAD_7_SIZE 1
+/* STRONG: Saved script command during damage, also reused as a signed defeat countdown. */
+#define DOS_BB_DATA_T_SAVED_CMD_OFFSET 0x8
+#define DOS_BB_DATA_T_SAVED_CMD_SIZE 2
+/* STRONG: Sprite-6 contact x in the main fight; reused as phase scratch in later encounters. */
+#define DOS_BB_DATA_T_SPRITE6_X_OFFSET 0xa
+#define DOS_BB_DATA_T_SPRITE6_X_SIZE 2
+/* STRONG: Sprite-6 contact y in the main fight; reused as scroll/phase scratch in later encounters. */
+#define DOS_BB_DATA_T_SPRITE6_Y_OFFSET 0xc
+#define DOS_BB_DATA_T_SPRITE6_Y_SIZE 2
+/* STRONG: Multipurpose attack/intro counter, including successive overhead projectile positions. */
+#define DOS_BB_DATA_T_FIELD8_0XE_OFFSET 0xe
+#define DOS_BB_DATA_T_FIELD8_0XE_SIZE 1
+/* UNKNOWN: No intended meaning established for bb_data_t._pad_15. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BB_DATA_T__PAD_15_OFFSET 0xf
+#define DOS_BB_DATA_T__PAD_15_SIZE 1
+/* STRONG: Mr Stone attack selector; 255 terminates the row. */
+#define DOS_BB_ATTACK_ENTRY_T_ATTACK_OFFSET 0x0
+#define DOS_BB_ATTACK_ENTRY_T_ATTACK_SIZE 2
+/* STRONG: Wait/repetition count loaded into WaitForFinAtan for the selected attack. */
+#define DOS_BB_ATTACK_ENTRY_T_WAIT_FOR_FIN_ATAN_OFFSET 0x2
+#define DOS_BB_ATTACK_ENTRY_T_WAIT_FOR_FIN_ATAN_SIZE 1
+/* UNKNOWN: No intended meaning established for bb_attack_entry_t.reserved. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BB_ATTACK_ENTRY_T_RESERVED_OFFSET 0x3
+#define DOS_BB_ATTACK_ENTRY_T_RESERVED_SIZE 1
+#define DOS_COUTEAUX_INFO_T_SIZE 20
+#define DOS_PMA_BLOCK_FLAGS_T_SIZE 1
+/* STRONG: Knife target horizontal coordinate; staging readers can add camera x and attack aiming writers use Rayman coordinates. */
+#define DOS_COUTEAUX_INFO_T_X_POS_OFFSET 0x0
+#define DOS_COUTEAUX_INFO_T_X_POS_SIZE 2
+/* STRONG: Knife target vertical coordinate; staging readers can add camera y and attack aiming writers use Rayman coordinates. */
+#define DOS_COUTEAUX_INFO_T_Y_POS_OFFSET 0x2
+#define DOS_COUTEAUX_INFO_T_Y_POS_SIZE 2
+/* STRONG: Knife launch delay/state latch, counting down to one for preparation and zero for travel. */
+#define DOS_COUTEAUX_INFO_T_FIELD2_0X4_OFFSET 0x4
+#define DOS_COUTEAUX_INFO_T_FIELD2_0X4_SIZE 2
+/* STRONG: Knife return delay; the next knife waits for the preceding entry to reach zero. */
+#define DOS_COUTEAUX_INFO_T_FIELD3_0X6_OFFSET 0x6
+#define DOS_COUTEAUX_INFO_T_FIELD3_0X6_SIZE 2
+/* STRONG: Fifteen-step preparation/flicker countdown used before restoring launch velocity. */
+#define DOS_COUTEAUX_INFO_T_FIELD4_0X8_OFFSET 0x8
+#define DOS_COUTEAUX_INFO_T_FIELD4_0X8_SIZE 2
+/* STRONG: Saved horizontal knife launch velocity restored after the preparation pause. */
+#define DOS_COUTEAUX_INFO_T_FIELD5_0XA_OFFSET 0xa
+#define DOS_COUTEAUX_INFO_T_FIELD5_0XA_SIZE 2
+/* STRONG: Saved vertical knife launch velocity restored after the preparation pause. */
+#define DOS_COUTEAUX_INFO_T_FIELD6_0XC_OFFSET 0xc
+#define DOS_COUTEAUX_INFO_T_FIELD6_0XC_SIZE 2
+/* STRONG: Index of the level object bound to this knife slot. */
+#define DOS_COUTEAUX_INFO_T_FIELD7_0XE_OFFSET 0xe
+#define DOS_COUTEAUX_INFO_T_FIELD7_0XE_SIZE 2
+/* STRONG: Saved directional animation frame restored during the preparation pause. */
+#define DOS_COUTEAUX_INFO_T_RECORD_FLAG_OFFSET 0x10
+#define DOS_COUTEAUX_INFO_T_RECORD_FLAG_SIZE 1
+/* STRONG: Knife arrival/completion flag counted by check_couteaux; distinct from object activation. */
+#define DOS_COUTEAUX_INFO_T_ACTIVE_OFFSET 0x11
+#define DOS_COUTEAUX_INFO_T_ACTIVE_SIZE 1
+/* STRONG: Numeric per-knife launch-mode selector; 0/1/2/3 choose different directional/ballistic setup. */
+#define DOS_COUTEAUX_INFO_T_FIELD9_0X12_OFFSET 0x12
+#define DOS_COUTEAUX_INFO_T_FIELD9_0X12_SIZE 1
+/* UNKNOWN: No intended meaning established for couteaux_info_t.dos_tail. Observed layout and typed accesses are retained without a rename. */
+#define DOS_COUTEAUX_INFO_T_DOS_TAIL_OFFSET 0x13
+#define DOS_COUTEAUX_INFO_T_DOS_TAIL_SIZE 1
+/* UNKNOWN: No intended meaning established for pma_block_flags_t.raw. Observed layout and typed accesses are retained without a rename. */
+#define DOS_PMA_BLOCK_FLAGS_T_RAW_OFFSET 0x0
+#define DOS_PMA_BLOCK_FLAGS_T_RAW_SIZE 1
+/* UNKNOWN: No intended meaning established for pma_block_flags_t.bits. Observed layout and typed accesses are retained without a rename. */
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_OFFSET 0x0
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_SIZE 1
+/* UNKNOWN: No intended meaning established for pma_block_flags_t.bits.unused0. Observed layout and typed accesses are retained without a rename. */
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED0_OFFSET 0x0
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED0_SIZE 1
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED0_MASK 0x01
+/* UNKNOWN: No intended meaning established for pma_block_flags_t.bits.solid. Observed layout and typed accesses are retained without a rename. */
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_SOLID_OFFSET 0x0
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_SOLID_SIZE 1
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_SOLID_MASK 0x02
+/* UNKNOWN: No intended meaning established for pma_block_flags_t.bits.unused1. Observed layout and typed accesses are retained without a rename. */
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED1_OFFSET 0x0
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED1_SIZE 1
+#define DOS_PMA_BLOCK_FLAGS_T_BITS_UNUSED1_MASK 0xfc
+#define DOS_BANDE_T_SIZE 24
+#define DOS_DEF_BANDE_T_SIZE 8
+#define DOS_DEF_SPRITE_T_SIZE 8
+/* STRONG: Band extent along the splitting axis; zero marks the foreground-sprite band. */
+#define DOS_BANDE_T_LENGTH_OFFSET 0x0
+#define DOS_BANDE_T_LENGTH_SIZE 2
+/* STRONG: Cumulative band starting offset along the splitting axis. */
+#define DOS_BANDE_T_OFFSET_OFFSET 0x2
+#define DOS_BANDE_T_OFFSET_SIZE 2
+/* STRONG: Scroll update mode: zero parallax, 1/2 autonomous signs, 4/5 combined parallax and autonomous motion. */
+#define DOS_BANDE_T_FIELD_4_OFFSET 0x4
+#define DOS_BANDE_T_FIELD_4_SIZE 1
+/* UNKNOWN: No intended meaning established for bande_t._pad_5. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BANDE_T__PAD_5_OFFSET 0x5
+#define DOS_BANDE_T__PAD_5_SIZE 1
+/* STRONG: Current wrapped scroll displacement in pixels. */
+#define DOS_BANDE_T_FIELD_6_OFFSET 0x6
+#define DOS_BANDE_T_FIELD_6_SIZE 2
+/* STRONG: Camera parallax divisor copied from def_bande_t.field_2. */
+#define DOS_BANDE_T_FIELD_8_OFFSET 0x8
+#define DOS_BANDE_T_FIELD_8_SIZE 1
+/* STRONG: Autonomous scroll increment in sixteenths copied from def_bande_t.field_4. */
+#define DOS_BANDE_T_FIELD_9_OFFSET 0x9
+#define DOS_BANDE_T_FIELD_9_SIZE 1
+/* UNKNOWN: No intended meaning established for bande_t._pad_0a. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BANDE_T__PAD_0A_OFFSET 0xa
+#define DOS_BANDE_T__PAD_0A_SIZE 2
+/* STRONG: Source band-start pointer, with row/column addressing selected by scroll mode. */
+#define DOS_BANDE_T_SOURCE_BUFFER_POS_OFFSET 0xc
+#define DOS_BANDE_T_SOURCE_BUFFER_POS_SIZE 4
+/* STRONG: Destination band-start pointer, using 320-byte screen rows in horizontal mode. */
+#define DOS_BANDE_T_DRAW_BUFFER_POS_OFFSET 0x10
+#define DOS_BANDE_T_DRAW_BUFFER_POS_SIZE 4
+/* STRONG: Autonomous scroll accumulator in sixteenths, wrapped by sixteen times the plane extent. */
+#define DOS_BANDE_T_FIELD_14_OFFSET 0x14
+#define DOS_BANDE_T_FIELD_14_SIZE 2
+/* UNKNOWN: No intended meaning established for bande_t._pad_16. Observed layout and typed accesses are retained without a rename. */
+#define DOS_BANDE_T__PAD_16_OFFSET 0x16
+#define DOS_BANDE_T__PAD_16_SIZE 2
+/* STRONG: Initial band extent copied to the runtime band. */
+#define DOS_DEF_BANDE_T_LENGTH_OFFSET 0x0
+#define DOS_DEF_BANDE_T_LENGTH_SIZE 2
+/* STRONG: Initial camera parallax divisor copied to bande_t.field_8. */
+#define DOS_DEF_BANDE_T_FIELD_2_OFFSET 0x2
+#define DOS_DEF_BANDE_T_FIELD_2_SIZE 1
+/* UNKNOWN: No intended meaning established for def_bande_t._pad_3. Observed layout and typed accesses are retained without a rename. */
+#define DOS_DEF_BANDE_T__PAD_3_OFFSET 0x3
+#define DOS_DEF_BANDE_T__PAD_3_SIZE 1
+/* STRONG: Initial autonomous scroll increment copied to bande_t.field_9. */
+#define DOS_DEF_BANDE_T_FIELD_4_OFFSET 0x4
+#define DOS_DEF_BANDE_T_FIELD_4_SIZE 1
+/* UNKNOWN: No intended meaning established for def_bande_t._pad_5. Observed layout and typed accesses are retained without a rename. */
+#define DOS_DEF_BANDE_T__PAD_5_OFFSET 0x5
+#define DOS_DEF_BANDE_T__PAD_5_SIZE 1
+/* STRONG: Initial scroll update mode copied to bande_t.field_4. */
+#define DOS_DEF_BANDE_T_FIELD_6_OFFSET 0x6
+#define DOS_DEF_BANDE_T_FIELD_6_SIZE 1
+/* UNKNOWN: No intended meaning established for def_bande_t._pad_7. Observed layout and typed accesses are retained without a rename. */
+#define DOS_DEF_BANDE_T__PAD_7_OFFSET 0x7
+#define DOS_DEF_BANDE_T__PAD_7_SIZE 1
+/* STRONG: Background sprite horizontal placement copied into the runtime Sprite table. */
+#define DOS_DEF_SPRITE_T_X_OFFSET 0x0
+#define DOS_DEF_SPRITE_T_X_SIZE 2
+/* STRONG: Background sprite vertical placement copied into the runtime Sprite table. */
+#define DOS_DEF_SPRITE_T_Y_OFFSET 0x2
+#define DOS_DEF_SPRITE_T_Y_SIZE 2
+/* STRONG: Index of the scrolling band whose displacement and layering apply to the sprite. */
+#define DOS_DEF_SPRITE_T_BANDE_INDEX_OFFSET 0x4
+#define DOS_DEF_SPRITE_T_BANDE_INDEX_SIZE 2
+/* UNKNOWN: No intended meaning established for def_sprite_t._pad_6. Observed layout and typed accesses are retained without a rename. */
+#define DOS_DEF_SPRITE_T__PAD_6_OFFSET 0x6
+#define DOS_DEF_SPRITE_T__PAD_6_SIZE 2
+#define DOS_BOOL_SIZE 1
+#define DOS_SAX_ATTACK_ENTRY_T_SIZE 4
+#define DOS_SAX_NOTE_ENTRY_T_SIZE 10
+#define DOS_SAX_DATA_T_SIZE 18
+/* STRONG: Next note or boss-action selector returned by PrepareAtak. */
+#define DOS_SAX_ATTACK_ENTRY_T_NEXT_NOTE_OFFSET 0x0
+#define DOS_SAX_ATTACK_ENTRY_T_NEXT_NOTE_SIZE 1
+/* STRONG: Delay loaded as time+1 after a type-74 note shot. */
+#define DOS_SAX_ATTACK_ENTRY_T_TIME_OFFSET 0x1
+#define DOS_SAX_ATTACK_ENTRY_T_TIME_SIZE 1
+/* STRONG: Nonzero attack-row terminator that resets IndexAtak. */
+#define DOS_SAX_ATTACK_ENTRY_T_END_OFFSET 0x2
+#define DOS_SAX_ATTACK_ENTRY_T_END_SIZE 2
+/* STRONG: Note type offset added to ninety; also initializes the note substate. */
+#define DOS_SAX_NOTE_ENTRY_T_TYPE_OFFSET 0x0
+#define DOS_SAX_NOTE_ENTRY_T_TYPE_SIZE 1
+/* UNKNOWN: No intended meaning established for sax_note_entry_t.dos_alignment. Observed layout and typed accesses are retained without a rename. */
+#define DOS_SAX_NOTE_ENTRY_T_DOS_ALIGNMENT_OFFSET 0x1
+#define DOS_SAX_NOTE_ENTRY_T_DOS_ALIGNMENT_SIZE 1
+/* STRONG: Horizontal launch magnitude, negated for the opposite facing. */
+#define DOS_SAX_NOTE_ENTRY_T_SPEED_X_OFFSET 0x2
+#define DOS_SAX_NOTE_ENTRY_T_SPEED_X_SIZE 2
+/* STRONG: Initial vertical launch velocity. */
+#define DOS_SAX_NOTE_ENTRY_T_SPEED_Y_OFFSET 0x4
+#define DOS_SAX_NOTE_ENTRY_T_SPEED_Y_SIZE 2
+/* STRONG: Value assigned to note iframes_timer; type 92 uses it as a split count. */
+#define DOS_SAX_NOTE_ENTRY_T_INITIAL_IFRAMES_OFFSET 0x6
+#define DOS_SAX_NOTE_ENTRY_T_INITIAL_IFRAMES_SIZE 2
+/* UNKNOWN: No intended meaning established for sax_note_entry_t.field4_0x8. Observed layout and typed accesses are retained without a rename. */
+#define DOS_SAX_NOTE_ENTRY_T_FIELD4_0X8_OFFSET 0x8
+#define DOS_SAX_NOTE_ENTRY_T_FIELD4_0X8_SIZE 2
+/* STRONG: Mr Sax horizontal position scratch used by encounter code. */
+#define DOS_SAX_DATA_T_X_POS_OFFSET 0x0
+#define DOS_SAX_DATA_T_X_POS_SIZE 2
+/* STRONG: Mr Sax vertical position scratch used by encounter code. */
+#define DOS_SAX_DATA_T_Y_POS_OFFSET 0x2
+#define DOS_SAX_DATA_T_Y_POS_SIZE 2
+/* STRONG: World x of the twenty-pixel-wide reflected-note hit box derived from sprite 2. */
+#define DOS_SAX_DATA_T_NOTE_BOX_COLL_X_OFFSET 0x4
+#define DOS_SAX_DATA_T_NOTE_BOX_COLL_X_SIZE 2
+/* STRONG: World y of the 140-pixel-high reflected-note hit box derived from sprite 5 plus twenty. */
+#define DOS_SAX_DATA_T_NOTE_BOX_COLL_Y_OFFSET 0x6
+#define DOS_SAX_DATA_T_NOTE_BOX_COLL_Y_SIZE 2
+/* STRONG: Adjusted sprite-2 horizontal firing anchor. */
+#define DOS_SAX_DATA_T_SPRITE2_X_OFFSET 0x8
+#define DOS_SAX_DATA_T_SPRITE2_X_SIZE 2
+/* STRONG: Adjusted sprite-2 vertical firing anchor. */
+#define DOS_SAX_DATA_T_SPRITE2_Y_OFFSET 0xa
+#define DOS_SAX_DATA_T_SPRITE2_Y_SIZE 2
+/* STRONG: Damage coordination latch: one requests a hit, two denotes a reaction, zero clears it. */
+#define DOS_SAX_DATA_T_COUP_OFFSET 0xc
+#define DOS_SAX_DATA_T_COUP_SIZE 1
+/* STRONG: HP value restored by INIT_SAXO for type 74. */
+#define DOS_SAX_DATA_T_SAVED_HP_OFFSET 0xd
+#define DOS_SAX_DATA_T_SAVED_HP_SIZE 1
+/* STRONG: Interrupted main state restored after the hit animation. */
+#define DOS_SAX_DATA_T_FIELD8_0XE_OFFSET 0xe
+#define DOS_SAX_DATA_T_FIELD8_0XE_SIZE 1
+/* STRONG: Interrupted substate restored after the hit animation. */
+#define DOS_SAX_DATA_T_FIELD9_0XF_OFFSET 0xf
+#define DOS_SAX_DATA_T_FIELD9_0XF_SIZE 1
+/* STRONG: Signed encounter countdown/action scratch, including main-fight defeat timing. */
+#define DOS_SAX_DATA_T_FIELD10_0X10_OFFSET 0x10
+#define DOS_SAX_DATA_T_FIELD10_0X10_SIZE 2
+#define DOS_VITRAUX_INFO_T_SIZE 10
+/* STRONG: Window object's horizontal center captured by init_vitraux. */
+#define DOS_VITRAUX_INFO_T_X_POS_OFFSET 0x0
+#define DOS_VITRAUX_INFO_T_X_POS_SIZE 2
+/* STRONG: Window object's bottom position captured by init_vitraux. */
+#define DOS_VITRAUX_INFO_T_Y_POS_OFFSET 0x2
+#define DOS_VITRAUX_INFO_T_Y_POS_SIZE 2
+/* STRONG: Byte level-object index bound to the window slot. */
+#define DOS_VITRAUX_INFO_T_OBJ_ID_OFFSET 0x4
+#define DOS_VITRAUX_INFO_T_OBJ_ID_SIZE 1
+/* STRONG: Slot index written during window registration. */
+#define DOS_VITRAUX_INFO_T_INDEX_OFFSET 0x5
+#define DOS_VITRAUX_INFO_T_INDEX_SIZE 1
+/* UNKNOWN: No intended meaning established for vitraux_info_t.field_6. Observed layout and typed accesses are retained without a rename. */
+#define DOS_VITRAUX_INFO_T_FIELD_6_OFFSET 0x6
+#define DOS_VITRAUX_INFO_T_FIELD_6_SIZE 1
+/* STRONG: Remaining display repeats, decremented whenever the 100-tick period expires. */
+#define DOS_VITRAUX_INFO_T_MODE_OFFSET 0x7
+#define DOS_VITRAUX_INFO_T_MODE_SIZE 1
+/* STRONG: Window display countdown, reloaded to one hundred on each repeat. */
+#define DOS_VITRAUX_INFO_T_VALUE_OFFSET 0x8
+#define DOS_VITRAUX_INFO_T_VALUE_SIZE 2
+#define DOS_OBJTYPE_SIZE 1
+#define DOS_MITE_POING_LOCAL_T_SIZE 20
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.y_16. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_Y_16_OFFSET 0x0
+#define DOS_MITE_POING_LOCAL_T_Y_16_SIZE 4
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.field_4. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_FIELD_4_OFFSET 0x4
+#define DOS_MITE_POING_LOCAL_T_FIELD_4_SIZE 2
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.speed_x. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_SPEED_X_OFFSET 0x6
+#define DOS_MITE_POING_LOCAL_T_SPEED_X_SIZE 2
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.charge. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_CHARGE_OFFSET 0x8
+#define DOS_MITE_POING_LOCAL_T_CHARGE_SIZE 2
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.field_A. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_FIELD_A_OFFSET 0xa
+#define DOS_MITE_POING_LOCAL_T_FIELD_A_SIZE 2
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.sub_etat. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_SUB_ETAT_OFFSET 0xc
+#define DOS_MITE_POING_LOCAL_T_SUB_ETAT_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.is_returning. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_IS_RETURNING_OFFSET 0xd
+#define DOS_MITE_POING_LOCAL_T_IS_RETURNING_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.is_active. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_IS_ACTIVE_OFFSET 0xe
+#define DOS_MITE_POING_LOCAL_T_IS_ACTIVE_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.damage. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_DAMAGE_OFFSET 0xf
+#define DOS_MITE_POING_LOCAL_T_DAMAGE_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.is_charging. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_IS_CHARGING_OFFSET 0x10
+#define DOS_MITE_POING_LOCAL_T_IS_CHARGING_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.is_boum. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_IS_BOUM_OFFSET 0x11
+#define DOS_MITE_POING_LOCAL_T_IS_BOUM_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.field_12. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_FIELD_12_OFFSET 0x12
+#define DOS_MITE_POING_LOCAL_T_FIELD_12_SIZE 1
+/* UNKNOWN: No intended meaning established for mite_poing_local_t.field_13. Observed layout and typed accesses are retained without a rename. */
+#define DOS_MITE_POING_LOCAL_T_FIELD_13_OFFSET 0x13
+#define DOS_MITE_POING_LOCAL_T_FIELD_13_SIZE 1
+#define DOS_CB_COLLISION_T_SIZE 8
+#define DOS_CASSE_BRIQUE_ENTRY_T_SIZE 8
+/* STRONG: Horizontal ball-to-brick separation retained for the chosen contact. */
+#define DOS_CB_COLLISION_T_DX_OFFSET 0x0
+#define DOS_CB_COLLISION_T_DX_SIZE 2
+/* STRONG: Vertical ball-to-brick separation retained for the chosen contact. */
+#define DOS_CB_COLLISION_T_DY_OFFSET 0x2
+#define DOS_CB_COLLISION_T_DY_SIZE 2
+/* STRONG: Whether the chosen contact reflects the ball's horizontal velocity. */
+#define DOS_CB_COLLISION_T_REFLECT_X_OFFSET 0x4
+#define DOS_CB_COLLISION_T_REFLECT_X_SIZE 1
+/* STRONG: Whether the chosen contact reflects the ball's vertical velocity. */
+#define DOS_CB_COLLISION_T_REFLECT_Y_OFFSET 0x5
+#define DOS_CB_COLLISION_T_REFLECT_Y_SIZE 1
+/* STRONG: Index of the contacted runtime brick slot. */
+#define DOS_CB_COLLISION_T_INDEX_OFFSET 0x6
+#define DOS_CB_COLLISION_T_INDEX_SIZE 1
+/* UNKNOWN: No intended meaning established for cb_collision_t.reserved. Observed layout and typed accesses are retained without a rename. */
+#define DOS_CB_COLLISION_T_RESERVED_OFFSET 0x7
+#define DOS_CB_COLLISION_T_RESERVED_SIZE 1
+/* STRONG: Brick x offset within its formation, read from animation layout. */
+#define DOS_CASSE_BRIQUE_ENTRY_T_X_OFFSET 0x0
+#define DOS_CASSE_BRIQUE_ENTRY_T_X_SIZE 2
+/* STRONG: Brick y offset within its formation, read from animation layout. */
+#define DOS_CASSE_BRIQUE_ENTRY_T_Y_OFFSET 0x2
+#define DOS_CASSE_BRIQUE_ENTRY_T_Y_SIZE 2
+/* STRONG: Index of the pooled level object used by this brick slot. */
+#define DOS_CASSE_BRIQUE_ENTRY_T_OBJECT_INDEX_OFFSET 0x4
+#define DOS_CASSE_BRIQUE_ENTRY_T_OBJECT_INDEX_SIZE 2
+/* STRONG: Saved layout brick kind derived from the animation sprite ID. */
+#define DOS_CASSE_BRIQUE_ENTRY_T_KIND_OFFSET 0x6
+#define DOS_CASSE_BRIQUE_ENTRY_T_KIND_SIZE 1
+/* UNKNOWN: No intended meaning established for casse_brique_entry_t.reserved. Observed layout and typed accesses are retained without a rename. */
+#define DOS_CASSE_BRIQUE_ENTRY_T_RESERVED_OFFSET 0x7
+#define DOS_CASSE_BRIQUE_ENTRY_T_RESERVED_SIZE 1
+#define DOS_OPTIONS_T_SIZE 20
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_MUSIC_ENABLED_OFFSET 0x0
+#define DOS_OPTIONS_T_MUSIC_ENABLED_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_SOUND_VOLUME_OFFSET 0x2
+#define DOS_OPTIONS_T_SOUND_VOLUME_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_SIZESCREEN_OFFSET 0x4
+#define DOS_OPTIONS_T_SIZESCREEN_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_FREQUENCE_OFFSET 0x6
+#define DOS_OPTIONS_T_FREQUENCE_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_FIXON_OFFSET 0x8
+#define DOS_OPTIONS_T_FIXON_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_BACKGROUNDON_OFFSET 0xa
+#define DOS_OPTIONS_T_BACKGROUNDON_SIZE 2
+/* PROVEN: Overloaded menu working slot. Keys use first7 signed16 slots as left/up/right/down/fist/jump/action. Audio uses music/volume;pad slots1/2/3 are jump/fist/action. Graphics slots1..6 are video selector,clip preset,frequency,fixon,background,differential;video menu slots0/1/2 are one-hot normal/ModeX/P486 choices. Interpret only in active screen context. */
+#define DOS_OPTIONS_T_SCROLLDIFFON_OFFSET 0xc
+#define DOS_OPTIONS_T_SCROLLDIFFON_SIZE 2
+/* UNKNOWN: Declared signed16 working-record storage;no value-consuming use established. */
+#define DOS_OPTIONS_T_FIELD_E_OFFSET 0xe
+#define DOS_OPTIONS_T_FIELD_E_SIZE 2
+/* UNKNOWN: Declared signed16 working-record storage;no value-consuming use established. */
+#define DOS_OPTIONS_T_FIELD_10_OFFSET 0x10
+#define DOS_OPTIONS_T_FIELD_10_SIZE 2
+/* UNKNOWN: Declared signed16 working-record storage;no value-consuming use established. */
+#define DOS_OPTIONS_T_FIELD_12_OFFSET 0x12
+#define DOS_OPTIONS_T_FIELD_12_SIZE 2
+#define DOS_SYNCHRO_LOOP_PALETTE_FUNC_T_SIZE 4
+#define DOS_WORLD_INFO_SAVE_T_SIZE 1
+/* PROVEN: Whole serialized byte;field writes preserve unrelated high3 bits. */
+#define DOS_WORLD_INFO_SAVE_T_RAW_OFFSET 0x0
+#define DOS_WORLD_INFO_SAVE_T_RAW_SIZE 1
+/* PROVEN: Packed bit0 copies runtime accessible flag. */
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKED_OFFSET 0x0
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKED_SIZE 1
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKED_MASK 0x01
+/* PROVEN: Packed bit1 copies runtime pending bit2;not runtime scratch bit1. */
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKING_OFFSET 0x0
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKING_SIZE 1
+#define DOS_WORLD_INFO_SAVE_T_IS_UNLOCKING_MASK 0x02
+/* PROVEN: Packed bits2..4 store low3 cage-count bits,ordinary game count0..6. */
+#define DOS_WORLD_INFO_SAVE_T_NB_CAGES_OFFSET 0x0
+#define DOS_WORLD_INFO_SAVE_T_NB_CAGES_SIZE 1
+#define DOS_WORLD_INFO_SAVE_T_NB_CAGES_MASK 0x1c
+/* UNKNOWN: High3 bits retained by store/retrieve field operations;no semantic consumer established. */
+#define DOS_WORLD_INFO_SAVE_T_UNUSED_OFFSET 0x0
+#define DOS_WORLD_INFO_SAVE_T_UNUSED_SIZE 1
+#define DOS_WORLD_INFO_SAVE_T_UNUSED_MASK 0xe0
+#define DOS_BUTTON_TEST_FN_SIZE 4
+#define DOS_KEY_TEST_FN_SIZE 4
+#define DOS_INPUT_FN_SIZE 4
+#define DOS_SWAP_FUNC_T_SIZE 4
+#define DOS_KEYBOARD_HANDLER_FN_SIZE 6
+#define DOS_DOS_VECTOR_T_SIZE 6
+#define DOS_TEMP_MEM_ENTRY_T_SIZE 12
+/* PROVEN: Block byte capacity;zero for unused descriptor. */
+#define DOS_TEMP_MEM_ENTRY_T_CAPACITY_OFFSET 0x0
+#define DOS_TEMP_MEM_ENTRY_T_CAPACITY_SIZE 4
+/* PROVEN: Block start pointer;unused descriptor points to pool end. */
+#define DOS_TEMP_MEM_ENTRY_T_DATA_OFFSET 0x4
+#define DOS_TEMP_MEM_ENTRY_T_DATA_SIZE 4
+/* PROVEN: Nonzero means live block;zero allows best-fit allocation/coalescing. */
+#define DOS_TEMP_MEM_ENTRY_T_ALLOCATED_OFFSET 0x8
+#define DOS_TEMP_MEM_ENTRY_T_ALLOCATED_SIZE 1
+#define DOS_DPMI_MEMORY_INFO_T_SIZE 48
+/* PROVEN: First output dword of INT31h0500h;returned by get_avail_memory. */
+#define DOS_DPMI_MEMORY_INFO_T_LARGEST_FREE_BLOCK_OFFSET 0x0
+#define DOS_DPMI_MEMORY_INFO_T_LARGEST_FREE_BLOCK_SIZE 4
+/* UNKNOWN: Remaining11 DPMI output dwords;not consumed by this unit. Do not invent per-element names. */
+#define DOS_DPMI_MEMORY_INFO_T_REMAINING_INFO_OFFSET 0x4
+#define DOS_DPMI_MEMORY_INFO_T_REMAINING_INFO_SIZE 44
+#define DOS_MEM_PEAK_T_SIZE 8
+/* PROVEN: Largest observed arena cursor. */
+#define DOS_MEM_PEAK_T_USED_OFFSET 0x0
+#define DOS_MEM_PEAK_T_USED_SIZE 4
+/* PROVEN: Current num_world when cursor peak was replaced. */
+#define DOS_MEM_PEAK_T_WORLD_OFFSET 0x4
+#define DOS_MEM_PEAK_T_WORLD_SIZE 2
+/* PROVEN: Current num_level when cursor peak was replaced. */
+#define DOS_MEM_PEAK_T_LEVEL_OFFSET 0x6
+#define DOS_MEM_PEAK_T_LEVEL_SIZE 2
+#define DOS_MEM_USAGE_STATS_T_SIZE 40
+/* PROVEN: Adjusted capacity of pooled temporary arena. */
+#define DOS_MEM_USAGE_STATS_T_TEMP_CAPACITY_OFFSET 0x0
+#define DOS_MEM_USAGE_STATS_T_TEMP_CAPACITY_SIZE 4
+/* PROVEN: Peak cursor plus world/level location for the named arena. */
+#define DOS_MEM_USAGE_STATS_T_FIX_OFFSET 0x4
+#define DOS_MEM_USAGE_STATS_T_FIX_SIZE 8
+/* PROVEN: Peak cursor plus world/level location for the named arena. */
+#define DOS_MEM_USAGE_STATS_T_WORLD_OFFSET 0xc
+#define DOS_MEM_USAGE_STATS_T_WORLD_SIZE 8
+/* PROVEN: Peak cursor plus world/level location for the named arena. */
+#define DOS_MEM_USAGE_STATS_T_LEVEL_OFFSET 0x14
+#define DOS_MEM_USAGE_STATS_T_LEVEL_SIZE 8
+/* PROVEN: Peak cursor plus world/level location for the named arena. */
+#define DOS_MEM_USAGE_STATS_T_SPRITE_OFFSET 0x1c
+#define DOS_MEM_USAGE_STATS_T_SPRITE_SIZE 8
+/* PROVEN: Historical diagnostic high-water value;fallback updates compare pool capacity+single request,not sum of all live heap fallbacks. */
+#define DOS_MEM_USAGE_STATS_T_TEMP_PEAK_OFFSET 0x24
+#define DOS_MEM_USAGE_STATS_T_TEMP_PEAK_SIZE 4
 #endif
 

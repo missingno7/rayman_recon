@@ -1,0 +1,888 @@
+{
+ "schema_version": 1,
+ "oracle": "gog_v121_us",
+ "scope": {
+  "kind": "unit",
+  "source": "ray_pc.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/init_data_state.h"
+  ],
+  "local_headers": [],
+  "preamble": "typedef unsigned int size_t; typedef struct FILE FILE; typedef char *va_list;",
+  "statement_macros": [],
+  "globals": [
+   "global:DrawBufferNormal",
+   "global:PLAN2BIT",
+   "global:PLAN3BIT",
+   "global:VGA_FREQ",
+   "global:current_pal_id",
+   "global:current_rvb",
+   "global:display_buffer",
+   "global:main_mem_tmp",
+   "global:plan2bit_length",
+   "global:plan3bit_length",
+   "global:rvb_plan3",
+   "global:rvb_pres"
+  ]
+ },
+ "artifact_root": "build/workers/sem_flow",
+ "proof_boundary": "DOS evidence establishes the stated meanings; STRICT status is separately recorded. Source name changes and ABI facades preserve whole compiled object contributions.",
+ "restructuring": "No function/global/field symbol,ownership or TU boundary is changed. Local stats declarations are included in a local header; exact ABI facade details below.",
+ "entities": [
+  {
+   "id": "function:INIT_PC",
+   "kind": "function",
+   "current_name": "INIT_PC",
+   "proposed_name": null,
+   "c_type": "void INIT_PC(void)",
+   "meaning": "Allocate logo temporary arena of0x2EE00 bytes.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Allocate logo temporary arena of0x2EE00 bytes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61920",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "INIT_PC"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "INIT_PC",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Allocate logo temporary arena of0x2EE00 bytes."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:61920",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "616c78f27e449856b87d581a66ec642396c7c22baf8e52e5be1025c739460072",
+   "baseline_parser_body_sha256": "616c78f27e449856b87d581a66ec642396c7c22baf8e52e5be1025c739460072",
+   "readers_writers": {
+    "globals": [
+     "main_mem_tmp"
+    ],
+    "callees": [
+     "init_memory"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:FIN_PC",
+   "kind": "function",
+   "current_name": "FIN_PC",
+   "proposed_name": null,
+   "c_type": "void FIN_PC(void)",
+   "meaning": "Free the logo temporary arena.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Free the logo temporary arena."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61934",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "FIN_PC"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "FIN_PC",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Free the logo temporary arena."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:61934",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "214a214f0080bedcf736eafba1ad434993118cf8048cda47cd523234bef4268c",
+   "baseline_parser_body_sha256": "214a214f0080bedcf736eafba1ad434993118cf8048cda47cd523234bef4268c",
+   "readers_writers": {
+    "globals": [
+     "main_mem_tmp"
+    ],
+    "callees": [
+     "free_main_mem"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:updateLogo",
+   "kind": "function",
+   "current_name": "updateLogo",
+   "proposed_name": null,
+   "c_type": "void updateLogo(s16 fade_duration, s16 first_count, s16 second_count)",
+   "meaning": "Present PLAN2BIT at320x200, fade in, then wait two signed16 countdown phases. Count -1 skips a phase; first phase cannot be skipped by input, second accepts Space/button0/button1. Fade out afterward.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Present PLAN2BIT at320x200, fade in, then wait two signed16 countdown phases. Count -1 skips a phase; first phase cannot be skipped by input, second accepts Space/button0/button1. Fade out afterward."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61940",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "updateLogo"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "updateLogo",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Present PLAN2BIT at320x200, fade in, then wait two signed16 countdown phases. Count -1 skips a phase; first phase cannot be skipped by input, second accepts Space/button0/button1. Fade out afterward."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:61940",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "e20a0db19035db73281448ace80e62142595c088d42f0bd0f0beb9690d4c460b",
+   "baseline_parser_body_sha256": "e20a0db19035db73281448ace80e62142595c088d42f0bd0f0beb9690d4c460b",
+   "readers_writers": {
+    "globals": [
+     "DrawBufferNormal",
+     "PLAN2BIT",
+     "VGA_FREQ",
+     "current_rvb",
+     "display_buffer",
+     "rvb_pres"
+    ],
+    "callees": [
+     "DisplayBufferModeNormal",
+     "InitModeNormalWithFrequency",
+     "SWAP_BUFFERS",
+     "TOUCHE",
+     "but0pressed",
+     "but1pressed",
+     "do_fade",
+     "endsynchro",
+     "fade_out",
+     "memcpy",
+     "readinput",
+     "start_fade_in",
+     "synchro"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:updateLogo:i:1",
+   "kind": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Iteration/index value in updateLogo: s16 i;; i = 0;; ++i;; if (i == fade_duration); i = 0;. Preserve declared width and update order.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "s16 i;",
+     "i = 0;",
+     "++i;",
+     "if (i == fade_duration)",
+     "i = 0;",
+     "i = 0;",
+     "++i;",
+     "if (i == fade_duration)",
+     "i = 0;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "updateLogo",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "updateLogo",
+     "ordinal": 1,
+     "uses": [
+      "s16 i;",
+      "i = 0;",
+      "++i;",
+      "if (i == fade_duration)",
+      "i = 0;",
+      "i = 0;",
+      "++i;",
+      "if (i == fade_duration)",
+      "i = 0;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "updateLogo",
+   "role": "local",
+   "declarator": "s16 $",
+   "declaration_ordinal": 1,
+   "source_file": "src/ray_pc.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:updateLogo:fade_duration:2",
+   "kind": "local",
+   "current_name": "fade_duration",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in updateLogo: if (i == fade_duration); if (i == fade_duration). Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "if (i == fade_duration)",
+     "if (i == fade_duration)"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "updateLogo",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "updateLogo",
+     "ordinal": 2,
+     "uses": [
+      "if (i == fade_duration)",
+      "if (i == fade_duration)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "updateLogo",
+   "role": "parameter",
+   "declarator": "s16 $",
+   "declaration_ordinal": 2,
+   "source_file": "src/ray_pc.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:updateLogo:first_count:3",
+   "kind": "local",
+   "current_name": "first_count",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in updateLogo: while (first_count != (-1)); first_count--;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "while (first_count != (-1))",
+     "first_count--;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "updateLogo",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "updateLogo",
+     "ordinal": 3,
+     "uses": [
+      "while (first_count != (-1))",
+      "first_count--;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "updateLogo",
+   "role": "parameter",
+   "declarator": "s16 $",
+   "declaration_ordinal": 3,
+   "source_file": "src/ray_pc.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "local:updateLogo:second_count:4",
+   "kind": "local",
+   "current_name": "second_count",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Local value in updateLogo: if (second_count == (-1)); second_count--;. Function contract identifies its operation; no independent gameplay enum is inferred.",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s16",
+    "observed_uses": [
+     "if (second_count == (-1))",
+     "second_count--;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "updateLogo",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "updateLogo",
+     "ordinal": 4,
+     "uses": [
+      "if (second_count == (-1))",
+      "second_count--;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "Existing spelling retained; not asserted historical unless external evidence says so",
+   "function": "updateLogo",
+   "role": "parameter",
+   "declarator": "s16 $",
+   "declaration_ordinal": 4,
+   "source_file": "src/ray_pc.c",
+   "signedness": "signed"
+  },
+  {
+   "id": "function:LOAD_SCREEN",
+   "kind": "function",
+   "current_name": "LOAD_SCREEN",
+   "proposed_name": null,
+   "c_type": "void LOAD_SCREEN(void)",
+   "meaning": "Load logo/vignette resource29 into main_mem_tmp.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Load logo/vignette resource29 into main_mem_tmp."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61a70",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "LOAD_SCREEN"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "LOAD_SCREEN",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Load logo/vignette resource29 into main_mem_tmp."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:61a70",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "b32374de09daa21ffcb05971daf81d2c506458e57e9e11276d80bd0e471900eb",
+   "baseline_parser_body_sha256": "b32374de09daa21ffcb05971daf81d2c506458e57e9e11276d80bd0e471900eb",
+   "readers_writers": {
+    "globals": [
+     "main_mem_tmp"
+    ],
+    "callees": [
+     "LoadPlan2InVignet"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:sub_71A84",
+   "kind": "function",
+   "current_name": "sub_71A84",
+   "proposed_name": null,
+   "c_type": "void sub_71A84(void)",
+   "meaning": "Load vignette resource31 into main_mem_tmp; no external historical purpose name is established.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Load vignette resource31 into main_mem_tmp; no external historical purpose name is established."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61a84",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "sub_71A84"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "sub_71A84",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Load vignette resource31 into main_mem_tmp; no external historical purpose name is established."
+   ],
+   "name_provenance": "RAYVERSE",
+   "oracle_address": "1:61a84",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "bb0a7e590fbf7a339e4f0a126ea860359ef4e32d6813f5f3f9d6016d3f78739d",
+   "baseline_parser_body_sha256": "bb0a7e590fbf7a339e4f0a126ea860359ef4e32d6813f5f3f9d6016d3f78739d",
+   "readers_writers": {
+    "globals": [
+     "main_mem_tmp"
+    ],
+    "callees": [
+     "LoadPlan2InVignet"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "function:sub_71A98",
+   "kind": "function",
+   "current_name": "sub_71A98",
+   "proposed_name": null,
+   "c_type": "void sub_71A98(void)",
+   "meaning": "Swap PLAN2BIT/PLAN3BIT pointers, their byte lengths, and the768-byte rvb_pres/rvb_plan3 palettes.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Swap PLAN2BIT/PLAN3BIT pointers, their byte lengths, and the768-byte rvb_pres/rvb_plan3 palettes."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61a98",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "sub_71A98"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "sub_71A98",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Swap PLAN2BIT/PLAN3BIT pointers, their byte lengths, and the768-byte rvb_pres/rvb_plan3 palettes."
+   ],
+   "name_provenance": "RAYVERSE",
+   "oracle_address": "1:61a98",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "0bf32dd8f02aad5dc7e644ff189b8b2045555627eae54c9e49e75df5ed328c79",
+   "baseline_parser_body_sha256": "62b6dff956cab15fd41ce63ee997cddf95a1cd5979833c470037537a76f93655",
+   "readers_writers": {
+    "globals": [
+     "PLAN2BIT",
+     "PLAN3BIT",
+     "plan2bit_length",
+     "plan3bit_length",
+     "rvb_plan3",
+     "rvb_pres"
+    ],
+    "callees": [
+     "memcpy"
+    ],
+    "members": []
+   }
+  },
+  {
+   "id": "local:sub_71A98:temp:1",
+   "kind": "local",
+   "current_name": "palette_swap",
+   "proposed_name": null,
+   "c_type": "u8 [0x300]",
+   "meaning": "Local palette swap. Exact role: u8 temp[0x300];; memcpy(temp, &rvb_pres, 0x300);; memcpy(&rvb_plan3, temp, 0x300);",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 [0x300]",
+    "observed_uses": [
+     "u8 temp[0x300];",
+     "memcpy(temp, &rvb_pres, 0x300);",
+     "memcpy(&rvb_plan3, temp, 0x300);"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "sub_71A98",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "sub_71A98",
+     "ordinal": 1,
+     "uses": [
+      "u8 temp[0x300];",
+      "memcpy(temp, &rvb_pres, 0x300);",
+      "memcpy(&rvb_plan3, temp, 0x300);"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "INVENTED purpose spelling; DOS dataflow PROVEN; original Android lookup retained in naming audit",
+   "function": "sub_71A98",
+   "role": "local",
+   "declarator": "u8 $[0x300]",
+   "declaration_ordinal": 1,
+   "source_file": "src/ray_pc.c",
+   "signedness": "unsigned",
+   "previous_name": "temp"
+  },
+  {
+   "id": "local:sub_71A98:temp_ptr:2",
+   "kind": "local",
+   "current_name": "buffer_swap",
+   "proposed_name": null,
+   "c_type": "u8 *",
+   "meaning": "Local buffer swap. Exact role: u8 *temp_ptr;; temp_ptr = PLAN2BIT;; PLAN3BIT = temp_ptr;",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "u8 *",
+    "observed_uses": [
+     "u8 *temp_ptr;",
+     "temp_ptr = PLAN2BIT;",
+     "PLAN3BIT = temp_ptr;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "sub_71A98",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "sub_71A98",
+     "ordinal": 2,
+     "uses": [
+      "u8 *temp_ptr;",
+      "temp_ptr = PLAN2BIT;",
+      "PLAN3BIT = temp_ptr;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "INVENTED purpose spelling; DOS dataflow PROVEN; original Android lookup retained in naming audit",
+   "function": "sub_71A98",
+   "role": "local",
+   "declarator": "u8 *$",
+   "declaration_ordinal": 2,
+   "source_file": "src/ray_pc.c",
+   "signedness": "not applicable (pointer)",
+   "previous_name": "temp_ptr"
+  },
+  {
+   "id": "local:sub_71A98:temp_size:3",
+   "kind": "local",
+   "current_name": "length_swap",
+   "proposed_name": null,
+   "c_type": "s32",
+   "meaning": "Local length swap. Exact role: s32 temp_size;; temp_size = plan2bit_length;; plan3bit_length = temp_size;",
+   "unit": "see function contract / declared representation",
+   "value_domain": {
+    "representation": "s32",
+    "observed_uses": [
+     "s32 temp_size;",
+     "temp_size = plan2bit_length;",
+     "plan3bit_length = temp_size;"
+    ],
+    "limitation": "Declaration and observed computations are not an exhaustive runtime range; no capacity/reachability is inferred."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "function": "sub_71A98",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/inventory_ray_pc.json",
+     "kind": "declaration_and_use",
+     "function": "sub_71A98",
+     "ordinal": 3,
+     "uses": [
+      "s32 temp_size;",
+      "temp_size = plan2bit_length;",
+      "plan3bit_length = temp_size;"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep the declared narrowing/signedness and arithmetic in the function contract."
+   ],
+   "name_provenance": "INVENTED purpose spelling; DOS dataflow PROVEN; original Android lookup retained in naming audit",
+   "function": "sub_71A98",
+   "role": "local",
+   "declarator": "s32 $",
+   "declaration_ordinal": 3,
+   "source_file": "src/ray_pc.c",
+   "signedness": "signed",
+   "previous_name": "temp_size"
+  },
+  {
+   "id": "function:DO_UBI_LOGO",
+   "kind": "function",
+   "current_name": "DO_UBI_LOGO",
+   "proposed_name": null,
+   "c_type": "void DO_UBI_LOGO(void)",
+   "meaning": "Allocate temporary arena, reset audio clock/palette, load resource29, initialize fade and logo music, run updateLogo(60,-1,8), free arena, stop CD.",
+   "unit": "see parameters/result and side-effect contract",
+   "value_domain": {
+    "contract": "Allocate temporary arena, reset audio clock/palette, load resource29, initialize fade and logo music, run updateLogo(60,-1,8), free arena, stop CD."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_flow/evidence/ray_pc.dos.txt",
+     "kind": "DOS_function",
+     "address": "1:61b34",
+     "verification_status": "STRICT"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/symbols.json",
+     "kind": "whole_binary_callers_and_source_references",
+     "key": "DO_UBI_LOGO"
+    },
+    {
+     "artifact": "build/workers/sem_flow/evidence/xref_names.json",
+     "kind": "external_name",
+     "key": "DO_UBI_LOGO",
+     "authority": "Corroboration only; DOS wins every disagreement."
+    }
+   ],
+   "port_notes": [
+    "Allocate temporary arena, reset audio clock/palette, load resource29, initialize fade and logo music, run updateLogo(60,-1,8), free arena, stop CD."
+   ],
+   "name_provenance": "Android original symbol",
+   "oracle_address": "1:61b34",
+   "source_file": "src/ray_pc.c",
+   "source_body_sha256": "048f5b538439967e291ace4c7cab065f7a705891928a7b710d646518b5448894",
+   "baseline_parser_body_sha256": "048f5b538439967e291ace4c7cab065f7a705891928a7b710d646518b5448894",
+   "readers_writers": {
+    "globals": [
+     "current_pal_id"
+    ],
+    "callees": [
+     "FIN_PC",
+     "INIT_FADE_IN",
+     "INIT_PC",
+     "LOAD_SCREEN",
+     "SetCompteurTrameAudio",
+     "start_cd_ubi_soft",
+     "stop_cd",
+     "updateLogo"
+    ],
+    "members": []
+   }
+  }
+ ],
+ "unit_local_type_aliases": [],
+ "source_fingerprints": {
+  "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
+  "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
+  "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/include/map.h": "e6ecfc28c926ae4f18c71f1a2ccdf1199253c7bc0887e08715bc335456789f17",
+  "src/include/type_island_abi.h": "08f0103a45b8cad235165e57cd03c312b13eb60dcbfaff3ab0908d1fe8e94094",
+  "src/include/init_data_state.h": "1f6d46eb3a29c303ce37dd64041396065124bd511d7bc9b29253fc8580924577"
+ },
+ "proposal_fingerprints": {
+  "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
+  "box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
+  "cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
+  "input.c": "5c0c0b729e4043ac713f79ce0a68e750eed5063c14b761faea72934d0fa6d2cd",
+  "jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "mathutil.c": "c597394578c5b7642f6a3a532085faddbc727cc8c042c0d7c65daabb9346df75",
+  "menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "menu_inline.h": "69c059f454d951c97c524554332167a94005d55b58685a313732e461a691a56f",
+  "menu_keys_local.h": "0e58dc6d67fada5077de5dda4279b863c8d2d07fec2cbc6132b66d580d8dd394",
+  "menu_local.h": "c689ccb9f469353ade55119678539f1dbfffe4333bb6b7c9ef8819542ac57b24",
+  "original_inline.h": "1220e5385e2ce07476a73b85cbcd2c822f3d1acac54d1d3312d99e19698dbefb",
+  "pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "rand.c": "e0b57934471d7d330eac7870d64d0d542a463cbdddd62ba6b51cc1ba250d2aa3",
+  "ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
+  "save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "savecodec.c": "f5a1bbddace7847ea77d6326052f1fa6070385790409f685ea802b81c603e20a",
+  "sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "sysutils_local.h": "295d003e6d7c639f1d2966115363dc45ce9b63c11a650486050a38e3e8276e58",
+  "worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "evidence_source_fingerprints": {
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/blood.c": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/box.c": "8b3182164c5bcc4d4ca26f006ca02866bcd32387adfa0792ecb5b000edcddd95",
+  "src/bss/bss_3d130.c": "27e0458769606b5c822b0f35e516a78673b22eff0e71a2cd1d5273e2323dac55",
+  "src/bss/bss_3d7b8.c": "b56b8c04b7ecda7c33b0cde74edc3c1b568c0adbf561bba62976be1109bc16d4",
+  "src/bss/bss_3d7d8.c": "9bfcd907b6c684051385a803b9103f7badd4391481d47fbe830614e61f318ccd",
+  "src/bss/bss_3d84c.c": "b1b557e5db1605c4e195cd5393842ebd62063efde1a1bff39be741d1595e8e11",
+  "src/bss/bss_3fa4c.c": "844593744ce67b4faf37c2b1008936331ee753bc002a4bd425914411845a52c6",
+  "src/bss/bss_3fa82.c": "a2f83d588f67f357d586bb77e1dd11af47b38e379e340e553c3d3fad8c590628",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/data/bss_palettes.c": "9bfcd0be66c70bf318fc9bb9dcaded7e128f54dba61b2426c41e25a8718aa9aa",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/effect1.c": "6aa0b532fa19c31f02b1dbb885dce33d0f3ce31c75553ac390c996873b5bf2d7",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/input.c": "5c0c0b729e4043ac713f79ce0a68e750eed5063c14b761faea72934d0fa6d2cd",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/movie.c": "cf17158fd0425314fb207bc55ee5264ef2f72c97ea07eb4d34d61405c976c2a4",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/RAYMAN.CFG": "3bf294ba76bc8794fbb91421a71a543e651d24d148f259085042e4a0b6fcfea7"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/box.dos.txt": "df2250b596ffda8b22effb28d9d2e4c28d3cb3c10db20a571e90e0eef8e7f815",
+  "evidence/box_typed_accesses.json": "c68e0e3139ab7e64ca16647993603ccdeda86c776d7af4873f0d4eea1fcea915",
+  "evidence/canonical_input_hashes.json": "0b06e44e47315294fc00a88f8d2193e749dfa9588a5c421ba75ea6f00b624903",
+  "evidence/cdsave.dos.txt": "84f432dedabe5f79766a279575305bd3da741a7f58e9e9a274672962724d2e58",
+  "evidence/cdsave_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/cheat.dos.txt": "6d64afbdc62b52e6127951378ede64bb887b3fce5c92f5f19e2902bc56960266",
+  "evidence/cheat_typed_accesses.json": "0d3a2bcd692e11af82911c35fd3e21c93757a1390483b21ab1a005bc596db601",
+  "evidence/data_domains.json": "6921e5abef079e3cd4cf91dac314284073f105b2161d64fe46adaa54f5e4adab",
+  "evidence/displacement_candidates.json": "d10ee3791b47905dc1ce8fd6e9a778ea68155b17f5bfed86ddfddd282d8c076f",
+  "evidence/global_declared_extents.json": "f445924469fe8fead8d0fc6e39dacfd0a691d728f9a20171a0d089812d1b7aac",
+  "evidence/input.dos.txt": "d64165bad5fb1f9aa7046989318a357f9ae3be3ee38131906d466cde21eeed92",
+  "evidence/input_typed_accesses.json": "f4d30248acb349763c1a070f82ec5c974e23e600d8737ac2eb8cb58ddc4e8481",
+  "evidence/inventory.json": "d983e69d8a882d01ec8f254cb0eff069cb17a9f17a2bfa2d8b0f5c92d2544f9b",
+  "evidence/inventory_box.json": "7961a9de0209640694cde532b3308e3b8295c8d8a8930c0e63c100843dc1114f",
+  "evidence/inventory_cdsave.json": "42e551609cc8bf0053ddad8e79801e2ebc49c4ef0e085681d338d74594deac79",
+  "evidence/inventory_cheat.json": "099bddcf827bf059ef7a14a7e16741ae1766b9f8a1c48129cde28f887bdf1c95",
+  "evidence/inventory_input.json": "8f24e0fadc00b635a68a7c8669e9ea52d0ee626eb6759876d7ee7ece5767520c",
+  "evidence/inventory_jumelle.json": "b152cf69d2ea720a2f51b8622e84b0236bc88ade1b30b12bddea9e05389f5ed3",
+  "evidence/inventory_mathutil.json": "b394a0d160e639cc6efd84d3cdf57684ff3e8af3df4984faa59e5d0f2b6cca76",
+  "evidence/inventory_menu.json": "07cc2870db0766b95d74439038cc100d732346dd806c71aa95a7402e412f8df4",
+  "evidence/inventory_pcmain.json": "446c7940aebcc9311f409fa93ae4df6d28098986a37d9d7711d24676bed40e69",
+  "evidence/inventory_rand.json": "12633ab7063e9a1114d12e96bb2477fb80cbc5132cdeaab991087aa3d2884394",
+  "evidence/inventory_ray_pc.json": "04796c15d1380817aa9b562ff2e5c866b7d8578a3bd42ac8bb4f260be57d23a2",
+  "evidence/inventory_save.json": "615c9f05df2402cd7040de40101f723df8711a9e75dd7b2822858b8f6f596a60",
+  "evidence/inventory_savecodec.json": "756cb383700ae903c8f0133cdf46ff07aaeaee00dfaa63e7eceac6f4c3f12e1b",
+  "evidence/inventory_sysutils.json": "1c98e20e4496db62a3cabe58de451f4794df3921950d5eae7e74230bb9fc4b76",
+  "evidence/inventory_worldmap.json": "0fcea41f0a3dce75f70024356a6ff597ff3a1306be22de323380a59439b6a2c0",
+  "evidence/jumelle.dos.txt": "a0fb7ca7672e364f0adf14b648a85dba6f0e50ea2ef6cf239110cb8f3bf78cf0",
+  "evidence/jumelle_typed_accesses.json": "2af0900bc8ced35d2efb5a177eb9f41b4820765b95d679c2b2dc91ce0016c79f",
+  "evidence/layout.json": "a17c8b32794a3a2401390bf2ba90a6ae640faa43a6ffdcc3a75987e9f923d64a",
+  "evidence/mathutil.dos.txt": "60c911e5e591b814b36e0c6d24982c6239b065fa22cc6a65457c937885d82222",
+  "evidence/mathutil_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/menu.dos.txt": "038aa0caea08047e662eaf6b64d963d1ab110dec2d6de3aba01df90d002d459e",
+  "evidence/menu_typed_accesses.json": "ffc2642400b2bbecddaf88eebb6ae3d3ddd1349ee4424f6f74a4457693d5b5c1",
+  "evidence/naming_audit.json": "276900dc1353f03eeeccff4a82b82d383297c706d6864a718934181df000eed4",
+  "evidence/negative_results.json": "95281cfe61347562aaa0cff78edd556f5147558335806b931462b44aaca2e16e",
+  "evidence/parse_errors.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/pcmain.dos.txt": "ce70b87cd14f11ac015f347faa2b33030b053cd391c8d458269d7563301857c9",
+  "evidence/pcmain_typed_accesses.json": "a4c1816cb22ebd67d322859080d771392b3fcd7f0b431a4392d903109a0406c8",
+  "evidence/proposal_scopes.json": "05e7d944562be5ae69456f672c3739d7c757e204214d95082e191acf1a7628cb",
+  "evidence/rand.dos.txt": "0295e9c9050fef5d4b63663d5704bef71780d3a41215a79fcdf4b92f455c7cfa",
+  "evidence/rand_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/ray_pc.dos.txt": "11d92a1fe0f9d96ee89824dbbb6627965b6fcef3d52021738d395d1dfb82dbe7",
+  "evidence/ray_pc_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/read_manifest.json": "427562257d33e7d109c138324fbd8c4fb9c23b306c16f2fbaadf632564ed65d2",
+  "evidence/save.dos.txt": "d5a303d7688f8bc2d48d7fc2ca4d199b42a8435ab83e9aa923077e36ffa47a2c",
+  "evidence/savecodec.dos.txt": "46c75f2a53a06b36bab785b471d1ef64650ac03211341ebeae1a1a5d909da2b0",
+  "evidence/savecodec_typed_accesses.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "evidence/save_formats.json": "83dfb7a7a76794213ca55162028be973706f2695039f7a67ddff39b8e375e00c",
+  "evidence/save_typed_accesses.json": "a42a8de1e7110f286212307e53ee06026f9dc137f92e4311deea57fdba94cd4b",
+  "evidence/scopes.json": "f6fcf670caf9ae8ba47faf3ae247d8fee4fe3030500525439ad1ff42d5bf32fe",
+  "evidence/symbols.json": "bec95c3a024cd74fc7d4146d4d7eabfa253964dcce262d52ee1497f8070a0263",
+  "evidence/sysutils.dos.txt": "6d35855936f53b95e3489b8f84ee7573dd7d1027632419417e8bee1a5ba48042",
+  "evidence/sysutils_typed_accesses.json": "0c7d8490e1331d904d1d1322ee8701a7bfc5effcf088051a1ad8d9905cd7047c",
+  "evidence/worldmap.dos.txt": "17a0d6b207249fb14443bdc39b0e2346f1357e360f88ed3e75d39de3b241e35a",
+  "evidence/worldmap_typed_accesses.json": "397a3244b8f8b98e4250768483eb719c32390aa22331cdd55990266b4b3dcd20",
+  "evidence/world_graph.json": "1b06a20cf89f914c1404f90fcb029bd25b4798287eff3ff0ab4a98b8fd3df078",
+  "evidence/xref_names.json": "2f881b2ca7c1a61a3978b9508b71a7e249a5a9a62271b7b7d821461a93905b1a"
+ }
+}

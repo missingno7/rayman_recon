@@ -892,18 +892,19 @@ block_98:
 }
 
 //525FC
-void snapLaserToWeapon(obj_t *laser_obj, u8 param_2)
+/* Local names: docs/semantics/meredenis.json (DOS dataflow; compiler output unchanged). */
+void snapLaserToWeapon(obj_t *laser_obj, u8 initialize_launch)
 {
-    obj_t *unk_obj = &level.objects[laser_obj->follow_id];
+    obj_t *weapon_obj = &level.objects[laser_obj->follow_id];
     s16 x; s16 y; s16 w; s16 h;
     u8 sub_etat;
     eta_t *eta;
 
-    GET_SPRITE_POS(unk_obj, laser_obj->link, &x, &y, &w, &h);
-    if (param_2)
+    GET_SPRITE_POS(weapon_obj, laser_obj->link, &x, &y, &w, &h);
+    if (initialize_launch)
     {
-        eta = &unk_obj->eta[unk_obj->main_etat][unk_obj->sub_etat];
-        switch (unk_obj->sub_etat)
+        eta = &weapon_obj->eta[weapon_obj->main_etat][weapon_obj->sub_etat];
+        switch (weapon_obj->sub_etat)
         {
         case 17:
             eta->anim_index = 47;
@@ -915,9 +916,9 @@ void snapLaserToWeapon(obj_t *laser_obj, u8 param_2)
             eta->anim_index = 46;
             break;
         }
-        unk_obj->anim_index = eta->anim_index;
+        weapon_obj->anim_index = eta->anim_index;
         laser_obj->x = x - laser_obj->offset_bx;
-        if (unk_obj->flags.flip_x)
+        if (weapon_obj->flags.flip_x)
         {
             laser_obj->cmd = GO_RIGHT; //for some reason it's inverted compared to the PS1 decomp? 
             laser_obj->x += w - 5;
@@ -1147,11 +1148,12 @@ void doMereDenisHit(obj_t* obj, s16 sprite) {
 }
 
 //52C54
+/* Local names: docs/semantics/meredenis.json (DOS dataflow; compiler output unchanged). */
 void mereDenisBigLaserCommand(obj_t *laser_obj)
 {
     u8 max_frame;
-    obj_t *unk_obj;
-    eta_t *unk_eta;
+    obj_t *weapon_obj;
+    eta_t *weapon_eta;
 
     switch (laser_obj->sub_etat)
     {
@@ -1171,20 +1173,20 @@ void mereDenisBigLaserCommand(obj_t *laser_obj)
         snapLaserToWeapon(laser_obj, false);
     else
     {
-        unk_obj = &level.objects[laser_obj->follow_id];
-        if (unk_obj->follow_id == laser_obj->id) // field 4A? 
+        weapon_obj = &level.objects[laser_obj->follow_id];
+        if (weapon_obj->follow_id == laser_obj->id) // field 4A? 
         {
-            unk_eta = &unk_obj->eta[unk_obj->main_etat][unk_obj->sub_etat];
-            switch (unk_obj->anim_index)
+            weapon_eta = &weapon_obj->eta[weapon_obj->main_etat][weapon_obj->sub_etat];
+            switch (weapon_obj->anim_index)
             {
             case 46:
-                unk_eta->anim_index = 1;
+                weapon_eta->anim_index = 1;
                 break;
             case 47:
-                unk_eta->anim_index = 0;
+                weapon_eta->anim_index = 0;
                 break;
             case 48:
-                unk_eta->anim_index = 28;
+                weapon_eta->anim_index = 28;
                 break;
             }
         }

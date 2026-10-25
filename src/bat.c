@@ -27,10 +27,11 @@ s16 myRand(s16 max);
 #define Abs(value) abs32_inline(value)
 #include "inline_helpers.h"
 
+/* Local names: docs/semantics/bat.json (DOS dataflow; compiler output unchanged). */
 void DO_BAT_FLASH(s16 in_x, s16 in_y)
 {
-    s16 fire_par_3;
-    s16 unk_1;
+    s16 fire_direction;
+    s16 ratio_index;
     s16 diff_x;
     s16 diff_y;
     u8 x_gt_0;
@@ -53,39 +54,39 @@ void DO_BAT_FLASH(s16 in_x, s16 in_y)
 
     if (diff_y == 0) {
         if (x_gt_0)
-            fire_par_3 = 27;
+            fire_direction = 27;
         else if (diff_x != 0)
-            fire_par_3 = 9;
+            fire_direction = 9;
         else
-            fire_par_3 = -1;
+            fire_direction = -1;
     } else {
-        unk_1 = diff_x * 45 / diff_y;
+        ratio_index = diff_x * 45 / diff_y;
         if (x_gt_0) {
             if (y_gt_0) {
-                if (unk_1 > 255)
-                    fire_par_3 = 27;
+                if (ratio_index > 255)
+                    fire_direction = 27;
                 else
-                    fire_par_3 = 27 + N_anim[unk_1];
+                    fire_direction = 27 + N_anim[ratio_index];
             } else {
-                if (unk_1 > 255)
-                    fire_par_3 = 0;
+                if (ratio_index > 255)
+                    fire_direction = 0;
                 else
-                    fire_par_3 = N_anim[unk_1];
+                    fire_direction = N_anim[ratio_index];
             }
         } else if (y_gt_0) {
-            if (unk_1 > 255)
-                fire_par_3 = 18;
+            if (ratio_index > 255)
+                fire_direction = 18;
             else
-                fire_par_3 = 18 + N_anim[unk_1];
+                fire_direction = 18 + N_anim[ratio_index];
         } else {
-            if (unk_1 > 255)
-                fire_par_3 = 9;
+            if (ratio_index > 255)
+                fire_direction = 9;
             else
-                fire_par_3 = 9 + N_anim[unk_1];
+                fire_direction = 9 + N_anim[ratio_index];
         }
     }
 
-    DO_REDEYE_FIRE(in_x, in_y, fire_par_3);
+    DO_REDEYE_FIRE(in_x, in_y, fire_direction);
 }
 
 void DO_BAT_LEFT_FLASH(obj_t *obj)

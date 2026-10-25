@@ -145,7 +145,8 @@ void INIT_SAXO(obj_t* sax_obj) {
 }
 
 //759B4
-void allocateNote2(obj_t* note_obj, s16 a2) {
+/* Local names: docs/semantics/saxo.json (DOS dataflow; compiler output unchanged). */
+void allocateNote2(obj_t* note_obj, s16 side_selector) {
     /* 50D7C 8017557C -O2 -msoft-float */
     obj_t* cur_obj;
     s16 i;
@@ -164,13 +165,13 @@ void allocateNote2(obj_t* note_obj, s16 a2) {
                     cur_obj->speed_x = 0;
 
                     offs_x = note_obj->offset_bx >> 1;
-                    if (a2 != 0)
+                    if (side_selector != 0)
                         offs_x = -offs_x;
                     cur_obj->x = note_obj->x + offs_x;
                     cur_obj->y = note_obj->y;
 
                     cur_obj->main_etat = 0;
-                    cur_obj->sub_etat = a2 + 2;
+                    cur_obj->sub_etat = side_selector + 2;
                     cur_obj->init_x = cur_obj->x;
                     cur_obj->init_y = cur_obj->y;
                     skipToLabel(cur_obj, 1, true);

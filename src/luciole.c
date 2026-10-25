@@ -94,13 +94,14 @@ void CLEAR_FIXE_LUCIOLE(void)
     }
 }
 
-void set_luciole(s32 a1, s32 a2)
+/* Names and meanings: docs/semantics/luciole.json. */
+void set_luciole(s32 center_x, s32 center_y)
 {
 
-    Bloc_lim_W1_Aff = a1 - rayon_luciole;
-    Bloc_lim_W2_Aff = a1 + rayon_luciole;
-    Bloc_lim_H1_Aff = a2 - rayon_luciole;
-    Bloc_lim_H2_Aff = a2 + rayon_luciole;
+    Bloc_lim_W1_Aff = center_x - rayon_luciole;
+    Bloc_lim_W2_Aff = center_x + rayon_luciole;
+    Bloc_lim_H1_Aff = center_y - rayon_luciole;
+    Bloc_lim_H2_Aff = center_y + rayon_luciole;
 
     if (Bloc_lim_H1_Aff < Bloc_lim_H1_Glob)
         Bloc_lim_H1_Aff = Bloc_lim_H1_Glob;
@@ -121,7 +122,8 @@ void set_luciole(s32 a1, s32 a2)
 
 }
 
-void init_aff_luciole(s32 a1, s32 a2)
+/* Names and meanings: docs/semantics/luciole.json. */
+void init_aff_luciole(s32 center_x, s32 center_y)
 {
     rotationtxt = 0;
     Bloc_lim_H1_Glob = Bloc_lim_H1;
@@ -131,10 +133,11 @@ void init_aff_luciole(s32 a1, s32 a2)
     Bloc_lim_W1_Glob = Bloc_lim_W1;
     rayon_luciole = 0;
     Bloc_lim_W2_Glob = Bloc_lim_W2;
-    set_luciole(a1, a2);
+    set_luciole(center_x, center_y);
 }
 
-void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
+/* Names and meanings: docs/semantics/luciole.json. */
+void plot2line(s32 center_x, s32 center_y, s32 inner_half_width, s32 row_offset, u8 *draw_buf)
 {
   s32 x_outer_left;
   s32 left_width;
@@ -148,9 +151,9 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
   s32 i;
   u8 *p;
   radius = rayon_luciole + ADDLUCLIP;
-  x_outer_left = a1 - radius;
-  x_outer_right = a1 + radius;
-  x_inner_left = a1 - a3;
+  x_outer_left = center_x - radius;
+  x_outer_right = center_x + radius;
+  x_inner_left = center_x - inner_half_width;
   if (x_outer_left < Bloc_lim_W1_Glob)
   {
     x_outer_left = Bloc_lim_W1_Glob;
@@ -160,7 +163,7 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
     x_inner_left = Bloc_lim_W2_Glob;
   }
   left_width = x_inner_left - x_outer_left;
-  x_inner_right = a1 + a3;
+  x_inner_right = center_x + inner_half_width;
   if (x_outer_right > Bloc_lim_W2_Glob)
   {
     x_outer_right = Bloc_lim_W2_Glob;
@@ -170,15 +173,15 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
     x_inner_right = Bloc_lim_W1_Glob;
   }
   {
-    s32 perm_value_8;
-    perm_value_8 = x_outer_right - x_inner_right;
-    right_width = perm_value_8;
+    s32 right_width_copy;
+    right_width_copy = x_outer_right - x_inner_right;
+    right_width = right_width_copy;
   }
   {
-    s32 perm_value_9;
-    perm_value_9 = a2 - a4;
+    s32 top_y_copy;
+    top_y_copy = center_y - row_offset;
     {
-      y_top = perm_value_9;
+      y_top = top_y_copy;
     }
   }
   {
@@ -191,7 +194,7 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
           p[i] = 0;
 
       }
-      y_bottom = a2 + a4;
+      y_bottom = center_y + row_offset;
       if ((y_bottom >= Bloc_lim_H1_Glob) && (y_bottom < Bloc_lim_H2_Glob))
       {
         p = draw_buf + ((x_outer_left + (y_bottom * 64)) + (y_bottom * 256));
@@ -210,7 +213,7 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
         p[i] = 0;
 
     }
-    y_bottom = a2 + a4;
+    y_bottom = center_y + row_offset;
     if ((y_bottom >= Bloc_lim_H1_Glob) && (y_bottom < Bloc_lim_H2_Glob))
     {
       p = draw_buf + ((x_inner_right + (y_bottom * 64)) + (y_bottom * 256));
@@ -221,17 +224,18 @@ void plot2line(s32 a1, s32 a2, s32 a3, s32 a4, u8 *draw_buf)
   }
 }
 
-void aff_luciole(s32 a1, s32 a2, s32 a3, u8 *draw_buf)
+/* Names and meanings: docs/semantics/luciole.json. */
+void aff_luciole(s32 center_x, s32 center_y, s32 radius, u8 *draw_buf)
 {
   s32 x;
   s32 i;
   s32 y;
-  for (i = 0, y = a3; i <= ADDLUCLIP; ++i, ++y)
+  for (i = 0, y = radius; i <= ADDLUCLIP; ++i, ++y)
   {
-    plot2line(a1, a2, 0, y, draw_buf);
+    plot2line(center_x, center_y, 0, y, draw_buf);
   }
 
-  x = (s32) a3;
+  x = (s32) radius;
   i = 0;
   y = 0;
   if (x >= 0)
@@ -240,15 +244,15 @@ void aff_luciole(s32 a1, s32 a2, s32 a3, u8 *draw_buf)
     s32 err = (2 * x) - 1;
     do
     {
-      plot2line(a1, a2, i, x, draw_buf);
-      plot2line(a1, a2, x, i, draw_buf);
+      plot2line(center_x, center_y, i, x, draw_buf);
+      plot2line(center_x, center_y, x, i, draw_buf);
       ++i;
       {
-        s32 perm_value_5;
-        s32 *perm_address_4;
-        perm_address_4 = &perm_value_5;
-        *perm_address_4 = y + d;
-        y = perm_value_5;
+        s32 next_error;
+        s32 *error_address;
+        error_address = &next_error;
+        *error_address = y + d;
+        y = next_error;
       }
       d += 2;
       if (x <= y)

@@ -8,10 +8,10 @@
 #include "inline_helpers.h"
 #define Abs(value) ((value) >= 0 ? (value) : -(value))
 
-typedef struct vec2b_t {
+typedef struct ngawe_byte_pair_t {
     u8 x;
     u8 y;
-} vec2b_t;
+} ngawe_byte_pair_t;
 
 #define BLOCK_FULLY_SOLID 0
 #define BLOCK_SOLID 1
@@ -193,18 +193,19 @@ void ngaweTriesToGrabShip(obj_t *obj)
     }
 }
 
-void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 param_3) {
+/* Names and meanings: docs/semantics/map_ngawe.json. */
+void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 same_facing) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     /* DOS 1:4d7a2..4d7bb: w=esp, h=esp+4, x=esp+0xc, y=esp+0x10. */
     s16 ngw_y; s16 ngw_w; s16 ngw_x; s16 ngw_h;
-    s16 unk_1;
+    s16 travel_budget;
     s16 i = 0;
     obj_t *cur_obj = &level.objects[i];
     s16 nb_objs = level.nb_objects;
 
     while (i < nb_objs) {
         if (cur_obj->type == TYPE_RING && !cur_obj->is_active) {
-            if (param_3)
+            if (same_facing)
                 cur_obj->flags.flip_x = ngw_obj->flags.flip_x;
             else
                 cur_obj->flags.flip_x = !ngw_obj->flags.flip_x;
@@ -226,11 +227,11 @@ void allocatePirateNgaweRing(obj_t* ngw_obj, s16 spd_y, u8 param_3) {
             cur_obj->flags.flag_0x40 = 0;
 
             /* DOS 1:4d84f..4d87b narrows the distance before the flip product. */
-            unk_1 =
+            travel_budget =
                     (s16) (ray.offset_bx + (s16)ray.x - (s16)cur_obj->x - cur_obj->offset_bx);
-            unk_1 *= (cur_obj->flags.flip_x ? 1 : -1);
-            unk_1 = max32((s32)unk_1, 0) + 15;
-            cur_obj->link = unk_1;
+            travel_budget *= (cur_obj->flags.flip_x ? 1 : -1);
+            travel_budget = max32((s32)travel_budget, 0) + 15;
+            cur_obj->link = travel_budget;
 
             cur_obj->flags.hurtbyfist = 0;
             cur_obj->flags.command_test = 0;
@@ -396,14 +397,15 @@ void DO_NGW_POING_COLLISION(obj_t* ngw_obj, s16 sprite) {
     }
 }
 
+/* Names and meanings: docs/semantics/map_ngawe.json. */
 void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s32 distance;
     /* DOS 1:4dd6c keeps the object array base in ECX through the command dispatch. */
     obj_t *objects = level.objects;
-    obj_t *unk_obj = &objects[ring_obj->param];
+    obj_t *owner_obj = &objects[ring_obj->param];
 
-    if (!(unk_obj->is_active)) {
+    if (!(owner_obj->is_active)) {
         ring_obj->flags.alive = 0;
         DO_NOVA(ring_obj);
         return;
@@ -413,11 +415,11 @@ void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
         if (ring_obj->flags.hurtbyfist) {
             ring_obj->is_active = 0;
             ring_obj->flags.alive = 0;
-            unk_obj->config++;
+            owner_obj->config++;
         } else {
             ring_obj->flags.hurtbyfist = 1;
             ring_obj->flags.command_test = 1;
-            ring_obj->link = (ring_obj->offset_bx + (s16)ring_obj->x) - (s16)unk_obj->x - unk_obj->offset_bx;
+            ring_obj->link = (ring_obj->offset_bx + (s16)ring_obj->x) - (s16)owner_obj->x - owner_obj->offset_bx;
             distance = ring_obj->link;
             if (distance < 0)
                 distance = -distance;
@@ -435,11 +437,11 @@ void DO_ONE_NGW_RING_COMMAND(obj_t* ring_obj) {
             ring_obj->speed_y = ring_obj->follow_id;
         } else {
             if (ring_obj->flags.hurtbyfist) {
-                unk_obj = &objects[ring_obj->param];
-                ring_obj->link = (unk_obj->offset_bx + (s16)unk_obj->x) - (s16)ring_obj->x - ring_obj->offset_bx;
+                owner_obj = &objects[ring_obj->param];
+                ring_obj->link = (owner_obj->offset_bx + (s16)owner_obj->x) - (s16)ring_obj->x - ring_obj->offset_bx;
                 ring_obj->speed_y =
                         (
-                                unk_obj->y + ((unk_obj->offset_by + unk_obj->offset_hy) >> 1) -
+                                owner_obj->y + ((owner_obj->offset_by + owner_obj->offset_hy) >> 1) -
                                 (ring_obj->y + ((ring_obj->offset_by + ring_obj->offset_hy) >> 1))
                         ) * ring_obj->speed_x;
                 if (ring_obj->link != 0) {

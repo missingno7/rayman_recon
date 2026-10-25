@@ -158,11 +158,12 @@ void DO_TOTEM_TOUCHE(obj_t* obj, s16 sprite) {
     }
 }
 
+/* Local names: docs/semantics/bbmont.json (DOS dataflow; compiler output unchanged). */
 void DO_TOTEM_COMMAND(obj_t* tot_obj) {
     /* 57950 8017C150 -O2 -msoft-float */
     /* COMPILER_STEERED: flag declaration first, paired with the substate
      * snapshot below; either edit alone leaves the AL/AH colour tie. */
-    u8 unk_1;
+    u8 animation_finished;
     s16 x;
     s16 w;
     s16 y;
@@ -268,15 +269,15 @@ void DO_TOTEM_COMMAND(obj_t* tot_obj) {
 
         if (tot_obj->anim_frame == (tot_obj->animations[tot_obj->anim_index].frames_count - 1) &&
             horloge[tot_obj->eta[tot_obj->main_etat][tot_obj->sub_etat].anim_speed & 0xf] == 0)
-            unk_1 = 1;
+            animation_finished = 1;
         else
-            unk_1 = 0;
+            animation_finished = 0;
 
         /* INVENTED local state retains the DOS substate allocation. */
         state = tot_obj->sub_etat;
         switch (state) {
             case 4:
-                if (unk_1) {
+                if (animation_finished) {
                     if (++tot_obj->iframes_timer < 4) {
                         set_sub_etat(tot_obj, 5);
                         tot_obj->x = tot_obj->init_x - 85;
@@ -287,7 +288,7 @@ void DO_TOTEM_COMMAND(obj_t* tot_obj) {
                 }
                 break;
             case 5:
-                if (unk_1) {
+                if (animation_finished) {
                     if (++tot_obj->iframes_timer < 4) {
                         set_sub_etat(tot_obj, 4);
                         tot_obj->x = tot_obj->init_x + 71;
@@ -405,7 +406,8 @@ void allocateDog(obj_t* bb1_obj) {
     }
 }
 
-void allocateTir(obj_t* bb1_obj, s16 param_2) {
+/* Local names: docs/semantics/bbmont.json (DOS dataflow; compiler output unchanged). */
+void allocateTir(obj_t* bb1_obj, s16 launch_pattern) {
     /* 58278 8017CA78 -O2 -msoft-float */
     s16 sprite_ind;
     s32 new_x_1;
@@ -422,18 +424,18 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
         do {
             if (cur_obj->type == TYPE_BBL && !cur_obj->is_active) {
                 s16 y; s16 x; s16 h; s16 w;
-                if (param_2 == 4) {
+                if (launch_pattern == 4) {
                     cur_obj->flags.follow_enabled = 0;
                 } else {
                     cur_obj->flags.follow_enabled = 1;
                 }
-                if (param_2 != 0)
+                if (launch_pattern != 0)
                     sprite_ind = 8;
                 else
                     sprite_ind = 9;
                 cur_obj->flags.flip_x = 0;
                 GET_SPRITE_POS(bb1_obj, sprite_ind, &x, &y, &w, &h);
-                if (param_2 == 1) {
+                if (launch_pattern == 1) {
                     bb1_x = x - cur_obj->offset_bx;
                     new_x_1 = (w >> 1) + bb1_x;
                     cur_obj->x = new_x_1 + (bb1_obj->flags.flip_x ? 64 : -64);
@@ -445,7 +447,7 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                     cur_obj->speed_x = new_spd_x;
                     cur_obj->speed_y = 0;
                     cur_obj->flags.flip_x = bb1_obj->flags.flip_x;
-                } else if (param_2 == 0) {
+                } else if (launch_pattern == 0) {
                     bb1_x = x - cur_obj->offset_bx;
                     new_x_1 = bb1_x; new_x_1 += w >> 1;
                     cur_obj->x = new_x_1 + (bb1_obj->flags.flip_x ? 9 : -9);
@@ -458,12 +460,12 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                     cur_obj->speed_y = -5;
                     cur_obj->flags.flip_x = bb1_obj->flags.flip_x;
                 } else {
-                    if (param_2 == 3) {
+                    if (launch_pattern == 3) {
                         cur_obj->x = bb1_obj->x + (bb1_obj->flags.flip_x ? 120 : -36);
                         cur_obj->y = bb1_obj->y - 185;
                         cur_obj->speed_y = 4;
                     } else {
-                        if (param_2 < 10) {
+                        if (launch_pattern < 10) {
                             cur_obj->x = ray.x;
                             if (cur_obj->x < 40)
                                 cur_obj->x = 40;
@@ -482,12 +484,12 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                     cur_obj->speed_x = 0;
                 }
                 cur_obj->iframes_timer = 38;
-                if (param_2 != 3)
+                if (launch_pattern != 3)
                     cur_obj->gravity_value_2 = 10;
                 else
                     cur_obj->gravity_value_2 = 7;
 
-                if (param_2 == 0)
+                if (launch_pattern == 0)
                     cur_obj->gravity_value_2 = 3;
                 cur_obj->main_etat = 2;
                 cur_obj->sub_etat = 6;
@@ -497,11 +499,11 @@ void allocateTir(obj_t* bb1_obj, s16 param_2) {
                 cur_obj->is_active = 1;
                 add_alwobj(cur_obj);
                 cur_obj->gravity_value_1 = 0;
-                if (param_2 < 10)
-                    cur_obj->param = param_2;
+                if (launch_pattern < 10)
+                    cur_obj->param = launch_pattern;
                 else
                     cur_obj->param = 4;
-//                if (param_2 != 3)
+//                if (launch_pattern != 3)
 //                {
 //                    PS1_AlwaysObjects[PS1_AlwaysObjectsCount] = cur_obj->id;
 //                    PS1_AlwaysObjectsCount++;
@@ -572,6 +574,7 @@ void INIT_BBMONT(obj_t* obj) {
     bb1.field2_0x4 = 0;
 }
 
+/* Local names: docs/semantics/bbmont.json (DOS dataflow; compiler output unchanged). */
 void DO_BBL_COMMAND(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     // There is a bug in the original game, though, causing a potential out-of-bounds access (see below).
@@ -581,7 +584,7 @@ void DO_BBL_COMMAND(obj_t* obj) {
     s32 spd_x_abs;
     s32 spd_x;
     s32 bb1_x;
-    s16 unk_x;
+    s16 tile_probe_dx;
     s32 tile_x;
     s32 tile_y;
     map_tile_t *map;
@@ -604,11 +607,11 @@ void DO_BBL_COMMAND(obj_t* obj) {
         obj->flags.alive = 0;
     }
 
-    unk_x = 20;
+    tile_probe_dx = 20;
     if (obj->speed_x < 0)
-        unk_x = -20;
+        tile_probe_dx = -20;
 
-    tile_x = (obj->x + obj->offset_bx + unk_x) >> 4;
+    tile_x = (obj->x + obj->offset_bx + tile_probe_dx) >> 4;
     tile_y = (obj->y + 40) >> 4;
     tile_x += mp.width * tile_y;
     map = mp.map;

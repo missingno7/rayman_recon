@@ -19,11 +19,11 @@ class Semir(unittest.TestCase):
 
     def test_mutant_is_mismatch(self):
         src = (ROOT / "src" / "luciole.c").read_text(encoding="utf-8")
-        old = "Bloc_lim_H2_Aff = a2 + rayon_luciole;"
+        old = "Bloc_lim_H2_Aff = center_y + rayon_luciole;"
         self.assertEqual(src.count(old), 1)
         copy = BUILD / "tests" / "semir" / "luciole.c"
         copy.parent.mkdir(parents=True, exist_ok=True)
-        copy.write_text(src.replace(old, "Bloc_lim_H2_Aff = a2 - rayon_luciole;"), encoding="utf-8")
+        copy.write_text(src.replace(old, "Bloc_lim_H2_Aff = center_y - rayon_luciole;"), encoding="utf-8")
         r = next(r for r in semir.run_unit("luciole", {"set_luciole"}, str(copy), tag="luciole_mutant")
                  if r["function"] == "set_luciole")
         self.assertEqual(r["verdict"], "MISMATCH")

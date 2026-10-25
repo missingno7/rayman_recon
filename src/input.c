@@ -561,15 +561,16 @@ u8 read_pic_mask(void);
 void write_pic_mask(u8 mask);
 #pragma aux write_pic_mask = "out 21h,al" parm [al] modify exact []
 
+/* Local meanings: docs/semantics/input.json, function:PC_keyboard_interrupt_handler. */
 void __interrupt __far PC_keyboard_interrupt_handler(void)
 {
     u8 scancode;
     u8 state;
     u8 value;
-    u8 v3;
+    u8 update_key_state;
     s32 i;
 
-    v3 = 0;
+    update_key_state = 0;
     _disable();
     value = read_pic_mask();
     write_pic_mask(value | 2);
@@ -605,7 +606,7 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
         if (scancode == 0xe1)
             byte_967CC = 1;
         else
-            v3 = 1;
+            update_key_state = 1;
         break;
     case 1:
         if (scancode == SC_CONTROL)
@@ -623,7 +624,7 @@ void __interrupt __far PC_keyboard_interrupt_handler(void)
         break;
     }
 
-    if (v3) {
+    if (update_key_state) {
         state = (scancode & 0x80) ^ 0x80;
         Touche_Enfoncee[scancode & 0x7f] = state;
     }

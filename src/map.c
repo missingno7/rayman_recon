@@ -214,13 +214,14 @@ void init_build_map(big_map_t *map, u8 *map_blocks)  /* map_blocks: DOS caller p
     update_display_map(map);
 }
 
+/* Names and meanings: docs/semantics/map.json. */
 void update_display_map(big_map_t *map)
 {
     display_map_t *display_map;
     s32 y;
     s32 x;
-    s32 v6;
-    s32 v7;
+    s32 visible_width;
+    s32 visible_height;
     s16 clip_x;
     s16 clip_y;
 
@@ -232,10 +233,10 @@ void update_display_map(big_map_t *map)
     display_map->x = clip_x - (x & 0xf);
     clip_y = Bloc_lim_H1;
     display_map->y = clip_y - (y & 0xf);
-    v6 = Bloc_lim_W2 - display_map->x;
-    v7 = Bloc_lim_H2 - display_map->y;
-    display_map->width_in_tiles = (v6 >> 4) + ((v6 & 0xf) != 0);
-    display_map->height_in_tiles = (v7 >> 4) + ((v7 & 0xf) != 0);
+    visible_width = Bloc_lim_W2 - display_map->x;
+    visible_height = Bloc_lim_H2 - display_map->y;
+    display_map->width_in_tiles = (visible_width >> 4) + ((visible_width & 0xf) != 0);
+    display_map->height_in_tiles = (visible_height >> 4) + ((visible_height & 0xf) != 0);
     BufferNormalDeplt = 4 - (display_map->x & 3);
     DrawBufferNormal = DrawBufferNormalIni + BufferNormalDeplt;
     draw_buffer = DrawBufferNormalIni + BufferNormalDeplt;

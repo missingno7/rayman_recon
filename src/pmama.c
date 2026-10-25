@@ -171,14 +171,15 @@ u8 find_couteau(obj_t* obj) {
 }
 
 //64574
-s16 x_pos(u8 param_1, u8 nb_couteau) {
+/* Local names: docs/semantics/pmama.json (DOS dataflow; compiler output unchanged). */
+s16 x_pos(u8 slot_index, u8 nb_couteau) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 x;
 
     if (nb_couteau == 0) {
         x = 0;
     } else {
-        x = (240 / (nb_couteau * 2)) * (param_1 * 2 + 1);
+        x = (240 / (nb_couteau * 2)) * (slot_index * 2 + 1);
         if (level.objects[mama_pirate_obj_id].flags.flip_x)
             x += 80;
     }
@@ -186,14 +187,15 @@ s16 x_pos(u8 param_1, u8 nb_couteau) {
 }
 
 //645CC
-s16 y_pos(s16 param_1, s16 param_2) {
+/* Local names: docs/semantics/pmama.json (DOS dataflow; compiler output unchanged). */
+s16 y_pos(s16 row_index, s16 use_row_offset) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical.
     s16 y;
 
-    if (param_2 == 0)
+    if (use_row_offset == 0)
         y = 44;
     else
-        y = param_1 * 16 + 44;
+        y = row_index * 16 + 44;
     return y;
 }
 
@@ -245,7 +247,8 @@ void init_move_couteau(obj_t* obj) {
 #ifdef PC
                 CouteauxInfos[cout_ind].y_pos = y_pos(9 - cout_ind, 1) + 8;
 #else
-                CouteauxInfos[cout_ind].y_pos = y_pos(11 - cout_ind, 1) + 8;
+/* Inactive non-PC branch, retained for parser:                 CouteauxInfos[cout_ind].y_pos = y_pos(11 - cout_ind, 1) + 8;
+*/
 #endif
                 CouteauxInfos[cout_ind].field9_0x12 = 0;
                 if (cout_ind == 0)
@@ -898,7 +901,8 @@ void DO_PMA_COMMAND(obj_t* obj) {
 #ifdef PC
                             256
 #else
-                            272
+/* Inactive non-PC branch, retained for parser:                             272
+*/
 #endif
                     )) {
                         obj->speed_x = 0;

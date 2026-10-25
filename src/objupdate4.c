@@ -4,8 +4,8 @@
 #include "map.h"
 #include "inline_helpers.h"
 #define PC
-typedef s32 ObjType;
-typedef unsigned char bool;
+typedef s32 platform_object_type_t;
+typedef unsigned char platform_bool_t;
 #define Abs(x) (((s32)(x)) < 0 ? -((s32)(x)) : ((s32)(x)))
 #define TYPE_INST_PLAT 25
 #define TYPE_CRUMBLE_PLAT 26
@@ -31,14 +31,14 @@ extern s16 jump_time;
 extern s16 num_world;
 extern u8 horloge[25];
 extern options_jeu_t options_jeu;
-bool EOA(obj_t* obj);
+platform_bool_t EOA(obj_t* obj);
 s16 GET_SPRITE_POS(obj_t* obj, s16 index, s16* x, s16* y, s16* w, s16* h);
-void RAY_HIT(bool hurt, obj_t* obj);
+void RAY_HIT(platform_bool_t hurt, obj_t* obj);
 void RAY_THROW_FIST(void);
 void Reset_air_speed(u8 is_rolling_speed);
 void ray_jump(void);
 void allocatePaillette(obj_t* obj);
-void skipToLabel(obj_t* obj, u8 label, bool jump);
+void skipToLabel(obj_t* obj, u8 label, platform_bool_t jump);
 void obj_init(obj_t* obj);
 void set_main_and_sub_etat(obj_t* obj, u8 etat, u8 sub_etat);
 #include <stdlib.h>
@@ -50,20 +50,21 @@ extern obj_t *poing_obj;
 void set_sub_etat(obj_t* obj, u8 sub_etat);
 void DoPlatformPoingCollision(obj_t* obj, s16 sprite);
 
+/* Names and meanings: docs/semantics/objupdate4.json. */
 void DO_SPECIAL_PLATFORM(obj_t* obj) {
     /* DOS 1:53800. Partial: exact extent, remaining source-shape differences. */
     u16 obj_type;
-    u8 unk_2;
+    u8 suppress_manual_bounce;
     s16 plat_y; s16 plat_x; s16 plat_h; s16 plat_w;
-    u16 test_1;
+    u16 released_value;
     s32 speed;
     s32 speed_threshold;
-    s16 unk_1;
+    s16 rolling_threshold;
     u8 is_rolling_speed;
-    if (RayEvts.tiny) unk_1 = 0x100;
-    else unk_1 = 0x200;
+    if (RayEvts.tiny) rolling_threshold = 0x100;
+    else rolling_threshold = 0x200;
     speed = decalage_en_cours;
-    speed_threshold = unk_1;
+    speed_threshold = rolling_threshold;
     is_rolling_speed = Abs(speed) > speed_threshold;
 
     switch (obj->type)
@@ -249,7 +250,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             }
             break;
         case TYPE_BIG_BOING_PLAT:
-            unk_2 = 0;
+            suppress_manual_bounce = 0;
             if (ray.follow_id == obj->id)
             {
                 /* DOS materializes the state predicate before the follow-id guard. */
@@ -260,14 +261,14 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
                     obj->gravity_value_2 = 0;
-                    unk_2 = 1;
+                    suppress_manual_bounce = 1;
                     obj->speed_y =
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
-                    unk_2 = 1;
+                    suppress_manual_bounce = 1;
             }
             if (obj->main_etat == 2)
             {
@@ -298,10 +299,10 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                 }
                 else
                 {
-                    test_1 = 1; /* TODO: remove? */
+                    released_value = 1; /* TODO: remove? */
                     if (
-                            !unk_2 && ray.follow_id == obj->id &&
-                            button_released % 2 == test_1 &&
+                            !suppress_manual_bounce && ray.follow_id == obj->id &&
+                            button_released % 2 == released_value &&
                             options_jeu.test_fire1()
                             )
                     {
@@ -319,7 +320,7 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
             }
             break;
         case TYPE_BOING_PLAT:
-            unk_2 = 0;
+            suppress_manual_bounce = 0;
             if (ray.follow_id == obj->id)
             {
                 /* DOS materializes the state predicate before the follow-id guard. */
@@ -330,14 +331,14 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                     obj->link = 0;
                     obj->gravity_value_1 = 0;
                     obj->gravity_value_2 = 0;
-                    unk_2 = 1;
+                    suppress_manual_bounce = 1;
                     obj->speed_y =
                     obj->iframes_timer =
                             obj->follow_id + 1;
                     obj->follow_id = 0;
                 }
                 else if (obj->iframes_timer == obj->follow_id + 1)
-                    unk_2 = 1;
+                    suppress_manual_bounce = 1;
             }
 
             if (obj->main_etat == 2)
@@ -368,10 +369,10 @@ void DO_SPECIAL_PLATFORM(obj_t* obj) {
                 }
                 else
                 {
-                    test_1 = 1;
+                    released_value = 1;
                     if (
-                            !unk_2 && ray.follow_id == obj->id &&
-                            button_released % 2 == test_1 &&
+                            !suppress_manual_bounce && ray.follow_id == obj->id &&
+                            button_released % 2 == released_value &&
                             options_jeu.test_fire1()
                             )
                     {

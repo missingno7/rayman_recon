@@ -1,0 +1,2065 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "poing.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:RayEvts",
+   "global:button_released",
+   "global:compteur_attente",
+   "global:decalage_en_cours",
+   "global:helico_time",
+   "global:horloge",
+   "global:level",
+   "global:poing",
+   "global:poing_obj",
+   "global:poing_obj_id",
+   "global:ray",
+   "global:ray_zdc_h",
+   "global:ray_zdc_w",
+   "global:ray_zdc_x",
+   "global:ray_zdc_y",
+   "global:xmap",
+   "global:ymap"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:fist_U_turn",
+   "kind": "function",
+   "current_name": "fist_U_turn",
+   "proposed_name": null,
+   "c_type": "void fist_U_turn(u8 force_return_frame)",
+   "oracle_address": "1:566a0",
+   "meaning": "Convert outbound fist substates 1/3/5/8/10/12 to their paired return substates; optionally force animation frame 7.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Convert outbound fist substates 1/3/5/8/10/12 to their paired return substates; optionally force animation frame 7.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "fist_U_turn"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:566a0",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "fist_U_turn",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "fist_U_turn",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Convert outbound fist substates 1/3/5/8/10/12 to their paired return substates; optionally force animation frame 7.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "04c4dd00bfa4f83592e324734228e480e73cb532c444d0f1a4e2c8ca0d8c8ad9",
+   "readers_writers": {
+    "globals": [
+     "poing_obj"
+    ],
+    "callees": [
+     "set_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:fist_U_turn:a1:1",
+   "kind": "local",
+   "function": "fist_U_turn",
+   "role": "parameter",
+   "current_name": "force_return_frame",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by fist_U_turn: force_return_frame",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "force_return_frame"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:566a0",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "fist_U_turn",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "a1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "function:CALC_FIST_POS",
+   "kind": "function",
+   "current_name": "CALC_FIST_POS",
+   "proposed_name": null,
+   "c_type": "void CALC_FIST_POS(void)",
+   "oracle_address": "1:56700",
+   "meaning": "Convert Q4 fist y to screen pixels and set fist screen x with the Normal +8 bias.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Convert Q4 fist y to screen pixels and set fist screen x with the Normal +8 bias.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "CALC_FIST_POS"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56700",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "CALC_FIST_POS",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "CALC_FIST_POS",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Convert Q4 fist y to screen pixels and set fist screen x with the Normal +8 bias.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "23b662ce187ac198f94698d441531d977507e2990943e5ee3a5cb2835ccb09df",
+   "readers_writers": {
+    "globals": [
+     "poing",
+     "poing_obj",
+     "xmap",
+     "ymap"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:CALC_FIST_POS:screen_y:1",
+   "kind": "local",
+   "function": "CALC_FIST_POS",
+   "role": "local",
+   "current_name": "screen_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in CALC_FIST_POS computed/consumed by screen_y = poing.y_16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "screen_y = poing.y_16",
+     "screen_y >>= 4",
+     "screen_y = (s16) screen_y",
+     "screen_y -= ymap",
+     "poing_obj->screen_y = screen_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56700",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "CALC_FIST_POS",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "function:RAY_THROW_FIST",
+   "kind": "function",
+   "current_name": "RAY_THROW_FIST",
+   "proposed_name": null,
+   "c_type": "void RAY_THROW_FIST(void)",
+   "oracle_address": "1:5676c",
+   "meaning": "Select Rayman throw state, apply charged recoil, activate/reset fist, derive damage and capped speed from upgrade/charge, initialize its outbound budget/decrement and Q4 vertical position.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Select Rayman throw state, apply charged recoil, activate/reset fist, derive damage and capped speed from upgrade/charge, initialize its outbound budget/decrement and Q4 vertical position.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "RAY_THROW_FIST"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:5676c",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "RAY_THROW_FIST",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "RAY_THROW_FIST",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Select Rayman throw state, apply charged recoil, activate/reset fist, derive damage and capped speed from upgrade/charge, initialize its outbound budget/decrement and Q4 vertical position.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "a5eea9bb854383f3833b4b7241ccb39cf049ea6a5467eb549832691f093a84f0",
+   "readers_writers": {
+    "globals": [
+     "decalage_en_cours",
+     "poing",
+     "poing_obj",
+     "poing_obj_id",
+     "ray",
+     "ray_zdc_h",
+     "ray_zdc_w",
+     "ray_zdc_x",
+     "ray_zdc_y"
+    ],
+    "callees": [
+     "CALC_FIST_POS",
+     "abs32_inline",
+     "add_alwobj",
+     "ashl16",
+     "ashr16",
+     "del_alwobj",
+     "max32",
+     "min32",
+     "set_main_and_sub_etat",
+     "set_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:RAY_THROW_FIST:unk_2:1",
+   "kind": "local",
+   "function": "RAY_THROW_FIST",
+   "role": "local",
+   "current_name": "charge_q8",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in RAY_THROW_FIST computed/consumed by charge_q8 = ashl16(poing.charge, 8)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "charge_q8 = ashl16(poing.charge, 8)",
+     "poing.field_4 = charge_q8",
+     "poing.charge = charge_q8",
+     "poing.field_A = (charge_q8 * poing.speed_x) / poing.field_A"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:5676c",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "RAY_THROW_FIST",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "unk_2",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "function:RAY_PREPARE_FIST",
+   "kind": "function",
+   "current_name": "RAY_PREPARE_FIST",
+   "proposed_name": null,
+   "c_type": "void RAY_PREPARE_FIST(void)",
+   "oracle_address": "1:56af0",
+   "meaning": "When eta permits throwing, either launch an airborne charge-32 fist with matched animation timing or enter ground preparation with charge 5 and charging flag set.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "When eta permits throwing, either launch an airborne charge-32 fist with matched animation timing or enter ground preparation with charge 5 and charging flag set.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "RAY_PREPARE_FIST"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56af0",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "RAY_PREPARE_FIST",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "RAY_PREPARE_FIST",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "When eta permits throwing, either launch an airborne charge-32 fist with matched animation timing or enter ground preparation with charge 5 and charging flag set.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "3bea67d6ad3a1adef72ccd07b197cc81937e0c807f3c6b3814bb4cf3533db7c8",
+   "readers_writers": {
+    "globals": [
+     "RayEvts",
+     "button_released",
+     "compteur_attente",
+     "helico_time",
+     "poing",
+     "ray"
+    ],
+    "callees": [
+     "RAY_STOP",
+     "RAY_THROW_FIST",
+     "get_eta",
+     "set_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "function:RAY_GROW_FIST",
+   "kind": "function",
+   "current_name": "RAY_GROW_FIST",
+   "proposed_name": null,
+   "c_type": "void RAY_GROW_FIST(void)",
+   "oracle_address": "1:56bd0",
+   "meaning": "Increment charge and clamp at 63.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Increment charge and clamp at 63.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "RAY_GROW_FIST"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56bd0",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "RAY_GROW_FIST",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "RAY_GROW_FIST",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Increment charge and clamp at 63.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "85d77f026a0da9ebf477969e7effc2107ecf4354b08c92509c2dd52449f5de22",
+   "readers_writers": {
+    "globals": [
+     "poing"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "function:fin_poing_follow",
+   "kind": "function",
+   "current_name": "fin_poing_follow",
+   "proposed_name": null,
+   "c_type": "void fin_poing_follow(u8 place_at_ray)",
+   "oracle_address": "1:56bf4",
+   "meaning": "Release a carried object, zero its speeds and either place it at Rayman when forced/fist dead or restore its initial position.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Release a carried object, zero its speeds and either place it at Rayman when forced/fist dead or restore its initial position.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "fin_poing_follow"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56bf4",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "fin_poing_follow",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "fin_poing_follow",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Release a carried object, zero its speeds and either place it at Rayman when forced/fist dead or restore its initial position.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "da211cb1f6090361ec9a3ca6dbb38538cfd6a9dee4bfc03169e74df4b7296900",
+   "readers_writers": {
+    "globals": [
+     "level",
+     "poing_obj",
+     "ray",
+     "ray_zdc_h",
+     "ray_zdc_y"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:fin_poing_follow:unk_obj:1",
+   "kind": "local",
+   "function": "fin_poing_follow",
+   "role": "local",
+   "current_name": "carried_obj",
+   "proposed_name": null,
+   "c_type": "obj_t * = level.objects + poing_obj->follow_id",
+   "declarator": "obj_t *$ = level.objects + poing_obj->follow_id",
+   "meaning": "Object pointer selected or traversed by fin_poing_follow. Observed selection/use: obj_t *carried_obj = level.objects + poing_obj->follow_id",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj_t *carried_obj = level.objects + poing_obj->follow_id",
+     "carried_obj->speed_x = 0",
+     "carried_obj->speed_y = 0",
+     "carried_obj->x = (ray.x + ray.offset_bx) - carried_obj->offset_bx",
+     "carried_obj->y = ((ray_zdc_h + (ray_zdc_y >> 1)) - 5) - ((carried_obj->offset_by + carried_obj->offset_hy) >> 1)",
+     "carried_obj->x = carried_obj->init_x",
+     "carried_obj->y = carried_obj->init_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56bf4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "fin_poing_follow",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "unk_obj",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:fin_poing_follow:ray_y:1",
+   "kind": "local",
+   "function": "fin_poing_follow",
+   "role": "local",
+   "current_name": "ray_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused local declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56bf4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "fin_poing_follow",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:fin_poing_follow:unk_y:1",
+   "kind": "local",
+   "function": "fin_poing_follow",
+   "role": "local",
+   "current_name": "unk_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused local declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56bf4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "fin_poing_follow",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:fin_poing_follow:a1:1",
+   "kind": "local",
+   "function": "fin_poing_follow",
+   "role": "parameter",
+   "current_name": "place_at_ray",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by fin_poing_follow: place_at_ray || (!poing_obj->flags.alive)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "place_at_ray || (!poing_obj->flags.alive)",
+     "!place_at_ray"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56bf4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "fin_poing_follow",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "a1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "function:POING_FOLLOW",
+   "kind": "function",
+   "current_name": "POING_FOLLOW",
+   "proposed_name": null,
+   "c_type": "void POING_FOLLOW(obj_t *obj)",
+   "oracle_address": "1:56ca0",
+   "meaning": "Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "POING_FOLLOW"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56ca0",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "POING_FOLLOW",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "POING_FOLLOW",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "aa3ef219e28ac4f1494a5059b2eda98c4d1a33292ce5c16085c460cfc7dc207a",
+   "readers_writers": {
+    "globals": [
+     "level",
+     "ray"
+    ],
+    "callees": [
+     "fin_poing_follow"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:POING_FOLLOW:follow_obj:1",
+   "kind": "local",
+   "function": "POING_FOLLOW",
+   "role": "local",
+   "current_name": "follow_obj",
+   "proposed_name": null,
+   "c_type": "obj_t * = &level.objects[obj->follow_id]",
+   "declarator": "obj_t *$ = &level.objects[obj->follow_id]",
+   "meaning": "Object pointer selected or traversed by POING_FOLLOW. Observed selection/use: obj_t *follow_obj = &level.objects[obj->follow_id]",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj_t *follow_obj = &level.objects[obj->follow_id]",
+     "follow_obj->speed_x = obj->speed_x",
+     "follow_obj->speed_y = obj->speed_y",
+     "!((ray.iframes_timer == (-1)) && follow_obj->is_active)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ca0",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "POING_FOLLOW",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:POING_FOLLOW:obj:1",
+   "kind": "local",
+   "function": "POING_FOLLOW",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to POING_FOLLOW; Copy fist speeds to its carried object and release unless Rayman has normal -1 invulnerability sentinel and the carried object remains active.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj_t *follow_obj = &level.objects[obj->follow_id]",
+     "&level.objects[obj->follow_id]",
+     "follow_obj->speed_x = obj->speed_x",
+     "follow_obj->speed_y = obj->speed_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ca0",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "POING_FOLLOW",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "function:alter_fist_speed",
+   "kind": "function",
+   "current_name": "alter_fist_speed",
+   "proposed_name": null,
+   "c_type": "void alter_fist_speed(obj_t *obj)",
+   "oracle_address": "1:56cec",
+   "meaning": "Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "alter_fist_speed"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56cec",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "alter_fist_speed",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "alter_fist_speed",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "d49635a37ce12c09052987dc10f3c0e338fedae355b0a63f7b8b6a3f1cefba5d",
+   "readers_writers": {
+    "globals": [
+     "horloge"
+    ],
+    "callees": [
+     "abs32_inline"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:alter_fist_speed:accel_x:1",
+   "kind": "local",
+   "function": "alter_fist_speed",
+   "role": "local",
+   "current_name": "accel_x",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in alter_fist_speed computed/consumed by accel_x = 2",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "accel_x = 2",
+     "accel_x = 1",
+     "accel_x = 0",
+     "obj->speed_x -= accel_x",
+     "obj->speed_x += accel_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56cec",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "alter_fist_speed",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:alter_fist_speed:abs_spd_x:1",
+   "kind": "local",
+   "function": "alter_fist_speed",
+   "role": "local",
+   "current_name": "abs_spd_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in alter_fist_speed computed/consumed by abs_spd_x = abs32_inline(obj->speed_x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "abs_spd_x = abs32_inline(obj->speed_x)",
+     "abs_spd_x >= 11"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56cec",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "alter_fist_speed",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:alter_fist_speed:obj:1",
+   "kind": "local",
+   "function": "alter_fist_speed",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to alter_fist_speed; Change horizontal speed toward the opposite direction by 2 at magnitude at least 11, 1 at at least 8, or a clock-2 alternating unit at smaller magnitudes.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "abs_spd_x = abs32_inline(obj->speed_x)",
+     "abs32_inline(obj->speed_x)",
+     "abs32_inline(obj->speed_x) >= 8",
+     "obj->flags.flip_x",
+     "obj->speed_x -= accel_x",
+     "obj->speed_x += accel_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56cec",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "alter_fist_speed",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "function:switch_off_fist",
+   "kind": "function",
+   "current_name": "switch_off_fist",
+   "proposed_name": null,
+   "c_type": "void switch_off_fist(void)",
+   "oracle_address": "1:56d54",
+   "meaning": "Clear fist activity/collision/return flags, reset charge 5 and initial substate, kill/deactivate the object and release any carried object.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Clear fist activity/collision/return flags, reset charge 5 and initial substate, kill/deactivate the object and release any carried object.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "switch_off_fist"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56d54",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "switch_off_fist",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "switch_off_fist",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Clear fist activity/collision/return flags, reset charge 5 and initial substate, kill/deactivate the object and release any carried object.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "45e0b8007705da842f7cd96aa0242a8efe6712fdd1611ee8b5400fc315e75b91",
+   "readers_writers": {
+    "globals": [
+     "poing",
+     "poing_obj"
+    ],
+    "callees": [
+     "fin_poing_follow"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "function:DO_POING",
+   "kind": "function",
+   "current_name": "DO_POING",
+   "proposed_name": null,
+   "c_type": "void DO_POING(obj_t *obj)",
+   "oracle_address": "1:56da4",
+   "meaning": "Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "DO_POING"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "DO_POING",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "DO_POING",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "064940c38166ffab6c0e89494f52af3800292b74d062b78ea316f5be39b449ed",
+   "readers_writers": {
+    "globals": [
+     "poing",
+     "ray",
+     "ray_zdc_h",
+     "ray_zdc_w",
+     "ray_zdc_x",
+     "ray_zdc_y"
+    ],
+    "callees": [
+     "Abs",
+     "CALC_FIST_POS",
+     "DO_POING_COLLISION",
+     "POING_FOLLOW",
+     "alter_fist_speed",
+     "fist_U_turn",
+     "inrange",
+     "max32",
+     "min32",
+     "switch_off_fist"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:DO_POING:ray_diff_x:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "ray_diff_x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in DO_POING computed/consumed by ray_diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - obj->offset_bx",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "ray_diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - obj->offset_bx",
+     "ray_diff_x += 11",
+     "ray_diff_x -= 11",
+     "(obj->flags.flip_x && (ray_diff_x >= obj->x)) || ((!obj->flags.flip_x) && (ray_diff_x <= obj->x))",
+     "return_gap_x = ((s16) ray_diff_x) - ((s16) obj->x)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:DO_POING:ray_diff_y:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "ray_diff_y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in DO_POING computed/consumed by ray_diff_y = ((ray_zdc_h + half_height) - (obj_height >> 1)) * 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "ray_diff_y = ((ray_zdc_h + half_height) - (obj_height >> 1)) * 16",
+     "return_slope_q4 = ray_diff_y - poing.y_16",
+     "inrange(next_y_q4, min32(poing.y_16, ray_diff_y), max32(poing.y_16, ray_diff_y))",
+     "min32(poing.y_16, ray_diff_y)",
+     "max32(poing.y_16, ray_diff_y)",
+     "obj->speed_y = (ray_diff_y - poing.y_16) >> 4"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:DO_POING:unk_x_1:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "return_gap_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in DO_POING computed/consumed by return_gap_x = ((s16) ray_diff_x) - ((s16) obj->x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return_gap_x = ((s16) ray_diff_x) - ((s16) obj->x)",
+     "return_gap_x != 0",
+     "return_slope_q4 = return_slope_q4 / return_gap_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "unk_x_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:DO_POING:unk_y_1:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "return_slope_q4",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in DO_POING computed/consumed by return_slope_q4 = ray_diff_y - poing.y_16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return_slope_q4 = ray_diff_y - poing.y_16",
+     "return_slope_q4 = return_slope_q4 / return_gap_x",
+     "obj->speed_y = return_slope_q4 * obj->speed_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "unk_y_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:DO_POING:unk_1:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "next_y_q4",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in DO_POING computed/consumed by next_y_q4 = obj->speed_y + poing.y_16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "next_y_q4 = obj->speed_y + poing.y_16",
+     "inrange(next_y_q4, min32(poing.y_16, ray_diff_y), max32(poing.y_16, ray_diff_y))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "previous_name": "unk_1",
+   "name_provenance": "INVENTED editorial local spelling; Android table checked, which does not retain local symbols."
+  },
+  {
+   "id": "local:DO_POING:return_speed:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "return_speed",
+   "proposed_name": null,
+   "c_type": "s32 = poing.speed_x",
+   "declarator": "s32 $ = poing.speed_x",
+   "meaning": "Local initialized as poing.speed_x; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 return_speed = poing.speed_x",
+     "Abs((s32) obj->speed_x) < return_speed"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:DO_POING:half_height:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "half_height",
+   "proposed_name": null,
+   "c_type": "s32 = ray_zdc_y >> 1",
+   "declarator": "s32 $ = ray_zdc_y >> 1",
+   "meaning": "Local initialized as ray_zdc_y >> 1; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 half_height = ray_zdc_y >> 1",
+     "ray_diff_y = ((ray_zdc_h + half_height) - (obj_height >> 1)) * 16"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:DO_POING:obj_height:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "local",
+   "current_name": "obj_height",
+   "proposed_name": null,
+   "c_type": "s32 = obj->offset_by",
+   "declarator": "s32 $ = obj->offset_by",
+   "meaning": "Local initialized as obj->offset_by; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 obj_height = obj->offset_by",
+     "obj_height += obj->offset_hy",
+     "ray_diff_y = ((ray_zdc_h + half_height) - (obj_height >> 1)) * 16"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:DO_POING:obj:1",
+   "kind": "local",
+   "function": "DO_POING",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to DO_POING; Consume outbound charge budget, decelerate/reverse, steer returning y toward Rayman without overshoot, switch off after crossing Rayman, process eligible collisions and update carried-object motion.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->speed_x != 0",
+     "obj->y = poing.y_16 >> 4",
+     "alter_fist_speed(obj)",
+     "Abs((s32) obj->speed_x) < return_speed",
+     "Abs((s32) obj->speed_x)",
+     "ray_diff_x = (ray_zdc_x + (ray_zdc_w >> 1)) - obj->offset_bx",
+     "obj->flags.flip_x",
+     "s32 obj_height = obj->offset_by",
+     "obj_height += obj->offset_hy",
+     "(obj->flags.flip_x && (ray_diff_x >= obj->x)) || ((!obj->flags.flip_x) && (ray_diff_x <= obj->x))",
+     "!obj->flags.flip_x",
+     "return_gap_x = ((s16) ray_diff_x) - ((s16) obj->x)",
+     "obj->speed_y = return_slope_q4 * obj->speed_x",
+     "next_y_q4 = obj->speed_y + poing.y_16",
+     "obj->speed_y >>= 4",
+     "obj->speed_y = (ray_diff_y - poing.y_16) >> 4",
+     "obj->anim_index = obj->eta[obj->main_etat][obj->sub_etat].anim_index",
+     "obj->speed_x--",
+     "obj->speed_x++",
+     "obj->follow_id != (-1)",
+     "POING_FOLLOW(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56da4",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "DO_POING",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "function:allocatePoingBoum",
+   "kind": "function",
+   "current_name": "allocatePoingBoum",
+   "proposed_name": null,
+   "c_type": "void allocatePoingBoum(void)",
+   "oracle_address": "1:56ff8",
+   "meaning": "Activate an inactive type-11 fist-impact animation at the fist sprite edge/vertical center, resetting animation and screen position.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Activate an inactive type-11 fist-impact animation at the fist sprite edge/vertical center, resetting animation and screen position.",
+    "operations_artifact": "evidence/poing_operations.json",
+    "operations_key": "allocatePoingBoum"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "allocatePoingBoum",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "allocatePoingBoum",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Activate an inactive type-11 fist-impact animation at the fist sprite edge/vertical center, resetting animation and screen position.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c",
+   "source_body_sha256": "2f18ff5af3c79c065569d32000d721d87227893a0f7f90e347b7bd9c9b7fbfa0",
+   "readers_writers": {
+    "globals": [
+     "level",
+     "poing_obj"
+    ],
+    "callees": [
+     "GET_ANIM_POS",
+     "GET_SPRITE_POS",
+     "add_alwobj",
+     "calc_obj_pos"
+    ]
+   },
+   "evidence_units": [
+    "poing.c"
+   ]
+  },
+  {
+   "id": "local:allocatePoingBoum:obj:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object pointer selected or traversed by allocatePoingBoum. Observed selection/use: obj = level.objects + i",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj = level.objects + i",
+     "(obj->type == TYPE_11_BOUM) && (!obj->is_active)",
+     "!obj->is_active",
+     "add_alwobj(obj)",
+     "GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h)",
+     "obj->anim_frame = 0",
+     "obj->x = poing_x - obj->offset_bx",
+     "obj->x += poing_w",
+     "obj->y = (poing_y + (poing_h >> 1)) - ((obj->offset_by + obj->offset_hy) >> 1)",
+     "calc_obj_pos(obj)",
+     "obj->flags.alive = 1",
+     "obj->is_active = 1",
+     "++obj"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:i:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in allocatePoingBoum computed/consumed by i = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0",
+     "obj = level.objects + i",
+     "i < nb_objs",
+     "++i"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:nb_objs:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "nb_objs",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in allocatePoingBoum computed/consumed by nb_objs = level.nb_objects",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "nb_objs = level.nb_objects",
+     "i < nb_objs"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:anim_x:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "anim_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation horizontal origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h)",
+     "&anim_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:anim_y:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "anim_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation vertical origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h)",
+     "&anim_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:anim_w:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "anim_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation width output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h)",
+     "&anim_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:anim_h:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "anim_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation height output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_ANIM_POS(obj, &anim_x, &anim_y, &anim_w, &anim_h)",
+     "&anim_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:poing_x:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "poing_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation horizontal origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(poing_obj, 0, &poing_x, &poing_y, &poing_w, &poing_h)",
+     "&poing_x",
+     "obj->x = poing_x - obj->offset_bx"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:poing_y:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "poing_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation vertical origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(poing_obj, 0, &poing_x, &poing_y, &poing_w, &poing_h)",
+     "&poing_y",
+     "obj->y = (poing_y + (poing_h >> 1)) - ((obj->offset_by + obj->offset_hy) >> 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:poing_w:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "poing_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation width output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(poing_obj, 0, &poing_x, &poing_y, &poing_w, &poing_h)",
+     "&poing_w",
+     "obj->x += poing_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  },
+  {
+   "id": "local:allocatePoingBoum:poing_h:1",
+   "kind": "local",
+   "function": "allocatePoingBoum",
+   "role": "local",
+   "current_name": "poing_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation height output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(poing_obj, 0, &poing_x, &poing_y, &poing_w, &poing_h)",
+     "&poing_h",
+     "obj->y = (poing_y + (poing_h >> 1)) - ((obj->offset_by + obj->offset_hy) >> 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:56ff8",
+     "artifact": "evidence/poing.dos.txt",
+     "function": "allocatePoingBoum",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/poing.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0"
+ },
+ "proposal_fingerprints": {
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/obj/poing.c": "5c90ddbfda070dd8fca3e4f4ca31b65c42009525e13222db26a91f83ed7a3856",
+  "external/rayverse/src/poing.c": "13393090424532e54d1a5c4e9a84b53d990e9a1975cc6183f4eaeb984613c6b3"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/poing.dos.txt": "5997e625483b7a0099b776bb14e00f498b35ca6831425da653118a07482a35ce",
+  "evidence/poing_operations.json": "da3cd7e03293d59e7995b6f5b6a0111450f0f667eaa43be32f9f6c8ab20a15ab",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_3cde8.c": "02b52e2e052caa50f35ded463db216400c965380ed0ea50bdac56d4fae11d368",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/bss/bss_3f772.c": "277faa5b48f6d25cc6bc4421ebba0249752409be5f4b1cf6c5aa8a1d4b5d207d",
+  "src/bss/bss_3f818.c": "8da1eec0fdd2b1ea195988a3b0c88cdd8ee43789a0d5e027347849c7ec6cf256",
+  "src/bss/bss_3f860.c": "e8c92425fc17a3757d493a2b24b9b20bb863c95ea66aab163abeebf7fd357bca",
+  "src/bss/bss_3f864.c": "50dd65633cbaaeb54005c5918f6a13f68a930c2aa9fb7e8d6753d0d64a0f9e38",
+  "src/bss/bss_3f876.c": "1772dbe3a3561f34cca4d414fa4beec154b67064c7538461c05496a5a118f0e1",
+  "src/bss/bss_3f878.c": "649d13776df696b9f37606009d6f78d48cd347e409b8a07ce0965ab02856b337",
+  "src/bss/bss_3f89a.c": "0e58145042c6c4b3abccc6901b2abd627716a54775981345c569c965af246125",
+  "src/bss/bss_3f9f5.c": "46233a930e5d026e220105a35871c6a6699b4c5bda5cc0b321dae86fc6008433",
+  "src/bss/bss_3fa7c.c": "f9d0aefdebcfe342185f718907c930144fc57bc2dcc69a0b7a9d73f4e618782b",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/display_local.h": "fa7f501b8c913a762570217464dff976596797ee5ec746061236357df58aaeb5",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/lowlevel_02640.asm": "f4378b646f1aa46640623a6acb47bc78d756241b71bbbd0e66607fa03e0731f8",
+  "src/lowlevel_04430.asm": "af37b2102b6c222f70339bfb31494dcba5859503d154596f495a64bec18b17af",
+  "src/lowlevel_data.asm": "6acd7010d9846ddf4f4d71bf1c1e45065059a23ef9abfa633ed244901c1e1925",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Charge begins at5 (air throw32), grows to63, then becomes a signed16 charge<<8 outbound budget. Upgrades select base speeds5/8/11, gold adds damage2, movement adjustment caps stored launch speed at16. Keep the separate Q4 y accumulator, +8 screen x bias, paired outbound/return substates, deceleration thresholds11/8, zero-speed reversal, crossing test and no-overshoot return steering. The collision globals ray_zdc_h/ray_zdc_y have existing reversed y-origin/height roles; use actual expressions. Carried-object release chooses initial position versus Rayman placement from force/alive state."
+}

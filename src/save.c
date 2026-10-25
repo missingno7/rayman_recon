@@ -95,14 +95,15 @@ void doneGameSave(void) {
 	save1.is_just_saved = 0;
 }
 
+/* Local meanings: docs/semantics/save.json, function:saveGameState. */
 void saveGameState(obj_t *save_obj, save_state_t *save_state)
 {
     s16 j;
     obj_t *cur_obj;
     u8 i;
     s16 nb_objs;
-    s32 unk_2;
-    s16 unk_1;
+    s32 alive_bit_mask;
+    s16 alive_word_index;
 
     save_state->status_bar_tings = status_bar.num_wiz;
     save_state->x_map = xmap;
@@ -153,12 +154,12 @@ void saveGameState(obj_t *save_obj, save_state_t *save_state)
         do {
             if (cur_obj->type == 141 || cur_obj->type == 164 ||
                 cur_obj->type == 179 || cur_obj->type == 242) {
-                unk_1 = j >> 5;
-                unk_2 = 1U << (j & 0x1f);
+                alive_word_index = j >> 5;
+                alive_bit_mask = 1U << (j & 0x1f);
                 if (cur_obj->flags.alive)
-                    save_state->triggered_objects[unk_1] |= unk_2;
+                    save_state->triggered_objects[alive_word_index] |= alive_bit_mask;
                 else
-                    save_state->triggered_objects[unk_1] &= ~unk_2;
+                    save_state->triggered_objects[alive_word_index] &= ~alive_bit_mask;
             }
             j++;
             cur_obj++;

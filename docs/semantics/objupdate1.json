@@ -1,0 +1,4744 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "objupdate1.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:cptr_tab"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:cmd_context_t",
+   "type:cptr_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:popCmdContext",
+   "kind": "function",
+   "current_name": "popCmdContext",
+   "proposed_name": null,
+   "c_type": "void popCmdContext(obj_t *obj)",
+   "oracle_address": "1:50ad0",
+   "meaning": "Restore the current script offset from the context at the unsigned depth, then decrement depth.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Restore the current script offset from the context at the unsigned depth, then decrement depth.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "popCmdContext"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ad0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "popCmdContext",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "popCmdContext",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Restore the current script offset from the context at the unsigned depth, then decrement depth.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "3fb1b9e71237fc4aeaa1b35c54445980fc7470fca77801058f5533deb24c328c",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:popCmdContext:obj:1",
+   "kind": "local",
+   "function": "popCmdContext",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to popCmdContext; Restore the current script offset from the context at the unsigned depth, then decrement depth.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset = obj->cmd_contexts[(u8) obj->cmd_context_depth].cmd_offset",
+     "--obj->cmd_context_depth"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ad0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "popCmdContext",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:char2short",
+   "kind": "function",
+   "current_name": "char2short",
+   "proposed_name": null,
+   "c_type": "s16 char2short(u8 x)",
+   "oracle_address": "1:50ae4",
+   "meaning": "Sign-extend an encoded command byte to a signed 16-bit value using the 128 boundary.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Sign-extend an encoded command byte to a signed 16-bit value using the 128 boundary.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "char2short"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ae4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "char2short",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "char2short",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Sign-extend an encoded command byte to a signed 16-bit value using the 128 boundary.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "b8f6ff62287fe8441796c1c2e6a1e1c87ca2ae75ce5c4c3aba890aaa74ddf443",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:char2short:result:1",
+   "kind": "local",
+   "function": "char2short",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in char2short computed/consumed by result = -(256 - x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "result = -(256 - x)",
+     "result = x",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ae4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "char2short",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:char2short:x:1",
+   "kind": "local",
+   "function": "char2short",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by char2short: x > 0x7F",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x > 0x7F",
+     "result = -(256 - x)",
+     "-(256 - x)",
+     "result = x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ae4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "char2short",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readNoArg",
+   "kind": "function",
+   "current_name": "readNoArg",
+   "proposed_name": null,
+   "c_type": "u8 readNoArg(obj_t *obj)",
+   "oracle_address": "1:50afc",
+   "meaning": "Consume no command arguments and return zero.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Consume no command arguments and return zero.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readNoArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50afc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readNoArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readNoArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Consume no command arguments and return zero.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ab967fe193ca1dc0b0672132393250f6918cefd9f39dd12cb1fdb2ad9fa81afa",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readNoArg:obj:1",
+   "kind": "local",
+   "function": "readNoArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50afc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readNoArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipNoArg",
+   "kind": "function",
+   "current_name": "skipNoArg",
+   "proposed_name": null,
+   "c_type": "u8 skipNoArg(obj_t *obj)",
+   "oracle_address": "1:50afc",
+   "meaning": "Skip no command arguments and return zero.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip no command arguments and return zero.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipNoArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50afc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipNoArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipNoArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip no command arguments and return zero.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ab967fe193ca1dc0b0672132393250f6918cefd9f39dd12cb1fdb2ad9fa81afa",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipNoArg:obj:1",
+   "kind": "local",
+   "function": "skipNoArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50afc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipNoArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readOneArg",
+   "kind": "function",
+   "current_name": "readOneArg",
+   "proposed_name": null,
+   "c_type": "u8 readOneArg(obj_t *obj)",
+   "oracle_address": "1:50b00",
+   "meaning": "Advance one command byte and store its unsigned value in nb_cmd.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance one command byte and store its unsigned value in nb_cmd.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readOneArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50b00",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readOneArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readOneArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance one command byte and store its unsigned value in nb_cmd.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "a1c9cecebebdaccbc61e1fab63506e3e8d0ee5afbbcf4b839a6cc0cfba8f6087",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readOneArg:obj:1",
+   "kind": "local",
+   "function": "readOneArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readOneArg; Advance one command byte and store its unsigned value in nb_cmd.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset++",
+     "obj->nb_cmd = obj->cmds[obj->cmd_offset]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50b00",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readOneArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readTestArgs",
+   "kind": "function",
+   "current_name": "readTestArgs",
+   "proposed_name": null,
+   "c_type": "u8 readTestArgs(obj_t *obj)",
+   "oracle_address": "1:50b20",
+   "meaning": "Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readTestArgs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50b20",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readTestArgs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readTestArgs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "57c0b1864fc5e85b15078d2261d9655cb901f9bf26c42a16a25be7237c2164f2",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readTestArgs:obj:1",
+   "kind": "local",
+   "function": "readTestArgs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readTestArgs; Read a test selector into nb_cmd; selectors 0..4 also consume a comparison operand into param, while 70..72 do not.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->nb_cmd = obj->cmds[++obj->cmd_offset]",
+     "++obj->cmd_offset",
+     "obj->nb_cmd",
+     "obj->param = obj->cmds[++obj->cmd_offset]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50b20",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readTestArgs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readGoXYargs",
+   "kind": "function",
+   "current_name": "readGoXYargs",
+   "proposed_name": null,
+   "c_type": "u8 readGoXYargs(obj_t *obj)",
+   "oracle_address": "1:50b5c",
+   "meaning": "Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readGoXYargs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50b5c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readGoXYargs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readGoXYargs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "bebeb2a1b7f959ce7a71199e8eaf6653da708afdab4fc297050564a1669adcea",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "char2short"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readGoXYargs:obj:1",
+   "kind": "local",
+   "function": "readGoXYargs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readGoXYargs; Read two signed command bytes into nb_cmd and link for the base-100 absolute-coordinate handlers.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "++obj->cmd_offset",
+     "obj->nb_cmd = char2short(obj->cmds[obj->cmd_offset])",
+     "char2short(obj->cmds[obj->cmd_offset])",
+     "obj->link = char2short(obj->cmds[obj->cmd_offset])"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50b5c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readGoXYargs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readSpeedArgs",
+   "kind": "function",
+   "current_name": "readSpeedArgs",
+   "proposed_name": null,
+   "c_type": "u8 readSpeedArgs(obj_t *obj)",
+   "oracle_address": "1:50ba8",
+   "meaning": "Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readSpeedArgs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ba8",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readSpeedArgs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readSpeedArgs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "f7a79c1cffe54887d4b3bda05761811a56c4f3d04ac13a249179a651244a7ea0",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "char2short"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readSpeedArgs:obj:1",
+   "kind": "local",
+   "function": "readSpeedArgs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readSpeedArgs; Read an unsigned duration into nb_cmd and signed horizontal/vertical speed bytes into iframes_timer/follow_id.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset++",
+     "obj->nb_cmd = obj->cmds[obj->cmd_offset]",
+     "obj->iframes_timer = char2short(obj->cmds[obj->cmd_offset])",
+     "char2short(obj->cmds[obj->cmd_offset])",
+     "obj->follow_id = char2short(obj->cmds[obj->cmd_offset])"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ba8",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readSpeedArgs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readInvalidArg",
+   "kind": "function",
+   "current_name": "readInvalidArg",
+   "proposed_name": null,
+   "c_type": "u8 readInvalidArg(obj_t *obj)",
+   "oracle_address": "1:50c14",
+   "meaning": "Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readInvalidArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c14",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readInvalidArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readInvalidArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "42a0744dd62737fac33494d9f26f7f54edb91f819b92cf0e1ad0bc44662fcceb",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "readOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readInvalidArg:obj:1",
+   "kind": "local",
+   "function": "readInvalidArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readInvalidArg; Restart command decoding at byte zero by setting offset -1 and recursively reading one command; return one.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset = -1",
+     "readOneCommand(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c14",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readInvalidArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipOneArg",
+   "kind": "function",
+   "current_name": "skipOneArg",
+   "proposed_name": null,
+   "c_type": "u8 skipOneArg(obj_t *obj)",
+   "oracle_address": "1:50c24",
+   "meaning": "Advance the command offset by one without loading an argument.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance the command offset by one without loading an argument.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipOneArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c24",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipOneArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipOneArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance the command offset by one without loading an argument.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "b9acb450940232738a5cf87e56dfbdf5fcd4ab3429b093baa34ff326c1a4b196",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipOneArg:obj:1",
+   "kind": "local",
+   "function": "skipOneArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipOneArg; Advance the command offset by one without loading an argument.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c24",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipOneArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipTestArgs",
+   "kind": "function",
+   "current_name": "skipTestArgs",
+   "proposed_name": null,
+   "c_type": "u8 skipTestArgs(obj_t *obj)",
+   "oracle_address": "1:50c2c",
+   "meaning": "Skip a test selector and its extra byte only for selectors 0..4.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip a test selector and its extra byte only for selectors 0..4.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipTestArgs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipTestArgs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipTestArgs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip a test selector and its extra byte only for selectors 0..4.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "eb5d5b75bfa92d166236a690322790bd4f24b185e99874bfe8aa894dd06c89c7",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipTestArgs:obj:1",
+   "kind": "local",
+   "function": "skipTestArgs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipTestArgs; Skip a test selector and its extra byte only for selectors 0..4.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmds[++obj->cmd_offset]",
+     "++obj->cmd_offset",
+     "obj->cmd_offset++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipTestArgs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipGoXYArgs",
+   "kind": "function",
+   "current_name": "skipGoXYArgs",
+   "proposed_name": null,
+   "c_type": "u8 skipGoXYArgs(obj_t *obj)",
+   "oracle_address": "1:50c4c",
+   "meaning": "Advance the command offset by two.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance the command offset by two.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipGoXYArgs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c4c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipGoXYArgs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipGoXYArgs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance the command offset by two.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "c89bb488d826fed5f86a494b240c644ae48f169c6b70f40c0e33311166bb6abd",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipGoXYArgs:obj:1",
+   "kind": "local",
+   "function": "skipGoXYArgs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipGoXYArgs; Advance the command offset by two.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset += 2"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c4c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipGoXYArgs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipSpeedArgs",
+   "kind": "function",
+   "current_name": "skipSpeedArgs",
+   "proposed_name": null,
+   "c_type": "u8 skipSpeedArgs(obj_t *obj)",
+   "oracle_address": "1:50c54",
+   "meaning": "Advance the command offset by three.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance the command offset by three.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipSpeedArgs"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c54",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipSpeedArgs",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipSpeedArgs",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance the command offset by three.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ec9d0b7921734c80793cdfcb5ff37db7068914e4295f589a661de00ee71e81c0",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipSpeedArgs:obj:1",
+   "kind": "local",
+   "function": "skipSpeedArgs",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipSpeedArgs; Advance the command offset by three.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset += 3"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c54",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipSpeedArgs",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_SELF_HANDLED",
+   "kind": "function",
+   "current_name": "handle_SELF_HANDLED",
+   "proposed_name": null,
+   "c_type": "u8 handle_SELF_HANDLED(obj_t *obj)",
+   "oracle_address": "1:50c5c",
+   "meaning": "Stop immediate command handling by returning zero; the object-specific updater handles the stored command.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Stop immediate command handling by returning zero; the object-specific updater handles the stored command.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_SELF_HANDLED"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c5c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_SELF_HANDLED",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_SELF_HANDLED",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Stop immediate command handling by returning zero; the object-specific updater handles the stored command.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ab967fe193ca1dc0b0672132393250f6918cefd9f39dd12cb1fdb2ad9fa81afa",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_SELF_HANDLED:obj:1",
+   "kind": "local",
+   "function": "handle_SELF_HANDLED",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c5c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_SELF_HANDLED",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipInvalidArg",
+   "kind": "function",
+   "current_name": "skipInvalidArg",
+   "proposed_name": null,
+   "c_type": "u8 skipInvalidArg(obj_t *obj)",
+   "oracle_address": "1:50c60",
+   "meaning": "Restart skip decoding at byte zero and return one.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Restart skip decoding at byte zero and return one.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipInvalidArg"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c60",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipInvalidArg",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipInvalidArg",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Restart skip decoding at byte zero and return one.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "061905f4cd7dd418adcfe838154b8f360aad0ee4fe42dc5c46b5550c97156695",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipInvalidArg:obj:1",
+   "kind": "local",
+   "function": "skipInvalidArg",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipInvalidArg; Restart skip decoding at byte zero and return one.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset = -1",
+     "skipOneCommand(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c60",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipInvalidArg",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_11_GO_LABEL",
+   "kind": "function",
+   "current_name": "handle_11_GO_LABEL",
+   "proposed_name": null,
+   "c_type": "u8 handle_11_GO_LABEL(obj_t *obj)",
+   "oracle_address": "1:50c6c",
+   "meaning": "Continue immediate command processing after a label.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Continue immediate command processing after a label.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_11_GO_LABEL"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c6c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_11_GO_LABEL",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_11_GO_LABEL",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Continue immediate command processing after a label.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "2dfeaa16a78759fe5f23400faba96b7d6377e468e6c8e864f9d8869f33779908",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_11_GO_LABEL:obj:1",
+   "kind": "local",
+   "function": "handle_11_GO_LABEL",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c6c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_11_GO_LABEL",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_19_GO_WAITSTATE",
+   "kind": "function",
+   "current_name": "handle_19_GO_WAITSTATE",
+   "proposed_name": null,
+   "c_type": "u8 handle_19_GO_WAITSTATE(obj_t *obj)",
+   "oracle_address": "1:50c70",
+   "meaning": "Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_19_GO_WAITSTATE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c70",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_19_GO_WAITSTATE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_19_GO_WAITSTATE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "36730a30ea55d7d2919b24959c155627383fc3423d9ecff4b51d98cca817eb9c",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "vblToEOA"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_19_GO_WAITSTATE:obj:1",
+   "kind": "local",
+   "function": "handle_19_GO_WAITSTATE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_19_GO_WAITSTATE; Convert the animation duration to GO_WAIT with nb_cmd equal to vblToEOA minus one and reset-if-new animation mode.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->change_anim_mode = ANIMMODE_RESET_IF_NEW",
+     "obj->cmd = GO_WAIT",
+     "obj->nb_cmd = vblToEOA(obj, obj->nb_cmd) - 1",
+     "vblToEOA(obj, obj->nb_cmd)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c70",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_19_GO_WAITSTATE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_25_RESERVED_GO_GOSUB",
+   "kind": "function",
+   "current_name": "handle_25_RESERVED_GO_GOSUB",
+   "proposed_name": null,
+   "c_type": "u8 handle_25_RESERVED_GO_GOSUB(obj_t *obj)",
+   "oracle_address": "1:50c90",
+   "meaning": "Push a one-count return context, then jump directly through cmd_labels[nb_cmd].",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Push a one-count return context, then jump directly through cmd_labels[nb_cmd].",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_25_RESERVED_GO_GOSUB"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50c90",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_25_RESERVED_GO_GOSUB",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_25_RESERVED_GO_GOSUB",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Push a one-count return context, then jump directly through cmd_labels[nb_cmd].",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "7267f70cd82d97184ec843fcdbf174b4b470caba32a66049fcb43c9c8cb4ad0f",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "pushCmdContext"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_25_RESERVED_GO_GOSUB:obj:1",
+   "kind": "local",
+   "function": "handle_25_RESERVED_GO_GOSUB",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_25_RESERVED_GO_GOSUB; Push a one-count return context, then jump directly through cmd_labels[nb_cmd].",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "pushCmdContext(obj, 1)",
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50c90",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_25_RESERVED_GO_GOSUB",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+   "kind": "function",
+   "current_name": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+   "proposed_name": null,
+   "c_type": "u8 handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO(obj_t *obj)",
+   "oracle_address": "1:50cbc",
+   "meaning": "Jump directly through cmd_labels[nb_cmd] and continue immediate handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Jump directly through cmd_labels[nb_cmd] and continue immediate handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50cbc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Jump directly through cmd_labels[nb_cmd] and continue immediate handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "9a3ef0d2af8ab22c97b4ddaa7f891b6cbea7b6618070b8dbc77250ba1a50c68b",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO:obj:1",
+   "kind": "local",
+   "function": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO; Jump directly through cmd_labels[nb_cmd] and continue immediate handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50cbc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_RESERVED_GO_SKIP_and_RESERVED_GO_GOTO",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_26_RESERVED_GO_BRANCHTRUE",
+   "kind": "function",
+   "current_name": "handle_26_RESERVED_GO_BRANCHTRUE",
+   "proposed_name": null,
+   "c_type": "u8 handle_26_RESERVED_GO_BRANCHTRUE(obj_t *obj)",
+   "oracle_address": "1:50cdc",
+   "meaning": "Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_26_RESERVED_GO_BRANCHTRUE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50cdc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_26_RESERVED_GO_BRANCHTRUE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_26_RESERVED_GO_BRANCHTRUE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "d292920c4ee031c7173095dfc2b0daeb17e19348fbad5666a806dd3f1a6e462d",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_26_RESERVED_GO_BRANCHTRUE:obj:1",
+   "kind": "local",
+   "function": "handle_26_RESERVED_GO_BRANCHTRUE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_26_RESERVED_GO_BRANCHTRUE; Jump through cmd_labels[nb_cmd] only when command_test is set; continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.command_test",
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50cdc",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_26_RESERVED_GO_BRANCHTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_27_RESERVED_GO_BRANCHFALSE",
+   "kind": "function",
+   "current_name": "handle_27_RESERVED_GO_BRANCHFALSE",
+   "proposed_name": null,
+   "c_type": "u8 handle_27_RESERVED_GO_BRANCHFALSE(obj_t *obj)",
+   "oracle_address": "1:50d04",
+   "meaning": "Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_27_RESERVED_GO_BRANCHFALSE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50d04",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_27_RESERVED_GO_BRANCHFALSE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_27_RESERVED_GO_BRANCHFALSE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "952420f074ec16b665daa9779ef08454f3754e063d6e3ddb15c54eed7704c904",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_27_RESERVED_GO_BRANCHFALSE:obj:1",
+   "kind": "local",
+   "function": "handle_27_RESERVED_GO_BRANCHFALSE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_27_RESERVED_GO_BRANCHFALSE; Jump through cmd_labels[nb_cmd] only when command_test is clear; continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "!obj->flags.command_test",
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50d04",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_27_RESERVED_GO_BRANCHFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_28_RESERVED_GO_SKIPTRUE",
+   "kind": "function",
+   "current_name": "handle_28_RESERVED_GO_SKIPTRUE",
+   "proposed_name": null,
+   "c_type": "u8 handle_28_RESERVED_GO_SKIPTRUE(obj_t *obj)",
+   "oracle_address": "1:50d2c",
+   "meaning": "Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_28_RESERVED_GO_SKIPTRUE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50d2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_28_RESERVED_GO_SKIPTRUE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_28_RESERVED_GO_SKIPTRUE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "d292920c4ee031c7173095dfc2b0daeb17e19348fbad5666a806dd3f1a6e462d",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_28_RESERVED_GO_SKIPTRUE:obj:1",
+   "kind": "local",
+   "function": "handle_28_RESERVED_GO_SKIPTRUE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_28_RESERVED_GO_SKIPTRUE; Jump through cmd_labels[nb_cmd] when command_test is set; continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.command_test",
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50d2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_28_RESERVED_GO_SKIPTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_29_RESERVED_GO_SKIPFALSE",
+   "kind": "function",
+   "current_name": "handle_29_RESERVED_GO_SKIPFALSE",
+   "proposed_name": null,
+   "c_type": "u8 handle_29_RESERVED_GO_SKIPFALSE(obj_t *obj)",
+   "oracle_address": "1:50d54",
+   "meaning": "Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_29_RESERVED_GO_SKIPFALSE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50d54",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_29_RESERVED_GO_SKIPFALSE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_29_RESERVED_GO_SKIPFALSE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "952420f074ec16b665daa9779ef08454f3754e063d6e3ddb15c54eed7704c904",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_29_RESERVED_GO_SKIPFALSE:obj:1",
+   "kind": "local",
+   "function": "handle_29_RESERVED_GO_SKIPFALSE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_29_RESERVED_GO_SKIPFALSE; Jump through cmd_labels[nb_cmd] when command_test is clear; continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "!obj->flags.command_test",
+     "obj->cmd_offset = obj->cmd_labels[obj->nb_cmd]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50d54",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_29_RESERVED_GO_SKIPFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_21_GO_X",
+   "kind": "function",
+   "current_name": "handle_21_GO_X",
+   "proposed_name": null,
+   "c_type": "u8 handle_21_GO_X(obj_t *obj)",
+   "oracle_address": "1:50d7c",
+   "meaning": "Set object x to signed nb_cmd*100+link and continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set object x to signed nb_cmd*100+link and continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_21_GO_X"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50d7c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_21_GO_X",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_21_GO_X",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set object x to signed nb_cmd*100+link and continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "1265e6a737e63b69d547ed5c3190844462f0e1f0d5b2d04ebd3e90c4209359f6",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_21_GO_X:obj:1",
+   "kind": "local",
+   "function": "handle_21_GO_X",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_21_GO_X; Set object x to signed nb_cmd*100+link and continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->x = (obj->nb_cmd * 100) + obj->link"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50d7c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_21_GO_X",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_22_GO_Y",
+   "kind": "function",
+   "current_name": "handle_22_GO_Y",
+   "proposed_name": null,
+   "c_type": "u8 handle_22_GO_Y(obj_t *obj)",
+   "oracle_address": "1:50da8",
+   "meaning": "Set object y to signed nb_cmd*100+link and continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set object y to signed nb_cmd*100+link and continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_22_GO_Y"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50da8",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_22_GO_Y",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_22_GO_Y",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set object y to signed nb_cmd*100+link and continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "b0c012eefdb8c2a2d0778789168d9937f7545be570b7d3e435d65908af463934",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_22_GO_Y:obj:1",
+   "kind": "local",
+   "function": "handle_22_GO_Y",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_22_GO_Y; Set object y to signed nb_cmd*100+link and continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->y = (obj->nb_cmd * 100) + obj->link"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50da8",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_22_GO_Y",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_12_GO_GOTO",
+   "kind": "function",
+   "current_name": "handle_12_GO_GOTO",
+   "proposed_name": null,
+   "c_type": "u8 handle_12_GO_GOTO(obj_t *obj)",
+   "oracle_address": "1:50dd4",
+   "meaning": "Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_12_GO_GOTO"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50dd4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_12_GO_GOTO",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_12_GO_GOTO",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "e73883eb52a6d1e3fc49b52737606c7514b79f4da9717aa5624aae53f38d183c",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_12_GO_GOTO:obj:1",
+   "kind": "local",
+   "function": "handle_12_GO_GOTO",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_12_GO_GOTO; Scan to the requested label, immediately decode after it, and stop the outer immediate-handler loop.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "skipToLabel(obj, obj->nb_cmd, 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50dd4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_12_GO_GOTO",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_8_GO_STATE",
+   "kind": "function",
+   "current_name": "handle_8_GO_STATE",
+   "proposed_name": null,
+   "c_type": "u8 handle_8_GO_STATE(obj_t *obj)",
+   "oracle_address": "1:50dec",
+   "meaning": "Set the main state from nb_cmd, clear both speeds, and continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set the main state from nb_cmd, clear both speeds, and continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_8_GO_STATE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50dec",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_8_GO_STATE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_8_GO_STATE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set the main state from nb_cmd, clear both speeds, and continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "349ad4304990b3b3211e49fb5b4a26d76032fdb86a921a88621323ee0c10aed3",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "set_main_etat"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_8_GO_STATE:obj:1",
+   "kind": "local",
+   "function": "handle_8_GO_STATE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_8_GO_STATE; Set the main state from nb_cmd, clear both speeds, and continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "set_main_etat(obj, obj->nb_cmd)",
+     "obj->speed_x = 0",
+     "obj->speed_y = 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50dec",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_8_GO_STATE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_5_GO_SUBSTATE",
+   "kind": "function",
+   "current_name": "handle_5_GO_SUBSTATE",
+   "proposed_name": null,
+   "c_type": "u8 handle_5_GO_SUBSTATE(obj_t *obj)",
+   "oracle_address": "1:50e0c",
+   "meaning": "Set the substate from nb_cmd, clear both speeds, and continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set the substate from nb_cmd, clear both speeds, and continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_5_GO_SUBSTATE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e0c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_5_GO_SUBSTATE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_5_GO_SUBSTATE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set the substate from nb_cmd, clear both speeds, and continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "c9ed27d4de3cd795cddb44a2804740207cecefb4c7a102767e08cbd30c571684",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "set_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_5_GO_SUBSTATE:obj:1",
+   "kind": "local",
+   "function": "handle_5_GO_SUBSTATE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_5_GO_SUBSTATE; Set the substate from nb_cmd, clear both speeds, and continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "set_sub_etat(obj, obj->nb_cmd)",
+     "obj->speed_x = 0",
+     "obj->speed_y = 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e0c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_5_GO_SUBSTATE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_6_GO_SKIP",
+   "kind": "function",
+   "current_name": "handle_6_GO_SKIP",
+   "proposed_name": null,
+   "c_type": "u8 handle_6_GO_SKIP(obj_t *obj)",
+   "oracle_address": "1:50e2c",
+   "meaning": "Skip nb_cmd complete encoded commands and continue handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip nb_cmd complete encoded commands and continue handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_6_GO_SKIP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_6_GO_SKIP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_6_GO_SKIP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip nb_cmd complete encoded commands and continue handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "584f6e549ef59f6a1f65880c6afd3e8851ce7e26e92fb173b8ab09149ae6e044",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_6_GO_SKIP:length:1",
+   "kind": "local",
+   "function": "handle_6_GO_SKIP",
+   "role": "local",
+   "current_name": "length",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_6_GO_SKIP computed/consumed by length = obj->nb_cmd",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "length = obj->nb_cmd",
+     "i = 0; i < length; i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_6_GO_SKIP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_6_GO_SKIP:i:1",
+   "kind": "local",
+   "function": "handle_6_GO_SKIP",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_6_GO_SKIP computed/consumed by i = 0; i < length; i++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < length; i++",
+     "i = 0",
+     "i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_6_GO_SKIP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_6_GO_SKIP:obj:1",
+   "kind": "local",
+   "function": "handle_6_GO_SKIP",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_6_GO_SKIP; Skip nb_cmd complete encoded commands and continue handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "length = obj->nb_cmd",
+     "skipOneCommand(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e2c",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_6_GO_SKIP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_9_GO_PREPARELOOP",
+   "kind": "function",
+   "current_name": "handle_9_GO_PREPARELOOP",
+   "proposed_name": null,
+   "c_type": "u8 handle_9_GO_PREPARELOOP(obj_t *obj)",
+   "oracle_address": "1:50e50",
+   "meaning": "Push the current offset and the nb_cmd loop count.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Push the current offset and the nb_cmd loop count.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_9_GO_PREPARELOOP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e50",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_9_GO_PREPARELOOP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_9_GO_PREPARELOOP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Push the current offset and the nb_cmd loop count.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "6e661f8b4c35e46b3ba1ea6465dd9ef49343470e6ddd3cdc0b37ce7ecad7d057",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "pushCmdContext"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_9_GO_PREPARELOOP:obj:1",
+   "kind": "local",
+   "function": "handle_9_GO_PREPARELOOP",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_9_GO_PREPARELOOP; Push the current offset and the nb_cmd loop count.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "pushCmdContext(obj, obj->nb_cmd)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e50",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_9_GO_PREPARELOOP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_13_GO_GOSUB",
+   "kind": "function",
+   "current_name": "handle_13_GO_GOSUB",
+   "proposed_name": null,
+   "c_type": "u8 handle_13_GO_GOSUB(obj_t *obj)",
+   "oracle_address": "1:50e60",
+   "meaning": "Push a one-count return context and scan to the requested label.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Push a one-count return context and scan to the requested label.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_13_GO_GOSUB"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e60",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_13_GO_GOSUB",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_13_GO_GOSUB",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Push a one-count return context and scan to the requested label.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ca1902c497f5743c65b00391322e37f8631d228d20944ec29bdb5cb413b5475f",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "pushCmdContext",
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_13_GO_GOSUB:obj:1",
+   "kind": "local",
+   "function": "handle_13_GO_GOSUB",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_13_GO_GOSUB; Push a one-count return context and scan to the requested label.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "pushCmdContext(obj, 1)",
+     "skipToLabel(obj, obj->nb_cmd, 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e60",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_13_GO_GOSUB",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_14_GO_RETURN",
+   "kind": "function",
+   "current_name": "handle_14_GO_RETURN",
+   "proposed_name": null,
+   "c_type": "u8 handle_14_GO_RETURN(obj_t *obj)",
+   "oracle_address": "1:50e88",
+   "meaning": "Pop the script return context and continue immediate handling.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Pop the script return context and continue immediate handling.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_14_GO_RETURN"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e88",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_14_GO_RETURN",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_14_GO_RETURN",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Pop the script return context and continue immediate handling.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "5f07758bf34b1dc1f665539786911db606aec4d3f695fb155f7fed493c13fb07",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "popCmdContext"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_14_GO_RETURN:obj:1",
+   "kind": "local",
+   "function": "handle_14_GO_RETURN",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_14_GO_RETURN; Pop the script return context and continue immediate handling.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "popCmdContext(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e88",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_14_GO_RETURN",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_10_GO_DOLOOP",
+   "kind": "function",
+   "current_name": "handle_10_GO_DOLOOP",
+   "proposed_name": null,
+   "c_type": "u8 handle_10_GO_DOLOOP(obj_t *obj)",
+   "oracle_address": "1:50e90",
+   "meaning": "Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_10_GO_DOLOOP"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50e90",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_10_GO_DOLOOP",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_10_GO_DOLOOP",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "ae51a5023db8b5dc3702f3cf3ec493bcd1a36adc77797add917cc4701d95ecbc",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_10_GO_DOLOOP:obj:1",
+   "kind": "local",
+   "function": "handle_10_GO_DOLOOP",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_10_GO_DOLOOP; Predecrement the top context count; repeat at its saved offset while positive, otherwise pop depth.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "(--obj->cmd_contexts[(u8) obj->cmd_context_depth].count) > 0",
+     "--obj->cmd_contexts[(u8) obj->cmd_context_depth].count",
+     "obj->cmd_offset = obj->cmd_contexts[(u8) obj->cmd_context_depth].cmd_offset",
+     "--obj->cmd_context_depth"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50e90",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_10_GO_DOLOOP",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_33_INVALID_CMD",
+   "kind": "function",
+   "current_name": "handle_33_INVALID_CMD",
+   "proposed_name": null,
+   "c_type": "u8 handle_33_INVALID_CMD(obj_t *obj)",
+   "oracle_address": "1:50ec4",
+   "meaning": "Set command offset to -1 so the next decode restarts at the beginning.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Set command offset to -1 so the next decode restarts at the beginning.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_33_INVALID_CMD"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ec4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_33_INVALID_CMD",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_33_INVALID_CMD",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Set command offset to -1 so the next decode restarts at the beginning.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "01982a31c50db4c2ca5acb550605b741f26b60a48018fec594436f5dbdcece46",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_33_INVALID_CMD:obj:1",
+   "kind": "local",
+   "function": "handle_33_INVALID_CMD",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_33_INVALID_CMD; Set command offset to -1 so the next decode restarts at the beginning.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_offset = -1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ec4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_33_INVALID_CMD",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_15_GO_BRANCHTRUE",
+   "kind": "function",
+   "current_name": "handle_15_GO_BRANCHTRUE",
+   "proposed_name": null,
+   "c_type": "u8 handle_15_GO_BRANCHTRUE(obj_t *obj)",
+   "oracle_address": "1:50ed0",
+   "meaning": "Scan to the requested label only when command_test is set; return zero on the taken branch.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Scan to the requested label only when command_test is set; return zero on the taken branch.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_15_GO_BRANCHTRUE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ed0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_15_GO_BRANCHTRUE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_15_GO_BRANCHTRUE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Scan to the requested label only when command_test is set; return zero on the taken branch.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "1e510fd8bfc559b157eb1a823a16b97e3abb45c9de48eb5aae75eae81327b24c",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_15_GO_BRANCHTRUE:obj:1",
+   "kind": "local",
+   "function": "handle_15_GO_BRANCHTRUE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_15_GO_BRANCHTRUE; Scan to the requested label only when command_test is set; return zero on the taken branch.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.command_test",
+     "skipToLabel(obj, obj->nb_cmd, 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ed0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_15_GO_BRANCHTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_16_GO_BRANCHFALSE",
+   "kind": "function",
+   "current_name": "handle_16_GO_BRANCHFALSE",
+   "proposed_name": null,
+   "c_type": "u8 handle_16_GO_BRANCHFALSE(obj_t *obj)",
+   "oracle_address": "1:50ef4",
+   "meaning": "Scan to the requested label only when command_test is clear; return zero on the taken branch.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Scan to the requested label only when command_test is clear; return zero on the taken branch.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_16_GO_BRANCHFALSE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50ef4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_16_GO_BRANCHFALSE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_16_GO_BRANCHFALSE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Scan to the requested label only when command_test is clear; return zero on the taken branch.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "2f298495b70d59d4ed363df95f5523b64d2ad9f7babb17afa9ab38e77a070e4d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_16_GO_BRANCHFALSE:obj:1",
+   "kind": "local",
+   "function": "handle_16_GO_BRANCHFALSE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_16_GO_BRANCHFALSE; Scan to the requested label only when command_test is clear; return zero on the taken branch.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "!obj->flags.command_test",
+     "skipToLabel(obj, obj->nb_cmd, 1)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50ef4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_16_GO_BRANCHFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_31_GO_SKIPTRUE",
+   "kind": "function",
+   "current_name": "handle_31_GO_SKIPTRUE",
+   "proposed_name": null,
+   "c_type": "u8 handle_31_GO_SKIPTRUE(obj_t *obj)",
+   "oracle_address": "1:50f18",
+   "meaning": "Skip nb_cmd complete commands only when command_test is set.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip nb_cmd complete commands only when command_test is set.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_31_GO_SKIPTRUE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50f18",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_31_GO_SKIPTRUE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_31_GO_SKIPTRUE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip nb_cmd complete commands only when command_test is set.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "7846658cbfafa8657abe7298ec6f7cbb9e9662e721c7176c992ce24ab111cd9d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_31_GO_SKIPTRUE:length:1",
+   "kind": "local",
+   "function": "handle_31_GO_SKIPTRUE",
+   "role": "local",
+   "current_name": "length",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_31_GO_SKIPTRUE computed/consumed by length = obj->nb_cmd",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "length = obj->nb_cmd",
+     "i = 0; i < length; i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f18",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_31_GO_SKIPTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_31_GO_SKIPTRUE:i:1",
+   "kind": "local",
+   "function": "handle_31_GO_SKIPTRUE",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_31_GO_SKIPTRUE computed/consumed by i = 0; i < length; i++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < length; i++",
+     "i = 0",
+     "i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f18",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_31_GO_SKIPTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_31_GO_SKIPTRUE:obj:1",
+   "kind": "local",
+   "function": "handle_31_GO_SKIPTRUE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_31_GO_SKIPTRUE; Skip nb_cmd complete commands only when command_test is set.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.command_test",
+     "length = obj->nb_cmd",
+     "skipOneCommand(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f18",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_31_GO_SKIPTRUE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_32_GO_SKIPFALSE",
+   "kind": "function",
+   "current_name": "handle_32_GO_SKIPFALSE",
+   "proposed_name": null,
+   "c_type": "u8 handle_32_GO_SKIPFALSE(obj_t *obj)",
+   "oracle_address": "1:50f44",
+   "meaning": "Skip nb_cmd complete commands only when command_test is clear.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Skip nb_cmd complete commands only when command_test is clear.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_32_GO_SKIPFALSE"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50f44",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_32_GO_SKIPFALSE",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_32_GO_SKIPFALSE",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Skip nb_cmd complete commands only when command_test is clear.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "c73f999cc9108452bdccea198891aee2165a88e19447c2761a92c7e76bd967e8",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "skipOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_32_GO_SKIPFALSE:length:1",
+   "kind": "local",
+   "function": "handle_32_GO_SKIPFALSE",
+   "role": "local",
+   "current_name": "length",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_32_GO_SKIPFALSE computed/consumed by length = obj->nb_cmd",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "length = obj->nb_cmd",
+     "i = 0; i < length; i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f44",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_32_GO_SKIPFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_32_GO_SKIPFALSE:i:1",
+   "kind": "local",
+   "function": "handle_32_GO_SKIPFALSE",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in handle_32_GO_SKIPFALSE computed/consumed by i = 0; i < length; i++",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < length; i++",
+     "i = 0",
+     "i++"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f44",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_32_GO_SKIPFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_32_GO_SKIPFALSE:obj:1",
+   "kind": "local",
+   "function": "handle_32_GO_SKIPFALSE",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_32_GO_SKIPFALSE; Skip nb_cmd complete commands only when command_test is clear.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "!obj->flags.command_test",
+     "length = obj->nb_cmd",
+     "skipOneCommand(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f44",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_32_GO_SKIPFALSE",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_18_GO_SETTEST",
+   "kind": "function",
+   "current_name": "handle_18_GO_SETTEST",
+   "proposed_name": null,
+   "c_type": "u8 handle_18_GO_SETTEST(obj_t *obj)",
+   "oracle_address": "1:50f70",
+   "meaning": "Assign the low bit of nb_cmd to the one-bit command-test latch.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Assign the low bit of nb_cmd to the one-bit command-test latch.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_18_GO_SETTEST"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50f70",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_18_GO_SETTEST",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_18_GO_SETTEST",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Assign the low bit of nb_cmd to the one-bit command-test latch.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "8f5414c37e8fa0fcd3d79c52174e8e761a5654b59670d4103f6889925634adcc",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_18_GO_SETTEST:obj:1",
+   "kind": "local",
+   "function": "handle_18_GO_SETTEST",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_18_GO_SETTEST; Assign the low bit of nb_cmd to the one-bit command-test latch.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->flags.command_test = obj->nb_cmd & 1"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f70",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_18_GO_SETTEST",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:handle_17_GO_TEST",
+   "kind": "function",
+   "current_name": "handle_17_GO_TEST",
+   "proposed_name": null,
+   "c_type": "u8 handle_17_GO_TEST(obj_t *obj)",
+   "oracle_address": "1:50f98",
+   "meaning": "Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "handle_17_GO_TEST"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:50f98",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "handle_17_GO_TEST",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "handle_17_GO_TEST",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "fbab2181f5f6cb42afd4987bd030ee2f394e1dcb2dd5008dbba59f3be74222e1",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "OBJ_IN_ZONE",
+     "calc_obj_dir",
+     "myRand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:handle_17_GO_TEST:saved_flags:1",
+   "kind": "local",
+   "function": "handle_17_GO_TEST",
+   "role": "local",
+   "current_name": "saved_flags",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in handle_17_GO_TEST computed/consumed by saved_flags = *((u8 *) (&obj->flags))",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "saved_flags = *((u8 *) (&obj->flags))",
+     "saved_flags <<= 4",
+     "saved_flags >>= 7",
+     "obj->flags.flip_x = saved_flags"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f98",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_17_GO_TEST",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:handle_17_GO_TEST:obj:1",
+   "kind": "local",
+   "function": "handle_17_GO_TEST",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to handle_17_GO_TEST; Evaluate zone, fist-hit, command-read, facing, random-zero, main-state or substate predicates into command_test; facing-to-Rayman test restores the original facing.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->nb_cmd",
+     "OBJ_IN_ZONE(obj)",
+     "obj->flags.command_test = 1",
+     "obj->flags.command_test = 0",
+     "obj->flags.hurtbyfist",
+     "!obj->flags.read_commands",
+     "obj->flags.flip_x == obj->param",
+     "myRand(obj->param) == 0",
+     "myRand(obj->param)",
+     "saved_flags = *((u8 *) (&obj->flags))",
+     "*((u8 *) (&obj->flags))",
+     "&obj->flags",
+     "calc_obj_dir(obj)",
+     "obj->flags.flip_x = saved_flags",
+     "obj->main_etat == obj->param",
+     "obj->sub_etat == obj->param"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:50f98",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "handle_17_GO_TEST",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:readOneCommand",
+   "kind": "function",
+   "current_name": "readOneCommand",
+   "proposed_name": null,
+   "c_type": "u8 readOneCommand(obj_t *obj)",
+   "oracle_address": "1:51154",
+   "meaning": "Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "readOneCommand"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:51154",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "readOneCommand",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "readOneCommand",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "e8db359e8c315f0ff447d016edec37db01bc8e6fd51042cbd16e0bb946dd0306",
+   "readers_writers": {
+    "globals": [
+     "cptr_tab"
+    ],
+    "callees": [
+     "cptr_tab"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:readOneCommand:obj:1",
+   "kind": "local",
+   "function": "readOneCommand",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to readOneCommand; Advance to the next opcode, save it in cmd, and dispatch the read callback in the 34-entry command table.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "++obj->cmd_offset",
+     "obj->cmd = obj->cmds[obj->cmd_offset]",
+     "return cptr_tab[obj->cmd].read(obj);",
+     "cptr_tab[obj->cmd].read(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51154",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "readOneCommand",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipOneCommand",
+   "kind": "function",
+   "current_name": "skipOneCommand",
+   "proposed_name": null,
+   "c_type": "u8 skipOneCommand(obj_t *obj)",
+   "oracle_address": "1:51180",
+   "meaning": "Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipOneCommand"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:51180",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipOneCommand",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipOneCommand",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "626d48dfa1fce623a34c03109a01c154d57e3371b45cb29764e7abe34913d172",
+   "readers_writers": {
+    "globals": [
+     "cptr_tab"
+    ],
+    "callees": [
+     "cptr_tab"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipOneCommand:obj:1",
+   "kind": "local",
+   "function": "skipOneCommand",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipOneCommand; Advance to the next opcode, save it in cmd, and dispatch the skip callback in the command table.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "++obj->cmd_offset",
+     "obj->cmd = obj->cmds[obj->cmd_offset]",
+     "return cptr_tab[obj->cmd].skip(obj);",
+     "cptr_tab[obj->cmd].skip(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51180",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipOneCommand",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:GET_OBJ_CMD",
+   "kind": "function",
+   "current_name": "GET_OBJ_CMD",
+   "proposed_name": null,
+   "c_type": "void GET_OBJ_CMD(obj_t *obj)",
+   "oracle_address": "1:511ac",
+   "meaning": "For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "GET_OBJ_CMD"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:511ac",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "GET_OBJ_CMD",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "GET_OBJ_CMD",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "e207603250a569946ff429636b765292c3853431ea84fd0497a443e83a5cb9ba",
+   "readers_writers": {
+    "globals": [
+     "cptr_tab"
+    ],
+    "callees": [
+     "cptr_tab",
+     "readOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:GET_OBJ_CMD:obj:1",
+   "kind": "local",
+   "function": "GET_OBJ_CMD",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to GET_OBJ_CMD; For a non-null script with reading enabled, postdecrement nb_cmd and decode only when its old value was zero; keep handling while callbacks return nonzero. A null script selects GO_NOP.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmds",
+     "obj->flags.read_commands && ((obj->nb_cmd--) == 0)",
+     "obj->nb_cmd--",
+     "cptr_tab[obj->cmd].handle(obj)",
+     "readOneCommand(obj)",
+     "obj->cmd = GO_NOP"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:511ac",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "GET_OBJ_CMD",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:pushCmdContext",
+   "kind": "function",
+   "current_name": "pushCmdContext",
+   "proposed_name": null,
+   "c_type": "void pushCmdContext(obj_t *obj, u8 count)",
+   "oracle_address": "1:511f4",
+   "meaning": "Increment signed context depth and store current script offset and byte count through its unsigned index.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Increment signed context depth and store current script offset and byte count through its unsigned index.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "pushCmdContext"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:511f4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "pushCmdContext",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "pushCmdContext",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Increment signed context depth and store current script offset and byte count through its unsigned index.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "bf6f847f426a116f0ee41f810b7b735179d7c2b81e3c2f5d64b955386b313829",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:pushCmdContext:obj:1",
+   "kind": "local",
+   "function": "pushCmdContext",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to pushCmdContext; Increment signed context depth and store current script offset and byte count through its unsigned index.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "++obj->cmd_context_depth",
+     "obj->cmd_contexts[(u8) obj->cmd_context_depth].cmd_offset = obj->cmd_offset",
+     "obj->cmd_contexts[(u8) obj->cmd_context_depth].count = count"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:511f4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "pushCmdContext",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:pushCmdContext:count:1",
+   "kind": "local",
+   "function": "pushCmdContext",
+   "role": "parameter",
+   "current_name": "count",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by pushCmdContext: obj->cmd_contexts[(u8) obj->cmd_context_depth].count = count",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "obj->cmd_contexts[(u8) obj->cmd_context_depth].count = count"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:511f4",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "pushCmdContext",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:skipToLabel",
+   "kind": "function",
+   "current_name": "skipToLabel",
+   "proposed_name": null,
+   "c_type": "void skipToLabel(obj_t *obj, u8 label, u8 skip_label_cmd)",
+   "oracle_address": "1:51220",
+   "meaning": "Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "skipToLabel"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "skipToLabel",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "skipToLabel",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "83cf2d03604716306af0b96b52cc61a30a2e035d2116e2134228082c90320f27",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "GET_OBJ_CMD",
+     "skipOneCommand"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:skipToLabel:initial_offset:1",
+   "kind": "local",
+   "function": "skipToLabel",
+   "role": "local",
+   "current_name": "initial_offset",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in skipToLabel computed/consumed by initial_offset = obj->cmd_offset",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "initial_offset = obj->cmd_offset",
+     "obj->cmd_offset == initial_offset",
+     "initial_offset != obj->cmd_offset"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:skipToLabel:initial_read_commands:1",
+   "kind": "local",
+   "function": "skipToLabel",
+   "role": "local",
+   "current_name": "initial_read_commands",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in skipToLabel computed/consumed by initial_read_commands = obj->flags.read_commands",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "initial_read_commands = obj->flags.read_commands",
+     "obj->flags.read_commands = initial_read_commands"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:skipToLabel:obj:1",
+   "kind": "local",
+   "function": "skipToLabel",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to skipToLabel; Scan complete commands until a matching label or return to the initial offset; optionally decode after the label while temporarily enabling command reads, otherwise select GO_NOP.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "initial_offset = obj->cmd_offset",
+     "initial_read_commands = obj->flags.read_commands",
+     "(obj->cmd != GO_LABEL) || (obj->cmds[obj->cmd_offset] != label)",
+     "skipOneCommand(obj)",
+     "obj->cmd_offset == initial_offset",
+     "initial_offset != obj->cmd_offset",
+     "obj->nb_cmd = 0",
+     "obj->flags.read_commands = 1",
+     "GET_OBJ_CMD(obj)",
+     "obj->flags.read_commands = initial_read_commands",
+     "obj->cmd = GO_NOP"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:skipToLabel:label:1",
+   "kind": "local",
+   "function": "skipToLabel",
+   "role": "parameter",
+   "current_name": "label",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by skipToLabel: (obj->cmd != GO_LABEL) || (obj->cmds[obj->cmd_offset] != label)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "(obj->cmd != GO_LABEL) || (obj->cmds[obj->cmd_offset] != label)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:skipToLabel:skip_label_cmd:1",
+   "kind": "local",
+   "function": "skipToLabel",
+   "role": "parameter",
+   "current_name": "skip_label_cmd",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by skipToLabel: skip_label_cmd",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "skip_label_cmd"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:51220",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "skipToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "function:pushToLabel",
+   "kind": "function",
+   "current_name": "pushToLabel",
+   "proposed_name": null,
+   "c_type": "void pushToLabel(obj_t *obj, u8 label, u8 skip_label_cmd)",
+   "oracle_address": "1:512c0",
+   "meaning": "Push a one-count context and perform the ordinary label scan.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Push a one-count context and perform the ordinary label scan.",
+    "operations_artifact": "evidence/objupdate1_operations.json",
+    "operations_key": "pushToLabel"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:512c0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "pushToLabel",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "pushToLabel",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Push a one-count context and perform the ordinary label scan.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c",
+   "source_body_sha256": "4ae00a6d2904636c144d078e6bf73a6bacf61fab4c5cf9ab3ddbd7105fee5a4f",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "pushCmdContext",
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "objupdate1.c"
+   ]
+  },
+  {
+   "id": "local:pushToLabel:obj:1",
+   "kind": "local",
+   "function": "pushToLabel",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to pushToLabel; Push a one-count context and perform the ordinary label scan.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "pushCmdContext(obj, 1)",
+     "skipToLabel(obj, label, skip_label_cmd)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:512c0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "pushToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:pushToLabel:label:1",
+   "kind": "local",
+   "function": "pushToLabel",
+   "role": "parameter",
+   "current_name": "label",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by pushToLabel: skipToLabel(obj, label, skip_label_cmd)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "skipToLabel(obj, label, skip_label_cmd)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:512c0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "pushToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  },
+  {
+   "id": "local:pushToLabel:skip_label_cmd:1",
+   "kind": "local",
+   "function": "pushToLabel",
+   "role": "parameter",
+   "current_name": "skip_label_cmd",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by pushToLabel: skipToLabel(obj, label, skip_label_cmd)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "skipToLabel(obj, label, skip_label_cmd)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:512c0",
+     "artifact": "evidence/objupdate1.dos.txt",
+     "function": "pushToLabel",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/objupdate1.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/objupdate1.c": "52022124cf64b5361d24b7b147bd0a7bcce3ec2ea1d4ed6bde3bdc2a72c8e327"
+ },
+ "proposal_fingerprints": {
+  "objupdate1.c": "52022124cf64b5361d24b7b147bd0a7bcce3ec2ea1d4ed6bde3bdc2a72c8e327",
+  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/command_56AF0.c": "434a30930de9e1614ce29a28fa645eee45f1b8fa3ed2ccf6f46df9a8939a507e",
+  "external/rayverse/src/objupdate.c": "5a73e1fb25b960628970dace2cabe939fad970396e75f2d4186e20c99afedac8"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/objupdate1.dos.txt": "b1afdf271811aec48b43559a565312eec3573492222f109b7f37343e858f2833",
+  "evidence/objupdate1_operations.json": "4224509513da89d80ba3bce534fc573e428d4000ed9b76cbf89c4a29d91865e3",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/data/blk_70e4.c": "897049d82d92cd998254f36ec615c28bf8abfad9ba13550c5094c877259524b9",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Treat the object script as bytecode, not animation data. Signed byte conversion is explicit for GO_X/GO_Y and GO_SPEED velocity operands; duration/test operands have their separate widths. GET_OBJ_CMD tests the old nb_cmd value before decrement, and zero handler result yields to the object updater. Preserve label scanning, temporary read-enable restoration, parity-only SETTEST, signed depth -1 and predecremented loop counts. The 34 three-pointer dispatch records are decoded in evidence/command_dispatch.json. Context capacity is not inferred."
+}

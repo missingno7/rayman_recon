@@ -23,42 +23,43 @@ extern u8 GameModeVideo;
 u8 BTYP(s16 tile_x, s16 tile_y);
 s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y);
 
-void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 unk_x, u8 unk_y)
+/* Names and meanings: docs/semantics/action.json. */
+void setBossReachingSpeeds(obj_t *obj, u8 horloge_ind, u8 blend_x, u8 blend_y)
 {
-    s16 diff_x_1;
-    s16 diff_y_1;
-    s32 unk_1;
-    s32 unk_2;
-    s32 unk_3;
-    s16 unk_4;
-    s16 unk_5;
+    s16 gap_x_q4;
+    s16 gap_y_q4;
+    s32 speed_limit_q4;
+    s32 max_gap_q4;
+    s32 travel_steps_q4;
+    s16 target_speed_x;
+    s16 target_speed_y;
     s32 factor;
     s32 diff_y_wide;
     if ((bossXToReach != -32000) && (bossYToReach != -32000))
     {
         factor = alternateBossSpeedFactor;
-        unk_1 = obj->eta[obj->main_etat][obj->sub_etat].speed_x_right * (bossSpeedFactor + factor);
-        unk_1 /= 0x4000;
-        diff_x_1 = (bossXToReach - obj->x) * 16;
-        diff_y_1 = bossYToReach - obj->y; diff_y_1 *= 16;
-        if ((diff_x_1 != 0 || diff_y_1 != 0) && unk_1 != 0)
+        speed_limit_q4 = obj->eta[obj->main_etat][obj->sub_etat].speed_x_right * (bossSpeedFactor + factor);
+        speed_limit_q4 /= 0x4000;
+        gap_x_q4 = (bossXToReach - obj->x) * 16;
+        gap_y_q4 = bossYToReach - obj->y; gap_y_q4 *= 16;
+        if ((gap_x_q4 != 0 || gap_y_q4 != 0) && speed_limit_q4 != 0)
         {
-            diff_y_wide = diff_y_1;
-            unk_2 = max32((s32)diff_x_1 >= 0 ? (s32)diff_x_1 : -(s32)diff_x_1,
+            diff_y_wide = gap_y_q4;
+            max_gap_q4 = max32((s32)gap_x_q4 >= 0 ? (s32)gap_x_q4 : -(s32)gap_x_q4,
                           diff_y_wide < 0 ? -diff_y_wide : diff_y_wide);
-            unk_1 = min32((s16)unk_2, unk_1);
-            unk_3 = ashl16(unk_2, 4) / unk_1;
-            unk_4 = ashl16(diff_x_1, 4) / unk_3;
-            unk_5 = ashl16(diff_y_1, 4) / unk_3;
+            speed_limit_q4 = min32((s16)max_gap_q4, speed_limit_q4);
+            travel_steps_q4 = ashl16(max_gap_q4, 4) / speed_limit_q4;
+            target_speed_x = ashl16(gap_x_q4, 4) / travel_steps_q4;
+            target_speed_y = ashl16(gap_y_q4, 4) / travel_steps_q4;
             if (horloge[horloge_ind] == 0)
             {
-                obj->speed_x = (obj->speed_x * (s16)(0xFF - unk_x) + (unk_4 * unk_x)) / 255;
+                obj->speed_x = (obj->speed_x * (s16)(0xFF - blend_x) + (target_speed_x * blend_x)) / 255;
                 if (obj->main_etat == 2)
                 {
-                    if (diff_y_wide <= unk_1)
-                        unk_y = 0xFF;
+                    if (diff_y_wide <= speed_limit_q4)
+                        blend_y = 0xFF;
                 }
-                obj->speed_y = (obj->speed_y * (s16)(0xFF - unk_y) + (unk_5 * unk_y)) / 255;
+                obj->speed_y = (obj->speed_y * (s16)(0xFF - blend_y) + (target_speed_y * blend_y)) / 255;
             }
         }
         else

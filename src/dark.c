@@ -108,29 +108,30 @@ void dark_attaque_suivante(void)
         type_dark_attaque = dark_sequence[dark_attaque];
 }
 
+/* Local names: docs/semantics/dark.json (DOS dataflow; compiler output unchanged). */
 void init_vitraux(void)
 {
-    u8 unk_1 = 0;
+    u8 window_index = 0;
     s16 i = 0;
     obj_t *cur_obj = level.objects;
     s16 nb_objs = level.nb_objects;
 
     if (nb_objs > 0) {
         do {
-            if (unk_1 >= 5)
+            if (window_index >= 5)
                 return;
             if (cur_obj->type == TYPE_VITRAIL) {
-                VitrauxInfos[unk_1].obj_id = (u8)i;
-                VitrauxInfos[unk_1].x_pos = cur_obj->x + cur_obj->offset_bx;
-                VitrauxInfos[unk_1].y_pos = cur_obj->y + cur_obj->offset_by;
-                VitrauxInfos[unk_1].index = unk_1;
-                VitrauxInfos[unk_1].field_6 = 0;
-                VitrauxInfos[unk_1].mode = 0;
-                VitrauxInfos[unk_1].value = 0;
+                VitrauxInfos[window_index].obj_id = (u8)i;
+                VitrauxInfos[window_index].x_pos = cur_obj->x + cur_obj->offset_bx;
+                VitrauxInfos[window_index].y_pos = cur_obj->y + cur_obj->offset_by;
+                VitrauxInfos[window_index].index = window_index;
+                VitrauxInfos[window_index].field_6 = 0;
+                VitrauxInfos[window_index].mode = 0;
+                VitrauxInfos[window_index].value = 0;
                 cur_obj->flags.alive = 1;
                 cur_obj->is_active = 1;
-                cur_obj->param = unk_1;
-                unk_1++;
+                cur_obj->param = window_index;
+                window_index++;
             }
             i++;
             cur_obj++;
@@ -808,14 +809,15 @@ void DO_VITRAIL_COMMAND(obj_t *obj)
     }
 }
 
-void allume_vitraux(u8 *param_1)
+/* Local names: docs/semantics/dark.json (DOS dataflow; compiler output unchanged). */
+void allume_vitraux(u8 *repeat_counts)
 {
     u8 i;
 
     i = 0;
     while (i < 5) {
         if (VitrauxInfos[i].mode == 0) {
-            VitrauxInfos[i].mode = param_1[i];
+            VitrauxInfos[i].mode = repeat_counts[i];
             VitrauxInfos[i].value = 100;
             level.objects[(u8)VitrauxInfos[i].obj_id].anim_frame = 0;
         }

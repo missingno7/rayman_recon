@@ -105,13 +105,14 @@ void DO_TRP_COMMAND(obj_t *obj)
     DO_TRP_ATTAK(obj);
 }
 
-void trompetteWind(obj_t *obj, u8 a2)
+/* Local names: docs/semantics/trumpet.json (DOS dataflow; compiler output unchanged). */
+void trompetteWind(obj_t *obj, u8 wind_mode)
 {
     s16 trp_x;
     s16 trp_y;
     s16 trp_w;
     s16 trp_h;
-    s16 unk_1;
+    s16 wind_delta;
 
     obj->timer = 100;
     GET_ANIM_POS(obj, &trp_x, &trp_y, &trp_w, &trp_h);
@@ -127,16 +128,16 @@ void trompetteWind(obj_t *obj, u8 a2)
                   trp_x, trp_y, trp_w, trp_h)) {
         ashr16(ray_zdc_w, 1);
         ashr16(ray_zdc_y, 1);
-        unk_1 = 7;
-        if ((!obj->flags.flip_x && a2 == 0) ||
-            (obj->flags.flip_x && a2 == 1))
-            unk_1 = -unk_1;
+        wind_delta = 7;
+        if ((!obj->flags.flip_x && wind_mode == 0) ||
+            (obj->flags.flip_x && wind_mode == 1))
+            wind_delta = -wind_delta;
     } else {
-        unk_1 = 0;
+        wind_delta = 0;
     }
 
-    if (unk_1 != 0) {
-        ray_wind_force += unk_1;
+    if (wind_delta != 0) {
+        ray_wind_force += wind_delta;
         if (ray.main_etat != 5)
             decalage_en_cours = ashl16(ray_wind_force, 8);
     }

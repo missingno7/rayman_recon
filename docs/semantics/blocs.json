@@ -1,0 +1,4636 @@
+{
+ "schema_version": 2,
+ "oracle": "gog_v121_us",
+ "artifact_root": "build/workers/sem_objs",
+ "proof_boundary": "Meaning confidence is independent of STRICT matching. DOS operations dominate external labels. UNKNOWN keeps neutral names. Initial shipped values do not imply runtime bounds, capacities or reachability.",
+ "scope": {
+  "kind": "unit",
+  "source": "blocs.c",
+  "headers": [
+   "include/rtypes.h",
+   "include/palette.h",
+   "include/obj.h",
+   "include/game.h",
+   "include/map.h",
+   "include/type_island_abi.h",
+   "include/lowlevel.h"
+  ],
+  "local_headers": [],
+  "preamble": "",
+  "statement_macros": [],
+  "globals": [
+   "global:RayEvts",
+   "global:block_flags",
+   "global:button_released",
+   "global:calcbloc1",
+   "global:calcbloc2",
+   "global:calcblocfloor",
+   "global:calcblocrecal",
+   "global:flags",
+   "global:hand_btyp",
+   "global:hand_btypd",
+   "global:hand_btypg",
+   "global:jump_time",
+   "global:ray",
+   "global:ray_last_ground_btyp",
+   "global:ray_on_poelle",
+   "global:ray_wind_force"
+  ],
+  "types": [
+   "type:active_objects_t",
+   "type:anim_frame_t",
+   "type:anim_layer_t",
+   "type:anim_t",
+   "type:block_flags_t",
+   "type:calcbloc1_func_t",
+   "type:calcbloc_func_t",
+   "type:cmd_context_t",
+   "type:credit_t",
+   "type:display_item_t",
+   "type:eta_t",
+   "type:finbosslevel_t",
+   "type:font_t",
+   "type:level_obj_t",
+   "type:level_t",
+   "type:loadinforay_t",
+   "type:map_data_t",
+   "type:map_tile_t",
+   "type:mem_t",
+   "type:obj_flags_t",
+   "type:obj_t",
+   "type:obj_type_flags_t",
+   "type:options_jeu_t",
+   "type:poing_t",
+   "type:rayevts_t",
+   "type:record_t",
+   "type:rgb_palette_t",
+   "type:rgb_t",
+   "type:save_state_t",
+   "type:sprite_t",
+   "type:status_bar_t",
+   "type:world_info_t",
+   "type:zdc_t"
+  ]
+ },
+ "entities": [
+  {
+   "id": "function:MURDUR",
+   "kind": "function",
+   "current_name": "MURDUR",
+   "proposed_name": null,
+   "c_type": "u16 MURDUR(s16 x, s16 y)",
+   "oracle_address": "1:14e90",
+   "meaning": "Return whether the pixel coordinate selects tile type 15; this tests the exact type, not every solid flag.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return whether the pixel coordinate selects tile type 15; this tests the exact type, not every solid flag.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "MURDUR"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:14e90",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "MURDUR",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "MURDUR",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return whether the pixel coordinate selects tile type 15; this tests the exact type, not every solid flag.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "6c6351d1e1bd0264d0f3521c355f75fb90d76ec50bca353082d1c41eab995596",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "BTYP"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:MURDUR:x:1",
+   "kind": "local",
+   "function": "MURDUR",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by MURDUR: return BTYP(x >> 4, y >> 4) == BTYP_SOLID;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return BTYP(x >> 4, y >> 4) == BTYP_SOLID;",
+     "BTYP(x >> 4, y >> 4)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14e90",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "MURDUR",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:MURDUR:y:1",
+   "kind": "local",
+   "function": "MURDUR",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by MURDUR: return BTYP(x >> 4, y >> 4) == BTYP_SOLID;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return BTYP(x >> 4, y >> 4) == BTYP_SOLID;",
+     "BTYP(x >> 4, y >> 4)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14e90",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "MURDUR",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:dist_to_bloc_floor",
+   "kind": "function",
+   "current_name": "dist_to_bloc_floor",
+   "proposed_name": null,
+   "c_type": "s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y)",
+   "oracle_address": "1:14eac",
+   "meaning": "Evaluate the floor-shape callback at x and narrowed y, subtract the original y and return the signed 16-bit distance.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Evaluate the floor-shape callback at x and narrowed y, subtract the original y and return the signed 16-bit distance.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "dist_to_bloc_floor"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:14eac",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "dist_to_bloc_floor",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "dist_to_bloc_floor",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Evaluate the floor-shape callback at x and narrowed y, subtract the original y and return the signed 16-bit distance.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "3166136ef69654ae165044ee69f4961be50e214ba2ac87440d82de82993e66ff",
+   "readers_writers": {
+    "globals": [
+     "calcblocfloor"
+    ],
+    "callees": [
+     "calcblocfloor"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:dist_to_bloc_floor:result:1",
+   "kind": "local",
+   "function": "dist_to_bloc_floor",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "s32 = calcblocfloor[btyp](x, (s16) y) - y",
+   "declarator": "s32 $ = calcblocfloor[btyp](x, (s16) y) - y",
+   "meaning": "Local initialized as calcblocfloor[btyp](x, (s16) y) - y; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14eac",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "dist_to_bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:dist_to_bloc_floor:btyp:1",
+   "kind": "local",
+   "function": "dist_to_bloc_floor",
+   "role": "parameter",
+   "current_name": "btyp",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by dist_to_bloc_floor: s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+     "calcblocfloor[btyp](x, (s16) y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14eac",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "dist_to_bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:dist_to_bloc_floor:x:1",
+   "kind": "local",
+   "function": "dist_to_bloc_floor",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by dist_to_bloc_floor: s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+     "calcblocfloor[btyp](x, (s16) y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14eac",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "dist_to_bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:dist_to_bloc_floor:y:1",
+   "kind": "local",
+   "function": "dist_to_bloc_floor",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by dist_to_bloc_floor: s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s32 result = calcblocfloor[btyp](x, (s16) y) - y",
+     "calcblocfloor[btyp](x, (s16) y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14eac",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "dist_to_bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:bloc_floor",
+   "kind": "function",
+   "current_name": "bloc_floor",
+   "proposed_name": null,
+   "c_type": "s16 bloc_floor(s16 btype, s16 x, s16 y)",
+   "oracle_address": "1:14ec8",
+   "meaning": "Return the supplied tile type when its floor distance is nonpositive, otherwise return zero.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return the supplied tile type when its floor distance is nonpositive, otherwise return zero.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "bloc_floor"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:14ec8",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "bloc_floor",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "bloc_floor",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return the supplied tile type when its floor distance is nonpositive, otherwise return zero.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "b2ee9fd6ef4cfdb559a01fe84df542729a0fa7fe157bc8e2c75a2db5568286c2",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "dist_to_bloc_floor"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:bloc_floor:btype:1",
+   "kind": "local",
+   "function": "bloc_floor",
+   "role": "parameter",
+   "current_name": "btype",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by bloc_floor: dist_to_bloc_floor(btype, x, y) <= 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "dist_to_bloc_floor(btype, x, y) <= 0",
+     "dist_to_bloc_floor(btype, x, y)",
+     "return btype;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14ec8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:bloc_floor:x:1",
+   "kind": "local",
+   "function": "bloc_floor",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by bloc_floor: dist_to_bloc_floor(btype, x, y) <= 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "dist_to_bloc_floor(btype, x, y) <= 0",
+     "dist_to_bloc_floor(btype, x, y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14ec8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:bloc_floor:y:1",
+   "kind": "local",
+   "function": "bloc_floor",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by bloc_floor: dist_to_bloc_floor(btype, x, y) <= 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "dist_to_bloc_floor(btype, x, y) <= 0",
+     "dist_to_bloc_floor(btype, x, y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14ec8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "bloc_floor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:calc_typ_trav",
+   "kind": "function",
+   "current_name": "calc_typ_trav",
+   "proposed_name": null,
+   "c_type": "u8 calc_typ_trav(obj_t *obj, u8 height)",
+   "oracle_address": "1:14f60",
+   "meaning": "Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "calc_typ_trav"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "calc_typ_trav",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "calc_typ_trav",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "47c5e2aecd3d1218ed8f50785df438d52b4a8ac619a9722802915c04e889b953",
+   "readers_writers": {
+    "globals": [
+     "RayEvts",
+     "ray"
+    ],
+    "callees": [
+     "BTYP",
+     "MURDUR",
+     "ashr16"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:calc_typ_trav:y:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by y = obj->offset_by + ((u16) obj->y)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "y = obj->offset_by + ((u16) obj->y)",
+     "BTYP(((s32) x) >> 4, ((s32) y) >> 4)",
+     "BTYP(x >> 4, (y - 0x10) >> 4)",
+     "ashr16(y - inset, 4U)",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10)) != 0",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:x:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by x = obj->offset_bx + ((u16) obj->x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x = obj->offset_bx + ((u16) obj->x)",
+     "BTYP(((s32) x) >> 4, ((s32) y) >> 4)",
+     "BTYP(x >> 4, (y - 0x10) >> 4)",
+     "ashr16(x, 4U)",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10)) != 0",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:inset:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "inset",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by inset = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "inset = 0",
+     "inset += 8 - obj->speed_y",
+     "inset += 0x11",
+     "inset += 2",
+     "inset += 8",
+     "inset += 9",
+     "inset += 0x19",
+     "inset += 1",
+     "height = height - ashr16(inset, 4U)",
+     "ashr16(inset, 4U)",
+     "ashr16(y - inset, 4U)",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10)) != 0",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:step:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "step",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by step = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "step = 0",
+     "; step <= height; step++",
+     "step++",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10)) != 0",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:hits:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "hits",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by hits = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "hits = 0",
+     "hits += 1",
+     "hits"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:result:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by result = 0",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "result = 0",
+     "result = 0x0000000F",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:btype:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "local",
+   "current_name": "btype",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in calc_typ_trav computed/consumed by btype = obj->btypes[0]",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "btype = obj->btypes[0]",
+     "(btype >= 2) && ((btype <= 3) || ((btype >= 18) && (btype <= 19)))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:obj:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to calc_typ_trav; Probe a vertical column of type-15 wall tiles with type/slope-dependent inset and tiny-Rayman height handling; return 15 if any wall was hit, else zero.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "(obj->type == TYPE_23_RAYMAN) && RayEvts.tiny",
+     "y = obj->offset_by + ((u16) obj->y)",
+     "x = obj->offset_bx + ((u16) obj->x)",
+     "inset += 8 - obj->speed_y",
+     "obj->speed_x >= 0",
+     "obj->speed_x <= 0",
+     "btype = obj->btypes[0]"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_trav:height:1",
+   "kind": "local",
+   "function": "calc_typ_trav",
+   "role": "parameter",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by calc_typ_trav: height = ashr16(height, 1)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height = ashr16(height, 1)",
+     "ashr16(height, 1)",
+     "height = (height) ? (height) : (1)",
+     "height = height - ashr16(inset, 4U)",
+     "height > 0x80U",
+     "height = 0",
+     "; step <= height; step++",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10)) != 0",
+     "MURDUR(x, (y - inset) - ((height - step) * 0x10))"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:14f60",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_trav",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:calc_typ_travd",
+   "kind": "function",
+   "current_name": "calc_typ_travd",
+   "proposed_name": null,
+   "c_type": "u8 calc_typ_travd(obj_t *obj, u8 backwards)",
+   "oracle_address": "1:151f8",
+   "meaning": "Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "calc_typ_travd"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "calc_typ_travd",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "calc_typ_travd",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "17cfd5af8469cf60133f2ac14d69cdf2615d17091fe5330f5373fd23672a0367",
+   "readers_writers": {
+    "globals": [
+     "RayEvts",
+     "flags",
+     "ray"
+    ],
+    "callees": [
+     "GET_SPRITE_POS",
+     "ashr16",
+     "calc_typ_trav",
+     "sgn"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:calc_typ_travd:eta:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "eta",
+   "proposed_name": null,
+   "c_type": "eta_t **",
+   "declarator": "eta_t **$",
+   "meaning": "Local value in calc_typ_travd computed/consumed by eta = ray.eta",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "eta = ray.eta",
+     "eta[ray.main_etat][ray.sub_etat].flags & 0x40"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:x_saved:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "x_saved",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by x_saved = obj->x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x_saved = obj->x",
+     "obj->x = x_saved"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:direction:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "direction",
+   "proposed_name": null,
+   "c_type": "s16 = sgn(obj->speed_x)",
+   "declarator": "s16 $ = sgn(obj->speed_x)",
+   "meaning": "Local initialized as sgn(obj->speed_x); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 direction = sgn(obj->speed_x)",
+     "direction != 0",
+     "direction < 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:x_offset:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "x_offset",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by x_offset = 8",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x_offset = 8",
+     "x_offset = 14",
+     "x_offset -= follow_inset",
+     "x_offset = -x_offset",
+     "-x_offset",
+     "obj->x += x_offset"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:follow_inset:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "follow_inset",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by follow_inset = 4",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "follow_inset = 4",
+     "follow_inset = 2",
+     "x_offset -= follow_inset"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:x_speed:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "x_speed",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by x_speed = obj->speed_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "x_speed = obj->speed_x",
+     "x_speed = ashr16(x_speed, 4)",
+     "ashr16(x_speed, 4)",
+     "obj->x -= x_speed"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:sprite_y:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "sprite_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation vertical origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h)",
+     "&sprite_y",
+     "sprite_y = 0",
+     "height = ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+     "ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+     "-(sprite_y + obj->offset_hy)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:sprite_x:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "sprite_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation horizontal origin output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h)",
+     "&sprite_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:sprite_w:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "sprite_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation width output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h)",
+     "&sprite_w"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:sprite_h:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "sprite_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Sprite/animation height output; may be reused after the query as recorded in the uses.",
+   "unit": "pixels",
+   "value_domain": {
+    "observed_computations": [
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h)",
+     "&sprite_h"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:height:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by height = ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height = ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+     "height = ashr16(height, 1)",
+     "ashr16(height, 1)",
+     "height != 0",
+     "height--",
+     "result = calc_typ_trav(obj, height)",
+     "calc_typ_trav(obj, height)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:result:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in calc_typ_travd computed/consumed by result = calc_typ_trav(obj, height)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "result = calc_typ_trav(obj, height)",
+     "result = 0",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:obj:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to calc_typ_travd; Temporarily shift the object to a facing/speed-dependent side, derive probe height from following-sprite and crouch geometry, call calc_typ_trav and restore x.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "s16 direction = sgn(obj->speed_x)",
+     "sgn(obj->speed_x)",
+     "obj->type == TYPE_RAYMAN",
+     "x_saved = obj->x",
+     "obj->x += x_offset",
+     "x_speed = obj->speed_x",
+     "flags[obj->type].raw & flags1_0x10_move_x",
+     "obj->x -= x_speed",
+     "obj->flags.follow_enabled",
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &sprite_x, &sprite_y, &sprite_w, &sprite_h)",
+     "height = ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+     "ashr16((-(sprite_y + obj->offset_hy)) + obj->offset_by, 4)",
+     "-(sprite_y + obj->offset_hy)",
+     "result = calc_typ_trav(obj, height)",
+     "calc_typ_trav(obj, height)",
+     "obj->x = x_saved"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:calc_typ_travd:backwards:1",
+   "kind": "local",
+   "function": "calc_typ_travd",
+   "role": "parameter",
+   "current_name": "backwards",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Caller-supplied u8 argument used by calc_typ_travd: backwards",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "backwards",
+     "!backwards"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:151f8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "calc_typ_travd",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:TEST_FIN_BLOC",
+   "kind": "function",
+   "current_name": "TEST_FIN_BLOC",
+   "proposed_name": null,
+   "c_type": "void TEST_FIN_BLOC(obj_t *obj)",
+   "oracle_address": "1:15388",
+   "meaning": "When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "TEST_FIN_BLOC"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15388",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "TEST_FIN_BLOC",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "TEST_FIN_BLOC",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "38930bbef7bd232339f59e0b7f8c4f76cbca37645778a26e8620e81825043817",
+   "readers_writers": {
+    "globals": [
+     "block_flags",
+     "hand_btyp",
+     "hand_btypd",
+     "hand_btypg",
+     "jump_time",
+     "ray",
+     "ray_last_ground_btyp",
+     "ray_on_poelle",
+     "ray_wind_force"
+    ],
+    "callees": [
+     "Abs",
+     "IS_RAY_ON_LIANE",
+     "Reset_air_speed",
+     "set_main_and_sub_etat",
+     "set_main_etat",
+     "set_sub_etat",
+     "skipToLabel"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:TEST_FIN_BLOC:eta:1",
+   "kind": "local",
+   "function": "TEST_FIN_BLOC",
+   "role": "local",
+   "current_name": "eta",
+   "proposed_name": null,
+   "c_type": "eta_t **",
+   "declarator": "eta_t **$",
+   "meaning": "Local value in TEST_FIN_BLOC computed/consumed by eta = ray.eta",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "eta = ray.eta",
+     "eta[ray.main_etat][ray.sub_etat].flags & 0x40",
+     "!(ray.eta[ray.main_etat][ray.sub_etat].flags & 0x40)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15388",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "TEST_FIN_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:TEST_FIN_BLOC:obj:1",
+   "kind": "local",
+   "function": "TEST_FIN_BLOC",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to TEST_FIN_BLOC; When the sampled floor lacks support bit 2, enter actor-specific falling/script states and reset gravity/link scratch, with Rayman vine and pan-motion exceptions.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "!(((u8 *) block_flags)[obj->btypes[0]] & 2)",
+     "obj->type",
+     "set_main_and_sub_etat(obj, 2, 26)",
+     "set_main_and_sub_etat(obj, 2, 28)",
+     "set_main_and_sub_etat(obj, 2, 24)",
+     "set_main_and_sub_etat(obj, 2, 33)",
+     "set_main_and_sub_etat(obj, 2, 32)",
+     "set_main_and_sub_etat(obj, 2, 2)",
+     "skipToLabel(obj, 2, 1)",
+     "set_main_etat(obj, 2)",
+     "obj->sub_etat != 2",
+     "set_sub_etat(obj, 2)",
+     "set_sub_etat(obj, 10)",
+     "obj->gravity_value_2 = 7",
+     "obj->speed_y = 0",
+     "skipToLabel(obj, 0, 1)",
+     "obj->cmd_context_depth = -1",
+     "set_main_and_sub_etat(obj, 2, 0)",
+     "skipToLabel(obj, 8, 1)",
+     "obj->speed_x = 0",
+     "set_main_and_sub_etat(obj, 2, 4)",
+     "skipToLabel(obj, 15, 0)",
+     "obj->link = 0",
+     "obj->gravity_value_1 = 0",
+     "!((obj->type == TYPE_STONEDOG) || (obj->type == TYPE_STONEDOG2))",
+     "obj->gravity_value_2 = 0"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15388",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "TEST_FIN_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:TEST_IS_ON_RESSORT_BLOC",
+   "kind": "function",
+   "current_name": "TEST_IS_ON_RESSORT_BLOC",
+   "proposed_name": null,
+   "c_type": "u8 TEST_IS_ON_RESSORT_BLOC(obj_t *obj)",
+   "oracle_address": "1:156d4",
+   "meaning": "Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "TEST_IS_ON_RESSORT_BLOC"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:156d4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "TEST_IS_ON_RESSORT_BLOC",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "TEST_IS_ON_RESSORT_BLOC",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "7fac04a59e2425fe297754e6268bec08338c03a10cefff81a646993187671e11",
+   "readers_writers": {
+    "globals": [
+     "flags"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:TEST_IS_ON_RESSORT_BLOC:result:1",
+   "kind": "local",
+   "function": "TEST_IS_ON_RESSORT_BLOC",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8 = 0",
+   "declarator": "u8 $ = 0",
+   "meaning": "Local initialized as 0; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "u8 result = 0",
+     "result = 1",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:156d4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "TEST_IS_ON_RESSORT_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:TEST_IS_ON_RESSORT_BLOC:obj:1",
+   "kind": "local",
+   "function": "TEST_IS_ON_RESSORT_BLOC",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to TEST_IS_ON_RESSORT_BLOC; Report descending/nonrising contact with type-9 spring for Rayman or an object whose type has the jump flag.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "(obj->btypes[0] == BTYP_RESSORT) && (obj->speed_y >= 0)",
+     "obj->type == TYPE_23_RAYMAN",
+     "flags[obj->type].raw & flags2_8_can_jump"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:156d4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "TEST_IS_ON_RESSORT_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:IS_ON_RESSORT_BLOC",
+   "kind": "function",
+   "current_name": "IS_ON_RESSORT_BLOC",
+   "proposed_name": null,
+   "c_type": "u8 IS_ON_RESSORT_BLOC(obj_t *obj)",
+   "oracle_address": "1:15708",
+   "meaning": "Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "IS_ON_RESSORT_BLOC"
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15708",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "NEAR_MATCH",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "IS_ON_RESSORT_BLOC",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "IS_ON_RESSORT_BLOC",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "05dd6a737f6b0d7980712ad1fd3d5866cd29d257a97882db4a98b1ae6a2cee88",
+   "readers_writers": {
+    "globals": [
+     "button_released",
+     "flags",
+     "jump_time",
+     "ray"
+    ],
+    "callees": [
+     "PlaySnd",
+     "allocatePaillette",
+     "obj_jump",
+     "ray_jump",
+     "set_main_and_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:IS_ON_RESSORT_BLOC:result:1",
+   "kind": "local",
+   "function": "IS_ON_RESSORT_BLOC",
+   "role": "local",
+   "current_name": "result",
+   "proposed_name": null,
+   "c_type": "u8 = 0",
+   "declarator": "u8 $ = 0",
+   "meaning": "Local initialized as 0; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "u8 result = 0",
+     "result = 1",
+     "button_released = result",
+     "return result;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15708",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "IS_ON_RESSORT_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:IS_ON_RESSORT_BLOC:btype:1",
+   "kind": "local",
+   "function": "IS_ON_RESSORT_BLOC",
+   "role": "local",
+   "current_name": "btype",
+   "proposed_name": null,
+   "c_type": "u8 = obj->btypes[0]",
+   "declarator": "u8 $ = obj->btypes[0]",
+   "meaning": "Local initialized as obj->btypes[0]; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "u8 btype = obj->btypes[0]",
+     "(btype == BTYP_RESSORT) && (obj->speed_y >= 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15708",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "IS_ON_RESSORT_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:IS_ON_RESSORT_BLOC:obj:1",
+   "kind": "local",
+   "function": "IS_ON_RESSORT_BLOC",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to IS_ON_RESSORT_BLOC; Apply a type-9 spring bounce: Rayman jump plus -3 velocity, jump_time 12, sound and sparkle, or obj_jump for jump-enabled objects.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "u8 btype = obj->btypes[0]",
+     "(btype == BTYP_RESSORT) && (obj->speed_y >= 0)",
+     "obj->type == TYPE_23_RAYMAN",
+     "(flags[obj->type].raw & flags2_8_can_jump) != 0",
+     "obj_jump(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15708",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "IS_ON_RESSORT_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:CALC_MOV_ON_BLOC",
+   "kind": "function",
+   "current_name": "CALC_MOV_ON_BLOC",
+   "proposed_name": null,
+   "c_type": "void CALC_MOV_ON_BLOC(obj_t *obj)",
+   "oracle_address": "1:15820",
+   "meaning": "Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "CALC_MOV_ON_BLOC"
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "NEAR_MATCH",
+     "byte_diffs": 261,
+     "first_diff": 33,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "CALC_MOV_ON_BLOC",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "CALC_MOV_ON_BLOC",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "1812374f8e4ac60ce3faa495933014a86bd5b2031f5453a270b8312a7ab657ab",
+   "readers_writers": {
+    "globals": [
+     "block_flags",
+     "button_released",
+     "calcbloc1",
+     "calcbloc2",
+     "calcblocfloor",
+     "flags",
+     "ray"
+    ],
+    "callees": [
+     "Abs",
+     "BTYP",
+     "IS_ON_RESSORT_BLOC",
+     "TEST_FIN_BLOC",
+     "calcbloc1",
+     "calcbloc2",
+     "calcblocfloor",
+     "instantSpeed",
+     "ray_jump",
+     "set_main_and_sub_etat"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:speed_x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "speed_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by speed_x = instantSpeed(obj->speed_x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "speed_x = instantSpeed(obj->speed_x)",
+     "instantSpeed(obj->speed_x)",
+     "speed_x = obj->speed_x",
+     "x = (full_x & 15) + speed_x",
+     "speed_x > 0",
+     "speed_x < 0",
+     "tmp_x = full_x + speed_x",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
+     "next_x = full_x + speed_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:delta:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "delta",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by delta = height - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "delta = height - y",
+     "next_y = full_y + delta",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
+     "next_y = (full_y + delta) + 16",
+     "obj->speed_y = (delta + height) - y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:full_x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "full_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by full_x = obj->offset_bx + ((u16) obj->x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "full_x = obj->offset_bx + ((u16) obj->x)",
+     "x = (full_x & 15) + speed_x",
+     "tmp_x = full_x + speed_x",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
+     "next_x = full_x + speed_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:full_y:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "full_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by full_y = obj->offset_by + ((u16) obj->y)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "full_y = obj->offset_by + ((u16) obj->y)",
+     "y = full_y & 15",
+     "next_y = full_y + delta",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
+     "next_y = (full_y + delta) + 16"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by full_x = obj->offset_bx + ((u16) obj->x)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "full_x = obj->offset_bx + ((u16) obj->x)",
+     "x = (full_x & 15) + speed_x",
+     "x = 15",
+     "x = 0",
+     "height = calcbloc1[obj->btypes[0]](x, y)",
+     "calcbloc1[obj->btypes[0]](x, y)",
+     "x = tmp_x",
+     "btyp = BTYP(x >> 4, next_y >> 4)",
+     "BTYP(x >> 4, next_y >> 4)",
+     "x &= 15",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "height = 15 - x",
+     "height = x",
+     "height = 15 - (x >> 1)",
+     "height = 7 - (x >> 1)",
+     "height = x >> 1",
+     "height = (x >> 1) + 8"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:y:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by full_y = obj->offset_by + ((u16) obj->y)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "full_y = obj->offset_by + ((u16) obj->y)",
+     "y = full_y & 15",
+     "height = calcbloc1[obj->btypes[0]](x, y)",
+     "calcbloc1[obj->btypes[0]](x, y)",
+     "y = height",
+     "delta = height - y",
+     "y = next_y & 15",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "height = y - 16",
+     "height = y",
+     "obj->speed_y = (delta + height) - y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:height:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "height",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by height = calcbloc1[obj->btypes[0]](x, y)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "height = calcbloc1[obj->btypes[0]](x, y)",
+     "y = height",
+     "delta = height - y",
+     "height = y - 16",
+     "height = 15 - x",
+     "height = x",
+     "height = 15 - (x >> 1)",
+     "height = 7 - (x >> 1)",
+     "height = x >> 1",
+     "height = (x >> 1) + 8",
+     "height = y",
+     "height += dist",
+     "obj->speed_y = (delta + height) - y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:next_y:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "next_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by next_y = full_y + delta",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "next_y = full_y + delta",
+     "btyp = BTYP(x >> 4, next_y >> 4)",
+     "BTYP(x >> 4, next_y >> 4)",
+     "y = next_y & 15",
+     "next_y = (full_y + delta) + 16",
+     "floor_y = (next_y & 15) - 16",
+     "floor_type = BTYP(next_x >> 4, next_y >> 4)",
+     "BTYP(next_x >> 4, next_y >> 4)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:next_x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "next_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by next_x = full_x + speed_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "next_x = full_x + speed_x",
+     "floor_type = BTYP(next_x >> 4, next_y >> 4)",
+     "BTYP(next_x >> 4, next_y >> 4)",
+     "dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y",
+     "calcblocfloor[floor_type](next_x & 15, floor_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:dist:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "dist",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y",
+     "((s16) dist) > 2",
+     "height += dist"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:btyp:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "btyp",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by btyp = BTYP(x >> 4, next_y >> 4)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "btyp = BTYP(x >> 4, next_y >> 4)",
+     "btyp",
+     "((((ray.follow_id == (-1)) && (!(ray.main_etat == 2))) && (Abs(obj->speed_y) > 2)) && (Abs(obj->speed_y) < 16)) && (!(((u8 *) block_flags)[btyp] & 2))",
+     "!(((u8 *) block_flags)[btyp] & 2)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:floor_type:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "floor_type",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by floor_type = BTYP(next_x >> 4, next_y >> 4)",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "floor_type = BTYP(next_x >> 4, next_y >> 4)",
+     "dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y",
+     "calcblocfloor[floor_type](next_x & 15, floor_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:floor_x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "floor_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Unused local declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:floor_y:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "floor_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by floor_y = (next_y & 15) - 16",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "floor_y = (next_y & 15) - 16",
+     "dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y",
+     "calcblocfloor[floor_type](next_x & 15, floor_y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:tmp_x:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "tmp_x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by tmp_x = full_x + speed_x",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "tmp_x = full_x + speed_x",
+     "x = tmp_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:saved_speed_y:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "saved_speed_y",
+   "proposed_name": null,
+   "c_type": "s16 = obj->speed_y",
+   "declarator": "s16 $ = obj->speed_y",
+   "meaning": "Local initialized as obj->speed_y; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 saved_speed_y = obj->speed_y",
+     "obj->speed_y = saved_speed_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:obj:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to CALC_MOV_ON_BLOC; Follow tile slopes with signed word coordinates and shape callbacks, handle spring activation and support loss, and update vertical displacement for Rayman and tile-aware object types.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "(flags[obj->type].raw & flags2_1_check_tile_type) || (obj->type == TYPE_23_RAYMAN)",
+     "(flags[obj->type].raw & flags1_0x10_move_x) && (obj->type != TYPE_23_RAYMAN)",
+     "speed_x = instantSpeed(obj->speed_x)",
+     "instantSpeed(obj->speed_x)",
+     "speed_x = obj->speed_x",
+     "full_x = obj->offset_bx + ((u16) obj->x)",
+     "full_y = obj->offset_by + ((u16) obj->y)",
+     "(obj->type == TYPE_23_RAYMAN) && (ray.param != (-1))",
+     "height = calcbloc1[obj->btypes[0]](x, y)",
+     "calcbloc1[obj->btypes[0]](x, y)",
+     "!IS_ON_RESSORT_BLOC(obj)",
+     "IS_ON_RESSORT_BLOC(obj)",
+     "obj->type",
+     "((((ray.follow_id == (-1)) && (!(ray.main_etat == 2))) && (Abs(obj->speed_y) > 2)) && (Abs(obj->speed_y) < 16)) && (!(((u8 *) block_flags)[btyp] & 2))",
+     "Abs(obj->speed_y)",
+     "s16 saved_speed_y = obj->speed_y",
+     "obj->speed_y = saved_speed_y",
+     "obj->speed_y = (delta + height) - y",
+     "TEST_FIN_BLOC(obj)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:recale_position",
+   "kind": "function",
+   "current_name": "recale_position",
+   "proposed_name": null,
+   "c_type": "void recale_position(obj_t *obj)",
+   "oracle_address": "1:15b30",
+   "meaning": "Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "recale_position"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "recale_position",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "recale_position",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "2bb114bf4ee846a1cb700abead4c7682ad3c45dabeb19e605fcb08ba94df7a08",
+   "readers_writers": {
+    "globals": [
+     "calcblocrecal"
+    ],
+    "callees": [
+     "BTYP",
+     "calcblocrecal"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:recale_position:full_x:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "local",
+   "current_name": "full_x",
+   "proposed_name": null,
+   "c_type": "s16 = obj->offset_bx + ((u16) obj->x)",
+   "declarator": "s16 $ = obj->offset_bx + ((u16) obj->x)",
+   "meaning": "Local initialized as obj->offset_bx + ((u16) obj->x); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 full_x = obj->offset_bx + ((u16) obj->x)",
+     "s16 x = full_x & 15",
+     "s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "BTYP(full_x >> 4, full_y >> 4)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:recale_position:full_y:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "local",
+   "current_name": "full_y",
+   "proposed_name": null,
+   "c_type": "s16 = obj->offset_by + ((u16) obj->y)",
+   "declarator": "s16 $ = obj->offset_by + ((u16) obj->y)",
+   "meaning": "Local initialized as obj->offset_by + ((u16) obj->y); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 full_y = obj->offset_by + ((u16) obj->y)",
+     "s16 y = full_y & 0xfff0",
+     "s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "BTYP(full_x >> 4, full_y >> 4)",
+     "obj->speed_y = (y + z) - full_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:recale_position:y:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "local",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s16 = full_y & 0xfff0",
+   "declarator": "s16 $ = full_y & 0xfff0",
+   "meaning": "Local initialized as full_y & 0xfff0; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 full_y = obj->offset_by + ((u16) obj->y)",
+     "s16 y = full_y & 0xfff0",
+     "obj->y = (y + z) - obj->offset_by",
+     "obj->speed_y = (y + z) - full_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:recale_position:x:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "local",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16 = full_x & 15",
+   "declarator": "s16 $ = full_x & 15",
+   "meaning": "Local initialized as full_x & 15; subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 full_x = obj->offset_bx + ((u16) obj->x)",
+     "s16 x = full_x & 15",
+     "s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:recale_position:z:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "local",
+   "current_name": "z",
+   "proposed_name": null,
+   "c_type": "s16 = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+   "declarator": "s16 $ = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+   "meaning": "Local initialized as calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0); subsequent role is constrained by the recorded operations.",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+     "obj->y = (y + z) - obj->offset_by",
+     "obj->speed_y = (y + z) - full_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:recale_position:obj:1",
+   "kind": "local",
+   "function": "recale_position",
+   "role": "parameter",
+   "current_name": "obj",
+   "proposed_name": null,
+   "c_type": "obj_t *",
+   "declarator": "obj_t *$",
+   "meaning": "Object supplied to recale_position; Compute floor-aligned feet from the tile recalibration callback; update ordinary object y or Rayman vertical speed by the required correction.",
+   "unit": "object pointer",
+   "value_domain": {
+    "observed_computations": [
+     "s16 full_x = obj->offset_bx + ((u16) obj->x)",
+     "s16 full_y = obj->offset_by + ((u16) obj->y)",
+     "obj->type != TYPE_23_RAYMAN",
+     "obj->y = (y + z) - obj->offset_by",
+     "obj->speed_y = (y + z) - full_y"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15b30",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "recale_position",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_empty",
+   "kind": "function",
+   "current_name": "blocs1_empty",
+   "proposed_name": null,
+   "c_type": "s16 blocs1_empty(s32 x, s32 y)",
+   "oracle_address": "1:15bb0",
+   "meaning": "Return y+1 for the empty-tile first shape callback.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return y+1 for the empty-tile first shape callback.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_empty"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bb0",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_empty",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_empty",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return y+1 for the empty-tile first shape callback.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "e4dd5ce25bdf47d7079a6a37c78c9250649a409f19fb8c9c0b53f3b36f3aea5b",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_empty:x:1",
+   "kind": "local",
+   "function": "blocs1_empty",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bb0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_empty:y:1",
+   "kind": "local",
+   "function": "blocs1_empty",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs1_empty: return y + 1;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return y + 1;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bb0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_right_45",
+   "kind": "function",
+   "current_name": "blocs1_right_45",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_right_45(s32 x, s32 y)",
+   "oracle_address": "1:15bb4",
+   "meaning": "Return 15-x for the right 45-degree tile floor.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return 15-x for the right 45-degree tile floor.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_right_45"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bb4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_right_45",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_right_45",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return 15-x for the right 45-degree tile floor.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "f7f036a4ec2d1fe9371f985b350c74fa31853a86f75b69e84c27fc9a9f3a6e59",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_right_45:x:1",
+   "kind": "local",
+   "function": "blocs1_right_45",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs1_right_45: return 15 - x;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return 15 - x;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bb4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right_45",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_right_45:y:1",
+   "kind": "local",
+   "function": "blocs1_right_45",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bb4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right_45",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_left_45",
+   "kind": "function",
+   "current_name": "blocs1_left_45",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_left_45(s32 x, s32 y)",
+   "oracle_address": "1:15bc0",
+   "meaning": "Return x for the left 45-degree tile floor.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return x for the left 45-degree tile floor.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_left_45"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bc0",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_left_45",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_left_45",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return x for the left 45-degree tile floor.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "43468eafdff73b7a0790ea5d9cdb2e5c0e5dcb9c749e9990fc7e8d1e09253a01",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_left_45:x:1",
+   "kind": "local",
+   "function": "blocs1_left_45",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs1_left_45: return x;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return x;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bc0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left_45",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_left_45:y:1",
+   "kind": "local",
+   "function": "blocs1_left_45",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bc0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left_45",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_right1_30",
+   "kind": "function",
+   "current_name": "blocs1_right1_30",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_right1_30(s16 x, s32 y)",
+   "oracle_address": "1:15bc4",
+   "meaning": "Return 15-(x>>1) for the first right shallow-slope half.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return 15-(x>>1) for the first right shallow-slope half.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_right1_30"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bc4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_right1_30",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_right1_30",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return 15-(x>>1) for the first right shallow-slope half.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "a220c23e345f59132665f1415951f30bf4d20cde0e5611f772014bce102a9554",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_right1_30:x:1",
+   "kind": "local",
+   "function": "blocs1_right1_30",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by blocs1_right1_30: return 15 - (x >> 1);",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return 15 - (x >> 1);"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bc4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right1_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_right1_30:y:1",
+   "kind": "local",
+   "function": "blocs1_right1_30",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bc4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right1_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_right2_30",
+   "kind": "function",
+   "current_name": "blocs1_right2_30",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_right2_30(s16 x, s32 y)",
+   "oracle_address": "1:15bd4",
+   "meaning": "Return 7-(x>>1) for the second right shallow-slope half.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return 7-(x>>1) for the second right shallow-slope half.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_right2_30"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bd4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_right2_30",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_right2_30",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return 7-(x>>1) for the second right shallow-slope half.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "8f871333552ca26a566ac0e11b3cc7fad3ea95f625e6be4e88b8c3ba4f73954d",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_right2_30:x:1",
+   "kind": "local",
+   "function": "blocs1_right2_30",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by blocs1_right2_30: return 7 - (x >> 1);",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return 7 - (x >> 1);"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bd4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right2_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_right2_30:y:1",
+   "kind": "local",
+   "function": "blocs1_right2_30",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bd4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_right2_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_left1_30",
+   "kind": "function",
+   "current_name": "blocs1_left1_30",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_left1_30(s16 x, s32 y)",
+   "oracle_address": "1:15be4",
+   "meaning": "Return x>>1 for the first left shallow-slope half.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return x>>1 for the first left shallow-slope half.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_left1_30"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15be4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_left1_30",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_left1_30",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return x>>1 for the first left shallow-slope half.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "32457a3ef7040082057558a085ad04912d940063171932f915bb91efd259656d",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_left1_30:x:1",
+   "kind": "local",
+   "function": "blocs1_left1_30",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by blocs1_left1_30: return x >> 1;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return x >> 1;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15be4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left1_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_left1_30:y:1",
+   "kind": "local",
+   "function": "blocs1_left1_30",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15be4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left1_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_left2_30",
+   "kind": "function",
+   "current_name": "blocs1_left2_30",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_left2_30(s16 x, s32 y)",
+   "oracle_address": "1:15be8",
+   "meaning": "Return (x>>1)+8 for the second left shallow-slope half.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return (x>>1)+8 for the second left shallow-slope half.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_left2_30"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15be8",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_left2_30",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_left2_30",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return (x>>1)+8 for the second left shallow-slope half.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "47ee5580bed04e88346cbf2fdbccce8986f46d5af92c588190ffe3d7e055ae2b",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_left2_30:x:1",
+   "kind": "local",
+   "function": "blocs1_left2_30",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Caller-supplied s16 argument used by blocs1_left2_30: return (x >> 1) + 8;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return (x >> 1) + 8;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15be8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left2_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_left2_30:y:1",
+   "kind": "local",
+   "function": "blocs1_left2_30",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15be8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_left2_30",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_liane",
+   "kind": "function",
+   "current_name": "blocs1_liane",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_liane(s32 x, s32 y)",
+   "oracle_address": "1:15bf0",
+   "meaning": "Share the y-preserving empty-floor implementation.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Share the y-preserving empty-floor implementation.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_liane"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_liane",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_liane",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Share the y-preserving empty-floor implementation.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "28eb7558cc1f4f9ccdd14162710cc6793e2b561b5396f0b4b6a5de51595fc71d",
+   "readers_writers": {
+    "globals": [],
+    "callees": [
+     "blocs3_empty"
+    ]
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_liane:x:1",
+   "kind": "local",
+   "function": "blocs1_liane",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs1_liane: return blocs3_empty(x, y);",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return blocs3_empty(x, y);",
+     "blocs3_empty(x, y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_liane",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_liane:y:1",
+   "kind": "local",
+   "function": "blocs1_liane",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs1_liane: return blocs3_empty(x, y);",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return blocs3_empty(x, y);",
+     "blocs3_empty(x, y)"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_liane",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs3_empty",
+   "kind": "function",
+   "current_name": "blocs3_empty",
+   "proposed_name": null,
+   "c_type": "s32 blocs3_empty(s32 x, s32 y)",
+   "oracle_address": "1:15bf0",
+   "meaning": "Return y unchanged.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return y unchanged.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs3_empty"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs3_empty",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs3_empty",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return y unchanged.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "6b6ed92055a054d427a03eea3a09f25f2fbe98ee29ea5aec4fa6b9f19394f03a",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs3_empty:x:1",
+   "kind": "local",
+   "function": "blocs3_empty",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs3_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs3_empty:y:1",
+   "kind": "local",
+   "function": "blocs3_empty",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Caller-supplied s32 argument used by blocs3_empty: return y;",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "return y;"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf0",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs3_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs4_empty",
+   "kind": "function",
+   "current_name": "blocs4_empty",
+   "proposed_name": null,
+   "c_type": "s32 blocs4_empty(s32 x, s32 y)",
+   "oracle_address": "1:15bf4",
+   "meaning": "Return zero.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return zero.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs4_empty"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs4_empty",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs4_empty",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return zero.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "ab967fe193ca1dc0b0672132393250f6918cefd9f39dd12cb1fdb2ad9fa81afa",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs4_empty:x:1",
+   "kind": "local",
+   "function": "blocs4_empty",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs4_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs4_empty:y:1",
+   "kind": "local",
+   "function": "blocs4_empty",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs4_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs1_hor",
+   "kind": "function",
+   "current_name": "blocs1_hor",
+   "proposed_name": null,
+   "c_type": "s32 blocs1_hor(s32 x, s32 y)",
+   "oracle_address": "1:15bf4",
+   "meaning": "Return zero for a horizontal supported tile.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return zero for a horizontal supported tile.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs1_hor"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs1_hor",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs1_hor",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return zero for a horizontal supported tile.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "ab967fe193ca1dc0b0672132393250f6918cefd9f39dd12cb1fdb2ad9fa81afa",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs1_hor:x:1",
+   "kind": "local",
+   "function": "blocs1_hor",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_hor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs1_hor:y:1",
+   "kind": "local",
+   "function": "blocs1_hor",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf4",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs1_hor",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:blocs2_empty",
+   "kind": "function",
+   "current_name": "blocs2_empty",
+   "proposed_name": null,
+   "c_type": "s32 blocs2_empty(s32 x, s32 y)",
+   "oracle_address": "1:15bf8",
+   "meaning": "Return the constant tile height 16.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Return the constant tile height 16.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "blocs2_empty"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15bf8",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "blocs2_empty",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "blocs2_empty",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Return the constant tile height 16.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "98f6892495e8575ad8832cdb0b92960062b04fee7ee7e5b0167b3217d716d5f6",
+   "readers_writers": {
+    "globals": [],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:blocs2_empty:x:1",
+   "kind": "local",
+   "function": "blocs2_empty",
+   "role": "parameter",
+   "current_name": "x",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs2_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:blocs2_empty:y:1",
+   "kind": "local",
+   "function": "blocs2_empty",
+   "role": "parameter",
+   "current_name": "y",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "meaning": "Unused parameter declaration; no value-consuming role is established.",
+   "unit": "unknown",
+   "value_domain": {
+    "observed_computations": [],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "UNKNOWN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15bf8",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "blocs2_empty",
+     "detail": "Local/parameter role from exact expressions and query argument positions. No value-consuming use exists; no intended meaning assigned."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "function:init_calcbloc_func",
+   "kind": "function",
+   "current_name": "init_calcbloc_func",
+   "proposed_name": null,
+   "c_type": "void init_calcbloc_func(void)",
+   "oracle_address": "1:15c7c",
+   "meaning": "Initialize all 64 entries of the four tile-shape callback tables, pairing solid/slippery slope variants and assigning empty/vine/horizontal behavior.",
+   "unit": "see parameter/result contracts",
+   "value_domain": {
+    "contract": "Initialize all 64 entries of the four tile-shape callback tables, pairing solid/slippery slope variants and assigning empty/vine/horizontal behavior.",
+    "operations_artifact": "evidence/blocs_operations.json",
+    "operations_key": "init_calcbloc_func"
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "RAYVERSE",
+   "evidence": [
+    {
+     "kind": "DOS",
+     "address": "1:15c7c",
+     "artifact": "evidence/blocs.dos.txt",
+     "verification_status": "STRICT",
+     "byte_diffs": 0,
+     "first_diff": null,
+     "detail": "Pinned oracle listing and fresh unchanged canonical-object baseline. STRICT establishes compiled operations; NEAR interpretations remain STRONG and do not gain STRICT from this pass."
+    },
+    {
+     "kind": "readers_writers_callers",
+     "artifact": "evidence/symbols.json",
+     "key": "init_calcbloc_func",
+     "detail": "Whole-code direct calls/tail jumps, relocation references and source-token sites; indirect calls require the dispatch tables/typed source."
+    },
+    {
+     "kind": "external_name",
+     "artifact": "evidence/external_names.json",
+     "key": "init_calcbloc_func",
+     "authority": "Android/xref/PS1/Rayverse corroboration only; DOS controls semantics."
+    }
+   ],
+   "port_notes": [
+    "Initialize all 64 entries of the four tile-shape callback tables, pairing solid/slippery slope variants and assigning empty/vine/horizontal behavior.",
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c",
+   "source_body_sha256": "38b4862cbe11198d921b2af1bb1b68b3ccd5fa83a7f8720dc80530cce2424ede",
+   "readers_writers": {
+    "globals": [
+     "calcbloc1",
+     "calcbloc2",
+     "calcblocfloor",
+     "calcblocrecal"
+    ],
+    "callees": []
+   },
+   "evidence_units": [
+    "blocs.c"
+   ]
+  },
+  {
+   "id": "local:init_calcbloc_func:i:1",
+   "kind": "local",
+   "function": "init_calcbloc_func",
+   "role": "local",
+   "current_name": "i",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "meaning": "Local value in init_calcbloc_func computed/consumed by i = 0; i < 64; ++i",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "i = 0; i < 64; ++i",
+     "i = 0",
+     "++i",
+     "i",
+     "calcbloc1[i] = blocs1_empty",
+     "calcbloc2[i] = blocs2_empty",
+     "calcblocfloor[i] = blocs3_empty",
+     "calcblocrecal[i] = blocs4_empty",
+     "calcbloc1[i] = blocs1_right_45",
+     "calcbloc2[i] = blocs1_right_45",
+     "calcblocfloor[i] = blocs1_right_45",
+     "calcblocrecal[i] = blocs1_right_45",
+     "calcbloc1[i] = blocs1_left_45",
+     "calcbloc2[i] = blocs1_left_45",
+     "calcblocfloor[i] = blocs1_left_45",
+     "calcblocrecal[i] = blocs1_left_45",
+     "calcbloc1[i] = blocs1_right1_30",
+     "calcbloc2[i] = blocs1_right1_30",
+     "calcblocfloor[i] = blocs1_right1_30",
+     "calcblocrecal[i] = blocs1_right1_30",
+     "calcbloc1[i] = blocs1_right2_30",
+     "calcbloc2[i] = blocs1_right2_30",
+     "calcblocfloor[i] = blocs1_right2_30",
+     "calcblocrecal[i] = blocs1_right2_30",
+     "calcbloc1[i] = blocs1_left1_30",
+     "calcbloc2[i] = blocs1_left1_30",
+     "calcblocfloor[i] = blocs1_left1_30",
+     "calcblocrecal[i] = blocs1_left1_30",
+     "calcbloc1[i] = blocs1_left2_30",
+     "calcbloc2[i] = blocs1_left2_30",
+     "calcblocfloor[i] = blocs1_left2_30",
+     "calcblocrecal[i] = blocs1_left2_30",
+     "calcbloc1[i] = blocs1_liane",
+     "calcbloc1[i] = blocs1_hor",
+     "calcbloc2[i] = blocs1_hor",
+     "calcblocfloor[i] = blocs1_hor",
+     "calcblocrecal[i] = blocs1_hor"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "PROVEN",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15c7c",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "init_calcbloc_func",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  }
+ ],
+ "source_fingerprints": {
+  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad"
+ },
+ "proposal_fingerprints": {
+  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "objupdate1.c": "52022124cf64b5361d24b7b147bd0a7bcce3ec2ea1d4ed6bde3bdc2a72c8e327",
+  "objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25"
+ },
+ "reference_input_fingerprints": {
+  "external/rayman-from-scratch/1.txt": "7631be0ec9d75b33c54cea8f5dd6b79f51381a7536dea0ea5c0d4f150336ff6f",
+  "external/rayman-ps1-decomp/src/collision/block_6E5E0.c": "356d0a6e0d52fdafad982f410658372b7bb1b8f5204fde238d74858f0b28eadb",
+  "external/rayverse/src/blocs.c": "6fd0170066f5ee3b42a007a6de24adc0ec426ebd014c5239f5c6828231a9a28b"
+ },
+ "evidence_artifact_fingerprints": {
+  "evidence/blocs.dos.txt": "7f8a5e8def99755b4b5e37701adac367ae13aa462f746c528f065a244ab7724b",
+  "evidence/blocs_operations.json": "901fc027bdbe9ee5aac2c7ad6bebdd9fdd2bae15f1de25aab0f586831f6b67bd",
+  "evidence/typed_fields.json": "6d1737777ae1bb0a57d2cbd27e1e3489ed059a76cd507e2e52b2c6272ae170e4"
+ },
+ "evidence_source_fingerprints": {
+  "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
+  "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
+  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
+  "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
+  "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
+  "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
+  "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
+  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/bss/bss_32748.c": "3cc29ea5246113792632695e9d09814ab417c5d08fd936546d0df36b5d004d71",
+  "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
+  "src/bss/bss_3f818.c": "8da1eec0fdd2b1ea195988a3b0c88cdd8ee43789a0d5e027347849c7ec6cf256",
+  "src/bss/bss_3f86e.c": "0991681a969d9627a47f91dcf2f6e62387c237cf5522a725ce2ee65a208021c9",
+  "src/bss/bss_3f89a.c": "0e58145042c6c4b3abccc6901b2abd627716a54775981345c569c965af246125",
+  "src/bss/bss_3fa53.c": "3755060248941aa89e6d84c42c31e212b20f331b9ad9df2c72a839161a71ac4d",
+  "src/bss/bss_3fa70.c": "ac31e5c8867c5d7269eda38653bffda6e3623e92b33d70f4d45e9583e2473392",
+  "src/bss/bss_3fa7c.c": "f9d0aefdebcfe342185f718907c930144fc57bc2dcc69a0b7a9d73f4e618782b",
+  "src/bss/bss_54e1c.c": "c95e04d2c1a446aa137ca0aeb101be218cc47c6ee6995185c8a3c645d5f172bf",
+  "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
+  "src/cdaudio.c": "b81b651081993cd63e3ef26840672ad810afad2ddb5643e0734725e97a257c3e",
+  "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
+  "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
+  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
+  "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
+  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
+  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
+  "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
+  "src/dosmem.c": "e8c5f3fb8a75461f787319365f7c5fe6e83803a5543e32123d0e3b8882cfe79b",
+  "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
+  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/hifi.c": "4b617784c1af8fd843cbbf6b80993f5a65802203c09a2f532bfae74169280ebb",
+  "src/hmi/hmi_active.c": "1af10ae4e44363f019241aacfcad7a8bc4674352bca487cf4721b3a2e64adc63",
+  "src/hmi/hmi_dpmi_asm.asm": "3c0e5535dbc681e741280c0e65b1e9858c68e36c1e0ef1df9e3700436161302c",
+  "src/hmi/hmi_local.h": "ce7378ce7505dfd7fa287f9060e97754f72d1ea2e7622278f499c01d309ff9de",
+  "src/hmi/hmi_samples.c": "fe5576e358576a6db60d98728b7c9fa94a26fc3a0fbc4061a3cf5b195b8fde48",
+  "src/hmi/hmi_status.c": "4334b5c1c6b5eca746f8d7c9656237884a8be15149313776e194e19e9a0c1d37",
+  "src/hmi/hmi_timer.c": "76fc9981403d5e2813d7c5ccc8e5b408140a7eceab390125111ea607ddbdc8c1",
+  "src/hmi/hmi_voice_params.c": "b84948daf4cb9ba4c9937c9d0ee338d0a511e8e1968d84fd4c25d1f8c1901d51",
+  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/include/dos_regs.h": "ccb9af2d98cce010389ea9877f33881a2f6308a8e603a6f3087730cd89394fc7",
+  "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
+  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
+  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
+  "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
+  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
+  "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
+  "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
+  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/movie.c": "cf17158fd0425314fb207bc55ee5264ef2f72c97ea07eb4d34d61405c976c2a4",
+  "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
+  "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
+  "src/objupdate1.c": "52022124cf64b5361d24b7b147bd0a7bcce3ec2ea1d4ed6bde3bdc2a72c8e327",
+  "src/objupdate2.c": "5dd770177d6811d103d35a7a0e144495f8053dddda7d330fd534bd73be78e77e",
+  "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
+  "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
+  "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
+  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
+  "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
+  "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
+  "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
+  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
+  "src/sound.c": "4dec5bc4af2418e2a9a4bc8f5d2e7eec954314da2216d8bf24079c62f1696e1c",
+  "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
+  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
+  "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b",
+  "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"
+ },
+ "asset_input_fingerprints": {
+  "assets/GOG/PCMAP/CAKE/RAY1.LEV": "75eaec43e9b5d75e99d850736854b58b75115c990697fd1e9ec1be8631ce6a89",
+  "assets/GOG/PCMAP/CAKE/RAY2.LEV": "4c3362ca41a1c7bb6f84dda2d0b3f743e155a67e0896b421cab77cad24f892c2",
+  "assets/GOG/PCMAP/CAKE/RAY3.LEV": "b2c273fe071dd3ecb5a528512d9a4740fe9254776be5d92ae4ec636b46854964",
+  "assets/GOG/PCMAP/CAKE/RAY4.LEV": "c039413c8497a7884999977e4562368ed94752736889dd64a3dddcb14acfba6e",
+  "assets/GOG/PCMAP/CAVE/RAY1.LEV": "9a38cac88c8bf28f0de0d57b335953dd3f5e3f0a7e25acd6b763cd3c45ddf1b0",
+  "assets/GOG/PCMAP/CAVE/RAY10.LEV": "776475a90b4c256199f518f71c9521e0150d95645ac9ea461019778cbc305b86",
+  "assets/GOG/PCMAP/CAVE/RAY11.LEV": "d3596e3d69a025f22cf2bdc6d7cddacb0e7ec09cd5c88096c80c6e250e1b6295",
+  "assets/GOG/PCMAP/CAVE/RAY12.LEV": "84fe20a40ea965932e018323313e127b6869e77f7f732d70bd8118e60d3d532e",
+  "assets/GOG/PCMAP/CAVE/RAY2.LEV": "0ceb5754a457053753fbf3d549380038ee83b0aa44c05082e3eaffebdb9c89b0",
+  "assets/GOG/PCMAP/CAVE/RAY3.LEV": "c8ed9da2e5731cf6ded55093179a5e23cf468d7b6b05d608e3024b6742f6081b",
+  "assets/GOG/PCMAP/CAVE/RAY4.LEV": "f534ae7da0beb037058895288373f9bc17796368bca0d0414ea61c7660cad389",
+  "assets/GOG/PCMAP/CAVE/RAY5.LEV": "bf69f8e88fd9066850a91ec703f2b6ffa98e1650251b8c4fb4aebd02cb53ff72",
+  "assets/GOG/PCMAP/CAVE/RAY6.LEV": "de707e3ff6db7eb6ba46e27ef182768de19ae439b21792b2b3305513d8624afd",
+  "assets/GOG/PCMAP/CAVE/RAY7.LEV": "145e591dd2bf29906a72aee4689168ea7e3f6747e4de5a3c7b5eec070e426730",
+  "assets/GOG/PCMAP/CAVE/RAY8.LEV": "5d5dcb22991c399d0d5f2123968a92b88b963e9c2a5baaaee8239a364a066cb8",
+  "assets/GOG/PCMAP/CAVE/RAY9.LEV": "edc6606b61a9a4678b44929bb57a2657e67a00f066b56d87d55b23c60f10c04c",
+  "assets/GOG/PCMAP/IMAGE/RAY1.LEV": "039d4dafbaee7206e204096d1dd37266d35f751a29ab5bf4e07bbeb06f021ebb",
+  "assets/GOG/PCMAP/IMAGE/RAY10.LEV": "3440998a5be4326e8c2731c2085ca5efd065450c15601e80363e7504aef19483",
+  "assets/GOG/PCMAP/IMAGE/RAY11.LEV": "7d6d762905ad22d5634f3e5854ec4c49e981fcd59872f20030e7f45b0508891b",
+  "assets/GOG/PCMAP/IMAGE/RAY12.LEV": "0797340060bba333df10d2cc4758486372a361afce7f7d5c38e0381d789e6381",
+  "assets/GOG/PCMAP/IMAGE/RAY13.LEV": "ab642ec0fa9998885a5b90cc8ebb368646758b2d1035f857188ffbb1268ba064",
+  "assets/GOG/PCMAP/IMAGE/RAY2.LEV": "de778e3345edb19ee6a1d76e964ba912acfd8c430ce18eb34970358a20d3f439",
+  "assets/GOG/PCMAP/IMAGE/RAY3.LEV": "ed29e71bc91a32669e1f50be548bf3db1a254c22a024290de939637cca596477",
+  "assets/GOG/PCMAP/IMAGE/RAY4.LEV": "22d327f3142cb8a0210affab67f0df75e33434a28712d30672d464b0e6baeaeb",
+  "assets/GOG/PCMAP/IMAGE/RAY5.LEV": "a2b78ce17e551c4e37b8bcb78e460fddc3559a07298de378da95c56d9e92d378",
+  "assets/GOG/PCMAP/IMAGE/RAY6.LEV": "44d9d7f52b589f1c02e7cdeac6f2c57ee556572c1b14639a0007f579d71ff98d",
+  "assets/GOG/PCMAP/IMAGE/RAY7.LEV": "e5d20847e28e12ae0cab23b835c4a08ae0378cfdb0e0df88aa5672cc02294560",
+  "assets/GOG/PCMAP/IMAGE/RAY8.LEV": "ebe6625310bf1c8acb5f979f4932d7ef4af20a37511635e9f05928063b0669c0",
+  "assets/GOG/PCMAP/IMAGE/RAY9.LEV": "cfd1ba48cc5d4cda52713bbd4629bca933477cceb0174c6d014f66c332f65e44",
+  "assets/GOG/PCMAP/JUNGLE/RAY1.LEV": "0ec51733878bed47c7b1761db4311385798bc04ebcf77b7c18e7244313481a42",
+  "assets/GOG/PCMAP/JUNGLE/RAY10.LEV": "c160b3fb55a1411decea732fe9d597e3e3979dad24ffe6b7535eaf308253682b",
+  "assets/GOG/PCMAP/JUNGLE/RAY11.LEV": "e981ac5bc0ba84359a2fe34371414c0eb013e4c3acde7ae0dfa0db59935ec799",
+  "assets/GOG/PCMAP/JUNGLE/RAY12.LEV": "f247b7fdbd6d64b5d17cd6750609758b855246f6f544a1bfc1c49c35c5dd7ea4",
+  "assets/GOG/PCMAP/JUNGLE/RAY13.LEV": "29e54370f5f10f1f5f83e95528971683c0b9c02b6451ef0de6cbdc7a46ff34f5",
+  "assets/GOG/PCMAP/JUNGLE/RAY14.LEV": "d72fdc4b12d0c3f9ed7509456c487417a21b2728f48377b0682dc822c86b5c9a",
+  "assets/GOG/PCMAP/JUNGLE/RAY15.LEV": "c25a81f629f2d97192f75402fcf1886530f9caf09a674e9b3104ca3c271546a9",
+  "assets/GOG/PCMAP/JUNGLE/RAY16.LEV": "ad4a20bb0337eabb5eb3b3d434e10022456f599a3eda879ecbe1e5e8de41aea9",
+  "assets/GOG/PCMAP/JUNGLE/RAY17.LEV": "ba8409fa4eac2f293955f1e7f41b844c169c1bd6e81d825c71aee772916498d3",
+  "assets/GOG/PCMAP/JUNGLE/RAY18.LEV": "c3f12655e175d1583dc797ead99a612e4d7fa0db222ed0a14afd51710dece91f",
+  "assets/GOG/PCMAP/JUNGLE/RAY19.LEV": "692180f91821a52dad17cfdfa6d7bcda9b8d5a44ed9a405b294532144b6b3a60",
+  "assets/GOG/PCMAP/JUNGLE/RAY2.LEV": "2d73eaa258d127c93adedb2b5d53e7d19520d88c1ada992c9644a345a5174a08",
+  "assets/GOG/PCMAP/JUNGLE/RAY20.LEV": "00cdad293f060991b3ab7b1dba733c2db4a33ee10824cc41349bb601605dba66",
+  "assets/GOG/PCMAP/JUNGLE/RAY21.LEV": "c4fadca3e99830fb52fcfe2290bdb3427fd4e1db8cf781d03c9116263dc29623",
+  "assets/GOG/PCMAP/JUNGLE/RAY22.LEV": "b4be058f4ccb1208c444b9672435dd577f2a00c7cbf4ba587b71ffbc3213ff0a",
+  "assets/GOG/PCMAP/JUNGLE/RAY3.LEV": "72e6fb1030c79d402d7a2ffd30bab6f0475fb3b63c863c6e215f5a6be095afad",
+  "assets/GOG/PCMAP/JUNGLE/RAY4.LEV": "d2986491596c1ca4cb96b7c5e82fa7feb2eb9ce3b29f22fb0308d7fea965a463",
+  "assets/GOG/PCMAP/JUNGLE/RAY5.LEV": "49bd36159b8f93d743c18f1c3b0b9de1e5c8d2ef8f8f83bbe35ddf29ac20a995",
+  "assets/GOG/PCMAP/JUNGLE/RAY6.LEV": "68ac604df4a9b5e2ab24b02ffd0a3750ff721f6ff58211a9fe29edcfd3225038",
+  "assets/GOG/PCMAP/JUNGLE/RAY7.LEV": "b54cfed0fb68cd34513750b1d72973a8eb0e1a1f55a715a48df4649e2d208732",
+  "assets/GOG/PCMAP/JUNGLE/RAY8.LEV": "06c3d6c7f0586c7fd635ff75a4d2b7bb892010a09b1cf3a09a2618ba34a51e8d",
+  "assets/GOG/PCMAP/JUNGLE/RAY9.LEV": "2c5ef824292b15b286d73371310d96d1952c14153547cef287846dd4fd303df1",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY1.LEV": "2037d5de86011c341f8ad3a7e6aca6f7ba8fc8a9643689dc9bce157119612434",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY10.LEV": "1c7ff889f5c5237055471834310595e33c4efe87635d73eaec0300a4775f694e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY11.LEV": "2db11ecf4370063e6e19cf1948413ba2968d98e1fcec85de67cc58c317cb68e2",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY12.LEV": "72a269949baa59066e204f4e8d347b239a34fb8e30cc918371bd932f4e8510f3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY13.LEV": "0d2bc5e71975ae69963121156be553b00706d8da8bf0e0b228a63e87f1d2882e",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY2.LEV": "4548a970fd24a6549fd0a1518d59871ba4b8d2347b78f02319588d8e08cdd53b",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY3.LEV": "00f9712c6cedc35e753d9f578199675fecad0bf6a63a5ae71692907ca2336823",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY4.LEV": "8055d50843dff9dd12b3a4d973dea22a6c96762ca8c624281754b72e4a251888",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY5.LEV": "eeb32050258d245de8e0d5d8c5e5672a27bedbd072434c132a0f276d6819d245",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY6.LEV": "b43a1e711b132d115268493dd93b782b0d7edfe58bad8a10c06211c2918e67d3",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY7.LEV": "6753a67e41ac508d5caec3ed14b6d1c7e7a83a959a49477a7b5afbc1c0aaee53",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY8.LEV": "e2728e925c0cc1f8db906918d0a899d775ad5db8794014a22b42e52a74d8a1b6",
+  "assets/GOG/PCMAP/MOUNTAIN/RAY9.LEV": "ef794d259321fc42d297dcaf79f050d8ad9b9116a716c93dae45391b4db6e34d",
+  "assets/GOG/PCMAP/MUSIC/RAY1.LEV": "6e97e7da006c2a13e4c535858cd559a4cafecb3b65d2b5f63387fc281b5c8456",
+  "assets/GOG/PCMAP/MUSIC/RAY10.LEV": "3d19853ce0b71e497d0e6dc3434908f344ccb6d3ced53baebbfdec29b334eae1",
+  "assets/GOG/PCMAP/MUSIC/RAY11.LEV": "7937006e3a4093ef4ce15b9b508b575c820720fe5909230006504af5a8a00de9",
+  "assets/GOG/PCMAP/MUSIC/RAY12.LEV": "0b2942ccc8e1dd2cb50b1a40c027b4c67b2385d47656b48fff1414dc91acfb8c",
+  "assets/GOG/PCMAP/MUSIC/RAY13.LEV": "689c77bf4fc1b987abc30b096e8679d88754e49c7e38b3e5cca3f49fac43409c",
+  "assets/GOG/PCMAP/MUSIC/RAY14.LEV": "3438d5c6b0e1c36aba3578b294835c96da51fa2aed0f3361db13477e4e3f1abb",
+  "assets/GOG/PCMAP/MUSIC/RAY15.LEV": "15226cae400bcab89b13f16021c38642abf5b37e135369c2b4cf7d1b6d25a8ae",
+  "assets/GOG/PCMAP/MUSIC/RAY16.LEV": "5b773a2f3939f39a20e8b26b1f57f24d04f9758ee84e660dddc00560cd2cf6d5",
+  "assets/GOG/PCMAP/MUSIC/RAY17.LEV": "d6f9b64c5b242aae2cba608ad298cd3b6745ed380c8fa167c30790208fbbf8a3",
+  "assets/GOG/PCMAP/MUSIC/RAY18.LEV": "1115eafba01e87197e2bfc9470fb03269872743d80cd4cf6b46ee52c0319c076",
+  "assets/GOG/PCMAP/MUSIC/RAY2.LEV": "948edf18bdf332857b5ef4e88ff8d6faa1550b69d5e46167af9f3e0db2f73665",
+  "assets/GOG/PCMAP/MUSIC/RAY3.LEV": "926c3da9977569fb41e9d30019e13892312508b3bfc0edafc5aaaffbe37d4afe",
+  "assets/GOG/PCMAP/MUSIC/RAY4.LEV": "97d91e16f40e3fe49aa67786217ac50d7ff42c6d03a868886b7fcbe1145ea990",
+  "assets/GOG/PCMAP/MUSIC/RAY5.LEV": "df7c6f7428fa557e4a2aee4a93749928558e926c1a550b38e26cdbed496dab4a",
+  "assets/GOG/PCMAP/MUSIC/RAY6.LEV": "29985c914882a1b742101db3175ed1b5a457200c14d140dce37c683a71767f22",
+  "assets/GOG/PCMAP/MUSIC/RAY7.LEV": "832a80f113489dec69e4883c4adbbc750551ecd10a45444abdbe53a34ea3db9f",
+  "assets/GOG/PCMAP/MUSIC/RAY8.LEV": "d12bbece8f26d841532606be3284fc5021a9e23f82444e58441bd8194be25c92",
+  "assets/GOG/PCMAP/MUSIC/RAY9.LEV": "4ba300071b256caad9e9b5d761c4473fae79b1d2728e05818a9d5a22d88175c2"
+ },
+ "behaviour_contract": "Collision tile size is16. Exact type15 wall probes differ from the general block solid bit. Preserve all slope formulas, signed shifts, temporary x shifts/restoration, tiny/crouch probe-height logic and floor-distance inequalities. Spring type9 bounces only for Rayman or jump-enabled types and nonnegative vertical speed. Support loss selects actor-specific states and gravity resets; Rayman vine/pan cases are separate. Keep the existing first-callback signed16 return declaration provisional; no ABI change is proposed."
+}
