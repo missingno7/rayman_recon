@@ -33,11 +33,12 @@ Everything the port does differently from the DOS executable, with the reason. D
 - `box.c`: `(u8 *)((u32)draw_buffer + n)` -> `draw_buffer + n`.
 - `jumelle.c`: wrapped `u32` indices cast to `s32` (the offsets the 32-bit program used).
 - `map_ngawe.c`, `frame.c`: argument order of a second C view of the same assembly routine.
+- Screen effects (`effect2/50350/633e0/6c3b0/6ec80/effecthelp.c`, `blood.c`): `sizeof` instead of literal DOS sizes,
+  a native texture pointer instead of a u32, descriptor writes at native offsets, pointer comparison instead of
+  truncated s32 addresses. Proven equal frame by frame to the unmodified units at DOS pointer width.
 
 ## Known open items
 
-- Screen effects (`effect*.c`, `blood.c`) are not 64-bit clean yet (literal record sizes, a pointer kept in u32,
-  descriptor offsets): they run correctly on the i686 build; x86_64 needs their derivatives (in progress).
 - Floating point: `jumelle.c InitMatriceJumelle` and the effect curve use host `exp`/`atan`/`sqrt` instead of
   Watcom's software routines; results are converted to integers. A last-ulp difference could change one table
   entry; not yet measured against the DOS tables.

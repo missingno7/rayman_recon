@@ -1,0 +1,20 @@
+--- a/src/effecthelp.c
++++ b/src/effecthelp.c
+@@ -180,7 +180,7 @@
+     effect5_y_offset = 0;
+ 
+     if (source != 0 && destination != 0) {
+-        effect5_state = (effect5_state_t *)sub_6FBB4(0x3c);
++        effect5_state = (effect5_state_t *)sub_6FBB4(sizeof(effect5_state_t))  /* PORT: native pointer-bearing state */;
+         if (effect5_state != 0) {
+             state = effect5_state;
+             state->columns = max32(2, columns);
+@@ -189,7 +189,7 @@
+             state->point_count = (u16)((columns + 1) * (rows + 1));
+             state->source = source;
+             state->destination = destination;
+-            state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);
++            state->items = (effect5_item_t *)sub_6FBB4(state->count * sizeof(effect5_item_t))  /* PORT: native pointer-bearing items */;
+             if (state->items != 0) {
+                 state->points = (effect5_point_t *)sub_6FBB4(state->point_count * 10);
+                 if (state->points != 0) {

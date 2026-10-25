@@ -145,8 +145,8 @@
    "unit": "src/blood.c",
    "code": "if ((s32)(*line + row_start) < (s32)dst)",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "OPEN",
-   "reason": "end-of-game blood effect compares truncated addresses; needs a derivative before it runs natively"
+   "verdict": "DERIVED",
+   "reason": "Resolved by derive/blood.patch; native pointers/relative byte offsets preserve the DOS calculations. See provenance.json and tests/effect_diff.c."
   },
   {
    "unit": "src/box.c",
@@ -271,15 +271,15 @@
    "unit": "src/effect6ec80.c",
    "code": "surface = (u32)state->surface_a;",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "OPEN",
-   "reason": "effect vertex keeps a surface pointer in a u32 field read by draw_effect_segment; pause/transition effects need a derivative before they run natively"
+   "verdict": "DERIVED",
+   "reason": "Resolved by derive/effect6ec80.patch; native pointers/relative byte offsets preserve the DOS calculations. See provenance.json and tests/effect_diff.c."
   },
   {
    "unit": "src/effect6ec80.c",
    "code": "surface = (u32)state->surface_b;",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "OPEN",
-   "reason": "effect vertex keeps a surface pointer in a u32 field read by draw_effect_segment; pause/transition effects need a derivative before they run natively"
+   "verdict": "DERIVED",
+   "reason": "Resolved by derive/effect6ec80.patch; native pointers/relative byte offsets preserve the DOS calculations. See provenance.json and tests/effect_diff.c."
   },
   {
    "unit": "src/frame.c",
@@ -525,6 +525,57 @@
    "warning": "-Wpointer-to-int-cast",
    "verdict": "HARMLESS",
    "reason": "only the low 2 alignment bits of the pointer are used"
+  }
+ ],
+ "layout_sites_note": "Manual source audit of pointer-layout hazards that do not produce compiler pointer-conversion warnings; resolved by the effect derivatives. Existing sites[] remains the compiler-enforced warning inventory.",
+ "layout_sites": [
+  {
+   "unit": "src/effect2.c",
+   "code": "(u8 *)(items + (item++)->draw_order) + 0x3c",
+   "verdict": "DERIVED",
+   "reason": "DOS descriptor offset precedes native pointer alignment padding; take the screen member address."
+  },
+  {
+   "unit": "src/effect50350.c",
+   "code": "state->vertices = (effect_segment_t *)sub_6FBB4(0x58);",
+   "verdict": "DERIVED",
+   "reason": "Allocate 2 * sizeof(effect_segment_t). The 0x78 transformed-point allocation contains no pointers and is already host-width invariant."
+  },
+  {
+   "unit": "src/effect633e0.c",
+   "code": "state = (effect_column_state_t *)sub_6FBB4(0x30);",
+   "verdict": "DERIVED",
+   "reason": "Allocate sizeof(effect_column_state_t)."
+  },
+  {
+   "unit": "src/effect6c3b0.c",
+   "code": "state = (effect_state_6c_t *)sub_6FBB4(0x20);",
+   "verdict": "DERIVED",
+   "reason": "Allocate sizeof(effect_state_6c_t)."
+  },
+  {
+   "unit": "src/effect6ec80.c",
+   "code": "u32 surface;",
+   "verdict": "DERIVED",
+   "reason": "Both the vertex field and helper local are texture pointers; use u8 * so the embedded descriptor begins with a native pointer."
+  },
+  {
+   "unit": "src/effect6ec80.c",
+   "code": "allocated = (effect_state_6e_t *)sub_6FBB4(0xbc);",
+   "verdict": "DERIVED",
+   "reason": "Allocate sizeof(effect_state_6e_t); the vertex array already uses sizeof."
+  },
+  {
+   "unit": "src/effecthelp.c",
+   "code": "effect5_state = (effect5_state_t *)sub_6FBB4(0x3c);",
+   "verdict": "DERIVED",
+   "reason": "Allocate sizeof(effect5_state_t)."
+  },
+  {
+   "unit": "src/effecthelp.c",
+   "code": "state->items = (effect5_item_t *)sub_6FBB4(state->count * 52);",
+   "verdict": "DERIVED",
+   "reason": "Allocate count * sizeof(effect5_item_t); take descriptor member addresses as before."
   }
  ]
 }

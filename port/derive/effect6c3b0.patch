@@ -1,0 +1,11 @@
+--- a/src/effect6c3b0.c
++++ b/src/effect6c3b0.c
+@@ -150,7 +150,7 @@
+ 
+     success = 0;
+     if (screen != 0 && output != 0) {
+-        state = (effect_state_6c_t *)sub_6FBB4(0x20);
++        state = (effect_state_6c_t *)sub_6FBB4(sizeof(effect_state_6c_t))  /* PORT: native pointer-bearing state */;
+         effect_state_6c = state;
+         if (state != 0) {
+             state->radius = max32(8, min32(radius, 48));

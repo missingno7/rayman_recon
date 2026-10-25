@@ -59,6 +59,63 @@
     "The eight left[]/right[] index expressions are cast to s32: the same offsets the 32-bit program used. Found by the first native run (segmentation fault); this class is caught systematically by the i686 reference build (port/docs/ARCHITECTURE.md)."
    ],
    "base_sha256": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1"
+  },
+  "effect2.c": {
+   "patch": "effect2.patch",
+   "reason": "The embedded draw descriptor starts at the native screen field; its DOS byte offset 0x3c precedes alignment padding on x64.",
+   "divergences": [
+    "Select the screen field by member address; the descriptor contract and all drawing calculations are unchanged."
+   ],
+   "base_sha256": "be7b61cf3e893b1b097dd5157c0cc7b64751f8069b40b3c9a1b45fe3d5b96cd7"
+  },
+  "effect50350.c": {
+   "patch": "effect50350.patch",
+   "reason": "Two effect_segment_t records contain native texture pointers and outgrow the literal DOS allocation of 0x58 bytes.",
+   "divergences": [
+    "Allocate two sizeof(effect_segment_t) records (0x58 bytes on i686); existing typed descriptor writes and native rasterizer contract remain unchanged."
+   ],
+   "base_sha256": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45"
+  },
+  "effect633e0.c": {
+   "patch": "effect633e0.patch",
+   "reason": "The effect_column_state_t allocation is the literal 0x30-byte DOS pointer-bearing layout.",
+   "divergences": [
+    "Allocate sizeof(effect_column_state_t) (0x30 on i686); column tables, phases, and pixel calculations are unchanged."
+   ],
+   "base_sha256": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6"
+  },
+  "effect6c3b0.c": {
+   "patch": "effect6c3b0.patch",
+   "reason": "The radial effect state holds three pointers and outgrows the literal 0x20-byte DOS allocation.",
+   "divergences": [
+    "Allocate sizeof(effect_state_6c_t) (0x20 on i686); the displacement map and update/draw order are unchanged."
+   ],
+   "base_sha256": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
+  },
+  "effect6ec80.c": {
+   "patch": "effect6ec80.patch",
+   "reason": "The wave state uses a literal DOS allocation and vertex/local surface values store texture pointers in u32.",
+   "divergences": [
+    "Allocate sizeof(effect_state_6e_t) (0xbc on i686).",
+    "Use u8 * for both surface declarations and assign texture pointers without u32 narrowing; projected words and rectangle bytes follow the native pointer in the existing descriptor contract. Vertex allocation already uses sizeof. All wave calculations are unchanged."
+   ],
+   "base_sha256": "52fa1968f314afd228baf162e72c9a0363f4b069c5d63f0e130d3d35de631154"
+  },
+  "effecthelp.c": {
+   "patch": "effecthelp.patch",
+   "reason": "The sphere state and items contain native pointers but allocate literal DOS record sizes.",
+   "divergences": [
+    "Allocate sizeof(effect5_state_t) and count * sizeof(effect5_item_t) (0x3c and count * 52 on i686); sphere setup, interpolation, bounce/drop calculations, and embedded descriptor fields are unchanged."
+   ],
+   "base_sha256": "53d4cc8cc5d25cfe97be4d299030c87849405a6621abd44058831149b8e77ae2"
+  },
+  "blood.c": {
+   "patch": "blood.patch",
+   "reason": "DoEffectBloodOut compares two addresses after truncation to signed 32-bit values.",
+   "divergences": [
+    "Compare the byte-height to the destination offset from the same frame origin. This preserves the original frame-origin test without pointer truncation or forming the potentially out-of-buffer row_start + height pointer. RNG order, all pixel writes, and synchronization are unchanged."
+   ],
+   "base_sha256": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed"
   }
  }
 }

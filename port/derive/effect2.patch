@@ -1,0 +1,11 @@
+--- a/src/effect2.c
++++ b/src/effect2.c
+@@ -315,7 +315,7 @@
+ 
+     for (i = 0; i < state->count; ++i) {
+         draw_effect_segment(state->destination,
+-                            (u8 *)(items + (item++)->draw_order) + 0x3c);
++                            (u8 *)&items[(item++)->draw_order].screen  /* PORT: native descriptor field, not DOS byte offset */);
+     }
+ }
+ 

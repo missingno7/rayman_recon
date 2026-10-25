@@ -1,0 +1,11 @@
+--- a/src/blood.c
++++ b/src/blood.c
+@@ -77,7 +77,7 @@
+             row_start = dst;
+             for (row = 200; row != 0; --row) {
+                 for (pixels = 320; pixels != 0; pixels -= 2) {
+-                    if ((s32)(*line + row_start) < (s32)dst)
++                    if (*line < dst - row_start)  /* PORT: compare offsets from the frame origin, without narrowing addresses */
+                         *(s16 *)dst = *(s16 *)&src[-(*line)];
+                     else
+                         *(s16 *)dst = 0;

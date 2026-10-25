@@ -1,0 +1,11 @@
+--- a/src/effect50350.c
++++ b/src/effect50350.c
+@@ -149,7 +149,7 @@
+             state = effect_data();
+             state->source = source;
+             state->destination = destination;
+-            state->vertices = (effect_segment_t *)sub_6FBB4(0x58);
++            state->vertices = (effect_segment_t *)sub_6FBB4(2 * sizeof(effect_segment_t))  /* PORT: two native pointer-bearing descriptors */;
+             if (state->vertices != 0) {
+                 state->transformed = (effect3d_point_t *)sub_6FBB4(0x78);
+                 if (state->transformed != 0) {

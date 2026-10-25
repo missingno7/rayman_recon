@@ -1,0 +1,11 @@
+--- a/src/effect633e0.c
++++ b/src/effect633e0.c
+@@ -84,7 +84,7 @@
+ 
+     success = 0;
+     if (source != 0 && destination != 0) {
+-        state = (effect_column_state_t *)sub_6FBB4(0x30);
++        state = (effect_column_state_t *)sub_6FBB4(sizeof(effect_column_state_t))  /* PORT: native pointer-bearing state */;
+         effect_state_55760 = state;
+         if (state != 0) {
+             state->width = max32(8, min32(width, 40));

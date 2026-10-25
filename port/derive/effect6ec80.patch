@@ -1,0 +1,41 @@
+--- a/src/effect6ec80.c
++++ b/src/effect6ec80.c
+@@ -10,7 +10,7 @@
+     u16 next_x;
+     u8 next_y;
+     u8 field_7;
+-    u32 surface;
++    u8 *surface;  /* PORT: native texture pointer */
+     s32 projected[8];
+     u8 rectangle[8];
+ } effect_vertex_6e_t;
+@@ -64,7 +64,7 @@
+     u8 index;
+     u8 y;
+     u16 x;
+-    u32 surface;
++    u8 *surface;  /* PORT: native texture pointer */
+ 
+     state = effect_state_6e;
+     step_x = (u8)(320 / state->columns);
+@@ -85,9 +85,9 @@
+             vertex->x = vertex->next_x = x;
+             vertex->y = vertex->next_y = y;
+             if (x < 160) {
+-                surface = (u32)state->surface_a;
++                surface = state->surface_a;  /* PORT: retain the complete pointer */
+             } else {
+-                surface = (u32)state->surface_b;
++                surface = state->surface_b;  /* PORT: retain the complete pointer */
+                 x -= 160;
+             }
+             vertex->surface = surface;
+@@ -134,7 +134,7 @@
+ 
+     success = 0;
+     if (source != 0 && sprite != 0) {
+-        allocated = (effect_state_6e_t *)sub_6FBB4(0xbc);
++        allocated = (effect_state_6e_t *)sub_6FBB4(sizeof(effect_state_6e_t))  /* PORT: native pointer-bearing state */;
+         effect_state_6e = allocated;
+         if (allocated != 0) {
+             state = allocated;

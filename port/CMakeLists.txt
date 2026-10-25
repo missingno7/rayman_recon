@@ -78,6 +78,9 @@ foreach(i RANGE ${_last})
     endif()
     list(APPEND RAY_HIST_SOURCES ${_path})
     set(_opts "")
+    if(_rel MATCHES "^bss/")
+        list(APPEND _opts "-include${RAY_PORT}/compat/include/port_bss_layout.h")
+    endif()
     if(EXISTS ${RAY_PORT}/game/protos/${_stem}.h)
         list(APPEND _opts "-include${RAY_PORT}/game/protos/${_stem}.h")
     endif()
@@ -177,3 +180,11 @@ add_executable(port_unit_tests tests/unit_tests.c)
 target_link_libraries(port_unit_tests PRIVATE rayman_native rayman_hist rayman_native m)
 target_include_directories(port_unit_tests PRIVATE ${RAY_SRC}/include ${RAY_PORT})
 add_test(NAME port_unit_tests COMMAND port_unit_tests)
+
+# Screen-effect differential proof (x86_64 and i686 derivatives vs unmodified units at DOS pointer width).
+include(tests/effect_diff.cmake)
+
+# End to end: original recorded demo 0 through the whole game, deterministic, against the reviewed golden summary
+# shared by all architectures (tests/golden).
+add_test(NAME port_e2e_demo0 COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_demo.py $<TARGET_FILE:rayman> ${RAY_DATA} 0)
+set_tests_properties(port_e2e_demo0 PROPERTIES TIMEOUT 1800)

@@ -44,7 +44,7 @@ A unit whose code depends on the DOS machine in a way no boundary service can ab
 against its `src/` file, each change marked `/* PORT: ... */`, with reason and divergence list in
 `derive/provenance.json`. The build applies the patch to the current `src/` file, so matching improvements flow
 into the port automatically; `tools/derive.py check` (a ctest gate) fails when the base changed since review.
-Current derivatives: `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`.
+Current derivatives (14): `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
 
 `game/port_main.c` mirrors `PcMain` call for call for the test entries; `tools/mirror.py` pins the mirrored
 bodies so a change to `PcMain` forces a review.
@@ -63,6 +63,10 @@ by truncating pointers or emulating a DOS address space:
 - **Unsigned 32-bit index wraparound** (`ptr[x - y*224]` with `u32 x, y`) is kept with an `(s32)` cast.
 - **Allocation sizes and arenas.** Literal DOS sizes of pointer-carrying records are replaced by `sizeof`;
   the game's block arenas are scaled (`PORT_ARENA_SCALE`) because native records are larger.
+- **Packing pragmas.** `src/bss/bt.h` opens `#pragma pack(4)` before including the shared headers (natural
+  <= 4 alignment for the DOS BSS placement). Natively that capped pointer alignment and gave the BSS units a
+  smaller `mem_t` than the code units (the arena capacity aliased `cdTime`); the BSS units pre-include the shared
+  headers (`compat/include/port_bss_layout.h`) so every unit sees one natural layout.
 - **One assembly routine, several C views.** On DOS a `#pragma aux` register ABI let callers see one routine
   through prototypes with different argument orders; natively each extra view gets an adapter
   (`video/lowlevel_adapters.c`) or a one-line derivative.
@@ -94,5 +98,7 @@ between the x86_64 and i686 builds on the same deterministic input exposes a 64-
 (`DemoRecord`, played by the game's own demo code: authentic human input); `--menus` runs the original menus and
 game interactively; `--dos-main` the unmodified DOS `main`. `--deterministic --headless --frame-log` give
 reproducible per-frame hashes for regression runs. `ctest` runs: derivative/mirror/prototype/ABI gates, native unit
-tests of the compat layer; `tests/asm_diff/` proves the native drawing layer against the original assembly in
+tests of the compat layer, the screen-effect differential (`tests/effect_diff.c`: 18,428 effect frames, x86_64
+and i686 derivatives equal to the unmodified units at DOS pointer width) and the end-to-end demo against its
+golden summary; `tests/asm_diff/` proves the native drawing layer against the original assembly in
 Unicorn (14,594 cases, zero mismatches).
