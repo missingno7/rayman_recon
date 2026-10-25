@@ -1,0 +1,172 @@
+--- a/src/cdaudio.c
++++ b/src/cdaudio.c
+@@ -3,6 +3,8 @@
+ #include <stdio.h>
+ #include <i86.h>
+ #include "cd_local.h"
++#include "platform/cdrom.h"
++#include "dos_regs.h"
+ 
+ /* Typed initializers with original TU string literals. See NOTES.md. */
+ #include "rtypes.h"
+@@ -31,18 +33,14 @@
+ extern u8 byte_DEEFB, byte_DEEFC, byte_DEEFD, byte_DEF00;
+ extern u16 word_DE8BC;
+ extern u8 WindowsLance, byte_CFA14, JeuCracker;
+-extern void sub_564f8(s32 command, s32 value);
++extern s16 sub_564f8(u8 interrupt_number, dos_regs_t *registers);
+ extern u16 dos_allocate_conventional_block(u16 bytes, u32 *out_offset);
+ extern u8 dos_free_conventional_block(u16 handle);
+ extern void sub_5bbe8(void);
+ extern void FatalError(const char *message);
+ extern void clear_memory(void *dest, s32 value, s32 count);
+ 
+-/* INVENTED representation view; the DOS stores prove offset:selector = 4:2 bytes.
+- * Keep each global a native six-byte far pointer at its true start. */
+-typedef struct { u32 offset; u16 selector; } cd_far_parts_t;
+-#define CD_OFFSET(p) (((cd_far_parts_t *)&(p))->offset)
+-#define CD_SELECTOR(p) (((cd_far_parts_t *)&(p))->selector)
++/* PORT: DOS offsets address bounded native request storage (platform/cdrom.c). */
+ 
+ /* DOS MSCDEX state. The far-pointer globals are offset:selector pairs. */
+ extern u32 cd_offset_830;
+@@ -84,7 +82,7 @@
+ 
+ extern u8 AudioStatusByte(void);
+ extern void sub_193d0(u8 value);
+-extern void sub_193f0(s32 value);
++extern void sub_193f0(intptr_t value);
+ extern u16 sub_19400(u16 value);
+ extern u16 sub_19410(u8 command, u32 argument, u8 __far *request);
+ extern void sub_19474(u8 __far *request, u8 command);
+@@ -153,7 +151,7 @@
+ void sub_193e0(u8 value) { byte_DEEFC = value; }
+ void sub_193e8(u8 value) { byte_DEEFD = value; }
+ /* value -> register_block. See docs/semantics/cdaudio.json. */
+-void sub_193f0(s32 register_block) { sub_564f8(0x2f, register_block); }
++void sub_193f0(intptr_t register_block) { sub_564f8(0x2f, (dos_regs_t *)register_block); }
+ /* value -> request_status. See docs/semantics/cdaudio.json. */
+ u16 sub_19400(u16 request_status) { if (request_status & 0x8000) return request_status & 0xff; return 0x100; }
+ 
+@@ -168,7 +166,7 @@
+         cd_request_regs.bx = (u16)real_mode_request;
+         cd_request_regs.cx = drive_index;
+         ++tries;
+-        sub_193f0((s32)&cd_request_regs);
++        sub_193f0((intptr_t)&cd_request_regs);
+         if (tries == 10)
+             break;
+     } while (protected_request[4] & 0x80);
+@@ -216,7 +214,7 @@
+     cd_request_regs.es = (u16)(cd_offset_850 >> 16);
+     cd_request_regs.bx = (u16)cd_offset_850;
+     cd_request_regs.ax = 0x1510;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     return (cd_buffer_878[4] & 2) != 0;
+ }
+ 
+@@ -232,7 +230,7 @@
+     cd_request_regs.es = (u16)(cd_offset_850 >> 16);
+     cd_request_regs.bx = (u16)cd_offset_850;
+     cd_request_regs.ax = 0x1510;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     cd_status_playing = (*(cd_status_word_ptr_t)(cd_buffer_878 + 3) & 0x200) != 0;
+     cd_status_ready = (u32)((cd_buffer_890[1] & 1) != 0);
+     cd_status_error = !(cd_status_playing | cd_status_ready);
+@@ -247,7 +245,7 @@
+     cd_request_regs.ax = 0x1500;
+     cd_request_regs.bx = 0;
+     cd_request_regs.cx = 0;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     byte_DEEFB = (u8)cd_request_regs.cx;
+     return (u8)cd_request_regs.bx;
+ }
+@@ -265,7 +263,7 @@
+             cd_request_regs.ax = 0x150b;
+             cd_request_regs.cx = drive;
+             cd_request_regs.bx = 0;
+-            sub_193f0((s32)&cd_request_regs);
++            sub_193f0((intptr_t)&cd_request_regs);
+             if (cd_request_regs.ax != 0) {
+                 --remaining;
+                 cd_drive_map[drive] = 1;
+@@ -298,38 +296,27 @@
+             word_DE8BC = 0x100;
+             sub_19700();
+             cd_drive_handle = dos_allocate_conventional_block(0x8a, &cd_offset_840);
+-            CD_OFFSET(cd_buffer_872) = 0x30;
+-            CD_OFFSET(cd_buffer_866) = 0x35;
+-            CD_OFFSET(cd_buffer_884) = 0x3c;
+-            CD_OFFSET(cd_buffer_890) = 0x43;
+-            CD_OFFSET(cd_buffer_88a) = 0;
+-            CD_OFFSET(cd_buffer_878) = 0;
+-            CD_OFFSET(cd_buffer_86c) = 0x1a;
++            cd_buffer_872 = port_cd_buffer(0x30, 1);
++            cd_buffer_866 = port_cd_buffer(0x35, 1);
++            cd_buffer_884 = port_cd_buffer(0x3c, 1);
++            cd_buffer_890 = port_cd_buffer(0x43, 1);
++            cd_buffer_88a = port_cd_buffer(0, 1);
++            cd_buffer_878 = port_cd_buffer(0, 1);
++            cd_buffer_86c = port_cd_buffer(0x1a, 1);
+             cd_offset_850 = cd_offset_840;
+             cd_offset_858 = cd_offset_840 + 0x30;
+             allocation_failed = cd_drive_handle == 0;
+-            CD_SELECTOR(cd_buffer_88a) = cd_drive_handle;
+-            CD_SELECTOR(cd_buffer_878) = cd_drive_handle;
+             cd_offset_854 = cd_offset_840 + 0x35;
+-            CD_SELECTOR(cd_buffer_872) = cd_drive_handle;
+-            CD_SELECTOR(cd_buffer_866) = cd_drive_handle;
+             cd_offset_84c = cd_offset_840 + 0x3c;
+-            CD_SELECTOR(cd_buffer_884) = cd_drive_handle;
+-            CD_SELECTOR(cd_buffer_86c) = cd_drive_handle;
+             cd_offset_848 = cd_offset_840 + 0x1a;
+-            CD_SELECTOR(cd_buffer_890) = cd_drive_handle;
+-            CD_SELECTOR(cd_buffer_860) = cd_drive_handle;
+             cd_offset_844 = cd_offset_840 + 0x43;
+-            CD_OFFSET(cd_buffer_860) = 0x4e;
+-            CD_SELECTOR(cd_buffer_87e) = cd_drive_handle;
++            cd_buffer_860 = port_cd_buffer(0x4e, 1);
+             cd_offset_838 = cd_offset_840 + 0x4e;
+-            CD_OFFSET(cd_buffer_87e) = 0x59;
+-            CD_SELECTOR(cd_buffer_89c) = cd_drive_handle;
++            cd_buffer_87e = port_cd_buffer(0x59, 1);
+             cd_offset_830 = cd_offset_840 + 0x59;
+-            CD_SELECTOR(cd_buffer_896) = cd_drive_handle;
+             cd_offset_83c = cd_offset_840 + 0x5b;
+-            CD_OFFSET(cd_buffer_89c) = 0x5b;
+-            CD_OFFSET(cd_buffer_896) = 0x64;
++            cd_buffer_89c = port_cd_buffer(0x5b, 1);
++            cd_buffer_896 = port_cd_buffer(0x64, 1);
+             cd_offset_834 = cd_offset_840 + 0x64;
+             if (allocation_failed)
+                 word_DE8BC = 0x101;
+@@ -377,7 +364,7 @@
+     cd_request_regs.ax = 0x1500;
+     cd_request_regs.bx = 0;
+     cd_request_regs.cx = 0;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     return cd_request_regs.bx != 0;
+ }
+ 
+@@ -386,7 +373,7 @@
+     s32 version;
+     cd_request_regs.ax = 0x150c;
+     cd_request_regs.bx = 0;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     version = cd_request_regs.bx;
+     cd_computed_lba = (cd_request_regs.bx & 0xff) + ((version >> 8) & 0xff) * 100;
+     return cd_computed_lba >= 0xd2;
+@@ -613,7 +600,7 @@
+     cd_request_regs.es = (u16)(cd_offset_834 >> 16);
+     cd_request_regs.bx = (u16)cd_offset_834;
+     cd_request_regs.cx = drive_index;
+-    sub_193f0((s32)&cd_request_regs);
++    sub_193f0((intptr_t)&cd_request_regs);
+     return word_DE8BC;
+ }
+ 

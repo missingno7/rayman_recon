@@ -116,6 +116,15 @@
     "Compare the byte-height to the destination offset from the same frame origin. This preserves the original frame-origin test without pointer truncation or forming the potentially out-of-buffer row_start + height pointer. RNG order, all pixel writes, and synchronization are unchanged."
    ],
    "base_sha256": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed"
+  },
+  "cdaudio.c": {
+   "patch": "cdaudio.patch",
+   "reason": "DPMI register-block address truncation and 16:32 selector pointer overlays cannot represent native pointers.",
+   "divergences": [
+    "sub_193f0 takes intptr_t and calls the correctly typed real-mode transport, preserving the register-block address on both architectures.",
+    "Eleven native pointer views are assigned from bounded port_cd_buffer offsets instead of writing offset:selector bytes into native pointer storage. Request bytes and all TOC/status/cue policy remain unchanged."
+   ],
+   "base_sha256": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d"
   }
  }
 }

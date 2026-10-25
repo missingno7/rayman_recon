@@ -62,7 +62,7 @@ FILE *port_fopen(const char *path, const char *mode)
         }
         return fopen(host, mode);
     }
-    port_files_resolve(path, 1, host, sizeof host);
+    if (!port_files_resolve(path, 1, host, sizeof host)) return NULL;
     if (mode[0] == 'r')
         copy_up(path, host);
     return fopen(host, mode);
@@ -80,7 +80,7 @@ int port_open(const char *path, int wflags, ...)
         va_end(ap);
     }
     if (writing) {
-        port_files_resolve(path, 1, host, sizeof host);
+        if (!port_files_resolve(path, 1, host, sizeof host)) return -1;
         if (!(wflags & W_TRUNC))
             copy_up(path, host);
     } else if (!port_files_resolve(path, 0, host, sizeof host)) {
@@ -122,7 +122,7 @@ int port_unlink(const char *path)
 {
     char host[1024];
     /* Only files the port wrote can be removed; the game data stays untouched. */
-    port_files_resolve(path, 1, host, sizeof host);
+    if (!port_files_resolve(path, 1, host, sizeof host)) return -1;
     return remove(host);
 }
 

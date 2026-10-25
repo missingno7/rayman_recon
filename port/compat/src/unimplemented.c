@@ -50,7 +50,6 @@ ABSENT(sub_1268A, "Mode X VGA cache upload")
 ABSENT(_dos_read, "movie file read")
 /* BIOS services without a caller on the supported paths. */
 ABSENT(bios_wait_timer, "INT 15h wait (unused benchmark, docs/port/PLATFORM_OPEN.md)")
-ABSENT(sub_2748, "INT 1Ah tick read")
 /* VGA graphics-controller write inside an effect (effect1), and the sound fatal-error text mode switch. */
 ABSENT(write_vga_register, "VGA register write from an effect")
 ABSENT(sound_set_video_mode, "sound fatal-error text mode")

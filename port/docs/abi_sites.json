@@ -208,8 +208,8 @@
    "unit": "src/cdaudio.c",
    "code": "sub_193f0((s32)&cd_request_regs);",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "MSCDEX request block address; the CD service replaces cdaudio (not ported yet)"
+   "verdict": "DERIVED",
+   "reason": "cdaudio.patch widens sub_193f0 register-block transport to intptr_t; native request pointers come from bounded port_cd_buffer, never selector overlays. DOS transfer addresses remain checked tokens."
   },
   {
    "unit": "src/cheat.c",

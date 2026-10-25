@@ -19,8 +19,9 @@ Everything the port does differently from the DOS executable, with the reason. D
 | Video presentation | VGA normal mode or Mode X | normal mode only; Mode X entries stop the program | first milestone; GameModeVideo = Mode X from a config file would stop with a clear message |
 | Sound | HMI SOS driver | no driver: LOAD_CONFIG takes the game's no-sound-card path | audio backend is the next platform step |
 | Joystick | analog game port | nothing connected (buttons released, axes at calibrated centres) | gamepad mapping is a later step |
-| CD drive | MSCDEX + Rayman CD | TEMPORARY (milestone 1): no Rayman CD; the CD checks are skipped | the game's own limited mode follows ("LIMITED VERSION" overlay, exit after the first map); the virtual CD drive replaces this |
+| CD drive | MSCDEX 2.21 + the Rayman CD | virtual MSCDEX drive (default D:) on the player's CUE/BIN image (`--cd`): the game's own CD code builds and interprets every request; the port serves INT 2Fh 15xxh and the device packets (IOCTL, PLAY, STOP, RESUME, READ LONG) with position from the port clock at 75 sectors/s; CD audio plays from the BIN through SDL3. Files on the CD letter are read from the installed data directory; writes fail (EROFS) | the protection probe and the music behave as with the disc; without an image the drive is empty and the original "insert CD" prompt appears |
 | Protection: `exit_if_not_cd_drive` | INT 21h 36h on the CD drive must report a read-only medium | succeeds | the player's own data stands in for the CD |
+| CD request memory | conventional memory below 1 MiB (DPMI 0100h) | one bounded port-owned area addressed by real-mode tokens, used only by the CD transport | the request blocks carry segment:offset addresses by protocol; the tokens never encode host addresses |
 | Text screen | AfficheEntete writes B8000h | skipped by the mirror | console output only |
 | Intro movie | playVideo("intro.dat") | skipped by the mirror | movie player not ported yet |
 
@@ -32,6 +33,9 @@ Everything the port does differently from the DOS executable, with the reason. D
 - `data/blk_215c.c`: `DisplayBufferNormal` points at the port's VGA window instead of linear A0000h.
 - `box.c`: `(u8 *)((u32)draw_buffer + n)` -> `draw_buffer + n`.
 - `jumelle.c`: wrapped `u32` indices cast to `s32` (the offsets the 32-bit program used).
+- `cdaudio.c`: the INT 2Fh register block is passed as a pointer and the eleven far-pointer request views are
+  native pointers into the port's request area; all request building, status interpretation, TOC/MSF logic and
+  play/pause/resume routing stay original.
 - `map_ngawe.c`, `frame.c`: argument order of a second C view of the same assembly routine.
 - Screen effects (`effect2/50350/633e0/6c3b0/6ec80/effecthelp.c`, `blood.c`): `sizeof` instead of literal DOS sizes,
   a native texture pointer instead of a u32, descriptor writes at native offsets, pointer comparison instead of

@@ -32,7 +32,7 @@ exit_if_not_cd_drive (succeeds), menu_patch_once (no-op), menu_check_debug_break
 | Files (fopen/open/read/write/lseek/filelength/unlink) | DOS paths resolved case-insensitively; reads from the save directory, then the player's data directory (never written); writes to the save directory; Watcom O_* flag values decoded |
 | INT 10h | mode set / get (VGA model) |
 | INT 21h | 30h version (6.22), 4Ch exit |
-| INT 2Fh (via DPMI 0300h, `sub_564f8`) | 1600h/4680h: no Windows; 1500h: no MSCDEX (until the virtual CD drive lands) |
+| INT 2Fh (via DPMI 0300h, `sub_564f8`) | 1600h/4680h: no Windows; 1500h/150Bh/150Ch/1510h and optional 1502h-1504h: virtual MSCDEX 2.21 drive (`platform/cdrom.c`, device packets IOCTL in 04/06/0A/0B/0C/0F, out 00/01/03/05, PLAY 84, STOP 85, RESUME 88, READ LONG 80); CD-DA output `platform/cd_audio.c` (SDL3 stream, 44.1 kHz s16 stereo from the BIN) |
 | INT 33h | 0000h: no mouse |
 | INT 1Ah | 00h: BIOS ticks from the clock |
 | DPMI 0100h/0101h | no conventional blocks (their only users are replaced services) |

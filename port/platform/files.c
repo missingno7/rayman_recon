@@ -1,4 +1,5 @@
 #include "platform/files.h"
+#include "platform/cdrom.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -113,6 +114,14 @@ static int find_ci(const char *base, const char *rel, char *out, size_t n)
 int port_files_resolve(const char *dos_path, int for_write, char *out, size_t out_size)
 {
     char rel[512];
+    /* Detect both D:\absolute and D:relative before normalization (the CD save probe uses the latter). */
+    if (port_cd_path(dos_path)) {
+        if (for_write) { errno = EROFS; return 0; }
+        if (!port_cd_present()) { errno = ENOENT; return 0; }
+        normalise(dos_path, rel, sizeof rel);
+        /* Installed-data fallback: CD reads never consult the writable save overlay. */
+        return find_ci(data_dir, rel, out, out_size);
+    }
     normalise(dos_path, rel, sizeof rel);
     if (for_write) {
         char dir[1024];

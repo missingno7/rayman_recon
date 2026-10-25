@@ -22,6 +22,7 @@ set(RAY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/.. CACHE PATH "Repository root (src/, c
 set(RAY_SRC ${RAY_ROOT}/src)
 set(RAY_PORT ${CMAKE_CURRENT_SOURCE_DIR})
 set(RAY_DATA "" CACHE PATH "Directory with the player's original Rayman data (RAYMAN.EXE's directory)")
+set(RAY_CD_TEST_IMAGE "${RAY_ROOT}/assets/DOS_CD/RAYMAN.cue" CACHE FILEPATH "The player's Rayman CD image (CUE/BIN) used by the CD and end-to-end gates")
 
 # --- Historical units -------------------------------------------------------------------------------------
 # Every 'game' profile unit of config/units.json; derivatives replace their src file (derive/provenance.json).
@@ -147,7 +148,9 @@ add_library(rayman_native STATIC
     video/lowlevel_adapters.c
     platform/host.c
     platform/files.c
-    platform/clock.c)
+    platform/clock.c
+    platform/cdrom.c
+    platform/cd_audio.c)
 target_include_directories(rayman_native PUBLIC ${RAY_PORT})
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
 target_compile_options(rayman_native PRIVATE -funsigned-char -fwrapv -fno-strict-aliasing)
@@ -186,5 +189,19 @@ include(tests/effect_diff.cmake)
 
 # End to end: original recorded demo 0 through the whole game, deterministic, against the reviewed golden summary
 # shared by all architectures (tests/golden).
-add_test(NAME port_e2e_demo0 COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_demo.py $<TARGET_FILE:rayman> ${RAY_DATA} 0)
+add_test(NAME port_e2e_demo0 COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_demo.py $<TARGET_FILE:rayman> ${RAY_DATA} 0
+    ${RAY_CD_TEST_IMAGE})
 set_tests_properties(port_e2e_demo0 PROPERTIES TIMEOUT 1800)
+
+add_executable(port_cd_tests tests/cd_tests.c)
+target_include_directories(port_cd_tests PRIVATE ${RAY_SRC}/include ${RAY_SRC} ${RAY_PORT})
+target_link_libraries(port_cd_tests PRIVATE rayman_native rayman_hist rayman_native m)
+add_test(NAME port_cd_tests COMMAND port_cd_tests ${RAY_CD_TEST_IMAGE})
+
+add_executable(port_cd_audio_tests tests/cd_audio_tests.c)
+target_include_directories(port_cd_audio_tests PRIVATE ${RAY_PORT})
+target_link_libraries(port_cd_audio_tests PRIVATE rayman_native rayman_hist rayman_native m)
+add_test(NAME port_cd_audio_tests COMMAND port_cd_audio_tests ${RAY_CD_TEST_IMAGE})
+set_tests_properties(port_cd_audio_tests PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy")
+add_test(NAME port_cd_missing_disc COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/cd_missing_disc.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${CMAKE_CURRENT_BINARY_DIR}/cd-no-image-save)

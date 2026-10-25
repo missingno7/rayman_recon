@@ -1,7 +1,7 @@
 /*
  * Process entry of the native port: options, platform start-up, then one of the game entries (port_main.h).
  *
- *   rayman [--data DIR] [--save DIR] [--demo N | --menus | --dos-main] [--headless] [--deterministic]
+ *   rayman [--data DIR] [--save DIR] [--cd PATH.cue] [--cd-drive D] [--demo N | --menus | --dos-main] [--headless] [--deterministic]
  *          [--frames N] [--frame-log FILE] [--dump-frames DIR --dump-every N] [--epoch SECONDS]
  *          [--scale N] [--fullscreen]
  *
@@ -13,6 +13,7 @@
 #include "game/port_main.h"
 #include "platform/clock.h"
 #include "platform/files.h"
+#include "platform/cdrom.h"
 #include "platform/host.h"
 #include "video/vga.h"
 
@@ -25,6 +26,8 @@ void port_set_time_epoch(long long seconds);
 #include <stdlib.h>
 #include <string.h>
 
+extern unsigned char JeuCracker, MusicCdActive;
+extern short num_world, num_level;
 static long frame_limit = -1;
 static long frame_count;
 static FILE *frame_log;
@@ -97,6 +100,7 @@ static void on_frame(const uint8_t *pixels, const uint8_t *dac, void *user)
             h = (h ^ dac[i]) * 1099511628211ULL;
         fprintf(frame_log, "%ld %llu %016llx\n", frame_count, (unsigned long long)port_clock_ns(),
                 (unsigned long long)h);
+        fflush(frame_log); /* Preserve completed frames across another port boundary crash. */
     }
     if (dump_dir && dump_every > 0 && frame_count % dump_every == 0)
         dump_frame(pixels, dac);
@@ -122,6 +126,11 @@ static void key_script_pump(void)
 
 static void at_exit(void)
 {
+    /* Headless regression runs: a one-line summary of where the game ended. */
+    if (port_host_headless())
+        printf("port exit: JeuCracker=%u MusicCdActive=%u frames=%ld world=%d level=%d\n",
+               JeuCracker, MusicCdActive, frame_count, num_world, num_level);
+    port_cd_shutdown();
     port_host_shutdown();
 }
 
@@ -129,15 +138,21 @@ int main(int argc, char **argv)
 {
     const char *data = getenv("RAYMAN_DATA");
     const char *save = NULL;
+    const char *cd = getenv("RAYMAN_CD");
+    const char *cd_drive = getenv("RAYMAN_CD_DRIVE");
+    char cd_letter = cd_drive && *cd_drive ? cd_drive[0] : 'D';
     char default_save[1024];
     port_host_options host = {0, 0, 0};
     int deterministic = 0, demo = -1, dos_main = 0, i;
 
+    setvbuf(stdout, NULL, _IONBF, 0);
     for (i = 1; i < argc; i++) {
         const char *a = argv[i];
         const char *v = i + 1 < argc ? argv[i + 1] : NULL;
         if (!strcmp(a, "--data") && v) data = argv[++i];
         else if (!strcmp(a, "--save") && v) save = argv[++i];
+        else if (!strcmp(a, "--cd") && v) cd = argv[++i];
+        else if (!strcmp(a, "--cd-drive") && v && strlen(v)==1) cd_letter = argv[++i][0];
         else if (!strcmp(a, "--demo") && v) demo = atoi(argv[++i]);
         else if (!strcmp(a, "--menus")) demo = -1;
         else if (!strcmp(a, "--dos-main")) dos_main = 1;
@@ -174,6 +189,7 @@ int main(int argc, char **argv)
     if (!port_host_init(&host))
         return 1;
     atexit(at_exit);
+    if (!port_cd_init(cd, cd_letter)) return 2;
     port_vga_set_frame_hook(on_frame, NULL);
     if (key_count)
         port_host_set_pump_hook(key_script_pump);

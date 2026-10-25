@@ -21,10 +21,11 @@ from that RAYMAN.EXE at build time. The i686 reference build uses `C:/msys64/min
 ## Run
 
 ```bash
-build/port/rayman.exe --data D:/Prog/rayman_recon/assets/GOG --menus
+build/port/rayman.exe --data D:/Prog/rayman_recon/assets/GOG --cd D:/Prog/rayman_recon/assets/DOS_CD/RAYMAN.cue --menus
 ```
 
-`--demo N` (0..5) plays one of the original recorded demos; `--headless --deterministic --frames N --frame-log F`
+`--cd PATH.cue` inserts the player's Rayman CD image in the virtual drive (CD music, protection checks); without
+it the drive is empty and the game asks for the CD as the original did. `--demo N` (0..5) plays one of the original recorded demos; `--headless --deterministic --frames N --frame-log F`
 gives a reproducible per-frame hash log; `--dump-frames DIR --dump-every N` writes BMPs. Saves go to the SDL pref
 directory unless `--save DIR` is given. Alt+Enter toggles fullscreen.
 

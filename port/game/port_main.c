@@ -42,6 +42,10 @@ void LOAD_CONFIG(void);
 void PC_init_cheats(void);
 void InitPcSoundCard(void);
 void stop_cd(void);
+void InitMusic(void);
+void verify_mscdex(void);
+void check_saved_drive_letter(void);
+u8 verify_cdrom_response(void);
 void DEPART_INIT_LOOP(void);
 void INIT_WORLD_INFO(void);
 void set_default_Bloc_clipping(void);
@@ -127,16 +131,15 @@ static void mirror_pcmain(int run, int demo)
     sub_5BAE0();
     MakeMyRand(1);
     printf("CD ROM's Initialization.\n");
-    /* PORT, TEMPORARY until the virtual CD drive replaces src/cdaudio.c: InitMusic, verify_mscdex,
-       check_saved_drive_letter and verify_cdrom_response are skipped and the machine has no Rayman CD
-       (byte_CFA29 = 0, no CD music). The game's own consequence is its limited mode: check_cd_for_save sets
-       JeuCracker, so DisplayCrackers draws "LIMITED VERSION" and FIN_MAP_LOOP exits after the first map. */
-    MusicCdActive = 0;
+    InitMusic();
     input_mode = 1;
     Init_Clavier();
     atexit(ToDoAtExit);
     OptionMusicCdActive = MusicCdActive;
-    byte_CFA29 = 0;
+    verify_mscdex();
+    check_saved_drive_letter();
+    if (verify_cdrom_response())
+        MusicCdActive = OptionMusicCdActive;
     InitMemoryVariable();
     sub_5BAE0();
     sprite_clipping(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);

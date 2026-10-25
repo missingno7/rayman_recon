@@ -4,7 +4,7 @@ Runs `rayman --demo N --headless --deterministic` (fixed epoch, fresh save direc
 image hash log with the reviewed golden summary in tests/golden/demo<N>.json. Every build architecture compares
 against the same golden values, so the x86_64 build must reproduce the i686 reference (DOS pointer width) exactly.
 
-    python port/tests/e2e_demo.py RAYMAN_EXE DATA_DIR DEMO [--update]
+    python port/tests/e2e_demo.py RAYMAN_EXE DATA_DIR DEMO [CD_CUE] [--update]
 """
 import json
 import shutil
@@ -27,13 +27,17 @@ def summary(log_text):
 
 
 def main(argv):
-    exe, data, demo = argv[1], argv[2], int(argv[3])
+    args = [a for a in argv[1:] if a != "--update"]
+    exe, data, demo = str(Path(args[0]).resolve()), args[1], int(args[2])
+    cd = args[3] if len(args) > 3 else None
     update = "--update" in argv
     work = Path(tempfile.mkdtemp(prefix="rayman-e2e-"))
     try:
         log = work / "frames.txt"
         cmd = [exe, "--data", data, "--save", str(work / "save"), "--demo", str(demo), "--headless",
                "--deterministic", "--frames", str(FRAMES), "--frame-log", str(log)]
+        if cd:
+            cmd += ["--cd", cd]
         run = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
         got = summary(log.read_text() if log.exists() else "")
         got["exit"] = run.returncode

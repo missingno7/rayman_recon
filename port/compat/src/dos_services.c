@@ -1,10 +1,11 @@
 /*
  * Software interrupts and DPMI real-mode calls the historical units issue, answered as the port's machine:
- * no Windows, no MSCDEX, no mouse, a DOS 6.22 kernel, VGA mode switches. Anything else stops the program.
+ * no Windows, virtual MSCDEX, no mouse, a DOS 6.22 kernel, VGA mode switches. Anything else stops the program.
  * The replaced unit src/dosmem.c (DPMI wrappers) is implemented here with its original contracts.
  */
 #include "compat/src/pc_hardware.h"
 #include "platform/clock.h"
+#include "platform/cdrom.h"
 #include "video/vga.h"
 
 #include "compat/include/i86.h"
@@ -26,6 +27,13 @@ static void unknown(const char *kind, int intno, unsigned ax)
 static uint32_t bios_ticks(void)
 {
     return (uint32_t)(port_pc_pit_ticks() / 65536);
+}
+
+/* Original ASM 1:02748..0275b: INT 1Ah AH=0, store CX:DX at [ESI].
+   TestCdLoop and pause timing use this same BIOS tick domain. Reading never waits. */
+void sub_2748(uint32_t *out)
+{
+    *out = bios_ticks();
 }
 
 int int386(int intno, union REGS *in, union REGS *out)
@@ -86,18 +94,15 @@ void segread(struct SREGS *seg)
 
 /* ---- src/dosmem.c (DOS 1:56460..56670), replaced ---------------------------------------------------------- */
 
-/* DPMI 0100h: conventional memory is only used for real-mode buffers of replaced services; none is provided. */
-u16 dos_allocate_conventional_block(u16 bytes, s32 *selector_and_segment)
+/* DPMI 0100h: bounded virtual conventional storage, used by CD request packets. */
+u16 dos_allocate_conventional_block(u16 bytes, u32 *selector_and_segment)
 {
-    (void)bytes;
-    *selector_and_segment = 0;
-    return 0;
+    return port_cd_allocate(bytes, selector_and_segment);
 }
 
 u8 dos_free_conventional_block(u16 handle)
 {
-    (void)handle;
-    return 1;
+    return port_cd_free(handle);
 }
 
 /* Real-mode interrupt through DPMI 0300h. Installation checks of absent resident programs leave the registers
@@ -105,12 +110,12 @@ u8 dos_free_conventional_block(u16 handle)
 s16 sub_564f8(u8 interrupt_number, dos_regs_t *registers)
 {
     if (interrupt_number == 0x2f) {
+        if (port_cd_interrupt(registers)) return registers->ss;
         switch (registers->ax) {
         case 0x1600:   /* Windows enhanced mode check: AL 0 = not running */
             registers->ax = 0x1600 & 0xff00;
             return registers->ss;
         case 0x4680:   /* Windows 3.x real/standard mode check: unchanged = not running */
-        case 0x1500:   /* MSCDEX installation check: BX stays 0 = not installed */
             return registers->ss;
         default:
             break;
