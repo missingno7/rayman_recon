@@ -119,6 +119,10 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     # Incompatible pointer assignments are reviewed sites (port/docs/abi_sites.json), not build errors.
     list(APPEND RAY_HIST_FLAGS -Wno-unknown-pragmas -Werror=implicit-function-declaration
          -Werror=int-conversion -Werror=return-type -Wno-error=incompatible-pointer-types)
+    # Some original paths read locals they never wrote (e.g. SET_RAY_DIST when GET_SPRITE_POS fails: DOS used
+    # whatever the stack held). The port starts every local at zero, so such reads are identical on every run and
+    # architecture instead of depending on host stack contents (port/docs/DIVERGENCES.md).
+    list(APPEND RAY_HIST_FLAGS -ftrivial-auto-var-init=zero)
     if(MINGW)
         list(APPEND RAY_HIST_FLAGS -mno-ms-bitfields)
     endif()
@@ -139,8 +143,11 @@ add_custom_command(
     COMMENT "Extracting external data assets from RAYMAN.EXE")
 
 # game/port_main.c mirrors PcMain and is compiled exactly like the historical units it calls.
+# render/scene_capture.c reads game state for the semantic renderer (port/docs/RENDERER.md); its observation
+# point is DRAW_MAP's call in DO_MAIN_LOOP_PC_NORMAL, redirected at link time (no source change).
 add_library(rayman_hist STATIC ${RAY_HIST_SOURCES} ${RAY_PORT}/game/port_main.c ${RAY_PORT}/game/dos_records.c
-    ${RAY_ASSETS_C})
+    ${RAY_PORT}/render/scene_capture.c ${RAY_ASSETS_C})
+target_link_options(rayman_hist INTERFACE "-Wl,--wrap=DRAW_MAP")
 target_include_directories(rayman_hist PRIVATE
     ${RAY_PORT}/compat/include ${RAY_SRC}/include ${RAY_SRC} ${RAY_PORT} ${RAY_ROOT}/docs/semantics/generated)
 target_compile_options(rayman_hist PRIVATE ${RAY_HIST_FLAGS}
@@ -165,7 +172,9 @@ add_library(rayman_native STATIC
     platform/movie_trace.c
     platform/cdrom.c
     platform/cd_audio.c
-    platform/audio.c)
+    platform/audio.c
+    render/world.c
+    render/compose.c)
 target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
 target_compile_options(rayman_native PRIVATE -funsigned-char -fwrapv -fno-strict-aliasing)
@@ -205,6 +214,10 @@ include(tests/effect_diff.cmake)
 # End to end: the six original recorded demos (worlds 1-5) through the whole game, deterministic, against the reviewed golden summary
 # shared by all architectures (tests/golden).
 # The game's own RAYMAN.CFG survives a restart (two sessions, scripted menu walk).
+# Semantic renderer: exact against the original draw buffer, and a wider presentation changes nothing but margins.
+add_test(NAME port_wide_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_wide.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
+set_tests_properties(port_wide_demos PROPERTIES TIMEOUT 1800)
 add_test(NAME port_config_roundtrip COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/config_roundtrip.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
 

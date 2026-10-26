@@ -99,6 +99,12 @@ tests require CarteSonAutorisee=1 and sample activity; RAYMAN_E2E_EVIDENCE retai
 from golden summaries. Unit tests compile the current reconstructed HMI API bodies with private names and
 compare randomized operation sequences, alongside playback/PCM/interrupt tests and all nine actual PlayTchatch request paths.
 
+## Render observation point
+
+`DRAW_MAP`'s call in `DO_MAIN_LOOP_PC_NORMAL` is redirected at link time (`-Wl,--wrap=DRAW_MAP`) to
+`render/scene_capture.c`, which reads the frame's state into a render snapshot and then calls the unchanged
+`DRAW_MAP`. It reads, never writes, game state and calls no game draw function (docs/RENDERER.md 2).
+
 ## Original FLC player
 
 `movie.c` is a derivative only for native pointer/record layouts (provenance.json). Its compact/standard header

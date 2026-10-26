@@ -18,14 +18,17 @@ typedef struct port_host_options {
     int headless;        /* no window, no presentation (tests) */
     int scale;           /* initial window scale (integer); 0 = automatic */
     int fullscreen;
+    int width;           /* logical image width: 320, or wider with a presentation margin (render/compose.h) */
 } port_host_options;
 
 int port_host_init(const port_host_options *options);
 void port_host_shutdown(void);
 int port_host_headless(void);
 
-/* Present a 320x200 image of palette indices with the 6-bit-per-component DAC palette (768 bytes). */
-void port_host_present(const uint8_t *pixels, int pitch, const uint8_t *dac_rgb6);
+/* Present a width x 200 image of palette indices with the 6-bit-per-component DAC palette (768 bytes). The 200
+   rows fill the height of a 4:3 picture of the original 320 columns (pixel aspect 1.2); wider images extend it
+   sideways. */
+void port_host_present(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6);
 
 /* Process pending window/input events. Keyboard events become PC/AT set-1 scan codes (make, break, 0xE0
    prefixes, typematic repeats as repeated makes): what the DOS keyboard controller delivered on port 0x60. */

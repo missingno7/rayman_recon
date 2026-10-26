@@ -13,6 +13,7 @@
 static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Texture *texture;
+static int texture_width;
 static int headless = 1;
 static int quit_requested;
 
@@ -119,16 +120,15 @@ int port_host_init(const port_host_options *options)
         return 0;
     }
     scale = options->scale > 0 ? options->scale : 4;
-    if (!SDL_CreateWindowAndRenderer("Rayman", LOGICAL_W * scale, ASPECT_H * scale,
+    texture_width = options->width > LOGICAL_W ? options->width : LOGICAL_W;
+    if (!SDL_CreateWindowAndRenderer("Rayman", texture_width * scale, ASPECT_H * scale,
                                      SDL_WINDOW_RESIZABLE | (options->fullscreen ? SDL_WINDOW_FULLSCREEN : 0),
                                      &window, &renderer)) {
         fprintf(stderr, "SDL_CreateWindowAndRenderer: %s\n", SDL_GetError());
         return 0;
     }
     SDL_SetRenderVSync(renderer, 0);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, LOGICAL_W, LOGICAL_H);
-    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART);
-    return texture != NULL;
+    return 1;
 }
 
 void port_host_shutdown(void)
@@ -150,7 +150,7 @@ void port_host_shutdown(void)
 int port_host_headless(void) { return headless; }
 int port_host_quit_requested(void) { return quit_requested; }
 
-void port_host_present(const uint8_t *pixels, int pitch, const uint8_t *dac_rgb6)
+void port_host_present(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6)
 {
     uint32_t lut[256];
     void *dst;
@@ -158,6 +158,15 @@ void port_host_present(const uint8_t *pixels, int pitch, const uint8_t *dac_rgb6
     SDL_FRect rect;
     if (headless)
         return;
+    if (!texture || width != texture_width) {
+        if (texture)
+            SDL_DestroyTexture(texture);
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, width, LOGICAL_H);
+        if (!texture)
+            return;
+        SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART);
+        texture_width = width;
+    }
     for (x = 0; x < 256; x++) {
         /* 6-bit DAC component c becomes the 8-bit level (c << 2) | (c >> 4). */
         uint32_t r = dac_rgb6[3 * x] & 63, g = dac_rgb6[3 * x + 1] & 63, b = dac_rgb6[3 * x + 2] & 63;
@@ -167,18 +176,19 @@ void port_host_present(const uint8_t *pixels, int pitch, const uint8_t *dac_rgb6
         for (y = 0; y < LOGICAL_H; y++) {
             uint32_t *row = (uint32_t *)((uint8_t *)dst + y * dst_pitch);
             const uint8_t *src = pixels + y * pitch;
-            for (x = 0; x < LOGICAL_W; x++)
+            for (x = 0; x < width; x++)
                 row[x] = lut[src[x]];
         }
         SDL_UnlockTexture(texture);
     }
-    /* Largest 4:3 rectangle; pixel-art scaling keeps pixel edges sharp at non-integer vertical factors. */
+    /* Largest width:240 rectangle (4:3 for the original 320 columns); pixel-art scaling keeps pixel edges sharp
+       at non-integer vertical factors. */
     SDL_GetCurrentRenderOutputSize(renderer, &w, &h);
     rect.w = (float)w;
-    rect.h = (float)w * ASPECT_H / LOGICAL_W;
+    rect.h = (float)w * ASPECT_H / width;
     if (rect.h > h) {
         rect.h = (float)h;
-        rect.w = (float)h * LOGICAL_W / ASPECT_H;
+        rect.w = (float)h * width / ASPECT_H;
     }
     rect.x = (w - rect.w) / 2;
     rect.y = (h - rect.h) / 2;

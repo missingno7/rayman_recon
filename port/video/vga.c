@@ -7,6 +7,7 @@
 #include "compat/src/pc_hardware.h"
 #include "platform/clock.h"
 #include "platform/host.h"
+#include "render/compose.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -71,14 +72,21 @@ static void present(void)
     memcpy(shown_dac, dac, sizeof shown_dac);
     shown_valid = 1;
     last_present = port_clock_ns();
-    if (frame_hook)
-        frame_hook(port_vga_aperture, dac, frame_hook_user);
-    port_host_present(port_vga_aperture, 320, dac);
+    {
+        /* The presentation viewport (render/compose.c) frames the unchanged image; hooks see the image itself. */
+        int width;
+        const uint8_t *frame = port_render_compose(port_vga_aperture, &width);
+        if (frame_hook)
+            frame_hook(port_vga_aperture, dac, frame_hook_user);
+        port_host_present(frame, width, width, dac);
+    }
     port_pc_poll();
 }
 
+/* Called by the frame swaps (Swap_To_Screen and the joystick-polling swaps): the display now holds a built frame. */
 void port_vga_display_changed(void)
 {
+    port_render_on_swap(port_vga_aperture);
     dirty = 1;
     present();
 }

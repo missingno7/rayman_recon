@@ -15,6 +15,7 @@ hardware, DOS/BIOS/DPMI services, MSCDEX and the HMI sound driver.
 | `port/compat/` | port | Watcom/DOS dialect (pre-included headers) and the DOS-machine services behind it |
 | `port/video/` | port | VGA device model and native implementations of the assembly drawing contracts |
 | `port/platform/` | port | SDL3 host (window, presentation, keyboard), file service, clock |
+| `port/render/` | port | semantic renderer: render snapshots captured from game state, portable layer renderer, presentation viewport (docs/RENDERER.md) |
 | `port/game/` | port | entry points, per-unit prototype headers, serialized-record decoders, unit treatment |
 | `port/tests/` | port | native gates and the differential proof against the original assembly |
 

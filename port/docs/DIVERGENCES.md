@@ -13,6 +13,7 @@ Everything the port does differently from the DOS executable, with the reason. D
 | Free memory (DPMI 0500h) | measured | 16 MiB | InitMemoryVariable takes its full-feature branch (normal mode, all sprites, backgrounds) |
 | Block arenas | TailleMainMem* bytes | twice that on 64-bit hosts | native records with pointers are larger; only the out-of-memory threshold moves |
 | Heap contents | whatever the DPMI host left (zero on fresh pages) | every `malloc` block zero-filled | some effects read freshly allocated memory before writing it; zero-fill makes runs reproducible instead of depending on host heap layout |
+| Uninitialized locals | whatever the stack held | zero (`-ftrivial-auto-var-init=zero` for the historical units) | some paths read locals they never wrote, e.g. `SET_RAY_DIST` after a failed `GET_SPRITE_POS` (src/collision1.c): found by the gameplay-state log, where repeated identical runs gave object 46 of demo 4 different `ray_dist` values; now identical on every run and architecture, demo goldens unchanged |
 | `time()` | wall clock (the game seeds its random table with srand(time(NULL)) in MakeMyRand) | wall clock in real time; in `--deterministic` runs a fixed epoch (default 1996-01-01, `--epoch`) plus the port clock | reproducible regression runs; the interactive game stays randomized as on DOS |
 | CPU | CPUID family | Pentium (5) | only printed |
 | DOS / Windows detection | INT 21h 30h, INT 2Fh 1600h/4680h | DOS 6.22, no Windows | printed; Windows paths not taken |
