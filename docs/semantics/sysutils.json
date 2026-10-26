@@ -3415,7 +3415,7 @@
  "evidence_source_fingerprints": {
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
   "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
-  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic.c": "bd3dd552dbcbdd284411808e25990d039ce49b467a099277c20de390f940a8b1",
   "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
   "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
   "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",

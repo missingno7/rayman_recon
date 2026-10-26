@@ -789,12 +789,13 @@
      ]
     },
     "save_objects_flags": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ]
+     ],
+     "quality": "COMPILER_STEERED"
     },
     "restore_objects_flags": {
      "status": "STRICT",

@@ -34,11 +34,19 @@ bool EOA(obj_t* obj) {
 
 //1D0EC
 void save_objects_flags(void) {
+    /* COMPILER_STEERED: separate index/flag snapshots and destructive doubling
+     * reproduce DOS 1:0d0ec..0d15b; the coupled spelling is required.
+     * New local names bit_index, word_index, active and alive are INVENTED. */
     s32 i = 0;
     s32 nb_objects = level.nb_objects;
     obj_t* obj = &level.objects[0];
     while (i < nb_objects) {
-        set2bits(&saveobj[i >> 4], i & 0xF, obj->flags.alive + 2 * obj->is_active);
+        s32 bit_index = i & 0xf;
+        s32 word_index = i >> 4;
+        s32 active = obj->is_active;
+        s32 alive = obj->flags.alive;
+        active = 2 * active;
+        set2bits(&saveobj[word_index], bit_index, alive + active);
         obj++;
         i++;
     }

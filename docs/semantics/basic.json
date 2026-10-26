@@ -447,7 +447,7 @@
     "16 objects per u32: entry i uses word i>>4 and shift2*(15-(i&15)); low bit within the pair is alive, high bit active. Entry pairs run from most-significant to least-significant bits."
    ],
    "source_file": "src/basic.c",
-   "source_body_sha256": "50806196cb5ec0572e51f6c958ca6bb8616bd337fd31467feb288c5dd63b6082",
+   "source_body_sha256": "5595a70825823304373b8dc044d21be94c0de72b6ca00b830fc16cbb92c4868a",
    "readers_writers": {
     "globals": [
      "level",
@@ -614,6 +614,196 @@
    ],
    "port_notes": [
     "Preserve declared width, signed arithmetic and narrowing at assignment/call boundaries."
+   ],
+   "evidence_units": [
+    "basic.c"
+   ]
+  },
+  {
+   "id": "local:save_objects_flags:bit_index:1",
+   "kind": "local",
+   "function": "save_objects_flags",
+   "current_name": "bit_index",
+   "proposed_name": null,
+   "c_type": "s32 = i & 0xf",
+   "declarator": "s32 $ = i & 0xf",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "meaning": "Copy of i & 0xf: the 2-bit slot index of object i within its saveobj word (16 objects per word).",
+   "unit": "slot index 0..15",
+   "value_domain": {
+    "observed_code_uses": [
+     "* New local names bit_index, word_index, active and alive are INVENTED. */",
+     "s32 bit_index = i & 0xf;",
+     "set2bits(&saveobj[word_index], bit_index, alive + active);"
+    ],
+    "limitation": "Compiler-steering copy; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 bit_index = i & 0xf",
+     "uses": [
+      "* New local names bit_index, word_index, active and alive are INVENTED. */",
+      "s32 bit_index = i & 0xf;",
+      "set2bits(&saveobj[word_index], bit_index, alive + active);"
+     ],
+     "supplied_by": "basic.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "save_objects_flags STRICT (tools/verify.py basic)",
+     "supplied_by": "basic.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the former expression; kept for STRICT matching only."
+   ],
+   "evidence_units": [
+    "basic.c"
+   ]
+  },
+  {
+   "id": "local:save_objects_flags:word_index:1",
+   "kind": "local",
+   "function": "save_objects_flags",
+   "current_name": "word_index",
+   "proposed_name": null,
+   "c_type": "s32 = i >> 4",
+   "declarator": "s32 $ = i >> 4",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "meaning": "Copy of i >> 4: the saveobj word holding object i's two flag bits.",
+   "unit": "saveobj word index",
+   "value_domain": {
+    "observed_code_uses": [
+     "* New local names bit_index, word_index, active and alive are INVENTED. */",
+     "s32 word_index = i >> 4;",
+     "set2bits(&saveobj[word_index], bit_index, alive + active);"
+    ],
+    "limitation": "Compiler-steering copy; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 word_index = i >> 4",
+     "uses": [
+      "* New local names bit_index, word_index, active and alive are INVENTED. */",
+      "s32 word_index = i >> 4;",
+      "set2bits(&saveobj[word_index], bit_index, alive + active);"
+     ],
+     "supplied_by": "basic.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "save_objects_flags STRICT (tools/verify.py basic)",
+     "supplied_by": "basic.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the former expression; kept for STRICT matching only."
+   ],
+   "evidence_units": [
+    "basic.c"
+   ]
+  },
+  {
+   "id": "local:save_objects_flags:active:1",
+   "kind": "local",
+   "function": "save_objects_flags",
+   "current_name": "active",
+   "proposed_name": null,
+   "c_type": "s32 = obj->is_active",
+   "declarator": "s32 $ = obj->is_active",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "meaning": "obj->is_active, then doubled in place: the high bit (value 2) of the saved 2-bit object state.",
+   "unit": "0 or 2 after doubling",
+   "value_domain": {
+    "observed_code_uses": [
+     "* New local names bit_index, word_index, active and alive are INVENTED. */",
+     "s32 active = obj->is_active;",
+     "active = 2 * active;",
+     "set2bits(&saveobj[word_index], bit_index, alive + active);"
+    ],
+    "limitation": "Compiler-steering copy; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 active = obj->is_active",
+     "uses": [
+      "* New local names bit_index, word_index, active and alive are INVENTED. */",
+      "s32 active = obj->is_active;",
+      "active = 2 * active;",
+      "set2bits(&saveobj[word_index], bit_index, alive + active);"
+     ],
+     "supplied_by": "basic.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "save_objects_flags STRICT (tools/verify.py basic)",
+     "supplied_by": "basic.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the former expression; kept for STRICT matching only."
+   ],
+   "evidence_units": [
+    "basic.c"
+   ]
+  },
+  {
+   "id": "local:save_objects_flags:alive:1",
+   "kind": "local",
+   "function": "save_objects_flags",
+   "current_name": "alive",
+   "proposed_name": null,
+   "c_type": "s32 = obj->flags.alive",
+   "declarator": "s32 $ = obj->flags.alive",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 1,
+   "meaning": "obj->flags.alive: the low bit of the saved 2-bit object state.",
+   "unit": "0 or 1",
+   "value_domain": {
+    "observed_code_uses": [
+     "* New local names bit_index, word_index, active and alive are INVENTED. */",
+     "s32 alive = obj->flags.alive;",
+     "set2bits(&saveobj[word_index], bit_index, alive + active);"
+    ],
+    "limitation": "Compiler-steering copy; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 alive = obj->flags.alive",
+     "uses": [
+      "* New local names bit_index, word_index, active and alive are INVENTED. */",
+      "s32 alive = obj->flags.alive;",
+      "set2bits(&saveobj[word_index], bit_index, alive + active);"
+     ],
+     "supplied_by": "basic.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "save_objects_flags STRICT (tools/verify.py basic)",
+     "supplied_by": "basic.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the former expression; kept for STRICT matching only."
    ],
    "evidence_units": [
     "basic.c"
@@ -19847,7 +20037,7 @@
   }
  ],
  "source_fingerprints": {
-  "src/basic.c": "1b440e9a163f87c1c24ae47a541a84ee3680c972fb15c8dfc16b8227ce3b7b9a",
+  "src/basic.c": "bd3dd552dbcbdd284411808e25990d039ce49b467a099277c20de390f940a8b1",
   "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
   "src/include/rtypes.h": "e83748ebccbcecb65ca6e6586c2f1af9f635592ef1d0f043d30438143b291fdc",
   "src/include/palette.h": "917256c1d40722cfe4cdc1ecf1ca7b1cf58fd705fb8df7ef1bdd1eb5b325b2f5",
