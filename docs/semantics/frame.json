@@ -11877,7 +11877,7 @@
     "Lightning levels(1,9),(2,4),(4,9):save original in15;anchors0/14=(r/2,g/2,4b/5),5=4RGB/3,7=(2r/3,2g/3,b),10=2RGB,clamp63;replace rvb0 with0;interpolate0->5->7->10->14;next delay=myRand(200)+1. Cave(5,4):loop only colors0..254,save15;0/14=(r,77g/100,12b/100),replace rvb0,interpolate;then recolor128..174 in palette9 using84%,62%,12% of the ALREADY tinted rvb0 and interpolate0->9->14. Entry255 omission is retained."
    ],
    "source_file": "src/frame.c",
-   "source_body_sha256": "d528358ccaa5d2cd35444ed9335943fb722d75b3a8a6bd97a26b63a246a57364",
+   "source_body_sha256": "03c833a8d31a22d43d7fc4054a1191e8cb7f45d28b4b5fe3965bb7fcacde77ee",
    "readers_writers": {
     "globals": [
      "CompteurEclair",
@@ -12021,6 +12021,110 @@
    ],
    "port_notes": [
     "Preserve declared width,signed operations,cast/narrowing points and statement/declaration order. Lightning levels(1,9),(2,4),(4,9):save original in15;anchors0/14=(r/2,g/2,4b/5),5=4RGB/3,7=(2r/3,2g/3,b),10=2RGB,clamp63;replace rvb0 with0;interpolate0->5->7->10->14;next delay=myRand(200)+1. Cave(5,4):loop only colors0..254,save15;0/14=(r,77g/100,12b/100),replace rvb0,interpolate;then recolor128..174 in palette9 using84%,62%,12% of the ALREADY tinted rvb0 and interpolate0->9->14. Entry255 omission is retained."
+   ],
+   "evidence_units": [
+    "frame.c"
+   ]
+  },
+  {
+   "id": "local:InitPaletteSpecialPC:divisor3:2",
+   "kind": "local",
+   "function": "InitPaletteSpecialPC",
+   "current_name": "divisor3",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 2,
+   "meaning": "Compiler-steering constant 3 (COMPILER_STEERED, wave 6): set once in the lightning-level branch and used only as the divisor of the palette scale expressions; each use equals the former literal form (e.g. (8*c)/4 == 2*c for the non-negative 6-bit components).",
+   "unit": "dimensionless divisor",
+   "value_domain": {
+    "observed_code_uses": [
+     "s32 divisor3, divisor4;",
+     "divisor3 = 3;",
+     "rvb_special[5].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / divisor3);",
+     "rvb_special[5].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / divisor3);",
+     "rvb_special[5].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor3);"
+    ],
+    "limitation": "Constant within the branch; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 divisor3",
+     "uses": [
+      "s32 divisor3, divisor4;",
+      "divisor3 = 3;",
+      "rvb_special[5].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / divisor3);",
+      "rvb_special[5].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / divisor3);",
+      "rvb_special[5].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor3);"
+     ],
+     "supplied_by": "frame.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "InitPaletteSpecialPC STRICT (tools/verify.py frame)",
+     "supplied_by": "frame.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the literal divisor; keep for STRICT matching only."
+   ],
+   "evidence_units": [
+    "frame.c"
+   ]
+  },
+  {
+   "id": "local:InitPaletteSpecialPC:divisor4:3",
+   "kind": "local",
+   "function": "InitPaletteSpecialPC",
+   "current_name": "divisor4",
+   "proposed_name": null,
+   "c_type": "s32",
+   "declarator": "s32 $",
+   "signedness": "signed",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "meaning": "Compiler-steering constant 4 (COMPILER_STEERED, wave 6): set once in the lightning-level branch and used only as the divisor of the palette scale expressions; each use equals the former literal form (e.g. (8*c)/4 == 2*c for the non-negative 6-bit components).",
+   "unit": "dimensionless divisor",
+   "value_domain": {
+    "observed_code_uses": [
+     "s32 divisor3, divisor4;",
+     "divisor4 = 4;",
+     "rvb_special[7].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor4);",
+     "rvb_special[10].colors[i].r = min32(63, (8 * rvb[0].colors[i].r) / divisor4);",
+     "rvb_special[10].colors[i].g = min32(63, (8 * rvb[0].colors[i].g) / divisor4);",
+     "rvb_special[10].colors[i].b = min32(63, (8 * rvb[0].colors[i].b) / divisor4);"
+    ],
+    "limitation": "Constant within the branch; no other writer."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED compiler-steering local; no original local-name claim",
+   "evidence": [
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s32 divisor4",
+     "uses": [
+      "s32 divisor3, divisor4;",
+      "divisor4 = 4;",
+      "rvb_special[7].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor4);",
+      "rvb_special[10].colors[i].r = min32(63, (8 * rvb[0].colors[i].r) / divisor4);",
+      "rvb_special[10].colors[i].g = min32(63, (8 * rvb[0].colors[i].g) / divisor4);",
+      "rvb_special[10].colors[i].b = min32(63, (8 * rvb[0].colors[i].b) / divisor4);"
+     ],
+     "supplied_by": "frame.c"
+    },
+    {
+     "kind": "verifier",
+     "result": "InitPaletteSpecialPC STRICT (tools/verify.py frame)",
+     "supplied_by": "frame.c"
+    }
+   ],
+   "port_notes": [
+    "Behaviour identical to the literal divisor; keep for STRICT matching only."
    ],
    "evidence_units": [
     "frame.c"
@@ -15221,7 +15325,7 @@
   "src/include/type_island_abi.h": "08f0103a45b8cad235165e57cd03c312b13eb60dcbfaff3ab0908d1fe8e94094",
   "src/include/init_data_state.h": "1f6d46eb3a29c303ce37dd64041396065124bd511d7bc9b29253fc8580924577",
   "src/frame_local.h": "a0ef805824bc8b5a52a5d8c3dc6735f1efb1a244e0f8948d30c8a9647125196f",
-  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301"
+  "src/frame.c": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018"
  },
  "artifact_root": "build/workers/sem_render",
  "evidence_source_fingerprints": {
@@ -15272,7 +15376,7 @@
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "src/fee_types.h": "ce85a8b655b9b2a53c96381fe9df8aa599aa554b21f7061ccb07b478f3c9da8c",
   "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
-  "src/frame.c": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301",
+  "src/frame.c": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018",
   "src/frame_local.h": "a0ef805824bc8b5a52a5d8c3dc6735f1efb1a244e0f8948d30c8a9647125196f",
   "src/hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
   "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",

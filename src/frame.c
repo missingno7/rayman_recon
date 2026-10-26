@@ -1144,30 +1144,35 @@ void DISPLAY_FOND_MENU(void) {
 #define clip_palette_component(value) min32((value), 63)
 
 void InitPaletteSpecialPC(void) {
+    /* COMPILER_STEERED: preserve the DOS branch-local divisors, constant-first
+       clamps and repeated palette-14 source-channel computations. */
     s32 i;
+    s32 divisor3, divisor4;
     CompteurEclair = 0;
     if ((num_world == 1 && num_level == 9) ||
         (num_world == 2 && num_level == 4) ||
         (num_world == 4 && num_level == 9)) {
+        divisor4 = 4;
+        divisor3 = 3;
         for (i = 0; i < 256; ++i) {
             rvb_special[15].colors[i].r = rvb[0].colors[i].r;
             rvb_special[15].colors[i].g = rvb[0].colors[i].g;
             rvb_special[15].colors[i].b = rvb[0].colors[i].b;
-            rvb_special[0].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 8);
-            rvb_special[0].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 8);
-            rvb_special[0].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 5);
-            rvb_special[5].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 3);
-            rvb_special[5].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 3);
-            rvb_special[5].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 3);
-            rvb_special[7].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 6);
-            rvb_special[7].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 6);
-            rvb_special[7].colors[i].b = clip_palette_component(rvb[0].colors[i].b);
-            rvb_special[10].colors[i].r = clip_palette_component(2 * rvb[0].colors[i].r);
-            rvb_special[10].colors[i].g = clip_palette_component(2 * rvb[0].colors[i].g);
-            rvb_special[10].colors[i].b = clip_palette_component(2 * rvb[0].colors[i].b);
-            rvb_special[14].colors[i].r = clip_palette_component((4 * rvb[0].colors[i].r) / 8);
-            rvb_special[14].colors[i].g = clip_palette_component((4 * rvb[0].colors[i].g) / 8);
-            rvb_special[14].colors[i].b = clip_palette_component((4 * rvb[0].colors[i].b) / 5);
+            rvb_special[0].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / 8);
+            rvb_special[0].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / 8);
+            rvb_special[0].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / 5);
+            rvb_special[5].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / divisor3);
+            rvb_special[5].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / divisor3);
+            rvb_special[5].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor3);
+            rvb_special[7].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / 6);
+            rvb_special[7].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / 6);
+            rvb_special[7].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / divisor4);
+            rvb_special[10].colors[i].r = min32(63, (8 * rvb[0].colors[i].r) / divisor4);
+            rvb_special[10].colors[i].g = min32(63, (8 * rvb[0].colors[i].g) / divisor4);
+            rvb_special[10].colors[i].b = min32(63, (8 * rvb[0].colors[i].b) / divisor4);
+            rvb_special[14].colors[i].r = min32(63, (4 * rvb[0].colors[i].r) / 8);
+            rvb_special[14].colors[i].g = min32(63, (4 * rvb[0].colors[i].g) / 8);
+            rvb_special[14].colors[i].b = min32(63, (4 * rvb[0].colors[i].b) / 5);
             rvb[0].colors[i].r = rvb_special[0].colors[i].r;
             rvb[0].colors[i].g = rvb_special[0].colors[i].g;
             rvb[0].colors[i].b = rvb_special[0].colors[i].b;
@@ -1183,21 +1188,21 @@ void InitPaletteSpecialPC(void) {
             rvb_special[15].colors[i].r = rvb[0].colors[i].r;
             rvb_special[15].colors[i].g = rvb[0].colors[i].g;
             rvb_special[15].colors[i].b = rvb[0].colors[i].b;
-            rvb_special[0].colors[i].r = clip_palette_component(rvb[0].colors[i].r);
-            rvb_special[0].colors[i].g = clip_palette_component((77 * rvb[0].colors[i].g) / 100);
-            rvb_special[0].colors[i].b = clip_palette_component((12 * rvb[0].colors[i].b) / 100);
-            rvb_special[14].colors[i].r = clip_palette_component(rvb_special[0].colors[i].r);
-            rvb_special[14].colors[i].g = clip_palette_component(rvb_special[0].colors[i].g);
-            rvb_special[14].colors[i].b = clip_palette_component(rvb_special[0].colors[i].b);
+            rvb_special[0].colors[i].r = min32(63, rvb[0].colors[i].r);
+            rvb_special[0].colors[i].g = min32(63, (77 * rvb[0].colors[i].g) / 100);
+            rvb_special[0].colors[i].b = min32(63, (12 * rvb[0].colors[i].b) / 100);
+            rvb_special[14].colors[i].r = min32(63, rvb[0].colors[i].r);
+            rvb_special[14].colors[i].g = min32(63, (77 * rvb[0].colors[i].g) / 100);
+            rvb_special[14].colors[i].b = min32(63, (12 * rvb[0].colors[i].b) / 100);
             rvb[0].colors[i].r = rvb_special[0].colors[i].r;
             rvb[0].colors[i].g = rvb_special[0].colors[i].g;
             rvb[0].colors[i].b = rvb_special[0].colors[i].b;
         }
         DoFadePaletteSpecialPC(0, 14);
         for (i = 128; i <= 174; ++i) {
-            rvb_special[9].colors[i].r = clip_palette_component((84 * rvb[0].colors[i].r) / 100);
-            rvb_special[9].colors[i].g = clip_palette_component((62 * rvb[0].colors[i].g) / 100);
-            rvb_special[9].colors[i].b = clip_palette_component((12 * rvb[0].colors[i].b) / 100);
+            rvb_special[9].colors[i].r = min32(63, (84 * rvb[0].colors[i].r) / 100);
+            rvb_special[9].colors[i].g = min32(63, (62 * rvb[0].colors[i].g) / 100);
+            rvb_special[9].colors[i].b = min32(63, (12 * rvb[0].colors[i].b) / 100);
             rvb[0].colors[i].r = rvb_special[0].colors[i].r;
             rvb[0].colors[i].g = rvb_special[0].colors[i].g;
             rvb[0].colors[i].b = rvb_special[0].colors[i].b;

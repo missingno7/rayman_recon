@@ -65,6 +65,7 @@ class ParsingTests(unittest.TestCase):
         obs = SimpleNamespace(homes_seen=3, events=rows)
         groups = cgtrace.focused_events(['a','b','c'], 'b', obs, ['a','b'])
         self.assertEqual(list(groups), ['b'])
+        self.assertEqual(list(cgtrace.focused_events(['a','b','B'], 'b', obs, ['a'])), ['b'])
         self.assertEqual(groups['b'][-2]['request_index'], 0)
         with self.assertRaisesRegex(ValueError, 'cannot attribute'):
             cgtrace.focused_events(['a','b','c'], 'b', SimpleNamespace(homes_seen=2, events=rows), ['a'])

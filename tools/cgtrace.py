@@ -608,9 +608,11 @@ def group_events(names, events, publics):
 
 
 def focused_events(names, func, observer, publics):
-    """Events of the one observed function; attribution checked against every function's home pass."""
-    if (observer.homes_seen != len(names) or len({n.casefold() for n in names}) != len(names)
-            or not set(publics) <= set(names)):
+    """Events of the one observed function; attribution checked against every function's home pass.
+
+    Unlike group_events, names differing only in case (frame.c do_fade/DO_FADE) are accepted: attribution is by
+    source order and only func's trace file is written, so case-insensitive file names cannot collide."""
+    if observer.homes_seen != len(names) or len(set(names)) != len(names) or not set(publics) <= set(names):
         raise ValueError(f'cannot attribute functions: definitions={len(names)}, '
                          f'home passes={observer.homes_seen}, unmatched publics={set(publics) - set(names)}')
     rows = [e for e in observer.events if e['event'] != 'payload_loaded']

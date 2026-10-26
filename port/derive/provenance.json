@@ -50,7 +50,7 @@
    "divergences": [
     "The normal-mode joystick swap call passes (DrawBufferNormal, display_buffer): the same registers the DOS call loaded (ESI source, EDI destination)."
    ],
-   "base_sha256": "836f8035f629cee71f5d8e2b0aa1421c6f326b87a90e2e7f19ca7b340db55301"
+   "base_sha256": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018"
   },
   "jumelle.c": {
    "patch": "jumelle.patch",
