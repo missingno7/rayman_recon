@@ -25,6 +25,7 @@ never executed: only the rebuilt executable, as required.
 | Compat helpers, record decoder, assets, PIT/retrace model | `tests/unit_tests.c` |
 | Source connection | derivatives apply to reviewed bases; PcMain mirror pinned; generated prototypes current; every 64-bit-sensitive compiler site has a verdict |
 | Native renderer vs original (`tests/e2e_native.py`, `--verify-render`, six demos) | all 11,812 gameplay frames complete (every operation drawn natively) and equal to the original draw buffer and display over the full 320x200 image; every gameplay pass equal to the original's changes; gameplay-state log per swap identical with `--renderer native` (docs/RENDERER.md 8) |
+| Uninitialized-locals policy (`tests/uninit_scope.py`, measurement) | zero vs 0xFE-pattern locals: all six demos identical (x86_64); zero vs host stack: demo 4 state diverges on i686 only, images identical (DIVERGENCES.md) |
 | Margin experiment (`tests/e2e_wide.py`, reference renderer, to be replaced at stage E) | frame-hash and gameplay-state logs identical with and without `--widescreen`; original image unchanged in the centre of every dumped wide frame; margins drawn in five demos (the sixth is a firefly level, black by design) |
 
 ## Not yet verified

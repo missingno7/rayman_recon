@@ -120,9 +120,16 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     list(APPEND RAY_HIST_FLAGS -Wno-unknown-pragmas -Werror=implicit-function-declaration
          -Werror=int-conversion -Werror=return-type -Wno-error=incompatible-pointer-types)
     # Some original paths read locals they never wrote (e.g. SET_RAY_DIST when GET_SPRITE_POS fails: DOS used
-    # whatever the stack held). The port starts every local at zero, so such reads are identical on every run and
-    # architecture instead of depending on host stack contents (port/docs/DIVERGENCES.md).
-    list(APPEND RAY_HIST_FLAGS -ftrivial-auto-var-init=zero)
+    # whatever the stack held). Port policy (port/docs/DIVERGENCES.md "Uninitialized locals"): every local of the
+    # historical units starts at zero, so such reads are identical on every run and architecture instead of
+    # depending on host stack contents. RAY_UNINIT_LOCALS=pattern (0xFE bytes) or none builds the variants that
+    # measure the policy's runtime scope (port/tests/uninit_scope.py); only `zero` is a supported build.
+    set(RAY_UNINIT_LOCALS zero CACHE STRING "Historical units' uninitialized locals: zero (policy), pattern, none")
+    if(RAY_UNINIT_LOCALS STREQUAL "zero" OR RAY_UNINIT_LOCALS STREQUAL "pattern")
+        list(APPEND RAY_HIST_FLAGS -ftrivial-auto-var-init=${RAY_UNINIT_LOCALS})
+    elseif(NOT RAY_UNINIT_LOCALS STREQUAL "none")
+        message(FATAL_ERROR "RAY_UNINIT_LOCALS must be zero, pattern or none")
+    endif()
     if(MINGW)
         list(APPEND RAY_HIST_FLAGS -mno-ms-bitfields)
     endif()
