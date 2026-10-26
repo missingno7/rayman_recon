@@ -14,7 +14,9 @@
 #define port_mkdir(p) mkdir((p), 0777)
 #endif
 
-static char data_dir[1024];
+static char data_dirs[32][1024];
+static size_t data_count;
+#define data_dir data_dirs[0]
 static char save_dir[1024];
 
 static int is_dir(const char *p)
@@ -48,10 +50,19 @@ static void make_dirs(const char *path)
 
 int port_files_init(const char *data, const char *save)
 {
-    snprintf(data_dir, sizeof data_dir, "%s", data);
+    data_count = 0;
+    if (!port_files_add_data(data)) return 0;
     snprintf(save_dir, sizeof save_dir, "%s", save);
     make_dirs(save_dir);
     return is_dir(data_dir) && is_dir(save_dir);
+}
+
+int port_files_add_data(const char *data)
+{
+    if (!data || data_count == 32 || strlen(data) >= sizeof data_dirs[0] || !is_dir(data))
+        return 0;
+    snprintf(data_dirs[data_count++], sizeof data_dirs[0], "%s", data);
+    return 1;
 }
 
 const char *port_files_data_dir(void) { return data_dir; }
@@ -111,6 +122,14 @@ static int find_ci(const char *base, const char *rel, char *out, size_t n)
 #endif
 }
 
+static int find_data(const char *rel, char *out, size_t n)
+{
+    size_t i;
+    for (i = 0; i < data_count; ++i)
+        if (find_ci(data_dirs[i], rel, out, n)) return 1;
+    return 0;
+}
+
 int port_files_resolve(const char *dos_path, int for_write, char *out, size_t out_size)
 {
     char rel[512];
@@ -119,8 +138,8 @@ int port_files_resolve(const char *dos_path, int for_write, char *out, size_t ou
         if (for_write) { errno = EROFS; return 0; }
         if (!port_cd_present()) { errno = ENOENT; return 0; }
         normalise(dos_path, rel, sizeof rel);
-        /* Installed-data fallback: CD reads never consult the writable save overlay. */
-        return find_ci(data_dir, rel, out, out_size);
+        /* Installed-data fallback: search player-selected roots, never the save overlay or CD image. */
+        return find_data(rel, out, out_size);
     }
     normalise(dos_path, rel, sizeof rel);
     if (for_write) {
@@ -137,5 +156,5 @@ int port_files_resolve(const char *dos_path, int for_write, char *out, size_t ou
         }
         return 1;
     }
-    return find_ci(save_dir, rel, out, out_size) || find_ci(data_dir, rel, out, out_size);
+    return find_ci(save_dir, rel, out, out_size) || find_data(rel, out, out_size);
 }

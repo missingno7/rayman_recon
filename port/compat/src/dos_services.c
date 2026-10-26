@@ -26,7 +26,7 @@ static void unknown(const char *kind, int intno, unsigned ax)
 /* BIOS time-of-day ticks (18.2065 Hz: PIT/65536) since the port clock started. */
 static uint32_t bios_ticks(void)
 {
-    return (uint32_t)(port_pc_pit_ticks() / 65536);
+    return port_pc_bios_ticks();
 }
 
 /* Original ASM 1:02748..0275b: INT 1Ah AH=0, store CX:DX at [ESI].

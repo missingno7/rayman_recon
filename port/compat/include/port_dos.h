@@ -20,6 +20,8 @@ extern "C" {
 FILE *port_fopen(const char *path, const char *mode);
 int port_open(const char *path, int watcom_flags, ...);
 int port_read(int fd, void *buf, unsigned count);
+/* DOS success (0) includes a short read or EOF; actual is written on success. */
+int32_t _dos_read(int32_t fd, void *buf, uint32_t count, uint32_t *actual);
 int port_write(int fd, const void *buf, unsigned count);
 int port_close(int fd);
 long port_lseek(int fd, long offset, int origin);

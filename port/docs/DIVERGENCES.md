@@ -23,9 +23,13 @@ Everything the port does differently from the DOS executable, with the reason. D
 | Protection: `exit_if_not_cd_drive` | INT 21h 36h on the CD drive must report a read-only medium | succeeds | the player's own data stands in for the CD |
 | CD request memory | conventional memory below 1 MiB (DPMI 0100h) | one bounded port-owned area addressed by real-mode tokens, used only by the CD transport | the request blocks carry segment:offset addresses by protocol; the tokens never encode host addresses |
 | Text screen | AfficheEntete writes B8000h | skipped by the mirror | console output only |
-| Intro movie | playVideo("intro.dat") | skipped by the mirror | movie player not ported yet |
+| Data search path | one installed game directory (or save path for CD launch) | save overlay, then ordered player-chosen `--data` roots | lets the player supply installed movie files; no automatic movie/CD-image lookup |
 
 ## Derivative changes (same results, different spelling)
+
+- `display.c`: declare the actual `playVideo(const char *, const char *, u8)` signature and pass its path buffer; the conclusion keeps the same address, track 21 and call order.
+- `movie.c`: native work/surface/info records, pointer-sized palette context, `sizeof` clears and named timer/sound members. File-header prefix stays identical; decoder, calculation, pacing, input order, CD policy and final 32-step fade stay original. Optional movie trace observes state only.
+- PIT0 reloading restarts its fractional phase while retaining accumulated whole BIOS ticks (BOUNDARY.md); IRQ0 and INT 1Ah share this model.
 
 - `hifi.c`: decode serialized 16-byte bank records into native fields, bind pointers without truncation, use the full native config layout matching data_6664.c, and replace the speech flag byte offset with a field operation. All calculations and call order remain.
 - `load.c`: DOS object records decoded field by field; file words stored into pointer fields sign-extended; BIOS

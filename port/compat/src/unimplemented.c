@@ -46,8 +46,6 @@ ABSENT(block_clear, "Mode X tile plane")
 ABSENT(block_copy, "Mode X tile plane")
 ABSENT(sub_1268A, "Mode X VGA cache upload")
 
-/* Movies: the FLC player (src/movie.c) reads with DOS _dos_read; not ported yet (docs/port/MOVIE_FORMAT.md). */
-ABSENT(_dos_read, "movie file read")
 /* BIOS services without a caller on the supported paths. */
 ABSENT(bios_wait_timer, "INT 15h wait (unused benchmark, docs/port/PLATFORM_OPEN.md)")
 /* VGA graphics-controller write inside an effect (effect1), and the sound fatal-error text mode switch. */

@@ -19,6 +19,8 @@ void port_pc_poll(void);
 
 /* PIT ticks (1.193182 MHz) of the port clock. */
 uint64_t port_pc_pit_ticks(void);
+/* IRQ0 periods elapsed; programming channel 0 retains ticks and restarts its phase. */
+uint32_t port_pc_bios_ticks(void);
 
 /* Abort with a clear message: an untreated DOS/hardware service was reached. */
 void port_unimplemented(const char *what);

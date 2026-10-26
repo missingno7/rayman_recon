@@ -61,15 +61,48 @@ static uint16_t pit_counter_at(uint64_t tick)
     return (uint16_t)(pit_reload - (uint32_t)(elapsed % pit_reload));
 }
 
+/* ---- PIT channel 0 (movie timer and BIOS IRQ0 clock) ----------------------------------------------------- */
+static uint64_t pit0_load_tick, pit0_last_latch, pit0_last_poll;
+static uint32_t pit0_reload = 65536, pit0_bios_base;
+static uint16_t pit0_latched;
+static uint8_t pit0_new_low;
+static int pit0_write_low = 1, pit0_read_low = 1, pit0_mode = 3;
+
+uint32_t port_pc_bios_ticks(void)
+{
+    return pit0_bios_base + (uint32_t)((port_pc_pit_ticks() - pit0_load_tick) / pit0_reload);
+}
+
+static uint16_t pit0_counter(void)
+{
+    uint64_t t = port_pc_pit_ticks(), elapsed;
+    /* Same ISA latch cost as channel 2. It also makes deterministic busy waits progress. */
+    if (t <= pit0_last_latch) {
+        if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
+            port_clock_wait_until(((pit0_last_latch + 1) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
+        t = pit0_last_latch + 1;
+    }
+    pit0_last_latch = t;
+    /* Poll during the unchanged movie busy wait, including its audio/CD and keyboard services. */
+    if (t - pit0_last_poll >= PORT_PIT_HZ / 1000) {
+        pit0_last_poll = t;
+        port_pc_poll();
+    }
+    elapsed = (t - pit0_load_tick) % pit0_reload;
+    /* The movie uses mode 2; the BIOS default/restored mode 3 decrements by two. */
+    if (pit0_mode == 3) elapsed = (elapsed * 2) % pit0_reload;
+    return (uint16_t)(pit0_reload - (uint32_t)elapsed);
+}
+
 /* ---- BIOS data area ------------------------------------------------------------------------------------ */
-/* Tick count at 0040:006C (linear 0x46C): PIT channel 0 at its BIOS divisor 65536. Code polls it in loops
+/* Tick count at 0040:006C (linear 0x46C): IRQ0 periods (default divisor 65536). Code polls it in loops
    (load_world waits for two tick edges); in deterministic time each read moves the clock to the next edge. */
 uint8_t port_bios_tick_byte(void)
 {
     uint64_t pit = port_pc_pit_ticks();
-    uint8_t value = (uint8_t)(pit / 65536);
+    uint8_t value = (uint8_t)port_pc_bios_ticks();
     if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-        port_clock_wait_until(((pit / 65536 + 1) * 65536 * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
+        port_clock_wait_until(((pit0_load_tick + ((pit - pit0_load_tick) / pit0_reload + 1) * pit0_reload) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
     else
         port_pc_poll();
     return value;
@@ -126,6 +159,11 @@ unsigned inp(unsigned port)
     case 0x61: return port61;
     case 0x201: return 0xff;                 /* game port, nothing connected (compat/src/gameport.c) */
     case 0x21: return pic_mask;
+    case 0x40: {
+        uint8_t v = pit0_read_low ? (uint8_t)pit0_latched : (uint8_t)(pit0_latched >> 8);
+        pit0_read_low = !pit0_read_low;
+        return v;
+    }
     case 0x42: {
         uint8_t v = pit_read_low ? (uint8_t)pit_latched : (uint8_t)(pit_latched >> 8);
         pit_read_low = !pit_read_low;
@@ -152,12 +190,31 @@ unsigned outp(unsigned port, unsigned value)
     case 0x21: pic_mask = (uint8_t)value; return value;
     case 0x61: port61 = (uint8_t)value; return value;
     case 0x43:
-        if ((value & 0xc0) == 0x80 && (value & 0x30) == 0) {   /* latch channel 2 */
+        if ((value & 0xc0) == 0) {
+            if ((value & 0x30) == 0) {
+                pit0_latched = pit0_counter();
+                pit0_read_low = 1;
+            } else if ((value & 0x30) == 0x30 && ((value & 0x0e) == 4 || (value & 0x0e) == 6) && !(value & 1)) {
+                pit0_mode = (value >> 1) & 7;
+                pit0_write_low = pit0_read_low = 1;
+            } else port_unimplemented("PIT channel 0 mode/access");
+        } else if ((value & 0xc0) == 0x80 && (value & 0x30) == 0) {   /* latch channel 2 */
             pit_latched = pit_counter_at(pit_latch_tick());
             pit_read_low = 1;
         } else if ((value & 0xc0) == 0x80) {                   /* channel 2 mode/access */
             pit_write_low = 1;
         }
+        return value;
+    case 0x40:
+        if (pit0_write_low) pit0_new_low = (uint8_t)value;
+        else {
+            /* IRQ0 count is retained; reloading restarts the fractional counter phase. */
+            pit0_bios_base = port_pc_bios_ticks();
+            pit0_reload = pit0_new_low | (value << 8);
+            if (!pit0_reload) pit0_reload = 65536;
+            pit0_load_tick = port_pc_pit_ticks();
+        }
+        pit0_write_low = !pit0_write_low;
         return value;
     case 0x42:
         if (pit_write_low) {

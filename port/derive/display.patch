@@ -1,0 +1,20 @@
+--- a/src/display.c
++++ b/src/display.c
+@@ -189,7 +189,7 @@
+ extern void LOAD_VIGNET_GAME(mem_t *mem);
+ extern void INIT_ANIM_VICTOIRE(void);
+ extern void DO_RAYMAN_WINS(void);
+-extern void playVideo(mem_t *mem, const char *filename, s16 video_id);
++extern s32 playVideo(const char *path, const char *filename, u8 audio_track); /* PORT: actual native signature. */
+ extern void POINTEUR_BOUTONS_OPTIONS_BIS(void);
+ extern void INIT_HORLOGES(void);
+ extern void block_free(mem_t *mem);
+@@ -962,7 +962,7 @@
+     star_ray_dev = 0;
+     if (You_Win) {
+         if (num_level_choice > 1 && Frequence != 0x46)
+-            playVideo(&demo_video_mem, "conclu.dat", 21);
++            playVideo(demo_video_mem, "conclu.dat", 21); /* PORT: the buffer is a path. */
+         num_level = 4;
+         num_world = 6;
+         align_mem_desc(&main_mem_level);

@@ -26,7 +26,23 @@ build/port/rayman.exe --data D:/Prog/rayman_recon/assets/GOG --cd D:/Prog/rayman
 
 `--cd PATH.cue` inserts the player's Rayman CD image in the virtual drive (CD music, protection checks); without
 it the drive is empty and the game asks for the CD as the original did. `--demo N` (0..5) plays one of the original recorded demos; `--headless --deterministic --frames N --frame-log F`
-gives a reproducible per-frame hash log; `--dump-frames DIR --dump-every N` writes BMPs. Saves go to the SDL pref
+gives a reproducible per-frame hash log; `--dump-frames DIR --dump-every N` writes BMPs. `--data DIR` may be repeated (up to 32 roots); reads search saves first, then those directories in the given
+order, using the first existing match. Explicit `--data` roots replace `RAYMAN_DATA`. Writes still go only to
+the save directory. Every root participates in all reads: saves/configuration missing from an earlier root
+can also come from a later root. Movies retain the DOS filenames `intro.dat` / `conclu.dat`: missing files return -5 and
+play is skipped. To use movie files from a full install without replacing the GOG game data:
+
+```bash
+rayman --data D:/Prog/rayman_recon/assets/GOG --data D:/Prog/rayman_recon/assets/DOS --cd D:/Prog/rayman_recon/assets/DOS_CD/RAYMAN.cue --menus
+```
+
+No movie lookup is performed on the virtual CD image. As in PcMain, the intro runs after the player leaves
+the menus to start a game (except demos and the `Frequence == 'F'` path); the conclusion uses the existing
+victory path. The original player, frame pacing, palette fade and CD track windows run natively.
+`RAYMAN_MOVIE_TRACE=FILE` optionally logs entry/result, decoded frames, selected presentation frames, CD row/state,
+port-clock timestamps and CD audio queue size; `RAYMAN_CD_TRACE=FILE` logs the actual device commands.
+
+Saves go to the SDL pref
 directory unless `--save DIR` is given. Alt+Enter toggles fullscreen.
 
 ## Gates

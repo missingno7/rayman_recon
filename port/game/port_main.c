@@ -96,7 +96,8 @@ void init_arg(s32 argc, char **argv);
 u8 detect_dos_version(u8 *major_version, u8 *minor_version);
 u8 detect_windows(u8 *first_result, u8 *second_result);
 extern u8 DosDetect, HVerDos, LVerDos, WindowsLance, NVersionWindows, HVersionWindows;
-extern char saved_argv[255];
+extern char saved_argv[255], demo_video_mem[100];
+s32 playVideo(const char *path, const char *filename, u8 audio_track);
 void rayman_dos_main(int argc, char **argv);
 
 /* The DOS command line the port runs as: the game installed in C:\RAYMAN (PORT: argv[0] is only compared with
@@ -173,7 +174,8 @@ static void mirror_pcmain(int run, int demo)
         } else {
             DO_NEW_MENUS();
         }
-        /* PORT: the intro movie (playVideo "intro.dat") is not ported yet. */
+        if (!fin_de_rayman && !ModeDemo && Frequence != 'F')
+            playVideo(demo_video_mem, "intro.dat", 20);
         while (!fin_du_jeu && status_bar.lives >= 0 && new_world) {
             MakeMyRand(1);
             SPECIAL_INIT();

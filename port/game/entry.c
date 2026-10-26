@@ -142,6 +142,8 @@ int main(int argc, char **argv)
 {
     const char *data = getenv("RAYMAN_DATA");
     const char *save = NULL;
+    const char *data_roots[32];
+    int data_count = 0;
     const char *cd = getenv("RAYMAN_CD");
     const char *cd_drive = getenv("RAYMAN_CD_DRIVE");
     char cd_letter = cd_drive && *cd_drive ? cd_drive[0] : 'D';
@@ -153,7 +155,10 @@ int main(int argc, char **argv)
     for (i = 1; i < argc; i++) {
         const char *a = argv[i];
         const char *v = i + 1 < argc ? argv[i + 1] : NULL;
-        if (!strcmp(a, "--data") && v) data = argv[++i];
+        if (!strcmp(a, "--data") && v) {
+            if (data_count == 32) { fprintf(stderr, "rayman: at most 32 --data directories\n"); return 2; }
+            data_roots[data_count++] = argv[++i];
+        }
         else if (!strcmp(a, "--save") && v) save = argv[++i];
         else if (!strcmp(a, "--cd") && v) cd = argv[++i];
         else if (!strcmp(a, "--cd-drive") && v && strlen(v)==1) cd_letter = argv[++i][0];
@@ -175,6 +180,7 @@ int main(int argc, char **argv)
             return 2;
         }
     }
+    if (data_count) data = data_roots[0]; /* Explicit roots replace RAYMAN_DATA. */
     if (!data) {
         fprintf(stderr, "rayman: give the original game directory with --data DIR (or RAYMAN_DATA)\n");
         return 2;
@@ -188,6 +194,12 @@ int main(int argc, char **argv)
     if (!port_files_init(data, save)) {
         fprintf(stderr, "rayman: data directory %s or save directory %s is not usable\n", data, save);
         return 2;
+    }
+    for (i = 1; i < data_count; ++i) {
+        if (!port_files_add_data(data_roots[i])) {
+            fprintf(stderr, "rayman: data directory %s is not usable\n", data_roots[i]);
+            return 2;
+        }
     }
     port_clock_init(deterministic ? PORT_CLOCK_DETERMINISTIC : PORT_CLOCK_REALTIME);
     if (!port_host_init(&host))

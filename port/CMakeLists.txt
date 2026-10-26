@@ -162,6 +162,7 @@ add_library(rayman_native STATIC
     platform/host.c
     platform/files.c
     platform/clock.c
+    platform/movie_trace.c
     platform/cdrom.c
     platform/cd_audio.c
     platform/audio.c)
@@ -236,3 +237,18 @@ add_executable(port_hmi_tests tests/hmi_tests.c ${HMI_REFERENCE})
 target_include_directories(port_hmi_tests PRIVATE ${RAY_SRC}/hmi)
 target_link_libraries(port_hmi_tests PRIVATE rayman_native rayman_hist rayman_native m)
 add_test(NAME port_hmi_tests COMMAND port_hmi_tests ${RAY_DATA} ${CMAKE_CURRENT_BINARY_DIR}/hmi-test-save)
+
+# Original FLC decoder, private native layout and independent scalar chunk fixtures/corpus.
+set(RAY_MOVIE_TEST_DATA "${RAY_ROOT}/assets/DOS" CACHE PATH "Player's read-only INTRO.DAT/CONCLU.DAT test inputs")
+add_executable(port_movie_tests tests/movie_tests.c)
+add_dependencies(port_movie_tests rayman_hist)
+target_compile_options(port_movie_tests PRIVATE ${RAY_HIST_FLAGS}
+    "SHELL:-include ${RAY_PORT}/compat/include/port_watcom.h")
+target_compile_definitions(port_movie_tests PRIVATE PORT_MOVIE_SOURCE="${RAY_DERIVED_DIR}/movie.c")
+target_include_directories(port_movie_tests PRIVATE ${RAY_PORT}/compat/include ${RAY_SRC}/include ${RAY_SRC} ${RAY_PORT})
+target_link_libraries(port_movie_tests PRIVATE rayman_native rayman_hist rayman_native m)
+add_test(NAME port_movie_tests COMMAND port_movie_tests ${RAY_MOVIE_TEST_DATA} ${CMAKE_CURRENT_BINARY_DIR}/movie-test-save ${RAY_CD_TEST_IMAGE})
+
+add_test(NAME port_movie_e2e COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_movie.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_MOVIE_TEST_DATA} ${RAY_CD_TEST_IMAGE})
+set_tests_properties(port_movie_e2e PROPERTIES TIMEOUT 600)

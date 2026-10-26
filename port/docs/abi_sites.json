@@ -264,8 +264,8 @@
    "unit": "src/display.c",
    "code": "playVideo(&demo_video_mem, \"conclu.dat\", 21);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "display.c derivative gives the conclusion call the actual native playVideo prototype and char-buffer argument; same address and track 21."
   },
   {
    "unit": "src/effect6ec80.c",
@@ -453,43 +453,43 @@
    "unit": "src/movie.c",
    "code": "status = sub_3AA70(local.work, local.path);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/movie.c",
    "code": "status = sub_3B014(local.work, local.info);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/movie.c",
    "code": "status = sub_3B138(local.work, local.info);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/movie.c",
    "code": "sub_3AA4C(work);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/movie.c",
    "code": "sub_3AFB4(local.work, local.info);",
    "warning": "-Wincompatible-pointer-types",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/movie.c",
    "code": "writer((u32)surface, index, src, run);",
    "warning": "-Wpointer-to-int-cast",
-   "verdict": "NOT_ON_PORT_PATH",
-   "reason": "FLC movie player; not ported yet"
+   "verdict": "DERIVED",
+   "reason": "movie.c derivative uses native records/members, typed pointer parameters and a pointer-sized palette context; serialized prefix checked by static assertions."
   },
   {
    "unit": "src/pcmain.c",

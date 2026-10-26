@@ -118,6 +118,22 @@ long port_filelength(int fd)
 }
 #endif
 
+/* Watcom _dos_read: zero on any successful read, including short reads/EOF.
+   On failure return a DOS error (and set errno); do not overwrite actual. */
+int32_t _dos_read(int32_t fd, void *buffer, uint32_t count, uint32_t *actual)
+{
+    int n = port_read(fd, buffer, count);
+    if (n < 0) {
+        switch (errno) {
+        case EBADF: return 6;  /* invalid handle */
+        case EACCES: return 5;
+        default: return 30;    /* read fault */
+        }
+    }
+    *actual = (uint32_t)n;
+    return 0;
+}
+
 int port_unlink(const char *path)
 {
     char host[1024];

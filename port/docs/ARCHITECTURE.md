@@ -47,7 +47,7 @@ A unit whose code depends on the DOS machine in a way no boundary service can ab
 against its `src/` file, each change marked `/* PORT: ... */`, with reason and divergence list in
 `derive/provenance.json`. The build applies the patch to the current `src/` file, so matching improvements flow
 into the port automatically; `tools/derive.py check` (a ctest gate) fails when the base changed since review.
-Current derivatives (17): `bss/bt.h` (BSS layout), `cdaudio.c` (CD transport), `hifi.c` (serialized banks, request/config native views), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
+Current derivatives (19): `bss/bt.h` (BSS layout), `cdaudio.c` (CD transport), `hifi.c` (serialized banks, request/config native views), `sysutils.c`, `load.c`, `data/blk_215c.c`, `box.c`, `map_ngawe.c`, `frame.c`, `jumelle.c`, `movie.c` (native work/surface records and palette context), `display.c` (conclusion caller prototype), and the screen effects `effect2.c`, `effect50350.c`, `effect633e0.c`, `effect6c3b0.c`, `effect6ec80.c`, `effecthelp.c`, `blood.c` (literal sizes of pointer-carrying records, a texture pointer kept in `u32`, descriptor offsets, truncated address comparison).
 
 `game/port_main.c` mirrors `PcMain` call for call for the test entries; `tools/mirror.py` pins the mirrored
 bodies so a change to `PcMain` forces a review.
@@ -89,6 +89,10 @@ between the x86_64 and i686 builds on the same deterministic input exposes a 64-
 - **PIT channel 2 / timing entries** (`compat/src/pc_hardware.c`): `clock_ticks`, `wait_until`, `speaker_enable`,
   `synchro`, `endsynchro` keep their original algorithms (docs/port/ASM_SPEC.md) on a modelled counter. Each latch
   advances at least one PIT tick, as an ISA port read did; `clock_ticks` treats equal reads as a wrap.
+- **PIT channel 0 / BIOS time** (`compat/src/pc_hardware.c`): the original movie timer uses a separate latched
+  counter and programs mode 2 / divisor 65536. INT 1Ah and the BIOS tick byte count completed IRQ0 periods;
+  reloading retains whole ticks and restarts the fractional phase (BOUNDARY.md). Movie busy waits poll the
+  existing host/keyboard/CD/HMI boundary.
 - **VGA** (`video/vga.c`): the A0000h window the game draws into, the 6-bit DAC, the retrace signal derived from
   the programmed CRTC/misc registers (the game selects 50..100 Hz), BIOS modes. Presentation is a side effect of
   the device, like a monitor: an image is shown at each retrace or swap when the window or DAC changed.

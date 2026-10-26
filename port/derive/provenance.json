@@ -144,6 +144,25 @@
     "Speech request flags |= 0x100 replaces DOS byte-offset 0x29."
    ],
    "base_sha256": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04"
+  },
+  "movie.c": {
+   "patch": "movie.patch",
+   "reason": "The DOS movie stack arrays overlap a pointer-bearing work record and use literal surface/timer offsets. The palette writer passes a surface address in u32.",
+   "divergences": [
+    "Use native work/surface records and sizeof clears, named timer and sound_mode members, and typed pointer arguments. The 128-byte serialized work prefix remains identical (static assertions); no file-header decoding or calculation changes.",
+    "The palette writer context is a native surface pointer (ignored by both writers), avoiding address truncation.",
+    "Audited all literals, byte offsets and u32 indices: +6 chunk payload, 16/128-byte serialized prefixes, 320 stride and surface_offset remain file/pixel quantities. No subtracting u32 index or wrapped negative pointer offset occurs. Chunk semantics, signed8 run narrowing, unusual odd-byte control, pacing, palette/CD/input order and error codes are unchanged.",
+    "Optional RAYMAN_MOVIE_TRACE observations at entry/return, decoded frames and fade start; no calculations, call order between game/services or clock advances changed."
+   ],
+   "base_sha256": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb"
+  },
+  "display.c": {
+   "patch": "display.patch",
+   "reason": "The conclusion caller declares playVideo as void(mem_t *,const char *,s16), while its actual definition takes a path string and u8 track and returns s32.",
+   "divergences": [
+    "Declare the actual native playVideo signature and pass demo_video_mem as its char buffer, rather than a pointer to the array through mem_t *. The path address and track 21 are identical; return value remains ignored; no scene or service call order changes."
+   ],
+   "base_sha256": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20"
   }
  }
 }
