@@ -121,6 +121,8 @@ typedef struct port_deform {
 
 void port_native_deform(const port_deform *e);
 
+const char *port_effect_name(int effect);
+
 /* Draw one PORT_OP_EFFECT operation onto the surfaces of its buffers. */
 void port_native_effect(const port_op *op, port_surface *const *surfaces);
 

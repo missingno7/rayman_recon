@@ -517,6 +517,14 @@ static void fire(const port_effect_fire *e, port_surface *const *surfaces)
             put(dst, e->destination.offset + (int64_t)y * 320 + x, e->field[y * e->width + x]);
 }
 
+const char *port_effect_name(int effect)
+{
+    static const char *names[PORT_EFFECT_COUNT] = {
+        "?", "curl", "segment", "plasma", "binoculars", "lens", "grey", "frame", "zoom_in", "blend", "dissolve",
+        "copy_rect", "fire"};
+    return effect > 0 && effect < PORT_EFFECT_COUNT ? names[effect] : "?";
+}
+
 void port_native_effect(const port_op *op, port_surface *const *surfaces)
 {
     switch (op->flags) {

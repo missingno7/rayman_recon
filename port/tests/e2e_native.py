@@ -44,6 +44,10 @@ SCENARIOS = [(f'demo{n}', ['--demo', str(n)], FRAMES) for n in range(6)] + [
     ('pause', ['--menus', '--keys', str(KEYS / 'pause.txt')], 7500),
     # Down, Down, Enter: the credits
     ('credits', ['--menus', '--keys', str(KEYS / 'credits.txt')], 6000),
+    # the new game under other start-up clocks: the vignette transitions are chosen by the game's random table,
+    # seeded from the clock (3000: the row wipe; 4000: a segment-rasterizer transition)
+    ('start_epoch3000', ['--menus', '--epoch', '3000', '--keys', str(KEYS / 'start_game.txt')], 3700),
+    ('start_epoch4000', ['--menus', '--epoch', '4000', '--keys', str(KEYS / 'start_game.txt')], 3700),
 ]
 # With the movie data (optional fourth argument): the intro movie, the world map and its fire-animated quit box.
 MOVIE_SCENARIO = ('movie', ['--menus', '--keys', str(KEYS / 'movie_menu.txt')], 5000)

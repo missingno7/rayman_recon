@@ -67,6 +67,7 @@ static struct {
     long unsupported[PORT_PASS_COUNT][PORT_PRIM_COUNT];
     long display_writes, overflow, origin_moves, presents, present_exact, volatile_images;
     long ops[2][PORT_PASS_COUNT][PORT_OP_KIND_COUNT];
+    long effects[PORT_EFFECT_COUNT];
     int reported;
 } st;
 
@@ -148,8 +149,6 @@ static int touches_video(const void *p, size_t n)
     return 0;
 }
 
-static int video_range(const void *p, size_t n, int64_t *offset) { return region(p, n, offset); }
-
 static int locate(const uint8_t *p, int32_t *x, int32_t *y)
 {
     int64_t off;
@@ -204,7 +203,7 @@ static void record_fill(void *dest, uint8_t value, size_t n)
     port_op *op;
     if (!n || !touches_video(dest, n) || claimed())
         return;
-    target = video_range(dest, n, &off);
+    target = region(dest, n, &off);
     if (target == TARGET_OTHER || n > INT32_MAX) {
         note("fill", dest, NULL, n);
         unsupported(PORT_PRIM_MEMORY, NULL);
@@ -233,8 +232,8 @@ static void record_copy(void *dest, const void *source, size_t n)
         }
         return;
     }
-    target = video_range(dest, n, &off);
-    source_target = touches_video(source, n) ? video_range(source, n, &src_off) : -1;
+    target = region(dest, n, &off);
+    source_target = touches_video(source, n) ? region(source, n, &src_off) : -1;
     if (target == TARGET_OTHER || source_target == TARGET_OTHER || n > INT32_MAX) {
         note("copy", dest, source, n);
         unsupported(PORT_PRIM_MEMORY, NULL);
@@ -1161,8 +1160,11 @@ static void end_frame(void)
     }
     {
         int i;
-        for (i = 0; i < rec.nb_ops; i++)
+        for (i = 0; i < rec.nb_ops; i++) {
             st.ops[g][rec.ops[i].pass][rec.ops[i].kind]++;
+            if (rec.ops[i].kind == PORT_OP_EFFECT && rec.ops[i].flags < PORT_EFFECT_COUNT)
+                st.effects[rec.ops[i].flags]++;
+        }
     }
     st.display_writes += rec.display_writes;
     st.overflow += rec.overflow;
@@ -1260,6 +1262,9 @@ void port_record_report(void)
         if (st.segments[p])
             printf("render pass %s: segments=%ld bad_segments=%ld bad_px=%lld\n", port_pass_name(p), st.segments[p],
                    st.bad_segments[p], st.bad_px[p]);
+    for (k = 1; k < PORT_EFFECT_COUNT; k++)
+        if (st.effects[k])
+            printf("render effect %s: %ld\n", port_effect_name(k), st.effects[k]);
     for (k = 0; k < nb_scenes; k++)
         printf("render scene %s: frames=%ld complete=%ld exact=%ld\n", scenes[k].name, scenes[k].frames,
                scenes[k].complete, scenes[k].exact);

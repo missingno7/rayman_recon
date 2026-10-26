@@ -32,7 +32,7 @@ configurable viewport and presentation (4:3, 16:9, 21:9), later optional interpo
 |---|---|---|
 | Gameplay frames of the normal-mode loop (`DO_MAIN_LOOP_PC_NORMAL`): background bands/columns or clear, rear and front weather, map, objects (Rayman, enemies, projectiles, cymbals as sprites), pixel particles, foreground band sprites, firefly darkness, border clear, HUD sprites, time display | **yes, complete in all six demos** | 11,812 gameplay frames, every one drawn only from its recorded frame and equal to the original draw buffer and display over the full 320x200 image (section 8) |
 | Native operations no demo frame reaches (background-off clear, stars, deformation-free boss bar, fairy text, time display, colour sprites) | yes, unverified | same operations as above, but no frame of the demos exercises them (section 4 "parity"); test scenarios needed |
-| Scenes outside the gameplay loop reached by the test scenarios: start-up logo, title animation, main menu with plasma boxes, options menu with the sound gauge, save-slot screen with name entry (deformed letters), world map with its binocular view, world vignettes with the page-curl, segment-quad and moving-lens transitions, the in-game options menu (greyscale capture of the frame, translucent frame, zoom-in and fades), the pause screen (spinning snapshot of the frame), the credits, the intro movie (FLC player), the world map's fire-animated quit box | **yes** | every frame and every presented image of the thirteen scenarios (section 8) equal to the reference |
+| Scenes outside the gameplay loop reached by the test scenarios: start-up logo, title animation, main menu with plasma boxes, options menu with the sound gauge, save-slot screen with name entry (deformed letters), world map with its binocular view, world vignettes with the page-curl, segment-quad and moving-lens transitions, the in-game options menu (greyscale capture of the frame, translucent frame, zoom-in and fades), the pause screen (spinning snapshot of the frame), the credits, the intro movie (FLC player), the world map's fire-animated quit box | **yes** | every frame and every presented image of the fifteen scenarios (section 8) equal to the reference; further start-up clocks (epochs 1000-8000) reach the row-wipe and segment-rasterizer transitions, all exact |
 | Remaining primitives: dword copies, diff sprites and tiles outside their semantic layers, read-backs into game memory | **no**: recorded as unsupported operations | counted per pass by the gate; none in the scenarios |
 | Scenes no scenario reaches yet: the other transition effects (effect2, effect50350, effect6ec80, effecthelp), level animations, in-game vignettes, the pause screensaver's later phase, continue, game over, victory, the conclusion movie, blood melt, the later worlds' levels | **unknown** (untested) | each will be measured when a scenario reaches it; pixel loops in C need a captured operation (section 6) |
 | Palette: DAC, fades, special palettes, cycling | shared | both renderers present indexed pixels through the same emulated DAC; palette state is game/presentation state, not pixels |
@@ -126,7 +126,8 @@ DO_MAIN_LOOP_PC_NORMAL (src/, unchanged)
   surfaces. A copy out of a target into other game memory is a **read-back** (counted as unsupported). Scenes
   outside the gameplay loop (logo, title animation, vignettes) consist largely of these operations.
 - **Scene labels**: the scene functions PcMain calls (`DO_UBI_LOGO`, `DEPART_WORLD`, `DO_MAIN_LOOP_PC_NORMAL`, ...)
-  are wrapped only to label frames; `--verify-render` reports frames, complete and exact frames per scene.
+  are wrapped only to label frames; `--verify-render` reports frames, complete and exact frames per scene
+  (`render scene`), operations per pass (`render ops`) and effect passes by kind (`render effect`).
 - **Screen effects** (render/effect_capture.c, render/effects.c): an effect's pixel pass is reached from another
   unit, so it is wrapped like a primitive. The wrapper records the pass's inputs (the effect state before its update,
   its tables, the source and destination buffers as target + offset) as one EFFECT operation and runs the original
@@ -236,9 +237,11 @@ state, consumes no random numbers.
   across runs and across x86_64/i686.
 - **Presented images**: before every present the native display is compared with the original display
   (`presents`, `present_exact`), and the frame log of a `--renderer native` run hashes the native image.
-- Gates: `tests/e2e_native.py` (ctest `port_native_demos`): thirteen scenarios (six demos, the idle menu path, and
-  key scripts in tests/keys: a new game to world 1 level 1, the options menu, the in-game options menu, pause, the
-  credits, and with the movie data the intro movie, world map and quit box), reference and native presentation:
+- Gates: `tests/e2e_native.py` (ctest `port_native_demos`): fifteen scenarios (six demos, the idle menu path, and
+  key scripts in tests/keys: a new game to world 1 level 1, the same under two other start-up clocks (`--epoch`:
+  the vignette transition is drawn from the game's random table, seeded from the clock), the options menu, the
+  in-game options menu, pause, the credits, and with the movie data the intro movie, world map and quit box),
+  reference and native presentation:
   presented-frame logs identical over the whole run, every frame (gameplay and other) complete and exact, every
   presented image exact, every gameplay pass exact, state logs identical. `tests/e2e_wide.py` keeps the margin
   experiment honest (section 9).
@@ -290,7 +293,7 @@ of the draw surface and of each operation's clip rule. Policies to decide explic
 |---|---|---|
 | A ownership audit | draw path, stateful passes, direct writes, read-backs, viewport decisions; full-frame parity strategy | done for the normal gameplay loop (this document, audit facts in sections 4 and 6); Mode X loop not audited |
 | B complete semantic frame | display list of every drawing operation + semantic layers; identity tags; resource generations | operations and layers done for gameplay frames; identity and generations open (section 7) |
-| C complete native software renderer | every operation drawn natively, full 320x200 parity | thirteen scenarios complete: demos, menus, options, save slots and name entry, world map, three transitions, gameplay, in-game options menu, pause, credits, intro movie; next: scenarios for the scenes still unreached (level endings, vignettes, continue, game over, victory, the other transitions, later worlds) |
+| C complete native software renderer | every operation drawn natively, full 320x200 parity | fifteen scenarios complete: demos, menus, options, save slots and name entry, world map, three transitions, gameplay, in-game options menu, pause, credits, intro movie; next: scenarios for the scenes still unreached (level endings, vignettes, continue, game over, victory, the other transitions, later worlds) |
 | D native renderer is the normal output | default `--renderer native`; read-backs from native surfaces; reference path only under verification | open |
 | E viewport independence | wider draw surface, same operations, section 9 policies; remove render/compose.c | open |
 | F presentation decoupling and interpolation | present recorded frames at the monitor's rate; interpolate tagged positions; snap on teleports, spawns, slot reuse, animation resets, scene changes, camera jumps; never more game updates | open |
