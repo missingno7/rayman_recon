@@ -9,16 +9,19 @@
 
 #include "render/frame.h"
 
+#include <stddef.h>
 #include <stdint.h>
 
 /* Passes (enum port_pass): begin returns the enclosing pass, end restores it. */
 int port_record_pass_begin(int pass);
 void port_record_pass_end(int previous);
+/* Scene label for statistics and diagnostics (the PcMain scene function running); returns the previous one. */
+const char *port_record_scene(const char *name);
 /* The frame is a gameplay frame (the gameplay loop's frame-start pass ran). */
 void port_record_gameplay(void);
 /* The semantic payload of the frame being recorded, filled by the capture before a layer operation is added. */
 port_scene *port_record_world(void);
-/* Append a semantic layer operation (PORT_OP_CLEAR / BACKGROUND / MAP / FRONT) for viewport (x0, y0)-(x1, y1). */
+/* Append a semantic layer operation (PORT_OP_BACKGROUND / MAP / FRONT) for viewport (x0, y0)-(x1, y1). */
 void port_record_layer(int kind, int x0, int y0, int x1, int y1);
 
 /* The firefly darkness aff_luciole drew (render/scene_capture.c, after Display_and_free_luciole). */
@@ -26,6 +29,22 @@ void port_record_firefly(int center_x, int center_y, int rayon, int addluclip, i
 
 /* ClearBorder (src/box.c) cleared everything outside (x0, y0)-(x1, y1) of the buffer at `target`. */
 void port_record_clear_outside(const uint8_t *target, int x0, int y0, int x1, int y1);
+
+/* While on, primitives are not recorded: the caller records one semantic operation for what they draw. */
+void port_record_claim(int on);
+
+/* The target (enum port_target) holding address p and its linear offset from the target's origin;
+   PORT_TARGET_COUNT when p is not video memory. */
+int port_record_target(const void *p, int64_t *offset);
+/* Append a screen-effect operation (render/effects.h) with a copy of its payload; 0 if it could not be stored. */
+int port_record_effect(int effect, const void *payload, size_t size);
+
+/* An effect pass wrote buffer p but could not be recorded (counted, frame marked incomplete). */
+void port_record_unsupported_effect(const void *p);
+
+/* An asset decoder (the movie player) wrote n bytes at buffer: if that is video memory, they become an image
+   operation (render/record.c record_asset). */
+void port_record_asset(void *buffer, size_t n);
 
 /* Renderer selection: 0 = reference (the original draw path's display), 1 = native (the native renderer's
    display only; nothing of the original buffers is presented). */

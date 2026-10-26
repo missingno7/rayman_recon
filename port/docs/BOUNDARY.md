@@ -106,7 +106,10 @@ The passes `DO_MAIN_LOOP_PC_NORMAL` calls (and `ClearBorder`) are redirected at 
 (`RAY_RENDER_PRIMITIVES`) to `render/record.c`. Each wrapper records what the original is about to draw (pass,
 operation, or a semantic layer read from game state) and then calls the unchanged original exactly once. The
 wrappers read, never write, game state, and call no game function a second time (docs/RENDERER.md 5). Calls inside
-one unit (for example `display2` from `DISPLAY_ALL_OBJECTS`) cannot be redirected this way.
+one unit (for example `display2` from `DISPLAY_ALL_OBJECTS`) cannot be redirected this way. The same mechanism labels
+scenes (`RAY_RENDER_SCENES`) and captures screen effects' pixel passes (`RAY_RENDER_EFFECTS`,
+render/effect_capture.c, whose copies of the effects' state layouts are checked against the units at build time).
+The historical units' `memcpy`/`memmove`/`memset` reach the recorder through the pre-included port_watcom.h.
 
 ## Original FLC player
 

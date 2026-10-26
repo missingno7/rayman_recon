@@ -1,168 +1,177 @@
 {
- "schema": 1,
- "units": {
-  "sysutils.c": {
-   "patch": "sysutils.patch",
-   "reason": "get_avail_memory issues DPMI 0500h with a 32-bit linear buffer address; the block arenas hold native records that carry 8-byte pointers.",
-   "divergences": [
-    "get_avail_memory reports PORT_FREE_MEMORY (16 MiB) instead of querying DPMI; InitMemoryVariable therefore always takes its >= 3 MiB branch (normal mode, all sprites, backgrounds).",
-    "init_memory allocates PORT_ARENA_SCALE (2 on 64-bit hosts) times the requested capacity; block_malloc semantics are unchanged, only the out-of-memory threshold moves."
-   ],
-   "base_sha256": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a"
-  },
-  "load.c": {
-   "patch": "load.patch",
-   "reason": "Level/world loading reads 32-bit file words into pointer-typed fields and reads 132-byte DOS object images directly into obj_t; both depend on the 32-bit DOS layout.",
-   "divergences": [
-    "Pointer-typed fields that receive a 32-bit file word (animations[].frames x3, ScrollDiffSprites, wldobj[].eta) are filled by port_fread_pointer_word (sign-extended word); the original sentinel tests and (s32) narrowing are unchanged.",
-    "Object instance records are decoded field by field from their DOS offsets (game/dos_records.c, offsets from docs/semantics/generated/semantics_dos.h); the four index words are rebound with the original (s16) narrowing. A malloc scratch array holds the index words; the game allocators are not touched.",
-    "load_world reads the BIOS tick byte at linear 0x46C four times while waiting for two tick edges (with the debug-register watch around it); the reads use port_bios_tick_byte(), the tick derived from the port clock. The watch itself is omitted (docs/port/PLATFORM_OPEN.md)."
-   ],
-   "base_sha256": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4"
-  },
-  "data/blk_215c.c": {
-   "patch": "data_blk_215c.patch",
-   "reason": "DisplayBufferNormal is initialised with the VGA linear address 0xA0000.",
-   "divergences": [
-    "DisplayBufferNormal points to the port display aperture (video/vga.c port_vga_aperture), the device that replaces VGA memory."
-   ],
-   "base_sha256": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119"
-  },
-  "box.c": {
-   "patch": "box.patch",
-   "reason": "Fire, CadreTrans and ClearBorder form draw-buffer addresses through a u32 round trip ((u8 *)((u32)draw_buffer + n)), which truncates a 64-bit pointer.",
-   "divergences": [
-    "The four address computations use pointer arithmetic draw_buffer + n; for every in-range offset this is the same address the 32-bit u32 arithmetic produced. No other change."
-   ],
-   "base_sha256": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb"
-  },
-  "map_ngawe.c": {
-   "patch": "map_ngawe.patch",
-   "reason": "INIT_GAME_MODE_NORMAL installs Copy_Plan0Diff_To_Buf behind island_copy_t, whose C parameter order (source, dest, pitch, height, width) differs from the routine's direct prototype (source, dest, width, height, pitch); the DOS register ABI made both views the same.",
-   "divergences": [
-    "Copy_Plan0_To_Buf receives the adapter port_island_copy_plan0diff (video/lowlevel_adapters.c), which reorders the arguments for the same routine. Same pixels."
-   ],
-   "base_sha256": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e"
-  },
-  "frame.c": {
-   "patch": "frame.patch",
-   "reason": "SWAP_BUFFERS calls Swap_And_Test_Joystick through frame.c's swap_func_t view, which lists EDI (destination) first; pcmain.c's view of the same pointer and the native routine take (source, destination).",
-   "divergences": [
-    "The normal-mode joystick swap call passes (DrawBufferNormal, display_buffer): the same registers the DOS call loaded (ESI source, EDI destination)."
-   ],
-   "base_sha256": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018"
-  },
-  "jumelle.c": {
-   "patch": "jumelle.patch",
-   "reason": "PrepareJumelleZoom indexes its zoom table with u32 expressions (x - y*224, -y*224 - x, ...) that wrap to negative offsets in 32-bit arithmetic; on a 64-bit host the wrapped value is a +4 GiB offset.",
-   "divergences": [
-    "The eight left[]/right[] index expressions are cast to s32: the same offsets the 32-bit program used. Found by the first native run (segmentation fault); this class is caught systematically by the i686 reference build (port/docs/ARCHITECTURE.md)."
-   ],
-   "base_sha256": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1"
-  },
-  "effect2.c": {
-   "patch": "effect2.patch",
-   "reason": "The embedded draw descriptor starts at the native screen field; its DOS byte offset 0x3c precedes alignment padding on x64.",
-   "divergences": [
-    "Select the screen field by member address; the descriptor contract and all drawing calculations are unchanged."
-   ],
-   "base_sha256": "be7b61cf3e893b1b097dd5157c0cc7b64751f8069b40b3c9a1b45fe3d5b96cd7"
-  },
-  "effect50350.c": {
-   "patch": "effect50350.patch",
-   "reason": "Two effect_segment_t records contain native texture pointers and outgrow the literal DOS allocation of 0x58 bytes.",
-   "divergences": [
-    "Allocate two sizeof(effect_segment_t) records (0x58 bytes on i686); existing typed descriptor writes and native rasterizer contract remain unchanged."
-   ],
-   "base_sha256": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45"
-  },
-  "effect633e0.c": {
-   "patch": "effect633e0.patch",
-   "reason": "The effect_column_state_t allocation is the literal 0x30-byte DOS pointer-bearing layout.",
-   "divergences": [
-    "Allocate sizeof(effect_column_state_t) (0x30 on i686); column tables, phases, and pixel calculations are unchanged."
-   ],
-   "base_sha256": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6"
-  },
-  "effect6c3b0.c": {
-   "patch": "effect6c3b0.patch",
-   "reason": "The radial effect state holds three pointers and outgrows the literal 0x20-byte DOS allocation.",
-   "divergences": [
-    "Allocate sizeof(effect_state_6c_t) (0x20 on i686); the displacement map and update/draw order are unchanged."
-   ],
-   "base_sha256": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
-  },
-  "effect6ec80.c": {
-   "patch": "effect6ec80.patch",
-   "reason": "The wave state uses a literal DOS allocation and vertex/local surface values store texture pointers in u32.",
-   "divergences": [
-    "Allocate sizeof(effect_state_6e_t) (0xbc on i686).",
-    "Use u8 * for both surface declarations and assign texture pointers without u32 narrowing; projected words and rectangle bytes follow the native pointer in the existing descriptor contract. Vertex allocation already uses sizeof. All wave calculations are unchanged."
-   ],
-   "base_sha256": "52fa1968f314afd228baf162e72c9a0363f4b069c5d63f0e130d3d35de631154"
-  },
-  "effecthelp.c": {
-   "patch": "effecthelp.patch",
-   "reason": "The sphere state and items contain native pointers but allocate literal DOS record sizes.",
-   "divergences": [
-    "Allocate sizeof(effect5_state_t) and count * sizeof(effect5_item_t) (0x3c and count * 52 on i686); sphere setup, interpolation, bounce/drop calculations, and embedded descriptor fields are unchanged."
-   ],
-   "base_sha256": "53d4cc8cc5d25cfe97be4d299030c87849405a6621abd44058831149b8e77ae2"
-  },
-  "blood.c": {
-   "patch": "blood.patch",
-   "reason": "DoEffectBloodOut compares two addresses after truncation to signed 32-bit values.",
-   "divergences": [
-    "Compare the byte-height to the destination offset from the same frame origin. This preserves the original frame-origin test without pointer truncation or forming the potentially out-of-buffer row_start + height pointer. RNG order, all pixel writes, and synchronization are unchanged."
-   ],
-   "base_sha256": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed"
-  },
-  "cdaudio.c": {
-   "patch": "cdaudio.patch",
-   "reason": "DPMI register-block address truncation and 16:32 selector pointer overlays cannot represent native pointers.",
-   "divergences": [
-    "sub_193f0 takes intptr_t and calls the correctly typed real-mode transport, preserving the register-block address on both architectures.",
-    "Eleven native pointer views are assigned from bounded port_cd_buffer offsets instead of writing offset:selector bytes into native pointer storage. Request bytes and all TOC/status/cue policy remain unchanged."
-   ],
-   "base_sha256": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d"
-  },
-  "bss/bt.h": {
-   "patch": "bss_bt_h.patch",
-   "reason": "bt.h opens #pragma pack(4) (never closed) before including the shared headers, so that Watcom places the central BSS with natural <= 4 alignment. With 8-byte pointers the BSS units then defined pointer-carrying types (mem_t, bande_t, ...) with a different layout than the code units (main_mem_world capacity aliased cdTime; the 288-row heat-haze Bande table of world 5 level 10 diverged).",
-   "divergences": [
-    "No global pack(4): every BSS unit uses the native natural layout of the code units. temp_mem_entry_t keeps pack(4) between push/pop, exactly as sysutils_local.h declares it. The whole src/bss directory is compiled from the derived tree (unchanged copies) so that the units find this header."
-   ],
-   "base_sha256": "eaefba2a9e5949168639ac93a3a51d7504b0b82ef213646c486ef3691f3b8359",
-   "with_directory": true
-  },
-  "hifi.c": {
-   "patch": "hifi.patch",
-   "reason": "DOS bank headers are serialized 16-byte records; native pointers and the full data_6664.c config view have different layouts. Speech sets a DOS byte offset into the request flags.",
-   "divergences": [
-    "No game calculations or service call order changed. Checksum and XOR process the same 2048 header bytes before field decoding and pointer binding.",
-    "Native data/config/request pointers replace padded DOS far-pointer views; full config member order matches the unchanged data_6664.c definition.",
-    "Speech request flags |= 0x100 replaces DOS byte-offset 0x29."
-   ],
-   "base_sha256": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04"
-  },
-  "movie.c": {
-   "patch": "movie.patch",
-   "reason": "The DOS movie stack arrays overlap a pointer-bearing work record and use literal surface/timer offsets. The palette writer passes a surface address in u32.",
-   "divergences": [
-    "Use native work/surface records and sizeof clears, named timer and sound_mode members, and typed pointer arguments. The 128-byte serialized work prefix remains identical (static assertions); no file-header decoding or calculation changes.",
-    "The palette writer context is a native surface pointer (ignored by both writers), avoiding address truncation.",
-    "Audited all literals, byte offsets and u32 indices: +6 chunk payload, 16/128-byte serialized prefixes, 320 stride and surface_offset remain file/pixel quantities. No subtracting u32 index or wrapped negative pointer offset occurs. Chunk semantics, signed8 run narrowing, unusual odd-byte control, pacing, palette/CD/input order and error codes are unchanged.",
-    "Optional RAYMAN_MOVIE_TRACE observations at entry/return, decoded frames and fade start; no calculations, call order between game/services or clock advances changed."
-   ],
-   "base_sha256": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb"
-  },
-  "display.c": {
-   "patch": "display.patch",
-   "reason": "The conclusion caller declares playVideo as void(mem_t *,const char *,s16), while its actual definition takes a path string and u8 track and returns s32.",
-   "divergences": [
-    "Declare the actual native playVideo signature and pass demo_video_mem as its char buffer, rather than a pointer to the array through mem_t *. The path address and track 21 are identical; return value remains ignored; no scene or service call order changes."
-   ],
-   "base_sha256": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20"
+  "schema": 1,
+  "units": {
+    "sysutils.c": {
+      "patch": "sysutils.patch",
+      "reason": "get_avail_memory issues DPMI 0500h with a 32-bit linear buffer address; the block arenas hold native records that carry 8-byte pointers.",
+      "divergences": [
+        "get_avail_memory reports PORT_FREE_MEMORY (16 MiB) instead of querying DPMI; InitMemoryVariable therefore always takes its >= 3 MiB branch (normal mode, all sprites, backgrounds).",
+        "init_memory allocates PORT_ARENA_SCALE (2 on 64-bit hosts) times the requested capacity; block_malloc semantics are unchanged, only the out-of-memory threshold moves."
+      ],
+      "base_sha256": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a"
+    },
+    "load.c": {
+      "patch": "load.patch",
+      "reason": "Level/world loading reads 32-bit file words into pointer-typed fields and reads 132-byte DOS object images directly into obj_t; both depend on the 32-bit DOS layout.",
+      "divergences": [
+        "Pointer-typed fields that receive a 32-bit file word (animations[].frames x3, ScrollDiffSprites, wldobj[].eta) are filled by port_fread_pointer_word (sign-extended word); the original sentinel tests and (s32) narrowing are unchanged.",
+        "Object instance records are decoded field by field from their DOS offsets (game/dos_records.c, offsets from docs/semantics/generated/semantics_dos.h); the four index words are rebound with the original (s16) narrowing. A malloc scratch array holds the index words; the game allocators are not touched.",
+        "load_world reads the BIOS tick byte at linear 0x46C four times while waiting for two tick edges (with the debug-register watch around it); the reads use port_bios_tick_byte(), the tick derived from the port clock. The watch itself is omitted (docs/port/PLATFORM_OPEN.md)."
+      ],
+      "base_sha256": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4"
+    },
+    "data/blk_215c.c": {
+      "patch": "data_blk_215c.patch",
+      "reason": "DisplayBufferNormal is initialised with the VGA linear address 0xA0000.",
+      "divergences": [
+        "DisplayBufferNormal points to the port display aperture (video/vga.c port_vga_aperture), the device that replaces VGA memory."
+      ],
+      "base_sha256": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119"
+    },
+    "box.c": {
+      "patch": "box.patch",
+      "reason": "Fire, CadreTrans and ClearBorder form draw-buffer addresses through a u32 round trip ((u8 *)((u32)draw_buffer + n)), which truncates a 64-bit pointer.",
+      "divergences": [
+        "The four address computations use pointer arithmetic draw_buffer + n; for every in-range offset this is the same address the 32-bit u32 arithmetic produced. No other change."
+      ],
+      "base_sha256": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb"
+    },
+    "map_ngawe.c": {
+      "patch": "map_ngawe.patch",
+      "reason": "INIT_GAME_MODE_NORMAL installs Copy_Plan0Diff_To_Buf behind island_copy_t, whose C parameter order (source, dest, pitch, height, width) differs from the routine's direct prototype (source, dest, width, height, pitch); the DOS register ABI made both views the same.",
+      "divergences": [
+        "Copy_Plan0_To_Buf receives the adapter port_island_copy_plan0diff (video/lowlevel_adapters.c), which reorders the arguments for the same routine. Same pixels."
+      ],
+      "base_sha256": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e"
+    },
+    "frame.c": {
+      "patch": "frame.patch",
+      "reason": "SWAP_BUFFERS calls Swap_And_Test_Joystick through frame.c's swap_func_t view, which lists EDI (destination) first; pcmain.c's view of the same pointer and the native routine take (source, destination).",
+      "divergences": [
+        "The normal-mode joystick swap call passes (DrawBufferNormal, display_buffer): the same registers the DOS call loaded (ESI source, EDI destination)."
+      ],
+      "base_sha256": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018"
+    },
+    "jumelle.c": {
+      "patch": "jumelle.patch",
+      "reason": "PrepareJumelleZoom indexes its zoom table with u32 expressions (x - y*224, -y*224 - x, ...) that wrap to negative offsets in 32-bit arithmetic; on a 64-bit host the wrapped value is a +4 GiB offset.",
+      "divergences": [
+        "The eight left[]/right[] index expressions are cast to s32: the same offsets the 32-bit program used. Found by the first native run (segmentation fault); this class is caught systematically by the i686 reference build (port/docs/ARCHITECTURE.md)."
+      ],
+      "base_sha256": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1"
+    },
+    "effect2.c": {
+      "patch": "effect2.patch",
+      "reason": "The embedded draw descriptor starts at the native screen field; its DOS byte offset 0x3c precedes alignment padding on x64.",
+      "divergences": [
+        "Select the screen field by member address; the descriptor contract and all drawing calculations are unchanged."
+      ],
+      "base_sha256": "be7b61cf3e893b1b097dd5157c0cc7b64751f8069b40b3c9a1b45fe3d5b96cd7"
+    },
+    "effect50350.c": {
+      "patch": "effect50350.patch",
+      "reason": "Two effect_segment_t records contain native texture pointers and outgrow the literal DOS allocation of 0x58 bytes.",
+      "divergences": [
+        "Allocate two sizeof(effect_segment_t) records (0x58 bytes on i686); existing typed descriptor writes and native rasterizer contract remain unchanged."
+      ],
+      "base_sha256": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45"
+    },
+    "effect633e0.c": {
+      "patch": "effect633e0.patch",
+      "reason": "The effect_column_state_t allocation is the literal 0x30-byte DOS pointer-bearing layout.",
+      "divergences": [
+        "Allocate sizeof(effect_column_state_t) (0x30 on i686); column tables, phases, and pixel calculations are unchanged."
+      ],
+      "base_sha256": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6"
+    },
+    "effect6c3b0.c": {
+      "patch": "effect6c3b0.patch",
+      "reason": "The radial effect state holds three pointers and outgrows the literal 0x20-byte DOS allocation.",
+      "divergences": [
+        "Allocate sizeof(effect_state_6c_t) (0x20 on i686); the displacement map and update/draw order are unchanged."
+      ],
+      "base_sha256": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
+    },
+    "effect6ec80.c": {
+      "patch": "effect6ec80.patch",
+      "reason": "The wave state uses a literal DOS allocation and vertex/local surface values store texture pointers in u32.",
+      "divergences": [
+        "Allocate sizeof(effect_state_6e_t) (0xbc on i686).",
+        "Use u8 * for both surface declarations and assign texture pointers without u32 narrowing; projected words and rectangle bytes follow the native pointer in the existing descriptor contract. Vertex allocation already uses sizeof. All wave calculations are unchanged."
+      ],
+      "base_sha256": "52fa1968f314afd228baf162e72c9a0363f4b069c5d63f0e130d3d35de631154"
+    },
+    "effecthelp.c": {
+      "patch": "effecthelp.patch",
+      "reason": "The sphere state and items contain native pointers but allocate literal DOS record sizes.",
+      "divergences": [
+        "Allocate sizeof(effect5_state_t) and count * sizeof(effect5_item_t) (0x3c and count * 52 on i686); sphere setup, interpolation, bounce/drop calculations, and embedded descriptor fields are unchanged."
+      ],
+      "base_sha256": "53d4cc8cc5d25cfe97be4d299030c87849405a6621abd44058831149b8e77ae2"
+    },
+    "blood.c": {
+      "patch": "blood.patch",
+      "reason": "DoEffectBloodOut compares two addresses after truncation to signed 32-bit values.",
+      "divergences": [
+        "Compare the byte-height to the destination offset from the same frame origin. This preserves the original frame-origin test without pointer truncation or forming the potentially out-of-buffer row_start + height pointer. RNG order, all pixel writes, and synchronization are unchanged."
+      ],
+      "base_sha256": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed"
+    },
+    "cdaudio.c": {
+      "patch": "cdaudio.patch",
+      "reason": "DPMI register-block address truncation and 16:32 selector pointer overlays cannot represent native pointers.",
+      "divergences": [
+        "sub_193f0 takes intptr_t and calls the correctly typed real-mode transport, preserving the register-block address on both architectures.",
+        "Eleven native pointer views are assigned from bounded port_cd_buffer offsets instead of writing offset:selector bytes into native pointer storage. Request bytes and all TOC/status/cue policy remain unchanged."
+      ],
+      "base_sha256": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d"
+    },
+    "bss/bt.h": {
+      "patch": "bss_bt_h.patch",
+      "reason": "bt.h opens #pragma pack(4) (never closed) before including the shared headers, so that Watcom places the central BSS with natural <= 4 alignment. With 8-byte pointers the BSS units then defined pointer-carrying types (mem_t, bande_t, ...) with a different layout than the code units (main_mem_world capacity aliased cdTime; the 288-row heat-haze Bande table of world 5 level 10 diverged).",
+      "divergences": [
+        "No global pack(4): every BSS unit uses the native natural layout of the code units. temp_mem_entry_t keeps pack(4) between push/pop, exactly as sysutils_local.h declares it. The whole src/bss directory is compiled from the derived tree (unchanged copies) so that the units find this header."
+      ],
+      "base_sha256": "eaefba2a9e5949168639ac93a3a51d7504b0b82ef213646c486ef3691f3b8359",
+      "with_directory": true
+    },
+    "hifi.c": {
+      "patch": "hifi.patch",
+      "reason": "DOS bank headers are serialized 16-byte records; native pointers and the full data_6664.c config view have different layouts. Speech sets a DOS byte offset into the request flags.",
+      "divergences": [
+        "No game calculations or service call order changed. Checksum and XOR process the same 2048 header bytes before field decoding and pointer binding.",
+        "Native data/config/request pointers replace padded DOS far-pointer views; full config member order matches the unchanged data_6664.c definition.",
+        "Speech request flags |= 0x100 replaces DOS byte-offset 0x29."
+      ],
+      "base_sha256": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04"
+    },
+    "movie.c": {
+      "patch": "movie.patch",
+      "reason": "The DOS movie stack arrays overlap a pointer-bearing work record and use literal surface/timer offsets. The palette writer passes a surface address in u32.",
+      "divergences": [
+        "Use native work/surface records and sizeof clears, named timer and sound_mode members, and typed pointer arguments. The 128-byte serialized work prefix remains identical (static assertions); no file-header decoding or calculation changes.",
+        "The palette writer context is a native surface pointer (ignored by both writers), avoiding address truncation.",
+        "Audited all literals, byte offsets and u32 indices: +6 chunk payload, 16/128-byte serialized prefixes, 320 stride and surface_offset remain file/pixel quantities. No subtracting u32 index or wrapped negative pointer offset occurs. Chunk semantics, signed8 run narrowing, unusual odd-byte control, pacing, palette/CD/input order and error codes are unchanged.",
+        "Optional RAYMAN_MOVIE_TRACE observations at entry/return, decoded frames and fade start; no calculations, call order between game/services or clock advances changed.",
+        "sub_3ABE4 calls port_record_asset (port/render/record.c) after its chunk loop: the decoded frame, read from the movie surface before it is paced and copied to the display, becomes an image operation of the native renderer; no game or decoder state changes."
+      ],
+      "base_sha256": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb"
+    },
+    "display.c": {
+      "patch": "display.patch",
+      "reason": "The conclusion caller declares playVideo as void(mem_t *,const char *,s16), while its actual definition takes a path string and u8 track and returns s32.",
+      "divergences": [
+        "Declare the actual native playVideo signature and pass demo_video_mem as its char buffer, rather than a pointer to the array through mem_t *. The path address and track 21 are identical; return value remains ignored; no scene or service call order changes."
+      ],
+      "base_sha256": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20"
+    },
+    "menu.c": {
+      "patch": "menu.patch",
+      "reason": "FonduOption's two in-place greyscale passes (the in-game and options menus' faded option rectangles) are C pixel loops inside a function called within its own unit, so the native renderer cannot observe them at link time.",
+      "divergences": [
+        "Two calls to port_record_menu_grey (port/render/effect_capture.c), one immediately before each greyscale loop of FonduOption mode 1, record the pass for the native renderer; they read the rectangle and MenuPalette and change no game state."
+      ],
+      "base_sha256": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb"
+    }
   }
- }
 }

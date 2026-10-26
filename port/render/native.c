@@ -1,4 +1,5 @@
 #include "render/native.h"
+#include "render/effects.h"
 
 #include <string.h>
 
@@ -15,15 +16,16 @@ const char *port_prim_name(int prim)
 {
     static const char *names[PORT_PRIM_COUNT] = {
         "sprite", "sprite_diff", "tile", "plan0_copy", "pixel", "weather", "black_box", "fond_box", "border_box",
-        "picture", "clear_borders", "clear_screen", "buffer_copy", "deform", "effect", "dword_copy"};
+        "picture", "clear_borders", "clear_screen", "buffer_copy", "deform", "effect", "dword_copy", "memory",
+        "readback"};
     return prim >= 0 && prim < PORT_PRIM_COUNT ? names[prim] : "?";
 }
 
 const char *port_op_name(int kind)
 {
     static const char *names[PORT_OP_KIND_COUNT] = {
-        "clear", "background", "map", "front", "sprite", "clear_borders", "pixel", "weather", "black_box",
-        "clear_outside", "firefly", "unsupported"};
+        "background", "map", "front", "sprite", "clear_borders", "pixel", "weather", "black_box",
+        "fill", "copy", "picture", "swap", "border_box", "fond_box", "deform", "effect", "origin", "clear_outside", "firefly", "unsupported"};
     return kind >= 0 && kind < PORT_OP_KIND_COUNT ? names[kind] : "?";
 }
 
@@ -38,11 +40,35 @@ static void put(port_surface *d, int32_t x, int32_t y, uint8_t v)
     }
 }
 
+/* Video memory is 320-byte rows: linear offset n is pixel (n mod 320, n div 320), rounding towards minus infinity. */
+static void put_linear(port_surface *d, int64_t n, uint8_t v)
+{
+    int64_t y = n >= 0 ? n / 320 : -1 - (-n - 1) / 320;
+    put(d, (int32_t)(n - 320 * y), (int32_t)y, v);
+}
+
+static uint8_t get_linear(const port_surface *d, int64_t n)
+{
+    int64_t y = n >= 0 ? n / 320 : -1 - (-n - 1) / 320, x = n - 320 * y;
+    if (x < d->x0 || x >= d->x0 + d->width || y < d->y0 || y >= d->y0 + d->height)
+        return 0;
+    return d->pixels[(y - d->y0) * d->pitch + (x - d->x0)];
+}
+
 static void fill(port_surface *d, int32_t x, int32_t y, int32_t n, uint8_t v)
 {
     int32_t i;
     for (i = 0; i < n; i++)
         put(d, x + i, y, v);
+}
+
+/* A sprite pixel at (x, y) relative to the buffer the drawer was given: base + 320 y + x. */
+static void put_sprite(port_surface *d, int32_t base, int32_t x, int32_t y, uint8_t v)
+{
+    if (base)
+        put_linear(d, (int64_t)base + (int64_t)y * 320 + x, v);
+    else
+        put(d, x, y, v);
 }
 
 /* DrawSprite*Normal* (ASM_SPEC clip_sprite_on_screen, port/video/lowlevel_normal.c): the clip box arithmetic
@@ -57,6 +83,12 @@ static void sprite(port_surface *d, const port_op *op)
     int32_t x = op->x, y = op->y;
     const int32_t *box = op->clip;
     const uint8_t *src = op->image;
+    if (op->flags & PORT_SPRITE_SCRATCH) {
+        uint8_t *slot = port_native_scratch(op->w);
+        if (!slot || (uint32_t)op->h + w * h > PORT_SCRATCH_BYTES)
+            return;
+        src = slot + op->h;
+    }
     uint32_t row, i;
     if (!(op->flags & PORT_SPRITE_NOCLIP)) {
         end = w;
@@ -110,10 +142,10 @@ static void sprite(port_surface *d, const port_op *op)
             uint8_t v = s[i];
             if (raw) {
                 if (v)
-                    put(d, x + (int32_t)(flip ? w - 1 - i : i), y + (int32_t)row, v);
+                    put_sprite(d, op->base, x + (int32_t)(flip ? w - 1 - i : i), y + (int32_t)row, v);
                 i++;
             } else if (v < 160) {
-                put(d, x + (int32_t)(flip ? w - 1 - i : i), y + (int32_t)row, (uint8_t)(v | or_color));
+                put_sprite(d, op->base, x + (int32_t)(flip ? w - 1 - i : i), y + (int32_t)row, (uint8_t)(v | or_color));
                 i++;
             } else {
                 i += v - 160u;
@@ -201,13 +233,58 @@ static void firefly(port_surface *d, const port_op *op)
     } while (i <= x);
 }
 
-void port_native_draw(const port_frame *f, int first, int last, port_surface *draw, port_surface *display)
+/* DrawBorderBoxNormal (ASM_SPEC; port/video/lowlevel_normal.c): light left column and top row, dark bottom and right
+   edges plus the extra shadow row and column, in the original's write order. */
+static void border_box(port_surface *d, const port_op *op)
 {
+    int64_t base = op->x;
+    uint8_t light = (uint8_t)op->size, dark = (uint8_t)(op->size >> 8);
+    int32_t row, col;
+    for (row = 0; row < op->h; row++)
+        put_linear(d, base + (int64_t)row * 320, light);
+    for (col = 0; col < op->w - 1; col++)
+        put_linear(d, base + (int64_t)(op->h - 1) * 320 + 1 + col, dark);
+    for (col = 0; col < op->w; col++)
+        put_linear(d, base + (int64_t)op->h * 320 + col, dark);
+    for (col = 0; col < op->w; col++)
+        put_linear(d, base + col, light);
+    for (row = 1; row < op->h; row++)
+        put_linear(d, base + (int64_t)row * 320 + op->w - 1, dark);
+    for (row = 0; row < op->h; row++)
+        put_linear(d, base + (int64_t)row * 320 + op->w, dark);
+}
+
+/* DrawFondBoxNormal: each pixel becomes its diagonal neighbour (+321, or -321 walking backwards for type 2) shifted by
+   -5 (+5), and when that crosses a 32-colour bank, the bank bits with the low bits cleared (set). Reads the surface
+   it is modifying, in the original order. */
+static void fond_box(port_surface *d, const port_op *op)
+{
+    int back = op->flags == 2, step = back ? -1 : 1;
+    int64_t at = op->x;
+    int32_t row, col;
+    if (back)
+        at += (int64_t)(op->h - 1) * 320 + op->w - 1;
+    for (row = 0; row < op->h; row++) {
+        for (col = 0; col < op->w; col++) {
+            uint8_t v = get_linear(d, at + (back ? -321 : 321)), out = (uint8_t)(v + (back ? 5 : -5));
+            uint8_t cross = (uint8_t)((v ^ out) & 224);
+            if (cross)
+                out = (uint8_t)(cross | (back ? 31 : 0));
+            put_linear(d, at, out);
+            at += step;
+        }
+        at += (int64_t)step * (320 - op->w);
+    }
+}
+
+void port_native_draw(const port_frame *f, int first, int last, port_surface *const *surfaces)
+{
+    port_surface *draw = surfaces[PORT_TARGET_DRAW], *display = surfaces[PORT_TARGET_DISPLAY];
     int i;
     int32_t y;
     for (i = first; i < last; i++) {
         const port_op *op = &f->ops[i];
-        port_surface *dst = op->target ? display : draw;
+        port_surface *dst = op->target < PORT_TARGET_COUNT ? surfaces[op->target] : NULL;
         port_rect view = {op->clip[0], op->clip[2], op->clip[1], op->clip[3]};
         port_rect all;
         if (!dst)
@@ -217,12 +294,6 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *dr
         all.x1 = dst->x0 + dst->width;
         all.y1 = dst->y0 + dst->height;
         switch (op->kind) {
-        case PORT_OP_CLEAR:
-            /* N_CLRSCR: 64000 bytes; the loop's clear: 16008 dwords, 32 bytes beyond the 200 rows */
-            for (y = 0; y < op->w / 320; y++)
-                fill(dst, 0, y, 320, 0);
-            fill(dst, 0, op->w / 320, op->w % 320, 0);
-            break;
         case PORT_OP_BACKGROUND:
             port_render_background(&f->world, dst, view, PORT_RENDER_ORIGINAL);
             break;
@@ -247,6 +318,61 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *dr
             break;
         case PORT_OP_WEATHER:
             weather(dst, op);
+            break;
+        case PORT_OP_FILL:
+            for (y = 0; y < op->w; y++)
+                put_linear(dst, (int64_t)op->x + y, op->color);
+            break;
+        case PORT_OP_COPY:
+            if (op->flags) {
+                const port_surface *src = op->color < PORT_TARGET_COUNT ? surfaces[op->color] : NULL;
+                if (src)
+                    for (y = 0; y < op->w; y++)
+                        put_linear(dst, (int64_t)op->x + y, get_linear(src, (int64_t)op->y + y));
+            } else {
+                for (y = 0; y < op->w; y++)
+                    put_linear(dst, (int64_t)op->x + y, op->image[y]);
+            }
+            break;
+        case PORT_OP_PICTURE:
+            for (y = 0; y < op->h; y++) {
+                int32_t x;
+                for (x = 0; x < op->w; x++)
+                    put(dst, op->x + x, op->y + y, op->image[(size_t)y * op->w + x]);
+            }
+            break;
+        case PORT_OP_SWAP:
+            if (draw && display)
+                for (y = 0; y < op->h; y++) {
+                    int32_t x;
+                    for (x = 0; x < op->w; x++)
+                        put_linear(display, (int64_t)(op->clip[1] + y) * 320 + op->clip[0] + x,
+                                   get_linear(draw, (int64_t)(op->y + y) * 320 + op->x + x));
+                }
+            break;
+        case PORT_OP_BORDER_BOX:
+            border_box(dst, op);
+            break;
+        case PORT_OP_FOND_BOX:
+            fond_box(dst, op);
+            break;
+        case PORT_OP_DEFORM:
+            port_native_deform((const port_deform *)(const void *)op->image);
+            break;
+        case PORT_OP_EFFECT:
+            port_native_effect(op, surfaces);
+            break;
+        case PORT_OP_ORIGIN:
+            /* logical byte n is now the old logical byte n + delta (the 320-byte rows of the buffer) */
+            if (op->x > 0) {
+                int64_t n;
+                for (n = -(int64_t)320 * 32; n < (int64_t)320 * 232; n++)
+                    put_linear(dst, n, get_linear(dst, n + op->x));
+            } else if (op->x < 0) {
+                int64_t n;
+                for (n = (int64_t)320 * 232 - 1; n >= -(int64_t)320 * 32; n--)
+                    put_linear(dst, n, get_linear(dst, n + op->x));
+            }
             break;
         case PORT_OP_CLEAR_OUTSIDE:
             /* ClearBorder (src/box.c 408): rows above y0 and from y1, then columns left of x0 and from x1 */

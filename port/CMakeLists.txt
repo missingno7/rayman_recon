@@ -154,7 +154,8 @@ add_custom_command(
 # redirected at link time (no source change, each original called exactly once): the passes DO_MAIN_LOOP_PC_NORMAL
 # calls (wrapped in render/scene_capture.c), and the drawing primitives and frame swaps (render/record.c).
 add_library(rayman_hist STATIC ${RAY_HIST_SOURCES} ${RAY_PORT}/game/port_main.c ${RAY_PORT}/game/dos_records.c
-    ${RAY_PORT}/render/scene_capture.c ${RAY_ASSETS_C})
+    ${RAY_PORT}/render/scene_capture.c ${RAY_PORT}/render/effect_capture.c
+    ${RAY_PORT}/render/menu_capture.c ${RAY_ASSETS_C})
 set(RAY_RENDER_PASSES CLEAR_FIXE_LUCIOLE Display_Back_Screen display_flocons_behind DRAW_MAP display_grp_stars
     DISPLAY_ALL_OBJECTS display_pix_gerbes Display_Sprite_On_Front display_flocons_before Display_and_free_luciole
     DISPLAY_TEXT_FEE DISPLAY_FIXE DisplayCrackers DisplayProgrammerMessage display_time DISPLAY_GAME_VIGNET
@@ -166,8 +167,15 @@ set(RAY_RENDER_PRIMITIVES DrawSpriteNormalNoClip DrawSpriteNormal DrawSpriteNorm
     draw_flocon5_Normal draw_flocon6_Normal draw_flocon7_Normal draw_normal_5755 draw_pluie5_Normal
     draw_pluie6_Normal draw_pluie7_Normal DrawBlackBoxNormal DrawFondBoxNormal DrawBorderBoxNormal
     DisplayAnyPictureNormal clear_borders_Normal N_CLRSCR ClearDrawAndDisplayBufferNormal DisplayBufferModeNormal
-    draw_sprite_deform draw_effect_segment copy_dwords Swap_To_Screen get_joy_input1_dos1 get_joy_input1_dos2)
-foreach(sym IN LISTS RAY_RENDER_PASSES RAY_RENDER_PRIMITIVES)
+    draw_sprite_deform draw_effect_segment copy_dwords Swap_To_Screen get_joy_input1_dos1 get_joy_input1_dos2
+    fill fill_cld copy copy_guarded clear_memory LoadPcxOptions port_read _dos_read)
+set(RAY_RENDER_SCENES DO_UBI_LOGO DO_GROS_RAYMAN InitDemoJeu DO_NEW_MENUS DO_WORLD_MAP DEPART_WORLD DEPART_LEVEL
+    START_LEVEL_ANIM INIT_GAME_MODE_NORMAL DO_MAIN_LOOP_PC_NORMAL FIN_GAME_MODE_NORMAL DO_CONTINUE DO_VICTOIRE
+    FinDemoJeu FIN_GAME_LOOP FIN_MAP_LOOP FIN_DEAD_LOOP INIT_MOTEUR_LEVEL playVideo)
+# Screen effects' pixel passes (render/effect_capture.c, render/effects.h).
+set(RAY_RENDER_EFFECTS effect_helper_63838 PlasmaBox DisplayJumellesNormal effect_helper_6c9bc CaptureVideo
+    CadreTrans SYNCHRO_LOOP DISPLAY_FOND_MENU FireBox)
+foreach(sym IN LISTS RAY_RENDER_PASSES RAY_RENDER_PRIMITIVES RAY_RENDER_SCENES RAY_RENDER_EFFECTS)
     target_link_options(rayman_hist INTERFACE "-Wl,--wrap=${sym}")
 endforeach()
 target_include_directories(rayman_hist PRIVATE
@@ -175,6 +183,17 @@ target_include_directories(rayman_hist PRIVATE
 target_compile_options(rayman_hist PRIVATE ${RAY_HIST_FLAGS}
     "SHELL:-include ${RAY_PORT}/compat/include/port_watcom.h")
 target_compile_definitions(rayman_hist PRIVATE RAYMAN_PORT=1)
+
+# Layout gate for render/effect_layouts.h: compiles the effect units next to the port's copies of their state
+# structures (static assertions); built with the game, linked nowhere.
+add_library(rayman_effect_layouts OBJECT ${RAY_PORT}/render/effect_layout_633e0.c
+    ${RAY_PORT}/render/effect_layout_6c3b0.c)
+add_dependencies(rayman_effect_layouts rayman_hist)
+target_include_directories(rayman_effect_layouts PRIVATE ${RAY_DERIVED_DIR}
+    ${RAY_PORT}/compat/include ${RAY_SRC}/include ${RAY_SRC} ${RAY_PORT} ${RAY_ROOT}/docs/semantics/generated)
+target_compile_options(rayman_effect_layouts PRIVATE ${RAY_HIST_FLAGS}
+    "SHELL:-include ${RAY_PORT}/compat/include/port_watcom.h")
+target_compile_definitions(rayman_effect_layouts PRIVATE RAYMAN_PORT=1)
 
 # --- Port-owned code ---------------------------------------------------------------------------------------
 add_library(rayman_native STATIC
@@ -197,6 +216,7 @@ add_library(rayman_native STATIC
     platform/audio.c
     render/world.c
     render/native.c
+    render/effects.c
     render/record.c
     render/compose.c)
 target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
@@ -242,9 +262,6 @@ include(tests/effect_diff.cmake)
 add_test(NAME port_wide_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_wide.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
 set_tests_properties(port_wide_demos PROPERTIES TIMEOUT 1800)
-add_test(NAME port_native_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_native.py
-    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
-set_tests_properties(port_native_demos PROPERTIES TIMEOUT 1800)
 add_test(NAME port_config_roundtrip COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/config_roundtrip.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
 
@@ -280,6 +297,10 @@ add_test(NAME port_hmi_tests COMMAND port_hmi_tests ${RAY_DATA} ${CMAKE_CURRENT_
 
 # Original FLC decoder, private native layout and independent scalar chunk fixtures/corpus.
 set(RAY_MOVIE_TEST_DATA "${RAY_ROOT}/assets/DOS" CACHE PATH "Player's read-only INTRO.DAT/CONCLU.DAT test inputs")
+# Native renderer gate (port/docs/RENDERER.md 8): demos, menus, key-script scenarios, the intro movie.
+add_test(NAME port_native_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_native.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE} "${RAY_MOVIE_TEST_DATA}")
+set_tests_properties(port_native_demos PROPERTIES TIMEOUT 3000)
 add_executable(port_movie_tests tests/movie_tests.c)
 add_dependencies(port_movie_tests rayman_hist)
 target_compile_options(port_movie_tests PRIVATE ${RAY_HIST_FLAGS}

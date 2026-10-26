@@ -25,7 +25,8 @@ Every `game`-profile unit of `config/units.json` is compiled by a modern C compi
 
 - `compat/include/port_watcom.h` pre-included: Watcom keywords (`__far`, `__interrupt`, ...) with no meaning in a
   flat address space, and C-library calls routed to explicit port services (`fopen` -> DOS path service,
-  `open` with *Watcom* flag values, `rand` -> Watcom's LCG, `itoa`, `kbhit`, ...);
+  `open` with *Watcom* flag values, `rand` -> Watcom's LCG, `itoa`, `kbhit`, ...; `memcpy`/`memmove`/`memset` ->
+  the renderer's recorder, which notes copies and fills into video memory, then runs the C library's);
 - compat versions of `<i86.h>`, `<dos.h>`, `<conio.h>`, `<io.h>` (register images, port I/O, vectors);
 - `game/protos/<unit>.h` where the unit calls functions without a declaration (Watcom's implicit `int` was
   harmless on its 32-bit register ABI; natively a pointer or `s16` result needs the real prototype). Generated

@@ -172,10 +172,10 @@ void __wrap_CLEAR_FIXE_LUCIOLE(void)
     port_record_gameplay();
     __real_CLEAR_FIXE_LUCIOLE();
     port_record_pass_end(previous);
-    /* DO_MAIN_LOOP_PC_NORMAL (src/pcmain.c 529-539) clears the draw buffer next when the background is off. */
+    /* DO_MAIN_LOOP_PC_NORMAL (src/pcmain.c 529-539) clears the draw buffer next when the background is off (its
+       memset is recorded as a fill); the layer payload notes it for the margin compositor. */
     if (RaymanDansUneMapDuJeu && !(BackgroundOn && FondAutorise == 1)) {
         port_record_world()->background = PORT_SCENE_BG_CLEAR;
-        layer(PORT_OP_CLEAR);
     }
 }
 
@@ -268,6 +268,52 @@ PASS_VOID(DISPLAY_GAME_VIGNET, PORT_PASS_VIGNETTE)
 PASS_VOID(DO_OPTIONS_IN_GAME, PORT_PASS_OPTIONS)
 PASS_VOID(Do_Effect_Pause, PORT_PASS_PAUSE)
 PASS_ARG(HANDLE_KEY, PORT_PASS_KEYS, u8 *)
+
+/* Scene labels: the scene functions PcMain (game/port_main.c) calls, for the renderer's per-scene statistics. */
+#define SCENE_VOID(name) \
+    void __real_##name(void); \
+    void __wrap_##name(void) \
+    { \
+        const char *previous = port_record_scene(#name); \
+        __real_##name(); \
+        port_record_scene(previous); \
+    }
+#define SCENE_ARG(name, type) \
+    void __real_##name(type a); \
+    void __wrap_##name(type a) \
+    { \
+        const char *previous = port_record_scene(#name); \
+        __real_##name(a); \
+        port_record_scene(previous); \
+    }
+
+SCENE_VOID(DO_UBI_LOGO)
+SCENE_VOID(DO_GROS_RAYMAN)
+SCENE_VOID(InitDemoJeu)
+SCENE_VOID(DO_NEW_MENUS)
+SCENE_VOID(DO_WORLD_MAP)
+SCENE_VOID(DEPART_WORLD)
+SCENE_VOID(DEPART_LEVEL)
+SCENE_VOID(START_LEVEL_ANIM)
+SCENE_VOID(INIT_GAME_MODE_NORMAL)
+SCENE_ARG(DO_MAIN_LOOP_PC_NORMAL, u8 *)
+SCENE_VOID(FIN_GAME_MODE_NORMAL)
+SCENE_VOID(DO_CONTINUE)
+SCENE_VOID(DO_VICTOIRE)
+SCENE_VOID(FinDemoJeu)
+SCENE_VOID(FIN_GAME_LOOP)
+SCENE_VOID(FIN_MAP_LOOP)
+SCENE_VOID(FIN_DEAD_LOOP)
+SCENE_ARG(INIT_MOTEUR_LEVEL, s32)
+
+s32 __real_playVideo(const char *path, const char *filename, u8 audio_track);
+s32 __wrap_playVideo(const char *path, const char *filename, u8 audio_track)
+{
+    const char *previous = port_record_scene("playVideo");
+    s32 result = __real_playVideo(path, filename, audio_track);
+    port_record_scene(previous);
+    return result;
+}
 
 /* FNV-1a over the gameplay state the presentation must never change: camera, clock, random table position and
    contents, Rayman and every level object from is_active through field_83 (no pointers in that range). */

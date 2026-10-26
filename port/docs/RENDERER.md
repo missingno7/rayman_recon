@@ -32,15 +32,16 @@ configurable viewport and presentation (4:3, 16:9, 21:9), later optional interpo
 |---|---|---|
 | Gameplay frames of the normal-mode loop (`DO_MAIN_LOOP_PC_NORMAL`): background bands/columns or clear, rear and front weather, map, objects (Rayman, enemies, projectiles, cymbals as sprites), pixel particles, foreground band sprites, firefly darkness, border clear, HUD sprites, time display | **yes, complete in all six demos** | 11,812 gameplay frames, every one drawn only from its recorded frame and equal to the original draw buffer and display over the full 320x200 image (section 8) |
 | Native operations no demo frame reaches (background-off clear, stars, deformation-free boss bar, fairy text, time display, colour sprites) | yes, unverified | same operations as above, but no frame of the demos exercises them (section 4 "parity"); test scenarios needed |
-| Deformed sprites (type 254, `draw_sprite_deform`), fond/border boxes, picture copies, effect segments, dword copies, diff sprites outside the band layers | **no**: recorded as unsupported operations | counted per pass by the gate |
-| Scenes outside the gameplay loop: start-up logos, menus, world map, vignettes, in-game options, pause, credits, loading screens, movies | **no** | their C code writes the buffers directly (section 6) |
+| Scenes outside the gameplay loop reached by the test scenarios: start-up logo, title animation, main menu with plasma boxes, options menu with the sound gauge, save-slot screen with name entry (deformed letters), world map with its binocular view, world vignettes with the page-curl, segment-quad and moving-lens transitions, the in-game options menu (greyscale capture of the frame, translucent frame, zoom-in and fades), the pause screen (spinning snapshot of the frame), the credits, the intro movie (FLC player), the world map's fire-animated quit box | **yes** | every frame and every presented image of the thirteen scenarios (section 8) equal to the reference |
+| Remaining primitives: dword copies, diff sprites and tiles outside their semantic layers, read-backs into game memory | **no**: recorded as unsupported operations | counted per pass by the gate; none in the scenarios |
+| Scenes no scenario reaches yet: the other transition effects (effect2, effect50350, effect6ec80, effecthelp), level animations, in-game vignettes, the pause screensaver's later phase, continue, game over, victory, the conclusion movie, blood melt, the later worlds' levels | **unknown** (untested) | each will be measured when a scenario reaches it; pixel loops in C need a captured operation (section 6) |
 | Palette: DAC, fades, special palettes, cycling | shared | both renderers present indexed pixels through the same emulated DAC; palette state is game/presentation state, not pixels |
 | Mode X | not presented by the port | DIVERGENCES.md |
 
 The **default presentation is still the reference** (`--renderer reference`). `--renderer native` presents only
-the native renderer's display; in gameplay frames it is identical to the reference, outside them it shows what the
-native renderer can draw (gaps are visible, never filled from the original). The default switches at stage D
-(section 10).
+the native renderer's display; it shows exactly the reference images through the whole of every demo run, and
+elsewhere what the native renderer can draw (gaps are visible, never filled from the original). The default
+switches at stage D (section 10), once the menus and the remaining scenes are native.
 
 ## 3. Where a frame comes from
 
@@ -117,41 +118,92 @@ DO_MAIN_LOOP_PC_NORMAL (src/, unchanged)
   from buffer offsets, the clip state in force, the image pointer, the pass) and calls the original once. Inside the
   semantic passes (background, map, front) primitives are not recorded: the layer operation stands for them, and
   the pass check compares it with what they drew.
+- **Memory operations**: the historical units' `memcpy`/`memmove`/`memset` are routed to port services by the
+  pre-included compat/include/port_watcom.h (like `fopen`), and the original inline helpers `fill`/`copy` and the
+  library's `clear_memory` are wrapped. A copy or fill into a target becomes a FILL or COPY operation; a copy's
+  source bytes are captured into the frame's arena when recorded (the game reuses scratch buffers such as PLAN2
+  later in the same frame), or, when the source is itself a target, the native renderer copies between its own
+  surfaces. A copy out of a target into other game memory is a **read-back** (counted as unsupported). Scenes
+  outside the gameplay loop (logo, title animation, vignettes) consist largely of these operations.
+- **Scene labels**: the scene functions PcMain calls (`DO_UBI_LOGO`, `DEPART_WORLD`, `DO_MAIN_LOOP_PC_NORMAL`, ...)
+  are wrapped only to label frames; `--verify-render` reports frames, complete and exact frames per scene.
+- **Screen effects** (render/effect_capture.c, render/effects.c): an effect's pixel pass is reached from another
+  unit, so it is wrapped like a primitive. The wrapper records the pass's inputs (the effect state before its update,
+  its tables, the source and destination buffers as target + offset) as one EFFECT operation and runs the original
+  once with recording suspended; render/effects.c reproduces the pixel pass on the native surfaces. The effect's
+  private state layouts are copied in render/effect_layouts.h and held to the originals by a build-time gate
+  (render/effect_layout_*.c compiles the unit next to the copies and asserts every field offset and size).
+  Implemented: page curl (effect633e0.c `effect_helper_63838`), moving lens (effect6c3b0.c `effect_helper_6c9bc`),
+  plasma boxes (box.c `PlasmaBox`), world-map binoculars (jumelle.c `DisplayJumellesNormal`), and the segment
+  rasterizer `draw_effect_segment` (a primitive, recorded with its descriptor; its texture is staged in the effect
+  buffer).
+- **Deformed sprites**: `draw_sprite_deform` renders into a game scratch buffer (`new_sprite_deform`) that the next
+  sprite draws and the next deform reuses. The deform is a native operation writing the native renderer's copy of
+  that buffer (a scratch slot, render/effects.h); sprites whose image lies in a registered scratch range read the
+  slot. No byte of the original deform output is used.
+- **Images decoded or read into video memory**: asset decoders that write a target directly (`LoadPcxOptions`, the
+  menus' pictures in the effect buffer; the FLC movie player's frames in the draw buffer) and file reads into a
+  target (`read`/`_dos_read`: the movie's compressed frames in the effect buffer) are game code, not drawing; their
+  output, read from the buffer when the decoder or read returns, becomes one image operation (no drawing primitive
+  has touched those bytes). The movie decoder's frame loop is inside its unit: the existing movie.c derivative calls
+  `port_record_asset` after each frame's chunks are decoded, before the frame is paced and copied to the display
+  (provenance.json).
+- **Frames without swaps**: scenes that copy to the display and present without swapping (the movie player) end a
+  frame at each presentation outside gameplay, so a frame stays one presented image.
+- **Fire**: `FireBox` (message boxes, credits) advances the fire field, consuming random numbers, then copies its
+  rows into the draw buffer; the wrapper runs it once and records the field's output rows as an image.
+- **Image lifetimes**: sprites drawn from the level and fixed atlases keep pointers (stable until a load); the
+  loader animation's zero-transparent sprites, decoded per picture into a reused buffer, are copied into the frame.
+  Under `--verify-render` every pointer-held sprite image is hashed when recorded and again when drawn
+  (`volatile_images` must stay 0).
+- **Menu fades**: `apparition_prg`, `fondu_prg` and `FonduPixel_prg` are `SYNCHRO_LOOP` scene callbacks called
+  through a pointer inside frame.c; `SYNCHRO_LOOP` itself is wrapped (render/menu_capture.c) and substitutes
+  trampolines that record each pass with the step it starts from, then run the callback once. `CaptureVideo`
+  (greyscale capture of the built frame for the in-game menu), `CadreTrans` (translucent frame) and
+  `DISPLAY_FOND_MENU` (in-game viewport copy of the menu background) are wrapped calls. `FonduOption`'s two
+  in-place greyscale loops run inside a function called within its own unit: the one derivative of this work,
+  port/derive/menu.patch, adds an observation call before each (no other change; provenance.json).
+- **Draw-buffer origin**: when `DrawBufferNormal` moves (the camera alignment in `update_display_map`, the reset in
+  `FIN_GAME_MODE_NORMAL`), an ORIGIN operation shifts the native draw surface by the same number of bytes, so
+  pixels that are not redrawn keep their memory position as in the original (found by a frame swapped by the menu
+  right after a demo).
 - **Frame** (render/frame.h): ordered operations plus the semantic payload (render/scene.h). Targets: the draw
-  buffer, or the display for primitives that write it directly.
+  buffer, the display (primitives and scenes that write it directly), and the off-screen effect buffer
+  `EffetBufferNormal` (two 64000-byte images: menus, pause, world map and transitions draw and stage pictures there).
+  The swap is an operation too, so the native renderer draws operations incrementally: at every swap and before
+  every present.
 - **Native renderer** (render/native.c, render/world.c; portable C, no game headers): one function per operation,
   each reproducing the original per-pixel rules (ASM_SPEC.md) on a surface of any size and origin. Sprites keep the
   clip-box arithmetic of `clip_sprite_on_screen` (unsigned upper compares, source advance rules, crop inside a
   marker run); band sprites keep the diff-sprite unit clipping including its two gaps.
 - **Native surfaces**: a draw surface with 32-pixel margins (a write past a row's end lands beyond the image, where
   the original's border clear leaves no visible difference; the full-frame check confirms it), and a 320x200
-  display. They persist between frames like the original buffers; nothing is ever copied into them from the
-  original buffers.
+  display, and a 320x400 effect surface. They persist between frames like the original buffers; nothing is ever
+  copied into them from the original buffers.
 - **Presentation**: `--renderer native` makes video/vga.c present the native display; the frame log, dumps and the
   host see that image.
 
 ## 6. Where original pixels are still required
 
-1. **Scenes outside the gameplay loop** write the buffers directly from C (audit: start-up logo `memcpy` of PLAN2
-   (ray_pc.c 58), menus: `CaptureVideo`, `FonduOption`, `fondu_prg`, `apparition_prg`, `CadreTrans`, plasma, fire,
-   gauges; world map: binoculars `DisplayJumellesNormal`; vignettes: `DISPLAY_FOND3` PLAN3 copy; pause and screen
-   effects: `effect_*` band copies and segment rasterizer; loading screens: `fill`; movies: the FLC player writes
-   the display). Each needs a semantic operation captured where the original produces it (link-time wrap of a
-   cross-unit call where one exists, otherwise a minimal reviewed derivative).
-2. **Read-backs**: the in-game menu's greyscale background (`CaptureVideo(draw_buffer)`), the pause snapshot
-   (`effect_copy_band(DrawBufferNormal)`), the simple pause (`SaveScreen(display)`), menu fades (read-modify-write),
-   blood melt. They read the reference buffers. In the native architecture they must read the native surfaces
-   (a native operation "capture the built frame" whose source is the native surface).
+1. **Pixel loops in C** outside the scenes already covered: the credits' fire (box.c), the remaining transition
+   effects (effect2, effect50350, effect6ec80, effecthelp; effect34580's spans go through `copy` and are
+   already native), the pause screensaver, blood melt, and the FLC movie player writing the display. Each needs an
+   operation captured where the original produces it, as for the page curl, lens, plasma and binoculars (section 5:
+   wrap of a cross-unit pixel pass, otherwise a minimal reviewed derivative). Copies, fills and decoded pictures
+   (logo, vignettes, `DISPLAY_FOND3`, loading screens, menu backgrounds) are already native.
+2. **Read-backs**: the pause snapshot (`effect_copy_band(DrawBufferNormal)`), the simple pause
+   (`SaveScreen(display)`), blood melt. They read the reference buffers; in the native architecture they must read
+   the native surfaces, as the in-game menu's greyscale capture and the menu fades now do (their operations read
+   the native draw surface and the native effect buffer).
 3. **Unsupported primitives** (counted by the gate): `draw_sprite_deform`, `DrawFondBoxNormal`,
-   `DrawBorderBoxNormal`, `DisplayAnyPictureNormal`, `draw_effect_segment`, `copy_dwords`, buffer copies other than
-   the full swap, `ClearDrawAndDisplayBufferNormal`, diff sprites and tiles outside their semantic layers.
+   `DrawBorderBoxNormal`, `draw_effect_segment`, `copy_dwords`, buffer copies other than the full swap, diff sprites
+   and tiles outside their semantic layers, copies that straddle a target's bounds.
 4. **The reference draw path still runs** in both modes (each wrapper calls the original primitive). Stage D can
    stop it outside verification only when no game code reads the reference buffers any more (item 2).
 
 Persistence: the original never clears the draw buffer while the background is on; pixels outside the viewport,
 the HUD area and the firefly darkness persist, and the swap copies only the viewport. The native surfaces persist
-the same way. The origin shift of item 3.2 is not modelled (only pixels never redrawn are affected; the full-frame
-check would show it).
+the same way, including the origin shifts of the draw buffer (ORIGIN operations, section 5).
 
 ## 7. Frames, snapshots and resource lifetimes
 
@@ -182,16 +234,33 @@ state, consumes no random numbers.
 - **Presentation independence**: one gameplay-state digest per frame swap (camera, clock, random table and index,
   every object from `is_active` to the end of `obj_t`); identical with `--renderer native`, with `--widescreen`,
   across runs and across x86_64/i686.
-- Gates: `tests/e2e_native.py` (ctest `port_native_demos`): all six demos, reference and native presentation, every
-  gameplay frame complete and exact, every gameplay pass exact, state logs identical. `tests/e2e_wide.py` keeps the
-  margin experiment honest (section 9).
+- **Presented images**: before every present the native display is compared with the original display
+  (`presents`, `present_exact`), and the frame log of a `--renderer native` run hashes the native image.
+- Gates: `tests/e2e_native.py` (ctest `port_native_demos`): thirteen scenarios (six demos, the idle menu path, and
+  key scripts in tests/keys: a new game to world 1 level 1, the options menu, the in-game options menu, pause, the
+  credits, and with the movie data the intro movie, world map and quit box), reference and native presentation:
+  presented-frame logs identical over the whole run, every frame (gameplay and other) complete and exact, every
+  presented image exact, every gameplay pass exact, state logs identical. `tests/e2e_wide.py` keeps the margin
+  experiment honest (section 9).
+- Debugging: `RAYMAN_RENDER_TRAP="FRAME X Y [TARGET]"` calls `port_record_trap(address)` when frame FRAME starts,
+  with the address of pixel (X, Y) of the draw buffer, display or effect buffer: a debugger watchpoint there names
+  the code that writes it (`gdb -x` with `break port_record_trap`, `watch -l *(unsigned char *)$rcx`). This found
+  each pixel loop above. `RAYMAN_RENDER_EXPLAIN="FRAME X Y [TARGET]"` lists the native operations that change that
+  pixel (`RAYMAN_RENDER_EXPLAIN_ALL=1`: every operation of the frame).
 - Result 2026-10-26 (x86_64, 6000 presented frames per demo): gameplay frames 2,094 / 1,628 / 1,800 / 2,016 /
   2,578 / 1,696 (demos 0-5, 11,812 in all), every one complete and equal to the original in draw buffer and
   display; every gameplay pass exact; state logs identical in reference and native presentation. Operations drawn
   natively: 494,605 object sprites, 82,709 HUD sprites, 92,654 particle pixels, 647,078 weather stamps, 4,032 black
   boxes, 2,016 firefly rings, 2 border clears, and one background, map, front and border-clear operation per
   frame. `--verify-render` prints these counts (`render ops`).
-- Non-gameplay frames: 1,758 start-up frames per demo run are recorded but not yet native (section 6.1).
+- Whole runs (6000 presented frames each): the 1,758 frames before gameplay (logo 2, title animation 1,419,
+  world vignette and page curl 336, ...) are complete and exact in every demo; the idle menu path (1,817 menu frames,
+  6,839 presents) and the scripted new game (1,859 menu and name-entry frames, 70 world-map frames, 279 vignette and
+  lens-transition frames, 5,995 gameplay frames; 16,416 presents), the options menu (2,296 menu frames) and the
+  in-game menu (7,317 gameplay-loop frames including the menu's capture, zoom-in and fades; 18,461 presents),
+  pause (20,422 presents), the credits (9,779 presents) and the intro movie (1,805 movie frames, 6,813 presents)
+  likewise; every presented image equals the original display, and the native presentation's frame logs equal the
+  reference's.
 
 ## 9. Widescreen
 
@@ -221,12 +290,13 @@ of the draw surface and of each operation's clip rule. Policies to decide explic
 |---|---|---|
 | A ownership audit | draw path, stateful passes, direct writes, read-backs, viewport decisions; full-frame parity strategy | done for the normal gameplay loop (this document, audit facts in sections 4 and 6); Mode X loop not audited |
 | B complete semantic frame | display list of every drawing operation + semantic layers; identity tags; resource generations | operations and layers done for gameplay frames; identity and generations open (section 7) |
-| C complete native software renderer | every operation drawn natively, full 320x200 parity | gameplay frames of the demos complete; next: unsupported primitives, nested scenes, non-gameplay scenes (section 6), test scenarios beyond the demos (key scripts, recorded BizHawk replays) |
+| C complete native software renderer | every operation drawn natively, full 320x200 parity | thirteen scenarios complete: demos, menus, options, save slots and name entry, world map, three transitions, gameplay, in-game options menu, pause, credits, intro movie; next: scenarios for the scenes still unreached (level endings, vignettes, continue, game over, victory, the other transitions, later worlds) |
 | D native renderer is the normal output | default `--renderer native`; read-backs from native surfaces; reference path only under verification | open |
 | E viewport independence | wider draw surface, same operations, section 9 policies; remove render/compose.c | open |
 | F presentation decoupling and interpolation | present recorded frames at the monitor's rate; interpolate tagged positions; snap on teleports, spawns, slot reuse, animation resets, scene changes, camera jumps; never more game updates | open |
 | G optional GPU backend | same frame contract | open |
 
-Next concrete step: the remaining primitives of gameplay scenes (deformation for type 254, fond/border boxes for
-text boxes, picture copies) with targeted test scenarios, then the start-up logo and the menu scenes, each as
-semantic operations captured where the original produces them.
+Next concrete step: scenarios that reach a level ending (vignette, continue), game over, victory and the later
+worlds, which need recorded play (BizHawk replays converted to key scripts, or saved games), then each scene's
+remaining pixel loops as captured operations, found with the trap and explain tools and measured scene by scene with
+the per-scene report.

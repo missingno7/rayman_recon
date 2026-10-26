@@ -10,8 +10,8 @@
 
 /* Can the native renderer draw this operation? */
 int port_native_supports(const port_op *op);
-/* Draw operations [first, last) of the frame, in order, onto the draw-buffer surface or the display surface
-   named by each operation's target (display may be NULL). Logical coordinates; the surfaces clip. */
-void port_native_draw(const port_frame *f, int first, int last, port_surface *draw, port_surface *display);
+/* Draw operations [first, last) of the frame, in order, onto the surface of each operation's target
+   (surfaces[PORT_TARGET_COUNT]; NULL skips). Logical coordinates; the surfaces clip. */
+void port_native_draw(const port_frame *f, int first, int last, port_surface *const *surfaces);
 
 #endif

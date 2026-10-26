@@ -47,7 +47,6 @@ enum port_pass {
 };
 
 enum port_op_kind {
-    PORT_OP_CLEAR,             /* the loop's background-disabled clear (16008 dwords from the buffer start) */
     PORT_OP_BACKGROUND,        /* scene background layer (render/world.c, ORIGINAL fidelity) */
     PORT_OP_MAP,               /* scene map layer */
     PORT_OP_FRONT,             /* scene foreground band sprites */
@@ -56,6 +55,23 @@ enum port_op_kind {
     PORT_OP_PIXEL,             /* fplot_Normal */
     PORT_OP_WEATHER,           /* draw_flocon* and draw_pluie* stamps */
     PORT_OP_BLACK_BOX,         /* DrawBlackBoxNormal */
+    PORT_OP_FILL,              /* memset/fill into a video buffer: w bytes of `color` from linear offset x */
+    PORT_OP_COPY,              /* memcpy/copy into a video buffer: w bytes to linear offset x, forward, from `image`
+                                  (bytes captured when recorded) or, with flags 1, from linear offset y of the
+                                  surface of target `color` */
+    PORT_OP_PICTURE,           /* DisplayAnyPictureNormal: w x h bytes from `image` (captured rows) at (x, y) */
+    PORT_OP_SWAP,              /* frame swap: rows of w bytes (rounded down to 4) x h from draw (x, y) to display
+                                  (clip[0], clip[1]) */
+    PORT_OP_BORDER_BOX,        /* DrawBorderBoxNormal: bevel at linear offset x, h rows, w columns, size = colours
+                                  (light | dark << 8) */
+    PORT_OP_FOND_BOX,          /* DrawFondBoxNormal: +/-5 shading from the diagonal neighbour, linear offset x, h rows,
+                                  w columns, flags = type (2 = backwards, lighter) */
+    PORT_OP_DEFORM,            /* draw_sprite_deform into native scratch slot `w`: image = source sprite, payload in
+                                  clip..: see render/effects.h port_deform */
+    PORT_OP_EFFECT,            /* a screen effect's pixel pass (flags = enum port_effect, image = its payload,
+                                  render/effects.h) */
+    PORT_OP_ORIGIN,            /* the draw buffer's origin moved by x bytes (update_display_map, FIN_GAME_MODE_NORMAL):
+                                  pixels keep their memory, so their logical position moves by -x */
     PORT_OP_CLEAR_OUTSIDE,     /* ClearBorder: zero everything outside the rectangle clip (x0, x1, y0, y1) */
     PORT_OP_FIREFLY,           /* aff_luciole: darkness around the lit window (x, y centre; size rayon_luciole;
                                   h ADDLUCLIP; clip = the full viewport Bloc_lim_*_Glob) */
@@ -63,12 +79,20 @@ enum port_op_kind {
     PORT_OP_KIND_COUNT
 };
 
+/* Video memory the game draws into; each has a native surface. */
+enum port_target {
+    PORT_TARGET_DRAW,          /* DrawBufferNormal: the frame being built (320-byte rows, origin moves with the camera) */
+    PORT_TARGET_DISPLAY,       /* the VGA display (written by swaps, and directly by some scenes) */
+    PORT_TARGET_EFFECT,        /* EffetBufferNormal: 2 x 64000-byte off-screen images (menus, pause, world map) */
+    PORT_TARGET_COUNT
+};
+
 /* Every drawing primitive the recorder observes (names of the original entries). */
 enum port_prim {
     PORT_PRIM_SPRITE, PORT_PRIM_SPRITE_DIFF, PORT_PRIM_TILE, PORT_PRIM_PLAN0_COPY, PORT_PRIM_PIXEL,
     PORT_PRIM_WEATHER, PORT_PRIM_BLACK_BOX, PORT_PRIM_FOND_BOX, PORT_PRIM_BORDER_BOX, PORT_PRIM_PICTURE,
     PORT_PRIM_CLEAR_BORDERS, PORT_PRIM_CLEAR_SCREEN, PORT_PRIM_BUFFER_COPY, PORT_PRIM_DEFORM, PORT_PRIM_EFFECT,
-    PORT_PRIM_DWORD_COPY, PORT_PRIM_COUNT
+    PORT_PRIM_DWORD_COPY, PORT_PRIM_MEMORY, PORT_PRIM_READBACK, PORT_PRIM_COUNT
 };
 
 /* PORT_OP_SPRITE variants (the eight DrawSprite*Normal* entries). */
@@ -76,17 +100,21 @@ enum port_prim {
 #define PORT_SPRITE_RAW 2      /* zero-transparent 256-colour (loader) instead of marker runs */
 #define PORT_SPRITE_COLOR 4    /* visible pixels OR (color * 8) */
 #define PORT_SPRITE_NOCLIP 8   /* no clipping */
+#define PORT_SPRITE_SCRATCH 16 /* image read from native scratch slot `w` at byte `h` (a deformed sprite) */
 
 typedef struct port_op {
     uint8_t kind, pass;
-    uint8_t target;            /* 0 = draw buffer, 1 = display (written directly, outside the swap) */
+    uint8_t target;            /* enum port_target */
     uint8_t flags;             /* SPRITE: PORT_SPRITE_*; WEATHER: stamp; UNSUPPORTED: enum port_prim */
     uint8_t color;             /* SPRITE: colour argument; PIXEL: colour */
     int32_t x, y;              /* logical position (draw buffer offsets converted to x, y) */
     uint32_t size;             /* SPRITE: (height << 8) | width as passed */
     int32_t w, h;              /* BLACK_BOX: width, height; CLEAR_BORDERS: right offset, height */
     int32_t clip[4];           /* SPRITE: clip box xmin, xmax, ymin, ymax; WEATHER: top, bottom, left, right */
-    const uint8_t *image;      /* SPRITE: image data */
+    const uint8_t *image;      /* SPRITE: image data (game-owned atlas, or bytes captured into the frame) */
+    uint32_t check;            /* verification: hash of a game-owned image when recorded (0 = not checked) */
+    int32_t base;              /* SPRITE: linear offset of the buffer the drawer was given (0 = the target's origin;
+                                  the menus draw into the second half of the effect buffer) */
     int32_t source;            /* identity of the drawn game entity, -1 = not tagged yet */
 } port_op;
 

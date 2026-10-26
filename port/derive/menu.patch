@@ -1,0 +1,27 @@
+--- a/src/menu.c
++++ b/src/menu.c
+@@ -164,6 +164,8 @@
+ extern u8 is_joypad_mode;
+ extern u8 something_with_cfg_25_default_00_joy;
+ extern rgb_palette_t MenuPalette;
++/* PORT: native renderer observation of FonduOption's in-place greyscale passes (port/render/effect_capture.c). */
++void port_record_menu_grey(u8 *rectangle, s16 width, s16 height, const void *palette);
+ extern u8 ModeDemo;
+ extern u8 MusicCdActive;
+ extern u8 OptionGame;
+@@ -3377,6 +3379,7 @@
+         SYNCHRO_LOOP_PALETTE(change_couleur_prg);
+ 
+         row = DrawBufferNormal + xFondu + SCREEN_WIDTH * yFondu;
++        port_record_menu_grey(row, wFondu, hFondu, &MenuPalette); /* PORT: renderer observation (RENDERER.md) */
+         for (j = 0; j < hFondu; ++j) {
+             for (i = 0; i < wFondu; ++i) {
+                 *row = (MenuPalette.colors[*row].r + MenuPalette.colors[*row].g + MenuPalette.colors[*row].b) / 3 + 128;
+@@ -3394,6 +3397,7 @@
+ 
+     if (mode == 1) {
+         row = EffetBufferNormal + SCREEN_WIDTH * SCREEN_HEIGHT + xFondu + SCREEN_WIDTH * yFondu;
++        port_record_menu_grey(row, wFondu, hFondu, &MenuPalette); /* PORT: renderer observation (RENDERER.md) */
+         for (j = 0; j < hFondu; ++j) {
+             for (i = 0; i < wFondu; ++i) {
+                 *row = (MenuPalette.colors[*row].g + MenuPalette.colors[*row].r + MenuPalette.colors[*row].b) / 3 + 128;

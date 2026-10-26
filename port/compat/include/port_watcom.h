@@ -59,6 +59,15 @@
 #define rand port_rand
 #define srand port_srand
 
+/* Copies and fills into the video buffers are drawing operations the port's renderer records (port/render/record.c,
+   docs/RENDERER.md); every call then runs the C library's. */
+void *port_memcpy(void *destination, const void *source, size_t count);
+void *port_memmove(void *destination, const void *source, size_t count);
+void *port_memset(void *destination, int value, size_t count);
+#define memcpy port_memcpy
+#define memmove port_memmove
+#define memset port_memset
+
 /* Last: Watcom flag values over every host definition (port_watcom_fcntl.h). */
 #include "port_watcom_fcntl.h"
 

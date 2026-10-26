@@ -1,11 +1,13 @@
 --- a/src/movie.c
 +++ b/src/movie.c
-@@ -11,11 +11,15 @@
+@@ -11,11 +11,17 @@
  #include <io.h>
  #include <stdio.h>
  #include <string.h>
 +/* PORT: optional diagnostic observations; no policy or clock effects. */
 +#include "platform/movie_trace.h"
++/* PORT: decoded movie frames become image operations of the native renderer (port/render/record.c). */
++void port_record_asset(void *buffer, size_t n);
  
  typedef struct movie_surface_t {
      u8 *pixels;
@@ -16,7 +18,7 @@
  } movie_surface_t;
  
  typedef struct movie_work_t {
-@@ -52,7 +56,12 @@
+@@ -52,7 +58,12 @@
      u16 type;
  } movie_chunk_t;
  
@@ -30,7 +32,7 @@
  
  extern u8 *DrawBufferNormal;
  extern u8 *DisplayBufferNormal;
-@@ -106,7 +115,7 @@
+@@ -106,7 +117,7 @@
  void sub_3A1E0(void);
  s32 sub_3A1EC(u8 mode);
  u8 sub_3A214(void);
@@ -39,7 +41,7 @@
  void sub_3A2AC(void);
  s32 sub_3A2C4(movie_surface_t *surface);
  s32 sub_3A2C8(movie_surface_t *surface);
-@@ -114,8 +123,8 @@
+@@ -114,8 +125,8 @@
  void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width);
  void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width);
  void sub_3A34C(movie_surface_t *surface, s32 x, s32 y, u16 color, u32 width);
@@ -50,7 +52,7 @@
  s32 sub_3A488(u32 *timer);
  void sub_3A4A4(s32 *timer);
  s32 sub_3A4B8(s32 *timer);
-@@ -123,8 +132,8 @@
+@@ -123,8 +134,8 @@
  s32 sub_3A538(s32 *fd, const char *path);
  s32 sub_3A55C(s32 fd, void *buffer, u32 count);
  s32 sub_3A578(s32 fd, u8 **buffer, u32 count);
@@ -61,7 +63,7 @@
  void sub_3A664(const u8 *data, movie_work_t *work, movie_surface_t *surface,
                 movie_palette_writer_t writer);
  void sub_3A6D0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
-@@ -134,7 +143,7 @@
+@@ -134,7 +145,7 @@
  void sub_3A8A0(const u8 *data, movie_work_t *work, movie_surface_t *surface);
  void sub_3A9F4(const u8 *data, movie_work_t *work, movie_surface_t *surface);
  void sub_3AA08(const u8 *data, movie_work_t *work, movie_surface_t *surface);
@@ -70,7 +72,7 @@
  s32 sub_3AA70(movie_work_t *work, char *path);
  s32 sub_3ABE4(movie_work_t *work, movie_frame_header_t *frame,
                const u8 *chunks, movie_surface_t *surface, s32 *timer);
-@@ -176,14 +185,14 @@
+@@ -176,14 +187,14 @@
      return regs.h.al;
  }
  
@@ -90,7 +92,7 @@
      movie_saved_mode = 0x3c;
      old_frequency = VGA_FREQ;
      VGA_FREQ = 0x3c;
-@@ -261,7 +270,7 @@
+@@ -261,7 +272,7 @@
      }
  }
  
@@ -99,7 +101,7 @@
  {
      s32 i;
      s32 end;
-@@ -281,7 +290,7 @@
+@@ -281,7 +292,7 @@
          movie_palette_xmax = end;
  }
  
@@ -108,7 +110,7 @@
  {
      s32 i;
      s32 end;
-@@ -393,7 +402,7 @@
+@@ -393,7 +404,7 @@
      return 0;
  }
  
@@ -117,7 +119,7 @@
  {
      s32 status;
  
-@@ -403,8 +412,8 @@
+@@ -403,8 +414,8 @@
          return -13;
      else
          movie_audio_track = (WindowsLance == 0);
@@ -128,7 +130,7 @@
      if (status < 0)
          goto return_status;
      status = sub_3A1C0();
-@@ -416,16 +425,16 @@
+@@ -416,16 +427,16 @@
      return 0;
  
  restore_timer:
@@ -148,7 +150,7 @@
      sub_3A1E0();
      if (MusicCdActive) {
          sub_1a5b8(AudioStatusByte() & 0xff);
-@@ -451,7 +460,7 @@
+@@ -451,7 +462,7 @@
          run = *src++;
          if (run == 0)
              run = 0x100;
@@ -157,7 +159,7 @@
          src += run * 3;
          index += run;
      }
-@@ -667,19 +676,16 @@
+@@ -667,19 +678,16 @@
      } while (--rows != 0);
  }
  
@@ -181,7 +183,16 @@
      status = sub_3A538(&work->fd, path);
      if (status < 0)
          goto open_error;
-@@ -838,6 +844,9 @@
+@@ -772,6 +780,8 @@
+             break;
+         }
+     }
++    /* PORT: renderer observation (port/docs/RENDERER.md): the decoded frame as an image operation. */
++    port_record_asset(surface->pixels, (size_t)surface->width * (size_t)surface->height);
+ 
+     if (work->sound_mode > 0 && MusicCdActive && movie_audio_state != 2 && movie_audio_counter != -1) {
+         audio_device = AudioStatusByte();
+@@ -838,6 +848,9 @@
              src += 320;
          } while (--rows != 0);
      }
@@ -191,7 +202,7 @@
      if (movie_audio_track != 0)
          movie_audio_enabled = 1;
      else
-@@ -893,7 +902,7 @@
+@@ -893,7 +906,7 @@
          effect_set_audio_status(AudioStatusByte());
          movie_audio_state = 1;
      }
@@ -200,7 +211,7 @@
      i = 0;
      movie_audio_counter = 0;
      for (; i < work->frame_count; ++i) {
-@@ -930,7 +939,7 @@
+@@ -930,7 +943,7 @@
  
      sub_3B0F4(work);
      lseek(work->fd, work->data_offset, 0);
@@ -209,7 +220,7 @@
      status = sub_3AF20(work, surface, timer);
      if (status < 0)
          return status;
-@@ -991,11 +1000,10 @@
+@@ -991,11 +1004,10 @@
  extern void sub_1a5b8(s32 state);
  
  typedef struct movie_local_t {
@@ -224,7 +235,7 @@
  } movie_local_t;
  
  
-@@ -1005,6 +1013,7 @@
+@@ -1005,6 +1017,7 @@
      s32 count;
      s8 color;
  
@@ -232,7 +243,7 @@
      for (count = 0; count < 0x40; count += 2) {
          for (pos = 0; pos != 0x300; pos += 3) {
              color = movie_video_buffer[pos] - 2;
-@@ -1060,31 +1069,39 @@
+@@ -1060,31 +1073,39 @@
          audio_track = 0;
  
      sub_3B260();
