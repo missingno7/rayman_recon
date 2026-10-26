@@ -10,6 +10,13 @@
 
 #include "game/port_main.h"
 
+/* The historical units must see the Watcom encoding port_open() decodes (compat/include/port_watcom_fcntl.h). */
+#include <fcntl.h>
+#include <io.h>
+#include <sys/stat.h>
+_Static_assert(O_RDWR == 0x0002 && O_CREAT == 0x0020 && O_TRUNC == 0x0040 && O_TEXT == 0x0100 &&
+               O_BINARY == 0x0200, "historical units must see Watcom O_* values");
+
 /* src/pcmain.c 40-43 */
 #define MODE_NORMAL 0
 #define SCREEN_HEIGHT 200

@@ -33,6 +33,9 @@ Every `game`-profile unit of `config/units.json` is compiled by a modern C compi
   aliasing, shared tentative definitions (`-fcommon`), SysV bit-field layout;
 - unknown pragmas ignored: `#pragma aux` ABI declarations have no native meaning; the `#pragma aux NAME = ...`
   ORIGINAL_INLINE sequences are implemented as C functions in `compat/src/inline_helpers.c`.
+- the Watcom `<fcntl.h>` flag values (`compat/include/port_watcom_fcntl.h`, applied after every host header;
+  `port_open` decodes them). A static assertion in `game/port_main.c` and the `port_config_roundtrip` gate
+  (RAYMAN.CFG written, reloaded, sound card kept) guard it.
 
 `pcmain.c`'s `void main(int, char **)` is compiled as `rayman_dos_main` (game/units.json); the SDL3 host owns
 the process entry point.

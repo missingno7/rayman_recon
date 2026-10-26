@@ -9,33 +9,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/* Watcom 10.6 <fcntl.h> / <sys/stat.h> flag values (C:\tools\watcom-10.6\H). The historical sources pass these
-   numerically (e.g. movie.c opens with the literal 0x200 = O_BINARY): the host C library's own values differ
-   (in MSVCRT 0x200 is O_TRUNC), so port_open() always decodes the Watcom encoding. */
-#undef O_RDONLY
-#undef O_WRONLY
-#undef O_RDWR
-#undef O_APPEND
-#undef O_CREAT
-#undef O_TRUNC
-#undef O_NOINHERIT
-#undef O_TEXT
-#undef O_BINARY
-#undef O_EXCL
-#define O_RDONLY    0x0000
-#define O_WRONLY    0x0001
-#define O_RDWR      0x0002
-#define O_APPEND    0x0010
-#define O_CREAT     0x0020
-#define O_TRUNC     0x0040
-#define O_NOINHERIT 0x0080
-#define O_TEXT      0x0100
-#define O_BINARY    0x0200
-#define O_EXCL      0x0400
-#undef S_IREAD
-#undef S_IWRITE
-#define S_IREAD     0000400
-#define S_IWRITE    0000200
+/* The Watcom <fcntl.h>/<sys/stat.h> flag values are applied by port_watcom_fcntl.h (see there). */
 
 #ifdef __cplusplus
 extern "C" {

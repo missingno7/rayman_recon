@@ -203,6 +203,10 @@ include(tests/effect_diff.cmake)
 
 # End to end: the six original recorded demos (worlds 1-5) through the whole game, deterministic, against the reviewed golden summary
 # shared by all architectures (tests/golden).
+# The game's own RAYMAN.CFG survives a restart (two sessions, scripted menu walk).
+add_test(NAME port_config_roundtrip COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/config_roundtrip.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
+
 foreach(_demo 0 1 2 3 4 5)
     add_test(NAME port_e2e_demo${_demo} COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_demo.py
         $<TARGET_FILE:rayman> ${RAY_DATA} ${_demo} ${RAY_CD_TEST_IMAGE})

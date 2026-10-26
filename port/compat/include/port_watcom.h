@@ -59,4 +59,7 @@
 #define rand port_rand
 #define srand port_srand
 
+/* Last: Watcom flag values over every host definition (port_watcom_fcntl.h). */
+#include "port_watcom_fcntl.h"
+
 #endif
