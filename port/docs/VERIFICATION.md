@@ -24,8 +24,8 @@ never executed: only the rebuilt executable, as required.
 | Virtual CD drive | 552 checks per build (`tests/cd_tests.c`, `cd_audio_tests.c`, missing-disc path) |
 | Compat helpers, record decoder, assets, PIT/retrace model | `tests/unit_tests.c` |
 | Source connection | derivatives apply to reviewed bases; PcMain mirror pinned; generated prototypes current; every 64-bit-sensitive compiler site has a verdict |
-| Semantic renderer vs original draw buffer (`--verify-render`, six demos) | background and map identical in every frame: 11,818 map frames, 9,239 background frames (weather frames have no background reference), 0 differing pixels (docs/RENDERER.md 4) |
-| Wider presentation (`tests/e2e_wide.py`) | frame-hash and gameplay-state logs identical with and without `--widescreen`; original image unchanged in the centre of every dumped wide frame; margins drawn in five demos (the sixth is a firefly level, black by design) |
+| Native renderer vs original (`tests/e2e_native.py`, `--verify-render`, six demos) | all 11,812 gameplay frames complete (every operation drawn natively) and equal to the original draw buffer and display over the full 320x200 image; every gameplay pass equal to the original's changes; gameplay-state log per swap identical with `--renderer native` (docs/RENDERER.md 8) |
+| Margin experiment (`tests/e2e_wide.py`, reference renderer, to be replaced at stage E) | frame-hash and gameplay-state logs identical with and without `--widescreen`; original image unchanged in the centre of every dumped wide frame; margins drawn in five demos (the sixth is a firefly level, black by design) |
 
 ## Not yet verified
 

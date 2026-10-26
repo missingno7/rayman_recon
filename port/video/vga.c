@@ -8,6 +8,7 @@
 #include "platform/clock.h"
 #include "platform/host.h"
 #include "render/compose.h"
+#include "render/record.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -62,22 +63,26 @@ static void present(void)
 {
     static const uint8_t black[768];
     const uint8_t *dac = bios_mode == 0x13 ? port_vga_dac : black;
+    /* Native renderer: its own display (render/record.c); otherwise the original display memory. */
+    const uint8_t *image = port_record_presented();
+    if (!image)
+        image = port_vga_aperture;
     dirty = 0;
-    if (shown_valid && !memcmp(shown_pixels, port_vga_aperture, sizeof shown_pixels) &&
+    if (shown_valid && !memcmp(shown_pixels, image, sizeof shown_pixels) &&
         !memcmp(shown_dac, dac, sizeof shown_dac)) {
         port_pc_poll();
         return;
     }
-    memcpy(shown_pixels, port_vga_aperture, sizeof shown_pixels);
+    memcpy(shown_pixels, image, sizeof shown_pixels);
     memcpy(shown_dac, dac, sizeof shown_dac);
     shown_valid = 1;
     last_present = port_clock_ns();
     {
         /* The presentation viewport (render/compose.c) frames the unchanged image; hooks see the image itself. */
         int width;
-        const uint8_t *frame = port_render_compose(port_vga_aperture, &width);
+        const uint8_t *frame = port_render_compose(image, &width);
         if (frame_hook)
-            frame_hook(port_vga_aperture, dac, frame_hook_user);
+            frame_hook(image, dac, frame_hook_user);
         port_host_present(frame, width, width, dac);
     }
     port_pc_poll();

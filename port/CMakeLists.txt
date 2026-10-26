@@ -143,11 +143,26 @@ add_custom_command(
     COMMENT "Extracting external data assets from RAYMAN.EXE")
 
 # game/port_main.c mirrors PcMain and is compiled exactly like the historical units it calls.
-# render/scene_capture.c reads game state for the semantic renderer (port/docs/RENDERER.md); its observation
-# point is DRAW_MAP's call in DO_MAIN_LOOP_PC_NORMAL, redirected at link time (no source change).
+# render/scene_capture.c reads game state for the native renderer (port/docs/RENDERER.md). Observation points,
+# redirected at link time (no source change, each original called exactly once): the passes DO_MAIN_LOOP_PC_NORMAL
+# calls (wrapped in render/scene_capture.c), and the drawing primitives and frame swaps (render/record.c).
 add_library(rayman_hist STATIC ${RAY_HIST_SOURCES} ${RAY_PORT}/game/port_main.c ${RAY_PORT}/game/dos_records.c
     ${RAY_PORT}/render/scene_capture.c ${RAY_ASSETS_C})
-target_link_options(rayman_hist INTERFACE "-Wl,--wrap=DRAW_MAP")
+set(RAY_RENDER_PASSES CLEAR_FIXE_LUCIOLE Display_Back_Screen display_flocons_behind DRAW_MAP display_grp_stars
+    DISPLAY_ALL_OBJECTS display_pix_gerbes Display_Sprite_On_Front display_flocons_before Display_and_free_luciole
+    DISPLAY_TEXT_FEE DISPLAY_FIXE DisplayCrackers DisplayProgrammerMessage display_time DISPLAY_GAME_VIGNET
+    DO_OPTIONS_IN_GAME Do_Effect_Pause HANDLE_KEY ClearBorder)
+set(RAY_RENDER_PRIMITIVES DrawSpriteNormalNoClip DrawSpriteNormal DrawSpriteNormal256 DrawSpriteFlipNormalNoClip
+    DrawSpriteFlipNormal DrawSpriteFlipNormal256 DrawSpriteColorNormal DrawSpriteColorFlipNormal DrawSpriteDiffNormal
+    Display_Bloc Display_Bloc_Plein Display_Bloc_Clippe Display_Bloc_Plein_Clippe Copy_Plan0Diff_To_Buf asm_04d55
+    fplot_Normal flocon_clipping draw_flocon1_Normal draw_flocon2_Normal draw_flocon3_Normal draw_flocon4_Normal
+    draw_flocon5_Normal draw_flocon6_Normal draw_flocon7_Normal draw_normal_5755 draw_pluie5_Normal
+    draw_pluie6_Normal draw_pluie7_Normal DrawBlackBoxNormal DrawFondBoxNormal DrawBorderBoxNormal
+    DisplayAnyPictureNormal clear_borders_Normal N_CLRSCR ClearDrawAndDisplayBufferNormal DisplayBufferModeNormal
+    draw_sprite_deform draw_effect_segment copy_dwords Swap_To_Screen get_joy_input1_dos1 get_joy_input1_dos2)
+foreach(sym IN LISTS RAY_RENDER_PASSES RAY_RENDER_PRIMITIVES)
+    target_link_options(rayman_hist INTERFACE "-Wl,--wrap=${sym}")
+endforeach()
 target_include_directories(rayman_hist PRIVATE
     ${RAY_PORT}/compat/include ${RAY_SRC}/include ${RAY_SRC} ${RAY_PORT} ${RAY_ROOT}/docs/semantics/generated)
 target_compile_options(rayman_hist PRIVATE ${RAY_HIST_FLAGS}
@@ -174,6 +189,8 @@ add_library(rayman_native STATIC
     platform/cd_audio.c
     platform/audio.c
     render/world.c
+    render/native.c
+    render/record.c
     render/compose.c)
 target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
@@ -218,6 +235,9 @@ include(tests/effect_diff.cmake)
 add_test(NAME port_wide_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_wide.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
 set_tests_properties(port_wide_demos PROPERTIES TIMEOUT 1800)
+add_test(NAME port_native_demos COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/e2e_native.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
+set_tests_properties(port_native_demos PROPERTIES TIMEOUT 1800)
 add_test(NAME port_config_roundtrip COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/config_roundtrip.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
 

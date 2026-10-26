@@ -1,5 +1,5 @@
 #include "render/compose.h"
-#include "render/capture.h"
+#include "render/record.h"
 #include "render/world.h"
 
 #include <string.h>

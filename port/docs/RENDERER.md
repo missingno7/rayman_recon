@@ -1,135 +1,232 @@
-# Semantic renderer
+# Native renderer
 
-Goal (user brief 2026-10-26): a native renderer that consumes semantic scene information (tiles, sprites, world
-positions, camera, layers, palettes, HUD, effects) instead of the finished 320x200 frame, so the port can later offer
-widescreen views of more of the original world, presentation at the monitor's refresh rate, interpolated motion that
-does not change simulation speed, in-game display settings, and an Android port. Constraints: `src/` and STRICT
-matching are untouched; `DO_MOTEUR`, object activation, the gameplay tick and the RNG are unchanged; the original
-pixel path stays the reference; the semantic renderer must reproduce the original image before it is trusted with
-anything wider; effects that need special handling are listed, not approximated.
-
-## 1. Where a gameplay frame comes from
-
-`DO_MAIN_LOOP_PC_NORMAL` (src/pcmain.c 478, DOS 1:070e0) runs one iteration per presented frame:
-
-1. present the frame built in the previous iteration: palette work (`fades`, `DoPaletteSpecialPC`,
-   `DO_SWAP_PALETTE`), then `Swap_To_Screen` copies the draw buffer to the display;
-2. `display_mode + 1` engine updates (`DO_GROS_MOTEUR_NORMAL`: `DO_MOTEUR`, `DO_MOTEUR2`, `get_luciole`,
-   `update_display_map`);
-3. build the next frame into the draw buffer, in this order (docs/port/RENDERING.md 1):
-
-| Pass | Function | State it reads | Semantic layer |
-|---|---|---|---|
-| background | `Calcul_Deplacement_Bande` (updates `Bande[].field_6`), `Display_Back_Screen` or a clear | bands, background image, `ymap`, `Val_*_Scroll_Y`, sprites | **implemented** |
-| rear weather | `display_flocons_behind` | weather groups | open |
-| map | `DRAW_MAP` | `BIG_MAP`, `display_map` (camera) | **implemented** |
-| grapple stars | `display_grp_stars` | star list | open |
-| objects | `DISPLAY_ALL_OBJECTS` (+ Rayman, fist, cymbal layers, boss bar) | active list, animations, sprites | next slice |
-| particles | `display_pix_gerbes` | Q6 particles | open |
-| foreground sprites | `Display_Sprite_On_Front` | background sprites on zero-length bands | **implemented** |
-| front weather | `display_flocons_before` | weather groups | open |
-| firefly lighting | `Display_and_free_luciole` | lit window | special (section 5) |
-| border | `clear_borders_Normal` | `Bloc_lim` | special (section 5) |
-| HUD / overlays | `DISPLAY_TEXT_FEE` or `DISPLAY_FIXE`, crack/programmer messages, `display_time`, vignettes, options | screen-space state | open |
-
-4. a missed deadline may run one more engine update without drawing (`DO_GROS_MOTEUR_NORMAL(1)`).
-
-So the image swapped at the start of iteration N+1 was built from the state at the end of iteration N's engine
-updates, and the state may advance once more before it is shown. A snapshot therefore has to be taken while the
-frame is built, not when it is presented.
-
-## 2. Architecture
+## 1. Target architecture (user brief 2026-10-26, revised the same day)
 
 ```
-historical units (src/, unchanged) ──DRAW_MAP call──▶ render/scene_capture.c ──port_scene──▶ render/world.c
-        │ draw buffer                                   (reads game state only)              (portable renderer)
-        ▼                                                                                        │
-  Swap_To_Screen ──▶ video/vga.c ──▶ render/compose.c (original image + semantic margins) ──▶ platform/host.c
+reconstructed original game logic (src/, unchanged; runs once per frame, as on DOS)
+        |  its own draw-order, culling and animation decisions
+        v
+complete semantic render frame (render/frame.h): ordered operations + semantic layers
+        |
+        v
+ONE native rendering pipeline (render/native.c, render/world.c)
+        |
+        v
+configurable viewport and presentation (4:3, 16:9, 21:9), later optional interpolation
 ```
 
-- **Observation point.** The `DRAW_MAP` call in `DO_MAIN_LOOP_PC_NORMAL` is redirected at link time
-  (`-Wl,--wrap=DRAW_MAP`, attached to `rayman_hist` in port/CMakeLists.txt) to `__wrap_DRAW_MAP`, which captures the
-  snapshot and then calls the unchanged `DRAW_MAP`. No source changes, no derivative. At that point the frame's
-  engine updates, camera, band scrolls and background are final. The capture calls no game draw function and
-  writes no game variable (`Calcul_Deplacement_Bande`, which advances auto-scrolling bands, is NOT replayed: its
-  result `field_6` is read).
-- **Snapshot** (`render/scene.h`, plain data, no game headers): camera `xmap/ymap`, the frame's viewport
-  (`Bloc_lim`), background mode/image/bands/sprites and the derived vertical offset (`Display_Back_Screen`'s local
-  `v68`, recomputed with the original expressions), and a map window of tile records (transparency + texture) 42x14
-  tiles around the camera, enough for margins up to 160 pixels. Logical coordinates: world point (wx, wy) is at
-  (wx - xmap + 8, wy - ymap), the projection of `update_display_map`/`calc_obj_pos`.
-- **Renderer** (`render/world.c`, portable C): background, map and foreground layers into any indexed surface and
-  rectangle. Two fidelities: **ORIGINAL** reproduces what the original code draws in the frame's own viewport,
-  including its viewport-dependent decisions; **EXTENDED** draws the same world for any rectangle.
-- **Presentation viewport** (`render/compose.c`): the display's 320x200 image, unchanged, in the centre of a frame
-  `320 + 2 * pad` wide; the margins are drawn with EXTENDED fidelity from the snapshot of the frame being shown
-  (bound at `Swap_To_Screen`). Margins stay black unless the display still holds that swapped gameplay frame (menus,
-  vignettes written directly to the screen, movies), the viewport is the original full screen, and the background
-  can extend (section 5).
-- **Host**: the indexed frame is converted with the DAC palette, as before; the window keeps 200 rows at the height of
-  a 4:3 picture of 320 columns (pixel aspect 1.2), so `--widescreen` (pad 54, 428 columns) is 16:9.
+- The original algorithms and data stay the source of truth. Nothing in the renderer re-decides gameplay,
+  animation, camera or draw order; the original high-level draw code runs exactly once per frame and only its
+  low-level output (the primitive calls) is translated into native operations.
+- Every visible pixel of the native image comes from the native renderer. The original draw path is kept as an
+  explicit **reference** for verification; it never contributes pixels to the native image, and it is not a
+  fallback for unimplemented layers.
+- 4:3 first: the native renderer must reproduce complete original 320x200 frames before wider viewports are built
+  on it. Widescreen then means a larger rectangle for the same renderer, plus explicit policies (section 9).
+- `src/` and STRICT matching are untouched. Port code observes the original at link time (no source change) or,
+  where unavoidable, through reviewed derivatives (port/derive/).
 
-Options: `--widescreen`, `--wide-pad N` (0..160), `--verify-render`, `--state-log FILE` (game/entry.c).
+## 2. Status (2026-10-26)
 
-## 3. Viewport-dependent rules found by the exactness gate
-
-Reproduced in ORIGINAL fidelity; EXTENDED does not apply them to margins.
-
-- `DRAW_MAP` draws nothing when its `display_map` grid is one tile wide or high (src/map_ngawe.c 81). Seen in the
-  firefly level, whose lit window starts a few pixels wide.
-- Band rows are copied from `W1 - BufferNormalDeplt` (the draw buffer's 1..4-byte alignment shift), `W2 - W1` bytes
-  rounded up to 8 (`Copy_Plan0Diff_To_Buf`): the full screen is covered, a narrow viewport's right edge can stay
-  unwritten.
-- A repeating background sprite is drawn at most twice: at its position (one period earlier when it exceeds 320 or
-  200) if it reaches past the viewport start, and one period further if that is before the viewport end.
-- The original clips tiles and diff sprites in 4-pixel units; the extra pixels fall outside the clip rectangle, so
-  per-pixel clipping inside it is identical.
-
-## 4. Verification
-
-- **Exactness gate** (`--verify-render`, in `__wrap_DRAW_MAP`): every frame, (1) the semantic background (ORIGINAL)
-  against the draw buffer before `DRAW_MAP`, on the pixels it writes; (2) the semantic map drawn over the original's
-  own pre-map buffer against the buffer after `DRAW_MAP`, on the whole viewport. Rear rain/snow lies between the two
-  in weather levels, so their background has no reference there (the map is still checked).
-  Result on the six original demos (x86_64): 11,818 map frames and 9,239 background frames, 0 differing pixels;
-  backgrounds: horizontal bands (demos 0, 2, 5), vertical columns (demo 1), narrowed firefly viewport (demo 3),
-  weather level (demo 4, map only).
-- **Presentation independence** (`tests/e2e_wide.py`, ctest `port_wide_demos`): each demo at the original width and
-  with `--widescreen`: identical frame-hash logs (original image + DAC), identical gameplay-state logs (camera,
-  `map_time`, random table and index, Rayman and every object from `is_active` to the end of `obj_t`), every dumped
-  wide frame holds the original frame unchanged in its centre, margins drawn (except demo 3, section 5), and the
-  exactness gate clean. The state log also agrees between x86_64 and i686 (demos 0 and 4 compared).
-- The state log found a nondeterminism unrelated to rendering: original paths reading uninitialized locals gave
-  repeated identical runs different `ray_dist` values; the historical units now start locals at zero
-  (DIVERGENCES.md).
-
-## 5. Effects and states that need special handling
-
-| Item | Current handling | Note |
+| Scope | Native? | Evidence |
 |---|---|---|
-| Original left border (`Bloc_lim_W1 = 4`, `clear_borders_Normal`) | kept: a 4-column black strip at the left of the exact centre | policy decision: fill with EXTENDED layers once objects are in the margins |
-| Firefly levels (`RayEvts.firefly`: `Bloc_lim` = lit window) | margins black | the original shows nothing outside the lit window either |
-| Narrowed viewports (breakout game, world 6 level 4 `InitClipping`) | margins black | not the original full screen |
-| Background image wrap for margins | only when the stored image is two identical halves (checked per image) | true for horizontal bands by construction and for the shipped column backgrounds (demos 1 and 4: 640-wide images, halves equal) |
-| Curtain levels (world 4 levels 4, 11) | background rows above the curtain are not drawn (original leaves them unwritten) | margins black there; original shows stale buffer content |
-| Heat effect (world 5 level 10, one band per row) | covered by the band model | not in the demos: unverified |
-| Rear/front weather, grapple stars, particles | not in margins | weather positions are projected screen coordinates; extending needs the weather state's extent |
-| Objects, Rayman, fist, cymbals, boss bar | not in margins | next slice; objects off-screen are already active (activation window ~1320x1200 around the camera, `build_active_table`) |
-| HUD, fairy text, vignettes, messages, options, pause effect | screen space, centre only | vignettes drawn over gameplay keep the world in the margins |
-| Palette: fades, special palettes, cycling, palette-boundary objects | automatic | margins are indexed and use the same DAC |
-| Effects that read the frame back (SaveScreen/RestoreScreen, deformation, mosaic, fire, transitions) | margins black | they run outside the swapped gameplay frame |
-| Mode X | not presented by the port | |
+| Gameplay frames of the normal-mode loop (`DO_MAIN_LOOP_PC_NORMAL`): background bands/columns or clear, rear and front weather, map, objects (Rayman, enemies, projectiles, cymbals as sprites), pixel particles, foreground band sprites, firefly darkness, border clear, HUD sprites, time display | **yes, complete in all six demos** | 11,812 gameplay frames, every one drawn only from its recorded frame and equal to the original draw buffer and display over the full 320x200 image (section 8) |
+| Native operations no demo frame reaches (background-off clear, stars, deformation-free boss bar, fairy text, time display, colour sprites) | yes, unverified | same operations as above, but no frame of the demos exercises them (section 4 "parity"); test scenarios needed |
+| Deformed sprites (type 254, `draw_sprite_deform`), fond/border boxes, picture copies, effect segments, dword copies, diff sprites outside the band layers | **no**: recorded as unsupported operations | counted per pass by the gate |
+| Scenes outside the gameplay loop: start-up logos, menus, world map, vignettes, in-game options, pause, credits, loading screens, movies | **no** | their C code writes the buffers directly (section 6) |
+| Palette: DAC, fades, special palettes, cycling | shared | both renderers present indexed pixels through the same emulated DAC; palette state is game/presentation state, not pixels |
+| Mode X | not presented by the port | DIVERGENCES.md |
 
-## 6. Roadmap
+The **default presentation is still the reference** (`--renderer reference`). `--renderer native` presents only
+the native renderer's display; in gameplay frames it is identical to the reference, outside them it shows what the
+native renderer can draw (gaps are visible, never filled from the original). The default switches at stage D
+(section 10).
 
-1. **Objects** (next): capture the `DISPLAY_ALL_OBJECTS` draw sequence as data: priority buckets 7..1 in active-list
-   order with its special cases (docs/port/RENDERING.md 2), per layer sprite, position, flip and colour, with the
-   object's array index as its identity. Gate: wrap `DISPLAY_ALL_OBJECTS` and compare like the map. Then particles,
-   stars, weather and HUD, until the semantic frame equals the original 320x200 image in every demo frame.
-2. **Full semantic frame**: with every layer reproduced, the presenter can draw the whole frame semantically
-   (original image still the reference and the gate); the left border and margins become a policy.
-3. **Presentation decoupling**: present at the monitor's refresh from the latest snapshot; the game loop, its
-   clock and `display_mode` keep their original timing.
-4. **Interpolation**: previous/current snapshots with stable identities (object index + allocation generation),
-   camera and object positions interpolated, discontinuities (teleports, animation changes, level changes) snap.
-5. **Settings and Android**: display options in a port menu; `render/` is portable C without game headers.
+## 3. Where a frame comes from
+
+`DO_MAIN_LOOP_PC_NORMAL` (src/pcmain.c 478, DOS 1:070e0), one iteration per built frame:
+
+1. palette work (`fades`, `DoPaletteSpecialPC`, `DO_SWAP_PALETTE`), then **swap**: `Swap_To_Screen` copies the
+   frame built in the previous iteration from the draw buffer to the display (the viewport rectangle, or the full
+   width while `fixon`/`fixontemp`);
+2. `display_mode + 1` engine updates (`DO_GROS_MOTEUR_NORMAL`); `update_display_map` also moves the draw buffer's
+   origin (`DrawBufferNormal`) by the camera's 1..4-byte alignment;
+3. build the next frame: the passes of section 4, in order;
+4. a missed deadline runs one more engine update without drawing (`DO_GROS_MOTEUR_NORMAL(1)`).
+
+Simulation and presentation are therefore not one-to-one; the native frame is recorded while the original builds
+it and drawn at its swap, so it is always the frame the original swaps. Nested scene loops (vignettes, in-game
+options, pause) run their own swaps inside an iteration (section 6). Scenes outside the gameplay loop swap through
+`SYNCHRO_LOOP`'s full-screen copy (`DisplayBufferModeNormal`).
+
+## 4. Rendering coverage matrix (normal-mode gameplay frame)
+
+Order = pass order in the loop. "Native op" = the frame operation(s) that represent the pass; "parity" = frames of
+the six demos in which the pass drew and was checked (pass check of section 8, plus the full-frame check).
+
+| # | Original pass (file) | Consumes | Output, clipping, transparency | Side effects (original, kept: the pass runs once) | Native op | Parity / gaps |
+|---|---|---|---|---|---|---|
+| 1 | `CLEAR_FIXE_LUCIOLE` (luciole.c 81) | `RayEvts.firefly`, `id_Cling_Old` | firefly HUD black boxes (`DrawBlackBoxNormal`, unclipped) | `id_Cling_Old = 0` | BLACK_BOX | demo 3 (4,032 boxes) |
+| 2a | loop clear (pcmain.c 538) when the background is off | - | `memset` 16008 dwords from the draw buffer origin | - | CLEAR (captured at the end of pass 1) | not reached: every demo level has its background on |
+| 2b | `Calcul_Deplacement_Bande` + `Display_Back_Screen` (skops.c 200, 450) | bands, `PLAN0BIT`, `ymap`, `Val_*_Scroll_Y`, curtain object, sprite clip box | band rows from `W1 - BufferNormalDeplt`, width rounded up to 8 (writes up to 4 px left of the viewport); band sprites as diff sprites (4-px units, `(dest & mask) | image`, exact clip-box arithmetic incl. its gaps) | `Calcul_Deplacement_Bande` (called by the loop, not the pass) advances `Bande[].field_6` once per drawn frame; the heat effect advances its phase | BACKGROUND (semantic: bands, scrolls, sprites captured at pass start) | all six demos; heat effect (world 5 level 10) unverified |
+| 3 | `display_flocons_behind` (affiche.c 838), after `flocon_clipping(H1, H2-6, W1, W2-4)` | weather groups 3..7 (unprojected positions, depth by group) | weather stamps, anchor tested against the weather box (upper bounds unsigned, inclusive), whole stamp written | none found | WEATHER | demo 4 (518,178 stamps) |
+| 4 | `DRAW_MAP` (map_ngawe.c 67) | `BIG_MAP`, `display_map` window | 16x16 tiles: opaque / two-bit row kinds, `(dest & mask) | tex`; 4-px clip rounding; nothing when the grid is <= 1 tile | none | MAP (semantic: tile window captured at pass start) | all six demos |
+| 5 | `display_grp_stars` -> `display_etoile` (affiche.c 1246, 1216) | grapple star list | sprites; culled against 320x200, not the viewport | **consumes `myRand`**, advances `grp_stars`/`current_star` | SPRITE | not drawn in the demos |
+| 6 | `DISPLAY_ALL_OBJECTS` (affiche.c 753) -> `display2`, `DISPLAY_CYMBALE`, `display_bar_boss`, `DISPLAY_DEFORMATION` | active list, priorities 7..1 (+ Rayman after 3, cymbals after 2, first priority-0 type 245), animations, `obj->screen_x/y`, scale | sprites (marker runs, mirror slot, colour OR), clip box (scoped H2-40 for types 252/251/173); deformed quads for type 254 | Rayman blink predicate reads `display_mode`; deformation scratch | SPRITE; deform = unsupported | all six demos (494,605 sprites); deformation, boss bar not drawn in the demos |
+| 7 | `display_pix_gerbes` (affiche.c 951) | Q6 particles | `fplot_Normal`, top-edge cull only | none (the engine kills particles outside the `_Aff` box) | PIXEL | demos 0 and 4 (92,654 pixels) |
+| 8 | `Display_Sprite_On_Front` (skops.c 381) | foreground band sprites (zero-length bands), `ymapmax` | diff sprites by the level's scroll type, **whether or not the background is on** | none | FRONT (semantic) | all six demos |
+| 9 | `display_flocons_before` (affiche.c 898) | weather groups 0..2 | weather stamps | none found | WEATHER | demo 4 (128,900 stamps) |
+| 10 | `Display_and_free_luciole` (luciole.c 269) -> `aff_luciole`/`plot2line` | lit-window centre, `rayon_luciole`, full viewport `Bloc_lim_*_Glob` | **C writes**: zeroed spans of a ring | computes `ADDLUCLIP`, updates `old_*_luc`, **restores `Bloc_lim`** (the sprite clip box stays narrowed) | FIREFLY (semantic: inputs read after the pass) | demo 3 |
+| 11 | `clear_borders_Normal` (loop) | viewport | 4 bytes left of the viewport and at its right edge, height rounded to even | none | CLEAR_BORDERS | all six demos |
+| 12 | `DISPLAY_TEXT_FEE` or `DISPLAY_FIXE` (affiche.c 1275, 605) | status bar, text, `fixontemp` | no-clip sprites, text glyph sprites, black boxes; at `fixontemp == 1` **C writes** `ClearBorder` into the display, then the draw buffer | `fixontemp` countdown (also selects the swap width), fairy `screen_y`, cling `screen_x/y`, `id_Cling_Old` | SPRITE, BLACK_BOX, CLEAR_OUTSIDE | HUD sprites in all six demos (82,709); ClearBorder into display and draw buffer in demo 3; fairy text not drawn |
+| 13 | `DisplayCrackers`, `DisplayProgrammerMessage` | - | text sprites | none | SPRITE | not drawn |
+| 14 | `display_time` (affiche.c 1373) | `left_time`, `map_time` | digit sprites | **`ray.is_active = 0` while `map_time <= 100`**, prompt colour | SPRITE | not drawn in the demos |
+| 15 | `DISPLAY_GAME_VIGNET`, `DO_OPTIONS_IN_GAME`, `Do_Effect_Pause` | | nested scene loops with their own swaps, picture copies, read-backs of the built frame (menu greyscale capture, pause snapshot) | many (audit: menu resets, `myRand` in pause) | - | **not native** (section 6) |
+| 16 | `HANDLE_KEY` | keys | none | none | - | - |
+
+Coordinates: objects `obj->screen_x/y` (world - camera + 8 / - camera, calc_obj_pos), map tiles 16c - xmap + 8,
+stars world - camera (no +8), particles Q6 screen, weather projected screen positions (centre 160,170), HUD fixed
+or viewport-relative anchors. docs/port/RENDERING.md has the full contracts.
+
+### Draw functions that change state
+
+Passes 1, 2b, 5, 10, 12, 14, 15 change state later frames depend on (star RNG, `ray.is_active`, `fixontemp`,
+`Bloc_lim`, band scroll). The architecture keeps them correct by construction: the original pass runs exactly once
+per built frame, in the original loop, and the native renderer never calls game code. Rendering the same recorded
+frame again (a wider view, a later interpolated presentation) touches no game state. A future presentation that
+draws more often than the game builds frames must therefore interpolate recorded frames, never call these passes.
+
+## 5. Implementation
+
+```
+DO_MAIN_LOOP_PC_NORMAL (src/, unchanged)
+   | pass calls ------------------- -Wl,--wrap ---> render/scene_capture.c (pass markers; semantic layers read from
+   |                                                game state at pass start: background, map, front; firefly after)
+   | primitive calls (slots) ------ -Wl,--wrap ---> render/record.c: append operation, then call the original
+   |                                                primitive (which keeps building the reference draw buffer)
+   | Swap_To_Screen / SYNCHRO swap - -Wl,--wrap ---> render/record.c: draw the frame natively (render/native.c,
+   v                                                render/world.c) into the native draw surface, swap it into the
+ reference draw buffer -> display                  native display; verify; next frame
+                                                          |
+ video/vga.c present(): native display (--renderer native) or the original display (reference) -> platform/host.c
+```
+
+- **Recording** (render/record.c). Every drawing primitive of port/video/lowlevel_normal.c, the joystick swaps of
+  compat/src/gameport.c and the passes of the loop are wrapped at link time (port/CMakeLists.txt
+  `RAY_RENDER_PASSES`, `RAY_RENDER_PRIMITIVES`). A wrapper appends one operation (logical coordinates converted
+  from buffer offsets, the clip state in force, the image pointer, the pass) and calls the original once. Inside the
+  semantic passes (background, map, front) primitives are not recorded: the layer operation stands for them, and
+  the pass check compares it with what they drew.
+- **Frame** (render/frame.h): ordered operations plus the semantic payload (render/scene.h). Targets: the draw
+  buffer, or the display for primitives that write it directly.
+- **Native renderer** (render/native.c, render/world.c; portable C, no game headers): one function per operation,
+  each reproducing the original per-pixel rules (ASM_SPEC.md) on a surface of any size and origin. Sprites keep the
+  clip-box arithmetic of `clip_sprite_on_screen` (unsigned upper compares, source advance rules, crop inside a
+  marker run); band sprites keep the diff-sprite unit clipping including its two gaps.
+- **Native surfaces**: a draw surface with 32-pixel margins (a write past a row's end lands beyond the image, where
+  the original's border clear leaves no visible difference; the full-frame check confirms it), and a 320x200
+  display. They persist between frames like the original buffers; nothing is ever copied into them from the
+  original buffers.
+- **Presentation**: `--renderer native` makes video/vga.c present the native display; the frame log, dumps and the
+  host see that image.
+
+## 6. Where original pixels are still required
+
+1. **Scenes outside the gameplay loop** write the buffers directly from C (audit: start-up logo `memcpy` of PLAN2
+   (ray_pc.c 58), menus: `CaptureVideo`, `FonduOption`, `fondu_prg`, `apparition_prg`, `CadreTrans`, plasma, fire,
+   gauges; world map: binoculars `DisplayJumellesNormal`; vignettes: `DISPLAY_FOND3` PLAN3 copy; pause and screen
+   effects: `effect_*` band copies and segment rasterizer; loading screens: `fill`; movies: the FLC player writes
+   the display). Each needs a semantic operation captured where the original produces it (link-time wrap of a
+   cross-unit call where one exists, otherwise a minimal reviewed derivative).
+2. **Read-backs**: the in-game menu's greyscale background (`CaptureVideo(draw_buffer)`), the pause snapshot
+   (`effect_copy_band(DrawBufferNormal)`), the simple pause (`SaveScreen(display)`), menu fades (read-modify-write),
+   blood melt. They read the reference buffers. In the native architecture they must read the native surfaces
+   (a native operation "capture the built frame" whose source is the native surface).
+3. **Unsupported primitives** (counted by the gate): `draw_sprite_deform`, `DrawFondBoxNormal`,
+   `DrawBorderBoxNormal`, `DisplayAnyPictureNormal`, `draw_effect_segment`, `copy_dwords`, buffer copies other than
+   the full swap, `ClearDrawAndDisplayBufferNormal`, diff sprites and tiles outside their semantic layers.
+4. **The reference draw path still runs** in both modes (each wrapper calls the original primitive). Stage D can
+   stop it outside verification only when no game code reads the reference buffers any more (item 2).
+
+Persistence: the original never clears the draw buffer while the background is on; pixels outside the viewport,
+the HUD area and the firefly darkness persist, and the swap copies only the viewport. The native surfaces persist
+the same way. The origin shift of item 3.2 is not modelled (only pixels never redrawn are affected; the full-frame
+check would show it).
+
+## 7. Frames, snapshots and resource lifetimes
+
+A recorded frame holds plain values (positions, clip boxes, colours, pass, target) and pointers to game-owned
+resources: sprite images (`obj->img_buffer` atlases), band image `PLAN0BIT`, masks, tile textures. They are valid
+until the level's resources are released, at the earliest at the next level load; the current presentation draws a
+frame synchronously at its swap, so this holds. Before frames are retained for asynchronous presentation or
+interpolation (stage F) the frame gets a resource generation (incremented where the game frees or reloads level
+memory) and the presenter drops frames of an older generation. Images are not copied per frame.
+
+Identity: operations carry `source = -1` today. Stage B tags each object operation with its object index and an
+allocation generation (needed for interpolation, section 10); the tagging point is the object loop of
+`DISPLAY_ALL_OBJECTS`, which calls `display2` inside its own unit (not wrappable at link time): a small reviewed
+derivative or an observation inside the sprite wrapper keyed by the active-list traversal is required.
+
+Drawing a frame reads only the frame: rendering the same frame twice gives the same pixels and changes no game
+state, consumes no random numbers.
+
+## 8. Verification
+
+- **Full-frame parity** (`--verify-render`, at every swap): the native draw surface against the original draw
+  buffer and the native display against the original display, all 320x200 pixels. A frame is *complete* when every
+  operation was drawn natively and none was lost. Reported separately for gameplay frames and other frames.
+- **Pass checks** (diagnostics): each pass's operations drawn over the original buffers as they were when the pass
+  began, compared with the original buffers when it ends (draw buffer inside the viewport, where later passes do not
+  overwrite scratch pixels; whole display). They localise any difference, including direct C writes no primitive
+  reports.
+- **Presentation independence**: one gameplay-state digest per frame swap (camera, clock, random table and index,
+  every object from `is_active` to the end of `obj_t`); identical with `--renderer native`, with `--widescreen`,
+  across runs and across x86_64/i686.
+- Gates: `tests/e2e_native.py` (ctest `port_native_demos`): all six demos, reference and native presentation, every
+  gameplay frame complete and exact, every gameplay pass exact, state logs identical. `tests/e2e_wide.py` keeps the
+  margin experiment honest (section 9).
+- Result 2026-10-26 (x86_64, 6000 presented frames per demo): gameplay frames 2,094 / 1,628 / 1,800 / 2,016 /
+  2,578 / 1,696 (demos 0-5, 11,812 in all), every one complete and equal to the original in draw buffer and
+  display; every gameplay pass exact; state logs identical in reference and native presentation. Operations drawn
+  natively: 494,605 object sprites, 82,709 HUD sprites, 92,654 particle pixels, 647,078 weather stamps, 4,032 black
+  boxes, 2,016 firefly rings, 2 border clears, and one background, map, front and border-clear operation per
+  frame. `--verify-render` prints these counts (`render ops`).
+- Non-gameplay frames: 1,758 start-up frames per demo run are recorded but not yet native (section 6.1).
+
+## 9. Widescreen
+
+Slice 1 (commit 9ae7217) added `--widescreen`: the reference 320x200 image unchanged in the centre and margins
+drawn by world.c from the frame's background/map/front layers (render/compose.c). That **hybrid compositor is an
+experiment and will be removed**: it combines two pipelines in one image, and objects, weather, particles and the
+HUD are missing from its margins. It stays only as a reference-mode option with its test (`port_wide_demos`) until
+stage E replaces it; it is not extended, and `--renderer native` refuses it.
+
+Stage E draws the whole wider frame with the native renderer from the same frame: the viewport becomes a parameter
+of the draw surface and of each operation's clip rule. Policies to decide explicitly (not by wrapping by default):
+
+| Item | Original rule | Policy needed |
+|---|---|---|
+| Object sprites | clip box [8,312)x[0,200) or Bloc_lim; active objects already exist ~1320x1200 around the camera | extend the clip box with the viewport; crop of a marker run differs from an uncropped draw (draw uncropped) |
+| Particles | engine kills them outside the `_Aff` box (gameplay state) | margins show no particles beyond it, unless the simulation is changed (not allowed) |
+| Stars | culled against 320x200 in the pass, consuming random numbers | cull decision must stay; margins without stars |
+| Weather | anchors tested against a viewport box; spawn uses a 320x200 inverse projection | margins only where flakes exist |
+| Background images | two identical halves for horizontal bands; column backgrounds checked per image | already checked per image (slice 1) |
+| Map edges, curtain, firefly, breakout, narrowed viewports | viewport-dependent decisions (RENDERING.md 5, section 4 above) | the original viewport rules apply inside the original rectangle; outside, black or explicit policy |
+| HUD | fixed anchors / viewport-relative | anchor policy (keep 4:3 positions or move to edges) |
+| Original 4-px left border (`Bloc_lim_W1 = 4`) | cleared every frame | policy: keep or draw the world there |
+
+## 10. Roadmap
+
+| Stage | Content | Status |
+|---|---|---|
+| A ownership audit | draw path, stateful passes, direct writes, read-backs, viewport decisions; full-frame parity strategy | done for the normal gameplay loop (this document, audit facts in sections 4 and 6); Mode X loop not audited |
+| B complete semantic frame | display list of every drawing operation + semantic layers; identity tags; resource generations | operations and layers done for gameplay frames; identity and generations open (section 7) |
+| C complete native software renderer | every operation drawn natively, full 320x200 parity | gameplay frames of the demos complete; next: unsupported primitives, nested scenes, non-gameplay scenes (section 6), test scenarios beyond the demos (key scripts, recorded BizHawk replays) |
+| D native renderer is the normal output | default `--renderer native`; read-backs from native surfaces; reference path only under verification | open |
+| E viewport independence | wider draw surface, same operations, section 9 policies; remove render/compose.c | open |
+| F presentation decoupling and interpolation | present recorded frames at the monitor's rate; interpolate tagged positions; snap on teleports, spawns, slot reuse, animation resets, scene changes, camera jumps; never more game updates | open |
+| G optional GPU backend | same frame contract | open |
+
+Next concrete step: the remaining primitives of gameplay scenes (deformation for type 254, fond/border boxes for
+text boxes, picture copies) with targeted test scenarios, then the start-up logo and the menu scenes, each as
+semantic operations captured where the original produces them.

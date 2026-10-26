@@ -24,10 +24,9 @@ static void mark(const port_surface *d, int x, int y, int n)
 
 static int floor_mod(int v, int m) { v %= m; return v < 0 ? v + m : v; }
 
-/* DrawSpriteDiffNormal: 4-pixel units; a unit whose four image bytes are all zero is skipped, otherwise each
-   byte becomes (dest & mask) | image. The original clips in whole units aligned to the sprite, so inside the
-   clip rectangle this per-pixel form is identical. */
-static void diff_sprite(const port_scene_bg_sprite *sp, int x, int y, port_surface *d, port_rect c)
+/* DrawSpriteDiffNormal, EXTENDED: 4-pixel units; a unit whose four image bytes are all zero is skipped, otherwise
+   each byte becomes (dest & mask) | image, clipped per pixel to the rectangle. */
+static void diff_sprite_clipped(const port_scene_bg_sprite *sp, int x, int y, port_surface *d, port_rect c)
 {
     int units = sp->width / 4, r, u, k;
     for (r = 0; r < sp->height; r++) {
@@ -50,6 +49,81 @@ static void diff_sprite(const port_scene_bg_sprite *sp, int x, int y, port_surfa
     }
 }
 
+/* DrawSpriteDiffNormal, ORIGINAL (ASM_SPEC clip_sprite_on_screen, diff variant; port/video/lowlevel_normal.c):
+   the sprite clip box in force, cropped in whole units from the left (the crop distance is rounded down to 4, so
+   up to 3 pixels left of the box are drawn), right edge rounded up to whole units, and the original's two gaps:
+   a left-cropped sprite is not clipped on the right, and a top-cropped sprite is not clipped at the bottom. The
+   surface bounds still apply. */
+static void diff_sprite_original(const port_scene_bg_sprite *sp, int16_t x16, int16_t y16, const int32_t *box,
+                                 port_surface *d)
+{
+    uint32_t w = sp->width, h = sp->height, end, units, rows, r, u;
+    int32_t x = x16, y = y16, k;
+    size_t skip_bytes = 0;
+    int cropped_left = x < box[0];
+    if (cropped_left) {
+        uint32_t distance = (uint32_t)box[0] - (uint32_t)x;
+        if (w <= distance)
+            return;
+        distance &= 0xfffc;
+        x = (int32_t)((uint32_t)x + distance);
+        skip_bytes = distance;
+        w = (w - distance) & 255;
+    }
+    end = w + (uint32_t)x;
+    if (cropped_left) {
+        units = w / 4;
+    } else if (end > (uint32_t)box[1]) {
+        if ((uint32_t)x >= (uint32_t)box[1])
+            return;
+        units = ((((uint32_t)box[1] - (uint32_t)x) & 255) + 3) / 4;
+    } else {
+        units = w / 4;
+    }
+    rows = h;
+    if (y < box[2]) {
+        uint32_t skip;
+        if ((int32_t)(h + (uint32_t)y) <= box[2])
+            return;
+        skip = ((uint32_t)box[2] - (uint32_t)y) & 65535;
+        rows = (h - skip) & 255;
+        skip_bytes += (size_t)sp->width * skip;
+        y = box[2];
+        if ((uint32_t)y > (uint32_t)box[3])
+            return;
+    } else if (h + (uint32_t)y > (uint32_t)box[3]) {
+        if ((uint32_t)y >= (uint32_t)box[3])
+            return;
+        rows = ((uint32_t)box[3] - (uint32_t)y) & 255;
+    }
+    if (!units)
+        return;
+    for (r = 0; r < rows; r++)
+        for (u = 0; u < units; u++) {
+            const uint8_t *img = sp->image + skip_bytes + r * sp->width + 4 * u;
+            const uint8_t *msk = sp->mask + skip_bytes + r * sp->width + 4 * u;
+            if (!(img[0] | img[1] | img[2] | img[3]))
+                continue;
+            for (k = 0; k < 4; k++) {
+                int32_t px = x + 4 * (int32_t)u + k, py = y + (int32_t)r;
+                if (px >= d->x0 && px < d->x0 + d->width && py >= d->y0 && py < d->y0 + d->height) {
+                    uint8_t *p = at(d, px, py);
+                    *p = (uint8_t)((*p & msk[k]) | img[k]);
+                    mark(d, px, py, 1);
+                }
+            }
+        }
+}
+
+static void diff_sprite(const port_scene *s, const port_scene_bg_sprite *sp, int x, int y, port_surface *d,
+                        port_rect c, int fidelity)
+{
+    if (fidelity == PORT_RENDER_ORIGINAL)
+        diff_sprite_original(sp, (int16_t)x, (int16_t)y, s->sprite_clip, d);
+    else
+        diff_sprite_clipped(sp, x, y, d, c);
+}
+
 /* Instances of a sprite repeating every `period` pixels along x (BANDS) or y (COLUMNS). The original computes
    the position along the scroll axis as s16, subtracts one period when it exceeds the screen size (320 or 200),
    and draws there when the sprite reaches past the viewport start and one period further when that is still
@@ -64,14 +138,15 @@ static void repeated_sprite(const port_scene *s, const port_scene_bg_sprite *sp,
         along = (int16_t)(along - period);
     if (fidelity == PORT_RENDER_ORIGINAL) {
         if (along + size > view0)
-            diff_sprite(sp, vertical ? across : along, vertical ? along : across, d, c);
+            diff_sprite(s, sp, vertical ? across : along, vertical ? along : across, d, c, fidelity);
         if (along + period < view1)
-            diff_sprite(sp, vertical ? across : along + period, vertical ? along + period : across, d, c);
+            diff_sprite(s, sp, vertical ? across : along + period, vertical ? along + period : across, d, c,
+                        fidelity);
         return;
     }
     for (pos = along - period * ((along + size - lo) / period + 1); pos < hi; pos += period)
         if (pos + size > lo)
-            diff_sprite(sp, vertical ? across : pos, vertical ? pos : across, d, c);
+            diff_sprite(s, sp, vertical ? across : pos, vertical ? pos : across, d, c, fidelity);
 }
 
 static const port_scene_band *band_at(const port_scene *s, int v)
@@ -170,10 +245,10 @@ void port_render_front(const port_scene *s, port_surface *dst, port_rect clip, i
         const port_scene_bg_sprite *sp = &s->sprites[i];
         if (s->bands[sp->band].length)
             continue;
-        if (s->background == PORT_SCENE_BG_BANDS && s->plan_width / 2 > 0)
+        if (s->front == PORT_SCENE_BG_BANDS && s->plan_width / 2 > 0)
             repeated_sprite(s, sp, sp->x - s->bands[sp->band].scroll, s->front_y - sp->height, 0, s->plan_width / 2,
                             dst, c, fidelity);
-        else if (s->background == PORT_SCENE_BG_COLUMNS && s->plan_height > 0)
+        else if (s->front == PORT_SCENE_BG_COLUMNS && s->plan_height > 0)
             repeated_sprite(s, sp, sp->y - s->bands[sp->band].scroll, sp->x, 1, s->plan_height, dst, c, fidelity);
     }
 }

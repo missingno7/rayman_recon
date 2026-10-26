@@ -101,9 +101,12 @@ compare randomized operation sequences, alongside playback/PCM/interrupt tests a
 
 ## Render observation point
 
-`DRAW_MAP`'s call in `DO_MAIN_LOOP_PC_NORMAL` is redirected at link time (`-Wl,--wrap=DRAW_MAP`) to
-`render/scene_capture.c`, which reads the frame's state into a render snapshot and then calls the unchanged
-`DRAW_MAP`. It reads, never writes, game state and calls no game draw function (docs/RENDERER.md 2).
+The passes `DO_MAIN_LOOP_PC_NORMAL` calls (and `ClearBorder`) are redirected at link time (`-Wl,--wrap`,
+`RAY_RENDER_PASSES` in CMakeLists.txt) to `render/scene_capture.c`, and the drawing primitives and frame swaps
+(`RAY_RENDER_PRIMITIVES`) to `render/record.c`. Each wrapper records what the original is about to draw (pass,
+operation, or a semantic layer read from game state) and then calls the unchanged original exactly once. The
+wrappers read, never write, game state, and call no game function a second time (docs/RENDERER.md 5). Calls inside
+one unit (for example `display2` from `DISPLAY_ALL_OBJECTS`) cannot be redirected this way.
 
 ## Original FLC player
 

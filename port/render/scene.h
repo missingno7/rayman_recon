@@ -53,7 +53,10 @@ typedef struct port_scene {
     int16_t bg_shift;         /* source row of screen y 0 (Display_Back_Screen's vertical offset) */
     int16_t bg_top;           /* first background row the game draws (curtain levels raise it) */
     int16_t bg_x0, bg_x1;     /* BANDS: columns the original band copy covers in the frame's viewport */
+    int front;                /* foreground band sprites (Display_Sprite_On_Front): BANDS or COLUMNS by the level's
+                                 scroll type, drawn whether or not the background is enabled */
     int16_t front_y;          /* foreground sprites: bottom edge y (Display_Sprite_On_Front) */
+    int32_t sprite_clip[4];   /* sprite clip box (xmin, xmax, ymin, ymax) the band sprites were drawn with */
     int nb_bands, nb_sprites;
     port_scene_band bands[PORT_SCENE_MAX_BANDS];
     port_scene_bg_sprite sprites[PORT_SCENE_MAX_BG_SPRITES];

@@ -42,10 +42,12 @@ victory path. The original player, frame pacing, palette fade and CD track windo
 `RAYMAN_MOVIE_TRACE=FILE` optionally logs entry/result, decoded frames, selected presentation frames, CD row/state,
 port-clock timestamps and CD audio queue size; `RAYMAN_CD_TRACE=FILE` logs the actual device commands.
 
-`--widescreen` (16:9) or `--wide-pad N` (0..160 pixels per side) shows the unchanged original image in the centre
-of a wider frame; the margins show more of the level (background, map, foreground decorations; objects are not
-drawn there yet), drawn by the semantic renderer from the same frame's game state without changing gameplay
-(docs/RENDERER.md). `--verify-render` checks that renderer against the original image every frame.
+Rendering (docs/RENDERER.md): the native renderer records what the original code draws each frame and draws it
+itself. `--renderer native` presents only its image (every gameplay frame of the original demos is complete and
+identical to the original; menus and other scenes are not native yet and show gaps); the default `reference`
+presents the original draw path. `--verify-render` compares the native renderer with the original in every frame.
+`--widescreen` / `--wide-pad N` is the first experiment (reference image in the centre, background and map in
+the margins); it will be replaced by the native renderer drawing wider views itself.
 
 Saves go to the SDL pref
 directory unless `--save DIR` is given. Alt+Enter toggles fullscreen.

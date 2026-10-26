@@ -6,7 +6,10 @@ For each original demo, one run at the original width and one with --widescreen 
   * every dumped wide frame holds the original frame's pixels unchanged in its central 320 columns,
   * margins were drawn by the semantic renderer for gameplay frames, except in demo 3: its firefly level narrows
     the game's own viewport to a small lit window, and the margins stay black like the unlit original screen.
-Also runs --verify-render: the semantic background and map equal the original draw buffer in every frame.
+Also runs --verify-render: the native renderer reproduces every gameplay frame (tests/e2e_native.py has the full gate).
+
+The margin compositor is the reference-renderer experiment of renderer slice 1 (port/docs/RENDERER.md, section 7):
+kept and tested until the native renderer draws wider viewports itself, then removed.
 
     python port/tests/e2e_wide.py RAYMAN_EXE DATA_DIR CD_CUE
 """
@@ -66,7 +69,8 @@ def main(argv):
                     centre_ok += 1
                 margin_px += sum(1 for y in range(200) for x in list(range(PAD)) + list(range(PAD + 320, ww))
                                  if wp[y * ww + x])
-            verify = re.search(r'render verify: frames=(\d+) mismatched_frames=(\d+)', wide_out)
+            verify = re.search(r'render frames: gameplay=(\d+) gameplay_complete=\d+ gameplay_draw_exact=\d+ '
+                               r'gameplay_display_exact=\d+ gameplay_complete_exact=(\d+)', wide_out)
             margins = re.search(r'margins_drawn=(\d+) margins_black=(\d+)', wide_out)
             print(f'demo{demo}: frames={nframes} frame_log_identical={same_frames} state_log_identical={same_state} '
                   f'centre_exact={centre_ok}/{centre_n} margin_px={margin_px} '
@@ -76,8 +80,8 @@ def main(argv):
                 problems.append(f'demo{demo}: wide presentation changed the frame or state log')
             if centre_ok != centre_n or centre_n == 0:
                 problems.append(f'demo{demo}: centre of the wide frame differs from the original frame')
-            if not verify or verify.group(2) != '0':
-                problems.append(f'demo{demo}: semantic renderer differs from the original draw buffer')
+            if not verify or verify.group(1) != verify.group(2):
+                problems.append(f'demo{demo}: native renderer differs from the original draw buffer')
             drawn = int(margins.group(1)) if margins else -1
             if demo in NARROW_VIEW_DEMOS:
                 if drawn != 0:
