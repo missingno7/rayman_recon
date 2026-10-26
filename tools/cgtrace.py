@@ -421,6 +421,11 @@ class Observer(_ObserverCore):
             for a, n in [(0x73cd4, 'score_block'), (0x7375a, 'try_reg'), (0x73515, 'change_ins'), (0x7366d, 'change_result'),
                 (0x7355b, 'change_widthfail'), (0x739b0, 'score_move'), (0x73ae0, 'score_move_result')]:
                 self.bp(self.base + a, n)
+            if self.focus:
+                self.park()
+            return
+        if self.focus is not None and label == 'homes_return':
+            self.focus_boundary(c)
             return
         if label == 'score_block':
             self.blk = c.Eax
@@ -469,12 +474,40 @@ class Observer(_ObserverCore):
             self._scheduler_hit(label, c)
         self._hit_core(label, c)
 
-    def __init__(self, payload_prefix, scheduler=False, functions=None):
+    def __init__(self, payload_prefix, scheduler=False, functions=None, focus=None):
         super().__init__(phases=True, scheduler=scheduler, scheduler_functions=functions)
         self.payload_prefix = payload_prefix
         self.blk = 0
         self.change = None
         self.move = None
+        # focus = source-order index of the only function observed (None = all). Every event of function k falls
+        # between the home passes (homes_return) of functions k-1 and k, so outside that window all breakpoints
+        # except the function boundary are lifted; each lifted breakpoint hit would cost two debug round trips.
+        self.focus = focus
+        self.homes_seen = 0
+        self.parked = {}
+
+    def park(self):
+        for a, (orig, label) in list(self.bps.items()):
+            if label not in ('loaded', 'homes_return'):
+                self.write(a, orig)
+                del self.bps[a]
+                self.parked[a] = label
+
+    def unpark(self):
+        for a, label in self.parked.items():
+            self.bp(a, label)
+        self.parked = {}
+
+    def focus_boundary(self, c):
+        index = self.homes_seen
+        self.homes_seen += 1
+        if index == self.focus:
+            self._hit_core('homes_return', c)
+            self.park()
+        elif self.homes_seen == self.focus:
+            self.scheduler_function_index = self.focus - 1
+            self.unpark()
         self.stage = None
 
     def scheduler_instruction(self, a):
@@ -570,24 +603,41 @@ def group_events(names, events, publics):
         if event['event'] == 'homes_return':
             index += 1
     for name, rows in result.items():
-        phases = [r['stage'] for r in rows if r['event'] == 'phase']
-        if phases != ['phase_regalloc', 'phase_post_start', 'phase_after_LdStAlloc',
-                      'phase_after_Score', 'phase_after_LdStCompress']:
-            raise ValueError(f'{name}: incomplete/out-of-order phase capture: {phases}')
-        for event in rows:
-            if event['event'] in ('best', 'rover') and 'chosen' not in event:
-                raise ValueError(f'{name}: incomplete {event["event"]} capture')
-            if event['event'] == 'sort' and 'output' not in event:
-                raise ValueError(f'{name}: incomplete sort capture')
-            if event['event'] == 'change_ins' and 'success' not in event:
-                raise ValueError(f'{name}: incomplete substitution capture')
-        request = {0: 0, 1: 0, 2: 0}
-        for event in rows:
-            if event['event'] == 'rover':
-                width = event['kind'] // 2
-                event['request_index'] = request.setdefault(width, 0)
-                request[width] += 1
+        check_function(name, rows)
     return result
+
+
+def focused_events(names, func, observer, publics):
+    """Events of the one observed function; attribution checked against every function's home pass."""
+    if (observer.homes_seen != len(names) or len({n.casefold() for n in names}) != len(names)
+            or not set(publics) <= set(names)):
+        raise ValueError(f'cannot attribute functions: definitions={len(names)}, '
+                         f'home passes={observer.homes_seen}, unmatched publics={set(publics) - set(names)}')
+    rows = [e for e in observer.events if e['event'] != 'payload_loaded']
+    if [e['event'] for e in rows].count('homes_return') != 1 or rows[-1]['event'] != 'homes_return':
+        raise ValueError(f'{func}: events outside the focused function')
+    check_function(func, rows)
+    return {func: rows}
+
+
+def check_function(name, rows):
+    phases = [r['stage'] for r in rows if r['event'] == 'phase']
+    if phases != ['phase_regalloc', 'phase_post_start', 'phase_after_LdStAlloc',
+                  'phase_after_Score', 'phase_after_LdStCompress']:
+        raise ValueError(f'{name}: incomplete/out-of-order phase capture: {phases}')
+    for event in rows:
+        if event['event'] in ('best', 'rover') and 'chosen' not in event:
+            raise ValueError(f'{name}: incomplete {event["event"]} capture')
+        if event['event'] == 'sort' and 'output' not in event:
+            raise ValueError(f'{name}: incomplete sort capture')
+        if event['event'] == 'change_ins' and 'success' not in event:
+            raise ValueError(f'{name}: incomplete substitution capture')
+    request = {0: 0, 1: 0, 2: 0}
+    for event in rows:
+        if event['event'] == 'rover':
+            width = event['kind'] // 2
+            event['request_index'] = request.setdefault(width, 0)
+            request[width] += 1
 
 
 def function_trace(name, events):
@@ -614,8 +664,11 @@ def require_identity(observed, normal):
     return hashlib.sha256(a).hexdigest()
 
 
-def trace(source, out, profile='game', func=None, schedule=False):
+def trace(source, out, profile='game', func=None, schedule=False, focus=False):
     """Serial, bounded compile through unchanged wcc.compile_c, with normal control.
+
+    focus=True (needs func) observes only func's allocation window: same events for func, far fewer debug stops;
+    sort 'number' then counts from func's first sort.
 
     Only wcc's subprocess adapter and generated TMP root are scoped here. The
     global subprocess module, wrapper code, flags, include paths and environment
@@ -640,6 +693,8 @@ def trace(source, out, profile='game', func=None, schedule=False):
     names = definitions(source.read_text())
     if func and func not in names:
         raise ValueError(f'function definition not found: {func}')
+    if focus and not func:
+        raise ValueError('focus requires a function')
     # A fresh destination prevents stale manifests from surviving a failed run.
     out.mkdir(parents=True, exist_ok=False)
     old_build, old_subprocess = wcc.BUILD, wcc.subprocess
@@ -649,7 +704,8 @@ def trace(source, out, profile='game', func=None, schedule=False):
         with tempfile.TemporaryDirectory(prefix='compile_', dir=out) as work:
             work = Path(work)
             obj, normal = work / 'observed.obj', work / 'normal.obj'
-            obs = Observer(payload[start:start + 16], scheduler=schedule, functions=names)
+            obs = Observer(payload[start:start + 16], scheduler=schedule, functions=names,
+                           focus=names.index(func) if focus else None)
             wcc.subprocess = SimpleNamespace(run=obs.run)
             rc, log = wcc.compile_c(source, obj, p['flags'], p['install'])
             (out / 'observed.log').write_text(log)
@@ -668,7 +724,8 @@ def trace(source, out, profile='game', func=None, schedule=False):
             import match
             publics = [match.demangle(n) for m in omf.load(obj) for n, si, off, typ in m.publics
                        if m.segments[si].cls.upper() == 'CODE']
-            groups = group_events(names, obs.events, publics)
+            groups = (focused_events(names, func, obs, publics) if focus
+                      else group_events(names, obs.events, publics))
             if any(e['event'] == 'exception' for e in obs.events):
                 raise RuntimeError('unexpected compiler exception; trace refused')
             (out / 'observed.obj').write_bytes(obj.read_bytes())
@@ -680,6 +737,8 @@ def trace(source, out, profile='game', func=None, schedule=False):
                             whole_omf_equal=True, omf_sha256=digest,
                             compiler_pins=ent['key_files'], functions=[func] if func else names,
                             attribution='source definition order, home-count/phase/public checked')
+            if focus:
+                manifest['focused'] = True
             if schedule:
                 manifest['scheduler'] = True
             (out / 'manifest.json').write_text(json.dumps(manifest, indent=2))

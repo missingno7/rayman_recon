@@ -58,6 +58,32 @@ class ParsingTests(unittest.TestCase):
             self.assertEqual([r['request_index'] for r in trace['rover']], [0,0,1])
             self.assertEqual(list(trace['phases']), phases)
 
+    def test_focused_events_need_every_home_pass_and_one_window(self):
+        phases = ['regalloc','post_start','after_LdStAlloc','after_Score','after_LdStCompress']
+        rows = [dict(event='payload_loaded')] + [dict(event='phase', stage='phase_'+s, graph=[]) for s in phases]
+        rows += [dict(event='rover', kind=2, chosen=1), dict(event='homes_return')]
+        obs = SimpleNamespace(homes_seen=3, events=rows)
+        groups = cgtrace.focused_events(['a','b','c'], 'b', obs, ['a','b'])
+        self.assertEqual(list(groups), ['b'])
+        self.assertEqual(groups['b'][-2]['request_index'], 0)
+        with self.assertRaisesRegex(ValueError, 'cannot attribute'):
+            cgtrace.focused_events(['a','b','c'], 'b', SimpleNamespace(homes_seen=2, events=rows), ['a'])
+        with self.assertRaisesRegex(ValueError, 'outside the focused'):
+            cgtrace.focused_events(['a','b','c'], 'b', SimpleNamespace(homes_seen=3, events=rows + rows[-1:]), ['a'])
+
+    def test_trace_key_follows_included_headers(self):
+        TMP.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=TMP) as d:
+            d = Path(d)
+            (d / 'unit.c').write_text('#include "local.h"\nint f(void) { return X; }\n')
+            (d / 'local.h').write_text('#include "inner.h"\n')
+            (d / 'inner.h').write_text('#define X 1\n')
+            self.assertEqual(explain.included_files(d / 'unit.c'), sorted([(d / 'local.h').resolve(),
+                                                                         (d / 'inner.h').resolve()]))
+            before = explain.trace_key(d / 'unit.c', 'game', 'f')
+            (d / 'inner.h').write_text('#define X 2\n')
+            self.assertNotEqual(before, explain.trace_key(d / 'unit.c', 'game', 'f'))
+
     def test_incomplete_decision_refused(self):
         events = [dict(event='phase',stage='phase_'+s,graph=[]) for s in
                   ['regalloc','post_start','after_LdStAlloc','after_Score','after_LdStCompress']]

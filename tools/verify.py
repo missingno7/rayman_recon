@@ -3,10 +3,14 @@
     python tools/verify.py                 verify all units in config/units.json (exit 1 on any regression)
     python tools/verify.py UNIT...         only these units
     python tools/verify.py --accept UNIT   after a clean pass, record improved statuses for UNIT
+    python tools/verify.py --jobs N        units compiled and checked in N processes (default: up to 16; 1 = serial)
 
 Objects are compiled into a fresh build/verify/<unit>/ directory every run (no object cache). A function
 regresses if its status ranks below the recorded one. The report is written to build/verify/report.json.
+Units are independent (own output directory, per-process compiler TMP); results are evaluated in unit order.
 """
+from concurrent.futures import ProcessPoolExecutor
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -56,10 +60,25 @@ def verify_unit(name, unit, images):
     return (results, segs), None
 
 
+_pool_images = {}
+
+
+def verify_in_pool(name, unit):
+    return verify_unit(name, unit, _pool_images)
+
+
 def main(argv):
     units = load_json(CONFIG / "units.json")
     accept = "--accept" in argv
-    names = [a for a in argv[1:] if not a.startswith("--")] or list(units["units"])
+    jobs = min(16, os.cpu_count() or 1)
+    args = argv[1:]
+    if "--jobs" in args:
+        i = args.index("--jobs")
+        jobs = int(args[i + 1])
+        del args[i:i + 2]
+        if jobs < 1:
+            raise SystemExit("--jobs must be >= 1")
+    names = [a for a in args if not a.startswith("--")] or list(units["units"])
     import promote
     canon = load_json(CONFIG / "symbols.json")
     bad = promote.overlaps(canon) + promote.android_mismatches(canon)
@@ -69,9 +88,17 @@ def main(argv):
     report = {}
     regressions = len(bad)
     strict_f = strict_b = data_b = bss_b = 0
-    for name in names:
+    jobs = min(jobs, len(names))
+    if jobs > 1:
+        for oracle in {units["units"][n]["oracle"] for n in names}:
+            ensure_prerequisites(oracle)
+        pool = ProcessPoolExecutor(jobs)
+        outcomes = pool.map(verify_in_pool, names, [units["units"][n] for n in names], chunksize=4)
+    else:
+        pool = None
+        outcomes = (verify_unit(n, units["units"][n], images) for n in names)
+    for name, (out, err) in zip(names, outcomes):
         unit = units["units"][name]
-        out, err = verify_unit(name, unit, images)
         if err:
             print(f"[{name}] {err}")
             # every recorded function and every recorded VERIFIED segment is lost (data-only units have no functions)
@@ -118,6 +145,8 @@ def main(argv):
                 strict_f += 1
                 strict_b += r["verified_bytes"]
         print(f"[{name}] " + ", ".join(f"{r['function']}={r['status']}" for r in results))
+    if pool:
+        pool.shutdown()
     dump_json(BUILD / "verify" / "report.json", report)
     if accept:
         if regressions:

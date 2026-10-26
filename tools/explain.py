@@ -2,6 +2,10 @@
 
 python tools/explain.py UNIT FUNC [--source COPY.c] [--out NEW_DIR]
 
+Traces only FUNC's allocation window (cgtrace focus) and caches it in build/cgtrace/cache, keyed by the source,
+its quoted-include closure, the function, the profile, the compiler pins and the observer code; a cache entry is
+used only when a normal compile still yields its observed OMF byte for byte. Default output: build/cgtrace/UNIT_FUNC.
+
 Machine alignment and IR association are diagnostic hypotheses. Decisions and
 phase changes are observations. Missing/ambiguous IR links are reported openly.
 No original DOS IR, costs, home order or rover stream is assumed to be known.
@@ -9,10 +13,16 @@ No original DOS IR, costs, home order or rover stream is assumed to be known.
 import argparse
 import collections
 import difflib
+import hashlib
 import json
+import os
 from pathlib import Path
+import re
+import shutil
 import struct
 import sys
+import tempfile
+import time
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -701,6 +711,77 @@ def render(report):
     return '\n'.join(lines) + '\n'
 
 
+CACHE = cgtrace.ROOT / 'build/cgtrace/cache'
+CACHE_KEEP = 200
+
+
+def included_files(source):
+    """Quoted-include closure; every existing candidate (including file's dir, source dir, src/include) counts."""
+    dirs = [source.parent, cgtrace.ROOT / 'src' / 'include']
+    seen, todo = set(), [source]
+    while todo:
+        f = todo.pop()
+        for name in re.findall(r'^[ \t]*#[ \t]*include[ \t]*"([^"]+)"', f.read_text(errors='replace'), re.M):
+            for d in [f.parent] + dirs:
+                p = (d / name).resolve()
+                if p.is_file() and p not in seen:
+                    seen.add(p)
+                    todo.append(p)
+    return sorted(seen)
+
+
+def trace_key(source, profile, func):
+    wcc = cgtrace.wcc
+    p = wcc.profile(profile)
+    h = hashlib.sha256(json.dumps([func, profile, p['flags'], wcc.install(p['install'])[0].get('key_files')],
+                                  sort_keys=True).encode())
+    for f in [source] + included_files(source) + [Path(cgtrace.__file__), Path(wcc.__file__)]:
+        h.update(str(f).encode() + b'\0' + f.read_bytes() + b'\0')
+    return h.hexdigest()[:32]
+
+
+def cached_trace(source, profile, func):
+    """Directory holding a focused trace of func for exactly this source (see module docstring)."""
+    wcc = cgtrace.wcc
+    entry = CACHE / trace_key(source, profile, func)
+    CACHE.mkdir(parents=True, exist_ok=True)
+    if (entry / 'manifest.json').is_file():
+        p = wcc.profile(profile)
+        with tempfile.TemporaryDirectory(dir=CACHE, prefix='tmp-check-') as t:
+            obj = Path(t) / 'normal.obj'
+            rc, _ = wcc.compile_c(source, obj, p['flags'], p['install'])
+            if not rc and obj.read_bytes() == (entry / 'observed.obj').read_bytes():
+                os.utime(entry)
+                return entry
+        shutil.rmtree(entry, ignore_errors=True)
+    work = CACHE / f'tmp-{os.getpid()}-{entry.name[:8]}'
+    shutil.rmtree(work, ignore_errors=True)
+    try:
+        cgtrace.trace(source, work, profile, func, schedule=True, focus=True)
+        try:
+            work.rename(entry)
+        except OSError:          # a concurrent run published the same key first
+            pass
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+    prune_cache()
+    return entry
+
+
+def prune_cache():
+    now = time.time()
+    entries = []
+    for d in CACHE.iterdir():
+        if d.name.startswith('tmp-'):
+            if now - d.stat().st_mtime > 3600:
+                shutil.rmtree(d, ignore_errors=True)
+        elif d.is_dir():
+            entries.append(d)
+    entries.sort(key=lambda d: d.stat().st_mtime, reverse=True)
+    for d in entries[CACHE_KEEP:]:
+        shutil.rmtree(d, ignore_errors=True)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('unit')
@@ -717,7 +798,10 @@ def main(argv=None):
     source = args.source or cgtrace.ROOT / unit['source']
     out = args.out or cgtrace.ROOT / 'build/cgtrace' / (args.unit + '_' + args.func)
     try:
-        cgtrace.trace(source, out, unit['profile'], args.func, schedule=True)
+        traced = cached_trace(Path(source).resolve(), unit['profile'], args.func)
+        if not args.out:
+            shutil.rmtree(out, ignore_errors=True)
+        shutil.copytree(traced, out)
         trace = json.loads((out / (args.func + '.json')).read_text())
         result = explain_object(out / 'observed.obj', args.func, trace, unit.get('oracle'), args.symbols)
         if args.compare_trace:
