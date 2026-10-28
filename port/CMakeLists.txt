@@ -217,8 +217,7 @@ add_library(rayman_native STATIC
     render/world.c
     render/native.c
     render/effects.c
-    render/record.c
-    render/compose.c)
+    render/record.c)
 target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
 target_compile_options(rayman_native PRIVATE -funsigned-char -fwrapv -fno-strict-aliasing)

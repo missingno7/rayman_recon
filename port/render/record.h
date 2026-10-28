@@ -50,17 +50,20 @@ void port_record_asset(void *buffer, size_t n);
    display only; nothing of the original buffers is presented). */
 void port_record_set_native(int on);
 int port_record_native(void);
-/* The image to present: the native display in native mode, otherwise NULL (present the original display). */
-const uint8_t *port_record_presented(void);
+/* The view of the native renderer: `pad` columns beyond the original 320 on each side (0 = the original view;
+   at most PORT_SCENE_MAX_PAD). Set before the game starts. */
+void port_record_set_pad(int pad);
+int port_record_pad(void);
+/* The image to present: the native display (width x 200 pixels, pitch width) in native mode, otherwise NULL
+   (present the original display, 320 x 200). */
+const uint8_t *port_record_presented(int *width);
 /* Verification: render every frame natively and compare it with the original draw buffer and display (full
    frame), and each pass's operations with the original buffer changes over that pass (diagnostics). */
 void port_record_set_verify(int on);
+int port_record_verify(void);
 void port_record_report(void);
 
 /* Called after every frame swap (the simulation-side frame boundary, independent of presentation). */
 void port_record_set_swap_hook(void (*hook)(void));
-
-/* The world payload of a gameplay frame swapped since the last call, or NULL (legacy margin compositor). */
-const port_scene *port_scene_take_pending(void);
 
 #endif

@@ -26,7 +26,7 @@ configurable viewport and presentation (4:3, 16:9, 21:9), later optional interpo
 - `src/` and STRICT matching are untouched. Port code observes the original at link time (no source change) or,
   where unavoidable, through reviewed derivatives (port/derive/).
 
-## 2. Status (2026-10-26)
+## 2. Status (2026-10-28)
 
 | Scope | Native? | Evidence |
 |---|---|---|
@@ -35,6 +35,7 @@ configurable viewport and presentation (4:3, 16:9, 21:9), later optional interpo
 | Scenes outside the gameplay loop reached by the test scenarios: start-up logo, title animation, main menu with plasma boxes, options menu with the sound gauge, save-slot screen with name entry (deformed letters), world map with its binocular view, world vignettes with the page-curl, segment-quad and moving-lens transitions, the in-game options menu (greyscale capture of the frame, translucent frame, zoom-in and fades), the pause screen (spinning snapshot of the frame), the credits, the intro movie (FLC player), the world map's fire-animated quit box | **yes** | every frame and every presented image of the fifteen scenarios (section 8) equal to the reference; further start-up clocks (epochs 1000-8000) reach the row-wipe and segment-rasterizer transitions, all exact |
 | Remaining primitives: dword copies, diff sprites and tiles outside their semantic layers, read-backs into game memory | **no**: recorded as unsupported operations | counted per pass by the gate; none in the scenarios |
 | Scenes no scenario reaches yet: the other transition effects (effect2, effect50350, effect6ec80, effecthelp), level animations, in-game vignettes, the pause screensaver's later phase, continue, game over, victory, the conclusion movie, blood melt, the later worlds' levels | **unknown** (untested) | each will be measured when a scenario reaches it; pixel loops in C need a captured operation (section 6) |
+| Wider view (`--widescreen`, `--wide-pad N`) | **yes**, drawn by the same native renderer | gameplay state unchanged in all six demos, margins drawn (section 9) |
 | Palette: DAC, fades, special palettes, cycling | shared | both renderers present indexed pixels through the same emulated DAC; palette state is game/presentation state, not pixels |
 | Mode X | not presented by the port | DIVERGENCES.md |
 
@@ -267,25 +268,36 @@ state, consumes no random numbers.
 
 ## 9. Widescreen
 
-Slice 1 (commit 9ae7217) added `--widescreen`: the reference 320x200 image unchanged in the centre and margins
-drawn by world.c from the frame's background/map/front layers (render/compose.c). That **hybrid compositor is an
-experiment and will be removed**: it combines two pipelines in one image, and objects, weather, particles and the
-HUD are missing from its margins. It stays only as a reference-mode option with its test (`port_wide_demos`) until
-stage E replaces it; it is not extended, and `--renderer native` refuses it.
+`--widescreen` (54 more columns per side: 428 x 200, 16:9 at the original pixel aspect) or `--wide-pad N` (0..160)
+makes the native renderer draw a wider view of the same recorded frames. There is one renderer and one frame: the
+view is the `pad` parameter of `port_native_draw` (render/native.h); the original draw path, which has 320 columns,
+is not involved in what is shown (`--widescreen` implies `--renderer native`). The slice-1 margin compositor, which
+framed the original image with separately drawn margins, is removed.
 
-Stage E draws the whole wider frame with the native renderer from the same frame: the viewport becomes a parameter
-of the draw surface and of each operation's clip rule. Policies to decide explicitly (not by wrapping by default):
+Rules of the wider view (render/native.c), applied to the draw buffer of gameplay frames:
 
-| Item | Original rule | Policy needed |
+| Item | Original rule | Wider view |
 |---|---|---|
-| Object sprites | clip box [8,312)x[0,200) or Bloc_lim; active objects already exist ~1320x1200 around the camera | extend the clip box with the viewport; crop of a marker run differs from an uncropped draw (draw uncropped) |
-| Particles | engine kills them outside the `_Aff` box (gameplay state) | margins show no particles beyond it, unless the simulation is changed (not allowed) |
-| Stars | culled against 320x200 in the pass, consuming random numbers | cull decision must stay; margins without stars |
-| Weather | anchors tested against a viewport box; spawn uses a 320x200 inverse projection | margins only where flakes exist |
-| Background images | two identical halves for horizontal bands; column backgrounds checked per image | already checked per image (slice 1) |
-| Map edges, curtain, firefly, breakout, narrowed viewports | viewport-dependent decisions (RENDERING.md 5, section 4 above) | the original viewport rules apply inside the original rectangle; outside, black or explicit policy |
-| HUD | fixed anchors / viewport-relative | anchor policy (keep 4:3 positions or move to edges) |
-| Original 4-px left border (`Bloc_lim_W1 = 4`) | cleared every frame | policy: keep or draw the world there |
+| Bounds equal to the full viewport (x within 0..8 to 312..320) | the original's clip boxes and viewport | widen by `pad` on both sides: sprite clip box (its arithmetic runs shifted right by `pad`, so the unsigned comparisons see the original's non-negative values), weather bounds, firefly darkness, the world layers, the gameplay swap |
+| Background, map, foreground band sprites | original viewport rules (band copy extent, two sprite instances, no map when the grid is one tile) | the layers' extended rules over the whole view; background columns beyond the stored image wrap through its other half only when the image is two identical halves (checked per image), otherwise they stay black |
+| Original 4-pixel left border (`clear_borders_Normal`, ClearBorder's columns) | cleared every frame | **not drawn** (user decision 2026-10-28): the world continues there |
+| Objects, Rayman, projectiles | drawn for every active object (activation ~1320x1200 around the camera), clipped to the box | visible in the margins as far as active objects reach |
+| Particles | the engine kills them outside the `_Aff` box (gameplay state) | none beyond that box; the simulation is not changed |
+| Stars | culled against 320x200 in the pass, consuming random numbers | none beyond it; the cull and its random numbers stay |
+| Weather | flakes spawn through a 320x200 inverse projection | drawn wherever flakes exist; few in the margins |
+| Firefly levels | darkness outside the lit window, within the viewport | the darkness covers the margins too |
+| Narrowed viewports (breakout, world 6 level 4) and their swaps | the swap copies the viewport | the original 320 columns, black margins |
+| HUD | fixed anchors / viewport-relative | kept at the 4:3 positions (policy; moving it to the edges is a later option) |
+| Menus, vignettes, movies, transitions, pause (screen-space scenes) | 320x200 images | the original 320 columns centred, black margins |
+| Draw-buffer origin moves | linear memory shift | each row shifts by the same number of pixels (rows stay apart in the wider surface) |
+
+Known content limits (the original art, not the renderer): a column background is a 320-pixel picture, so its
+repetition in the margins shows a seam where its edges meet; where a level places no object or tile beyond the
+original screen (for example the water sprites at the bottom of some levels), the margin stays black.
+
+Verification: the original view stays gated pixel for pixel (`port_native_demos`); `--verify-render` runs at the
+original width only. The wider view is gated by `port_wide_demos` (tests/e2e_wide.py): gameplay-state logs identical
+to the original-view run in all six demos, every frame 428 columns, margins drawn in gameplay frames.
 
 ## 10. Roadmap
 
@@ -295,7 +307,7 @@ of the draw surface and of each operation's clip rule. Policies to decide explic
 | B complete semantic frame | display list of every drawing operation + semantic layers; identity tags; resource generations | operations and layers done for gameplay frames; identity and generations open (section 7) |
 | C complete native software renderer | every operation drawn natively, full 320x200 parity | fifteen scenarios complete: demos, menus, options, save slots and name entry, world map, three transitions, gameplay, in-game options menu, pause, credits, intro movie; next: scenarios for the scenes still unreached (level endings, vignettes, continue, game over, victory, the other transitions, later worlds) |
 | D native renderer is the normal output | default `--renderer native`; read-backs from native surfaces; reference path only under verification | open |
-| E viewport independence | wider draw surface, same operations, section 9 policies; remove render/compose.c | open |
+| E viewport independence | wider draw surface, same operations, section 9 policies; remove render/compose.c | first version done (section 9): one renderer draws the wider view, the compositor is removed; open: HUD placement, wider vertical views, finer policies for screen-space scenes |
 | F presentation decoupling and interpolation | present recorded frames at the monitor's rate; interpolate tagged positions; snap on teleports, spawns, slot reuse, animation resets, scene changes, camera jumps; never more game updates | open |
 | G optional GPU backend | same frame contract | open |
 

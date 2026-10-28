@@ -7,7 +7,6 @@
 #include "compat/src/pc_hardware.h"
 #include "platform/clock.h"
 #include "platform/host.h"
-#include "render/compose.h"
 #include "render/record.h"
 
 #include <stdio.h>
@@ -54,7 +53,8 @@ void port_vga_set_mode(int mode)
     dirty = 1;
 }
 
-static uint8_t shown_pixels[64000];
+static uint8_t shown_pixels[(320 + 2 * 160) * 200];
+static int shown_width;
 static uint8_t shown_dac[768];
 static int shown_valid;
 
@@ -63,35 +63,36 @@ static void present(void)
 {
     static const uint8_t black[768];
     const uint8_t *dac = bios_mode == 0x13 ? port_vga_dac : black;
-    /* Native renderer: its own display (render/record.c); otherwise the original display memory. */
-    const uint8_t *image = port_record_presented();
-    if (!image)
+    /* Native renderer: its own display (render/record.c), as wide as its view; otherwise the original display
+       memory, 320 x 200. */
+    int width = 320;
+    const uint8_t *image = port_record_presented(&width);
+    size_t bytes;
+    if (!image) {
         image = port_vga_aperture;
+        width = 320;
+    }
+    bytes = (size_t)width * 200;
     dirty = 0;
-    if (shown_valid && !memcmp(shown_pixels, image, sizeof shown_pixels) &&
+    if (shown_valid && width == shown_width && !memcmp(shown_pixels, image, bytes) &&
         !memcmp(shown_dac, dac, sizeof shown_dac)) {
         port_pc_poll();
         return;
     }
-    memcpy(shown_pixels, image, sizeof shown_pixels);
+    memcpy(shown_pixels, image, bytes);
     memcpy(shown_dac, dac, sizeof shown_dac);
+    shown_width = width;
     shown_valid = 1;
     last_present = port_clock_ns();
-    {
-        /* The presentation viewport (render/compose.c) frames the unchanged image; hooks see the image itself. */
-        int width;
-        const uint8_t *frame = port_render_compose(image, &width);
-        if (frame_hook)
-            frame_hook(image, dac, frame_hook_user);
-        port_host_present(frame, width, width, dac);
-    }
+    if (frame_hook)
+        frame_hook(image, width, dac, frame_hook_user);
+    port_host_present(image, width, width, dac);
     port_pc_poll();
 }
 
 /* Called by the frame swaps (Swap_To_Screen and the joystick-polling swaps): the display now holds a built frame. */
 void port_vga_display_changed(void)
 {
-    port_render_on_swap(port_vga_aperture);
     dirty = 1;
     present();
 }

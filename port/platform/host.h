@@ -18,7 +18,7 @@ typedef struct port_host_options {
     int headless;        /* no window, no presentation (tests) */
     int scale;           /* initial window scale (integer); 0 = automatic */
     int fullscreen;
-    int width;           /* logical image width: 320, or wider with a presentation margin (render/compose.h) */
+    int width;           /* logical image width: 320, or the native renderer's wider view (render/record.h) */
 } port_host_options;
 
 int port_host_init(const port_host_options *options);

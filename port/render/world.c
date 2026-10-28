@@ -24,6 +24,27 @@ static void mark(const port_surface *d, int x, int y, int n)
 
 static int floor_mod(int v, int m) { v %= m; return v < 0 ? v + m : v; }
 
+/* Columns beyond the stored background image (reachable only in a wider view) are read by wrapping one half of the
+   image: valid when the image is two identical halves (horizontal bands scroll through a doubled image; the shipped
+   column backgrounds are their 320 columns twice). Checked once per image instead of assumed; otherwise those
+   columns are not drawn. */
+static int image_halves_equal(const port_scene *s)
+{
+    static const uint8_t *checked;
+    static int checked_w, checked_h, equal;
+    int y, half = s->plan_width / 2;
+    if (s->plan0 == checked && s->plan_width == checked_w && s->plan_height == checked_h)
+        return equal;
+    checked = s->plan0;
+    checked_w = s->plan_width;
+    checked_h = s->plan_height;
+    equal = s->plan0 && half > 0 && !(s->plan_width & 1);
+    for (y = 0; equal && y < s->plan_height; y++)
+        equal = !memcmp(s->plan0 + (size_t)y * s->plan_width, s->plan0 + (size_t)y * s->plan_width + half,
+                        (size_t)half);
+    return equal;
+}
+
 /* DrawSpriteDiffNormal, EXTENDED: 4-pixel units; a unit whose four image bytes are all zero is skipped, otherwise
    each byte becomes (dest & mask) | image, clipped per pixel to the rectangle. */
 static void diff_sprite_clipped(const port_scene_bg_sprite *sp, int x, int y, port_surface *d, port_rect c)
@@ -191,11 +212,14 @@ void port_render_background(const port_scene *s, port_surface *dst, port_rect cl
                 continue;
             src = s->plan0 + (size_t)row * s->plan_width;
             out = at(dst, xa, y);
-            for (x = xa; x < xb; x++) {
+            for (x = xa; x < xb; x++, out++) {
                 int col = b->scroll + x;
-                if (col < 0 || col >= s->plan_width)
+                if (col < 0 || col >= s->plan_width) {
+                    if (!image_halves_equal(s))
+                        continue;
                     col = floor_mod(col, period);
-                *out++ = src[col];
+                }
+                *out = src[col];
             }
             mark(dst, xa, y, xb - xa);
         }
@@ -210,15 +234,18 @@ void port_render_background(const port_scene *s, port_surface *dst, port_rect cl
     if (s->background == PORT_SCENE_BG_COLUMNS) {
         /* Vertical bands: column x of band b shows image column x, row (scroll + y) wrapped by the image height
            (the original copies the rows below the wrap point a second time from row 0). EXTENDED reads columns
-           outside the original image through half the image width (two identical halves, render/compose.c). */
+           outside the original image through half the image width, if the image is two equal halves. */
         int half = s->plan_width / 2;
         for (y = c.y0 > s->bg_top ? c.y0 : s->bg_top; y < c.y1; y++)
             for (x = c.x0; x < c.x1; x++) {
                 int col = x;
                 const port_scene_band *b;
                 int row;
-                if (fidelity == PORT_RENDER_EXTENDED && (x < 0 || x >= 320) && half > 0)
+                if (fidelity == PORT_RENDER_EXTENDED && (x < 0 || x >= 320)) {
+                    if (half <= 0 || !image_halves_equal(s))
+                        continue;
                     col = floor_mod(x, half);
+                }
                 b = band_at(s, col);
                 if (!b || col < 0 || col >= s->plan_width)
                     continue;

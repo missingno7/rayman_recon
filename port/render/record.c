@@ -28,7 +28,6 @@ static port_frame rec;
 static int pass = PORT_PASS_LOOP;
 static int native_mode, verify;
 static int32_t weather_bounds[4];
-static int pending_world;
 static void (*swap_hook)(void);
 static const char *scene = "start";
 
@@ -36,11 +35,15 @@ static const char *scene = "start";
    at the start of the next row; here it lands beyond the image, where the original's next operations (the border
    clear) leave no visible difference. */
 #define MARGIN 32
-#define DRAW_W (320 + 2 * MARGIN)
+#define MAX_PAD PORT_SCENE_MAX_PAD
+#define DRAW_W (320 + 2 * (MARGIN + MAX_PAD))
 #define DRAW_H (200 + 2 * MARGIN)
-static uint8_t native_draw_px[DRAW_W * DRAW_H], native_display_px[64000], native_effect_px[128000];
-static port_surface native_draw = {native_draw_px, DRAW_W, -MARGIN, -MARGIN, DRAW_W, DRAW_H, NULL};
+static uint8_t native_draw_px[DRAW_W * DRAW_H], native_display_px[(320 + 2 * MAX_PAD) * 200],
+    native_effect_px[128000];
+static port_surface native_draw = {native_draw_px, 320 + 2 * MARGIN, -MARGIN, -MARGIN, 320 + 2 * MARGIN, DRAW_H, NULL};
 static port_surface native_display = {native_display_px, 320, 0, 0, 320, 200, NULL};
+/* The view: `pad` columns beyond the original 320 on each side (render/native.h). */
+static int pad;
 static port_surface native_effect = {native_effect_px, 320, 0, 0, 320, 400, NULL};
 static port_surface *const native[PORT_TARGET_COUNT] = {&native_draw, &native_display, &native_effect};
 
@@ -378,8 +381,6 @@ void port_record_layer(int kind, int x0, int y0, int x1, int y1)
         op->clip[2] = y0;
         op->clip[3] = y1;
     }
-    if (kind == PORT_OP_MAP && rec.gameplay)
-        pending_world = 1;
 }
 
 void port_record_firefly(int center_x, int center_y, int rayon, int addluclip, int w1, int w2, int h1, int h2)
@@ -987,7 +988,7 @@ static void boundary(void)
     note_origin();
     if (!verify || !DrawBufferNormal)
         return;
-    port_native_draw(&rec, segment_first, rec.nb_ops, check);
+    port_native_draw(&rec, segment_first, rec.nb_ops, check, 0);
     if (segment_origin == DrawBufferNormal)
         bad = compare_rect(DrawBufferNormal, &check_draw, Bloc_lim_W1, Bloc_lim_H1, Bloc_lim_W2, Bloc_lim_H2,
                            segment_pass);
@@ -1023,7 +1024,7 @@ static void explain(int first, int last)
             frame = -1;
     }
     if (frame < 0 || st.frames[0] + st.frames[1] != frame || target < 0 || target >= TARGET_OTHER) {
-        port_native_draw(&rec, first, last, native);
+        port_native_draw(&rec, first, last, native, pad);
         return;
     }
     if (getenv("RAYMAN_RENDER_EXPLAIN_ALL"))
@@ -1036,7 +1037,7 @@ static void explain(int first, int last)
         const port_surface *s = native[target];
         const uint8_t *p = s->pixels + (y - s->y0) * s->pitch + (x - s->x0);
         uint8_t before = *p;
-        port_native_draw(&rec, i, i + 1, native);
+        port_native_draw(&rec, i, i + 1, native, pad);
         if (*p != before)
             fprintf(stderr, "render explain: frame %ld op %d %s/%s (target %u) changes (%ld,%ld): %u -> %u\n",
                     frame, i, port_pass_name(rec.ops[i].pass), port_op_name(rec.ops[i].kind), rec.ops[i].target, x, y,
@@ -1174,7 +1175,6 @@ static void end_frame(void)
     native_drawn = 0;
     arena_used = 0;
     segment_first = 0;
-    pending_world = 0;
     display_ops = 0;
     if (verify)
         trap_check();
@@ -1217,17 +1217,22 @@ int32_t __wrap_get_joy_input1_dos2(uint8_t *source, uint8_t *dest, int32_t width
     return r;
 }
 
-const port_scene *port_scene_take_pending(void)
-{
-    if (!pending_world)
-        return NULL;
-    pending_world = 0;
-    return &rec.world;
-}
-
 void port_record_set_native(int on) { native_mode = on; }
 int port_record_native(void) { return native_mode; }
-const uint8_t *port_record_presented(void)
+void port_record_set_pad(int value)
+{
+    pad = value < 0 ? 0 : value > MAX_PAD ? MAX_PAD : value;
+    native_draw.x0 = -(MARGIN + pad);
+    native_draw.width = native_draw.pitch = 320 + 2 * (MARGIN + pad);
+    native_display.x0 = -pad;
+    native_display.width = native_display.pitch = 320 + 2 * pad;
+    memset(native_draw_px, 0, sizeof native_draw_px);
+    memset(native_display_px, 0, sizeof native_display_px);
+}
+
+int port_record_pad(void) { return pad; }
+
+const uint8_t *port_record_presented(int *width)
 {
     flush();
     if (verify && DisplayBufferNormal) {
@@ -1240,9 +1245,11 @@ const uint8_t *port_record_presented(void)
         boundary();
         end_frame();
     }
+    *width = native_display.width;
     return native_mode ? native_display_px : NULL;
 }
 void port_record_set_verify(int on) { verify = on; }
+int port_record_verify(void) { return verify; }
 
 void port_record_report(void)
 {

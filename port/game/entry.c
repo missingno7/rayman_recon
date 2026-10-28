@@ -11,9 +11,9 @@
  *
  * --frames/--frame-log exist for regression runs: stop after N presented images, log one hash per image.
  *
- * --widescreen (16:9, a 54-pixel margin per side) / --wide-pad N present the unchanged original image in the centre
- * of a wider frame whose margins the semantic renderer draws (port/docs/RENDERER.md). --verify-render checks the
- * semantic renderer against the original draw buffer every frame; --state-log writes one gameplay-state digest per
+ * --widescreen (16:9: 54 more columns per side) / --wide-pad N (0..160) make the native renderer draw a wider view
+ * of the same frames (implies --renderer native; port/docs/RENDERER.md 9). --verify-render checks the native
+ * renderer against the original draw path every frame (original width only); --state-log writes one gameplay-state digest per
  * frame swap (presentation-independence tests). --renderer native presents only the native renderer's image
  * (port/docs/RENDERER.md); reference (default) presents the original draw path's display. Frame logs hash the
  * presented 320x200 image.
@@ -27,7 +27,6 @@
 #include "platform/host.h"
 #include "video/vga.h"
 #include "render/capture.h"
-#include "render/compose.h"
 #include "render/record.h"
 
 time_t port_time(time_t *out);
@@ -101,14 +100,14 @@ static void dump_frame(const uint8_t *pixels, int width, const uint8_t *dac)
     fclose(f);
 }
 
-/* FNV-1a over the 64000 visible pixels and the 768 DAC bytes. */
-static void on_frame(const uint8_t *pixels, const uint8_t *dac, void *user)
+/* FNV-1a over the presented pixels (width x 200) and the 768 DAC bytes. */
+static void on_frame(const uint8_t *pixels, int width, const uint8_t *dac, void *user)
 {
     (void)user;
     if (frame_log) {
         uint64_t h = 1469598103934665603ULL;
         int i;
-        for (i = 0; i < 64000; i++)
+        for (i = 0; i < width * 200; i++)
             h = (h ^ pixels[i]) * 1099511628211ULL;
         for (i = 0; i < 768; i++)
             h = (h ^ dac[i]) * 1099511628211ULL;
@@ -116,11 +115,8 @@ static void on_frame(const uint8_t *pixels, const uint8_t *dac, void *user)
                 (unsigned long long)h);
         fflush(frame_log); /* Preserve completed frames across another port boundary crash. */
     }
-    if (dump_dir && dump_every > 0 && frame_count % dump_every == 0) {
-        int width;
-        const uint8_t *frame = port_render_last(&width);   /* the presented frame, wider with a margin */
-        dump_frame(frame ? frame : pixels, frame ? width : 320, dac);
-    }
+    if (dump_dir && dump_every > 0 && frame_count % dump_every == 0)
+        dump_frame(pixels, width, dac);
     frame_count++;
     if (frame_limit >= 0 && frame_count >= frame_limit) {
         if (frame_log)
@@ -157,13 +153,9 @@ static void at_exit(void)
 {
     /* Headless regression runs: a one-line summary of where the game ended. */
     if (port_host_headless()) {
-        long drawn, black;
         printf("port exit: JeuCracker=%u MusicCdActive=%u frames=%ld world=%d level=%d CarteSonAutorisee=%u\n",
                JeuCracker, MusicCdActive, frame_count, num_world, num_level, CarteSonAutorisee);
         port_record_report();
-        port_render_counts(&drawn, &black);
-        if (port_render_pad())
-            printf("wide frames: pad=%d margins_drawn=%ld margins_black=%ld\n", port_render_pad(), drawn, black);
     }
     port_hmi_shutdown();
     port_cd_shutdown();
@@ -183,6 +175,7 @@ int main(int argc, char **argv)
     char default_save[1024];
     port_host_options host = {0, 0, 0, 320};
     int deterministic = 0, demo = -1, dos_main = 0, i;
+    int renderer = -1, wide_pad = 0;   /* renderer: -1 default (reference), 0 reference, 1 native */
 
     setvbuf(stdout, NULL, _IONBF, 0);
     for (i = 1; i < argc; i++) {
@@ -208,13 +201,14 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--epoch") && v) port_set_time_epoch(atoll(argv[++i]));
         else if (!strcmp(a, "--scale") && v) host.scale = atoi(argv[++i]);
         else if (!strcmp(a, "--fullscreen")) host.fullscreen = 1;
-        else if (!strcmp(a, "--widescreen")) port_render_set_pad(54);   /* 428 x 240 display: 16:9 */
-        else if (!strcmp(a, "--wide-pad") && v) port_render_set_pad(atoi(argv[++i]));
+        else if (!strcmp(a, "--widescreen")) wide_pad = 54;   /* 428 x 240 display: 16:9 */
+        else if (!strcmp(a, "--wide-pad") && v) wide_pad = atoi(argv[++i]);
         else if (!strcmp(a, "--verify-render")) port_record_set_verify(1);
         else if (!strcmp(a, "--renderer") && v) {
             const char *r = argv[++i];
-            if (!strcmp(r, "native")) port_record_set_native(1);
-            else if (strcmp(r, "reference")) { fprintf(stderr, "rayman: --renderer native|reference\n"); return 2; }
+            if (!strcmp(r, "native")) renderer = 1;
+            else if (!strcmp(r, "reference")) renderer = 0;
+            else { fprintf(stderr, "rayman: --renderer native|reference\n"); return 2; }
         }
         else if (!strcmp(a, "--state-log") && v) state_log = fopen(argv[++i], "w");
         else {
@@ -222,12 +216,22 @@ int main(int argc, char **argv)
             return 2;
         }
     }
-    if (port_record_native() && port_render_pad()) {
-        /* The margin compositor frames the reference image; the native renderer will draw wider views itself. */
-        fprintf(stderr, "rayman: --widescreen is the reference-renderer experiment; not with --renderer native\n");
+    if (wide_pad > 0) {
+        /* A wider view is the native renderer's: the original draw path has 320 columns. Its verification compares
+           the original view (render/record.c), so it runs at the original width. */
+        if (renderer == 0) {
+            fprintf(stderr, "rayman: --widescreen needs the native renderer (not --renderer reference)\n");
+            return 2;
+        }
+        renderer = 1;
+        port_record_set_pad(wide_pad);
+    }
+    if (port_record_pad() && port_record_verify()) {
+        fprintf(stderr, "rayman: --verify-render compares the original 320-column view; not with --widescreen\n");
         return 2;
     }
-    host.width = 320 + 2 * port_render_pad();
+    port_record_set_native(renderer == 1);
+    host.width = 320 + 2 * port_record_pad();
     if (data_count) data = data_roots[0]; /* Explicit roots replace RAYMAN_DATA. */
     if (!data) {
         fprintf(stderr, "rayman: give the original game directory with --data DIR (or RAYMAN_DATA)\n");

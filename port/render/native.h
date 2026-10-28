@@ -11,7 +11,13 @@
 /* Can the native renderer draw this operation? */
 int port_native_supports(const port_op *op);
 /* Draw operations [first, last) of the frame, in order, onto the surface of each operation's target
-   (surfaces[PORT_TARGET_COUNT]; NULL skips). Logical coordinates; the surfaces clip. */
-void port_native_draw(const port_frame *f, int first, int last, port_surface *const *surfaces);
+   (surfaces[PORT_TARGET_COUNT]; NULL skips). Logical coordinates; the surfaces clip.
+
+   pad = 0 draws the original 320x200 view. pad > 0 draws a view `pad` columns wider on each side (the surfaces must
+   cover x -pad .. 320 + pad): in gameplay frames, every bound of a draw-buffer operation that is the original full
+   viewport widens with the view (sprite clip box, weather bounds, firefly darkness, the world layers, the swap),
+   the world layers use their extended rules, and the original's 4-pixel border clear is not drawn. Screen-space
+   scenes (menus, movies, transitions) keep the 320 columns, centred, with black margins (port/docs/RENDERER.md 9). */
+void port_native_draw(const port_frame *f, int first, int last, port_surface *const *surfaces, int pad);
 
 #endif

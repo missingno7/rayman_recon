@@ -34,8 +34,9 @@ void port_vga_wait_retrace(int in_retrace);
 unsigned port_vga_inp(unsigned port);
 void port_vga_outp(unsigned port, unsigned value);
 
-/* Observers of every presented image (tests, recordings): pixels 320x200, pitch 320, DAC 768 bytes. */
-typedef void (*port_vga_frame_hook)(const uint8_t *pixels, const uint8_t *dac, void *user);
+/* Observers of every presented image (tests, recordings): width x 200 pixels (320, or the native renderer's wider
+   view), pitch width, DAC 768 bytes. */
+typedef void (*port_vga_frame_hook)(const uint8_t *pixels, int width, const uint8_t *dac, void *user);
 void port_vga_set_frame_hook(port_vga_frame_hook hook, void *user);
 
 #ifdef __cplusplus
