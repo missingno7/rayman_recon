@@ -6,7 +6,9 @@ For each original demo, one run presenting the original view (reference, 320 col
     identical: a wider view consumes no random numbers and changes no game state;
   * every dumped wide frame is 428 columns wide;
   * the margins hold drawn pixels in gameplay frames (the world, objects, weather extend past the original 320
-    columns). In demo 3, a firefly level, the darkness covers the margins like the unlit rest of the screen.
+    columns), except where they must stay black: demo 3, a firefly level, whose darkness covers them like the unlit
+    rest of the screen, and demo 4, a vertical-scrolling level whose map is 320 pixels wide (the view centres on
+    the map, black beyond its edges).
 The native renderer's exactness in the original view is gated separately (tests/e2e_native.py).
 
     python port/tests/e2e_wide.py RAYMAN_EXE DATA_DIR CD_CUE
@@ -20,7 +22,7 @@ from pathlib import Path
 FRAMES = 6000
 DUMP_EVERY = 97
 PAD = 54
-DARK_MARGIN_DEMOS = {3}   # world 5 level 4: the firefly darkness covers everything outside the lit window
+DARK_MARGIN_DEMOS = {3, 4}   # demo 3: firefly darkness; demo 4: a map 320 pixels wide (black beyond its edges)
 
 
 def run(exe, data, cd, demo, work, wide):
@@ -70,7 +72,10 @@ def main(argv):
                 problems.append(f'demo{demo}: the wider view changed the gameplay-state log')
             if widths != {320 + 2 * PAD}:
                 problems.append(f'demo{demo}: wide frames are not {320 + 2 * PAD} columns wide')
-            if demo not in DARK_MARGIN_DEMOS and margin_frames * 2 < frames:
+            if demo in DARK_MARGIN_DEMOS:
+                if margin_frames:
+                    problems.append(f'demo{demo}: the margins should stay black')
+            elif margin_frames * 2 < frames:
                 problems.append(f'demo{demo}: the margins are empty in most frames')
     finally:
         shutil.rmtree(work, ignore_errors=True)

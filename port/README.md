@@ -49,7 +49,8 @@ movie; scenes no test reaches yet may show gaps); the default `reference`
 presents the original draw path. `--verify-render` compares the native renderer with the original in every frame.
 `--widescreen` (16:9) or `--wide-pad N` (0..160 columns per side) makes the native renderer draw a wider view of
 the same frames: the world, objects and weather continue past the original 320 columns, without the original's
-4-pixel border; menus, movies and other screen-space scenes stay 4:3 in the centre.
+4-pixel border; at a level edge the view stops at the map's edge (the game's camera is untouched), and a level
+narrower than the view gets black borders; menus, movies and other screen-space scenes stay 4:3 in the centre.
 
 Saves go to the SDL pref
 directory unless `--save DIR` is given. Alt+Enter toggles fullscreen.

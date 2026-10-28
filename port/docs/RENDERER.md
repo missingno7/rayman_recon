@@ -278,7 +278,8 @@ Rules of the wider view (render/native.c), applied to the draw buffer of gamepla
 
 | Item | Original rule | Wider view |
 |---|---|---|
-| Bounds equal to the full viewport (x within 0..8 to 312..320) | the original's clip boxes and viewport | widen by `pad` on both sides: sprite clip box (its arithmetic runs shifted right by `pad`, so the unsigned comparisons see the original's non-negative values), weather bounds, firefly darkness, the world layers, the gameplay swap |
+| Presentation camera | the game's camera `xmap`, clamped to `[scroll_start_x, scroll_end_x]` (moteur.c) | unchanged; the wider window onto the world (`-pad .. 320 + pad`, world x = screen x + xmap - 8) gets a presentation offset that keeps it inside the level map: 0 when there is room, otherwise the window stops at the map edge and the original 4:3 area moves off centre. A map narrower than the window is centred, with black beyond its edges. World passes (background, weather, map, stars, objects, particles, foreground, firefly) are drawn through the window; HUD and text passes stay at their screen positions. Computed from the recorded frame (camera, map width); the game never sees it |
+| Bounds equal to the full viewport (x within 0..8 to 312..320) | the original's clip boxes and viewport | widen to the window: sprite clip box (its arithmetic runs shifted right by `pad`, so the unsigned comparisons see the original's non-negative values), weather bounds, firefly darkness, the world layers, the gameplay swap |
 | Background, map, foreground band sprites | original viewport rules (band copy extent, two sprite instances, no map when the grid is one tile) | the layers' extended rules over the whole view; background columns beyond the stored image wrap through its other half only when the image is two identical halves (checked per image), otherwise they stay black |
 | Original 4-pixel left border (`clear_borders_Normal`, ClearBorder's columns) | cleared every frame | **not drawn** (user decision 2026-10-28): the world continues there |
 | Objects, Rayman, projectiles | drawn for every active object (activation ~1320x1200 around the camera), clipped to the box | visible in the margins as far as active objects reach |
@@ -291,13 +292,18 @@ Rules of the wider view (render/native.c), applied to the draw buffer of gamepla
 | Menus, vignettes, movies, transitions, pause (screen-space scenes) | 320x200 images | the original 320 columns centred, black margins |
 | Draw-buffer origin moves | linear memory shift | each row shifts by the same number of pixels (rows stay apart in the wider surface) |
 
+A map narrower than the window is exercised by demo 4 (a vertical-scrolling level 320 pixels wide: centred, black
+borders). Not yet exercised by a test: boss arenas whose scroll limits lock the camera (the window follows the map,
+so it can show the surroundings of an arena).
+
 Known content limits (the original art, not the renderer): a column background is a 320-pixel picture, so its
 repetition in the margins shows a seam where its edges meet; where a level places no object or tile beyond the
 original screen (for example the water sprites at the bottom of some levels), the margin stays black.
 
 Verification: the original view stays gated pixel for pixel (`port_native_demos`); `--verify-render` runs at the
 original width only. The wider view is gated by `port_wide_demos` (tests/e2e_wide.py): gameplay-state logs identical
-to the original-view run in all six demos, every frame 428 columns, margins drawn in gameplay frames.
+to the original-view run in all six demos, every frame 428 columns, margins drawn in gameplay frames (black by
+design in demo 3, firefly darkness, and demo 4, a map 320 pixels wide).
 
 ## 10. Roadmap
 

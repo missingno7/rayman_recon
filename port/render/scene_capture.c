@@ -47,6 +47,7 @@ static void capture_view(port_scene *s)
     s->view_x1 = (int16_t)Bloc_lim_W2;
     s->view_y0 = (int16_t)Bloc_lim_H1;
     s->view_y1 = (int16_t)Bloc_lim_H2;
+    s->map_width = 16 * BIG_MAP.width;
 }
 
 /* Bands and band sprites: level data plus the scroll positions Calcul_Deplacement_Bande left in Bande[].field_6. */

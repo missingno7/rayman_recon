@@ -45,6 +45,7 @@ typedef struct port_scene_tile {
 typedef struct port_scene {
     uint32_t seq;             /* capture counter; 0 = never captured */
     int16_t xmap, ymap;       /* logical camera */
+    int32_t map_width;        /* the level map's width in pixels (16 x tiles); 0 = unknown */
     int16_t view_x0, view_x1, view_y0, view_y1;   /* Bloc_lim_W1/W2/H1/H2 of this frame */
     /* background */
     int background;           /* enum port_scene_background */

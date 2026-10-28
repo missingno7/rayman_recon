@@ -82,19 +82,64 @@ static void put_sprite(port_surface *d, int32_t base, int32_t x, int32_t y, uint
    with its unsigned upper comparisons, the left crop that advances the source only for unmirrored sprites, the
    right crop that advances it only for mirrored ones, and marker-run decoding from the cropped start (a crop can
    land inside a run, which the original then reads as data). Rows step by the uncropped width. */
-/* Wider view: a horizontal bound pair that is the original full viewport ([0..8, 312..320]) widens by pad. */
+/* Wider view: a horizontal bound pair that is the original full viewport ([0..8, 312..320]) widens to the window. */
 static int full_width(int32_t x0, int32_t x1) { return x0 <= 8 && x1 >= 312; }
 
-static void sprite(port_surface *d, const port_op *op, int pad)
+/* The wider view's window onto the world, in the game's screen coordinates (world x = screen x + xmap - 8):
+   [-pad, 320 + pad) moved by the presentation offset dx, so that it stays inside the level map. The game's camera
+   is not touched; at a level edge the window stops and the original 4:3 area moves off centre. A map narrower than
+   the window is centred, and the window is cut to the map (black beyond it). */
+typedef struct view_window { int32_t x0, x1, dx; } view_window;
+
+static view_window world_window(const port_scene *s, int pad)
+{
+    view_window w = {-pad, 320 + pad, 0};
+    if (s->map_width > 0) {
+        int32_t lo = 8 - s->xmap + pad, hi = s->map_width - 312 - pad - s->xmap;
+        if (lo <= hi)
+            w.dx = lo > 0 ? lo : hi < 0 ? hi : 0;
+        else
+            w.dx = (lo + hi) / 2;
+        w.x0 += w.dx;
+        w.x1 += w.dx;
+        if (w.x0 < 8 - s->xmap)
+            w.x0 = 8 - s->xmap;
+        if (w.x1 > s->map_width + 8 - s->xmap)
+            w.x1 = s->map_width + 8 - s->xmap;
+    }
+    return w;
+}
+
+/* The passes that draw the world (moved with the window); the others are screen-space (HUD, text). */
+static int world_pass(int pass)
+{
+    switch (pass) {
+    case PORT_PASS_BACKGROUND:
+    case PORT_PASS_REAR_WEATHER:
+    case PORT_PASS_MAP:
+    case PORT_PASS_STARS:
+    case PORT_PASS_OBJECTS:
+    case PORT_PASS_PARTICLES:
+    case PORT_PASS_FRONT:
+    case PORT_PASS_FRONT_WEATHER:
+    case PORT_PASS_FIREFLY:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+static void sprite(port_surface *d, const port_op *op, const view_window *win)
 {
     int flip = op->flags & PORT_SPRITE_FLIP, raw = op->flags & PORT_SPRITE_RAW;
     uint8_t or_color = (op->flags & PORT_SPRITE_COLOR) ? (uint8_t)(op->color * 8) : 0;
     uint32_t size = op->size, w = size & 255, h = (size >> 8) & 255, stride = w, end;
-    /* With a widened box the arithmetic runs `pad` columns to the right, so that its unsigned comparisons see the
-       same non-negative values as in the original view; pixels are written back at x - pad. */
-    int32_t shift = pad && full_width(op->clip[0], op->clip[1]) ? pad : 0;
+    /* A box widened to the window runs its arithmetic shifted right by -window.x0, so that its unsigned comparisons
+       see non-negative values as in the original view; pixels are written back shifted. */
+    int widen = win && full_width(op->clip[0], op->clip[1]);
+    int32_t shift = widen ? -win->x0 : 0;
     int32_t x = op->x + shift, y = op->y;
-    int32_t box[4] = {shift ? 0 : op->clip[0], shift ? 320 + 2 * pad : op->clip[1], op->clip[2], op->clip[3]};
+    int32_t box[4] = {widen ? 0 : op->clip[0], widen ? win->x1 - win->x0 : op->clip[1], op->clip[2], op->clip[3]};
     const uint8_t *src = op->image;
     if (op->flags & PORT_SPRITE_SCRATCH) {
         uint8_t *slot = port_native_scratch(op->w);
@@ -170,7 +215,7 @@ static void sprite(port_surface *d, const port_op *op, int pad)
 
 /* draw_flocon*_Normal / draw_pluie*_Normal stamps (ASM_SPEC): the anchor is tested against the bounds set by
    flocon_clipping (upper bounds compared unsigned, inclusive); the whole stamp is then written. */
-static void weather(port_surface *d, const port_op *op, int pad)
+static void weather(port_surface *d, const port_op *op, const view_window *win)
 {
     static const struct { const char *pattern; int w, h; } stamps[] = {
         {"7", 1, 1}, {"7867", 2, 2}, {".6.866.6.", 3, 3}, {"3", 1, 1}, {"5", 1, 1},
@@ -180,9 +225,9 @@ static void weather(port_surface *d, const port_op *op, int pad)
     int r, c;
     if (op->flags >= sizeof stamps / sizeof stamps[0])
         return;
-    if (pad && full_width(b[2], b[3])) {
-        /* wider view: the left and right bounds move out by pad (compared signed: anchors left of 0 exist) */
-        if (op->x < b[2] - pad || op->x > b[3] + pad || op->y < b[0] || (uint32_t)op->y > (uint32_t)b[1])
+    if (win && full_width(b[2], b[3])) {
+        /* wider view: the left and right bounds move to the window (compared signed: anchors left of 0 exist) */
+        if (op->x < win->x0 || op->x > win->x1 - (320 - b[3]) || op->y < b[0] || (uint32_t)op->y > (uint32_t)b[1])
             return;
     } else if (op->x < b[2] || (uint32_t)op->x > (uint32_t)b[3] || op->y < b[0] || (uint32_t)op->y > (uint32_t)b[1]) {
         return;
@@ -227,13 +272,13 @@ static void firefly_rows(port_surface *d, const port_op *op, const int32_t *g, i
 
 /* aff_luciole (src/luciole.c), radius rayon_luciole - 4: full rows from the radius to ADDLUCLIP beyond it, then the
    midpoint circle's spans. */
-static void firefly(port_surface *d, const port_op *op, int pad)
+static void firefly(port_surface *d, const port_op *op, const view_window *win)
 {
     int32_t radius = (int16_t)op->size - 4, x = radius, i, y, dd, err;
     int32_t g[4] = {op->clip[0], op->clip[1], op->clip[2], op->clip[3]};
-    if (pad && full_width(g[0], g[1])) {
-        g[0] -= pad;
-        g[1] += pad;
+    if (win && full_width(g[0], g[1])) {
+        g[0] = win->x0;
+        g[1] = win->x1;
     }
     for (i = 0, y = radius; i <= op->h; ++i, ++y)
         firefly_rows(d, op, g, 0, y);
@@ -316,34 +361,57 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
     for (i = first; i < last; i++) {
         const port_op *op = &f->ops[i];
         port_surface *dst = op->target < PORT_TARGET_COUNT ? surfaces[op->target] : NULL;
+        port_surface moved;
         port_rect view = {op->clip[0], op->clip[2], op->clip[1], op->clip[3]};
         port_rect all;
         /* the wider view applies to the gameplay frame's draw buffer */
         int wide = pad && f->gameplay && op->target == PORT_TARGET_DRAW ? pad : 0;
         int fidelity = PORT_RENDER_ORIGINAL;
+        view_window window, *win = NULL;
         if (!dst)
             continue;
+        if (wide && world_pass(op->pass)) {
+            /* the world through the window: drawn into the surface seen dx columns further right */
+            window = world_window(&f->world, wide);
+            win = &window;
+            moved = *dst;
+            moved.x0 += window.dx;
+            dst = &moved;
+        }
         all.x0 = dst->x0;
         all.y0 = dst->y0;
         all.x1 = dst->x0 + dst->width;
         all.y1 = dst->y0 + dst->height;
-        if (wide && full_width(view.x0, view.x1)) {
-            view.x0 = -wide;
-            view.x1 = 320 + wide;
+        if (win && full_width(view.x0, view.x1)) {
+            view.x0 = win->x0;
+            view.x1 = win->x1;
             fidelity = PORT_RENDER_EXTENDED;
         }
         switch (op->kind) {
         case PORT_OP_BACKGROUND:
+            if (win) {
+                /* the window beyond a narrow map's edges: black */
+                int32_t full_x0 = -wide + win->dx, full_x1 = 320 + wide + win->dx;
+                for (y = 0; y < 200; y++) {
+                    fill(dst, full_x0, y, win->x0 - full_x0, 0);
+                    fill(dst, win->x1, y, full_x1 - win->x1, 0);
+                }
+            }
             port_render_background(&f->world, dst, view, fidelity);
             break;
         case PORT_OP_MAP:
             port_render_map(&f->world, dst, view, fidelity);
             break;
         case PORT_OP_FRONT:
-            port_render_front(&f->world, dst, all, wide ? PORT_RENDER_EXTENDED : PORT_RENDER_ORIGINAL);
+            if (win) {
+                port_rect window_rect = {win->x0, 0, win->x1, 200};
+                port_render_front(&f->world, dst, window_rect, PORT_RENDER_EXTENDED);
+            } else {
+                port_render_front(&f->world, dst, all, PORT_RENDER_ORIGINAL);
+            }
             break;
         case PORT_OP_SPRITE:
-            sprite(dst, op, op->base ? 0 : wide);
+            sprite(dst, op, op->base ? NULL : win);
             break;
         case PORT_OP_CLEAR_BORDERS:
             /* clear_borders_Normal: 4 bytes at the row start and at +right, on height rounded down to even. Not in
@@ -359,7 +427,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             put(dst, op->x, op->y, op->color);
             break;
         case PORT_OP_WEATHER:
-            weather(dst, op, wide);
+            weather(dst, op, win);
             break;
         case PORT_OP_FILL:
             if (wide && op->x == 0 && op->w >= 64000) {
@@ -470,7 +538,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             }
             break;
         case PORT_OP_FIREFLY:
-            firefly(dst, op, wide);
+            firefly(dst, op, win);
             break;
         case PORT_OP_BLACK_BOX:
             for (y = 0; y < op->h; y++)
