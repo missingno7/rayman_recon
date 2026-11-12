@@ -140,12 +140,14 @@ Like the release, the port has one input path for pad and touch: `platform/pad.c
   been used (SDL also reports keyboards with d-pad keys as gamepads, e.g. the emulator's).
 - **Context** (`render/scene_capture.c port_game_input_context`): world map while `DO_WORLD_MAP` runs; in a level
   (`DO_MAIN_LOOP_PC_NORMAL` with `RaymanDansUneMapDuJeu`) the menu context while `GoMenu` or `OptionGame` (the
-  in-level options loop) is set, no HUD while `Vignet_To_Display` or from the start of Betilla's dialogue to the end
-  of the fairy level (`is_fee` and the fairy object's `DO_FEE_ETAPE` config 1..4 or a fairy text shown; the release:
-  `setHUDContext("Fee_no_hud")` at config 1), Ray on the mosquito while `NewMs`, else gameplay; no HUD during
-  `START_LEVEL_ANIM`; menu everywhere else. Fixed 2026-11-12: `is_fee` alone hid the HUD for the whole fairy level,
-  so Rayman could not walk to Betilla by touch (every tap was A). Checked on world 1 level 3: gameplay while walking,
-  no HUD from the dialogue on.
+  in-level options loop) is set, no HUD while `Vignet_To_Display`, Ray on the mosquito while `NewMs`, else gameplay;
+  no HUD during `START_LEVEL_ANIM`; menu everywhere else.
+- **Fairy levels (port decision, user 2026-11-12):** the normal controls stay throughout, Betilla's scene included.
+  The release hid its HUD from her first dialogue (`DO_FEE_ETAPE` config 1: `setHUDContext("Fee_no_hud")`), but the
+  DOS state gives no reliable end of the scene: her last text stays on screen while Rayman plays on. Two attempts
+  failed on the phone: hiding while `is_fee` (no stick in the whole level, every tap was A), then hiding from her first
+  dialogue until the level was left (no controls after the scene). Checked on world 1 level 3: gameplay context from
+  the level start to the end of the run.
 - **Overlay**: positions, activation areas, stick radius and thresholds, hit-box scales, alphas and visibility rules
   as specified above. Port-only additions: in the menu context the world-map cross, an OK button (A) at the GO
   position and a Back button (B) top left; with the HUD hidden in a level, a finger anywhere holds A (vignettes,
