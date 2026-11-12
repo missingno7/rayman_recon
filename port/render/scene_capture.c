@@ -485,6 +485,28 @@ uint64_t port_scene_state_digest(void)
    levelAnimInit, DO_FEE_ETAPE: HUD hidden; INIT_RAY_ON_MS: Ray on the mosquito). */
 extern u8 GoMenu, OptionGame, is_fee, NewMs, Vignet_To_Display;   /* OptionGame: src/menu.c in-level menu loop */
 extern u8 key_right, key_up, key_left, key_down, key_fist, key_jump, key_action;
+extern u8 display_txt_fee;
+extern s16 fee_obj_id;
+
+/* Betilla's dialogue sequence is running. `is_fee` marks the whole fairy level, where Rayman walks to her with the
+   normal controls; the Android release hides its HUD only from her first dialogue (DO_FEE_ETAPE config 1:
+   setHUDContext("Fee_no_hud")) to the end of the sequence. src/fee.c DO_FEE_ETAPE: config 1..4 are the dialogue
+   steps; display_txt_fee != 255 while a fairy text is shown. */
+static int fairy_sequence;   /* the dialogue has started in this fairy level: stays hidden until the level is left */
+
+static int fairy_dialogue(void)
+{
+    if (!is_fee)
+        return fairy_sequence = 0;
+    if (display_txt_fee != 255)
+        fairy_sequence = 1;
+    else if (fee_obj_id >= 0 && level.objects && fee_obj_id < level.nb_objects) {
+        u8 config = level.objects[fee_obj_id].config;
+        if (config >= 1 && config <= 4)
+            fairy_sequence = 1;
+    }
+    return fairy_sequence;
+}
 
 int port_game_input_context(uint8_t keys[PORT_KEY_COUNT], unsigned *powers)
 {
@@ -500,6 +522,8 @@ int port_game_input_context(uint8_t keys[PORT_KEY_COUNT], unsigned *powers)
     *powers = (evts.poing ? PORT_POWER_FIST : 0) | (evts.helico ? PORT_POWER_HELICO : 0) |
               (evts.super_helico ? PORT_POWER_SUPER_HELICO : 0) | (evts.run ? PORT_POWER_RUN : 0) |
               (evts.magicseed ? PORT_POWER_SEED : 0);
+    if (!scene || strcmp(scene, "DO_MAIN_LOOP_PC_NORMAL"))
+        fairy_sequence = 0;   /* outside a level's loop: the next fairy level starts with the normal controls */
     if (!scene)
         return PORT_CONTEXT_MENU;
     if (!strcmp(scene, "DO_WORLD_MAP"))
@@ -509,7 +533,7 @@ int port_game_input_context(uint8_t keys[PORT_KEY_COUNT], unsigned *powers)
     if (!strcmp(scene, "DO_MAIN_LOOP_PC_NORMAL") && RaymanDansUneMapDuJeu) {
         if (GoMenu || OptionGame)
             return PORT_CONTEXT_MENU;   /* the in-level menu Esc opened (Android: its pause popup) */
-        if (is_fee || Vignet_To_Display)
+        if (Vignet_To_Display || fairy_dialogue())
             return PORT_CONTEXT_LEVEL_NO_HUD;
         return NewMs ? PORT_CONTEXT_MOSKITO : PORT_CONTEXT_GAMEPLAY;
     }
