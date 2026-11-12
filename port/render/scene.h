@@ -13,7 +13,11 @@
 #include <stdint.h>
 
 #define PORT_SCENE_MAX_PAD 160                 /* widest supported presentation margin per side */
-#define PORT_SCENE_TILE_COLS ((320 + 2 * PORT_SCENE_MAX_PAD) / 16 + 2)
+/* How far the wider view can reach beyond the original 320 columns on one side: at a level edge the window stops
+   at the map edge and the original area moves off centre, so the far side reaches 2 * pad (render/native.c
+   world_window). Captured world data (the map window) covers this reach on both sides. */
+#define PORT_SCENE_MAX_REACH (2 * PORT_SCENE_MAX_PAD)
+#define PORT_SCENE_TILE_COLS ((320 + 2 * PORT_SCENE_MAX_REACH) / 16 + 2)
 #define PORT_SCENE_TILE_ROWS (200 / 16 + 2)
 #define PORT_SCENE_MAX_BANDS 300               /* Bande[300] */
 #define PORT_SCENE_MAX_BG_SPRITES 20           /* Sprite[20] */
@@ -69,6 +73,16 @@ typedef struct port_scene {
     int16_t tile_col0, tile_row0;
     uint8_t original_map_grid_w, original_map_grid_h;   /* DRAW_MAP's display_map grid for the frame's viewport */
     port_scene_tile tiles[PORT_SCENE_TILE_ROWS][PORT_SCENE_TILE_COLS];
+    /* firefly levels (RayEvts.firefly): the lit box the game clips this frame's world drawing to is
+       [lit_x0, lit_x1] (set_luciole: centre +- rayon_luciole) cut to the full viewport [glob_x0, glob_x1]
+       (Bloc_lim_*_Glob, src/luciole.c) */
+    uint8_t firefly;
+    int32_t lit_x0, lit_x1, glob_x0, glob_x1;
+    /* the boss bar (display_bar_boss, src/affiche.c 547, drawn inside DISPLAY_ALL_OBJECTS): the images of its
+       sprites (the fist object's 60 and 61 and the boss icons) and the rows it draws them at */
+    const uint8_t *bossbar_images[9];
+    int nb_bossbar_images;
+    int32_t bossbar_y[3];
 } port_scene;
 
 #endif

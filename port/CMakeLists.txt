@@ -185,6 +185,7 @@ add_library(rayman_hist STATIC ${RAY_HIST_SOURCES} ${RAY_PORT}/game/port_main.c 
     ${RAY_PORT}/render/menu_capture.c ${RAY_ASSETS_C})
 set(RAY_RENDER_PASSES CLEAR_FIXE_LUCIOLE Display_Back_Screen display_flocons_behind DRAW_MAP display_grp_stars
     DISPLAY_ALL_OBJECTS display_pix_gerbes Display_Sprite_On_Front display_flocons_before Display_and_free_luciole
+    DO_DARK2_AFFICHE_TEXT
     DISPLAY_TEXT_FEE DISPLAY_FIXE DisplayCrackers DisplayProgrammerMessage display_time DISPLAY_GAME_VIGNET
     DO_OPTIONS_IN_GAME Do_Effect_Pause HANDLE_KEY ClearBorder)
 set(RAY_RENDER_PRIMITIVES DrawSpriteNormalNoClip DrawSpriteNormal DrawSpriteNormal256 DrawSpriteFlipNormalNoClip

@@ -67,10 +67,11 @@ victory path. The original player, frame pacing, palette fade and CD track windo
 port-clock timestamps and CD audio queue size; `RAYMAN_CD_TRACE=FILE` logs the actual device commands.
 
 Rendering (docs/RENDERER.md): the native renderer records what the original code draws each frame and draws it
-itself. `--renderer native` presents only its image (the demos, menus, save slots, world map and gameplay are
-complete and identical to the original, and so are the options and in-game menus, pause, credits and the intro
-movie; scenes no test reaches yet may show gaps); the default `reference`
-presents the original draw path. `--verify-render` compares the native renderer with the original in every frame.
+itself, and by default its image is presented (the demos, menus, save slots, world map and gameplay, the first
+levels of all six worlds, continue and game over are complete and identical to the original, and so are the options
+and in-game menus, pause, credits and the intro movie); while it cannot draw a frame completely (scenes no test
+reaches yet may have such frames) the original image is shown instead. `--renderer native` presents only the native
+image (gaps visible), `--renderer reference` only the original draw path. `--verify-render` compares the native renderer with the original in every frame.
 `--widescreen` (16:9) or `--wide-pad N` (0..160 columns per side) makes the native renderer draw a wider view of
 the same frames: the world, objects and weather continue past the original 320 columns, without the original's
 4-pixel border; at a level edge the view stops at the map's edge (the game's camera is untouched), and a level

@@ -43,6 +43,7 @@ enum port_pass {
     PORT_PASS_OPTIONS,         /* DO_OPTIONS_IN_GAME */
     PORT_PASS_PAUSE,           /* Do_Effect_Pause */
     PORT_PASS_KEYS,            /* HANDLE_KEY */
+    PORT_PASS_HUD_TEXT,        /* DO_DARK2_AFFICHE_TEXT (called inside DISPLAY_FIXE): centred text */
     PORT_PASS_COUNT
 };
 
@@ -101,6 +102,8 @@ enum port_prim {
 #define PORT_SPRITE_COLOR 4    /* visible pixels OR (color * 8) */
 #define PORT_SPRITE_NOCLIP 8   /* no clipping */
 #define PORT_SPRITE_SCRATCH 16 /* image read from native scratch slot `w` at byte `h` (a deformed sprite) */
+#define PORT_SPRITE_EXTRA 32   /* presentation only: an object the game does not draw (inactive, outside its
+                                  activation zone), drawn in the wider view's margins only (render/native.c) */
 
 typedef struct port_op {
     uint8_t kind, pass;

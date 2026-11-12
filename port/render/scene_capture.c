@@ -37,6 +37,9 @@ extern u8 *Scroll_Masque[20];
 extern big_map_t BIG_MAP;
 extern level_t level;
 extern obj_t ray;
+extern rayevts_t RayEvts;
+extern s16 x_luc, y_luc, rayon_luciole, ADDLUCLIP;
+extern s32 Bloc_lim_W1_Glob, Bloc_lim_W2_Glob, Bloc_lim_H1_Glob, Bloc_lim_H2_Glob;
 extern int RandomIndex;
 extern short RandArray[256];
 
@@ -49,6 +52,12 @@ static void capture_view(port_scene *s)
     s->view_y0 = (int16_t)Bloc_lim_H1;
     s->view_y1 = (int16_t)Bloc_lim_H2;
     s->map_width = 16 * BIG_MAP.width;
+    /* the firefly's lit box before set_luciole cut it to the viewport (y_luc holds the screen x) */
+    s->firefly = RayEvts.firefly ? 1 : 0;
+    s->lit_x0 = y_luc - rayon_luciole;
+    s->lit_x1 = y_luc + rayon_luciole;
+    s->glob_x0 = Bloc_lim_W1_Glob;
+    s->glob_x1 = Bloc_lim_W2_Glob;
 }
 
 /* Bands and band sprites: level data plus the scroll positions Calcul_Deplacement_Bande left in Bande[].field_6. */
@@ -146,10 +155,11 @@ static void capture_front(port_scene *s)
     s->front_y = (int16_t)(2 * ymapmax - 2 * ymap + 200);
 }
 
-/* Map window around the camera (update_display_map: tile column c is at screen x 16c - xmap + 8). */
+/* Map window around the camera (update_display_map: tile column c is at screen x 16c - xmap + 8), as far as the
+   wider view can reach on either side. */
 static void capture_map(port_scene *s)
 {
-    s16 col0 = (s16)((xmap - 8 - PORT_SCENE_MAX_PAD) >> 4), row0 = (s16)(ymap >> 4);
+    s16 col0 = (s16)((xmap - 8 - PORT_SCENE_MAX_REACH) >> 4), row0 = (s16)(ymap >> 4);
     int r, c;
     capture_view(s);
     s->tile_col0 = col0;
@@ -222,10 +232,6 @@ void __wrap_Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16
     port_record_pass_end(previous);
 }
 
-extern rayevts_t RayEvts;
-extern s16 x_luc, y_luc, rayon_luciole, ADDLUCLIP;
-extern s32 Bloc_lim_W1_Glob, Bloc_lim_W2_Glob, Bloc_lim_H1_Glob, Bloc_lim_H2_Glob;
-
 /* Display_and_free_luciole (src/luciole.c 269-292) draws the darkness itself (aff_luciole). Its inputs are read
    after it ran: the ADDLUCLIP it computed, the centre (aff_luciole is called as (y_luc, x_luc): y_luc holds the
    screen x) and the full viewport, which it restored into Bloc_lim from Bloc_lim_*_Glob. */
@@ -269,11 +275,110 @@ void __wrap_ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
 
 PASS_VOID(display_flocons_behind, PORT_PASS_REAR_WEATHER)
 PASS_VOID(display_grp_stars, PORT_PASS_STARS)
-PASS_VOID(DISPLAY_ALL_OBJECTS, PORT_PASS_OBJECTS)
+/* Wider view, presentation only: objects the game does not draw because they are outside their activation zone
+   (in_action_zone, src/moteur.c: origin screen x within [-284 - zonediffx, 444 + zonediffx]), which a view wider
+   than the zone shows as late appearance on one side and early disappearance of wide sprites on the other. Drawn
+   (render/native.c, margins only, behind the active objects) for the types measured as static: over a camera
+   sweep of 59 levels at pad 100 (RENDERER.md 9, "Inactive static objects") each never moved, changed animation
+   or flipped while active, and showed no jump, animation change or flip when switching on or off (at least 3
+   such transitions). Reads game state only, as display2 (src/affiche.c 391) would draw the object. */
+static const u8 inactive_drawable[262] = {
+    [1] = 1, [2] = 1, [4] = 1, [5] = 1, [8] = 1, [16] = 1, [21] = 1, [27] = 1, [41] = 1, [42] = 1, [53] = 1,
+    [58] = 1, [63] = 1, [67] = 1, [82] = 1, [85] = 1, [87] = 1, [88] = 1, [95] = 1, [101] = 1, [105] = 1,
+    [109] = 1, [124] = 1, [142] = 1, [154] = 1, [155] = 1, [158] = 1, [160] = 1, [163] = 1, [164] = 1, [167] = 1,
+    [175] = 1, [176] = 1, [188] = 1, [229] = 1, [230] = 1, [234] = 1, [237] = 1, [240] = 1, [243] = 1};
+extern s16 zonediffx[262];
+extern obj_type_flags_t flags[262];
+s16 get_proj_x(s16 scale, s16 unprojected_x);
+s16 get_proj_y(s16 scale, s16 unprojected_y);
+s16 get_proj_dist(s16 scale, s16 outer_dim);
+
+static void capture_inactive_objects(void)
+{
+    int o;
+    if (!port_record_pad() || !RaymanDansUneMapDuJeu || !level.objects)
+        return;
+    for (o = 0; o < level.nb_objects; o++) {
+        obj_t *obj = &level.objects[o];
+        s32 screen_x = obj->x - xmap + 8, screen_y = obj->y - ymap, zd;
+        anim_t *anim;
+        anim_layer_t *layer;
+        s16 layers_per_frame;
+        int i;
+        if (obj->type >= 262 || !inactive_drawable[obj->type] || !obj->flags.alive || obj->is_active ||
+            (flags[obj->type].flags0 & 0x90) || obj->display_prio < 1 || obj->display_prio > 7 ||
+            !obj->animations || !obj->sprites || !obj->img_buffer || obj->anim_index == 255)
+            continue;
+        zd = zonediffx[obj->type];
+        if (screen_x >= -284 - zd && screen_x <= 444 + zd)
+            continue;   /* inside the zone: the game keeps it inactive for its own reasons */
+        anim = obj->animations + obj->anim_index;
+        layers_per_frame = anim->layers_per_frame & 0x3FFF;
+        if (!anim->layers || obj->anim_frame >= anim->frames_count)
+            continue;
+        layer = anim->layers + obj->anim_frame * layers_per_frame;
+        for (i = 0; i < layers_per_frame; i++, layer++) {
+            sprite_t *sprite;
+            s16 x, w, h;
+            if (!layer->sprite_index)
+                continue;
+            sprite = obj->sprites + layer->sprite_index;
+            if (!sprite->id)
+                continue;
+            if (!obj->flags.flip_x)
+                x = (s16)(layer->x + screen_x);
+            else
+                x = (s16)((obj->scale == 256 && i == 5 && obj->anim_index <= 16 && obj->anim_index >= 14 ? -16 : 0) +
+                          obj->offset_bx * 2 - layer->x - sprite->outer_width + screen_x);
+            w = get_proj_dist(obj->scale, sprite->outer_width);
+            h = get_proj_dist(obj->scale, sprite->outer_height);
+            port_record_extra_sprite(obj->flags.flip_x ^ layer->mirrored, get_proj_x(obj->scale, x),
+                                     sprite->color >> 4, get_proj_y(obj->scale, (s16)(layer->y + screen_y)),
+                                     (u16)((h << 8) + w), obj->img_buffer + sprite->offset_in_atlas);
+        }
+    }
+}
+
+/* The boss bar's sprites, so that the renderer can tell its operations from the objects' (render/native.c): the
+   images display_bar_boss passes (fist object sprites 60, 61 and sprite_of_ref of each boss icon) and its rows
+   (Bloc_lim_H2 - 19, - 20, - 30 in the normal video mode, projected like display_sprite does). */
+extern obj_t *poing_obj;
+extern s32 Bloc_lim_H2;
+u8 sprite_of_ref(obj_t *obj, u8 ref);
+static void capture_boss_bar(port_scene *s)
+{
+    static const u8 icons[] = {44, 108, 109, 110, 111, 112, 113};
+    int i, n = 0;
+    s->nb_bossbar_images = 0;
+    if (!poing_obj || !poing_obj->sprites || !poing_obj->img_buffer || poing_obj->nb_sprites <= 61)
+        return;
+    s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[60].offset_in_atlas;
+    s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[61].offset_in_atlas;
+    for (i = 0; i < (int)sizeof icons; i++) {
+        u8 index = sprite_of_ref(poing_obj, icons[i]);
+        if (index < poing_obj->nb_sprites)
+            s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[index].offset_in_atlas;
+    }
+    s->nb_bossbar_images = n;
+    s->bossbar_y[0] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 19));
+    s->bossbar_y[1] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 20));
+    s->bossbar_y[2] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 30));
+}
+
+void __real_DISPLAY_ALL_OBJECTS(void);
+void __wrap_DISPLAY_ALL_OBJECTS(void)
+{
+    int previous = port_record_pass_begin(PORT_PASS_OBJECTS);
+    capture_boss_bar(port_record_world());
+    capture_inactive_objects();
+    __real_DISPLAY_ALL_OBJECTS();
+    port_record_pass_end(previous);
+}
 PASS_VOID(display_pix_gerbes, PORT_PASS_PARTICLES)
 PASS_VOID(display_flocons_before, PORT_PASS_FRONT_WEATHER)
 PASS_VOID(DISPLAY_TEXT_FEE, PORT_PASS_FAIRY_TEXT)
 PASS_ARG(DISPLAY_FIXE, PORT_PASS_HUD, s32)
+PASS_VOID(DO_DARK2_AFFICHE_TEXT, PORT_PASS_HUD_TEXT)
 PASS_VOID(DisplayCrackers, PORT_PASS_CRACKERS)
 PASS_VOID(DisplayProgrammerMessage, PORT_PASS_PROGRAMMER)
 PASS_ARG(display_time, PORT_PASS_TIME, s32)

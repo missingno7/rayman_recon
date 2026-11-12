@@ -386,6 +386,24 @@ void port_record_layer(int kind, int x0, int y0, int x1, int y1)
     }
 }
 
+void port_record_extra_sprite(int flip, int32_t x, int32_t color, int32_t y, uint32_t size, const uint8_t *image)
+{
+    port_op *op;
+    if (!pad || !image)
+        return;
+    op = append(PORT_OP_SPRITE, TARGET_DRAW);
+    if (!op)
+        return;
+    op->flags = (uint8_t)((flip ? PORT_SPRITE_FLIP : 0) | PORT_SPRITE_EXTRA);
+    op->color = (uint8_t)color;
+    op->x = x;
+    op->y = y;
+    op->base = 0;
+    op->size = size;
+    get_sprite_clipping(&op->clip[0], &op->clip[1], &op->clip[2], &op->clip[3]);
+    op->image = image;
+}
+
 void port_record_firefly(int center_x, int center_y, int rayon, int addluclip, int w1, int w2, int h1, int h2)
 {
     port_op *op = append(PORT_OP_FIREFLY, TARGET_DRAW);
@@ -1126,9 +1144,32 @@ static void trap_check(void)
 }
 
 /* The end of a frame: verification, statistics, and a fresh frame. */
+/* Default presentation (native mode 2): the native image, except while the native surfaces miss something a frame
+   drew (an unsupported operation or a lost one): then the original image is shown, the original 320 columns
+   centred in a wider view. The gap lasts until a complete gameplay frame (which redraws the whole view) or a
+   complete frame in another scene. */
+static int tainted;
+static const char *taint_scene;
+static long fallback_presents, fallback_frames;
+
+static void note_completeness(void)
+{
+    if (rec.unsupported || rec.overflow) {
+        if (!tainted && native_mode == 2)
+            fprintf(stderr, "render: scene %s is presented from the original image until it is drawn natively again "
+                            "(unsupported operation)\n", scene);
+        tainted = 1;
+        taint_scene = scene;
+        fallback_frames++;
+    } else if (tainted && (rec.gameplay || scene != taint_scene)) {
+        tainted = 0;
+    }
+}
+
 static void end_frame(void)
 {
     int g = rec.gameplay ? 1 : 0;
+    note_completeness();
     if (verify && DrawBufferNormal) {
         long bad_draw = compare(DrawBufferNormal, 320, &native_draw, "frame draw buffer", PORT_PASS_LOOP);
         long bad_display = compare(DisplayBufferNormal, 320, &native_display, "frame display", PORT_PASS_LOOP);
@@ -1256,6 +1297,15 @@ const uint8_t *port_record_presented(int *width)
         end_frame();
     }
     *width = native_display.width;
+    if (native_mode == 2 && tainted && DisplayBufferNormal) {
+        static uint8_t fallback_px[(320 + 2 * MAX_PAD) * 200];
+        int y, w = native_display.width;
+        memset(fallback_px, 0, (size_t)w * 200);
+        for (y = 0; y < 200; y++)
+            memcpy(fallback_px + (size_t)y * w + pad, DisplayBufferNormal + 320 * y, 320);
+        fallback_presents++;
+        return fallback_px;
+    }
     return native_mode ? native_display_px : NULL;
 }
 void port_record_set_verify(int on) { verify = on; }
@@ -1270,11 +1320,11 @@ void port_record_report(void)
            "gameplay_complete_exact=%ld gameplay_draw_bad_px=%lld gameplay_display_bad_px=%lld other=%ld "
            "other_complete=%ld other_draw_exact=%ld other_display_exact=%ld overflow=%ld display_writes=%ld "
            "origin_moves=%ld presents=%ld present_exact=%ld "
-           "effect_exact=%ld/%ld volatile_images=%ld\n",
+           "effect_exact=%ld/%ld volatile_images=%ld fallback_frames=%ld fallback_presents=%ld\n",
            st.frames[1], st.complete[1], st.draw_exact[1], st.display_exact[1], st.complete_exact[1],
            st.draw_bad_px[1], st.display_bad_px[1], st.frames[0], st.complete[0], st.draw_exact[0],
            st.display_exact[0], st.overflow, st.display_writes, st.origin_moves, st.presents, st.present_exact, st.effect_exact[1],
-           st.effect_exact[0], st.volatile_images);
+           st.effect_exact[0], st.volatile_images, fallback_frames, fallback_presents);
     for (p = 0; p < PORT_PASS_COUNT; p++)
         if (st.segments[p])
             printf("render pass %s: segments=%ld bad_segments=%ld bad_px=%lld\n", port_pass_name(p), st.segments[p],
