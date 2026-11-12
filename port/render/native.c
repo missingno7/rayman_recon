@@ -110,6 +110,33 @@ static view_window world_window(const port_scene *s, int pad)
     return w;
 }
 
+/* The background and foreground layers as the presentation camera sees them. The window is where a camera at
+   xmap + dx would look; the game computed the band positions for xmap. Without this, while the window rests at a
+   level edge and the game's camera moves underneath it, the map stands still but the parallax layers slide. Each
+   band gets the position Calcul_Deplacement_Bande gives for the presentation camera (its camera-following part
+   re-evaluated, its autoscroll kept), expressed for the moved surface; a vertical level's strips, which do not
+   follow x at all, stay where the presentation shows them. */
+static int32_t floor_div(int32_t a, int32_t b) { return a / b - (a % b != 0 && (a % b < 0) != (b < 0)); }
+
+static const port_scene *presentation_layers(const port_scene *s, const view_window *win, port_scene *copy)
+{
+    int i, period = s->plan_width / 2;
+    if (!win || !win->dx)
+        return s;
+    *copy = *s;
+    if (s->background == PORT_SCENE_BG_COLUMNS || s->front == PORT_SCENE_BG_COLUMNS)
+        copy->bg_col_shift = win->dx;
+    if (period > 0 && (s->background == PORT_SCENE_BG_BANDS || s->front == PORT_SCENE_BG_BANDS))
+        for (i = 0; i < s->nb_bands; i++) {
+            const port_scene_band *b = &s->bands[i];
+            int32_t follow = floor_div((s->xmap + win->dx) * b->cam_mul, b->cam_div) -
+                             floor_div(s->xmap * b->cam_mul, b->cam_div);
+            int32_t scroll = (b->scroll + follow - win->dx) % period;
+            copy->bands[i].scroll = (int16_t)(scroll < 0 ? scroll + period : scroll);
+        }
+    return copy;
+}
+
 /* The passes that draw the world (moved with the window); the others are screen-space (HUD, text). */
 static int world_pass(int pass)
 {
@@ -368,6 +395,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         int wide = pad && f->gameplay && op->target == PORT_TARGET_DRAW ? pad : 0;
         int fidelity = PORT_RENDER_ORIGINAL;
         view_window window, *win = NULL;
+        static port_scene layers;
         if (!dst)
             continue;
         if (wide && world_pass(op->pass)) {
@@ -397,7 +425,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
                     fill(dst, win->x1, y, full_x1 - win->x1, 0);
                 }
             }
-            port_render_background(&f->world, dst, view, fidelity);
+            port_render_background(presentation_layers(&f->world, win, &layers), dst, view, fidelity);
             break;
         case PORT_OP_MAP:
             port_render_map(&f->world, dst, view, fidelity);
@@ -405,7 +433,8 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         case PORT_OP_FRONT:
             if (win) {
                 port_rect window_rect = {win->x0, 0, win->x1, 200};
-                port_render_front(&f->world, dst, window_rect, PORT_RENDER_EXTENDED);
+                port_render_front(presentation_layers(&f->world, win, &layers), dst, window_rect,
+                                  PORT_RENDER_EXTENDED);
             } else {
                 port_render_front(&f->world, dst, all, PORT_RENDER_ORIGINAL);
             }
@@ -541,6 +570,12 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             firefly(dst, op, win);
             break;
         case PORT_OP_BLACK_BOX:
+            /* A bar across the original screen (the fairy scene's borders) crosses the whole wider view. */
+            if (wide && full_width(op->x, op->x + op->w)) {
+                for (y = 0; y < op->h; y++)
+                    fill(dst, -wide, op->y + y, 320 + 2 * wide, 0);
+                break;
+            }
             for (y = 0; y < op->h; y++)
                 fill(dst, op->x, op->y + y, op->w, 0);
             break;

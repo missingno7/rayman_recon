@@ -63,6 +63,17 @@ static void capture_bands(port_scene *s)
         s->bands[i].offset = (int16_t)Bande[i].offset;
         s->bands[i].length = (int16_t)Bande[i].length;
         s->bands[i].scroll = (int16_t)Bande[i].field_6;
+        /* Calcul_Deplacement_Bande (src/skops.c): how the scroll position follows the camera's x. */
+        s->bands[i].cam_mul = 0;
+        s->bands[i].cam_div = 1;
+        if (Type_Scroll[Num_Fond + 10 * (num_world - 1)] == 0) {
+            if (Bande[i].length == 0)
+                s->bands[i].cam_mul = 2;
+            else if ((Bande[i].field_4 == 0 || Bande[i].field_4 == 4 || Bande[i].field_4 == 5) && Bande[i].field_8) {
+                s->bands[i].cam_mul = 1;
+                s->bands[i].cam_div = (int16_t)Bande[i].field_8;
+            }
+        }
     }
     s->nb_sprites = NbSprite < PORT_SCENE_MAX_BG_SPRITES ? NbSprite : PORT_SCENE_MAX_BG_SPRITES;
     for (i = 0; i < s->nb_sprites; i++) {
@@ -292,7 +303,24 @@ SCENE_VOID(DO_UBI_LOGO)
 SCENE_VOID(DO_GROS_RAYMAN)
 SCENE_VOID(InitDemoJeu)
 SCENE_VOID(DO_NEW_MENUS)
-SCENE_VOID(DO_WORLD_MAP)
+/* Development and test scenarios: RAYMAN_START_LEVEL="W L" makes the first world-map visit choose world W,
+   level L (the map runs as usual; only its choice is replaced when it returns). */
+void __real_DO_WORLD_MAP(void);
+void __wrap_DO_WORLD_MAP(void)
+{
+    extern s16 num_world_choice, num_level_choice;
+    static int used;
+    const char *previous = port_record_scene("DO_WORLD_MAP");
+    const char *want = getenv("RAYMAN_START_LEVEL");
+    int w, l;
+    __real_DO_WORLD_MAP();
+    if (!used && want && sscanf(want, "%d %d", &w, &l) == 2 && w >= 1 && w <= 6 && l >= 1 && l <= 30) {
+        num_world_choice = (s16)w;
+        num_level_choice = (s16)l;
+    }
+    used = 1;
+    port_record_scene(previous);
+}
 SCENE_VOID(DEPART_WORLD)
 SCENE_VOID(DEPART_LEVEL)
 SCENE_VOID(START_LEVEL_ANIM)

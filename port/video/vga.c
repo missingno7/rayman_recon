@@ -58,6 +58,8 @@ static int shown_width;
 static uint8_t shown_dac[768];
 static int shown_valid;
 
+static uint64_t frame_ns(void);
+
 /* Like a monitor scanning the window: an image is shown when the window memory or the DAC changed. */
 static void present(void)
 {
@@ -87,6 +89,8 @@ static void present(void)
     if (frame_hook)
         frame_hook(image, width, dac, frame_hook_user);
     port_host_present(image, width, width, dac);
+    /* Shown at a display refresh (when presentation is synchronized): pacing may follow the display. */
+    port_clock_frame_shown(frame_ns());
     port_pc_poll();
 }
 
@@ -146,9 +150,8 @@ unsigned port_vga_inp(unsigned port)
         uint64_t phase = retrace_phase(now);
         unsigned inside = phase < vsync_ns();
         attr_flipflop = 0;
-        /* Deterministic time does not pass while a loop polls; each read moves to the next edge. */
-        if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-            port_clock_wait_until(now - phase + (inside ? vsync_ns() : frame_ns()));
+        /* Machine time does not pass while a loop polls; each read moves to the next edge. */
+        port_clock_wait_until(now - phase + (inside ? vsync_ns() : frame_ns()));
         return inside ? 0x09 : 0x00;
     }
     case 0x3c9: {

@@ -93,8 +93,7 @@ static void invalidate(void)
 }
 static void status_poll(void)
 {
-    if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-        port_clock_wait_until(port_clock_ns()+POLL_NS);
+    port_clock_wait_until(port_clock_ns()+POLL_NS);
     port_pc_poll(); /* includes host keyboard IRQ delivery, CD and HMI pumping */
     update();
 }
@@ -164,6 +163,7 @@ s32 sosDIGIStartSample(s32 driver,dos_sound_request_t *request)
         if (bnkHeaderFixe[j].size && bnkHeaderFixe[j].offset==request->data) {v->bank=0;v->program=j;break;}
         if (bnkHeaderWorld[j].size && bnkHeaderWorld[j].offset==request->data) {v->bank=1;v->program=j;break;}
     }
+    if (getenv("RAYMAN_SOUND_DEBUG")) fprintf(stderr,"SND start v%d bank%d prog%d size%u flags%04x vol%u pan%u rate%d loop_start%u loop_len%u count%d\n",i,v->bank,v->program,(unsigned)request->size,(unsigned)request->flags,(unsigned)v->volume,(unsigned)v->pan,(int)request->sample_rate,(unsigned)request->field_30,(unsigned)request->field_34,(int)(int16_t)request->field_0c);
     trace_event("StartSample",i); invalidate();
     return i;
 }
@@ -194,13 +194,17 @@ s32 sosDIGISetSampleVolume(s32 driver,s16 n,s32 volume)
 {
     uint16_t old; (void)driver; update();
     if ((unsigned)n>=32 || !(voices[n].flags&ACTIVE)) return 0;
-    old=voices[n].volume; voices[n].volume=(uint16_t)volume; invalidate(); return (int16_t)old;
+    if (getenv("RAYMAN_SOUND_DEBUG")) fprintf(stderr,"SND vol v%d %d\n",(int)n,(int)volume);
+    /* Applies to what is mixed from here on. Not a reason to drop the queued sound: the game sets the volume of
+       a held sound every frame (the fist wind-up: 60 calls a second with the same value), and clearing the queue
+       each time left the device almost nothing to play. */
+    old=voices[n].volume; voices[n].volume=(uint16_t)volume; return (int16_t)old;
 }
 s32 sosDIGISetPanLocation(s32 driver,s16 n,s32 pan)
 {
     uint16_t old; (void)driver; update();
     if ((unsigned)n>=32 || !(voices[n].flags&ACTIVE)) return 0;
-    old=voices[n].pan; voices[n].pan=(uint16_t)pan; invalidate(); return (int16_t)old;
+    old=voices[n].pan; voices[n].pan=(uint16_t)pan; return (int16_t)old;
 }
 s32 sosTIMERInitSystem(s32 period,s32 flags)
 { if (period && !(flags&1)) timer_events[15]=1; return 0; }

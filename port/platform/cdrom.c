@@ -4,6 +4,7 @@
 #include "platform/cdrom.h"
 #include "dos_regs.h"
 #include "platform/cd_audio.h"
+#include "platform/cd_host.h"
 #include "platform/clock.h"
 #include <stdio.h>
 #include <string.h>
@@ -92,6 +93,7 @@ void port_cd_shutdown(void)
 {
     port_cd_audio_shutdown();
     if (bin) fclose(bin);
+    port_cd_host_close();
     if (trace) fclose(trace);
     bin = trace = NULL;
     allocated = 0;
@@ -115,6 +117,19 @@ int port_cd_init(const char *cue, char letter)
     log = getenv("RAYMAN_CD_TRACE");
     if (log && *log) trace = fopen(log, "w");
     if (!cue || !*cue) return 1; /* Resident driver and closed empty drive. */
+    if (isalpha((unsigned char)cue[0]) && cue[1]==':' && (!cue[2] || ((cue[2]=='\\' || cue[2]=='/') && !cue[3]))) {
+        /* "E:": the disc in a host drive (a real CD or a mounted image) is the medium. */
+        static port_cd_host_track host_tracks[100];
+        if (!port_cd_host_open((char)toupper((unsigned char)cue[0]),host_tracks,&first_track,&last_track,&leadout)) {
+            fprintf(stderr,"CD drive %c: no readable disc\n",toupper((unsigned char)cue[0]));
+            port_cd_shutdown();
+            return 0;
+        }
+        for (n=first_track;n<=last_track;n++) { tracks[n].start=host_tracks[n].start; tracks[n].data=host_tracks[n].data; }
+        fprintf(stdout,"Virtual MSCDEX 2.21: %c: %u tracks, lead-out LBA %u (host drive %c:)\n",'A'+drive,last_track,leadout,
+                toupper((unsigned char)cue[0]));
+        return 1;
+    }
     if (!(f = fopen(cue, "r"))) goto bad;
     while (fgets(line, sizeof line, f)) {
         char *p = line;
@@ -166,7 +181,7 @@ bad:
 }
 
 int port_cd_drive(void) { return drive; }
-int port_cd_present(void) { return bin != NULL && !door; }
+int port_cd_present(void) { return (bin != NULL || port_cd_host_is_open()) && !door; }
 int port_cd_path(const char *p) { return p[0] && p[1]==':' && toupper((unsigned char)p[0])=='A'+drive; }
 
 uint16_t port_cd_allocate(uint16_t bytes, uint32_t *address)
@@ -199,6 +214,7 @@ static int read_sector(uint32_t lba, int raw, uint8_t *out)
 {
     if (!port_cd_present() || lba>=leadout) return 0;
     if (!raw && !tracks[track_at(lba)].data) return 0;
+    if (!bin) return port_cd_host_read(lba,raw,tracks[track_at(lba)].data!=0,out);
     return seek64(bin,(uint64_t)lba*2352+(raw?0:16),SEEK_SET)==0 && fread(out,1,raw?2352:2048,bin)==(size_t)(raw?2352:2048);
 }
 

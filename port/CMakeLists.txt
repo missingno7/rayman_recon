@@ -213,6 +213,8 @@ add_library(rayman_native STATIC
     platform/movie_trace.c
     platform/cdrom.c
     platform/cd_audio.c
+    platform/cd_host.c
+    platform/config.c
     platform/audio.c
     render/world.c
     render/native.c

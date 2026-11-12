@@ -19,11 +19,22 @@ typedef struct port_host_options {
     int scale;           /* initial window scale (integer); 0 = automatic */
     int fullscreen;
     int width;           /* logical image width: 320, or the native renderer's wider view (render/record.h) */
+    int vsync;           /* the presenter shows frames at the display's refreshes (no tearing) */
 } port_host_options;
 
 int port_host_init(const port_host_options *options);
+/* Run the game. With a window, the game runs on its own thread and this (the main) thread becomes the presenter:
+   it polls the window's events and shows the newest frame the game handed over (port_host_present), so the game
+   never waits for the display. Headless: calls run directly. Returns run's result. */
+int port_host_run(int (*run)(void *), void *arg);
 void port_host_shutdown(void);
 int port_host_headless(void);
+/* Host time (SDL_GetTicksNS) at which the last present returned, and how many frames were presented (diagnostics). */
+uint64_t port_host_shown(uint64_t *count);
+/* How long the last present took on the host (upload, draw, swap), ns. */
+uint64_t port_host_present_cost_ns(void);
+/* The refresh period, in ns, of the display the window is on; 0 when unknown or headless. */
+uint64_t port_host_refresh_ns(void);
 
 /* Present a width x 200 image of palette indices with the 6-bit-per-component DAC palette (768 bytes). The 200
    rows fill the height of a 4:3 picture of the original 320 columns (pixel aspect 1.2); wider images extend it

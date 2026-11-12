@@ -86,8 +86,12 @@ between the x86_64 and i686 builds on the same deterministic input exposes a 64-
 
 ## The machine model
 
-- **Clock** (`platform/clock.c`): one time source, real time or deterministic (time advances only when the game
-  waits for a future event: the behaviour of an infinitely fast machine, reproducible bit for bit).
+- **Clock** (`platform/clock.c`): one time source, the DOS machine's time. It is virtual in every mode (time
+  advances only when the game waits for a future event: the behaviour of an ideal, fast enough machine,
+  reproducible bit for bit). In play the waits are paced against the host's clock; the tests run unpaced.
+- **Threads** (`platform/host.c` `port_host_run`): with a window, the game runs on its own thread and the main
+  thread presents the newest frame and polls the events, so the game never waits for the display. Headless runs
+  (all gates) stay on one thread.
 - **PIT channel 2 / timing entries** (`compat/src/pc_hardware.c`): `clock_ticks`, `wait_until`, `speaker_enable`,
   `synchro`, `endsynchro` keep their original algorithms (docs/port/ASM_SPEC.md) on a modelled counter. Each latch
   advances at least one PIT tick, as an ISA port read did; `clock_ticks` treats equal reads as a wrap.

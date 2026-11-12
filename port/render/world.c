@@ -238,13 +238,13 @@ void port_render_background(const port_scene *s, port_surface *dst, port_rect cl
         int half = s->plan_width / 2;
         for (y = c.y0 > s->bg_top ? c.y0 : s->bg_top; y < c.y1; y++)
             for (x = c.x0; x < c.x1; x++) {
-                int col = x;
+                int col = x - s->bg_col_shift;
                 const port_scene_band *b;
                 int row;
-                if (fidelity == PORT_RENDER_EXTENDED && (x < 0 || x >= 320)) {
+                if (fidelity == PORT_RENDER_EXTENDED && (col < 0 || col >= 320)) {
                     if (half <= 0 || !image_halves_equal(s))
                         continue;
-                    col = floor_mod(x, half);
+                    col = floor_mod(col, half);
                 }
                 b = band_at(s, col);
                 if (!b || col < 0 || col >= s->plan_width)
@@ -256,8 +256,8 @@ void port_render_background(const port_scene *s, port_surface *dst, port_rect cl
         for (i = 0; i < s->nb_sprites; i++) {
             const port_scene_bg_sprite *sp = &s->sprites[i];
             if (s->bands[sp->band].length)
-                repeated_sprite(s, sp, sp->y - s->bands[sp->band].scroll, sp->x, 1, s->plan_height, dst, c,
-                                fidelity);
+                repeated_sprite(s, sp, sp->y - s->bands[sp->band].scroll, sp->x + s->bg_col_shift, 1, s->plan_height,
+                                dst, c, fidelity);
         }
     }
 }
@@ -276,7 +276,8 @@ void port_render_front(const port_scene *s, port_surface *dst, port_rect clip, i
             repeated_sprite(s, sp, sp->x - s->bands[sp->band].scroll, s->front_y - sp->height, 0, s->plan_width / 2,
                             dst, c, fidelity);
         else if (s->front == PORT_SCENE_BG_COLUMNS && s->plan_height > 0)
-            repeated_sprite(s, sp, sp->y - s->bands[sp->band].scroll, sp->x, 1, s->plan_height, dst, c, fidelity);
+            repeated_sprite(s, sp, sp->y - s->bands[sp->band].scroll, sp->x + s->bg_col_shift, 1, s->plan_height, dst,
+                            c, fidelity);
     }
 }
 

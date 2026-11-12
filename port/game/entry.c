@@ -25,6 +25,8 @@
 #include "platform/hmi.h"
 #include "platform/audio.h"
 #include "platform/host.h"
+#include "platform/config.h"
+#include "platform/cd_host.h"
 #include "video/vga.h"
 #include "render/capture.h"
 #include "render/record.h"
@@ -39,6 +41,12 @@ void port_set_time_epoch(long long seconds);
 #include <string.h>
 
 extern unsigned char JeuCracker, MusicCdActive, CarteSonAutorisee;
+/* Pacing state of the original main loop (RAYMAN_PACE_TRACE). */
+extern unsigned char need_timer, use_sync, Frequence, VGA_FREQ;
+extern short display_mode, xmap;
+extern unsigned short word_CF7F0, word_CF7E6;
+extern int map_time;
+static FILE *pace_trace;
 extern short num_world, num_level;
 static long frame_limit = -1;
 static long frame_count;
@@ -138,6 +146,22 @@ static void on_swap(void)
         fprintf(state_log, "%ld %016llx\n", swaps, (unsigned long long)port_scene_state_digest());
         fflush(state_log);
     }
+    /* One line per built frame: when, the engine's step counter and camera, and the original loop's pacing mode. */
+    if (pace_trace) {
+        uint64_t late, max_late, restarts, shown_at, shown_count;
+        int locked;
+        port_clock_stats(&late, &max_late, &restarts, &locked);
+        shown_at = port_host_shown(&shown_count);
+        fprintf(pace_trace, "%ld %llu map_time=%d xmap=%d display_mode=%d need_timer=%u use_sync=%u Frequence=%u "
+                            "VGA_FREQ=%u frame_ticks=%u deadline_ticks=%u late_us=%llu max_late_us=%llu restarts=%llu locked=%d "
+                            "shown_ns=%llu shown=%llu present_us=%llu host_ns=%llu\n", swaps,
+                (unsigned long long)port_clock_ns(), map_time, xmap, display_mode, need_timer, use_sync, Frequence,
+                VGA_FREQ, word_CF7F0, word_CF7E6, (unsigned long long)(late / 1000),
+                (unsigned long long)(max_late / 1000), (unsigned long long)restarts, locked,
+                (unsigned long long)shown_at, (unsigned long long)shown_count,
+                (unsigned long long)(port_host_present_cost_ns() / 1000),
+                (unsigned long long)SDL_GetTicksNS());
+    }
     swaps++;
 }
 
@@ -163,6 +187,19 @@ static void at_exit(void)
     port_host_shutdown();
 }
 
+/* The game itself; with a window it runs on its own thread (platform/host.h port_host_run). */
+static struct game_args { int dos_main, demo, argc; char **argv; } start;
+
+static int run_game(void *arg)
+{
+    struct game_args *g = (struct game_args *)arg;
+    if (g->dos_main)
+        return port_run_dos_main(g->argc, g->argv);
+    if (g->demo >= 0)
+        return port_run_demo(g->demo);
+    return port_run_menus();
+}
+
 int main(int argc, char **argv)
 {
     const char *data = getenv("RAYMAN_DATA");
@@ -173,11 +210,17 @@ int main(int argc, char **argv)
     const char *cd_drive = getenv("RAYMAN_CD_DRIVE");
     char cd_letter = cd_drive && *cd_drive ? cd_drive[0] : 'D';
     char default_save[1024];
-    port_host_options host = {0, 0, 0, 320};
+    port_host_options host = {0, 0, 0, 320, 1};
     int deterministic = 0, demo = -1, dos_main = 0, i;
     int renderer = -1, wide_pad = 0;   /* renderer: -1 default (reference), 0 reference, 1 native */
+    const char *config_path = NULL;
+    static port_config config;
+    static char base_dir[1024], base_config[1100], base_cue[1100], host_cd[3];
+    int have_config = 0, no_vsync = 0;
 
     setvbuf(stdout, NULL, _IONBF, 0);
+    if (getenv("RAYMAN_PACE_TRACE") && *getenv("RAYMAN_PACE_TRACE"))
+        pace_trace = fopen(getenv("RAYMAN_PACE_TRACE"), "w");
     for (i = 1; i < argc; i++) {
         const char *a = argv[i];
         const char *v = i + 1 < argc ? argv[i + 1] : NULL;
@@ -201,6 +244,7 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--epoch") && v) port_set_time_epoch(atoll(argv[++i]));
         else if (!strcmp(a, "--scale") && v) host.scale = atoi(argv[++i]);
         else if (!strcmp(a, "--fullscreen")) host.fullscreen = 1;
+        else if (!strcmp(a, "--no-vsync")) no_vsync = 1;
         else if (!strcmp(a, "--widescreen")) wide_pad = 54;   /* 428 x 240 display: 16:9 */
         else if (!strcmp(a, "--wide-pad") && v) wide_pad = atoi(argv[++i]);
         else if (!strcmp(a, "--verify-render")) port_record_set_verify(1);
@@ -211,11 +255,61 @@ int main(int argc, char **argv)
             else { fprintf(stderr, "rayman: --renderer native|reference\n"); return 2; }
         }
         else if (!strcmp(a, "--state-log") && v) state_log = fopen(argv[++i], "w");
+        else if (!strcmp(a, "--config") && v) config_path = argv[++i];
         else {
             fprintf(stderr, "unknown option %s\n", a);
             return 2;
         }
     }
+    /* Started from the game folder (no data directory named): the program's own directory is the game, and the
+       player's settings file lives next to the program - created with the defaults on the first run. Runs that
+       name their data (tests, development) read a settings file only when --config names one. */
+    if (!data_count && !data) {
+        const char *base = SDL_GetBasePath();
+        FILE *probe;
+        snprintf(base_dir, sizeof base_dir, "%s", base ? base : "");
+        snprintf(base_cue, sizeof base_cue, "%sRAY.LNG", base_dir);
+        if (base && (probe = fopen(base_cue, "rb")) != NULL) {
+            fclose(probe);
+            data = base_dir;
+            if (!config_path) {
+                snprintf(base_config, sizeof base_config, "%s%s", base_dir, PORT_CONFIG_FILE);
+                config_path = base_config;
+            }
+        }
+    }
+    if (config_path) {
+        int state = port_config_load(config_path, &config);
+        if (state < 0)
+            fprintf(stderr, "rayman: %s is not a valid settings file; using the defaults (delete it to get a fresh "
+                            "one)\n", config_path);
+        else if (state != 1) {   /* missing, or written by an earlier version: (re)write with every setting */
+            if (state == 0) port_config_defaults(&config);
+            if (port_config_save(config_path, &config))
+                printf("Settings file %s: %s\n", state ? "updated" : "created", config_path);
+        }
+        have_config = 1;
+        if (config.widescreen && !wide_pad && renderer != 0 && !port_record_verify()) wide_pad = 54;
+        if (config.fullscreen) host.fullscreen = 1;
+        host.vsync = config.vsync;
+        if (!host.scale) host.scale = config.window_scale;
+        if (!save && config.save_dir[0]) save = config.save_dir;
+        if (!cd && strcmp(config.cd, "auto") && strcmp(config.cd, "none")) cd = config.cd;
+        if (!cd && !strcmp(config.cd, "auto")) {
+            /* The CD: an image next to the program, else a mounted Rayman disc. */
+            FILE *probe;
+            snprintf(base_cue, sizeof base_cue, "%sRAYMAN.cue", base_dir);
+            if (base_dir[0] && (probe = fopen(base_cue, "rb")) != NULL) {
+                fclose(probe);
+                cd = base_cue;
+            } else if ((host_cd[0] = port_cd_host_find()) != 0) {
+                host_cd[1] = ':';
+                cd = host_cd;
+            }
+        }
+    }
+    if (no_vsync)
+        host.vsync = 0;
     if (wide_pad > 0) {
         /* A wider view is the native renderer's: the original draw path has 320 columns. Its verification compares
            the original view (render/record.c), so it runs at the original width. */
@@ -234,7 +328,8 @@ int main(int argc, char **argv)
     host.width = 320 + 2 * port_record_pad();
     if (data_count) data = data_roots[0]; /* Explicit roots replace RAYMAN_DATA. */
     if (!data) {
-        fprintf(stderr, "rayman: give the original game directory with --data DIR (or RAYMAN_DATA)\n");
+        fprintf(stderr, "rayman: put the program in the original game directory, or give it with --data DIR "
+                        "(or RAYMAN_DATA)\n");
         return 2;
     }
     if (!save) {
@@ -253,6 +348,12 @@ int main(int argc, char **argv)
             return 2;
         }
     }
+    for (i = 0; have_config && i < config.extra_data_dir_count; ++i) {
+        if (!port_files_add_data(config.extra_data_dirs[i])) {
+            fprintf(stderr, "rayman: data directory %s (settings file) is not usable\n", config.extra_data_dirs[i]);
+            return 2;
+        }
+    }
     port_clock_init(deterministic ? PORT_CLOCK_DETERMINISTIC : PORT_CLOCK_REALTIME);
     if (!port_host_init(&host))
         return 1;
@@ -262,9 +363,9 @@ int main(int argc, char **argv)
     port_record_set_swap_hook(on_swap);
     if (key_count)
         port_host_set_pump_hook(key_script_pump);
-    if (dos_main)
-        return port_run_dos_main(argc, argv);
-    if (demo >= 0)
-        return port_run_demo(demo);
-    return port_run_menus();
+    start.dos_main = dos_main;
+    start.demo = demo;
+    start.argc = argc;
+    start.argv = argv;
+    return port_host_run(run_game, &start);
 }

@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define LOGICAL_W 320
@@ -16,26 +17,47 @@ static SDL_Texture *texture;
 static int texture_width;
 static int headless = 1;
 static int quit_requested;
+static int vsync_on;
+static uint64_t shown_ns, shown_count, present_cost_ns;
 
 static void (*pump_hook)(void);
 static uint8_t scan_queue[512];
 static unsigned scan_head, scan_tail;
 
-void port_host_inject_scancode(uint8_t code)
+/* Presenter (port_host_run): the game runs on its own thread; the main thread owns the window, the events and
+   the renderer. `shared` guards what the two exchange: the scan-code queue, the newest frame, the cached refresh
+   period. NULL while the game runs on the main thread (headless, tests). */
+static SDL_Mutex *shared;
+static SDL_Condition *frame_ready;
+static uint8_t newest_pixels[(LOGICAL_W + 2 * 160) * LOGICAL_H], newest_dac[768];
+static int newest_width;
+static uint64_t newest_seq, drawn_seq;
+static uint64_t cached_refresh_ns;
+static SDL_AtomicInt game_finished, presenter_stop, presenter_stopped;
+
+static void push_codes(const uint8_t *codes, int n)
 {
-    if (((scan_tail + 1) & 511) != scan_head) {
-        scan_queue[scan_tail] = code;
-        scan_tail = (scan_tail + 1) & 511;
-    }
+    int i;
+    if (shared) SDL_LockMutex(shared);
+    for (i = 0; i < n; i++)
+        if (((scan_tail + 1) & 511) != scan_head) {
+            scan_queue[scan_tail] = codes[i];
+            scan_tail = (scan_tail + 1) & 511;
+        }
+    if (shared) SDL_UnlockMutex(shared);
 }
+
+void port_host_inject_scancode(uint8_t code) { push_codes(&code, 1); }
 
 int port_host_next_scancode(void)
 {
-    int code;
-    if (scan_head == scan_tail)
-        return -1;
-    code = scan_queue[scan_head];
-    scan_head = (scan_head + 1) & 511;
+    int code = -1;
+    if (shared) SDL_LockMutex(shared);
+    if (scan_head != scan_tail) {
+        code = scan_queue[scan_head];
+        scan_head = (scan_head + 1) & 511;
+    }
+    if (shared) SDL_UnlockMutex(shared);
     return code;
 }
 
@@ -127,12 +149,27 @@ int port_host_init(const port_host_options *options)
         fprintf(stderr, "SDL_CreateWindowAndRenderer: %s\n", SDL_GetError());
         return 0;
     }
-    SDL_SetRenderVSync(renderer, 0);
+    vsync_on = options->vsync && SDL_SetRenderVSync(renderer, 1);
+    if (!vsync_on)
+        SDL_SetRenderVSync(renderer, 0);
     return 1;
 }
 
 void port_host_shutdown(void)
 {
+    if (shared) {
+        /* The game's thread is ending the program (exit) while the main thread presents: stop the presenter and
+           leave its window and renderer to the process exit - they belong to that thread. */
+        int i;
+        SDL_SetAtomicInt(&presenter_stop, 1);
+        SDL_LockMutex(shared);
+        SDL_SignalCondition(frame_ready);
+        SDL_UnlockMutex(shared);
+        for (i = 0; i < 500 && !SDL_GetAtomicInt(&presenter_stopped); i++)
+            SDL_Delay(1);
+        port_audio_shutdown();
+        return;
+    }
     if (texture)
         SDL_DestroyTexture(texture);
     if (renderer)
@@ -148,16 +185,68 @@ void port_host_shutdown(void)
 }
 
 int port_host_headless(void) { return headless; }
+uint64_t port_host_shown(uint64_t *count) { *count = shown_count; return shown_ns; }
+uint64_t port_host_present_cost_ns(void) { return present_cost_ns; }
+
+static uint64_t query_refresh_ns(void);
+
+uint64_t port_host_refresh_ns(void)
+{
+    uint64_t ns;
+    if (!shared)
+        return query_refresh_ns();
+    SDL_LockMutex(shared);   /* asked by the game's thread: the presenter keeps the value current */
+    ns = cached_refresh_ns;
+    SDL_UnlockMutex(shared);
+    return ns;
+}
+
+static uint64_t query_refresh_ns(void)
+{
+    const SDL_DisplayMode *m;
+    if (headless || !window)
+        return 0;
+    /* asked each time: the window can move to another display, the mode can change */
+    m = SDL_GetCurrentDisplayMode(SDL_GetDisplayForWindow(window));
+    if (!m || m->refresh_rate < 1.0f)
+        return 0;
+    if (m->refresh_rate_numerator > 0 && m->refresh_rate_denominator > 0)
+        return (uint64_t)m->refresh_rate_denominator * 1000000000ULL / (uint64_t)m->refresh_rate_numerator;
+    return (uint64_t)(1e9 / m->refresh_rate);
+}
 int port_host_quit_requested(void) { return quit_requested; }
 
+static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6);
+
 void port_host_present(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6)
+{
+    int y;
+    if (headless)
+        return;
+    if (!shared) {
+        draw_frame(pixels, pitch, width, dac_rgb6);
+        return;
+    }
+    /* Hand the frame to the presenter; the game never waits for the display. */
+    if (width > LOGICAL_W + 2 * 160)
+        return;
+    SDL_LockMutex(shared);
+    for (y = 0; y < LOGICAL_H; y++)
+        memcpy(newest_pixels + y * width, pixels + y * pitch, (size_t)width);
+    memcpy(newest_dac, dac_rgb6, 768);
+    newest_width = width;
+    newest_seq++;
+    SDL_SignalCondition(frame_ready);
+    SDL_UnlockMutex(shared);
+}
+
+static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6)
 {
     uint32_t lut[256];
     void *dst;
     int dst_pitch, x, y, w, h;
     SDL_FRect rect;
-    if (headless)
-        return;
+    uint64_t entered = SDL_GetTicksNS();
     if (!texture || width != texture_width) {
         if (texture)
             SDL_DestroyTexture(texture);
@@ -196,17 +285,42 @@ void port_host_present(const uint8_t *pixels, int pitch, int width, const uint8_
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture, NULL, &rect);
     SDL_RenderPresent(renderer);
+    shown_ns = SDL_GetTicksNS();
+    present_cost_ns = shown_ns - entered;
+    {
+        /* RAYMAN_PRESENT_TRACE=FILE: one line per shown frame - host ns when drawing began and when the present
+           returned. */
+        static FILE *trace;
+        static int asked;
+        if (!asked) {
+            const char *path = getenv("RAYMAN_PRESENT_TRACE");
+            asked = 1;
+            if (path && *path)
+                trace = fopen(path, "w");
+        }
+        if (trace)
+            fprintf(trace, "%llu %llu %llu\n", (unsigned long long)shown_count, (unsigned long long)entered,
+                    (unsigned long long)shown_ns);
+    }
+    shown_count++;
 }
 
 void port_host_set_pump_hook(void (*hook)(void)) { pump_hook = hook; }
 
+static void poll_events(void);
+
 void port_host_pump(void)
 {
-    SDL_Event e;
     if (pump_hook)
         pump_hook();
-    if (headless)
+    if (headless || shared)   /* with a presenter, the main thread polls the events */
         return;
+    poll_events();
+}
+
+static void poll_events(void)
+{
+    SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
         case SDL_EVENT_QUIT:
@@ -221,13 +335,94 @@ void port_host_pump(void)
                 SDL_SetWindowFullscreen(window, !(SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN));
                 break;
             }
-            if (code & 0x100)
-                port_host_inject_scancode(0xe0);
-            port_host_inject_scancode((uint8_t)((code & 0x7f) | (e.key.down ? 0 : 0x80)));
+            {
+                uint8_t codes[2] = {0xe0, (uint8_t)((code & 0x7f) | (e.key.down ? 0 : 0x80))};
+                if (code & 0x100)
+                    push_codes(codes, 2);
+                else
+                    push_codes(codes + 1, 1);
+            }
             break;
         }
         default:
             break;
         }
     }
+}
+
+/* ---- presenter --------------------------------------------------------------------------------------------- */
+typedef struct game_start { int (*run)(void *); void *arg; } game_start;
+
+static int game_thread(void *p)
+{
+    game_start *g = (game_start *)p;
+    int result = g->run(g->arg);
+    SDL_SetAtomicInt(&game_finished, 1);
+    SDL_LockMutex(shared);
+    SDL_SignalCondition(frame_ready);
+    SDL_UnlockMutex(shared);
+    return result;
+}
+
+int port_host_run(int (*run)(void *), void *arg)
+{
+    static uint8_t pixels[sizeof newest_pixels], dac[768];
+    game_start start = {run, arg};
+    SDL_PropertiesID props;
+    SDL_Thread *thread;
+    uint64_t refresh_asked = 0;
+    int result = 1, width = 0, fresh;
+    if (headless || !renderer)
+        return run(arg);
+    shared = SDL_CreateMutex();
+    frame_ready = SDL_CreateCondition();
+    cached_refresh_ns = query_refresh_ns();
+    props = SDL_CreateProperties();
+    SDL_SetPointerProperty(props, SDL_PROP_THREAD_CREATE_ENTRY_FUNCTION_POINTER, (void *)game_thread);
+    SDL_SetStringProperty(props, SDL_PROP_THREAD_CREATE_NAME_STRING, "game");
+    SDL_SetPointerProperty(props, SDL_PROP_THREAD_CREATE_USERDATA_POINTER, &start);
+    SDL_SetNumberProperty(props, SDL_PROP_THREAD_CREATE_STACKSIZE_NUMBER, 16 * 1024 * 1024);
+    thread = SDL_CreateThreadWithProperties(props);
+    SDL_DestroyProperties(props);
+    if (!thread) {
+        fprintf(stderr, "SDL_CreateThread: %s\n", SDL_GetError());
+        SDL_DestroyCondition(frame_ready);
+        SDL_DestroyMutex(shared);
+        shared = NULL;
+        return run(arg);
+    }
+    while (!SDL_GetAtomicInt(&game_finished) && !SDL_GetAtomicInt(&presenter_stop)) {
+        uint64_t now = SDL_GetTicksNS(), refresh = 0;
+        poll_events();
+        if (now - refresh_asked > 250000000ULL) {   /* the window can move to another display */
+            refresh = query_refresh_ns();
+            refresh_asked = now;
+        }
+        SDL_LockMutex(shared);
+        if (refresh)
+            cached_refresh_ns = refresh;
+        if (newest_seq == drawn_seq)
+            SDL_WaitConditionTimeout(frame_ready, shared, 2);   /* events stay served every 2 ms */
+        fresh = newest_seq != drawn_seq;
+        if (fresh) {
+            width = newest_width;
+            memcpy(pixels, newest_pixels, (size_t)width * LOGICAL_H);
+            memcpy(dac, newest_dac, sizeof dac);
+            drawn_seq = newest_seq;
+        }
+        SDL_UnlockMutex(shared);
+        if (fresh && !SDL_GetAtomicInt(&presenter_stop))
+            draw_frame(pixels, width, width, dac);   /* with vsync this returns at the display's refresh */
+    }
+    if (SDL_GetAtomicInt(&presenter_stop)) {
+        /* exit() on the game's thread is ending the process: nothing more is drawn. */
+        SDL_SetAtomicInt(&presenter_stopped, 1);
+        for (;;)
+            SDL_Delay(1000);
+    }
+    SDL_WaitThread(thread, &result);
+    SDL_DestroyCondition(frame_ready);
+    SDL_DestroyMutex(shared);
+    shared = NULL;
+    return result;
 }

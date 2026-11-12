@@ -46,8 +46,7 @@ static uint64_t pit_latch_tick(void)
 {
     uint64_t t = port_pc_pit_ticks();
     if (t <= pit_last_latch) {
-        if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-            port_clock_wait_until(((pit_last_latch + 1) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
+        port_clock_wait_until(((pit_last_latch + 1) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
         t = pit_last_latch + 1;
     }
     pit_last_latch = t;
@@ -76,10 +75,9 @@ uint32_t port_pc_bios_ticks(void)
 static uint16_t pit0_counter(void)
 {
     uint64_t t = port_pc_pit_ticks(), elapsed;
-    /* Same ISA latch cost as channel 2. It also makes deterministic busy waits progress. */
+    /* Same ISA latch cost as channel 2. It also makes busy waits progress in machine time. */
     if (t <= pit0_last_latch) {
-        if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-            port_clock_wait_until(((pit0_last_latch + 1) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
+        port_clock_wait_until(((pit0_last_latch + 1) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
         t = pit0_last_latch + 1;
     }
     pit0_last_latch = t;
@@ -96,15 +94,14 @@ static uint16_t pit0_counter(void)
 
 /* ---- BIOS data area ------------------------------------------------------------------------------------ */
 /* Tick count at 0040:006C (linear 0x46C): IRQ0 periods (default divisor 65536). Code polls it in loops
-   (load_world waits for two tick edges); in deterministic time each read moves the clock to the next edge. */
+   (load_world waits for two tick edges); each read moves machine time to the next edge. */
 uint8_t port_bios_tick_byte(void)
 {
     uint64_t pit = port_pc_pit_ticks();
     uint8_t value = (uint8_t)port_pc_bios_ticks();
-    if (port_clock_mode() == PORT_CLOCK_DETERMINISTIC)
-        port_clock_wait_until(((pit0_load_tick + ((pit - pit0_load_tick) / pit0_reload + 1) * pit0_reload) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
-    else
-        port_pc_poll();
+    port_clock_wait_until(((pit0_load_tick + ((pit - pit0_load_tick) / pit0_reload + 1) * pit0_reload) * 1000000000ULL + PORT_PIT_HZ - 1) / PORT_PIT_HZ);
+    if (port_clock_mode() != PORT_CLOCK_DETERMINISTIC)
+        port_pc_poll();   /* the player's keys, sound queues */
     return value;
 }
 

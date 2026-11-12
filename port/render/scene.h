@@ -28,6 +28,8 @@ enum port_scene_background {
 typedef struct port_scene_band {
     int16_t offset, length;   /* BANDS: rows [offset, offset + length) of the image; COLUMNS: columns */
     int16_t scroll;           /* Bande.field_6: BANDS: image column of screen x 0; COLUMNS: image row of screen y 0 */
+    int16_t cam_mul, cam_div; /* the part of scroll that follows the camera's x: floor(xmap * cam_mul / cam_div)
+                                 (Calcul_Deplacement_Bande); cam_mul 0 = none (autoscroll only, or a vertical level) */
 } port_scene_band;
 
 typedef struct port_scene_bg_sprite {
@@ -54,6 +56,8 @@ typedef struct port_scene {
     int16_t bg_shift;         /* source row of screen y 0 (Display_Back_Screen's vertical offset) */
     int16_t bg_top;           /* first background row the game draws (curtain levels raise it) */
     int16_t bg_x0, bg_x1;     /* BANDS: columns the original band copy covers in the frame's viewport */
+    int32_t bg_col_shift;     /* COLUMNS: screen column x shows image column x - bg_col_shift (0 in the original
+                                 view; the wider view's presentation offset, render/native.c) */
     int front;                /* foreground band sprites (Display_Sprite_On_Front): BANDS or COLUMNS by the level's
                                  scroll type, drawn whether or not the background is enabled */
     int16_t front_y;          /* foreground sprites: bottom edge y (Display_Sprite_On_Front) */

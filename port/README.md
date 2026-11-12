@@ -18,6 +18,26 @@ cmake --build build/port
 from that RAYMAN.EXE at build time. The i686 reference build uses `C:/msys64/mingw32/bin/gcc.exe` and the
 `i686-w64-mingw32` SDL3 package (see docs/ARCHITECTURE.md, "64-bit hosts"). Presets: `CMakePresets.json`.
 
+## Play (from the game folder)
+
+Copy `rayman.exe` (under any name, e.g. `rayman_sdl3.exe`) and `SDL3.dll` into a GOG v1.21 Rayman folder (the one
+with RAY.LNG and PCMAP) and start it without arguments. The program then uses its own folder as the game and
+creates `rayman_sdl3.json` next to itself on the first run (platform/config.h); a file written by an earlier
+version is completed with the newer settings, unknown settings are ignored:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `widescreen` | `false` | 16:9 view drawn by the native renderer |
+| `fullscreen` | `false` | start in fullscreen (Alt+Enter toggles) |
+| `window_scale` | `0` | integer window scale; 0 = automatic |
+| `vsync` | `true` | frames are shown at the display's refreshes (no tearing); `--no-vsync` on the command line |
+| `cd` | `"auto"` | the Rayman CD: `"auto"` = `RAYMAN.cue` in the game folder, else a CD drive whose disc is labelled RAYMAN (a real disc or a mounted image, read through the drive; Windows); `"E:"` = that drive; a `.cue` path; `"none"` = empty drive |
+| `save_dir` | `""` | where saves and RAYMAN.CFG are written; empty = the user's application-data folder |
+| `extra_data_dirs` | `[]` | further read-only folders searched after the game folder, e.g. one holding INTRO.DAT / CONCLU.DAT |
+
+Command-line options override the file. Runs that name their data (`--data`, `RAYMAN_DATA`: tests, development)
+read a settings file only when `--config FILE` names one. Data of other versions (e.g. v1.12) does not load.
+
 ## Run
 
 ```bash

@@ -3,6 +3,7 @@
  * the PIT/retrace clock model and the DOS record decoder. Expected values come from the documented instruction
  * sequences (src/include/inline_helpers.h) and the linked library code (DOS addresses in compat/src).
  */
+#include "platform/config.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -151,8 +152,49 @@ static void test_assets(void)
     CHECK(fnv(Def_Bande, 144000) == port_asset_fnv_Def_Bande);
 }
 
+static void write_text(const char *path, const char *text)
+{
+    FILE *f = fopen(path, "wb");
+    fputs(text, f);
+    fclose(f);
+}
+
+static void test_config(void)
+{
+    static port_config c, d;
+    const char *path = "config-test.json";
+    remove(path);
+    CHECK(port_config_load(path, &c) == 0);
+    port_config_defaults(&c);
+    CHECK(!c.widescreen && !c.fullscreen && c.vsync && !c.window_scale && !strcmp(c.cd, "auto") && !c.save_dir[0]);
+    c.vsync = 0;
+    c.widescreen = 1;
+    c.window_scale = 3;
+    strcpy(c.save_dir, "D:\\Saves \"x\"");
+    strcpy(c.extra_data_dirs[0], "D:/Games/Rayman");
+    c.extra_data_dir_count = 1;
+    CHECK(port_config_save(path, &c));
+    CHECK(port_config_load(path, &d) == 1);
+    CHECK(d.widescreen == 1 && d.fullscreen == 0 && d.vsync == 0 && d.window_scale == 3 && !strcmp(d.cd, "auto"));
+    CHECK(!strcmp(d.save_dir, c.save_dir) && d.extra_data_dir_count == 1 &&
+          !strcmp(d.extra_data_dirs[0], c.extra_data_dirs[0]));
+    /* A partial file with an unknown setting and a path typed with single backslashes: loads, reported incomplete. */
+    write_text(path, "{ \"future\": {\"a\": [1, 2.5, null]}, \"fullscreen\": true, \"cd\": \"E:\", "
+                     "\"save_dir\": \"D:\\Games\\x\" }");
+    CHECK(port_config_load(path, &d) == 2);
+    CHECK(d.fullscreen == 1 && d.widescreen == 0 && d.vsync == 1 && !strcmp(d.cd, "E:") &&
+          !strcmp(d.save_dir, "D:\\Games\\x"));
+    /* A wrong type and malformed text are rejected and leave the defaults. */
+    write_text(path, "{ \"widescreen\": 1 }");
+    CHECK(port_config_load(path, &d) == -1 && !d.widescreen && !strcmp(d.cd, "auto"));
+    write_text(path, "{ \"widescreen\": true");
+    CHECK(port_config_load(path, &d) == -1);
+    remove(path);
+}
+
 int main(void)
 {
+    test_config();
     test_assets();
     test_inline_helpers();
     test_forward_copy();
