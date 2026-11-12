@@ -58,3 +58,12 @@ First-time order: `inventory` (optional) -> `extract --all` -> `libscan --symbol
 
 ## Rules
 `AGENTS.md` (working rules), `docs/MATCHING.md` (workflow, status definitions), `docs/COMPILER.md` (evidence).
+
+## Licence
+This project's own work - the reconstructed source, the tools, the native port and the documentation - is free
+software under the GNU General Public License, version 2 or (at your option) any later version
+(SPDX: GPL-2.0-or-later; see `LICENSE`). It comes with no warranty.
+
+The licence does not cover Rayman itself. The game, its name, its data and its original executables belong to
+their owners (Ubisoft); none of them are in this repository, and you need your own copy of the game to build,
+verify or play anything here.
