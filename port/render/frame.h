@@ -101,6 +101,8 @@ enum port_prim {
 #define PORT_SPRITE_COLOR 4    /* visible pixels OR (color * 8) */
 #define PORT_SPRITE_NOCLIP 8   /* no clipping */
 #define PORT_SPRITE_SCRATCH 16 /* image read from native scratch slot `w` at byte `h` (a deformed sprite) */
+#define PORT_SPRITE_EXTRA 32   /* presentation only: an object the game does not draw (inactive, outside its
+                                  activation zone), drawn in the wider view's margins only (render/native.c) */
 
 typedef struct port_op {
     uint8_t kind, pass;

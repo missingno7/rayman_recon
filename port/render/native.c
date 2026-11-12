@@ -197,6 +197,10 @@ static void sprite(port_surface *d, const port_op *op, const view_window *win, c
     int32_t x = op->x + shift, y = op->y;
     int32_t box[4] = {bx0 + shift, bx1 + shift, op->clip[2], op->clip[3]};
     const uint8_t *src = op->image;
+    /* an object the game does not draw: only in the wider view, only outside the original 320 columns */
+    int extra = op->flags & PORT_SPRITE_EXTRA;
+    if (extra && !win)
+        return;
     if (op->flags & PORT_SPRITE_SCRATCH) {
         uint8_t *slot = port_native_scratch(op->w);
         if (!slot || (uint32_t)op->h + w * h > PORT_SCRATCH_BYTES)
@@ -254,7 +258,16 @@ static void sprite(port_surface *d, const port_op *op, const view_window *win, c
         const uint8_t *s = src + (size_t)row * stride;
         for (i = 0; i < w;) {
             uint8_t v = s[i];
-            if (raw) {
+            if (extra) {
+                int32_t px = x - shift + (int32_t)(flip ? w - 1 - i : i);
+                if (v >= 160) {
+                    i += v - 160u;
+                    continue;
+                }
+                if (px < 0 || px >= 320)
+                    put_sprite(d, op->base, px, y + (int32_t)row, (uint8_t)(v | or_color));
+                i++;
+            } else if (raw) {
                 if (v)
                     put_sprite(d, op->base, x - shift + (int32_t)(flip ? w - 1 - i : i), y + (int32_t)row, v);
                 i++;

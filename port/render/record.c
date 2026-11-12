@@ -383,6 +383,24 @@ void port_record_layer(int kind, int x0, int y0, int x1, int y1)
     }
 }
 
+void port_record_extra_sprite(int flip, int32_t x, int32_t color, int32_t y, uint32_t size, const uint8_t *image)
+{
+    port_op *op;
+    if (!pad || !image)
+        return;
+    op = append(PORT_OP_SPRITE, TARGET_DRAW);
+    if (!op)
+        return;
+    op->flags = (uint8_t)((flip ? PORT_SPRITE_FLIP : 0) | PORT_SPRITE_EXTRA);
+    op->color = (uint8_t)color;
+    op->x = x;
+    op->y = y;
+    op->base = 0;
+    op->size = size;
+    get_sprite_clipping(&op->clip[0], &op->clip[1], &op->clip[2], &op->clip[3]);
+    op->image = image;
+}
+
 void port_record_firefly(int center_x, int center_y, int rayon, int addluclip, int w1, int w2, int h1, int h2)
 {
     port_op *op = append(PORT_OP_FIREFLY, TARGET_DRAW);

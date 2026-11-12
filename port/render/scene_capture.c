@@ -274,7 +274,78 @@ void __wrap_ClearBorder(s16 lim_H1, s16 lim_H2, s16 lim_W1, s16 lim_W2)
 
 PASS_VOID(display_flocons_behind, PORT_PASS_REAR_WEATHER)
 PASS_VOID(display_grp_stars, PORT_PASS_STARS)
-PASS_VOID(DISPLAY_ALL_OBJECTS, PORT_PASS_OBJECTS)
+/* Wider view, presentation only: objects the game does not draw because they are outside their activation zone
+   (in_action_zone, src/moteur.c: origin screen x within [-284 - zonediffx, 444 + zonediffx]), which a view wider
+   than the zone shows as late appearance on one side and early disappearance of wide sprites on the other. Drawn
+   (render/native.c, margins only, behind the active objects) for the types measured as static: over a camera
+   sweep of 59 levels at pad 100 (RENDERER.md 9, "Inactive static objects") each never moved, changed animation
+   or flipped while active, and showed no jump, animation change or flip when switching on or off (at least 3
+   such transitions). Reads game state only, as display2 (src/affiche.c 391) would draw the object. */
+static const u8 inactive_drawable[262] = {
+    [1] = 1, [2] = 1, [4] = 1, [5] = 1, [8] = 1, [16] = 1, [21] = 1, [27] = 1, [41] = 1, [42] = 1, [53] = 1,
+    [58] = 1, [63] = 1, [67] = 1, [82] = 1, [85] = 1, [87] = 1, [88] = 1, [95] = 1, [101] = 1, [105] = 1,
+    [109] = 1, [124] = 1, [142] = 1, [154] = 1, [155] = 1, [158] = 1, [160] = 1, [163] = 1, [164] = 1, [167] = 1,
+    [175] = 1, [176] = 1, [188] = 1, [229] = 1, [230] = 1, [234] = 1, [237] = 1, [240] = 1, [243] = 1};
+extern s16 zonediffx[262];
+extern obj_type_flags_t flags[262];
+s16 get_proj_x(s16 scale, s16 unprojected_x);
+s16 get_proj_y(s16 scale, s16 unprojected_y);
+s16 get_proj_dist(s16 scale, s16 outer_dim);
+
+static void capture_inactive_objects(void)
+{
+    int o;
+    if (!port_record_pad() || !RaymanDansUneMapDuJeu || !level.objects)
+        return;
+    for (o = 0; o < level.nb_objects; o++) {
+        obj_t *obj = &level.objects[o];
+        s32 screen_x = obj->x - xmap + 8, screen_y = obj->y - ymap, zd;
+        anim_t *anim;
+        anim_layer_t *layer;
+        s16 layers_per_frame;
+        int i;
+        if (obj->type >= 262 || !inactive_drawable[obj->type] || !obj->flags.alive || obj->is_active ||
+            (flags[obj->type].flags0 & 0x90) || obj->display_prio < 1 || obj->display_prio > 7 ||
+            !obj->animations || !obj->sprites || !obj->img_buffer || obj->anim_index == 255)
+            continue;
+        zd = zonediffx[obj->type];
+        if (screen_x >= -284 - zd && screen_x <= 444 + zd)
+            continue;   /* inside the zone: the game keeps it inactive for its own reasons */
+        anim = obj->animations + obj->anim_index;
+        layers_per_frame = anim->layers_per_frame & 0x3FFF;
+        if (!anim->layers || obj->anim_frame >= anim->frames_count)
+            continue;
+        layer = anim->layers + obj->anim_frame * layers_per_frame;
+        for (i = 0; i < layers_per_frame; i++, layer++) {
+            sprite_t *sprite;
+            s16 x, w, h;
+            if (!layer->sprite_index)
+                continue;
+            sprite = obj->sprites + layer->sprite_index;
+            if (!sprite->id)
+                continue;
+            if (!obj->flags.flip_x)
+                x = (s16)(layer->x + screen_x);
+            else
+                x = (s16)((obj->scale == 256 && i == 5 && obj->anim_index <= 16 && obj->anim_index >= 14 ? -16 : 0) +
+                          obj->offset_bx * 2 - layer->x - sprite->outer_width + screen_x);
+            w = get_proj_dist(obj->scale, sprite->outer_width);
+            h = get_proj_dist(obj->scale, sprite->outer_height);
+            port_record_extra_sprite(obj->flags.flip_x ^ layer->mirrored, get_proj_x(obj->scale, x),
+                                     sprite->color >> 4, get_proj_y(obj->scale, (s16)(layer->y + screen_y)),
+                                     (u16)((h << 8) + w), obj->img_buffer + sprite->offset_in_atlas);
+        }
+    }
+}
+
+void __real_DISPLAY_ALL_OBJECTS(void);
+void __wrap_DISPLAY_ALL_OBJECTS(void)
+{
+    int previous = port_record_pass_begin(PORT_PASS_OBJECTS);
+    capture_inactive_objects();
+    __real_DISPLAY_ALL_OBJECTS();
+    port_record_pass_end(previous);
+}
 PASS_VOID(display_pix_gerbes, PORT_PASS_PARTICLES)
 PASS_VOID(display_flocons_before, PORT_PASS_FRONT_WEATHER)
 PASS_VOID(DISPLAY_TEXT_FEE, PORT_PASS_FAIRY_TEXT)

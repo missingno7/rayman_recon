@@ -283,7 +283,7 @@ Rules of the wider view (render/native.c), applied to the draw buffer of gamepla
 | Bounds equal to the full viewport (x within 0..8 to 312..320) | the original's clip boxes and viewport | widen to the window: sprite clip box (its arithmetic runs shifted right by `pad`, so the unsigned comparisons see the original's non-negative values), weather bounds, firefly darkness, the world layers, the gameplay swap |
 | Background, map, foreground band sprites | original viewport rules (band copy extent, two sprite instances, no map when the grid is one tile) | the layers' extended rules over the whole view; background columns beyond the stored image wrap through its other half only when the image is two identical halves (checked per image), otherwise they stay black |
 | Original 4-pixel left border (`clear_borders_Normal`, ClearBorder's columns) | cleared every frame | **not drawn** (user decision 2026-10-28): the world continues there |
-| Objects, Rayman, projectiles | drawn for every active object, clipped to the box. Activation (`in_action_zone`, src/moteur.c): object origin screen x in `[-284 - zonediffx, 444 + zonediffx]` (+60 while already active), `zonediffx` per type from -120 (type 0 in level 3) to +450 | visible in the margins as far as active objects reach. **Known limit (gameplay state, not drawn):** an object outside its activation zone is not drawn, so where the view reaches past the zone it appears late (pop-in) or is missing; see "Activation zone" below |
+| Objects, Rayman, projectiles | drawn for every active object, clipped to the box. Activation (`in_action_zone`, src/moteur.c): object origin screen x in `[-284 - zonediffx, 444 + zonediffx]` (+60 while already active), `zonediffx` per type from -120 (type 0 in level 3) to +450 | visible in the margins as far as active objects reach. Objects outside their activation zone are not drawn by the game; of the types measured as static, the wider view draws them anyway, in the margins only (presentation only, user decision 2026-11-12; "Inactive static objects" below). Other types still appear late where the view reaches past their zone ("Activation zone" below) |
 | Particles | the engine kills them outside the `_Aff` box (gameplay state) | none beyond that box; the simulation is not changed |
 | Stars | culled against 320x200 in the pass, consuming random numbers | none beyond it; the cull and its random numbers stay |
 | Weather | flakes spawn through a 320x200 inverse projection | drawn wherever flakes exist; few in the margins |
@@ -321,6 +321,46 @@ shift (now); (b) limit how far the window may extend past the original screen at
 columns beyond the map black, like a narrow map): at pad 100 a window that never shifts has 300 such frames in the
 same sample instead of 1,917 (worst 39 columns instead of 63), at the cost of black columns at level edges; (c) dim or
 fade the outer margin columns; (d) changing the activation zone would change the game and is excluded.
+Inactive static objects (user decision 2026-11-12: bend the drawing rule, never the game rule). In the wider
+view the native renderer also draws objects that are alive but inactive because their origin is outside the
+activation zone, for an allowlist of types measured as static, outside the original 320 columns only and behind
+the active objects (`capture_inactive_objects`, render/scene_capture.c; `PORT_SPRITE_EXTRA`, render/native.c). The
+sprite is the one `display2` would draw from the object's current animation frame at its current position;
+nothing is recorded in the original view, and the game state is untouched (`port_wide_demos`). Not drawn: types
+with special zone rules or boss bars (`flags0 & 0x90`), display priority outside 1..7.
+
+The allowlist comes from the same camera sweep (59 levels, pad 100, scroll limits locked and swept, Rayman
+dragged along; instrumentation with the session notes, not committed). Per type, every transition between active
+and inactive caused by the zone was logged (world position, animation, frame, flip on the last frame before and
+the first frame after), and every pair of consecutive active frames. A type qualifies only if: switching on never
+changed position, animation, frame or flip; switching off never changed position, animation or flip (one
+animation frame advance allowed: the object stops where it was); while active it never moved, changed animation
+or flipped; at least 3 zone transitions observed. That excludes enemies and anything that moves, resets (REINIT on
+leaving the zone shows as a position jump) or changes state.
+
+Allowlist (40 types; zone transitions on/off, levels): 1 PLATFORM 24/17 (10 levels), 2 POWERUP 7/4 (4), 4
+NEUTRAL 220/191 (28), 5 WIZARD1 4/3 (4), 8 10/8 (5), 16 FALLPLAT 12/11 (6), 21 PHOTOGRAPHE 11/4 (10), 27 8/6 (5), 41 OUYE 49/38 (10), 42 SIGNPOST
+9/4 (7), 53 MST_SHAKY_FRUIT 54/41 (3), 58 CAGE 14/13 (11), 63 25/29 (7), 67 1/2 (2), 82 JAUGEUP 14/10 (11), 85 1/2
+(1), 87 19/11 (2), 88 TAMBOUR2 8/4 (1), 95 POING_POWERUP 25/23 (12), 101 7/6 (5), 105 4/1 (2), 109 PI 3/4 (2), 124
+0/13 (13), 142 ONEUP 16/12 (13), 154 ROULETTE2 2/1 (1), 155 ROULETTE3 7/5 (1), 158 PALETTE_SWAPPER 12/12 (6), 160
+TIBETAIN_2 3/3 (1), 163 INDICATOR 16/14 (2), 164 GENERATING_DOOR 97/85 (36), 167 9/9 (2), 175 PUNAISE1 25/19 (4), 176
+CRAYON_BAS 15/5 (1), 188 15/10 (3), 229 PUNAISE2 16/16 (3), 230 PUNAISE3 11/8 (3), 234 LAVE 21/16 (1), 237 GOMME
+12/12 (5), 240 CRAYON_HAUT 16/24 (1), 243 MARK_AUTOJUMP_PLAT 4/3 (1). Excluded with the most pop-in: 161 WIZ (674/546
+transitions, 44 levels; it changes animation while active, 71 times; HYPOTHESIS: when collected), 17 LIFTPLAT and 26 CRUMBLE_PLAT
+(move or change animation while active), 162 (too few transitions: 2).
+
+Pop-in on the same sweep, frames in which an alive object outside its zone overlaps the view, before -> after:
+
+| View | left | right |
+|---|---|---|
+| pad 54 (16:9), centred / at an edge | 0 -> 0 / 0 -> 0 | 19 -> 0 / 4 -> 0 |
+| pad 100, centred | 0 -> 0 | 252 -> 13 |
+| pad 100, at an edge | 138 -> 0 | 1,527 -> 801 |
+
+(object-frames at pad 100: left 178 -> 0, right 2,889 -> 1,447, of which 1,143 are type 161). Checked on the
+demos at pad 100: state logs identical; demo 5's lava strip (234) now reaches the view's right edge at a level
+edge where it stopped short.
+
 Sprite size: on the right the sprites of these objects never start left of their origin (all 3,212 sampled
 object-frames), so late appearance comes from the view's right edge passing the zone limit (in every case), not
 from wide sprites; on the left only wide sprites (62-110 pixels, types 4 and 58) still overlap the view after

@@ -24,6 +24,11 @@ port_scene *port_record_world(void);
 /* Append a semantic layer operation (PORT_OP_BACKGROUND / MAP / FRONT) for viewport (x0, y0)-(x1, y1). */
 void port_record_layer(int kind, int x0, int y0, int x1, int y1);
 
+/* Presentation only (wider view): a sprite of an object the game does not draw, recorded with
+   PORT_SPRITE_EXTRA; nothing is recorded in the original view (pad 0). Same arguments as the DrawSprite*Normal
+   drawers, relative to the frame's draw buffer. */
+void port_record_extra_sprite(int flip, int32_t x, int32_t color, int32_t y, uint32_t size, const uint8_t *image);
+
 /* The firefly darkness aff_luciole drew (render/scene_capture.c, after Display_and_free_luciole). */
 void port_record_firefly(int center_x, int center_y, int rayon, int addluclip, int w1, int w2, int h1, int h2);
 
