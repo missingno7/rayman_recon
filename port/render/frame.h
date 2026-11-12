@@ -43,6 +43,7 @@ enum port_pass {
     PORT_PASS_OPTIONS,         /* DO_OPTIONS_IN_GAME */
     PORT_PASS_PAUSE,           /* Do_Effect_Pause */
     PORT_PASS_KEYS,            /* HANDLE_KEY */
+    PORT_PASS_HUD_TEXT,        /* DO_DARK2_AFFICHE_TEXT (called inside DISPLAY_FIXE): centred text */
     PORT_PASS_COUNT
 };
 

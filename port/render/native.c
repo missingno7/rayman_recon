@@ -8,7 +8,7 @@ const char *port_pass_name(int pass)
     static const char *names[PORT_PASS_COUNT] = {
         "loop", "frame_start", "background", "rear_weather", "map", "stars", "objects", "particles", "front",
         "front_weather", "firefly", "fairy_text", "hud", "crackers", "programmer", "time", "vignette", "options",
-        "pause", "keys"};
+        "pause", "keys", "hud_text"};
     return pass >= 0 && pass < PORT_PASS_COUNT ? names[pass] : "?";
 }
 
@@ -155,6 +155,42 @@ static const port_scene *presentation_layers(const port_scene *s, const view_win
             copy->bands[i].scroll = (int16_t)(scroll < 0 ? scroll + period : scroll);
         }
     return copy;
+}
+
+/* HUD anchoring in the wider view (user decision 2026-11-12): each status-bar element keeps its original distance
+   from its own corner of the view. -1: anchored left (moves left by pad), +1: right (moves right by pad), 0: stays.
+   The side of each element is the side the game places it on (src/affiche.c):
+     DISPLAY_FIXE (pass hud): lives icon and digits at x 16..70, hit points 35..59, the 1up/power clings in the clip
+       box 0..100 (DISPLAY_CLING), their black box at x 13 - all left; the ting counter at 244..290, its black boxes
+       at 241 and from Bloc_lim_W2 - all right. No element straddles the middle, so an element's side is the half of
+       the original screen its centre is in. DO_DARK2_AFFICHE_TEXT, the one centred text DISPLAY_FIXE draws, has its
+       own pass (hud_text) and stays.
+     CLEAR_FIXE_LUCIOLE (pass frame_start): the firefly levels' erasing boxes at x 13 (left) and 241 (right).
+     display_time (pass time): label and digits from Bloc_lim_W2 - 52 - right; the centred texts (x 160) stay.
+   Only for a frame whose viewport is the full screen (narrowed views keep the original 320 columns), and
+   independent of the presentation offset at level edges (these passes are screen-space). */
+static int hud_anchor(const port_frame *f, const port_op *op, int wide)
+{
+    const port_scene *s = &f->world;
+    int32_t vx0 = s->firefly ? s->glob_x0 : s->view_x0, vx1 = s->firefly ? s->glob_x1 : s->view_x1, centre;
+    if (!wide || op->target != PORT_TARGET_DRAW || op->base || !full_width(vx0, vx1))
+        return 0;
+    if (op->kind == PORT_OP_SPRITE)
+        centre = op->x + (int32_t)(op->size & 255) / 2;
+    else if (op->kind == PORT_OP_BLACK_BOX)
+        centre = op->x + op->w / 2;
+    else
+        return 0;
+    switch (op->pass) {
+    case PORT_PASS_HUD:
+        return centre < 160 ? -1 : 1;
+    case PORT_PASS_FRAME_START:
+        return op->kind == PORT_OP_BLACK_BOX ? (centre < 160 ? -1 : 1) : 0;
+    case PORT_PASS_TIME:
+        return op->x >= vx1 - 52 ? 1 : 0;
+    default:
+        return 0;
+    }
 }
 
 /* The passes that draw the world (moved with the window); the others are screen-space (HUD, text). */
@@ -488,8 +524,15 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         int fidelity = PORT_RENDER_ORIGINAL;
         view_window window, *win = NULL;
         static port_scene layers;
+        int anchor;
         if (!dst)
             continue;
+        if ((anchor = hud_anchor(f, op, wide)) != 0) {
+            /* drawn into the surface seen pad columns further left (anchored left) or right */
+            moved = *dst;
+            moved.x0 -= anchor * wide;
+            dst = &moved;
+        }
         if (wide && world_pass(op->pass)) {
             /* the world through the window: drawn into the surface seen dx columns further right */
             window = world_window(&f->world, wide);

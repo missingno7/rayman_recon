@@ -10,6 +10,8 @@ level edge reaches 320 columns past the original screen), all headless and deter
     columns), except where they must stay black: demo 3, a firefly level, whose darkness covers them like the unlit
     rest of the screen, and demo 4, a vertical-scrolling level whose map is 320 pixels wide (the view centres on
     the map, black beyond its edges).
+    The dark check covers the rows below the status bar (from row HUD_ROWS): the HUD is anchored to the view's
+    corners, so its elements (DISPLAY_FIXE: rows 0..49) are in the margins in every level.
     At the widest pad the dark check covers demo 4 only: there a window resting at a level's left edge moves the
     original screen itself into the outer columns (dx up to 2 * pad), and demo 3's firefly circle is lit there.
 The native renderer's exactness in the original view is gated separately (tests/e2e_native.py).
@@ -25,7 +27,8 @@ from pathlib import Path
 FRAMES = 6000
 DUMP_EVERY = 97
 PADS = (54, 160)
-DARK_MARGIN_DEMOS = {3, 4}   # demo 3: firefly darkness; demo 4: a map 320 pixels wide (black beyond its edges)
+DARK_MARGIN_DEMOS = {3, 4}
+HUD_ROWS = 50                # status bar band (render/native.c hud_anchor); below it dark margins must stay black   # demo 3: firefly darkness; demo 4: a map 320 pixels wide (black beyond its edges)
 
 
 def run(exe, data, cd, demo, work, pad):
@@ -63,11 +66,14 @@ def main(argv):
                 same_state = common > 0 and base[:common] == wide[:common]
                 widths = set()
                 margin_frames = margin_px = frames = 0
+                rows0 = HUD_ROWS if demo in DARK_MARGIN_DEMOS else 0
                 for f in sorted(dumps.glob('*.bmp')):
                     w, h, px = bmp(f)
                     widths.add(w)
                     frames += 1
-                    n = sum(1 for y in range(h) for x in list(range(pad)) + list(range(pad + 320, w)) if px[y * w + x])
+                    # the BMP is stored bottom-up: image row y is data row h - 1 - y
+                    n = sum(1 for y in range(rows0, h) for x in list(range(pad)) + list(range(pad + 320, w))
+                            if px[(h - 1 - y) * w + x])
                     margin_px += n
                     margin_frames += n > 0
                 print(f'demo{demo} pad{pad}: state swaps base={len(base)} wide={len(wide)} identical_prefix={same_state} '
