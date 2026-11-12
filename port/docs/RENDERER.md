@@ -278,16 +278,16 @@ Rules of the wider view (render/native.c), applied to the draw buffer of gamepla
 
 | Item | Original rule | Wider view |
 |---|---|---|
-| Presentation camera | the game's camera `xmap`, clamped to `[scroll_start_x, scroll_end_x]` (moteur.c) | unchanged; the wider window onto the world (`-pad .. 320 + pad`, world x = screen x + xmap - 8) gets a presentation offset that keeps it inside the level map: 0 when there is room, otherwise the window stops at the map edge and the original 4:3 area moves off centre. A map narrower than the window is centred, with black beyond its edges. World passes (background, weather, map, stars, objects, particles, foreground, firefly) are drawn through the window; HUD and text passes stay at their screen positions. Computed from the recorded frame (camera, map width); the game never sees it |
+| Presentation camera | the game's camera `xmap`, clamped to `[scroll_start_x, scroll_end_x]` (moteur.c) | unchanged; the wider window onto the world (`-pad .. 320 + pad`, world x = screen x + xmap - 8) gets a presentation offset that keeps it inside the level map: 0 when there is room, otherwise the window stops at the map edge and the original 4:3 area moves off centre. A map narrower than the window is centred, with black beyond its edges. World passes (background, weather, map, stars, objects, particles, foreground, firefly) are drawn through the window; HUD and text passes stay at their screen positions. Computed from the recorded frame (camera, map width); the game never sees it. Resting at an edge, the window's far side reaches `2 * pad` beyond the original screen (up to 320 columns at the widest pad), so the captured world data covers that reach: the map window is `PORT_SCENE_MAX_REACH` = 2 x 160 columns per side (render/scene.h). It covered only 160 before (fixed 2026-11-12): at pads above 80, map tiles were missing on the far side of a window resting at a level edge (at pad 100, up to ~40 columns at the left at a level's right end, up to 24 at the right at a level start) |
 | Parallax layers while the window rests at a level edge | band positions computed for the game's camera (`Calcul_Deplacement_Bande`) | drawn for the presentation camera `xmap + dx`: each band's camera-following part is re-evaluated for it (autoscroll kept), a vertical level's strips stay fixed in the view. Otherwise the map would stand still while the game's camera moves under the resting window and the background and foreground layers slid (`presentation_layers`, render/native.c). Measured on demos 0 and 2: frames in those stretches change ~500-1,600 pixels (sprites) instead of ~8,500-24,000 |
 | Bounds equal to the full viewport (x within 0..8 to 312..320) | the original's clip boxes and viewport | widen to the window: sprite clip box (its arithmetic runs shifted right by `pad`, so the unsigned comparisons see the original's non-negative values), weather bounds, firefly darkness, the world layers, the gameplay swap |
 | Background, map, foreground band sprites | original viewport rules (band copy extent, two sprite instances, no map when the grid is one tile) | the layers' extended rules over the whole view; background columns beyond the stored image wrap through its other half only when the image is two identical halves (checked per image), otherwise they stay black |
 | Original 4-pixel left border (`clear_borders_Normal`, ClearBorder's columns) | cleared every frame | **not drawn** (user decision 2026-10-28): the world continues there |
-| Objects, Rayman, projectiles | drawn for every active object (activation ~1320x1200 around the camera), clipped to the box | visible in the margins as far as active objects reach |
+| Objects, Rayman, projectiles | drawn for every active object, clipped to the box. Activation (`in_action_zone`, src/moteur.c): object origin screen x in `[-284 - zonediffx, 444 + zonediffx]` (+60 while already active), `zonediffx` per type from -120 (type 0 in level 3) to +450 | visible in the margins as far as active objects reach. **Known limit (gameplay state, not drawn):** an object outside its activation zone is not drawn, so where the view reaches past the zone it appears late (pop-in) or is missing; see "Activation zone" below |
 | Particles | the engine kills them outside the `_Aff` box (gameplay state) | none beyond that box; the simulation is not changed |
 | Stars | culled against 320x200 in the pass, consuming random numbers | none beyond it; the cull and its random numbers stay |
 | Weather | flakes spawn through a 320x200 inverse projection | drawn wherever flakes exist; few in the margins |
-| Firefly levels | darkness outside the lit window, within the viewport | the darkness covers the margins too |
+| Firefly levels | the world is drawn only inside the lit box around the firefly (`set_luciole`, cut to the viewport); `aff_luciole` blackens a ring around the lit circle (radius + ADDLUCLIP, the firefly's screen movement + 6) and the rest of the buffer stays black from earlier frames | the lit box's sides cut at the viewport's edge reach into the margin as far as the lit box (the circle is not cut straight at the original screen's edge); the darkness is drawn as the original's ring plus everything else in the window cleared every frame. The original's reliance on earlier frames fails in the wider view: while the window rests at a level edge a camera move or jump moves the surface under the screen by more than the ring covers, which left stale lit columns (reproduced at pad 100 in world 5 level 4: a 13-pixel column 65 columns from the circle after a camera jump). Fixed 2026-11-12 (`lit_widen`, `firefly_rest`, render/native.c); the original view is unchanged |
 | Narrowed viewports (breakout, world 6 level 4) and their swaps | the swap copies the viewport | the original 320 columns, black margins |
 | Fairy dialogue (`DISPLAY_TEXT_FEE`) | two black bars across the 320 columns, text and the writing glove at screen positions | the bars cross the whole wider view (a black box spanning the original screen is widened); text and glove stay at their 4:3 positions. Without the wider bars the level and the glove's world-pass copy showed in the margins beside them. Checked on world 1 level 3 (`RAYMAN_START_LEVEL="1 3"`): the text band of all 887 dialogue frames equals the original view's |
 | HUD | fixed anchors / viewport-relative | kept at the 4:3 positions (policy; moving it to the edges is a later option) |
@@ -302,10 +302,41 @@ Known content limits (the original art, not the renderer): a column background i
 repetition in the margins shows a seam where its edges meet; where a level places no object or tile beyond the
 original screen (for example the water sprites at the bottom of some levels), the margin stays black.
 
+Activation zone (measured 2026-11-12, OPEN design choice). The game activates an object only while its origin is
+inside the activation zone above; the wider view never changes that (gameplay state, gated). Measured with a
+development scenario that locks the camera's scroll limits and sweeps them across 59 levels of worlds 1-6 at 4
+pixels per frame (98,338 gameplay frames, about 45% with the window resting at a level edge; instrumentation not
+committed, kept with the session notes): frames in which an alive object outside its zone overlaps the view by at
+least one column:
+
+| View | window centred (dx = 0) | window resting at a level edge |
+|---|---|---|
+| 16:9 (pad 54) | 19 frames, right side, at most 9 columns | 4 frames, right side |
+| pad 100 | 252 frames, right side, at most 39 columns | 1,527 frames right side (at most 63 columns), 138 left side (at most 18 columns, one level) |
+
+The right side dominates: many types have a negative `zonediffx` (-50 to -120: activation ends at screen x 394 to
+324), and at a level start the window resting at the map's left edge spans `[0, 320 + 2 * pad]`. The six demos
+show the same pattern (demo 2 and 5: only pad 100 at an edge). Options, none changing the game: (a) keep the full
+shift (now); (b) limit how far the window may extend past the original screen at a level edge (the remaining
+columns beyond the map black, like a narrow map): at pad 100 a window that never shifts has 300 such frames in the
+same sample instead of 1,917 (worst 39 columns instead of 63), at the cost of black columns at level edges; (c) dim or
+fade the outer margin columns; (d) changing the activation zone would change the game and is excluded.
+
 Verification: the original view stays gated pixel for pixel (`port_native_demos`); `--verify-render` runs at the
 original width only. The wider view is gated by `port_wide_demos` (tests/e2e_wide.py): gameplay-state logs identical
-to the original-view run in all six demos, every frame 428 columns, margins drawn in gameplay frames (black by
-design in demo 3, firefly darkness, and demo 4, a map 320 pixels wide).
+to the original-view run in all six demos at pad 54 (16:9) and at the widest pad 160, every frame 320 + 2 * pad
+columns, margins drawn in gameplay frames (black by design in demo 3, firefly darkness, and demo 4, a map 320
+pixels wide; at pad 160 demo 4 only, since a window resting at a level edge moves the original screen into the
+outer columns, where demo 3's firefly is lit).
+
+Presented-frame numbering: an image is shown, and counted as a presented frame (`--frames`, `--dump-every`, the
+frame log), only when its pixels or palette changed (`present`, port/video/vga.c), so the same presented-frame
+index can be a different game moment in two views. Checked 2026-11-12 on demo 0: the original view, pad 100, and
+pad 100 with a forced presentation offset have identical gameplay-state logs per swap (3,799 common swaps, three
+pad-100 runs identical), while 3,000 presented frames hold 3,799 swaps in the original view and with the forced
+offset but 3,806 at plain pad 100. Dumps
+compared at the same presented index (a gem counter 8 vs 7) are an artefact of this numbering, not a divergence;
+compare views by swap (`--state-log`) instead.
 
 ## 10. Roadmap
 

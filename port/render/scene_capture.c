@@ -36,6 +36,9 @@ extern u8 *Scroll_Masque[20];
 extern big_map_t BIG_MAP;
 extern level_t level;
 extern obj_t ray;
+extern rayevts_t RayEvts;
+extern s16 x_luc, y_luc, rayon_luciole, ADDLUCLIP;
+extern s32 Bloc_lim_W1_Glob, Bloc_lim_W2_Glob, Bloc_lim_H1_Glob, Bloc_lim_H2_Glob;
 extern int RandomIndex;
 extern short RandArray[256];
 
@@ -48,6 +51,12 @@ static void capture_view(port_scene *s)
     s->view_y0 = (int16_t)Bloc_lim_H1;
     s->view_y1 = (int16_t)Bloc_lim_H2;
     s->map_width = 16 * BIG_MAP.width;
+    /* the firefly's lit box before set_luciole cut it to the viewport (y_luc holds the screen x) */
+    s->firefly = RayEvts.firefly ? 1 : 0;
+    s->lit_x0 = y_luc - rayon_luciole;
+    s->lit_x1 = y_luc + rayon_luciole;
+    s->glob_x0 = Bloc_lim_W1_Glob;
+    s->glob_x1 = Bloc_lim_W2_Glob;
 }
 
 /* Bands and band sprites: level data plus the scroll positions Calcul_Deplacement_Bande left in Bande[].field_6. */
@@ -145,10 +154,11 @@ static void capture_front(port_scene *s)
     s->front_y = (int16_t)(2 * ymapmax - 2 * ymap + 200);
 }
 
-/* Map window around the camera (update_display_map: tile column c is at screen x 16c - xmap + 8). */
+/* Map window around the camera (update_display_map: tile column c is at screen x 16c - xmap + 8), as far as the
+   wider view can reach on either side. */
 static void capture_map(port_scene *s)
 {
-    s16 col0 = (s16)((xmap - 8 - PORT_SCENE_MAX_PAD) >> 4), row0 = (s16)(ymap >> 4);
+    s16 col0 = (s16)((xmap - 8 - PORT_SCENE_MAX_REACH) >> 4), row0 = (s16)(ymap >> 4);
     int r, c;
     capture_view(s);
     s->tile_col0 = col0;
@@ -220,10 +230,6 @@ void __wrap_Display_Sprite_On_Front(u16 plan_width, u16 plan_height, u16 w1, u16
     __real_Display_Sprite_On_Front(plan_width, plan_height, w1, h1, w2, h2);
     port_record_pass_end(previous);
 }
-
-extern rayevts_t RayEvts;
-extern s16 x_luc, y_luc, rayon_luciole, ADDLUCLIP;
-extern s32 Bloc_lim_W1_Glob, Bloc_lim_W2_Glob, Bloc_lim_H1_Glob, Bloc_lim_H2_Glob;
 
 /* Display_and_free_luciole (src/luciole.c 269-292) draws the darkness itself (aff_luciole). Its inputs are read
    after it ran: the ADDLUCLIP it computed, the centre (aff_luciole is called as (y_luc, x_luc): y_luc holds the

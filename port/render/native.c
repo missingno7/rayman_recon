@@ -110,6 +110,26 @@ static view_window world_window(const port_scene *s, int pad)
     return w;
 }
 
+/* Firefly levels: the game clips the frame's world drawing to the lit box around the firefly, cut to the full
+   viewport (set_luciole, src/luciole.c). In the wider view a side cut at the viewport's edge reaches on into the
+   margin as far as the lit box itself (presentation only: the circle is not cut at the original screen's edge).
+   Returns whether a side moved. */
+static int lit_widen(const port_scene *s, const view_window *win, int32_t *x0, int32_t *x1)
+{
+    int moved = 0;
+    if (!win || !s->firefly)
+        return 0;
+    if (*x0 == s->glob_x0 && s->lit_x0 < *x0 && *x0 > win->x0) {
+        *x0 = s->lit_x0 > win->x0 ? s->lit_x0 : win->x0;
+        moved = 1;
+    }
+    if (*x1 == s->glob_x1 && s->lit_x1 > *x1 && *x1 < win->x1) {
+        *x1 = s->lit_x1 < win->x1 ? s->lit_x1 : win->x1;
+        moved = 1;
+    }
+    return moved;
+}
+
 /* The background and foreground layers as the presentation camera sees them. The window is where a camera at
    xmap + dx would look; the game computed the band positions for xmap. Without this, while the window rests at a
    level edge and the game's camera moves underneath it, the map stands still but the parallax layers slide. Each
@@ -156,17 +176,26 @@ static int world_pass(int pass)
     }
 }
 
-static void sprite(port_surface *d, const port_op *op, const view_window *win)
+static void sprite(port_surface *d, const port_op *op, const view_window *win, const port_scene *scene)
 {
     int flip = op->flags & PORT_SPRITE_FLIP, raw = op->flags & PORT_SPRITE_RAW;
     uint8_t or_color = (op->flags & PORT_SPRITE_COLOR) ? (uint8_t)(op->color * 8) : 0;
     uint32_t size = op->size, w = size & 255, h = (size >> 8) & 255, stride = w, end;
-    /* A box widened to the window runs its arithmetic shifted right by -window.x0, so that its unsigned comparisons
-       see non-negative values as in the original view; pixels are written back shifted. */
-    int widen = win && full_width(op->clip[0], op->clip[1]);
+    /* A box widened to the window (or a firefly lit box widened into the margin) runs its arithmetic shifted right
+       by -window.x0, so that its unsigned comparisons see non-negative values as in the original view; pixels are
+       written back shifted. */
+    int32_t bx0 = op->clip[0], bx1 = op->clip[1];
+    int widen = 0;
+    if (win && full_width(bx0, bx1)) {
+        bx0 = win->x0;
+        bx1 = win->x1;
+        widen = 1;
+    } else if (win) {
+        widen = lit_widen(scene, win, &bx0, &bx1);
+    }
     int32_t shift = widen ? -win->x0 : 0;
     int32_t x = op->x + shift, y = op->y;
-    int32_t box[4] = {widen ? 0 : op->clip[0], widen ? win->x1 - win->x0 : op->clip[1], op->clip[2], op->clip[3]};
+    int32_t box[4] = {bx0 + shift, bx1 + shift, op->clip[2], op->clip[3]};
     const uint8_t *src = op->image;
     if (op->flags & PORT_SPRITE_SCRATCH) {
         uint8_t *slot = port_native_scratch(op->w);
@@ -297,20 +326,64 @@ static void firefly_rows(port_surface *d, const port_op *op, const int32_t *g, i
     }
 }
 
+/* The wider view's darkness: everything in the window outside what aff_luciole touched. The original darkens only
+   a ring around the lit circle (radius + ADDLUCLIP, ADDLUCLIP = the firefly's screen movement + 6) and relies on
+   the rest of the buffer staying black from earlier frames. In the wider view the presentation offset can move
+   the surface under the screen between frames (a camera move or jump while the window rests at a level edge),
+   which the ring does not cover, and parts of the lit box widened into a margin are drawn there: so the margins
+   and every row the ring did not reach are cleared outright. Within the original's ring and circle nothing
+   changes. */
+static void firefly_rest(port_surface *d, const port_op *op, const int32_t *g, const uint8_t *touched)
+{
+    int32_t reach = (int16_t)op->size + op->h, left = op->x - reach, right = op->x + reach, y;
+    if (left < g[0])
+        left = g[0];
+    if (right > g[1])
+        right = g[1];
+    for (y = g[2]; y < g[3]; y++) {
+        if (y < 0 || y >= 200)
+            continue;
+        if (!touched[y] || right <= left) {
+            fill(d, g[0], y, g[1] - g[0], 0);
+            continue;
+        }
+        fill(d, g[0], y, left - g[0], 0);
+        fill(d, right, y, g[1] - right, 0);
+    }
+}
+
+static void mark_rows(uint8_t *touched, const port_op *op, int32_t row_offset)
+{
+    int32_t top = op->y - row_offset, bottom = op->y + row_offset;
+    if (top >= 0 && top < 200)
+        touched[top] = 1;
+    if (bottom >= 0 && bottom < 200)
+        touched[bottom] = 1;
+}
+
 /* aff_luciole (src/luciole.c), radius rayon_luciole - 4: full rows from the radius to ADDLUCLIP beyond it, then the
    midpoint circle's spans. */
 static void firefly(port_surface *d, const port_op *op, const view_window *win)
 {
     int32_t radius = (int16_t)op->size - 4, x = radius, i, y, dd, err;
     int32_t g[4] = {op->clip[0], op->clip[1], op->clip[2], op->clip[3]};
-    if (win && full_width(g[0], g[1])) {
+    uint8_t touched[200];
+    int wide = win && full_width(g[0], g[1]);
+    if (wide) {
         g[0] = win->x0;
         g[1] = win->x1;
+        memset(touched, 0, sizeof touched);
     }
-    for (i = 0, y = radius; i <= op->h; ++i, ++y)
+    for (i = 0, y = radius; i <= op->h; ++i, ++y) {
         firefly_rows(d, op, g, 0, y);
-    if (x < 0)
+        if (wide)
+            mark_rows(touched, op, y);
+    }
+    if (x < 0) {
+        if (wide)
+            firefly_rest(d, op, g, touched);
         return;
+    }
     i = 0;
     y = 0;
     dd = 1;
@@ -318,6 +391,10 @@ static void firefly(port_surface *d, const port_op *op, const view_window *win)
     do {
         firefly_rows(d, op, g, i, x);
         firefly_rows(d, op, g, x, i);
+        if (wide) {
+            mark_rows(touched, op, x);
+            mark_rows(touched, op, i);
+        }
         ++i;
         y += dd;
         dd += 2;
@@ -327,6 +404,8 @@ static void firefly(port_surface *d, const port_op *op, const view_window *win)
             err -= 2;
         }
     } while (i <= x);
+    if (wide)
+        firefly_rest(d, op, g, touched);
 }
 
 /* DrawBorderBoxNormal (ASM_SPEC; port/video/lowlevel_normal.c): light left column and top row, dark bottom and right
@@ -414,6 +493,9 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             view.x0 = win->x0;
             view.x1 = win->x1;
             fidelity = PORT_RENDER_EXTENDED;
+        } else if (win && (op->kind == PORT_OP_BACKGROUND || op->kind == PORT_OP_MAP) &&
+                   lit_widen(&f->world, win, &view.x0, &view.x1)) {
+            fidelity = PORT_RENDER_EXTENDED;
         }
         switch (op->kind) {
         case PORT_OP_BACKGROUND:
@@ -440,7 +522,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             }
             break;
         case PORT_OP_SPRITE:
-            sprite(dst, op, op->base ? NULL : win);
+            sprite(dst, op, op->base ? NULL : win, &f->world);
             break;
         case PORT_OP_CLEAR_BORDERS:
             /* clear_borders_Normal: 4 bytes at the row start and at +right, on height rounded down to even. Not in
