@@ -274,8 +274,11 @@ state, consumes no random numbers.
 
 ## 9. Widescreen
 
-`--widescreen` (54 more columns per side: 428 x 200, 16:9 at the original pixel aspect) or `--wide-pad N` (0..160)
-makes the native renderer draw a wider view of the same recorded frames. There is one renderer and one frame: the
+`--widescreen` (16:9 at the chosen pixel shape: 18 more columns per side with square pixels, the default since
+2026-11-12; 54, i.e. 428 x 200, with `--aspect original`), `--wide-pad N` (0..160), or `"widescreen": true` in the
+settings file (fullscreen: as wide as the display, `port_host_fit_pad`; e.g. 57 per side on 3120x1440 with square
+pixels) makes the native renderer draw a wider view of the same recorded frames. The pixel shape is presentation
+only (platform/host.c): the frames are always 320 + 2 x pad by 200. There is one renderer and one frame: the
 view is the `pad` parameter of `port_native_draw` (render/native.h); the original draw path, which has 320 columns,
 is not involved in what is shown (`--widescreen` implies `--renderer native`). The slice-1 margin compositor, which
 framed the original image with separately drawn margins, is removed.

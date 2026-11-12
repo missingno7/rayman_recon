@@ -72,10 +72,13 @@ levels of all six worlds, continue and game over are complete and identical to t
 and in-game menus, pause, credits and the intro movie); while it cannot draw a frame completely (scenes no test
 reaches yet may have such frames) the original image is shown instead. `--renderer native` presents only the native
 image (gaps visible), `--renderer reference` only the original draw path. `--verify-render` compares the native renderer with the original in every frame.
-`--widescreen` (16:9) or `--wide-pad N` (0..160 columns per side) makes the native renderer draw a wider view of
-the same frames: the world, objects and weather continue past the original 320 columns, without the original's
-4-pixel border; at a level edge the view stops at the map's edge (the game's camera is untouched), and a level
-narrower than the view gets black borders; menus, movies and other screen-space scenes stay 4:3 in the centre.
+`--widescreen` (16:9: 18 columns per side with square pixels, 54 with `--aspect original`) or `--wide-pad N`
+(0..160 columns per side) makes the native renderer draw a wider view of the same frames: the world, objects and
+weather continue past the original 320 columns, without the original's 4-pixel border; static objects the game keeps
+inactive beyond its action zone are drawn in the margins, and the HUD keeps its distance from the view's corners. At
+a level edge the view stops at the map's edge (the game's camera is untouched), and a level narrower than the view
+gets black borders; menus, movies and other screen-space scenes stay 320 columns wide in the centre. Pixel shape:
+square by default (the 320x200 picture shown as 16:10), `--aspect original` for the original 4:3 picture.
 
 Saves go to the SDL pref
 directory unless `--save DIR` is given. Alt+Enter toggles fullscreen.

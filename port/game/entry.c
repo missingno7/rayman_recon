@@ -94,7 +94,9 @@ static void dump_frame(const uint8_t *pixels, int width, const uint8_t *dac)
     uint8_t header[54 + 1024];
     FILE *f;
     int i, y;
-    uint32_t size = 54 + 1024 + (uint32_t)width * 200;
+    static const uint8_t zero[3];
+    int stride = (width + 3) & ~3;   /* BMP rows are padded to 4 bytes (e.g. 434 columns at 57 per side) */
+    uint32_t size = 54 + 1024 + (uint32_t)stride * 200;
     snprintf(path, sizeof path, "%s/frame_%06ld.bmp", dump_dir, frame_count);
     if (!(f = fopen(path, "wb")))
         return;
@@ -113,8 +115,10 @@ static void dump_frame(const uint8_t *pixels, int width, const uint8_t *dac)
         header[54 + 4 * i + 2] = (uint8_t)(r << 2 | r >> 4);
     }
     fwrite(header, 1, sizeof header, f);
-    for (y = 199; y >= 0; y--)
+    for (y = 199; y >= 0; y--) {
         fwrite(pixels + y * width, 1, (size_t)width, f);
+        fwrite(zero, 1, (size_t)(stride - width), f);
+    }
     fclose(f);
 }
 

@@ -73,10 +73,13 @@ Diagnostics: an empty file `pace_trace.on` in the game folder makes the app writ
 
 ## Status
 
-- PROVEN on the x86_64 emulator (API 36, 2340x1080), touch only: logo, intro, main menu, save creation and selection,
-  world map (cross + GO), level (floating stick, jump), Pause opening the DOS in-level options menu, Back returning to
-  the level.
-- arm64-v8a builds and links (no unresolved symbols besides libSDL3's); not yet run on a phone.
+- PROVEN on the x86_64 emulator (API 36, 2340x1080 and 3120x1440), touch only: logo, intro, main menu, save creation
+  and selection, world map (cross + GO), level (floating stick, jump), Pause opening the DOS in-level options menu,
+  Back returning to the level; the firefly demo (demo 3) at pad 100 with clean margins.
+- PROVEN on a phone (Galaxy S24 Ultra, arm64-v8a, Android 17, 3120x1440, 2026-11-12): played by touch by the user;
+  60 fps with CD music at full speed in the -O2 build (measurements above).
 - Not yet done: the release's button artwork (the overlay draws plain discs and labels; the art can be read from the
-  player's OBB, see TOUCH_CONTROLS.md open points), audio and CD music checks on a device, behaviour when the app is
-  backgrounded.
+  player's OBB, see TOUCH_CONTROLS.md open points); the touch overlay is shown during the attract-mode demos (it
+  follows the game's context: menus or gameplay); behaviour when the app is backgrounded.
+- OPEN: the user saw corrupted screen edges in the firefly demo on the phone (an earlier build); not reproduced on the
+  desktop or the emulator at the phone's resolution.
