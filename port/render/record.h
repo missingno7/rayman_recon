@@ -52,7 +52,8 @@ void port_record_unsupported_effect(const void *p);
 void port_record_asset(void *buffer, size_t n);
 
 /* Renderer selection: 0 = reference (the original draw path's display), 1 = native (the native renderer's
-   display only; nothing of the original buffers is presented). */
+   display only; nothing of the original buffers is presented), 2 = native with fallback (the default: the native
+   display, or the original image while a frame the native renderer could not draw completely is on screen). */
 void port_record_set_native(int on);
 int port_record_native(void);
 /* The view of the native renderer: `pad` columns beyond the original 320 on each side (0 = the original view;

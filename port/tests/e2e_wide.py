@@ -37,6 +37,8 @@ def run(exe, data, cd, demo, work, pad):
     dumps.mkdir()
     cmd = [exe, '--data', data, '--cd', cd, '--save', str(work / f'save{tag}{demo}'), '--demo', str(demo),
            '--headless', '--deterministic', '--frames', str(FRAMES), '--state-log', str(work / f'{tag}{demo}.state')]
+    if not pad:
+        cmd += ['--renderer', 'reference']
     if pad:
         cmd += ['--wide-pad', str(pad), '--dump-frames', str(dumps), '--dump-every', str(DUMP_EVERY)]
     subprocess.run(cmd, capture_output=True, text=True, timeout=1800)

@@ -14,9 +14,10 @@
  * --widescreen (16:9: 54 more columns per side) / --wide-pad N (0..160) make the native renderer draw a wider view
  * of the same frames (implies --renderer native; port/docs/RENDERER.md 9). --verify-render checks the native
  * renderer against the original draw path every frame (original width only); --state-log writes one gameplay-state digest per
- * frame swap (presentation-independence tests). --renderer native presents only the native renderer's image
- * (port/docs/RENDERER.md); reference (default) presents the original draw path's display. Frame logs hash the
- * presented 320x200 image.
+ * frame swap (presentation-independence tests). By default the native renderer's image is presented, and the
+ * original draw path's image only while a frame the native renderer could not draw completely is on screen;
+ * --renderer native presents only the native image (gaps visible), --renderer reference only the original draw
+ * path's display (port/docs/RENDERER.md). Frame logs hash the presented image.
  */
 #include "game/port_main.h"
 #include "platform/clock.h"
@@ -212,7 +213,7 @@ int main(int argc, char **argv)
     char default_save[1024];
     port_host_options host = {0, 0, 0, 320, 1};
     int deterministic = 0, demo = -1, dos_main = 0, i;
-    int renderer = -1, wide_pad = 0;   /* renderer: -1 default (reference), 0 reference, 1 native */
+    int renderer = -1, wide_pad = 0;   /* renderer: -1 default (native with fallback), 0 reference, 1 native */
     const char *config_path = NULL;
     static port_config config;
     static char base_dir[1024], base_config[1100], base_cue[1100], host_cd[3];
@@ -317,14 +318,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "rayman: --widescreen needs the native renderer (not --renderer reference)\n");
             return 2;
         }
-        renderer = 1;
-        port_record_set_pad(wide_pad);
+        port_record_set_pad(wide_pad);   /* the default renderer or --renderer native: both are native */
     }
     if (port_record_pad() && port_record_verify()) {
         fprintf(stderr, "rayman: --verify-render compares the original 320-column view; not with --widescreen\n");
         return 2;
     }
-    port_record_set_native(renderer == 1);
+    /* default: the native renderer, falling back to the original image for frames it cannot draw completely */
+    port_record_set_native(renderer == 1 ? 1 : renderer == 0 ? 0 : 2);
     host.width = 320 + 2 * port_record_pad();
     if (data_count) data = data_roots[0]; /* Explicit roots replace RAYMAN_DATA. */
     if (!data) {

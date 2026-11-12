@@ -78,6 +78,11 @@ typedef struct port_scene {
        (Bloc_lim_*_Glob, src/luciole.c) */
     uint8_t firefly;
     int32_t lit_x0, lit_x1, glob_x0, glob_x1;
+    /* the boss bar (display_bar_boss, src/affiche.c 547, drawn inside DISPLAY_ALL_OBJECTS): the images of its
+       sprites (the fist object's 60 and 61 and the boss icons) and the rows it draws them at */
+    const uint8_t *bossbar_images[9];
+    int nb_bossbar_images;
+    int32_t bossbar_y[3];
 } port_scene;
 
 #endif

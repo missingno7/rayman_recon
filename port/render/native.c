@@ -169,12 +169,30 @@ static const port_scene *presentation_layers(const port_scene *s, const view_win
      display_time (pass time): label and digits from Bloc_lim_W2 - 52 - right; the centred texts (x 160) stay.
    Only for a frame whose viewport is the full screen (narrowed views keep the original 320 columns), and
    independent of the presentation offset at level edges (these passes are screen-space). */
+/* The boss bar (display_bar_boss, drawn inside the objects pass): a sprite of the fist object's bar or icon images
+   at one of the bar's rows (both captured from the game, render/scene_capture.c capture_boss_bar). */
+static int boss_bar(const port_frame *f, const port_op *op)
+{
+    const port_scene *s = &f->world;
+    int i;
+    if (op->kind != PORT_OP_SPRITE || op->pass != PORT_PASS_OBJECTS || op->base ||
+        (op->y != s->bossbar_y[0] && op->y != s->bossbar_y[1] && op->y != s->bossbar_y[2]))
+        return 0;
+    for (i = 0; i < s->nb_bossbar_images; i++)
+        if (op->image == s->bossbar_images[i])
+            return 1;
+    return 0;
+}
+
 static int hud_anchor(const port_frame *f, const port_op *op, int wide)
 {
     const port_scene *s = &f->world;
     int32_t vx0 = s->firefly ? s->glob_x0 : s->view_x0, vx1 = s->firefly ? s->glob_x1 : s->view_x1, centre;
     if (!wide || op->target != PORT_TARGET_DRAW || op->base || !full_width(vx0, vx1))
         return 0;
+    /* the boss bar: anchored to the viewport's left edge (Bloc_lim_W1 + 0..20), its clip unchanged */
+    if (boss_bar(f, op))
+        return -1;
     if (op->kind == PORT_OP_SPRITE)
         centre = op->x + (int32_t)(op->size & 255) / 2;
     else if (op->kind == PORT_OP_BLACK_BOX)
@@ -533,7 +551,7 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
             moved.x0 -= anchor * wide;
             dst = &moved;
         }
-        if (wide && world_pass(op->pass)) {
+        if (wide && world_pass(op->pass) && !(op->pass == PORT_PASS_OBJECTS && boss_bar(f, op))) {
             /* the world through the window: drawn into the surface seen dx columns further right */
             window = world_window(&f->world, wide);
             win = &window;

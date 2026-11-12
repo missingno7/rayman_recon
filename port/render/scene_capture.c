@@ -338,10 +338,37 @@ static void capture_inactive_objects(void)
     }
 }
 
+/* The boss bar's sprites, so that the renderer can tell its operations from the objects' (render/native.c): the
+   images display_bar_boss passes (fist object sprites 60, 61 and sprite_of_ref of each boss icon) and its rows
+   (Bloc_lim_H2 - 19, - 20, - 30 in the normal video mode, projected like display_sprite does). */
+extern obj_t *poing_obj;
+extern s32 Bloc_lim_H2;
+u8 sprite_of_ref(obj_t *obj, u8 ref);
+static void capture_boss_bar(port_scene *s)
+{
+    static const u8 icons[] = {44, 108, 109, 110, 111, 112, 113};
+    int i, n = 0;
+    s->nb_bossbar_images = 0;
+    if (!poing_obj || !poing_obj->sprites || !poing_obj->img_buffer || poing_obj->nb_sprites <= 61)
+        return;
+    s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[60].offset_in_atlas;
+    s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[61].offset_in_atlas;
+    for (i = 0; i < (int)sizeof icons; i++) {
+        u8 index = sprite_of_ref(poing_obj, icons[i]);
+        if (index < poing_obj->nb_sprites)
+            s->bossbar_images[n++] = poing_obj->img_buffer + poing_obj->sprites[index].offset_in_atlas;
+    }
+    s->nb_bossbar_images = n;
+    s->bossbar_y[0] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 19));
+    s->bossbar_y[1] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 20));
+    s->bossbar_y[2] = get_proj_y(poing_obj->scale, (s16)(Bloc_lim_H2 - 30));
+}
+
 void __real_DISPLAY_ALL_OBJECTS(void);
 void __wrap_DISPLAY_ALL_OBJECTS(void)
 {
     int previous = port_record_pass_begin(PORT_PASS_OBJECTS);
+    capture_boss_bar(port_record_world());
     capture_inactive_objects();
     __real_DISPLAY_ALL_OBJECTS();
     port_record_pass_end(previous);
