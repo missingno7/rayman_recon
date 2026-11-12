@@ -302,7 +302,7 @@ Known content limits (the original art, not the renderer): a column background i
 repetition in the margins shows a seam where its edges meet; where a level places no object or tile beyond the
 original screen (for example the water sprites at the bottom of some levels), the margin stays black.
 
-Activation zone (measured 2026-11-12, OPEN design choice). The game activates an object only while its origin is
+Activation zone (measured 2026-11-12; user decision 2026-11-12: keep the full shift, option (a)). The game activates an object only while its origin is
 inside the activation zone above; the wider view never changes that (gameplay state, gated). Measured with a
 development scenario that locks the camera's scroll limits and sweeps them across 59 levels of worlds 1-6 at 4
 pixels per frame (98,338 gameplay frames, about 45% with the window resting at a level edge; instrumentation not
@@ -321,6 +321,10 @@ shift (now); (b) limit how far the window may extend past the original screen at
 columns beyond the map black, like a narrow map): at pad 100 a window that never shifts has 300 such frames in the
 same sample instead of 1,917 (worst 39 columns instead of 63), at the cost of black columns at level edges; (c) dim or
 fade the outer margin columns; (d) changing the activation zone would change the game and is excluded.
+Sprite size: on the right the sprites of these objects never start left of their origin (all 3,212 sampled
+object-frames), so late appearance comes from the view's right edge passing the zone limit (in every case), not
+from wide sprites; on the left only wide sprites (62-110 pixels, types 4 and 58) still overlap the view after
+deactivation, and only at pad 100 with the window resting at a level edge.
 
 Verification: the original view stays gated pixel for pixel (`port_native_demos`); `--verify-render` runs at the
 original width only. The wider view is gated by `port_wide_demos` (tests/e2e_wide.py): gameplay-state logs identical
