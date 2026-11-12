@@ -17,6 +17,10 @@ int port_record_pass_begin(int pass);
 void port_record_pass_end(int previous);
 /* Scene label for statistics and diagnostics (the PcMain scene function running); returns the previous one. */
 const char *port_record_scene(const char *name);
+/* The scene label now set (NULL outside the labelled scenes). */
+const char *port_record_current_scene(void);
+/* Total host time spent in the native renderer so far, ns (diagnostics). */
+uint64_t port_record_native_ns(void);
 /* The frame is a gameplay frame (the gameplay loop's frame-start pass ran). */
 void port_record_gameplay(void);
 /* The semantic payload of the frame being recorded, filled by the capture before a layer operation is added. */

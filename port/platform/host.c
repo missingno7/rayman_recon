@@ -1,5 +1,7 @@
 #include "platform/host.h"
 #include "platform/audio.h"
+#include "platform/pad.h"
+#include "platform/touch.h"
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
@@ -8,8 +10,14 @@
 
 #define LOGICAL_W 320
 #define LOGICAL_H 200
-/* The 320x200 mode was shown on a 4:3 monitor: each pixel is 1.2 times as tall as it is wide. */
-#define ASPECT_H 240
+/* Height of the presented picture in game-pixel widths: 240 shows the 320x200 mode as on a 4:3 monitor (each pixel
+   1.2 times as tall as wide), 200 shows square pixels (port_host_options.display_rows). */
+static int ASPECT_H = 240;
+#ifdef __ANDROID__
+#define PORT_ALWAYS_FULLSCREEN 1   /* phones: the whole screen, no status bar */
+#else
+#define PORT_ALWAYS_FULLSCREEN 0
+#endif
 
 static SDL_Window *window;
 static SDL_Renderer *renderer;
@@ -75,6 +83,7 @@ static int set1_code(SDL_Scancode s)
         return 0x3b + (s - SDL_SCANCODE_F1);
     switch (s) {
     case SDL_SCANCODE_ESCAPE: return 0x01;
+    case SDL_SCANCODE_AC_BACK: return 0x01;   /* Android Back: Esc, as the Android release's back-button listener */
     case SDL_SCANCODE_MINUS: return 0x0c;
     case SDL_SCANCODE_EQUALS: return 0x0d;
     case SDL_SCANCODE_BACKSPACE: return 0x0e;
@@ -134,25 +143,59 @@ static int set1_code(SDL_Scancode s)
 int port_host_init(const port_host_options *options)
 {
     int scale;
+    const char *touch_env = getenv("RAYMAN_TOUCH");
+    int touch;
     headless = options->headless;
     if (headless)
         return 1;
+#ifdef __ANDROID__
+    touch = !(touch_env && touch_env[0] == '0');
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#else
+    touch = touch_env && touch_env[0] == '1';
+#endif
+    /* Touch controls see fingers only; on a desktop test run the mouse acts as a finger. */
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+    if (touch)
+        SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
         return 0;
     }
     scale = options->scale > 0 ? options->scale : 4;
     texture_width = options->width > LOGICAL_W ? options->width : LOGICAL_W;
+    if (options->display_rows >= LOGICAL_H)
+        ASPECT_H = options->display_rows;
     if (!SDL_CreateWindowAndRenderer("Rayman", texture_width * scale, ASPECT_H * scale,
-                                     SDL_WINDOW_RESIZABLE | (options->fullscreen ? SDL_WINDOW_FULLSCREEN : 0),
+                                     SDL_WINDOW_RESIZABLE | (options->fullscreen || PORT_ALWAYS_FULLSCREEN ? SDL_WINDOW_FULLSCREEN : 0),
                                      &window, &renderer)) {
         fprintf(stderr, "SDL_CreateWindowAndRenderer: %s\n", SDL_GetError());
         return 0;
     }
+    port_pad_init();
+    port_touch_init(touch);
     vsync_on = options->vsync && SDL_SetRenderVSync(renderer, 1);
     if (!vsync_on)
         SDL_SetRenderVSync(renderer, 0);
     return 1;
+}
+
+int port_host_fit_pad(int max_pad, int display_rows)
+{
+    const SDL_DisplayMode *m;
+    int w, h, pad;
+    if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
+        return -1;
+    m = SDL_GetDesktopDisplayMode(SDL_GetPrimaryDisplay());
+    if (!m || m->w <= 0 || m->h <= 0) {
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        return -1;
+    }
+    w = m->w > m->h ? m->w : m->h;   /* the game runs in landscape */
+    h = m->w > m->h ? m->h : m->w;
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    pad = (int)(((double)display_rows * w / h - LOGICAL_W) / 2.0 + 0.5);
+    return pad < 0 ? 0 : pad > max_pad ? max_pad : pad;
 }
 
 void port_host_shutdown(void)
@@ -270,7 +313,7 @@ static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_
         }
         SDL_UnlockTexture(texture);
     }
-    /* Largest width:240 rectangle (4:3 for the original 320 columns); pixel-art scaling keeps pixel edges sharp
+    /* Largest width:ASPECT_H rectangle (4:3 or 16:10 for the original 320 columns); pixel-art scaling keeps pixel edges sharp
        at non-integer vertical factors. */
     SDL_GetCurrentRenderOutputSize(renderer, &w, &h);
     rect.w = (float)w;
@@ -284,6 +327,7 @@ static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture, NULL, &rect);
+    port_touch_draw(renderer);
     SDL_RenderPresent(renderer);
     shown_ns = SDL_GetTicksNS();
     present_cost_ns = shown_ns - entered;
@@ -321,7 +365,10 @@ void port_host_pump(void)
 static void poll_events(void)
 {
     SDL_Event e;
+    int out_w = 0, out_h = 0;
     while (SDL_PollEvent(&e)) {
+        if (port_pad_event(&e) || port_touch_event(&e))
+            continue;
         switch (e.type) {
         case SDL_EVENT_QUIT:
             quit_requested = 1;
@@ -348,6 +395,10 @@ static void poll_events(void)
             break;
         }
     }
+    if (renderer)
+        SDL_GetCurrentRenderOutputSize(renderer, &out_w, &out_h);
+    port_touch_update(out_w, out_h);
+    port_pad_update();
 }
 
 /* ---- presenter --------------------------------------------------------------------------------------------- */
@@ -370,7 +421,7 @@ int port_host_run(int (*run)(void *), void *arg)
     game_start start = {run, arg};
     SDL_PropertiesID props;
     SDL_Thread *thread;
-    uint64_t refresh_asked = 0;
+    uint64_t refresh_asked = 0, last_fresh = 0;
     int result = 1, width = 0, fresh;
     if (headless || !renderer)
         return run(arg);
@@ -411,8 +462,14 @@ int port_host_run(int (*run)(void *), void *arg)
             drawn_seq = newest_seq;
         }
         SDL_UnlockMutex(shared);
-        if (fresh && !SDL_GetAtomicInt(&presenter_stop))
+        if (fresh && !SDL_GetAtomicInt(&presenter_stop)) {
             draw_frame(pixels, width, width, dac);   /* with vsync this returns at the display's refresh */
+            last_fresh = SDL_GetTicksNS();
+        } else if (width && SDL_GetTicksNS() - last_fresh > 50000000ULL && port_touch_needs_redraw() &&
+                   !SDL_GetAtomicInt(&presenter_stop))
+            /* A still screen (no game frame for 50 ms): show the touch overlay's change. While frames arrive the
+               overlay is drawn with them; an extra vsync'd present would delay the next game frame. */
+            draw_frame(pixels, width, width, dac);
     }
     if (SDL_GetAtomicInt(&presenter_stop)) {
         /* exit() on the game's thread is ending the process: nothing more is drawn. */

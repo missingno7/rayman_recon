@@ -525,6 +525,13 @@
    "warning": "-Wpointer-to-int-cast",
    "verdict": "HARMLESS",
    "reason": "only the low 2 alignment bits of the pointer are used"
+  },
+  {
+   "unit": "src/pcmain.c",
+   "code": "printf(\"Windows 95 detected.\\n\", NVersionWindows, HVersionWindows);",
+   "warning": "-Wformat-extra-args",
+   "verdict": "HARMLESS",
+   "reason": "the format has no conversions, so the two extra arguments are never read (the original Watcom call passed them too); reported by gcc 15 / clang, not by the MinGW gcc"
   }
  ],
  "layout_sites_note": "Manual source audit of pointer-layout hazards that do not produce compiler pointer-conversion warnings; resolved by the effect derivatives. Existing sites[] remains the compiler-enforced warning inventory.",

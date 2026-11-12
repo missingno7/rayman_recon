@@ -1,0 +1,29 @@
+--- a/src/savecodec.c
++++ b/src/savecodec.c
+@@ -6,8 +6,8 @@
+ typedef unsigned char u8;
+ typedef signed short s16;
+ typedef unsigned short u16;
+-typedef signed long s32;
+-typedef unsigned long u32;
++typedef signed int s32;     /* port: Watcom long is 32 bits; LP64 hosts (Android) widen long */
++typedef unsigned int u32;   /* port: see s32 */
+ 
+ enum {
+     SAVE_BLOCK_BYTES = 8,
+@@ -89,13 +89,13 @@
+     u32 size;
+ 
+     fread(&size, 4, 1, stream);
+-    size ^= 0x54555657UL;
++    size ^= 0x54555657U;
+     return size;
+ }
+ 
+ void write_save_header_size(u32 size, FILE *stream)
+ {
+-    size ^= 0x54555657UL;
++    size ^= 0x54555657U;
+     fwrite(&size, 4, 1, stream);
+ }
+ 

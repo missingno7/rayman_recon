@@ -1,4 +1,5 @@
 #include "render/effects.h"
+#include <stddef.h>
 
 /* Video memory is 320-byte rows: linear offset n of a buffer is pixel (n mod 320, n div 320) of its surface. */
 static port_surface *surface_of(const port_effect_buffer *b, port_surface *const *surfaces)

@@ -17,6 +17,7 @@
 
 #include "render/capture.h"
 #include "render/record.h"
+#include "platform/pad.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -371,4 +372,41 @@ uint64_t port_scene_state_digest(void)
     }
 #undef MIX
     return h;
+}
+
+/* Input context for the virtual pad and touch HUD (platform/pad.h, port/docs/TOUCH_CONTROLS.md). Read from the
+   thread that polls SDL events while the game runs: single-byte flags and a scene label pointer, only read. The
+   Android release switches its HUD at the same points (setGameState: world map / level; displayGameVignetInit,
+   levelAnimInit, DO_FEE_ETAPE: HUD hidden; INIT_RAY_ON_MS: Ray on the mosquito). */
+extern u8 GoMenu, OptionGame, is_fee, NewMs, Vignet_To_Display;   /* OptionGame: src/menu.c in-level menu loop */
+extern u8 key_right, key_up, key_left, key_down, key_fist, key_jump, key_action;
+
+int port_game_input_context(uint8_t keys[PORT_KEY_COUNT], unsigned *powers)
+{
+    const char *scene = port_record_current_scene();
+    rayevts_t evts = RayEvts;
+    keys[PORT_KEY_RIGHT] = key_right;
+    keys[PORT_KEY_UP] = key_up;
+    keys[PORT_KEY_LEFT] = key_left;
+    keys[PORT_KEY_DOWN] = key_down;
+    keys[PORT_KEY_FIST] = key_fist;
+    keys[PORT_KEY_JUMP] = key_jump;
+    keys[PORT_KEY_ACTION] = key_action;
+    *powers = (evts.poing ? PORT_POWER_FIST : 0) | (evts.helico ? PORT_POWER_HELICO : 0) |
+              (evts.super_helico ? PORT_POWER_SUPER_HELICO : 0) | (evts.run ? PORT_POWER_RUN : 0) |
+              (evts.magicseed ? PORT_POWER_SEED : 0);
+    if (!scene)
+        return PORT_CONTEXT_MENU;
+    if (!strcmp(scene, "DO_WORLD_MAP"))
+        return PORT_CONTEXT_WORLDMAP;
+    if (!strcmp(scene, "START_LEVEL_ANIM"))
+        return PORT_CONTEXT_LEVEL_NO_HUD;
+    if (!strcmp(scene, "DO_MAIN_LOOP_PC_NORMAL") && RaymanDansUneMapDuJeu) {
+        if (GoMenu || OptionGame)
+            return PORT_CONTEXT_MENU;   /* the in-level menu Esc opened (Android: its pause popup) */
+        if (is_fee || Vignet_To_Display)
+            return PORT_CONTEXT_LEVEL_NO_HUD;
+        return NewMs ? PORT_CONTEXT_MOSKITO : PORT_CONTEXT_GAMEPLAY;
+    }
+    return PORT_CONTEXT_MENU;
 }

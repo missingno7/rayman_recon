@@ -15,7 +15,29 @@ project(rayman_port LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-find_package(SDL3 REQUIRED CONFIG)
+if(ANDROID)
+    # Android (port/docs/ANDROID.md): SDL is built from the pinned release tarball as libSDL3.so, which SDL's Java
+    # activity loads next to the game's libmain.so. The Gradle project unpacks SDL's Java glue from the same tarball.
+    set(RAY_SDL3_VERSION "3.4.16")
+    set(RAY_SDL3_SHA256 "7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68")
+    set(RAY_SDL3_TARBALL "C:/tools/download/sdl3/SDL3-${RAY_SDL3_VERSION}.tar.gz" CACHE FILEPATH
+        "SDL3 release source tarball (hash-checked)")
+    file(SHA256 "${RAY_SDL3_TARBALL}" _sdl_hash)
+    if(NOT _sdl_hash STREQUAL RAY_SDL3_SHA256)
+        message(FATAL_ERROR "SDL3 tarball missing or hash mismatch: ${RAY_SDL3_TARBALL}")
+    endif()
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+    set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL_INSTALL OFF CACHE BOOL "" FORCE)
+    include(FetchContent)
+    FetchContent_Declare(SDL3 URL "${RAY_SDL3_TARBALL}" URL_HASH SHA256=${RAY_SDL3_SHA256})
+    FetchContent_MakeAvailable(SDL3)
+else()
+    find_package(SDL3 REQUIRED CONFIG)
+endif()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 set(RAY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/.. CACHE PATH "Repository root (src/, config/, docs/); override when building a copy of port/")
@@ -133,6 +155,11 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     if(MINGW)
         list(APPEND RAY_HIST_FLAGS -mno-ms-bitfields)
     endif()
+    if(ANDROID)
+        # Bionic's compile-time FORTIFY rejects the original's raw memory dumps (save.c writes 0xa7a bytes from
+        # &ray into a temporary file it deletes at once); the desktop builds compile them unchecked as well.
+        list(APPEND RAY_HIST_FLAGS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0)
+    endif()
 endif()
 
 # External data assets (PalPlasma, Def_Bande): generated from the player's own RAYMAN.EXE at build time, never
@@ -216,6 +243,8 @@ add_library(rayman_native STATIC
     platform/cd_host.c
     platform/config.c
     platform/audio.c
+    platform/pad.c
+    platform/touch.c
     render/world.c
     render/native.c
     render/effects.c
@@ -228,6 +257,13 @@ if(MINGW)
 endif()
 target_link_libraries(rayman_native PUBLIC SDL3::SDL3)
 
+if(ANDROID)
+    # SDL's activity loads libmain.so and calls its SDL_main (game/entry.c's main, renamed by SDL_main.h).
+    add_library(rayman SHARED game/entry.c)
+    set_target_properties(rayman PROPERTIES OUTPUT_NAME main)
+    target_link_libraries(rayman PRIVATE rayman_native rayman_hist rayman_native m android log)
+    return()   # the gates below run the desktop build
+endif()
 add_executable(rayman game/entry.c)
 target_link_libraries(rayman PRIVATE rayman_native rayman_hist rayman_native m)
 if(WIN32)

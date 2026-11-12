@@ -49,6 +49,7 @@
 #define itoa port_itoa
 #define ltoa port_ltoa
 #define strupr port_strupr
+#define stricmp port_stricmp
 #define kbhit port_kbhit
 #define getch port_getch
 #define getche port_getche

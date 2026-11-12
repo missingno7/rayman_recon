@@ -1,6 +1,6 @@
 """Gate: the native renderer's wider view changes nothing but the presentation.
 
-For each original demo, one run presenting the original view (reference, 320 columns) and one with --widescreen
+For each original demo, one run presenting the original view (reference, 320 columns) and one with --wide-pad 54
 (the native renderer drawing 54 more columns per side), both headless and deterministic:
   * the gameplay-state logs (one digest per frame swap: camera, clock, random table, Rayman and every object) are
     identical: a wider view consumes no random numbers and changes no game state;
@@ -32,7 +32,8 @@ def run(exe, data, cd, demo, work, wide):
     cmd = [exe, '--data', data, '--cd', cd, '--save', str(work / f'save{tag}{demo}'), '--demo', str(demo),
            '--headless', '--deterministic', '--frames', str(FRAMES), '--state-log', str(work / f'{tag}{demo}.state')]
     if wide:
-        cmd += ['--widescreen', '--dump-frames', str(dumps), '--dump-every', str(DUMP_EVERY)]
+        # 54 columns per side: 16:9 at the original pixel aspect (428 x 200), the width this gate was reviewed at
+        cmd += ['--wide-pad', '54', '--dump-frames', str(dumps), '--dump-every', str(DUMP_EVERY)]
     subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     return dumps
 

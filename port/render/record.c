@@ -15,6 +15,7 @@
 int port_record_deform(const port_deform *e);
 #include "video/lowlevel_normal.h"
 
+#include <SDL3/SDL_timer.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -87,6 +88,8 @@ const char *port_record_scene(const char *name)
     scene = name;
     return previous;
 }
+
+const char *port_record_current_scene(void) { return scene; }
 
 static struct scene_stats *scene_stats(void)
 {
@@ -1013,6 +1016,11 @@ static void boundary(void)
 /* Draw the operations recorded since the last flush into the native surfaces (at swaps and presents). */
 /* Debugging aid (RAYMAN_RENDER_EXPLAIN="FRAME X Y [TARGET]"): in frame FRAME, print every native operation that
    changes pixel (X, Y) of the target's surface (0 draw, 1 display, 2 effect buffer). */
+/* Time spent drawing natively (diagnostics: RAYMAN_PACE_TRACE). */
+static uint64_t native_draw_ns;
+
+uint64_t port_record_native_ns(void) { return native_draw_ns; }
+
 static void explain(int first, int last)
 {
     static long frame = -2, x, y, target;
@@ -1024,7 +1032,9 @@ static void explain(int first, int last)
             frame = -1;
     }
     if (frame < 0 || st.frames[0] + st.frames[1] != frame || target < 0 || target >= TARGET_OTHER) {
+        uint64_t t0 = SDL_GetTicksNS();
         port_native_draw(&rec, first, last, native, pad);
+        native_draw_ns += SDL_GetTicksNS() - t0;
         return;
     }
     if (getenv("RAYMAN_RENDER_EXPLAIN_ALL"))

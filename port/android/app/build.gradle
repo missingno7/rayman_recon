@@ -1,0 +1,106 @@
+import java.security.MessageDigest
+
+plugins {
+    id 'com.android.application'
+}
+
+// Android build of the native port (port/docs/ANDROID.md). The native code is port/CMakeLists.txt (ANDROID branch):
+// libSDL3.so from the pinned SDL tarball and libmain.so (the port). The game data is never packaged: the player copies
+// a GOG v1.21 game folder and the Rayman CD image into the app's external files folder.
+def portDir = rootProject.file('..')
+def repoRoot = new File(portDir, '..')
+
+// SDL version and tarball hash have one source of truth: port/CMakeLists.txt. The Java glue (org.libsdl.app.*) must
+// match the native SDL exactly, so it is unpacked from the same tarball instead of being copied into the repository.
+def portCmake = new File(portDir, 'CMakeLists.txt').text
+def sdlVersion = (portCmake =~ /RAY_SDL3_VERSION "([^"]+)"/)[0][1]
+def sdlSha256 = (portCmake =~ /RAY_SDL3_SHA256 "([0-9a-f]{64})"/)[0][1]
+def sdlTar = new File((project.findProperty('sdlTarball') ?: "C:/tools/download/sdl3/SDL3-${sdlVersion}.tar.gz") as String)
+
+// RAYMAN.EXE of the player's game is read at build time (two data tables, port/tools/gen_assets.py).
+def rayData = (project.findProperty('rayData') ?: new File(repoRoot, 'assets/GOG').path) as String
+def python = (project.findProperty('python') ?: 'python') as String
+
+// ABIs: phones (arm64-v8a) and the emulator (x86_64); -Pabis=x86_64 builds one
+def abiList = ((project.findProperty('abis') ?: 'arm64-v8a,x86_64') as String).split(',')*.trim()
+
+def genJava = new File(buildDir, 'generated/sdl-java')
+
+android {
+    namespace 'org.raymanrecon.port'
+    compileSdk 36
+    ndkVersion = (project.findProperty('ndkVersion') ?: '27.0.12077973')
+
+    defaultConfig {
+        applicationId 'org.raymanrecon.port'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '0.1'
+        externalNativeBuild {
+            cmake {
+                arguments "-DRAY_DATA=${rayData.replace(File.separatorChar, '/' as char)}",
+                          "-DRAY_SDL3_TARBALL=${sdlTar.absolutePath.replace(File.separatorChar, '/' as char)}",
+                          "-DPython3_EXECUTABLE=${python.replace(File.separatorChar, '/' as char)}",
+                          // every variant builds the native code -O2 with debug info: unoptimised, the native widescreen
+                          // renderer misses the 60 Hz frame on phones (port/docs/ANDROID.md); -PnativeBuildType=Debug
+                          // builds it -O0 for debugging
+                          "-DCMAKE_BUILD_TYPE=${project.findProperty('nativeBuildType') ?: 'RelWithDebInfo'}"
+                abiFilters(*abiList)
+            }
+        }
+        ndk {
+            abiFilters(*abiList)
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path '../../CMakeLists.txt'
+            version '3.22.1'
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs += genJava
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // personal builds: signed with the debug key so the release variant installs directly
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+}
+
+tasks.register('checkSdlTarball') {
+    inputs.file(sdlTar)
+    doLast {
+        def md = MessageDigest.getInstance('SHA-256')
+        sdlTar.eachByte(65536) { buf, n -> md.update(buf, 0, n) }
+        if (md.digest().encodeHex().toString() != sdlSha256)
+            throw new GradleException("SDL tarball hash mismatch or missing: ${sdlTar}")
+    }
+}
+
+tasks.register('sdlJava', Copy) {
+    dependsOn 'checkSdlTarball'
+    def prefix = "SDL3-${sdlVersion}/android-project/app/src/main/java/"
+    from(tarTree(resources.gzip(sdlTar))) {
+        include "${prefix}**"
+        eachFile { it.path = it.path.substring(prefix.length()) }
+    }
+    includeEmptyDirs = false
+    into genJava
+}
+
+tasks.named('preBuild') {
+    dependsOn 'sdlJava'
+}

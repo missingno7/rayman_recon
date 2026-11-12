@@ -34,6 +34,7 @@ char *port_tmpnam(char *buf);
 char *port_itoa(int value, char *buf, int radix);
 char *port_ltoa(long value, char *buf, int radix);
 char *port_strupr(char *s);
+int port_stricmp(const char *a, const char *b);
 /* port_sleep(seconds): the units declare `sleep` themselves (load.c: void sleep(u32)). */
 /* Watcom 10.6 rand/srand (linked copy at DOS 1:71396/1:713ba, seed 2:2d9b4 = 1):
    next = next * 1103515245 + 12345; result = (next >> 16) & 0x7fff. */

@@ -20,9 +20,13 @@ typedef struct port_host_options {
     int fullscreen;
     int width;           /* logical image width: 320, or the native renderer's wider view (render/record.h) */
     int vsync;           /* the presenter shows frames at the display's refreshes (no tearing) */
+    int display_rows;    /* picture height in game-pixel widths: 240 = original 4:3 (pixels 1.2 tall), 200 = square; 0 = 240 */
 } port_host_options;
 
 int port_host_init(const port_host_options *options);
+/* Columns per side (0..max_pad) that make the width x display_rows picture fill the primary display in landscape
+   (display_rows as in port_host_options); -1 when the display cannot be queried. */
+int port_host_fit_pad(int max_pad, int display_rows);
 /* Run the game. With a window, the game runs on its own thread and this (the main) thread becomes the presenter:
    it polls the window's events and shows the newest frame the game handed over (port_host_present), so the game
    never waits for the display. Headless: calls run directly. Returns run's result. */

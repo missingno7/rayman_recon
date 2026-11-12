@@ -18,6 +18,9 @@ cmake --build build/port
 from that RAYMAN.EXE at build time. The i686 reference build uses `C:/msys64/mingw32/bin/gcc.exe` and the
 `i686-w64-mingw32` SDL3 package (see docs/ARCHITECTURE.md, "64-bit hosts"). Presets: `CMakePresets.json`.
 
+Android (arm64-v8a / x86_64 APK with the Android release's touch controls and gamepad support):
+[docs/ANDROID.md](docs/ANDROID.md), [docs/TOUCH_CONTROLS.md](docs/TOUCH_CONTROLS.md).
+
 ## Play (from the game folder)
 
 Copy `rayman.exe` (under any name, e.g. `rayman_sdl3.exe`) and `SDL3.dll` into a GOG v1.21 Rayman folder (the one
@@ -27,7 +30,8 @@ version is completed with the newer settings, unknown settings are ignored:
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `widescreen` | `false` | 16:9 view drawn by the native renderer |
+| `widescreen` | `false` (`true` on Android) | wider view drawn by the native renderer: 16:9 in a window, the display's shape in fullscreen |
+| `square_pixels` | `true` | each game pixel square: the 320x200 picture is shown as 16:10; `false` = the original 4:3 picture (pixels 1.2 times as tall, as on a 1990s monitor); `--aspect square\|original` |
 | `fullscreen` | `false` | start in fullscreen (Alt+Enter toggles) |
 | `window_scale` | `0` | integer window scale; 0 = automatic |
 | `vsync` | `true` | frames are shown at the display's refreshes (no tearing); `--no-vsync` on the command line |

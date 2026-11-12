@@ -3,7 +3,7 @@
  *
  *   rayman [--data DIR] [--save DIR] [--cd PATH.cue] [--cd-drive D] [--demo N | --menus | --dos-main] [--headless] [--deterministic]
  *          [--frames N] [--frame-log FILE] [--dump-frames DIR --dump-every N] [--epoch SECONDS]
- *          [--scale N] [--fullscreen] [--widescreen | --wide-pad N] [--verify-render] [--state-log FILE]
+ *          [--scale N] [--fullscreen] [--aspect square|original] [--widescreen | --wide-pad N] [--verify-render] [--state-log FILE]
  *          [--renderer native|reference]
  *
  * --keys FILE queues scan codes at given presented frames (tests).
@@ -11,7 +11,10 @@
  *
  * --frames/--frame-log exist for regression runs: stop after N presented images, log one hash per image.
  *
- * --widescreen (16:9: 54 more columns per side) / --wide-pad N (0..160) make the native renderer draw a wider view
+ * --aspect square|original: square game pixels (320x200 shown as 16:10; the default, also "square_pixels" in the
+ * settings file) or the original 4:3 picture (each pixel 1.2 times as tall).
+ * --widescreen (16:9: 18 more columns per side with square pixels, 54 with the original aspect) / --wide-pad N (0..160)
+ * make the native renderer draw a wider view
  * of the same frames (implies --renderer native; port/docs/RENDERER.md 9). --verify-render checks the native
  * renderer against the original draw path every frame (original width only); --state-log writes one gameplay-state digest per
  * frame swap (presentation-independence tests). --renderer native presents only the native renderer's image
@@ -31,6 +34,12 @@
 #include "render/capture.h"
 #include "render/record.h"
 
+#include <time.h>
+#ifdef __ANDROID__
+#define PORT_ENTRY_ALWAYS_FULLSCREEN 1
+#else
+#define PORT_ENTRY_ALWAYS_FULLSCREEN 0
+#endif
 time_t port_time(time_t *out);
 void port_set_time_epoch(long long seconds);
 
@@ -142,6 +151,7 @@ static void on_frame(const uint8_t *pixels, int width, const uint8_t *dac, void 
 static void on_swap(void)
 {
     static long swaps;
+    static uint64_t native_seen;
     if (state_log) {
         fprintf(state_log, "%ld %016llx\n", swaps, (unsigned long long)port_scene_state_digest());
         fflush(state_log);
@@ -154,13 +164,15 @@ static void on_swap(void)
         shown_at = port_host_shown(&shown_count);
         fprintf(pace_trace, "%ld %llu map_time=%d xmap=%d display_mode=%d need_timer=%u use_sync=%u Frequence=%u "
                             "VGA_FREQ=%u frame_ticks=%u deadline_ticks=%u late_us=%llu max_late_us=%llu restarts=%llu locked=%d "
-                            "shown_ns=%llu shown=%llu present_us=%llu host_ns=%llu\n", swaps,
+                            "shown_ns=%llu shown=%llu present_us=%llu host_ns=%llu native_us=%llu\n", swaps,
                 (unsigned long long)port_clock_ns(), map_time, xmap, display_mode, need_timer, use_sync, Frequence,
                 VGA_FREQ, word_CF7F0, word_CF7E6, (unsigned long long)(late / 1000),
                 (unsigned long long)(max_late / 1000), (unsigned long long)restarts, locked,
                 (unsigned long long)shown_at, (unsigned long long)shown_count,
                 (unsigned long long)(port_host_present_cost_ns() / 1000),
-                (unsigned long long)SDL_GetTicksNS());
+                (unsigned long long)SDL_GetTicksNS(),
+                (unsigned long long)((port_record_native_ns() - native_seen) / 1000));
+        native_seen = port_record_native_ns();
     }
     swaps++;
 }
@@ -217,6 +229,7 @@ int main(int argc, char **argv)
     static port_config config;
     static char base_dir[1024], base_config[1100], base_cue[1100], host_cd[3];
     int have_config = 0, no_vsync = 0;
+    int want_wide = 0, config_wide = 0, square = -1;   /* square: -1 = settings file or default (square), 0 original 4:3, 1 square */
 
     setvbuf(stdout, NULL, _IONBF, 0);
     if (getenv("RAYMAN_PACE_TRACE") && *getenv("RAYMAN_PACE_TRACE"))
@@ -245,7 +258,13 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--scale") && v) host.scale = atoi(argv[++i]);
         else if (!strcmp(a, "--fullscreen")) host.fullscreen = 1;
         else if (!strcmp(a, "--no-vsync")) no_vsync = 1;
-        else if (!strcmp(a, "--widescreen")) wide_pad = 54;   /* 428 x 240 display: 16:9 */
+        else if (!strcmp(a, "--widescreen")) want_wide = 1;   /* 16:9 at the chosen pixel shape (below) */
+        else if (!strcmp(a, "--aspect") && v) {
+            const char *r = argv[++i];
+            if (!strcmp(r, "square")) square = 1;
+            else if (!strcmp(r, "original")) square = 0;
+            else { fprintf(stderr, "rayman: --aspect square|original\n"); return 2; }
+        }
         else if (!strcmp(a, "--wide-pad") && v) wide_pad = atoi(argv[++i]);
         else if (!strcmp(a, "--verify-render")) port_record_set_verify(1);
         else if (!strcmp(a, "--renderer") && v) {
@@ -265,9 +284,34 @@ int main(int argc, char **argv)
        player's settings file lives next to the program - created with the defaults on the first run. Runs that
        name their data (tests, development) read a settings file only when --config names one. */
     if (!data_count && !data) {
+#ifdef __ANDROID__
+        /* Android (port/docs/ANDROID.md): the game folder is the app's external files folder,
+           Android/data/<package>/files/, which the player fills over USB or adb. */
+        const char *base = SDL_GetAndroidExternalStoragePath();
+        static char log_path[1100];
+        snprintf(base_dir, sizeof base_dir, "%s/", base ? base : "");
+        snprintf(log_path, sizeof log_path, "%srayman_log.txt", base_dir);
+        if (base) {   /* stdout/stderr go nowhere on Android */
+            FILE *marker;
+            freopen(log_path, "w", stdout);
+            freopen(log_path, "a", stderr);
+            setvbuf(stdout, NULL, _IONBF, 0);
+            /* No environment on Android: a file pace_trace.on in the game folder turns RAYMAN_PACE_TRACE on
+               (written to pace_trace.txt there). */
+            snprintf(log_path, sizeof log_path, "%space_trace.on", base_dir);
+            if (!pace_trace && (marker = fopen(log_path, "rb")) != NULL) {
+                fclose(marker);
+                snprintf(log_path, sizeof log_path, "%space_trace.txt", base_dir);
+                pace_trace = fopen(log_path, "w");
+            }
+        }
+#else
         const char *base = SDL_GetBasePath();
+#endif
         FILE *probe;
+#ifndef __ANDROID__
         snprintf(base_dir, sizeof base_dir, "%s", base ? base : "");
+#endif
         snprintf(base_cue, sizeof base_cue, "%sRAY.LNG", base_dir);
         if (base && (probe = fopen(base_cue, "rb")) != NULL) {
             fclose(probe);
@@ -277,6 +321,16 @@ int main(int argc, char **argv)
                 config_path = base_config;
             }
         }
+#ifdef __ANDROID__
+        else {
+            char message[1400];
+            snprintf(message, sizeof message,
+                     "Copy the files of your Rayman (GOG v1.21) game folder - RAY.LNG, RAYMAN.EXE, PCMAP, ... - "
+                     "and your CD image RAYMAN.cue + RAYMAN.bin into\n\n%s\n\nthen start the app again.", base_dir);
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Rayman: game data needed", message, NULL);
+            return 2;
+        }
+#endif
     }
     if (config_path) {
         int state = port_config_load(config_path, &config);
@@ -289,7 +343,9 @@ int main(int argc, char **argv)
                 printf("Settings file %s: %s\n", state ? "updated" : "created", config_path);
         }
         have_config = 1;
-        if (config.widescreen && !wide_pad && renderer != 0 && !port_record_verify()) wide_pad = 54;
+        if (square < 0) square = config.square_pixels;
+        if (config.widescreen && !wide_pad && !want_wide && renderer != 0 && !port_record_verify())
+            config_wide = 1;
         if (config.fullscreen) host.fullscreen = 1;
         host.vsync = config.vsync;
         if (!host.scale) host.scale = config.window_scale;
@@ -310,6 +366,22 @@ int main(int argc, char **argv)
     }
     if (no_vsync)
         host.vsync = 0;
+    /* Pixel shape (user decision 2026-11-12: square by default): the picture is 320 x 200 game pixels shown as 16:10,
+       or as the original 4:3 (pixels 1.2 times as tall). */
+    if (square < 0) square = 1;
+    host.display_rows = square ? 200 : 240;
+    if ((want_wide || config_wide) && !wide_pad) {
+        /* 16:9 at this pixel shape: 18 columns per side for square pixels, 54 for the original 4:3 */
+        wide_pad = (host.display_rows * 16 + 8) / 9;              /* the 16:9 width, rounded */
+        wide_pad = (wide_pad - 320 + 1) / 2;
+        if (config_wide && (host.fullscreen || PORT_ENTRY_ALWAYS_FULLSCREEN)) {
+            /* Fullscreen: as wide as the display (up to 160 columns per side), e.g. 57 square or 100 original on a
+               3120x1440 phone. */
+            int fit = port_host_fit_pad(160, host.display_rows);
+            if (fit >= 0) wide_pad = fit;
+        }
+        printf("Widescreen: %d columns per side (%s pixels)\n", wide_pad, square ? "square" : "4:3");
+    }
     if (wide_pad > 0) {
         /* A wider view is the native renderer's: the original draw path has 320 columns. Its verification compares
            the original view (render/record.c), so it runs at the original width. */

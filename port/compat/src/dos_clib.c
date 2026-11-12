@@ -188,6 +188,17 @@ char *port_ltoa(long value, char *buf, int radix)
     return port_itoa(v, buf, radix);
 }
 
+/* Watcom stricmp: compares as if both strings were lower case. */
+int port_stricmp(const char *a, const char *b)
+{
+    int ca, cb;
+    do {
+        ca = tolower((unsigned char)*a++);
+        cb = tolower((unsigned char)*b++);
+    } while (ca && ca == cb);
+    return ca - cb;
+}
+
 char *port_strupr(char *s)
 {
     char *p;

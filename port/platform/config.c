@@ -11,6 +11,10 @@ void port_config_defaults(port_config *c)
     memset(c, 0, sizeof *c);
     strcpy(c->cd, "auto");
     c->vsync = 1;
+    c->square_pixels = 1;   /* user decision 2026-11-12: square pixels by default */
+#ifdef __ANDROID__
+    c->widescreen = 1;   /* phones: the wide view fills the screen (port/docs/ANDROID.md) */
+#endif
 }
 
 static void skip_space(const char **p)
@@ -127,7 +131,7 @@ static int parse_dirs(const char **p, port_config *c)
 static int parse(const char *text, port_config *c, unsigned *seen)
 {
     static const char *const keys[] = {"widescreen", "fullscreen", "window_scale", "cd", "save_dir", "extra_data_dirs",
-                                        "vsync"};
+                                        "vsync", "square_pixels"};
     const char *p = text;
     char key[64];
     unsigned k;
@@ -152,6 +156,7 @@ static int parse(const char *text, port_config *c, unsigned *seen)
         case 4: ok = parse_string(&p, c->save_dir, sizeof c->save_dir); break;
         case 5: ok = parse_dirs(&p, c); break;
         case 6: ok = parse_bool(&p, &c->vsync); break;
+        case 7: ok = parse_bool(&p, &c->square_pixels); break;
         default: ok = skip_value(&p, 0); break;
         }
         if (!ok) return 0;
@@ -215,9 +220,10 @@ int port_config_save(const char *path, const port_config *c)
     FILE *f = fopen(path, "wb");
     int i, ok;
     if (!f) return 0;
-    fprintf(f, "{\n  \"widescreen\": %s,\n  \"fullscreen\": %s,\n  \"vsync\": %s,\n  \"window_scale\": %d,\n  \"cd\": ",
-            c->widescreen ? "true" : "false", c->fullscreen ? "true" : "false", c->vsync ? "true" : "false",
-            c->window_scale);
+    fprintf(f, "{\n  \"widescreen\": %s,\n  \"square_pixels\": %s,\n  \"fullscreen\": %s,\n  \"vsync\": %s,\n"
+               "  \"window_scale\": %d,\n  \"cd\": ",
+            c->widescreen ? "true" : "false", c->square_pixels ? "true" : "false", c->fullscreen ? "true" : "false",
+            c->vsync ? "true" : "false", c->window_scale);
     write_string(f, c->cd);
     fputs(",\n  \"save_dir\": ", f);
     write_string(f, c->save_dir);

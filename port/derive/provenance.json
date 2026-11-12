@@ -172,6 +172,14 @@
         "Two calls to port_record_menu_grey (port/render/effect_capture.c), one immediately before each greyscale loop of FonduOption mode 1, record the pass for the native renderer; they read the rectangle and MenuPalette and change no game state."
       ],
       "base_sha256": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb"
+    },
+    "savecodec.c": {
+      "patch": "savecodec.patch",
+      "reason": "The unit declares its own s32/u32 as Watcom long (32 bits); on LP64 hosts (Android, Linux) long is 64 bits, which widens the save stream's header size word and counters.",
+      "divergences": [
+        "None in behaviour: s32/u32 are int/unsigned int, the 32-bit types Watcom long denoted, so 4-byte header reads and writes fill the whole variable on every host."
+      ],
+      "base_sha256": "f5a1bbddace7847ea77d6326052f1fa6070385790409f685ea802b81c603e20a"
     }
   }
 }

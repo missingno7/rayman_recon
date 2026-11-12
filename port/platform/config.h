@@ -14,7 +14,8 @@ extern "C" {
 #define PORT_CONFIG_EXTRA_DIRS 8
 
 typedef struct port_config {
-    int widescreen;        /* 16:9 view drawn by the native renderer */
+    int widescreen;        /* wider view drawn by the native renderer (16:9 in a window, the display's shape fullscreen) */
+    int square_pixels;     /* 1: each game pixel square (320x200 = 16:10); 0: the original 4:3 picture (pixels 1.2 tall) */
     int fullscreen;
     int window_scale;      /* integer window scale; 0 = automatic */
     int vsync;             /* frames are shown at the display's refreshes (no tearing) */
