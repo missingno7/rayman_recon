@@ -51,6 +51,10 @@ void port_set_time_epoch(long long seconds);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>   /* GetStdHandle: the GUI program's log file */
+#endif
 
 extern unsigned char JeuCracker, MusicCdActive, CarteSonAutorisee;
 /* Pacing state of the original main loop (RAYMAN_PACE_TRACE). */
@@ -352,6 +356,10 @@ int main(int argc, char **argv)
         }
         else if (!strcmp(a, "--state-log") && v) state_log = fopen(argv[++i], "w");
         else if (!strcmp(a, "--config") && v) config_path = argv[++i];
+        else if (!strcmp(a, "--version")) {
+            printf("rayman_sdl3 %s\n", PORT_VERSION);
+            return 0;
+        }
         else {
             fprintf(stderr, "unknown option %s\n", a);
             return 2;
@@ -397,6 +405,20 @@ int main(int argc, char **argv)
 #ifndef __ANDROID__
         snprintf(base_dir, sizeof base_dir, "%s", base ? base : "");
 #endif
+#ifdef _WIN32
+        /* A GUI program on Windows (no console window): started from Explorer it has nowhere to print, so its output
+           goes to rayman_log.txt in the game folder, as on Android. Started with redirected output (a terminal
+           pipe, the tests) it keeps printing there. */
+        if (base && !GetStdHandle(STD_OUTPUT_HANDLE)) {
+            static char log_path[1100];
+            snprintf(log_path, sizeof log_path, "%srayman_log.txt", base_dir);
+            if (freopen(log_path, "w", stdout)) {
+                freopen(log_path, "a", stderr);
+                setvbuf(stdout, NULL, _IONBF, 0);
+            }
+        }
+#endif
+        printf("Rayman (native port) %s\n", PORT_VERSION);
         snprintf(base_cue, sizeof base_cue, "%sRAY.LNG", base_dir);
         if (base && (probe = fopen(base_cue, "rb")) != NULL) {
             fclose(probe);

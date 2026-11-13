@@ -5,8 +5,8 @@ plugins {
 }
 
 // Android build of the native port (port/docs/ANDROID.md). The native code is port/CMakeLists.txt (ANDROID branch):
-// libSDL3.so from the pinned SDL tarball and libmain.so (the port). The game data is never packaged: the player copies
-// a GOG v1.21 game folder and the Rayman CD image into the app's external files folder.
+// libSDL3.so from the pinned SDL tarball and libmain.so (the port). The game data is never packaged: on the first
+// start the player picks their game folder and the app copies it into its own folder (SetupActivity.java).
 def portDir = rootProject.file('..')
 def repoRoot = new File(portDir, '..')
 
@@ -35,7 +35,7 @@ android {
         minSdk 24
         targetSdk 35
         versionCode 1
-        versionName '0.1'
+        versionName '0.1.0'   // the port's version (port/CMakeLists.txt project VERSION)
         externalNativeBuild {
             cmake {
                 arguments "-DRAY_DATA=${rayData.replace(File.separatorChar, '/' as char)}",
@@ -66,11 +66,26 @@ android {
         }
     }
 
+    // Release signing (port/docs/RELEASE.md): the project's release key when it is given - Gradle properties or
+    // environment variables RAYMAN_KEYSTORE (file), RAYMAN_KEYSTORE_PASSWORD, RAYMAN_KEY_ALIAS, RAYMAN_KEY_PASSWORD;
+    // the passwords never live in the repository. Without them (personal builds) the debug key signs, so the
+    // release variant still installs directly.
+    def releaseKey = { String name -> (project.findProperty(name) ?: System.getenv(name)) as String }
+    signingConfigs {
+        release {
+            if (releaseKey('RAYMAN_KEYSTORE')) {
+                storeFile file(releaseKey('RAYMAN_KEYSTORE'))
+                storePassword releaseKey('RAYMAN_KEYSTORE_PASSWORD')
+                keyAlias releaseKey('RAYMAN_KEY_ALIAS')
+                keyPassword releaseKey('RAYMAN_KEY_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            // personal builds: signed with the debug key so the release variant installs directly
-            signingConfig signingConfigs.debug
+            signingConfig releaseKey('RAYMAN_KEYSTORE') ? signingConfigs.release : signingConfigs.debug
         }
     }
 

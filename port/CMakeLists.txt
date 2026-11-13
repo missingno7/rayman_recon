@@ -10,21 +10,29 @@ cmake_minimum_required(VERSION 3.20)
 #   platform/          SDL3 host: window, presentation, input, files, time
 #   game/              port-owned glue: entry points, per-unit prototype headers, unit treatment (units.json)
 #   tests/             native regression gates
-project(rayman_port LANGUAGES C)
+project(rayman_port VERSION 0.1.0 LANGUAGES C)   # the port's release version (rayman_sdl3 --version)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-if(ANDROID)
-    # Android (port/docs/ANDROID.md): SDL is built from the pinned release tarball as libSDL3.so, which SDL's Java
-    # activity loads next to the game's libmain.so. The Gradle project unpacks SDL's Java glue from the same tarball.
-    set(RAY_SDL3_VERSION "3.4.16")
-    set(RAY_SDL3_SHA256 "7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68")
-    set(RAY_SDL3_TARBALL "C:/tools/download/sdl3/SDL3-${RAY_SDL3_VERSION}.tar.gz" CACHE FILEPATH
-        "SDL3 release source tarball (hash-checked)")
-    file(SHA256 "${RAY_SDL3_TARBALL}" _sdl_hash)
-    if(NOT _sdl_hash STREQUAL RAY_SDL3_SHA256)
-        message(FATAL_ERROR "SDL3 tarball missing or hash mismatch: ${RAY_SDL3_TARBALL}")
+# SDL 3.4.16: an installed SDL3 package when there is one (desktop development), otherwise built here from the
+# pinned release tarball as a shared library (Android: libSDL3.so, which SDL's Java activity loads next to the game's
+# libmain.so; release builds: SDL3.dll / libSDL3.so shipped next to the program). The tarball: the local copy when
+# present, otherwise downloaded from SDL's GitHub release; hash-checked either way. The Android Gradle project unpacks
+# SDL's Java glue from the same tarball.
+set(RAY_SDL3_VERSION "3.4.16")
+set(RAY_SDL3_SHA256 "7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68")
+set(RAY_SDL3_TARBALL "C:/tools/download/sdl3/SDL3-${RAY_SDL3_VERSION}.tar.gz" CACHE FILEPATH
+    "SDL3 release source tarball (hash-checked); downloaded when missing")
+option(RAY_SDL3_FROM_SOURCE "Build SDL3 from the pinned tarball even when an SDL3 package is installed" OFF)
+if(NOT ANDROID AND NOT RAY_SDL3_FROM_SOURCE)
+    find_package(SDL3 CONFIG QUIET)
+endif()
+if(NOT SDL3_FOUND)
+    if(EXISTS "${RAY_SDL3_TARBALL}")
+        set(_sdl_url "${RAY_SDL3_TARBALL}")
+    else()
+        set(_sdl_url "https://github.com/libsdl-org/SDL/releases/download/release-${RAY_SDL3_VERSION}/SDL3-${RAY_SDL3_VERSION}.tar.gz")
     endif()
     set(SDL_SHARED ON CACHE BOOL "" FORCE)
     set(SDL_STATIC OFF CACHE BOOL "" FORCE)
@@ -33,10 +41,8 @@ if(ANDROID)
     set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(SDL_INSTALL OFF CACHE BOOL "" FORCE)
     include(FetchContent)
-    FetchContent_Declare(SDL3 URL "${RAY_SDL3_TARBALL}" URL_HASH SHA256=${RAY_SDL3_SHA256})
+    FetchContent_Declare(SDL3 URL "${_sdl_url}" URL_HASH SHA256=${RAY_SDL3_SHA256})
     FetchContent_MakeAvailable(SDL3)
-else()
-    find_package(SDL3 REQUIRED CONFIG)
 endif()
 
 # stb_vorbis v1.22 (public domain / MIT, nothings/stb commit 1ee679ca, 2021-07-12): decodes Ogg Vorbis CD audio tracks
@@ -273,10 +279,23 @@ if(ANDROID)
     # SDL's activity loads libmain.so and calls its SDL_main (game/entry.c's main, renamed by SDL_main.h).
     add_library(rayman SHARED game/entry.c)
     set_target_properties(rayman PROPERTIES OUTPUT_NAME main)
+    target_compile_definitions(rayman PRIVATE PORT_VERSION="${PROJECT_VERSION}")
     target_link_libraries(rayman PRIVATE rayman_native rayman_hist rayman_native m android log)
     return()   # the gates below run the desktop build
 endif()
 add_executable(rayman game/entry.c)
+target_compile_definitions(rayman PRIVATE PORT_VERSION="${PROJECT_VERSION}")
+if(UNIX AND NOT APPLE)
+    # Linux release: libSDL3.so.0 ships next to the program; the build directory gets a copy of it too, so the
+    # program finds it the same way there (no build path in the binary)
+    set_target_properties(rayman PROPERTIES BUILD_WITH_INSTALL_RPATH ON INSTALL_RPATH "$ORIGIN")
+    add_custom_command(TARGET rayman POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_SONAME_FILE:SDL3::SDL3> $<TARGET_FILE_DIR:rayman>)
+endif()
+if(WIN32)
+    # A Windows GUI program: no console window next to the game (game/entry.c writes rayman_log.txt instead).
+    set_target_properties(rayman PROPERTIES WIN32_EXECUTABLE ON)
+endif()
 # rayman_sdl3(.exe), like its settings file rayman_sdl3.json: it lives in the game folder next to the original
 # RAYMAN.EXE, which a "rayman.exe" would replace on case-insensitive file systems.
 set_target_properties(rayman PROPERTIES OUTPUT_NAME rayman_sdl3)

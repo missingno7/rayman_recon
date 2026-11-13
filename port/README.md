@@ -21,6 +21,9 @@ the build reads no game file, and the program reads only the game's data files, 
 Android (arm64-v8a / x86_64 APK with the Android release's touch controls and gamepad support):
 [docs/ANDROID.md](docs/ANDROID.md), [docs/TOUCH_CONTROLS.md](docs/TOUCH_CONTROLS.md).
 
+Releases (Windows, Linux, Android packages built by GitHub Actions from a tag; SDL built from its pinned source when
+no SDL3 package is installed, `-DRAY_SDL3_FROM_SOURCE=ON`): [docs/RELEASE.md](docs/RELEASE.md).
+
 ## Play (from the game folder)
 
 Copy `rayman_sdl3.exe` and `SDL3.dll` into a GOG v1.21 Rayman folder (the one
