@@ -19,6 +19,29 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import BUILD, CONFIG, ROOT, TOOLS_DIR, load_json, sha256_file  # noqa: E402
 
 _checked = set()
+PE_RUN = BUILD / "pe_run" / "pe_run"
+
+
+def winpath(p):
+    """Watcom reads '/' as an option prefix: pass C:\\native\\path (the host layer drops the drive letter)."""
+    return "C:" + str(Path(p).resolve()).replace("/", "\\")
+
+
+def pe_run_build():
+    if not PE_RUN.is_file():
+        r = subprocess.run(["make", "-C", str(ROOT / "tools" / "pe_run")], capture_output=True, text=True)
+        if r.returncode or not PE_RUN.is_file():
+            raise SystemExit("tools/pe_run does not build (needs win32_layer, see tools/pe_run/Makefile):\n" + r.stdout + r.stderr)
+
+
+def pe_run_command(exe, flags, src, out, env):
+    """Non-Windows only: the command and environment that run the pinned PE over win32_layer (no Wine)."""
+    pe_run_build()
+    env = {k: (winpath(v) if k in ("WATCOM", "TMP", "TEMP") else v) for k, v in env.items()}
+    env["INCLUDE"] = ";".join(winpath(d) for d in env["INCLUDE"].split(";"))
+    del env["PATH"]
+    env.update(SDL_VIDEO_DRIVER="dummy", W32L_PLATFORM_QUIET="1", W32L_PE=str(exe))
+    return [str(PE_RUN)] + list(flags) + [winpath(src), f"-fo={winpath(out)}"], env
 
 
 def install(name):
@@ -107,6 +130,8 @@ def compile_c(src, out, flags, inst="wc106", extra_include=(), tool="wcc386"):
     exe = base / ent[tool]["nt"]
     # Watcom accepts '/' as an option prefix: always pass absolute backslash paths.
     cmd = [str(exe)] + list(flags) + [str(Path(src).resolve()), f"-fo={Path(out).resolve()}"]
+    if os.name != "nt":
+        cmd, env = pe_run_command(exe, flags, src, out, env)
     try:
         r = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=120, cwd=str(tmp))
     finally:
