@@ -176,7 +176,6 @@ u8 effect_helper_6c7cc(u16 x, u16 y, u16 radius, s16 speed,
 s16 effect_helper_6c8d4(void)
 {
     effect_state_6c_t *state = effect_state_6c;
-    s32 delta;
     state->x = state->velocity_x + state->x;
     state->y = state->velocity_y + state->y;
     if (state->x + state->radius >= 320) {
@@ -195,9 +194,7 @@ s16 effect_helper_6c8d4(void)
         state->y = state->radius;
         state->velocity_y = -state->velocity_y;
     }
-    delta = state->velocity;
-    delta = delta >= 0 ? delta : -delta;
-    state->frame += delta;
+    state->frame += abs32_inline(state->velocity);
     if (state->frame > state->step) state->frame = 0;
     return state->frame;
 }

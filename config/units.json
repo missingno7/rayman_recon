@@ -13009,7 +13009,7 @@
      ]
     },
     "effect_helper_6c8d4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]
