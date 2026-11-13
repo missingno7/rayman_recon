@@ -23,6 +23,9 @@ const char *port_record_current_scene(void);
 uint64_t port_record_native_ns(void);
 /* The frame is a gameplay frame (the gameplay loop's frame-start pass ran). */
 void port_record_gameplay(void);
+/* The frame's draw buffer holds the in-game menu's background over the whole screen: the wider view presents it
+   at its full width (render/native.c, the swap). */
+void port_record_wide_backdrop(void);
 /* The semantic payload of the frame being recorded, filled by the capture before a layer operation is added. */
 port_scene *port_record_world(void);
 /* Append a semantic layer operation (PORT_OP_BACKGROUND / MAP / FRONT) for viewport (x0, y0)-(x1, y1). */

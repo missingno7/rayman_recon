@@ -645,8 +645,9 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         case PORT_OP_SWAP:
             if (!draw || !display)
                 break;
-            if (pad && f->gameplay && op->x <= 4 && op->w >= 316 && op->x == op->clip[0] && op->y == op->clip[1]) {
-                /* the gameplay view, its full width */
+            if (pad && (f->gameplay || f->wide_backdrop) && op->x <= 4 && op->w >= 316 && op->x == op->clip[0] &&
+                op->y == op->clip[1]) {
+                /* the gameplay view, or the in-game menu over its whole-screen background: the full width */
                 for (y = 0; y < op->h; y++) {
                     int32_t x;
                     for (x = -pad; x < 320 + pad; x++)

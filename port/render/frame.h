@@ -126,6 +126,7 @@ typedef struct port_op {
 typedef struct port_frame {
     uint32_t seq;
     int gameplay;              /* built by the gameplay loop (its frame-start pass ran) */
+    int wide_backdrop;         /* the in-game menu's background covered the whole screen (DISPLAY_FOND_MENU) */
     int nb_ops, overflow;      /* overflow: operations beyond PORT_FRAME_MAX_OPS were lost */
     int unsupported;           /* operations the native renderer cannot draw yet */
     int display_writes;        /* primitives that wrote the display directly (not via the draw buffer) */

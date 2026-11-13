@@ -40,7 +40,7 @@ static const char *scene = "start";
 #define DRAW_W (320 + 2 * (MARGIN + MAX_PAD))
 #define DRAW_H (200 + 2 * MARGIN)
 static uint8_t native_draw_px[DRAW_W * DRAW_H], native_display_px[(320 + 2 * MAX_PAD) * 200],
-    native_effect_px[128000];
+    native_effect_px[(320 + 2 * MAX_PAD) * 400];
 static port_surface native_draw = {native_draw_px, 320 + 2 * MARGIN, -MARGIN, -MARGIN, 320 + 2 * MARGIN, DRAW_H, NULL};
 static port_surface native_display = {native_display_px, 320, 0, 0, 320, 200, NULL};
 /* The view: `pad` columns beyond the original 320 on each side (render/native.h). */
@@ -372,6 +372,7 @@ void port_record_pass_end(int previous)
 }
 
 void port_record_gameplay(void) { rec.gameplay = 1; }
+void port_record_wide_backdrop(void) { rec.wide_backdrop = 1; }
 
 port_scene *port_record_world(void) { return &rec.world; }
 
@@ -1193,7 +1194,7 @@ static void end_frame(void)
         {
             /* the effect buffer is off-screen: a difference there is reported, not counted against the frame */
             int i = 0;
-            while (i < 128000 && native_effect_px[i] == EffetBufferNormal[i])
+            while (i < 128000 && native_effect_px[(i / 320) * native_effect.pitch + pad + i % 320] == EffetBufferNormal[i])
                 i++;
             if (i == 128000)
                 st.effect_exact[g]++;
@@ -1201,7 +1202,7 @@ static void end_frame(void)
                 st.reported++;
                 fprintf(stderr, "render verify: effect buffer (%s) differs in frame %ld at (%d,%d): original %u, native %u\n",
                         scene, st.frames[0] + st.frames[1] - 1, i % 320, i / 320, EffetBufferNormal[i],
-                        native_effect_px[i]);
+                        native_effect_px[(i / 320) * native_effect.pitch + pad + i % 320]);
             }
         }
         memcpy(check_draw_px, DrawBufferNormal, 64000);
@@ -1221,7 +1222,7 @@ static void end_frame(void)
     st.display_writes += rec.display_writes;
     st.overflow += rec.overflow;
     rec.seq++;
-    rec.gameplay = 0;
+    rec.gameplay = rec.wide_backdrop = 0;
     rec.nb_ops = rec.overflow = rec.unsupported = rec.display_writes = 0;
     native_drawn = 0;
     arena_used = 0;
@@ -1277,7 +1278,11 @@ void port_record_set_pad(int value)
     native_draw.width = native_draw.pitch = 320 + 2 * (MARGIN + pad);
     native_display.x0 = -pad;
     native_display.width = native_display.pitch = 320 + 2 * pad;
+    /* the effect buffer gets the margins too: the in-game menu's greyscale capture of the wider view */
+    native_effect.x0 = -pad;
+    native_effect.width = native_effect.pitch = 320 + 2 * pad;
     memset(native_draw_px, 0, sizeof native_draw_px);
+    memset(native_effect_px, 0, sizeof native_effect_px);
     memset(native_display_px, 0, sizeof native_display_px);
 }
 

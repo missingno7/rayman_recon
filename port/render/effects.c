@@ -410,17 +410,48 @@ static void lens(const port_effect_lens *e, port_surface *const *surfaces)
     }
 }
 
+/* The columns two surfaces share beyond the original 320 (the wider view's margins): [*x0, 0) and [320, *x1). */
+static int margins(const port_surface *a, const port_surface *b, int32_t *x0, int32_t *x1)
+{
+    if (!a || !b)
+        return 0;
+    *x0 = a->x0 > b->x0 ? a->x0 : b->x0;
+    *x1 = a->x0 + a->width < b->x0 + b->width ? a->x0 + a->width : b->x0 + b->width;
+    return *x0 < 0 || *x1 > 320;
+}
+
+static uint8_t pixel(const port_surface *d, int32_t x, int32_t y)
+{
+    return d->pixels[(y - d->y0) * d->pitch + (x - d->x0)];
+}
+
+static void set_pixel(port_surface *d, int32_t x, int32_t y, uint8_t v)
+{
+    d->pixels[(y - d->y0) * d->pitch + (x - d->x0)] = v;
+}
+
+static uint8_t grey_of(const port_effect_grey *e, uint8_t c)
+{
+    return (uint8_t)((e->palette[3 * c] + e->palette[3 * c + 1] + e->palette[3 * c + 2]) / 3 + 128);
+}
+
 static void grey(const port_effect_grey *e, port_surface *const *surfaces)
 {
     port_surface *dst = surface_of(&e->destination, surfaces);
     const port_surface *src = surface_of(&e->source, surfaces);
-    int32_t x, y;
+    int32_t x, y, x0, x1;
     for (y = 0; y < e->height; y++)
         for (x = 0; x < e->width; x++) {
             uint8_t c = get(src, e->source.offset + (int64_t)y * 320 + x);
-            put(dst, e->destination.offset + (int64_t)y * 320 + x,
-                (uint8_t)((e->palette[3 * c] + e->palette[3 * c + 1] + e->palette[3 * c + 2]) / 3 + 128));
+            put(dst, e->destination.offset + (int64_t)y * 320 + x, grey_of(e, c));
         }
+    /* The wider view: a capture of a whole screen (CaptureVideo) also takes the margins, so the in-game menu's
+       background shows the whole view the player saw (user decision 2026-11-13). */
+    if (e->width == 320 && e->height == 200 && !e->source.offset && !e->destination.offset &&
+        margins(src, dst, &x0, &x1))
+        for (y = 0; y < 200; y++)
+            for (x = x0; x < x1; x = x == -1 ? 320 : x + 1)
+                set_pixel(dst, x, y, grey_of(e, pixel(src, x, y)));
 }
 
 /* CadreTrans (src/box.c): each little-endian dword of the rectangle gains 0x40404040 (bytes carry into the next
@@ -503,10 +534,21 @@ static void copy_rect(const port_effect_rect *e, port_surface *const *surfaces)
 {
     port_surface *dst = surface_of(&e->destination, surfaces);
     const port_surface *src = surface_of(&e->source, surfaces);
-    int32_t x, y;
+    int32_t x, y, x0, x1;
     for (y = 0; y < e->height; y++)
         for (x = 0; x < e->width; x++)
             put(dst, e->destination.offset + (int64_t)y * 320 + x, get(src, e->source.offset + (int64_t)y * 320 + x));
+    /* The wider view: the in-game menu's background over the whole screen (DISPLAY_FOND_MENU with the full
+       viewport, 4..320 x 0..200, the same rows in both buffers) fills the margins and the original's 4 border
+       columns from the widened capture (grey above). */
+    if (e->source.offset == e->destination.offset && e->source.offset >= 0 && e->source.offset <= 8 &&
+        e->source.offset + e->width >= 312 && e->height == 200 && margins(src, dst, &x0, &x1))
+        for (y = 0; y < 200; y++) {
+            for (x = x0; x < (int32_t)e->source.offset; x++)
+                set_pixel(dst, x, y, pixel(src, x, y));
+            for (x = (int32_t)e->source.offset + e->width; x < x1; x++)
+                set_pixel(dst, x, y, pixel(src, x, y));
+        }
 }
 
 static void fire(const port_effect_fire *e, port_surface *const *surfaces)
