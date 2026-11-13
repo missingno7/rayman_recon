@@ -34,14 +34,23 @@ The packages are made by `port/tools/package.py` (stripping, symbols, text files
 Phones accept an update only when it is signed with the same key as the installed app, so every public APK is signed
 with the project's release key, never the debug key. The key and its passwords are never in the repository.
 
-Creating it (once, by the maintainer; keep the file and passwords safe - a lost key means users must uninstall to
-update):
+The key (created 2026-11-13, like the maintainer's other ports' keys): `~/.android/rayman-release.jks` (alias `rayman`,
+RSA 4096, certificate SHA-256 `28:55:1C:C7:B0:A1:BA:45:21:FE:E4:99:18:C7:99:3F:A4:B7:F9:66:2F:8B:60:ED:B3:BE:6C:DE:5D:4C:2C:DB`)
+with `~/.android/rayman-release.properties` (storeFile, storePassword, keyAlias, keyPassword). Back up both together:
+a lost key means users must uninstall (losing the app's copied game and saves) to update. `assembleRelease` signs with
+it whenever the properties file exists (`-Prayman.signing=FILE` names another).
+
+Publishing the APK: CI publishes the Windows and Linux packages; the signed APK is built locally and added to the
+release, with the checksums:
 
 ```bash
-keytool -genkeypair -v -keystore rayman-release.jks -alias rayman -keyalg RSA -keysize 4096 -validity 36500
+python port/tools/package.py android port/android/app/build/outputs/apk/release/app-release.apk build/release
 ```
 
-GitHub repository secrets used by the workflow: `RAYMAN_KEYSTORE_BASE64` (the .jks file, base64), `RAYMAN_KEYSTORE_PASSWORD`,
-`RAYMAN_KEY_ALIAS` (`rayman`), `RAYMAN_KEY_PASSWORD`. Without them the workflow signs with the debug key and leaves the
-APK out of the release. Local release builds use the same names as Gradle properties or environment variables
-(`port/android/app/build.gradle`).
+```bash
+gh release upload vX.Y.Z build/release/rayman_sdl3-X.Y.Z-android.apk build/release/SHA256SUMS.txt
+```
+
+CI can sign instead when the repository has the secrets `RAYMAN_KEYSTORE_BASE64` (the .jks file, base64),
+`RAYMAN_KEYSTORE_PASSWORD`, `RAYMAN_KEY_ALIAS` (`rayman`) and `RAYMAN_KEY_PASSWORD`; without them it signs with the
+debug key and leaves the APK out of the release.

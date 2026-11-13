@@ -66,14 +66,26 @@ android {
         }
     }
 
-    // Release signing (port/docs/RELEASE.md): the project's release key when it is given - Gradle properties or
-    // environment variables RAYMAN_KEYSTORE (file), RAYMAN_KEYSTORE_PASSWORD, RAYMAN_KEY_ALIAS, RAYMAN_KEY_PASSWORD;
-    // the passwords never live in the repository. Without them (personal builds) the debug key signs, so the
-    // release variant still installs directly.
+    // Release signing (port/docs/RELEASE.md), the key and its passwords never in the repository: the maintainer's
+    // key file described by a properties file (storeFile, storePassword, keyAlias, keyPassword), by default
+    // ~/.android/rayman-release.properties (-Prayman.signing=FILE elsewhere); or, in CI, Gradle properties or
+    // environment variables RAYMAN_KEYSTORE (file), RAYMAN_KEYSTORE_PASSWORD, RAYMAN_KEY_ALIAS, RAYMAN_KEY_PASSWORD.
+    // Without either (personal builds) the debug key signs, so the release variant still installs directly.
     def releaseKey = { String name -> (project.findProperty(name) ?: System.getenv(name)) as String }
+    def signingFile = file(project.findProperty('rayman.signing') ?:
+                           "${System.getProperty('user.home')}/.android/rayman-release.properties")
+    def signingProps = new Properties()
+    if (signingFile.exists())
+        signingFile.withInputStream { signingProps.load(it) }
+    def hasReleaseKey = signingFile.exists() || releaseKey('RAYMAN_KEYSTORE')
     signingConfigs {
         release {
-            if (releaseKey('RAYMAN_KEYSTORE')) {
+            if (signingFile.exists()) {
+                storeFile file(signingProps.getProperty('storeFile'))
+                storePassword signingProps.getProperty('storePassword')
+                keyAlias signingProps.getProperty('keyAlias')
+                keyPassword signingProps.getProperty('keyPassword')
+            } else if (releaseKey('RAYMAN_KEYSTORE')) {
                 storeFile file(releaseKey('RAYMAN_KEYSTORE'))
                 storePassword releaseKey('RAYMAN_KEYSTORE_PASSWORD')
                 keyAlias releaseKey('RAYMAN_KEY_ALIAS')
@@ -85,7 +97,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig releaseKey('RAYMAN_KEYSTORE') ? signingConfigs.release : signingConfigs.debug
+            signingConfig hasReleaseKey ? signingConfigs.release : signingConfigs.debug
         }
     }
 
