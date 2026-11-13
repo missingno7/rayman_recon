@@ -1751,7 +1751,7 @@
     "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
    ],
    "source_file": "src/luciole.c",
-   "source_body_sha256": "603ad6ab6a7c319356b7ebc5d1e03a84823b5aa8772ff03647b136b894fd6d3b",
+   "source_body_sha256": "fb17e77e1e9ea382f3c2ae12706f38e3fc7546ee47906e3b72eabeea939aa6d2",
    "readers_writers": {
     "globals": [
      "ADDLUCLIP",
@@ -1779,107 +1779,6 @@
    "evidence_units": [
     "luciole.c"
    ]
-  },
-  {
-   "id": "local:Display_and_free_luciole:dx:1",
-   "kind": "local",
-   "function": "Display_and_free_luciole",
-   "role": "local",
-   "current_name": "dx",
-   "proposed_name": null,
-   "c_type": "s32",
-   "declarator": "s32 $",
-   "meaning": "Local value in Display_and_free_luciole computed/consumed by dx = abs32_inline(old_x_luc - x_luc)",
-   "unit": "see observed operation",
-   "value_domain": {
-    "observed_computations": [
-     "dx = abs32_inline(old_x_luc - x_luc)",
-     "distance = max32(dy, dx)",
-     "max32(dy, dx)"
-    ],
-    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
-   },
-   "evidence_level": "STRONG",
-   "evidence": [
-    {
-     "kind": "DOS_function_and_C_dataflow",
-     "address": "1:38914",
-     "artifact": "evidence/luciole.dos.txt",
-     "function": "Display_and_free_luciole",
-     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
-   ],
-   "source_file": "src/luciole.c"
-  },
-  {
-   "id": "local:Display_and_free_luciole:dy:1",
-   "kind": "local",
-   "function": "Display_and_free_luciole",
-   "role": "local",
-   "current_name": "dy",
-   "proposed_name": null,
-   "c_type": "s32",
-   "declarator": "s32 $",
-   "meaning": "Local value in Display_and_free_luciole computed/consumed by dy = ((old_y_luc - y_luc) >= 0) ? (old_y_luc - y_luc) : (-(old_y_luc - y_luc))",
-   "unit": "see observed operation",
-   "value_domain": {
-    "observed_computations": [
-     "dy = ((old_y_luc - y_luc) >= 0) ? (old_y_luc - y_luc) : (-(old_y_luc - y_luc))",
-     "distance = max32(dy, dx)",
-     "max32(dy, dx)"
-    ],
-    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
-   },
-   "evidence_level": "STRONG",
-   "evidence": [
-    {
-     "kind": "DOS_function_and_C_dataflow",
-     "address": "1:38914",
-     "artifact": "evidence/luciole.dos.txt",
-     "function": "Display_and_free_luciole",
-     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
-   ],
-   "source_file": "src/luciole.c"
-  },
-  {
-   "id": "local:Display_and_free_luciole:distance:1",
-   "kind": "local",
-   "function": "Display_and_free_luciole",
-   "role": "local",
-   "current_name": "distance",
-   "proposed_name": null,
-   "c_type": "s32",
-   "declarator": "s32 $",
-   "meaning": "Local value in Display_and_free_luciole computed/consumed by distance = max32(dy, dx)",
-   "unit": "see observed operation",
-   "value_domain": {
-    "observed_computations": [
-     "distance = max32(dy, dx)",
-     "ADDLUCLIP = distance + 6"
-    ],
-    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
-   },
-   "evidence_level": "STRONG",
-   "evidence": [
-    {
-     "kind": "DOS_function_and_C_dataflow",
-     "address": "1:38914",
-     "artifact": "evidence/luciole.dos.txt",
-     "function": "Display_and_free_luciole",
-     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
-   ],
-   "source_file": "src/luciole.c"
   },
   {
    "id": "local:Display_and_free_luciole:draw_buf:1",
@@ -2438,10 +2337,10 @@
   }
  ],
  "source_fingerprints": {
-  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71"
+  "src/luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c"
  },
  "proposal_fingerprints": {
-  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c",
   "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
   "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
   "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
