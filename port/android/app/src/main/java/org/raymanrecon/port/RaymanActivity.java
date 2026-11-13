@@ -17,7 +17,7 @@ public class RaymanActivity extends SDLActivity {
         return new String[] { "SDL3", "main" };
     }
 
-    /* Testing (port/docs/ANDROID.md): an optional args.txt in the game folder holds command-line options of the
+    /* Testing (port/docs/ANDROID.md): an optional args.txt in the app's files folder (Android/data/<package>/files/) holds command-line options of the
        desktop build, whitespace-separated (e.g. "--demo 3"). Absent or unreadable: no options. */
     @Override
     protected String[] getArguments() {

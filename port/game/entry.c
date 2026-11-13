@@ -362,12 +362,20 @@ int main(int argc, char **argv)
        name their data (tests, development) read a settings file only when --config names one. */
     if (!data_count && !data) {
 #ifdef __ANDROID__
-        /* Android (port/docs/ANDROID.md): the game folder is the app's external files folder,
-           Android/data/<package>/files/, which the player fills over USB or adb. */
+        /* Android (port/docs/ANDROID.md): the app's external files folder, Android/data/<package>/files/. The
+           first-run setup (SetupActivity.java) copies the player's game into its Rayman/ folder, with GOG's CD
+           (game.ins, game.gog, Music/) and cloud_saves/ next to it, as in GOG's install; game files copied into the
+           folder itself over USB or adb still work. Logs stay in the files folder. */
         const char *base = SDL_GetAndroidExternalStoragePath();
         static char log_path[1100];
-        snprintf(base_dir, sizeof base_dir, "%s/", base ? base : "");
-        snprintf(log_path, sizeof log_path, "%srayman_log.txt", base_dir);
+        FILE *game_probe;
+        snprintf(base_dir, sizeof base_dir, "%s/Rayman/", base ? base : "");
+        snprintf(log_path, sizeof log_path, "%sRAY.LNG", base_dir);
+        if (base && (game_probe = fopen(log_path, "rb")) != NULL)
+            fclose(game_probe);
+        else
+            snprintf(base_dir, sizeof base_dir, "%s/", base ? base : "");
+        snprintf(log_path, sizeof log_path, "%s/rayman_log.txt", base ? base : ".");
         if (base) {   /* stdout/stderr go nowhere on Android */
             FILE *marker;
             freopen(log_path, "w", stdout);
@@ -375,10 +383,10 @@ int main(int argc, char **argv)
             setvbuf(stdout, NULL, _IONBF, 0);
             /* No environment on Android: a file pace_trace.on in the game folder turns RAYMAN_PACE_TRACE on
                (written to pace_trace.txt there). */
-            snprintf(log_path, sizeof log_path, "%space_trace.on", base_dir);
+            snprintf(log_path, sizeof log_path, "%s/pace_trace.on", base);
             if (!pace_trace && (marker = fopen(log_path, "rb")) != NULL) {
                 fclose(marker);
-                snprintf(log_path, sizeof log_path, "%space_trace.txt", base_dir);
+                snprintf(log_path, sizeof log_path, "%s/pace_trace.txt", base);
                 pace_trace = fopen(log_path, "w");
             }
         }
@@ -402,8 +410,8 @@ int main(int argc, char **argv)
         else {
             char message[1400];
             snprintf(message, sizeof message,
-                     "Copy the files of your Rayman (GOG v1.21) game folder - RAY.LNG, RAYMAN.EXE, PCMAP, ... - "
-                     "and your CD image RAYMAN.cue + RAYMAN.bin into\n\n%s\n\nthen start the app again.", base_dir);
+                     "No Rayman game was found in\n\n%s\n\nClear the app's storage in Android's settings to choose "
+                     "your game folder again.", base_dir);
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Rayman: game data needed", message, NULL);
             return 2;
         }

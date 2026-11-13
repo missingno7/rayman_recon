@@ -14,6 +14,19 @@
         android:enableOnBackInvokedCallback="false"
         android:hardwareAccelerated="true">
 
+        <!-- First start: the player picks their game folder once (SetupActivity.java); then the game. -->
+        <activity android:name=".SetupActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".RaymanActivity"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
@@ -21,11 +34,7 @@
             android:launchMode="singleInstance"
             android:configChanges="layoutDirection|locale|grammaticalGender|fontScale|fontWeightAdjustment|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:preferMinimalPostProcessing="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
     </application>
 </manifest>

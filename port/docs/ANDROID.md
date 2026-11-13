@@ -23,22 +23,30 @@ debug key (personal builds). `local.properties` (git-ignored) holds `sdk.dir`.
 
 ## Game data
 
-The APK contains no game files. The player copies the files of a GOG v1.21 Rayman folder (RAY.LNG,
-PCMAP, the .DAT files, ...) and the Rayman CD image `RAYMAN.cue` + `RAYMAN.bin` into the app's external files folder
-`Android/data/org.raymanrecon.port/files/` (over USB, or `adb push`):
+The APK contains no game files. On the first start (`SetupActivity.java`, user decision 2026-11-13) the app asks the
+player to pick their game folder with Android's folder picker: GOG's "Rayman Forever" folder, or a Rayman v1.21 game
+folder (the one with RAY.LNG). It copies what the game needs into the app's external files folder
+`Android/data/org.raymanrecon.port/files/`, laid out like GOG's install, with a progress bar, then starts the game:
+
+| Picked | Copied to `files/` |
+|---|---|
+| GOG's Rayman Forever | `Rayman/` (the game), `game.ins` and `game.gog` (GOG's CD), `Music/` (its Ogg tracks), `cloud_saves/`, and any `*.cue`/`*.bin` next to them (about 190 MB) |
+| a game folder with RAY.LNG | all of it into `Rayman/` (its own CD image or movies included) |
+
+Programs and shortcuts (`.exe`, `.dll`, `.lnk`) are skipped: the app reads only data files. The copy goes to
+`files/.incoming/` first and is moved into place when complete, so an interrupted setup never starts a half-copied game
+(the next start asks again). Later starts go straight to the game (`RaymanActivity`). To pick another folder, clear
+the app's storage in Android's settings.
+
+The native side then works as on Windows (port/README.md): `files/Rayman/` is the game folder (`rayman_sdl3.json` is
+created there), `cd: "auto"` finds GOG's `game.ins` one level up (or an original CD image, which it prefers), saves and
+RAYMAN.CFG go to `files/cloud_saves/` when it exists (else the app's private storage, `SDL_GetPrefPath`), and
+`files/rayman_log.txt` receives what the desktop build prints. Game files copied over USB or `adb push` straight into
+`files/` (RAY.LNG there) still work, without the setup:
 
 ```bash
 adb push assets/GOG/. /sdcard/Android/data/org.raymanrecon.port/files/
 ```
-
-```bash
-adb push assets/DOS_CD/RAYMAN.cue assets/DOS_CD/RAYMAN.bin /sdcard/Android/data/org.raymanrecon.port/files/
-```
-
-That folder is the game folder of the desktop build: `rayman_sdl3.json` (settings) is created there on the first run,
-`cd: "auto"` finds `RAYMAN.cue` there, and `rayman_log.txt` receives what the desktop build prints. Without RAY.LNG the
-app shows where to put the data and exits (the folder exists once the app has started once). Saves and RAYMAN.CFG go
-to the app's private storage (`SDL_GetPrefPath`).
 
 Native code is always built optimised (`RelWithDebInfo`, `-O2 -g`), the debug APK included; `-PnativeBuildType=Debug`
 builds it `-O0` for debugging only. Measured on a Galaxy S24 Ultra (2026-11-12, Pink Plant Woods, widescreen 100
@@ -47,10 +55,10 @@ machine clock at 0.694 x real time, so gameplay and CD music ran at about 69 % s
 about 4 ms per frame, machine clock 1.003 x (display lock at 120 Hz). The native renderer draws pixel by pixel
 (`render/native.c put`), so it is the cost that unoptimised builds and slower phones feel first.
 
-Testing: an optional `args.txt` in the game folder holds command-line options of the desktop build,
+Testing: an optional `args.txt` in the app's `files/` folder holds command-line options of the desktop build,
 whitespace-separated (e.g. `--demo 3`), read by `RaymanActivity.getArguments`. Delete it for normal play.
 
-Diagnostics: an empty file `pace_trace.on` in the game folder makes the app write `pace_trace.txt` there (the
+Diagnostics: an empty file `pace_trace.on` in the app's `files/` folder makes the app write `pace_trace.txt` there (the
 `RAYMAN_PACE_TRACE` line per frame, including `native_us`, the native renderer's time).
 
 ## Platform behaviour
