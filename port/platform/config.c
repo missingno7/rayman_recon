@@ -1,6 +1,7 @@
 /* Player settings file (platform/config.h): a flat JSON object. Unknown settings are ignored, so files written
    by a later version still load. */
 #include "platform/config.h"
+#include "platform/display.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,9 +13,7 @@ void port_config_defaults(port_config *c)
     strcpy(c->cd, "auto");
     c->vsync = 1;
     c->square_pixels = 1;   /* user decision 2026-11-12: square pixels by default */
-#ifdef __ANDROID__
-    c->widescreen = 1;   /* phones: the wide view fills the screen (port/docs/ANDROID.md) */
-#endif
+    c->widescreen = PORT_WIDE_FIT;   /* as wide as the window or screen (user decision 2026-11-13) */
 }
 
 static void skip_space(const char **p)
@@ -100,6 +99,21 @@ static int parse_bool(const char **p, int *out)
     return 0;
 }
 
+/* The wider view's mode: a name ("off", "16:9", "21:9", "fit") or, as written by earlier versions, true ("fit": a
+   wide window, the display's shape fullscreen) or false ("off"). */
+static int parse_wide(const char **p, int *out)
+{
+    char name[16];
+    if (parse_bool(p, out)) {
+        *out = *out ? PORT_WIDE_FIT : PORT_WIDE_OFF;
+        return 1;
+    }
+    if (!parse_string(p, name, sizeof name) || port_display_mode_from_name(name) < 0)
+        return 0;
+    *out = port_display_mode_from_name(name);
+    return 1;
+}
+
 static int parse_int(const char **p, int *out)
 {
     char *end;
@@ -149,7 +163,7 @@ static int parse(const char *text, port_config *c, unsigned *seen)
         skip_space(&p);
         for (k = 0; k < sizeof keys / sizeof keys[0] && strcmp(key, keys[k]); k++) {}
         switch (k) {
-        case 0: ok = parse_bool(&p, &c->widescreen); break;
+        case 0: ok = parse_wide(&p, &c->widescreen); break;
         case 1: ok = parse_bool(&p, &c->fullscreen); break;
         case 2: ok = parse_int(&p, &c->window_scale) && c->window_scale >= 0 && c->window_scale <= 64; break;
         case 3: ok = parse_string(&p, c->cd, sizeof c->cd); break;
@@ -220,9 +234,9 @@ int port_config_save(const char *path, const port_config *c)
     FILE *f = fopen(path, "wb");
     int i, ok;
     if (!f) return 0;
-    fprintf(f, "{\n  \"widescreen\": %s,\n  \"square_pixels\": %s,\n  \"fullscreen\": %s,\n  \"vsync\": %s,\n"
+    fprintf(f, "{\n  \"widescreen\": \"%s\",\n  \"square_pixels\": %s,\n  \"fullscreen\": %s,\n  \"vsync\": %s,\n"
                "  \"window_scale\": %d,\n  \"cd\": ",
-            c->widescreen ? "true" : "false", c->square_pixels ? "true" : "false", c->fullscreen ? "true" : "false",
+            port_display_mode_name(c->widescreen), c->square_pixels ? "true" : "false", c->fullscreen ? "true" : "false",
             c->vsync ? "true" : "false", c->window_scale);
     write_string(f, c->cd);
     fputs(",\n  \"save_dir\": ", f);

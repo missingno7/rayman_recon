@@ -10,8 +10,8 @@ no longer installs on current devices; its touch controls are reproduced from it
 
 Requirements: Android SDK with platform 36, NDK 27.0.12077973 and CMake 3.22.1 (SDK manager versions); JDK 17 or 21
 for Gradle 8.12; Python 3 on the build machine; the SDL 3.4.16 source tarball (default
-`C:/tools/download/sdl3/SDL3-3.4.16.tar.gz`, hash-checked; `-PsdlTarball=FILE` elsewhere); the player's GOG v1.21
-game folder for the two data tables taken from its RAYMAN.EXE at build time (default `assets/GOG`, `-PrayData=DIR`).
+`C:/tools/download/sdl3/SDL3-3.4.16.tar.gz`, hash-checked; `-PsdlTarball=FILE` elsewhere). The build reads no game
+file (`-PrayData=DIR` only names the game folder for the desktop tests CMake configures).
 
 ```bash
 cd port/android && JAVA_HOME="C:/Program Files/Java/jdk-17" ./gradlew.bat assembleDebug -Ppython=PATH_TO_python.exe
@@ -23,7 +23,7 @@ debug key (personal builds). `local.properties` (git-ignored) holds `sdk.dir`.
 
 ## Game data
 
-The APK contains no game files. The player copies the files of a GOG v1.21 Rayman folder (RAY.LNG, RAYMAN.EXE,
+The APK contains no game files. The player copies the files of a GOG v1.21 Rayman folder (RAY.LNG,
 PCMAP, the .DAT files, ...) and the Rayman CD image `RAYMAN.cue` + `RAYMAN.bin` into the app's external files folder
 `Android/data/org.raymanrecon.port/files/` (over USB, or `adb push`):
 
@@ -59,9 +59,10 @@ Diagnostics: an empty file `pace_trace.on` in the game folder makes the app writ
   of extra columns per side comes from the display's aspect ratio and the pixel shape (`port_host_fit_pad`, up to
   160 per side). Square pixels (`"square_pixels": true`, the default on every platform, user decision 2026-11-12)
   show the 320x200 picture as 16:10, so a 3120x1440 phone gets 57 columns per side (100 with the original 4:3 pixel
-  shape). Menus, movies and other screen-space scenes stay at 320 columns in the centre. `"widescreen": false` in
-  `rayman_sdl3.json` gives the original 320-column view. A desktop build in fullscreen with widescreen on also fits
-  its display; in a window it is 16:9. The game always renders 320x200: its "X mode" is the unchained (planar) VGA
+  shape). Menus, movies and other screen-space scenes drawn from 320-column pictures have black sides
+  (RENDERER.md section 9, the sides). `"widescreen": "off"` in `rayman_sdl3.json`, or the Display screen (Options,
+  Graphics Details, Video mode), gives the original 320-column view. A desktop build with `"fit"` fits its window or,
+  fullscreen, its display. The game always renders 320x200: its "X mode" is the unchained (planar) VGA
   layout at 200 lines (`InitModeX` 1:046b8 sets no vertical timing), and the port runs the normal mode.
 - Back key: Esc (pause in a level, back in the DOS menus), like the release's back-button listener.
 - Input: the virtual pad (`platform/pad.c`): a gamepad and the touch overlay (`platform/touch.c`) set the same pad

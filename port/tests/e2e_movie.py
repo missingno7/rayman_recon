@@ -36,7 +36,7 @@ def main(argv):
             env = os.environ.copy()
             env.update(RAYMAN_MOVIE_TRACE=str(folder / "movie.txt"), RAYMAN_CD_TRACE=str(folder / "cd.txt"),
                        RAYMAN_SOUND_TRACE=str(folder / "sound.txt"))
-            cmd = [exe, "--save", str(folder / "save"), "--cd", cd, "--headless", "--deterministic",
+            cmd = [exe, "--save", str(folder / "save"), "--cd", cd, "--no-cd-movies", "--headless", "--deterministic",
                    "--frames", str(frames), "--frame-log", str(folder / "frames.txt"), *entry]
             for data in roots:
                 cmd += ["--data", data]

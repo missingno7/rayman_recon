@@ -274,14 +274,35 @@ state, consumes no random numbers.
 
 ## 9. Widescreen
 
-`--widescreen` (16:9 at the chosen pixel shape: 18 more columns per side with square pixels, the default since
-2026-11-12; 54, i.e. 428 x 200, with `--aspect original`), `--wide-pad N` (0..160), or `"widescreen": true` in the
-settings file (fullscreen: as wide as the display, `port_host_fit_pad`; e.g. 57 per side on 3120x1440 with square
-pixels) makes the native renderer draw a wider view of the same recorded frames. The pixel shape is presentation
+The wider view's mode is a display setting (platform/display.h): `"widescreen"` in the settings file is `"off"`,
+`"16:9"` (18 more columns per side with square pixels, the default since 2026-11-12; 54, i.e. 428 x 200, with
+`--aspect original`), `"21:9"` (74 or 120) or `"fit"` (as wide as the window, fullscreen the display: e.g. 57 per
+side on 3120x1440 with square pixels; the earlier `true` reads as `"fit"`, `false` as `"off"`). `--widescreen` picks
+16:9, `--wide-pad N` (0..160) a fixed width. The player changes the mode, the pixel shape and fullscreen while the
+game runs, in the options menu's Display screen (Graphics Details, "video mode" row; port/game/display_screen.c,
+user decision 2026-11-13; it replaces the DOS video-mode screen, derive/menu.patch); a new view width takes effect
+at the next frame boundary (`port_record_request_pad`), the native surfaces keep their pixels in the columns both
+widths share, a window that is not fullscreen, maximized or in "fit" takes the picture's new shape at its height,
+and the settings file keeps the choice. These settings make the native renderer draw a wider view of the same
+recorded frames. The pixel shape is presentation
 only (platform/host.c): the frames are always 320 + 2 x pad by 200. There is one renderer and one frame: the
 view is the `pad` parameter of `port_native_draw` (render/native.h); the original draw path, which has 320 columns,
 is not involved in what is shown (`--widescreen` implies `--renderer native`). The slice-1 margin compositor, which
 framed the original image with separately drawn margins, is removed.
+
+The sides (user decision 2026-11-13: handled from the operations up, never decided per frame). The columns outside
+the original 320 are more screen, on every native surface (draw, display, effect buffer). An operation that covers
+whole rows of the original 320 columns covers the sides of those rows with its own meaning: a fill fills them; a
+copy between native surfaces that keeps columns in place copies them; a copy or picture from game memory, which has
+nothing beyond 320 columns, leaves them black; the greyscale capture greys them; the in-game menu's background copy
+of the full-width viewport copies them; ClearBorder's clear outside the viewport clears them (a full-width viewport
+has none outside it); a black box across the original screen crosses them. An operation that covers part of a row
+leaves them, as it leaves the rest of the row. A swap of the whole screen width shows whole rows of the view (sides,
+and the original's 4 border columns, included); a narrower swap copies its rectangle. So what the sides show always
+follows the data flow: a scene drawn from 320-column pictures has black sides, the in-game menu and its screen
+transitions keep the greyed wider view, the pause starts from the wider frame. Before, the swap decided per frame
+(gameplay frames wide, every other frame with black sides), and the in-game menu's transition frames, which do not
+redraw their background, blinked to black sides. At the original width (pad 0) the sides are never shown or compared.
 
 Rules of the wider view (render/native.c), applied to the draw buffer of gameplay frames:
 
@@ -300,8 +321,8 @@ Rules of the wider view (render/native.c), applied to the draw buffer of gamepla
 | Narrowed viewports (breakout, world 6 level 4) and their swaps | the swap copies the viewport | the original 320 columns, black margins |
 | Fairy dialogue (`DISPLAY_TEXT_FEE`) | two black bars across the 320 columns, text and the writing glove at screen positions | the bars cross the whole wider view (a black box spanning the original screen is widened); text and glove stay at their 4:3 positions. Without the wider bars the level and the glove's world-pass copy showed in the margins beside them. Checked on world 1 level 3 (`RAYMAN_START_LEVEL="1 3"`): the text band of all 887 dialogue frames equals the original view's |
 | HUD | fixed anchors / viewport-relative | anchored to the view's corners (user decision 2026-11-12): each element keeps its original distance from its own corner, independent of the presentation offset at level edges. Left: lives, hit points, the 1up/power clings and their black box (DISPLAY_FIXE x 13..85, DISPLAY_CLING clip box 0..100) move left by pad; right: the ting counter and its black boxes (x 241..312) and display_time's label and digits (from `Bloc_lim_W2 - 52`) move right by pad; centred texts (DO_DARK2_AFFICHE_TEXT, own pass hud_text; display_time's at x 160) stay. The firefly levels' erasing boxes (CLEAR_FIXE_LUCIOLE, x 13 and 241) move with their elements. Only in frames whose viewport is the full screen (narrowed views keep the original 320 columns). The side of each element is the half of the original screen its centre is in, which matches every DISPLAY_FIXE call site (none straddles the middle) (`hud_anchor`, render/native.c). The boss bar (display_bar_boss, drawn inside DISPLAY_ALL_OBJECTS) is anchored left too, with its original clip box (the part the original clips off at the viewport's left edge stays hidden) and independent of the presentation offset: its operations are recognised by image (the fist object's bar sprites 60 and 61 and the boss icons) and row (`Bloc_lim_H2` - 19, - 20, - 30), captured per frame (`capture_boss_bar`, render/scene_capture.c). Not yet seen in a test (no scenario reaches a boss fight); no false match in 84 runs of worlds 1-6, levels 5-18 |
-| Menus, vignettes, movies, transitions, pause (screen-space scenes) | 320x200 images | the original 320 columns centred, black margins. User decision 2026-11-12: no synthesized fill (blurred or mirrored edges were mocked up and declined); the margins stay black wherever there is nothing real to extend the drawing to, and a scene is widened only where the game has real content beyond the 320 columns (for example the world map's own map) |
-| In-game menu (`DO_OPTIONS_IN_GAME`: options, key and pad setup, graphics, quit box) | `CaptureVideo` greys the built 320x200 frame into the effect buffer; `DISPLAY_FOND_MENU` copies its viewport back as the background of every menu frame; the menu boxes, zoom-in and fades draw over it | the whole wider view (user decision 2026-11-13): the native effect buffer has the margins too; a whole-screen grey capture also greys the margin columns of its source, and a background copy of the full screen (viewport 4..320 x 0..200) also copies them and the original's 4 border columns, so the background is the wider view the player left, greyed. Such a frame (`wide_backdrop`, set by the DISPLAY_FOND_MENU capture) is presented at its full width like a gameplay frame; the boxes, zoom-in and fades stay at their 320-column positions. A reduced screen size (a narrower viewport) keeps the original 320 columns. The pause (`Do_Effect_Pause`) stays a 320-column card spinning on black: its snapshot is two 160-column textures (effect_helper_50738), so a wider card would need a new texture layout |
+| Menus, vignettes, movies, transitions, pause (screen-space scenes) | 320x200 images | what their operations put in the sides (above): black for scenes drawn from 320-column pictures. User decision 2026-11-12: no synthesized fill (blurred or mirrored edges were mocked up and declined); the sides stay black wherever there is nothing real to extend the drawing to, and a scene is widened only where the game has real content beyond the 320 columns |
+| In-game menu (`DO_OPTIONS_IN_GAME`: options, key and pad setup, graphics, Display, quit box) | `CaptureVideo` greys the built 320x200 frame into the effect buffer; `DISPLAY_FOND_MENU` copies its viewport back as the background of the menu frames; the boxes, zoom-in, fades and screen transitions draw over it | the whole wider view, greyed (user decision 2026-11-13), by the side rules above: the capture greys the sides, the background copy carries them, the transition frames keep them. A reduced screen size (a narrower viewport) has black sides (its clear outside the viewport). A view width changed in the menu shows black new columns until the menu closes (the capture has the old width). The pause (`Do_Effect_Pause`) starts from the wider frame and spins a 320-column card on black: its snapshot is two 160-column textures (effect_helper_50738) |
 | Draw-buffer origin moves | linear memory shift | each row shifts by the same number of pixels (rows stay apart in the wider surface) |
 
 A map narrower than the window is exercised by demo 4 (a vertical-scrolling level 320 pixels wide: centred, black

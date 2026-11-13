@@ -1,15 +1,61 @@
 --- a/src/menu.c
 +++ b/src/menu.c
-@@ -164,6 +164,8 @@
+@@ -164,6 +164,12 @@
  extern u8 is_joypad_mode;
  extern u8 something_with_cfg_25_default_00_joy;
  extern rgb_palette_t MenuPalette;
 +/* PORT: native renderer observation of FonduOption's in-place greyscale passes (port/render/effect_capture.c). */
 +void port_record_menu_grey(u8 *rectangle, s16 width, s16 height, const void *palette);
++/* PORT: the Display screen (port/game/display_screen.c) replaces the DOS video-mode screen (PCI / Mode X / VESA);
++   Graphics Details' "video mode" row shows the wider view's mode and opens it, also from the in-game options. */
++void port_INIT_DISPLAY_SCREEN(void);
++const char *port_display_value_text(void);
  extern u8 ModeDemo;
  extern u8 MusicCdActive;
  extern u8 OptionGame;
-@@ -3377,6 +3379,7 @@
+@@ -676,7 +682,7 @@
+                 DO_MENU();
+             } break;
+             case 10: {
+-                pINIT_SCREEN = INIT_VIDEOMODE_SCREEN;
++                pINIT_SCREEN = port_INIT_DISPLAY_SCREEN; /* PORT: the Display screen */
+                 pLOAD_SCREEN = NULL;
+                 DO_MENU();
+             } break;
+@@ -757,6 +763,9 @@
+                 if (MENU_RETURN) {
+                     menuEtape = 4;
+                 }
++                break;
++            case 10: /* PORT: the Display screen, from Graphics Details' "video mode" row */
++                pINIT_SCREEN = port_INIT_DISPLAY_SCREEN;
+                 break;
+             default:
+                 break;
+@@ -1973,9 +1982,10 @@
+     if (options.sound_volume == 0 && ModeNormalAutorise) {
+         if (OptionGame) {
+             if ((num_world != 6 || num_level != 4) && !is_fee) {
++                /* PORT: the "video mode" row (the Display screen) is shown in game too: rows 1..4, not 2..4 */
+                 position = 5;
+-                nbre_options = 4;
+-                first_option = 2;
++                nbre_options = 5;
++                first_option = 1;
+                 option_exit = 5;
+             } else {
+                 position = 4;
+@@ -2192,7 +2202,8 @@
+         }
+         switch (control_index) {
+         case 0:
+-            display_text(mode_names[options.sound_volume], byte_E4CFC + 118, y, 2,
++            /* PORT: the wider view's mode (the Display screen), not the DOS video card mode */
++            display_text(port_display_value_text(), byte_E4CFC + 118, y, 2,
+                          menu_to_display[option_index].color);
+             break;
+         case 1:
+@@ -3377,6 +3388,7 @@
          SYNCHRO_LOOP_PALETTE(change_couleur_prg);
  
          row = DrawBufferNormal + xFondu + SCREEN_WIDTH * yFondu;
@@ -17,7 +63,7 @@
          for (j = 0; j < hFondu; ++j) {
              for (i = 0; i < wFondu; ++i) {
                  *row = (MenuPalette.colors[*row].r + MenuPalette.colors[*row].g + MenuPalette.colors[*row].b) / 3 + 128;
-@@ -3394,6 +3397,7 @@
+@@ -3394,6 +3406,7 @@
  
      if (mode == 1) {
          row = EffetBufferNormal + SCREEN_WIDTH * SCREEN_HEIGHT + xFondu + SCREEN_WIDTH * yFondu;

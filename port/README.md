@@ -14,8 +14,8 @@ cmake -S port -B build/port -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=R
 cmake --build build/port
 ```
 
-`RAY_DATA` is the player's original game directory (RAYMAN.EXE, RAY.LNG, PCMAP, ...); two data tables are taken
-from that RAYMAN.EXE at build time. The i686 reference build uses `C:/msys64/mingw32/bin/gcc.exe` and the
+`RAY_DATA` is the player's original game directory (RAY.LNG, PCMAP, the .DAT files, ...), used only by the tests:
+the build reads no game file, and the program reads only the game's data files, never RAYMAN.EXE. The i686 reference build uses `C:/msys64/mingw32/bin/gcc.exe` and the
 `i686-w64-mingw32` SDL3 package (see docs/ARCHITECTURE.md, "64-bit hosts"). Presets: `CMakePresets.json`.
 
 Android (arm64-v8a / x86_64 APK with the Android release's touch controls and gamepad support):
@@ -23,20 +23,23 @@ Android (arm64-v8a / x86_64 APK with the Android release's touch controls and ga
 
 ## Play (from the game folder)
 
-Copy `rayman.exe` (under any name, e.g. `rayman_sdl3.exe`) and `SDL3.dll` into a GOG v1.21 Rayman folder (the one
-with RAY.LNG and PCMAP) and start it without arguments. The program then uses its own folder as the game and
+Copy `rayman_sdl3.exe` and `SDL3.dll` into a GOG v1.21 Rayman folder (the one
+with RAY.LNG and PCMAP; in GOG's Rayman Forever: `Rayman\`) and start it without arguments. In a GOG install
+it uses GOG's own CD (`..\game.ins`: `game.gog` and the music in `Music\raymanNN.ogg`, the drive GOG's DOSBox
+mounts) unless the original CD is at hand (below), and keeps RAYMAN.CFG and the saves in GOG's `..\cloud_saves`,
+shared with GOG's launcher. The program then uses its own folder as the game and
 creates `rayman_sdl3.json` next to itself on the first run (platform/config.h); a file written by an earlier
 version is completed with the newer settings, unknown settings are ignored:
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `widescreen` | `false` (`true` on Android) | wider view drawn by the native renderer: 16:9 in a window, the display's shape in fullscreen |
+| `widescreen` | `"fit"` | wider view drawn by the native renderer: `"off"`, `"16:9"`, `"21:9"`, or `"fit"` (as wide as the window, or the display in fullscreen); earlier files' `true`/`false` read as `"fit"`/`"off"`. Also in the game: Options, Graphics Details, Video mode opens the Display screen (widescreen, pixels, fullscreen), which changes them while the game runs and saves them here |
 | `square_pixels` | `true` | each game pixel square: the 320x200 picture is shown as 16:10; `false` = the original 4:3 picture (pixels 1.2 times as tall, as on a 1990s monitor); `--aspect square\|original` |
 | `fullscreen` | `false` | start in fullscreen (Alt+Enter toggles) |
 | `window_scale` | `0` | integer window scale; 0 = automatic |
 | `vsync` | `true` | frames are shown at the display's refreshes (no tearing); `--no-vsync` on the command line |
-| `cd` | `"auto"` | the Rayman CD: `"auto"` = `RAYMAN.cue` in the game folder, else a CD drive whose disc is labelled RAYMAN (a real disc or a mounted image, read through the drive; Windows); `"E:"` = that drive; a `.cue` path; `"none"` = empty drive |
-| `save_dir` | `""` | where saves and RAYMAN.CFG are written; empty = the user's application-data folder |
+| `cd` | `"auto"` | the Rayman CD: `"auto"` takes the first usable of `RAYMAN.cue` in the game folder, another `*.cue` there or in its parent folder, a CD drive whose disc is labelled RAYMAN (a real disc or a mounted image, read through the drive; Windows), and GOG's `*.ins` (game folder or parent): the original CD before GOG's, whose music cuts tracks 8, 13 and 14 short (docs/DIVERGENCES.md); else none. Cue sheets may name several files: BIN data and audio, or Ogg Vorbis audio tracks (GOG); `"E:"` = that drive; a `.cue` path; `"none"` = no CD. Without a CD the full game runs without CD music |
+| `save_dir` | `""` | where saves and RAYMAN.CFG are written; empty = GOG's `cloud_saves` next to the game folder when there is one, else the user's application-data folder |
 | `extra_data_dirs` | `[]` | further read-only folders searched after the game folder, e.g. one holding INTRO.DAT / CONCLU.DAT |
 
 Command-line options override the file. Runs that name their data (`--data`, `RAYMAN_DATA`: tests, development)
@@ -45,11 +48,12 @@ read a settings file only when `--config FILE` names one. Data of other versions
 ## Run
 
 ```bash
-build/port/rayman.exe --data D:/Prog/rayman_recon/assets/GOG --cd D:/Prog/rayman_recon/assets/DOS_CD/RAYMAN.cue --menus
+build/port/rayman_sdl3.exe --data D:/Prog/rayman_recon/assets/GOG --cd D:/Prog/rayman_recon/assets/DOS_CD/RAYMAN.cue --menus
 ```
 
-`--cd PATH.cue` inserts the player's Rayman CD image in the virtual drive (CD music, protection checks); without
-it the drive is empty and the game asks for the CD as the original did. `--demo N` (0..5) plays one of the original recorded demos; `--headless --deterministic --frames N --frame-log F`
+`--cd PATH.cue` inserts the player's Rayman CD image in the virtual drive (CD music, protection checks, and the
+movies when the game folder has none). Without a CD the full game runs without CD music (the original asked for the
+CD and offered a limited mode; game/cd_policy.c, docs/DIVERGENCES.md). `--demo N` (0..5) plays one of the original recorded demos; `--headless --deterministic --frames N --frame-log F`
 gives a reproducible per-frame hash log; `--dump-frames DIR --dump-every N` writes BMPs. `--data DIR` may be repeated (up to 32 roots); reads search saves first, then those directories in the given
 order, using the first existing match. Explicit `--data` roots replace `RAYMAN_DATA`. Writes still go only to
 the save directory. Every root participates in all reads: saves/configuration missing from an earlier root
@@ -60,7 +64,11 @@ play is skipped. To use movie files from a full install without replacing the GO
 rayman --data D:/Prog/rayman_recon/assets/GOG --data D:/Prog/rayman_recon/assets/DOS --cd D:/Prog/rayman_recon/assets/DOS_CD/RAYMAN.cue --menus
 ```
 
-No movie lookup is performed on the virtual CD image. As in PcMain, the intro runs after the player leaves
+When no data root has a movie, it comes from the inserted CD's `RAYMAN` folder: read in place from a disc in a
+host drive, copied once from a CUE/BIN image into `cd-cache` in the save folder (as the original installer copied
+it to the hard disk; platform/files.c). Only the two movies: they play with every version's game data, while the
+CD's other files belong to its own version (`--no-cd-movies` turns this off: the test scenarios, timed for a new
+game without the intro, use it). As in PcMain, the intro runs after the player leaves
 the menus to start a game (except demos and the `Frequence == 'F'` path); the conclusion uses the existing
 victory path. The original player, frame pacing, palette fade and CD track windows run natively.
 `RAYMAN_MOVIE_TRACE=FILE` optionally logs entry/result, decoded frames, selected presentation frames, CD row/state,

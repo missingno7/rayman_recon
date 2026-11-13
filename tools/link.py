@@ -130,7 +130,9 @@ def assets():
 
 
 def asset_specs():
-    return [('PalPlasma',0x5f70,48,1),('Def_Bande',0x80fc,144000,2)]
+    # Empty since 2026-11-13: PalPlasma and Def_Bande are reconstructed as typed source (src/data/blk_5f70.c,
+    # src/data/blk_80fc.c, verified data units), so no oracle byte enters the link any more.
+    return []
 
 def compile_all():
     (H/'objects').mkdir(exist_ok=True)

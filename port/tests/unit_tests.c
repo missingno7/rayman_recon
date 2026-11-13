@@ -3,6 +3,7 @@
  * the PIT/retrace clock model and the DOS record decoder. Expected values come from the documented instruction
  * sequences (src/include/inline_helpers.h) and the linked library code (DOS addresses in compat/src).
  */
+#include "platform/display.h"
 #include "platform/config.h"
 #include <math.h>
 #include <stdio.h>
@@ -133,10 +134,11 @@ static void test_obj_record(void)
     CHECK(o.sprites == NULL && o.cmds == NULL);
 }
 
-/* The external data assets generated from the player's RAYMAN.EXE (tools/gen_assets.py) must hold exactly the
-   executable's bytes: the native layouts of rgb_t (3 bytes) and def_bande_t (8 bytes) equal the DOS ones. */
+/* PalPlasma and Def_Bande (src/data/blk_5f70.c, blk_80fc.c, typed source) compiled natively must hold exactly the
+   DOS bytes (FNV-1a of GOG v1.21 obj2 2:05f70 and 2:080fc): the native layouts of rgb_t (3 bytes) and def_bande_t
+   (8 bytes) equal the DOS ones. */
 extern unsigned char PalPlasma[], Def_Bande[];
-extern const unsigned long long port_asset_fnv_PalPlasma, port_asset_fnv_Def_Bande;
+static const unsigned long long port_asset_fnv_PalPlasma = 0x026cfe363c27e07aULL, port_asset_fnv_Def_Bande = 0x118957a1e740c726ULL;
 
 static unsigned long long fnv(const unsigned char *p, size_t n)
 {
@@ -166,29 +168,58 @@ static void test_config(void)
     remove(path);
     CHECK(port_config_load(path, &c) == 0);
     port_config_defaults(&c);
-    CHECK(!c.widescreen && !c.fullscreen && c.vsync && !c.window_scale && !strcmp(c.cd, "auto") && !c.save_dir[0]);
+    CHECK(c.widescreen == PORT_WIDE_FIT && !c.fullscreen && c.vsync && !c.window_scale && !strcmp(c.cd, "auto") && !c.save_dir[0]);
     c.vsync = 0;
-    c.widescreen = 1;
+    c.widescreen = PORT_WIDE_21_9;
     c.window_scale = 3;
     strcpy(c.save_dir, "D:\\Saves \"x\"");
     strcpy(c.extra_data_dirs[0], "D:/Games/Rayman");
     c.extra_data_dir_count = 1;
     CHECK(port_config_save(path, &c));
     CHECK(port_config_load(path, &d) == 1);
-    CHECK(d.widescreen == 1 && d.fullscreen == 0 && d.vsync == 0 && d.window_scale == 3 && !strcmp(d.cd, "auto"));
+    CHECK(d.widescreen == PORT_WIDE_21_9 && d.fullscreen == 0 && d.vsync == 0 && d.window_scale == 3 && !strcmp(d.cd, "auto"));
     CHECK(!strcmp(d.save_dir, c.save_dir) && d.extra_data_dir_count == 1 &&
           !strcmp(d.extra_data_dirs[0], c.extra_data_dirs[0]));
     /* A partial file with an unknown setting and a path typed with single backslashes: loads, reported incomplete. */
     write_text(path, "{ \"future\": {\"a\": [1, 2.5, null]}, \"fullscreen\": true, \"cd\": \"E:\", "
                      "\"save_dir\": \"D:\\Games\\x\" }");
     CHECK(port_config_load(path, &d) == 2);
-    CHECK(d.fullscreen == 1 && d.widescreen == 0 && d.vsync == 1 && !strcmp(d.cd, "E:") &&
+    CHECK(d.fullscreen == 1 && d.widescreen == PORT_WIDE_FIT && d.vsync == 1 && !strcmp(d.cd, "E:") &&
           !strcmp(d.save_dir, "D:\\Games\\x"));
     /* A wrong type and malformed text are rejected and leave the defaults. */
     write_text(path, "{ \"widescreen\": 1 }");
-    CHECK(port_config_load(path, &d) == -1 && !d.widescreen && !strcmp(d.cd, "auto"));
+    CHECK(port_config_load(path, &d) == -1 && d.widescreen == PORT_WIDE_FIT && !strcmp(d.cd, "auto"));
     write_text(path, "{ \"widescreen\": true");
     CHECK(port_config_load(path, &d) == -1);
+    /* The wider view's mode: names, and the booleans of earlier versions (true = as wide as the window or display). */
+    write_text(path, "{ \"widescreen\": \"16:9\" }");
+    CHECK(port_config_load(path, &d) == 2 && d.widescreen == PORT_WIDE_16_9);
+    write_text(path, "{ \"widescreen\": true }");
+    CHECK(port_config_load(path, &d) == 2 && d.widescreen == PORT_WIDE_FIT);
+    write_text(path, "{ \"widescreen\": false }");
+    CHECK(port_config_load(path, &d) == 2 && d.widescreen == PORT_WIDE_OFF);
+    write_text(path, "{ \"widescreen\": \"wide\" }");
+    CHECK(port_config_load(path, &d) == -1);
+    /* The view width per mode and pixel shape (platform/display.c). */
+    port_display_init(PORT_WIDE_16_9, 1, 0, -1, 0);
+    CHECK(port_display_pad() == 18 && port_display_rows() == 200);
+    port_display_set_square(0);
+    CHECK(port_display_pad() == 54 && port_display_rows() == 240 && port_display_take_changed() && !port_display_take_changed());
+    port_display_set_mode(PORT_WIDE_21_9);
+    CHECK(port_display_pad() == 120);
+    port_display_set_square(1);
+    CHECK(port_display_pad() == 74);
+    port_display_set_mode(PORT_WIDE_FIT);
+    port_display_set_output(3120, 1440);
+    CHECK(port_display_pad() == 57);
+    port_display_set_output(0, 0);
+    CHECK(port_display_pad() == 18);
+    port_display_init(PORT_WIDE_FIT, 1, 0, 40, 0);
+    CHECK(port_display_pad() == 40);
+    port_display_set_mode(PORT_WIDE_OFF);
+    CHECK(port_display_pad() == 0);
+    port_display_init(PORT_WIDE_16_9, 1, 0, -1, 1);
+    CHECK(port_display_pad() == 0 && !port_display_adjustable());
     remove(path);
 }
 

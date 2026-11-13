@@ -17,7 +17,7 @@ KEYS = Path(__file__).resolve().parent / "keys" / "new_game.txt"
 
 
 def run(exe, data, cd, save):
-    cmd = [exe, "--data", data, "--cd", cd, "--save", str(save), "--menus", "--headless", "--deterministic",
+    cmd = [exe, "--data", data, "--cd", cd, "--no-cd-movies", "--save", str(save), "--menus", "--headless", "--deterministic",
            "--frames", "4200", "--keys", str(KEYS)]
     out = subprocess.run(cmd, capture_output=True, text=True, timeout=600).stdout
     return next((l for l in out.splitlines() if l.startswith("port exit:")), "")

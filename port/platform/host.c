@@ -1,5 +1,6 @@
 #include "platform/host.h"
 #include "platform/audio.h"
+#include "platform/display.h"
 #include "platform/pad.h"
 #include "platform/touch.h"
 
@@ -11,8 +12,11 @@
 #define LOGICAL_W 320
 #define LOGICAL_H 200
 /* Height of the presented picture in game-pixel widths: 240 shows the 320x200 mode as on a 4:3 monitor (each pixel
-   1.2 times as tall as wide), 200 shows square pixels (port_host_options.display_rows). */
+   1.2 times as tall as wide), 200 shows square pixels (port_host_options.display_rows at start, then the display
+   setting, platform/display.h). */
 static int ASPECT_H = 240;
+static int shown_width, shown_rows;   /* the picture shape last presented (a change reshapes a window) */
+static int applied_fullscreen = -1;   /* the fullscreen setting last applied to the window */
 #ifdef __ANDROID__
 #define PORT_ALWAYS_FULLSCREEN 1   /* phones: the whole screen, no status bar */
 #else
@@ -166,6 +170,9 @@ int port_host_init(const port_host_options *options)
     texture_width = options->width > LOGICAL_W ? options->width : LOGICAL_W;
     if (options->display_rows >= LOGICAL_H)
         ASPECT_H = options->display_rows;
+    shown_width = texture_width;
+    shown_rows = ASPECT_H;
+    applied_fullscreen = options->fullscreen || PORT_ALWAYS_FULLSCREEN;
     if (!SDL_CreateWindowAndRenderer("Rayman", texture_width * scale, ASPECT_H * scale,
                                      SDL_WINDOW_RESIZABLE | (options->fullscreen || PORT_ALWAYS_FULLSCREEN ? SDL_WINDOW_FULLSCREEN : 0),
                                      &window, &renderer)) {
@@ -283,6 +290,22 @@ void port_host_present(const uint8_t *pixels, int pitch, int width, const uint8_
     SDL_UnlockMutex(shared);
 }
 
+/* The picture changed shape (the player picked another view width or pixel shape): a window that is not fullscreen,
+   maximized or following its own shape ("fit") keeps its height and takes the picture's shape. */
+static void reshape_window(int width)
+{
+    int w, h;
+    if ((width == shown_width && ASPECT_H == shown_rows) || width != LOGICAL_W + 2 * port_display_pad())
+        return;   /* unchanged, or between a pixel-shape change and the view width that follows it a frame later */
+    shown_width = width;
+    shown_rows = ASPECT_H;
+    if (PORT_ALWAYS_FULLSCREEN || port_display_mode() == PORT_WIDE_FIT ||
+        (SDL_GetWindowFlags(window) & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_MAXIMIZED)) || !SDL_GetWindowSize(window, &w, &h))
+        return;
+    SDL_SetWindowSize(window, (h * width + ASPECT_H / 2) / ASPECT_H, h);
+    printf("Window: %d x %d for the %d x %d picture\n", (h * width + ASPECT_H / 2) / ASPECT_H, h, width, ASPECT_H);
+}
+
 static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_t *dac_rgb6)
 {
     uint32_t lut[256];
@@ -290,6 +313,8 @@ static void draw_frame(const uint8_t *pixels, int pitch, int width, const uint8_
     int dst_pitch, x, y, w, h;
     SDL_FRect rect;
     uint64_t entered = SDL_GetTicksNS();
+    ASPECT_H = port_display_rows();
+    reshape_window(width);
     if (!texture || width != texture_width) {
         if (texture)
             SDL_DestroyTexture(texture);
@@ -379,7 +404,8 @@ static void poll_events(void)
             if (!code)
                 break;
             if (e.key.down && e.key.scancode == SDL_SCANCODE_RETURN && (e.key.mod & SDL_KMOD_ALT)) {
-                SDL_SetWindowFullscreen(window, !(SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN));
+                if (!PORT_ALWAYS_FULLSCREEN)
+                    port_display_set_fullscreen(!port_display_fullscreen());   /* applied below, and saved */
                 break;
             }
             {
@@ -395,8 +421,13 @@ static void poll_events(void)
             break;
         }
     }
+    if (window && !PORT_ALWAYS_FULLSCREEN && applied_fullscreen != port_display_fullscreen()) {
+        applied_fullscreen = port_display_fullscreen();
+        SDL_SetWindowFullscreen(window, applied_fullscreen);
+    }
     if (renderer)
         SDL_GetCurrentRenderOutputSize(renderer, &out_w, &out_h);
+    port_display_set_output(out_w, out_h);   /* the "fit" view follows the window */
     port_touch_update(out_w, out_h);
     port_pad_update();
 }

@@ -64,7 +64,7 @@ MOVIE_SCENARIO = ('movie', ['--menus', '--keys', str(KEYS / 'movie_menu.txt')], 
 
 def run(exe, data, cd, demo, args, frames, work, native, env=None):
     tag = 'native' if native else 'reference'
-    cmd = [exe, '--data', data, '--cd', cd, '--save', str(work / f'save{tag}{demo}')] + args + [
+    cmd = [exe, '--data', data, '--cd', cd, '--no-cd-movies', '--save', str(work / f'save{tag}{demo}')] + args + [
            '--headless', '--deterministic', '--frames', str(frames), '--state-log', str(work / f'{tag}{demo}.state'),
            '--frame-log', str(work / f'{tag}{demo}.frames'), '--verify-render']
     cmd += ['--renderer', 'native' if native else 'reference']

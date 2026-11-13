@@ -69,6 +69,36 @@ static void fill(port_surface *d, int32_t x, int32_t y, int32_t n, uint8_t v)
         put(d, x + i, y, v);
 }
 
+/* The sides: a surface's columns outside the original 320 (the wider view's margins, and the draw surface's
+   overflow margin). They are more screen: an operation that covers whole rows of the original 320 columns covers
+   the sides of those rows too, with its own meaning (a fill fills them, a copy between native surfaces copies them,
+   an image from game memory, which has nothing beyond 320 columns, leaves them black); an operation that covers
+   part of a row leaves them, as it leaves the rest of the row. So the sides always hold what the data flow put
+   there, and a swap shows them like the rest of the screen (port/docs/RENDERER.md section 9). */
+static void sides_fill(port_surface *d, int32_t y, uint8_t v)
+{
+    fill(d, d->x0, y, -d->x0, v);
+    fill(d, 320, y, d->x0 + d->width - 320, v);
+}
+
+static void sides_copy(port_surface *d, int32_t y, const port_surface *s, int32_t sy)
+{
+    int32_t x;
+    for (x = d->x0; x < 0; x++)
+        put(d, x, y, get_pixel(s, x, sy));
+    for (x = 320; x < d->x0 + d->width; x++)
+        put(d, x, y, get_pixel(s, x, sy));
+}
+
+static int64_t floor_div320(int64_t n) { return n >= 0 ? n / 320 : -((-n + 319) / 320); }
+
+/* The rows a linear range [n, n + len) covers from column 0 to column 319: [*first, *last). */
+static void whole_rows(int64_t n, int64_t len, int32_t *first, int32_t *last)
+{
+    *first = (int32_t)-floor_div320(-n);
+    *last = (int32_t)floor_div320(n + len);
+}
+
 /* A sprite pixel at (x, y) relative to the buffer the drawer was given: base + 320 y + x. */
 static void put_sprite(port_surface *d, int32_t base, int32_t x, int32_t y, uint8_t v)
 {
@@ -614,19 +644,20 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         case PORT_OP_WEATHER:
             weather(dst, op, win);
             break;
-        case PORT_OP_FILL:
-            if (wide && op->x == 0 && op->w >= 64000) {
-                /* the whole buffer cleared: the whole view */
-                for (y = 0; y < 200; y++)
-                    clear_row(dst, y, op->color);
-                break;
-            }
+        case PORT_OP_FILL: {
+            int32_t row0, row1;
             for (y = 0; y < op->w; y++)
                 put_linear(dst, (int64_t)op->x + y, op->color);
+            whole_rows(op->x, op->w, &row0, &row1);
+            for (y = row0; y < row1; y++)
+                sides_fill(dst, y, op->color);
             break;
-        case PORT_OP_COPY:
+        }
+        case PORT_OP_COPY: {
+            const port_surface *src = op->flags && op->color < PORT_TARGET_COUNT ? surfaces[op->color] : NULL;
+            int64_t shift = (int64_t)op->y - op->x;   /* source offset minus destination offset */
+            int32_t row0, row1;
             if (op->flags) {
-                const port_surface *src = op->color < PORT_TARGET_COUNT ? surfaces[op->color] : NULL;
                 if (src)
                     for (y = 0; y < op->w; y++)
                         put_linear(dst, (int64_t)op->x + y, get_linear(src, (int64_t)op->y + y));
@@ -634,32 +665,38 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
                 for (y = 0; y < op->w; y++)
                     put_linear(dst, (int64_t)op->x + y, op->image[y]);
             }
+            whole_rows(op->x, op->w, &row0, &row1);
+            for (y = row0; y < row1; y++) {
+                /* rows of a native surface copied with their columns in place carry their sides */
+                if (src && shift == floor_div320(shift) * 320)
+                    sides_copy(dst, y, src, y + (int32_t)floor_div320(shift));
+                else
+                    sides_fill(dst, y, 0);
+            }
             break;
+        }
         case PORT_OP_PICTURE:
             for (y = 0; y < op->h; y++) {
                 int32_t x;
                 for (x = 0; x < op->w; x++)
                     put(dst, op->x + x, op->y + y, op->image[(size_t)y * op->w + x]);
+                if (op->x <= 0 && op->x + op->w >= 320)
+                    sides_fill(dst, op->y + y, 0);   /* a whole-width picture from game memory */
             }
             break;
         case PORT_OP_SWAP:
             if (!draw || !display)
                 break;
-            if (pad && (f->gameplay || f->wide_backdrop) && op->x <= 4 && op->w >= 316 && op->x == op->clip[0] &&
-                op->y == op->clip[1]) {
-                /* the gameplay view, or the in-game menu over its whole-screen background: the full width */
+            if (display->x0 < 0 && full_width(op->x, op->x + op->w) && op->x == op->clip[0] && op->y == op->clip[1]) {
+                /* rows of the whole screen: the whole rows of the view, the sides and the original's border
+                   columns included */
                 for (y = 0; y < op->h; y++) {
                     int32_t x;
-                    for (x = -pad; x < 320 + pad; x++)
+                    for (x = display->x0; x < display->x0 + display->width; x++)
                         put(display, x, op->clip[1] + y, get_pixel(draw, x, op->y + y));
                 }
                 break;
             }
-            if (pad)   /* screen-space scenes and narrowed views keep the original 320 columns */
-                for (y = 0; y < 200; y++) {
-                    fill(display, -pad, y, pad, 0);
-                    fill(display, 320, y, pad, 0);
-                }
             for (y = 0; y < op->h; y++) {
                 int32_t x;
                 for (x = 0; x < op->w; x++)
@@ -707,30 +744,25 @@ void port_native_draw(const port_frame *f, int first, int last, port_surface *co
         case PORT_OP_CLEAR_OUTSIDE:
             /* ClearBorder (src/box.c 408): rows above y0 and from y1, then columns left of x0 and from x1. In the
                wider view the rows span it, and a full-width viewport has no columns outside it. */
-            if (wide && full_width(op->clip[0], op->clip[1])) {
-                for (y = 0; y < op->clip[2]; y++)
-                    clear_row(dst, y, 0);
-                for (y = op->clip[3]; y < 200; y++)
-                    clear_row(dst, y, 0);
-                break;
-            }
             for (y = 0; y < op->clip[2]; y++)
-                fill(dst, 0, y, 320, 0);
+                clear_row(dst, y, 0);
             for (y = op->clip[3]; y < 200; y++)
-                fill(dst, 0, y, 320, 0);
+                clear_row(dst, y, 0);
+            if (dst->x0 < 0 && full_width(op->clip[0], op->clip[1]))
+                break;   /* a full-width viewport: its rows are the whole view, sides included */
             for (y = op->clip[2]; y < op->clip[3]; y++) {
-                fill(dst, 0, y, op->clip[0], 0);
-                fill(dst, op->clip[1], y, 320 - op->clip[1], 0);
+                fill(dst, dst->x0, y, op->clip[0] - dst->x0, 0);
+                fill(dst, op->clip[1], y, dst->x0 + dst->width - op->clip[1], 0);
             }
             break;
         case PORT_OP_FIREFLY:
             firefly(dst, op, win);
             break;
         case PORT_OP_BLACK_BOX:
-            /* A bar across the original screen (the fairy scene's borders) crosses the whole wider view. */
-            if (wide && full_width(op->x, op->x + op->w)) {
+            /* A bar across the original screen (the fairy scene's borders) crosses the whole view. */
+            if (full_width(op->x, op->x + op->w)) {
                 for (y = 0; y < op->h; y++)
-                    fill(dst, -wide, op->y + y, 320 + 2 * wide, 0);
+                    clear_row(dst, op->y + y, 0);
                 break;
             }
             for (y = 0; y < op->h; y++)

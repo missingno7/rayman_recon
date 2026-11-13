@@ -410,7 +410,9 @@ static void lens(const port_effect_lens *e, port_surface *const *surfaces)
     }
 }
 
-/* The columns two surfaces share beyond the original 320 (the wider view's margins): [*x0, 0) and [320, *x1). */
+/* The sides (render/native.c): columns outside the original 320 are more screen; a pass over whole rows of the
+   original 320 columns covers the sides of those rows too. The columns two surfaces share, sides included:
+   [*x0, *x1); nonzero when there are sides. */
 static int margins(const port_surface *a, const port_surface *b, int32_t *x0, int32_t *x1)
 {
     if (!a || !b)
@@ -445,13 +447,19 @@ static void grey(const port_effect_grey *e, port_surface *const *surfaces)
             uint8_t c = get(src, e->source.offset + (int64_t)y * 320 + x);
             put(dst, e->destination.offset + (int64_t)y * 320 + x, grey_of(e, c));
         }
-    /* The wider view: a capture of a whole screen (CaptureVideo) also takes the margins, so the in-game menu's
-       background shows the whole view the player saw (user decision 2026-11-13). */
-    if (e->width == 320 && e->height == 200 && !e->source.offset && !e->destination.offset &&
-        margins(src, dst, &x0, &x1))
-        for (y = 0; y < 200; y++)
-            for (x = x0; x < x1; x = x == -1 ? 320 : x + 1)
-                set_pixel(dst, x, y, grey_of(e, pixel(src, x, y)));
+    /* Whole rows (CaptureVideo's whole screen) grey their sides too: the in-game menu's background is the whole
+       view the player saw (user decision 2026-11-13). */
+    if (e->width >= 320 && e->source.offset % 320 == 0 && e->destination.offset % 320 == 0 && e->source.offset >= 0 &&
+        e->destination.offset >= 0 && margins(src, dst, &x0, &x1))
+        for (y = 0; y < e->height; y++) {
+            int32_t sy = (int32_t)(e->source.offset / 320) + y, dy = (int32_t)(e->destination.offset / 320) + y;
+            if (sy < src->y0 || sy >= src->y0 + src->height || dy < dst->y0 || dy >= dst->y0 + dst->height)
+                continue;
+            for (x = x0; x < 0; x++)
+                set_pixel(dst, x, dy, grey_of(e, pixel(src, x, sy)));
+            for (x = 320; x < x1; x++)
+                set_pixel(dst, x, dy, grey_of(e, pixel(src, x, sy)));
+        }
 }
 
 /* CadreTrans (src/box.c): each little-endian dword of the rectangle gains 0x40404040 (bytes carry into the next
@@ -538,17 +546,21 @@ static void copy_rect(const port_effect_rect *e, port_surface *const *surfaces)
     for (y = 0; y < e->height; y++)
         for (x = 0; x < e->width; x++)
             put(dst, e->destination.offset + (int64_t)y * 320 + x, get(src, e->source.offset + (int64_t)y * 320 + x));
-    /* The wider view: the in-game menu's background over the whole screen (DISPLAY_FOND_MENU with the full
-       viewport, 4..320 x 0..200, the same rows in both buffers) fills the margins and the original's 4 border
-       columns from the widened capture (grey above). */
-    if (e->source.offset == e->destination.offset && e->source.offset >= 0 && e->source.offset <= 8 &&
-        e->source.offset + e->width >= 312 && e->height == 200 && margins(src, dst, &x0, &x1))
-        for (y = 0; y < 200; y++) {
-            for (x = x0; x < (int32_t)e->source.offset; x++)
-                set_pixel(dst, x, y, pixel(src, x, y));
-            for (x = (int32_t)e->source.offset + e->width; x < x1; x++)
-                set_pixel(dst, x, y, pixel(src, x, y));
+    /* Rows of the full-width viewport (DISPLAY_FOND_MENU in game, 4..320) are whole rows of the view, as at the swap:
+       their sides and the original's border columns come along, columns in place (the greyed capture's, above). */
+    if (e->source.offset >= 0 && e->destination.offset >= 0 && e->source.offset % 320 == e->destination.offset % 320 &&
+        e->source.offset % 320 <= 8 && e->source.offset % 320 + e->width >= 312 && margins(src, dst, &x0, &x1)) {
+        int32_t cx = (int32_t)(e->source.offset % 320);
+        for (y = 0; y < e->height; y++) {
+            int32_t sy = (int32_t)(e->source.offset / 320) + y, dy = (int32_t)(e->destination.offset / 320) + y;
+            if (sy < src->y0 || sy >= src->y0 + src->height || dy < dst->y0 || dy >= dst->y0 + dst->height)
+                continue;
+            for (x = x0; x < cx; x++)
+                set_pixel(dst, x, dy, pixel(src, x, sy));
+            for (x = cx + e->width; x < x1; x++)
+                set_pixel(dst, x, dy, pixel(src, x, sy));
         }
+    }
 }
 
 static void fire(const port_effect_fire *e, port_surface *const *surfaces)

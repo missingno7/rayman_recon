@@ -1,11 +1,14 @@
 /* MSCDEX transport and a small CD-ROM device. Packet offsets/status bits follow
    the Microsoft CD-ROM driver interface; game policy remains in cdaudio.c.
-   The BIN is opened once, read-only, and never copied or extracted. */
+   The medium is a CUE sheet's files laid end to end, as on the disc: raw 2352-byte sectors (a BIN, GOG's game.gog)
+   or Ogg Vorbis audio tracks (GOG's Music\raymanNN.ogg), opened once, read-only, never copied. Single files of the disc's ISO 9660 file system can be
+   looked up and copied out (port_cd_file, port_cd_copy_file: the movies, platform/files.c). */
 #include "platform/cdrom.h"
 #include "dos_regs.h"
 #include "platform/cd_audio.h"
 #include "platform/cd_host.h"
 #include "platform/clock.h"
+#include "platform/ogg.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -23,7 +26,11 @@ typedef struct { uint32_t start, index0; uint8_t data, has_index0; } track_t;
 static track_t tracks[100];
 static unsigned first_track, last_track;
 static uint32_t leadout;
-static FILE *bin;
+/* The medium's files: each covers `sectors` sectors from disc sector `first`. */
+#define MAX_SOURCES 100
+typedef struct { FILE *raw; port_ogg *ogg; uint32_t first, sectors; } source_t;
+static source_t sources[MAX_SOURCES];
+static unsigned source_count;
 static int drive = 3, door, locked;
 static uint8_t volume[4] = {255,255,255,255}, channel[4] = {0,1,2,3};
 static union { uint64_t alignment; uint8_t data[65536]; } memory;
@@ -32,6 +39,7 @@ static uint32_t start_lba, end_lba, position;
 static uint64_t started;
 static int playing, paused;
 static FILE *trace;
+static char host_letter;   /* the host drive holding the disc ("E:"), 0 for an image */
 
 static uint16_t rd16(const uint8_t *p) { return (uint16_t)(p[0] | p[1] << 8); }
 static uint32_t rd32(const uint8_t *p) { return rd16(p) | (uint32_t)rd16(p+2) << 16; }
@@ -92,10 +100,15 @@ static void stop(void)
 void port_cd_shutdown(void)
 {
     port_cd_audio_shutdown();
-    if (bin) fclose(bin);
+    while (source_count) {
+        source_t *src = &sources[--source_count];
+        if (src->raw) fclose(src->raw);
+        port_ogg_close(src->ogg);
+    }
+    memset(sources, 0, sizeof sources);
     port_cd_host_close();
     if (trace) fclose(trace);
-    bin = trace = NULL;
+    trace = NULL;
     allocated = 0;
     first_track = last_track = leadout = 0;
     playing = paused = door = locked = 0;
@@ -126,62 +139,88 @@ int port_cd_init(const char *cue, char letter)
             return 0;
         }
         for (n=first_track;n<=last_track;n++) { tracks[n].start=host_tracks[n].start; tracks[n].data=host_tracks[n].data; }
+        host_letter=(char)toupper((unsigned char)cue[0]);
         fprintf(stdout,"Virtual MSCDEX 2.21: %c: %u tracks, lead-out LBA %u (host drive %c:)\n",'A'+drive,last_track,leadout,
                 toupper((unsigned char)cue[0]));
         return 1;
     }
     if (!(f = fopen(cue, "r"))) goto bad;
+    slash=strrchr(cue,'/'); backslash=strrchr(cue,'\\');
+    if (!slash || (backslash && backslash > slash)) slash=backslash;
+    /* Each FILE starts where the previous one ends; its INDEX times are relative to its own start. Its length:
+       a raw file's bytes / 2352, an audio file's frames / 588 rounded up. GOG labels its Ogg tracks "MP3": the
+       content decides (an Ogg stream), not the label. */
     while (fgets(line, sizeof line, f)) {
         char *p = line;
         while (isspace((unsigned char)*p)) ++p;
         if (!strncmp(p,"FILE ",5)) {
-            if (++files > 1 || sscanf(p,"FILE \"%1023[^\"]\" %31s",filename,mode)!=2 || strcmp(mode,"BINARY")) goto bad_cue;
+            source_t *src;
+            uint64_t frames;
+            size_t k;
+            uint32_t at = source_count ? sources[source_count-1].first + sources[source_count-1].sectors : 0;
+            if (source_count == MAX_SOURCES || sscanf(p,"FILE \"%1023[^\"]\" %31s",filename,mode)!=2) goto bad_cue;
+            for (k = 0; filename[k]; k++)
+                if (filename[k] == '\\') filename[k] = '/';
+            if (filename[0]=='/' || filename[1]==':') snprintf(path,sizeof path,"%s",filename);
+            else snprintf(path,sizeof path,"%.*s%s",slash ? (int)(slash-cue+1) : 0,cue,filename);
+            src = &sources[source_count];
+            src->first = at;
+            if ((src->ogg = port_ogg_open(path, &frames)) != NULL) {
+                src->sectors = (uint32_t)((frames + 587) / 588);
+            } else if (!strcmp(mode,"BINARY") && (src->raw = fopen(path,"rb")) != NULL) {
+                if (seek64(src->raw,0,SEEK_END) || (bytes=tell64(src->raw))<=0 || bytes%2352 ||
+                    (uint64_t)bytes/2352 > UINT32_MAX-150) { source_count++; goto bad_cue; }
+                src->sectors = (uint32_t)(bytes/2352);
+            } else {
+                fprintf(stderr,"CD image: cannot read %s\n",path);
+                goto bad_cue;
+            }
+            if ((uint64_t)at + src->sectors > UINT32_MAX-150) { source_count++; goto bad_cue; }
+            source_count++;
+            files++;
         } else if (!strncmp(p,"TRACK ",6)) {
             if (sscanf(p,"TRACK %u %31s",&n,mode)!=2 || !files || n == 0 || n > 98 || n != t+1) goto bad_cue;
             if (t && !seen[t]) goto bad_cue;
             t=n;
             if (!strcmp(mode,"AUDIO")) tracks[t].data=0;
-            else if (!strcmp(mode,"MODE1/2352")) tracks[t].data=0x40;
+            else if (!strcmp(mode,"MODE1/2352") && sources[source_count-1].raw) tracks[t].data=0x40;
             else goto bad_cue;
             last_track=t;
         } else if (!strncmp(p,"INDEX ",6)) {
+            uint32_t base = sources[source_count-1].first;
             if (sscanf(p,"INDEX %u %u:%u:%u",&index,&m,&s,&frame)!=4 || !t || s>=60 || frame>=75 || m>255) goto bad_cue;
             if (index==1) {
                 if (seen[t]) goto bad_cue;
-                tracks[t].start=m*4500+s*75+frame;
+                tracks[t].start=base+m*4500+s*75+frame;
                 seen[t]=1;
             } else if (index==0 && !seen[t] && !tracks[t].has_index0) {
-                tracks[t].index0=m*4500+s*75+frame;
+                tracks[t].index0=base+m*4500+s*75+frame;
                 tracks[t].has_index0=1;
             } else goto bad_cue;
         } else if (!strncmp(p,"PREGAP ",7) || !strncmp(p,"POSTGAP ",8)) goto bad_cue;
     }
     if (ferror(f) || !t || !seen[t] || tracks[1].start != 0) goto bad_cue;
     fclose(f);
-    slash=strrchr(cue,'/'); backslash=strrchr(cue,'\\');
-    if (!slash || (backslash && backslash > slash)) slash=backslash;
-    if (filename[0]=='/' || filename[0]=='\\' || filename[1]==':') snprintf(path,sizeof path,"%s",filename);
-    else snprintf(path,sizeof path,"%.*s%s",slash ? (int)(slash-cue+1) : 0,cue,filename);
-    if (!(bin=fopen(path,"rb"))) goto bad;
-    if (seek64(bin,0,SEEK_END) || (bytes=tell64(bin))<=0 || bytes%2352 || (uint64_t)bytes/2352 > UINT32_MAX-150) goto bad;
-    leadout=(uint32_t)(bytes/2352);
+    leadout=sources[source_count-1].first+sources[source_count-1].sectors;
     for (n=1;n<=t;n++)
         if (tracks[n].start>=leadout || (n>1 && tracks[n].start<=tracks[n-1].start) ||
             (tracks[n].has_index0 && (tracks[n].index0>tracks[n].start ||
              (n>1 && tracks[n].index0<tracks[n-1].start)))) goto bad;
     first_track=1;
-    fprintf(stdout,"Virtual MSCDEX 2.21: %c: %u tracks, lead-out LBA %u\n",'A'+drive,last_track,leadout);
+    fprintf(stdout,"Virtual MSCDEX 2.21: %c: %u tracks, lead-out LBA %u (%u file%s)\n",'A'+drive,last_track,leadout,
+            source_count,source_count==1?"":"s");
     return 1;
 bad_cue:
     fclose(f);
 bad:
-    fprintf(stderr,"CD image: invalid or unsupported single-file MODE1/2352 + AUDIO CUE/BIN: %s\n",cue ? cue : "");
+    fprintf(stderr,"CD image: invalid or unsupported CUE sheet (MODE1/2352 and AUDIO tracks in BIN or Ogg files): %s\n",
+            cue ? cue : "");
     port_cd_shutdown();
     return 0;
 }
 
 int port_cd_drive(void) { return drive; }
-int port_cd_present(void) { return (bin != NULL || port_cd_host_is_open()) && !door; }
+int port_cd_present(void) { return (source_count > 0 || port_cd_host_is_open()) && !door; }
 int port_cd_path(const char *p) { return p[0] && p[1]==':' && toupper((unsigned char)p[0])=='A'+drive; }
 
 uint16_t port_cd_allocate(uint16_t bytes, uint32_t *address)
@@ -214,9 +253,86 @@ static int read_sector(uint32_t lba, int raw, uint8_t *out)
 {
     if (!port_cd_present() || lba>=leadout) return 0;
     if (!raw && !tracks[track_at(lba)].data) return 0;
-    if (!bin) return port_cd_host_read(lba,raw,tracks[track_at(lba)].data!=0,out);
-    return seek64(bin,(uint64_t)lba*2352+(raw?0:16),SEEK_SET)==0 && fread(out,1,raw?2352:2048,bin)==(size_t)(raw?2352:2048);
+    unsigned k;
+    if (!source_count) return port_cd_host_read(lba,raw,tracks[track_at(lba)].data!=0,out);
+    for (k = 0; k < source_count && lba >= sources[k].first + sources[k].sectors; k++) {}
+    if (k == source_count) return 0;
+    if (sources[k].ogg) {
+        /* an audio sector: 588 frames of 16-bit stereo, little-endian; the track's end is silence */
+        int16_t pcm[588 * 2];
+        size_t got = raw ? port_ogg_read(sources[k].ogg, (uint64_t)(lba - sources[k].first) * 588, pcm, 588) : 0, i;
+        if (!raw) return 0;
+        for (i = 0; i < 588 * 2; i++)
+            wr16(out + 2 * i, (uint16_t)(i < got * 2 ? pcm[i] : 0));
+        return 1;
+    }
+    return seek64(sources[k].raw,(uint64_t)(lba-sources[k].first)*2352+(raw?0:16),SEEK_SET)==0 &&
+           fread(out,1,raw?2352:2048,sources[k].raw)==(size_t)(raw?2352:2048);
 }
+
+/* ISO 9660 (ECMA-119) on the disc's data track: the primary volume descriptor at sector 16 gives the root directory;
+   directory records are walked sector by sector (a zero length byte ends a sector's records). Names compare without
+   case and without the ";1" version suffix. */
+static int find_entry(uint32_t dir_lba, uint32_t dir_size, const char *name, int want_dir, uint32_t *lba, uint32_t *size)
+{
+    uint8_t sector[2048];
+    uint32_t done;
+    size_t len = strlen(name);
+    for (done = 0; done < dir_size; done += 2048) {
+        unsigned i = 0;
+        if (!read_sector(dir_lba + done / 2048, 0, sector)) return 0;
+        while (i + 33 <= 2048 && sector[i]) {
+            const uint8_t *r = sector + i;
+            unsigned rec = r[0], nl = r[32], k;
+            if (i + rec > 2048 || 33 + nl > rec) break;
+            if (((r[25] & 2) != 0) == want_dir && (nl == len || (nl > len && r[33 + len] == ';'))) {
+                for (k = 0; k < len && toupper(r[33 + k]) == toupper((unsigned char)name[k]); k++) {}
+                if (k == len) {
+                    *lba = rd32(r + 2);
+                    *size = rd32(r + 10);
+                    return 1;
+                }
+            }
+            i += rec;
+        }
+    }
+    return 0;
+}
+
+int port_cd_file(const char *dir, const char *name, uint32_t *lba, uint32_t *size)
+{
+    uint8_t pvd[2048];
+    uint32_t root_lba, root_size;
+    if (!port_cd_present() || !read_sector(16, 0, pvd) || pvd[0] != 1 || memcmp(pvd + 1, "CD001", 5)) return 0;
+    root_lba = rd32(pvd + 156 + 2);
+    root_size = rd32(pvd + 156 + 10);
+    if (dir && *dir && !find_entry(root_lba, root_size, dir, 1, &root_lba, &root_size)) return 0;
+    return find_entry(root_lba, root_size, name, 0, lba, size);
+}
+
+int port_cd_copy_file(uint32_t lba, uint32_t size, const char *host_path)
+{
+    uint8_t sector[2048];
+    char part[1100];
+    FILE *out;
+    uint32_t done;
+    int ok = 1;
+    snprintf(part, sizeof part, "%s.part", host_path);   /* renamed when complete: no half file is ever used */
+    if (!(out = fopen(part, "wb"))) return 0;
+    for (done = 0; ok && done < size; done += 2048) {
+        size_t n = size - done < 2048 ? size - done : 2048;
+        ok = read_sector(lba + done / 2048, 0, sector) && fwrite(sector, 1, n, out) == n;
+    }
+    ok = fclose(out) == 0 && ok;
+    remove(host_path);
+    if (!ok || rename(part, host_path) != 0) {
+        remove(part);
+        return 0;
+    }
+    return 1;
+}
+
+char port_cd_host_drive(void) { return port_cd_host_is_open() ? host_letter : 0; }
 
 size_t port_cd_pcm(uint64_t sample, int16_t *out, size_t frames)
 {

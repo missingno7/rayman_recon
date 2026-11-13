@@ -167,9 +167,11 @@
     },
     "menu.c": {
       "patch": "menu.patch",
-      "reason": "FonduOption's two in-place greyscale passes (the in-game and options menus' faded option rectangles) are C pixel loops inside a function called within its own unit, so the native renderer cannot observe them at link time.",
+      "reason": "FonduOption's two in-place greyscale passes (the in-game and options menus' faded option rectangles) are C pixel loops inside a function called within its own unit, so the native renderer cannot observe them at link time; and the DOS video-mode screen (PCI / Mode X / VESA) is meaningless in the port (Mode X is not provided), so Graphics Details' video-mode row opens the port's Display screen instead (user decision 2026-11-13).",
       "divergences": [
-        "Two calls to port_record_menu_grey (port/render/effect_capture.c), one immediately before each greyscale loop of FonduOption mode 1, record the pass for the native renderer; they read the rectangle and MenuPalette and change no game state."
+        "Two calls to port_record_menu_grey (port/render/effect_capture.c), one immediately before each greyscale loop of FonduOption mode 1, record the pass for the native renderer; they read the rectangle and MenuPalette and change no game state.",
+        "Graphics Details' \"video mode\" row shows the wider view's mode (port_display_value_text) instead of pci1/pci2/vesa, and opening it (menuEtape 10) starts port_INIT_DISPLAY_SCREEN (port/game/display_screen.c: widescreen, pixel shape, fullscreen) instead of INIT_VIDEOMODE_SCREEN, from the main options (DO_NEW_MENUS) and from the in-game options (DO_OPTIONS_IN_GAME gains case 10).",
+        "In game (outside the fairy levels and world 6 level 4), InitParamGraphicsScreen shows rows 1..4 instead of 2..4 (first_option 1, nbre_options 5 before its decrement): the video-mode row is reachable in game. The fairy-level variant is unchanged."
       ],
       "base_sha256": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb"
     },

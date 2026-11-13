@@ -45,6 +45,7 @@ static port_surface native_draw = {native_draw_px, 320 + 2 * MARGIN, -MARGIN, -M
 static port_surface native_display = {native_display_px, 320, 0, 0, 320, 200, NULL};
 /* The view: `pad` columns beyond the original 320 on each side (render/native.h). */
 static int pad;
+static int pending_pad = -1;   /* port_record_request_pad */
 static port_surface native_effect = {native_effect_px, 320, 0, 0, 320, 400, NULL};
 static port_surface *const native[PORT_TARGET_COUNT] = {&native_draw, &native_display, &native_effect};
 
@@ -372,7 +373,6 @@ void port_record_pass_end(int previous)
 }
 
 void port_record_gameplay(void) { rec.gameplay = 1; }
-void port_record_wide_backdrop(void) { rec.wide_backdrop = 1; }
 
 port_scene *port_record_world(void) { return &rec.world; }
 
@@ -1222,7 +1222,10 @@ static void end_frame(void)
     st.display_writes += rec.display_writes;
     st.overflow += rec.overflow;
     rec.seq++;
-    rec.gameplay = rec.wide_backdrop = 0;
+    rec.gameplay = 0;
+    if (pending_pad >= 0 && pending_pad != pad)
+        port_record_set_pad(pending_pad);
+    pending_pad = -1;
     rec.nb_ops = rec.overflow = rec.unsupported = rec.display_writes = 0;
     native_drawn = 0;
     arena_used = 0;
@@ -1271,19 +1274,40 @@ int32_t __wrap_get_joy_input1_dos2(uint8_t *source, uint8_t *dest, int32_t width
 
 void port_record_set_native(int on) { native_mode = on; }
 int port_record_native(void) { return native_mode; }
+/* A surface gets new columns: the pixels of the columns both layouts have stay where they are (the native surfaces
+   persist between frames like the original buffers: the draw buffer outside the redrawn areas, the menu pictures
+   in the effect buffer); new columns start black. */
+static void relayout(port_surface *s, int x0, int width)
+{
+    static uint8_t old[sizeof native_effect_px > sizeof native_draw_px ? sizeof native_effect_px : sizeof native_draw_px];
+    int old_x0 = s->x0, old_pitch = s->pitch, y;
+    int from = x0 > old_x0 ? x0 : old_x0;
+    int to = x0 + width < old_x0 + s->width ? x0 + width : old_x0 + s->width;
+    memcpy(old, s->pixels, (size_t)old_pitch * s->height);
+    memset(s->pixels, 0, (size_t)width * s->height);
+    if (to > from)
+        for (y = 0; y < s->height; y++)
+            memcpy(s->pixels + (size_t)y * width + (from - x0), old + (size_t)y * old_pitch + (from - old_x0),
+                   (size_t)(to - from));
+    s->x0 = x0;
+    s->width = s->pitch = width;
+}
+
 void port_record_set_pad(int value)
 {
     pad = value < 0 ? 0 : value > MAX_PAD ? MAX_PAD : value;
-    native_draw.x0 = -(MARGIN + pad);
-    native_draw.width = native_draw.pitch = 320 + 2 * (MARGIN + pad);
-    native_display.x0 = -pad;
-    native_display.width = native_display.pitch = 320 + 2 * pad;
+    relayout(&native_draw, -(MARGIN + pad), 320 + 2 * (MARGIN + pad));
+    relayout(&native_display, -pad, 320 + 2 * pad);
     /* the effect buffer gets the margins too: the in-game menu's greyscale capture of the wider view */
-    native_effect.x0 = -pad;
-    native_effect.width = native_effect.pitch = 320 + 2 * pad;
-    memset(native_draw_px, 0, sizeof native_draw_px);
-    memset(native_effect_px, 0, sizeof native_effect_px);
-    memset(native_display_px, 0, sizeof native_display_px);
+    relayout(&native_effect, -pad, 320 + 2 * pad);
+}
+
+/* A new view width (the player changed the display settings) takes effect at the next frame boundary: never
+   between the operations of one frame. */
+void port_record_request_pad(int value)
+{
+    if (!verify)
+        pending_pad = value;
 }
 
 int port_record_pad(void) { return pad; }

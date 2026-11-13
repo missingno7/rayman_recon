@@ -30,6 +30,7 @@
 #include "platform/audio.h"
 #include "platform/host.h"
 #include "platform/config.h"
+#include "platform/display.h"
 #include "platform/cd_host.h"
 #include "video/vga.h"
 #include "render/capture.h"
@@ -46,6 +47,7 @@ void port_set_time_epoch(long long seconds);
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,6 +65,8 @@ static long frame_count;
 static FILE *frame_log;
 static FILE *state_log;
 static const char *dump_dir;
+static port_config *settings;      /* the settings file, when the program has one (on_frame saves display changes) */
+static const char *settings_path;
 static long dump_every = 0;
 
 /* Scripted keyboard input for tests: "MILLISECONDS SCANCODE" lines (port-clock time, hex set-1 codes, 0x80 bit =
@@ -122,6 +126,56 @@ static void dump_frame(const uint8_t *pixels, int width, const uint8_t *dac)
     fclose(f);
 }
 
+/* The CD images the settings' "auto" may insert, best first (main). */
+static char cd_candidates[16][1100];
+static int cd_candidate_count;
+
+static void add_cd_candidate(const char *format, const char *a, const char *b)
+{
+    int k;
+    if (cd_candidate_count == 16)
+        return;
+    snprintf(cd_candidates[cd_candidate_count], sizeof cd_candidates[0], format, a, b);
+    for (k = 0; k < cd_candidate_count; k++)
+        if (!SDL_strcasecmp(cd_candidates[k], cd_candidates[cd_candidate_count]))
+            return;   /* RAYMAN.cue also matches *.cue */
+    cd_candidate_count++;
+}
+
+/* The game version of the data folder. The game code is v1.21's, and its tables locate the pieces of the data
+   archives (src/data/blk_215c.c: RAY.LNG's languages, VIGNET.DAT's pictures); other versions (the v1.12 CD) pack
+   different files that this code cannot read. Compared by the archives' total sizes; NULL when they match,
+   otherwise a message for the player. */
+typedef struct { int32_t offset, size; uint8_t xor_byte, checksum_byte; uint16_t reserved; } archive_entry;
+extern archive_entry language_infos[5], HeaderFilevignet[75];
+
+static const char *data_version_problem(void)
+{
+    static const struct { const char *name; const archive_entry *table; int count; } archives[] = {
+        {"RAY.LNG", language_infos, 5}, {"VIGNET.DAT", HeaderFilevignet, 75}};
+    static char message[600];
+    char path[1024];
+    int i;
+    for (i = 0; i < 2; i++) {
+        const archive_entry *last = &archives[i].table[archives[i].count - 1];
+        long expected = (long)last->offset + last->size, got = -1;
+        FILE *f;
+        if (port_files_resolve(archives[i].name, 0, path, sizeof path) && (f = fopen(path, "rb")) != NULL) {
+            if (fseek(f, 0, SEEK_END) == 0)
+                got = ftell(f);
+            fclose(f);
+        }
+        if (got != expected) {
+            snprintf(message, sizeof message,
+                     "This port plays the game files of Rayman v1.21 (the GOG release). The game folder's %s is %ld "
+                     "bytes, v1.21's is %ld: it holds another version of the game (for example the v1.12 CD), which "
+                     "this port does not support yet.", archives[i].name, got, expected);
+            return message;
+        }
+    }
+    return NULL;
+}
+
 /* FNV-1a over the presented pixels (width x 200) and the 768 DAC bytes. */
 static void on_frame(const uint8_t *pixels, int width, const uint8_t *dac, void *user)
 {
@@ -149,6 +203,23 @@ static void on_frame(const uint8_t *pixels, int width, const uint8_t *dac, void 
     }
     if (port_host_quit_requested())
         exit(0);
+    /* Display settings changed by the player (the options menu, Alt+Enter, a resized window in "fit"): the view width
+       follows at the next frame boundary, the settings file keeps the choice. */
+    {
+        static int logged = -1;
+        int want = port_display_pad();
+        if (want != logged && logged >= 0 && port_display_adjustable())
+            printf("Widescreen: %d columns per side (%s pixels)\n", want, port_display_square() ? "square" : "4:3");
+        logged = want;
+        port_record_request_pad(want);
+    }
+    if (port_display_take_changed() && settings_path) {
+        settings->widescreen = port_display_mode();
+        settings->square_pixels = port_display_square();
+        if (!PORT_ENTRY_ALWAYS_FULLSCREEN)
+            settings->fullscreen = port_display_fullscreen();
+        port_config_save(settings_path, settings);
+    }
 }
 
 /* One gameplay-state digest per frame swap: the frames the game builds, whichever renderer presents them and however
@@ -233,7 +304,7 @@ int main(int argc, char **argv)
     const char *config_path = NULL;
     static port_config config;
     static char base_dir[1024], base_config[1100], base_cue[1100], host_cd[3];
-    int have_config = 0, no_vsync = 0;
+    int have_config = 0, no_vsync = 0, cd_auto = 0;   /* cd_auto: the CD was found by the settings' "auto" */
     int want_wide = 0, config_wide = 0, square = -1;   /* square: -1 = settings file or default (square), 0 original 4:3, 1 square */
 
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -248,6 +319,7 @@ int main(int argc, char **argv)
         }
         else if (!strcmp(a, "--save") && v) save = argv[++i];
         else if (!strcmp(a, "--cd") && v) cd = argv[++i];
+        else if (!strcmp(a, "--no-cd-movies")) port_files_set_cd_movies(0);   /* the movies only from data roots */
         else if (!strcmp(a, "--cd-drive") && v && strlen(v)==1) cd_letter = argv[++i][0];
         else if (!strcmp(a, "--demo") && v) demo = atoi(argv[++i]);
         else if (!strcmp(a, "--menus")) demo = -1;
@@ -348,6 +420,8 @@ int main(int argc, char **argv)
                 printf("Settings file %s: %s\n", state ? "updated" : "created", config_path);
         }
         have_config = 1;
+        settings = &config;
+        settings_path = config_path;
         if (square < 0) square = config.square_pixels;
         if (config.widescreen && !wide_pad && !want_wide && renderer != 0 && !port_record_verify())
             config_wide = 1;
@@ -357,49 +431,65 @@ int main(int argc, char **argv)
         if (!save && config.save_dir[0]) save = config.save_dir;
         if (!cd && strcmp(config.cd, "auto") && strcmp(config.cd, "none")) cd = config.cd;
         if (!cd && !strcmp(config.cd, "auto")) {
-            /* The CD: an image next to the program, else a mounted Rayman disc. */
-            FILE *probe;
-            snprintf(base_cue, sizeof base_cue, "%sRAYMAN.cue", base_dir);
-            if (base_dir[0] && (probe = fopen(base_cue, "rb")) != NULL) {
-                fclose(probe);
-                cd = base_cue;
-            } else if ((host_cd[0] = port_cd_host_find()) != 0) {
-                host_cd[1] = ':';
-                cd = host_cd;
+            /* The CD, in this order (the first usable one is inserted, port_cd_init below): the original disc first,
+               user decision 2026-11-13, since GOG's music files cut tracks 8, 13 and 14 short and replace track 14's
+               piece (port/docs/DIVERGENCES.md): RAYMAN.cue in the game folder, another *.cue there or in the parent
+               folder, a Rayman disc in a host drive (a real CD or a mounted image), then GOG's *.ins (game.gog +
+               Music/raymanNN.ogg; Rayman Forever keeps the game in Rayman/ and its CD one level up). None: the game
+               runs without CD music (game/cd_policy.c). */
+            static const char *const sheets[] = {"*.cue", "*.ins"};
+            char dirs[2][1100];
+            int d, k, count;
+            snprintf(dirs[0], sizeof dirs[0], "%s", base_dir);
+            snprintf(dirs[1], sizeof dirs[1], "%s../", base_dir);
+            if (base_dir[0])
+                add_cd_candidate("%sRAYMAN.cue", base_dir, "");
+            for (k = 0; k < 2; k++) {
+                if (k == 1 && (host_cd[0] = port_cd_host_find()) != 0) {
+                    host_cd[1] = ':';
+                    add_cd_candidate("%s%s", host_cd, "");
+                }
+                for (d = 0; d < 2 && base_dir[0]; d++) {
+                    char **found = SDL_GlobDirectory(dirs[d], sheets[k], SDL_GLOB_CASEINSENSITIVE, &count);
+                    int f;
+                    for (f = 0; found && f < count; f++)
+                        add_cd_candidate("%s%s", dirs[d], found[f]);
+                    SDL_free(found);
+                }
             }
+            cd_auto = 1;
         }
     }
     if (no_vsync)
         host.vsync = 0;
     /* Pixel shape (user decision 2026-11-12: square by default): the picture is 320 x 200 game pixels shown as 16:10,
-       or as the original 4:3 (pixels 1.2 times as tall). */
+       or as the original 4:3 (pixels 1.2 times as tall). The wider view: off, 16:9, 21:9 or as wide as the window
+       (platform/display.h). Both can change while the game runs (the options menu's Display screen); a new view
+       width takes effect at the next frame boundary (on_frame). */
     if (square < 0) square = 1;
-    host.display_rows = square ? 200 : 240;
-    if ((want_wide || config_wide) && !wide_pad) {
-        /* 16:9 at this pixel shape: 18 columns per side for square pixels, 54 for the original 4:3 */
-        wide_pad = (host.display_rows * 16 + 8) / 9;              /* the 16:9 width, rounded */
-        wide_pad = (wide_pad - 320 + 1) / 2;
-        if (config_wide && (host.fullscreen || PORT_ENTRY_ALWAYS_FULLSCREEN)) {
-            /* Fullscreen: as wide as the display (up to 160 columns per side), e.g. 57 square or 100 original on a
-               3120x1440 phone. */
-            int fit = port_host_fit_pad(160, host.display_rows);
-            if (fit >= 0) wide_pad = fit;
-        }
-        printf("Widescreen: %d columns per side (%s pixels)\n", wide_pad, square ? "square" : "4:3");
+    if (wide_pad > 0 && renderer == 0) {
+        /* A wider view is the native renderer's: the original draw path has 320 columns. */
+        fprintf(stderr, "rayman: --widescreen needs the native renderer (not --renderer reference)\n");
+        return 2;
     }
-    if (wide_pad > 0) {
-        /* A wider view is the native renderer's: the original draw path has 320 columns. Its verification compares
-           the original view (render/record.c), so it runs at the original width. */
-        if (renderer == 0) {
-            fprintf(stderr, "rayman: --widescreen needs the native renderer (not --renderer reference)\n");
-            return 2;
-        }
-        port_record_set_pad(wide_pad);   /* the default renderer or --renderer native: both are native */
-    }
-    if (port_record_pad() && port_record_verify()) {
+    if ((wide_pad > 0 || want_wide) && port_record_verify()) {
         fprintf(stderr, "rayman: --verify-render compares the original 320-column view; not with --widescreen\n");
         return 2;
     }
+    port_display_init(want_wide ? PORT_WIDE_16_9 : config_wide ? config.widescreen : PORT_WIDE_OFF, square,
+                      host.fullscreen || PORT_ENTRY_ALWAYS_FULLSCREEN, wide_pad > 0 ? wide_pad : -1,
+                      renderer == 0 || port_record_verify());
+    host.display_rows = port_display_rows();
+    wide_pad = port_display_pad();
+    if (port_display_mode() == PORT_WIDE_FIT && wide_pad && port_display_fullscreen()) {
+        /* Fullscreen: as wide as the display (up to 160 columns per side), e.g. 57 square or 100 original on a
+           3120x1440 phone; the window reports its real size once it exists. */
+        int fit = port_host_fit_pad(PORT_DISPLAY_MAX_PAD, host.display_rows);
+        if (fit >= 0) wide_pad = fit;
+    }
+    if (wide_pad > 0)
+        printf("Widescreen: %d columns per side (%s pixels)\n", wide_pad, square ? "square" : "4:3");
+    port_record_set_pad(wide_pad);
     /* default: the native renderer, falling back to the original image for frames it cannot draw completely */
     port_record_set_native(renderer == 1 ? 1 : renderer == 0 ? 0 : 2);
     host.width = 320 + 2 * port_record_pad();
@@ -408,6 +498,16 @@ int main(int argc, char **argv)
         fprintf(stderr, "rayman: put the program in the original game directory, or give it with --data DIR "
                         "(or RAYMAN_DATA)\n");
         return 2;
+    }
+    if (!save && base_dir[0]) {
+        /* GOG's Rayman Forever: its DOSBox overlays ..\cloud_saves on the game folder, so the game's RAYMAN.CFG and
+           saves live there (GOG Galaxy syncs that folder); the port keeps them in the same place, shared with GOG's
+           launcher (user decision 2026-11-13). */
+        static char gog_saves[1100];
+        SDL_PathInfo info;
+        snprintf(gog_saves, sizeof gog_saves, "%s../cloud_saves", base_dir);
+        if (SDL_GetPathInfo(gog_saves, &info) && info.type == SDL_PATHTYPE_DIRECTORY)
+            save = gog_saves;
     }
     if (!save) {
         char *pref = SDL_GetPrefPath("Ubisoft", "Rayman (native port)");
@@ -431,11 +531,38 @@ int main(int argc, char **argv)
             return 2;
         }
     }
+    {
+        const char *problem = data_version_problem();
+        if (problem) {
+            fprintf(stderr, "rayman: %s\n", problem);
+            if (!host.headless)
+                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Rayman: unsupported game version", problem, NULL);
+            return 2;
+        }
+    }
     port_clock_init(deterministic ? PORT_CLOCK_DETERMINISTIC : PORT_CLOCK_REALTIME);
     if (!port_host_init(&host))
         return 1;
     atexit(at_exit);
-    if (!port_cd_init(cd, cd_letter)) return 2;
+    if (!cd_auto) {
+        if (!port_cd_init(cd, cd_letter)) return 2;   /* a CD the player named must work */
+    } else {
+        int k, inserted = 0;
+        for (k = 0; k < cd_candidate_count && !inserted; k++) {
+            FILE *probe = cd_candidates[k][1] == ':' && !cd_candidates[k][2] ? NULL : fopen(cd_candidates[k], "rb");
+            if (probe) fclose(probe);
+            if (!probe && !(cd_candidates[k][1] == ':' && !cd_candidates[k][2]))
+                continue;   /* no such file: not a candidate */
+            if ((inserted = port_cd_init(cd_candidates[k], cd_letter)) != 0)
+                cd = cd_candidates[k];
+            else
+                fprintf(stderr, "rayman: %s is not a usable Rayman CD\n", cd_candidates[k]);
+        }
+        if (!inserted) {
+            if (cd_candidate_count) fprintf(stderr, "rayman: playing without a CD\n");
+            if (!port_cd_init(NULL, cd_letter)) return 2;
+        }
+    }
     port_vga_set_frame_hook(on_frame, NULL);
     port_record_set_swap_hook(on_swap);
     if (key_count)

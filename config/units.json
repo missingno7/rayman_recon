@@ -1514,6 +1514,15 @@
     "_DATA": "VERIFIED"
    }
   },
+  "data_5f70": {
+   "source": "src/data/blk_5f70.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_DATA": "VERIFIED"
+   }
+  },
   "data_5fa0": {
    "source": "src/data/blk_5fa0.c",
    "oracle": "gog_v121_us",
@@ -1750,6 +1759,15 @@
   },
   "data_8084": {
    "source": "src/data/blk_8084.c",
+   "oracle": "gog_v121_us",
+   "profile": "game",
+   "functions": {},
+   "segments": {
+    "_DATA": "VERIFIED"
+   }
+  },
+  "data_80fc": {
+   "source": "src/data/blk_80fc.c",
    "oracle": "gog_v121_us",
    "profile": "game",
    "functions": {},

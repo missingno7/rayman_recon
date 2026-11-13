@@ -242,8 +242,6 @@ void __wrap_DISPLAY_FOND_MENU(void)
             e.height = Bloc_lim_H2 - Bloc_lim_H1;
             if (!port_record_effect(PORT_EFFECT_COPY_RECT, &e, sizeof e))
                 port_record_unsupported_effect(draw_buffer);
-            else if (Bloc_lim_W1 <= 8 && Bloc_lim_W2 >= 312 && Bloc_lim_H1 == 0 && Bloc_lim_H2 == 200)
-                port_record_wide_backdrop();
         } else {
             port_record_unsupported_effect(draw_buffer);
         }

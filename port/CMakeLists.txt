@@ -38,12 +38,29 @@ if(ANDROID)
 else()
     find_package(SDL3 REQUIRED CONFIG)
 endif()
+
+# stb_vorbis v1.22 (public domain / MIT, nothings/stb commit 1ee679ca, 2021-07-12): decodes Ogg Vorbis CD audio tracks
+# (GOG's Music/raymanNN.ogg, platform/ogg.c). The local copy when present, otherwise downloaded; hash-checked.
+set(RAY_STB_VORBIS_SHA256 "4c7cb2ff1f7011e9d67950446b7eb9ca044f2e464d76bfbb0b84dd2e23e65636")
+set(RAY_STB_VORBIS "C:/tools/download/stb/stb_vorbis-1ee679ca.c" CACHE FILEPATH "stb_vorbis.c (hash-checked)")
+if(NOT EXISTS "${RAY_STB_VORBIS}")
+    set(RAY_STB_VORBIS "${CMAKE_CURRENT_BINARY_DIR}/stb/stb_vorbis-1ee679ca.c")
+    if(NOT EXISTS "${RAY_STB_VORBIS}")
+        file(DOWNLOAD
+            "https://raw.githubusercontent.com/nothings/stb/1ee679ca2ef753a528db5ba6801e1067b40481b8/stb_vorbis.c"
+            "${RAY_STB_VORBIS}" EXPECTED_HASH SHA256=${RAY_STB_VORBIS_SHA256} TLS_VERIFY ON)
+    endif()
+endif()
+file(SHA256 "${RAY_STB_VORBIS}" _stb_hash)
+if(NOT _stb_hash STREQUAL RAY_STB_VORBIS_SHA256)
+    message(FATAL_ERROR "stb_vorbis hash mismatch: ${RAY_STB_VORBIS}")
+endif()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 set(RAY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/.. CACHE PATH "Repository root (src/, config/, docs/); override when building a copy of port/")
 set(RAY_SRC ${RAY_ROOT}/src)
 set(RAY_PORT ${CMAKE_CURRENT_SOURCE_DIR})
-set(RAY_DATA "" CACHE PATH "Directory with the player's original Rayman data (RAYMAN.EXE's directory)")
+set(RAY_DATA "" CACHE PATH "Directory with the player's original Rayman data, for the tests only (the build reads no game file)")
 set(RAY_CD_TEST_IMAGE "${RAY_ROOT}/assets/DOS_CD/RAYMAN.cue" CACHE FILEPATH "The player's Rayman CD image (CUE/BIN) used by the CD and end-to-end gates")
 
 # --- Historical units -------------------------------------------------------------------------------------
@@ -162,27 +179,14 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     endif()
 endif()
 
-# External data assets (PalPlasma, Def_Bande): generated from the player's own RAYMAN.EXE at build time, never
-# tracked (user decision 2026-10-22, docs/LINK.md).
-set(RAY_EXE "${RAY_DATA}/RAYMAN.EXE" CACHE FILEPATH "The player's GOG v1.21 RAYMAN.EXE")
-if(NOT EXISTS "${RAY_EXE}")
-    message(FATAL_ERROR "RAY_DATA must name the original game directory (RAYMAN.EXE not found at ${RAY_EXE})")
-endif()
-set(RAY_ASSETS_C ${CMAKE_CURRENT_BINARY_DIR}/assets/assets.c)
-add_custom_command(
-    OUTPUT ${RAY_ASSETS_C}
-    COMMAND ${CMAKE_COMMAND} -E env RAY_ROOT=${RAY_ROOT} PYTHONDONTWRITEBYTECODE=1
-            ${Python3_EXECUTABLE} ${RAY_PORT}/tools/gen_assets.py ${RAY_EXE} ${RAY_ASSETS_C}
-    DEPENDS ${RAY_EXE} ${RAY_PORT}/tools/gen_assets.py
-    COMMENT "Extracting external data assets from RAYMAN.EXE")
-
 # game/port_main.c mirrors PcMain and is compiled exactly like the historical units it calls.
 # render/scene_capture.c reads game state for the native renderer (port/docs/RENDERER.md). Observation points,
 # redirected at link time (no source change, each original called exactly once): the passes DO_MAIN_LOOP_PC_NORMAL
 # calls (wrapped in render/scene_capture.c), and the drawing primitives and frame swaps (render/record.c).
 add_library(rayman_hist STATIC ${RAY_HIST_SOURCES} ${RAY_PORT}/game/port_main.c ${RAY_PORT}/game/dos_records.c
     ${RAY_PORT}/render/scene_capture.c ${RAY_PORT}/render/effect_capture.c
-    ${RAY_PORT}/render/menu_capture.c ${RAY_ASSETS_C})
+    ${RAY_PORT}/render/menu_capture.c ${RAY_PORT}/game/display_screen.c
+    ${RAY_PORT}/game/cd_policy.c)
 set(RAY_RENDER_PASSES CLEAR_FIXE_LUCIOLE Display_Back_Screen display_flocons_behind DRAW_MAP display_grp_stars
     DISPLAY_ALL_OBJECTS display_pix_gerbes Display_Sprite_On_Front display_flocons_before Display_and_free_luciole
     DO_DARK2_AFFICHE_TEXT
@@ -203,7 +207,10 @@ set(RAY_RENDER_SCENES DO_UBI_LOGO DO_GROS_RAYMAN InitDemoJeu DO_NEW_MENUS DO_WOR
 # Screen effects' pixel passes (render/effect_capture.c, render/effects.h).
 set(RAY_RENDER_EFFECTS effect_helper_63838 PlasmaBox DisplayJumellesNormal effect_helper_6c9bc CaptureVideo
     CadreTrans SYNCHRO_LOOP DISPLAY_FOND_MENU FireBox)
-foreach(sym IN LISTS RAY_RENDER_PASSES RAY_RENDER_PRIMITIVES RAY_RENDER_SCENES RAY_RENDER_EFFECTS)
+# Playing without a CD (game/cd_policy.c): the insert-CD prompt and the save-time disc check, answered only when no
+# CD source exists.
+set(RAY_PORT_POLICY verify_cdrom_response check_cd_for_save)
+foreach(sym IN LISTS RAY_RENDER_PASSES RAY_RENDER_PRIMITIVES RAY_RENDER_SCENES RAY_RENDER_EFFECTS RAY_PORT_POLICY)
     target_link_options(rayman_hist INTERFACE "-Wl,--wrap=${sym}")
 endforeach()
 target_include_directories(rayman_hist PRIVATE
@@ -243,6 +250,8 @@ add_library(rayman_native STATIC
     platform/cd_audio.c
     platform/cd_host.c
     platform/config.c
+    platform/display.c
+    platform/ogg.c
     platform/audio.c
     platform/pad.c
     platform/touch.c
@@ -253,6 +262,8 @@ add_library(rayman_native STATIC
 target_include_directories(rayman_native PUBLIC ${RAY_PORT} ${RAY_SRC}/include)
 target_include_directories(rayman_native PRIVATE ${RAY_SRC}/include)
 target_compile_options(rayman_native PRIVATE -funsigned-char -fwrapv -fno-strict-aliasing)
+set_source_files_properties(platform/ogg.c PROPERTIES
+    COMPILE_DEFINITIONS "STB_VORBIS_SOURCE=\"${RAY_STB_VORBIS}\"" COMPILE_OPTIONS "-w")   # third-party code: no warnings
 if(MINGW)
     target_compile_options(rayman_native PRIVATE -mno-ms-bitfields)
 endif()
@@ -266,6 +277,9 @@ if(ANDROID)
     return()   # the gates below run the desktop build
 endif()
 add_executable(rayman game/entry.c)
+# rayman_sdl3(.exe), like its settings file rayman_sdl3.json: it lives in the game folder next to the original
+# RAYMAN.EXE, which a "rayman.exe" would replace on case-insensitive file systems.
+set_target_properties(rayman PROPERTIES OUTPUT_NAME rayman_sdl3)
 target_link_libraries(rayman PRIVATE rayman_native rayman_hist rayman_native m)
 if(WIN32)
     add_custom_command(TARGET rayman POST_BUILD
@@ -314,6 +328,13 @@ target_include_directories(port_cd_tests PRIVATE ${RAY_SRC}/include ${RAY_SRC} $
 target_link_libraries(port_cd_tests PRIVATE rayman_native rayman_hist rayman_native m)
 add_test(NAME port_cd_tests COMMAND port_cd_tests ${RAY_CD_TEST_IMAGE})
 
+# GOG's multi-file CD (game.ins: game.gog + Music/*.ogg), when a GOG Rayman Forever install is configured.
+set(RAY_GOG_TEST_DIR "" CACHE PATH "A GOG Rayman Forever install (game.ins, game.gog, Music/) for port_cd_ogg_tests")
+add_executable(port_cd_ogg_tests tests/cd_ogg_tests.c)
+target_include_directories(port_cd_ogg_tests PRIVATE ${RAY_PORT})
+target_link_libraries(port_cd_ogg_tests PRIVATE rayman_native rayman_hist rayman_native m)
+add_test(NAME port_cd_ogg_tests COMMAND port_cd_ogg_tests "${RAY_GOG_TEST_DIR}")
+
 add_executable(port_cd_audio_tests tests/cd_audio_tests.c)
 target_include_directories(port_cd_audio_tests PRIVATE ${RAY_PORT})
 target_link_libraries(port_cd_audio_tests PRIVATE rayman_native rayman_hist rayman_native m)
@@ -321,6 +342,9 @@ add_test(NAME port_cd_audio_tests COMMAND port_cd_audio_tests ${RAY_CD_TEST_IMAG
 set_tests_properties(port_cd_audio_tests PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy")
 add_test(NAME port_cd_missing_disc COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/cd_missing_disc.py
     $<TARGET_FILE:rayman> ${RAY_DATA} ${CMAKE_CURRENT_BINARY_DIR}/cd-no-image-save)
+add_test(NAME port_cd_movie COMMAND ${Python3_EXECUTABLE} ${RAY_PORT}/tests/cd_movie.py
+    $<TARGET_FILE:rayman> ${RAY_DATA} ${RAY_CD_TEST_IMAGE})
+set_tests_properties(port_cd_movie PROPERTIES TIMEOUT 1800)
 
 set(HMI_REFERENCE ${CMAKE_CURRENT_BINARY_DIR}/hmi_reference.c)
 add_custom_command(OUTPUT ${HMI_REFERENCE}

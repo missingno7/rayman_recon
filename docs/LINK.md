@@ -66,8 +66,9 @@ needs ~5 more declaration groups than known publics - docs/DATA.md); (3) pcmain 
 Pipeline works end to end and is reproducible (compile all 446 units + asset step + declaration-only layout.asm ->
 WLINK 10.6 `system pmodew` stack=8192 CASEEXACT, manifest-ordered modules, CLIB3R/MATH3R/MATH387R as libraries -> LE ->
 per-contribution diff -> PMWLITE /C4); a fresh rebuild reproduces every artifact byte for byte. Asset step (decision
-2026-10-22, reversible): Def_Bande/PalPlasma/PalFire bytes are extracted at build time from the user's own
-assets/GOG/RAYMAN.EXE into build/ - never tracked; any other missing byte is reported, never filled.
+2026-10-22, reversed 2026-11-13): Def_Bande/PalPlasma/PalFire bytes were extracted at build time from the user's own
+assets/GOG/RAYMAN.EXE into build/; all three are now verified data units (blk_5fa0.c, blk_5f70.c, blk_80fc.c) and
+tools/link.py asset_specs() is empty. Any other missing byte is reported, never filled.
 The full link does not resolve yet (135 names): 97 dt_str_* string literals with no defining contribution (data_51d4
 credits table 82, data_62d8 DOS error table 15, data_4d5c 1), 18 calls into the unassigned sound-driver code
 1:71afa..1:755ce, 10 names needing the open BSS holes, 10 assembly labels not exported across slices.

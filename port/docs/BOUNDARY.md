@@ -42,7 +42,7 @@ exit_if_not_cd_drive (succeeds), menu_patch_once (no-op), menu_check_debug_break
 | Interrupt vectors | table in `pc_hardware.c`; INT 9 handler run per scan code; other vectors stored |
 | HMI SOS (sos*) | `compat/src/hmi.c`: native 32-voice clock-driven HMI API; shared SDL audio device (`platform/audio.c`) with CD-DA |
 | Watcom C library | rand/srand (Watcom LCG, DOS 1:71396), itoa/ltoa, strupr, delay (`wait_milliseconds`), memset helper (`clear_memory`), acos (`effect_math_curve`, Watcom constant), sleep |
-| Data not reconstructed as source | PalPlasma, Def_Bande: generated at build time from the player's RAYMAN.EXE (`tools/gen_assets.py`, user decision 2026-10-22) |
+| Data not reconstructed as source | none: PalPlasma and Def_Bande, extracted from the player's RAYMAN.EXE at build time until 2026-11-13, are reconstructed as typed source (src/data/blk_5f70.c, blk_80fc.c); the port reads only the game's data files, never RAYMAN.EXE |
 
 Any port, interrupt or service not listed stops the program with `PORT: unimplemented DOS/hardware service
 reached: ...`.

@@ -1,7 +1,9 @@
 #include "platform/files.h"
 #include "platform/cdrom.h"
 
+#include <ctype.h>
 #include <errno.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -18,6 +20,7 @@ static char data_dirs[32][1024];
 static size_t data_count;
 #define data_dir data_dirs[0]
 static char save_dir[1024];
+static int cd_movies = 1;   /* movie_from_cd; --no-cd-movies */
 
 static int is_dir(const char *p)
 {
@@ -130,6 +133,48 @@ static int find_data(const char *rel, char *out, size_t n)
     return 0;
 }
 
+/* The movies (INTRO.DAT, CONCLU.DAT) from the inserted Rayman CD, when the game folder has none (user decision
+   2026-11-13). The original reads them only from its install folder, where its installer could copy them from the
+   CD's RAYMAN folder; the port looks there itself: a disc in a host drive (a real CD or a mounted image) is read
+   in place, a CUE/BIN image's file is copied once into the save folder's cd-cache, as the installer would have
+   done, so every file call of the game works on it unchanged. Only these two files: the movies play with every
+   version's game data, while the CD's other files belong to the CD's own version. */
+static int movie_from_cd(const char *rel, char *out, size_t n)
+{
+    static const char *const movies[] = {"INTRO.DAT", "CONCLU.DAT"};
+    const char *name = rel;
+    char cache[1024];
+    uint32_t lba, size;
+    size_t i;
+    struct stat st;
+    char letter;
+    if (name[0] == '.' && name[1] == '/')
+        name += 2;
+    for (i = 0; i < sizeof movies / sizeof movies[0]; i++) {
+        size_t k;
+        for (k = 0; movies[i][k] && name[k] && toupper((unsigned char)name[k]) == movies[i][k]; k++) {}
+        if (!movies[i][k] && !name[k])
+            break;
+    }
+    if (!cd_movies || i == sizeof movies / sizeof movies[0] || !port_cd_present())
+        return 0;
+    if ((letter = port_cd_host_drive()) != 0) {
+        char root[4] = {letter, ':', '/', 0}, path[64];
+        snprintf(path, sizeof path, "RAYMAN/%s", movies[i]);
+        return find_ci(root, path, out, n);
+    }
+    if (!port_cd_file("RAYMAN", movies[i], &lba, &size))
+        return 0;
+    snprintf(cache, sizeof cache, "%s/cd-cache", save_dir);
+    make_dirs(cache);
+    snprintf(out, n, "%s/%s", cache, movies[i]);
+    if (stat(out, &st) == 0 && (uint32_t)st.st_size == size)
+        return 1;
+    return port_cd_copy_file(lba, size, out);
+}
+
+void port_files_set_cd_movies(int on) { cd_movies = on; }
+
 int port_files_resolve(const char *dos_path, int for_write, char *out, size_t out_size)
 {
     char rel[512];
@@ -156,5 +201,6 @@ int port_files_resolve(const char *dos_path, int for_write, char *out, size_t ou
         }
         return 1;
     }
-    return find_ci(save_dir, rel, out, out_size) || find_data(rel, out, out_size);
+    return find_ci(save_dir, rel, out, out_size) || find_data(rel, out, out_size) ||
+           movie_from_cd(rel, out, out_size);
 }

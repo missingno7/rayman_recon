@@ -17,7 +17,6 @@ def sdlVersion = (portCmake =~ /RAY_SDL3_VERSION "([^"]+)"/)[0][1]
 def sdlSha256 = (portCmake =~ /RAY_SDL3_SHA256 "([0-9a-f]{64})"/)[0][1]
 def sdlTar = new File((project.findProperty('sdlTarball') ?: "C:/tools/download/sdl3/SDL3-${sdlVersion}.tar.gz") as String)
 
-// RAYMAN.EXE of the player's game is read at build time (two data tables, port/tools/gen_assets.py).
 def rayData = (project.findProperty('rayData') ?: new File(repoRoot, 'assets/GOG').path) as String
 def python = (project.findProperty('python') ?: 'python') as String
 

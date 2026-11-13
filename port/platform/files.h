@@ -25,6 +25,9 @@ int port_files_add_data(const char *data_dir);
 /* Resolve a DOS path. for_write = 0: an existing file (save dir, then ordered data dirs); returns 0 if none exists.
    for_write = 1: the save-dir path (parent directories created). Returns 1 on success.
    Virtual CD paths: read-only alias of the data search path; writes return 0 with errno=EROFS. */
+/* The movies from the inserted CD when the data roots have none (default on); off for scenarios recorded without
+   the intro (--no-cd-movies). */
+void port_files_set_cd_movies(int on);
 int port_files_resolve(const char *dos_path, int for_write, char *out, size_t out_size);
 
 const char *port_files_data_dir(void);

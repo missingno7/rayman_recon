@@ -23,9 +23,6 @@ const char *port_record_current_scene(void);
 uint64_t port_record_native_ns(void);
 /* The frame is a gameplay frame (the gameplay loop's frame-start pass ran). */
 void port_record_gameplay(void);
-/* The frame's draw buffer holds the in-game menu's background over the whole screen: the wider view presents it
-   at its full width (render/native.c, the swap). */
-void port_record_wide_backdrop(void);
 /* The semantic payload of the frame being recorded, filled by the capture before a layer operation is added. */
 port_scene *port_record_world(void);
 /* Append a semantic layer operation (PORT_OP_BACKGROUND / MAP / FRONT) for viewport (x0, y0)-(x1, y1). */
@@ -67,6 +64,8 @@ int port_record_native(void);
    at most PORT_SCENE_MAX_PAD). Set before the game starts. */
 void port_record_set_pad(int pad);
 int port_record_pad(void);
+/* Change the view width at the next frame boundary (ignored under --verify-render). */
+void port_record_request_pad(int pad);
 /* The image to present: the native display (width x 200 pixels, pitch width) in native mode, otherwise NULL
    (present the original display, 320 x 200). */
 const uint8_t *port_record_presented(int *width);
