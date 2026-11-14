@@ -2001,12 +2001,11 @@
      "quality": "SYNTHETIC"
     },
     "Display_and_free_luciole": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "PS1_SOURCE_GUIDED",
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "COMPILER_STEERED"
+     ]
     },
     "free_luciole": {
      "status": "STRICT",
@@ -12820,7 +12819,7 @@
      ]
     },
     "LoadTchatchPerdu": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "RAYVERSE_GUIDED",
       "DOS_BINARY_DERIVED"
@@ -13010,7 +13009,7 @@
      ]
     },
     "effect_helper_6c8d4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
      ]

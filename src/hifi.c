@@ -357,6 +357,7 @@ void PlayTchatch(s32 sound, s32 volume)
 
     request.volume = (volume * 0x7fff) / 0x7f;
     ((u8 *)&request)[0x29] |= 1;
+    /* No case 5: sound 5 leaves bank unset, as in the original jump table. */
     switch (sound) {
     case 1: bank = 8; break;
     case 6: bank = 7; break;
@@ -365,7 +366,6 @@ void PlayTchatch(s32 sound, s32 volume)
     case 4: bank = 0; break;
     case 3: bank = 2; break;
     case 8: bank = 6; break;
-    case 5:
     case 9: bank = 3; break;
     }
     if (bank != 6) {

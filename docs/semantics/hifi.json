@@ -3131,7 +3131,7 @@
    ],
    "oracle_address": "1:2edf4",
    "source_file": "src/hifi.c",
-   "source_body_sha256": "21d2a62a9252e914d53c753cc092b488fdcc94990b926b20b092205316e311cd",
+   "source_body_sha256": "a1218d2f7ef5a8a451009ee48d598a853cff67e715a0e93bd978d021ec505dd5",
    "baseline_parser_body_sha256": "21d2a62a9252e914d53c753cc092b488fdcc94990b926b20b092205316e311cd",
    "name_provenance": "Android original symbol",
    "readers_writers": {
@@ -7795,11 +7795,11 @@
   }
  ],
  "source_fingerprints": {
-  "src/hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
+  "src/hifi.c": "85ad6f6c0d75f4c1e1e704295cacd12db56dd92286d09496997284800559b7e3",
   "src/hifi_local.h": "68cd84c911cfd1af021db1cad6efdba5df4a2905afec9b8a557a4927f75986ec"
  },
  "proposal_fingerprints": {
-  "hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
+  "hifi.c": "85ad6f6c0d75f4c1e1e704295cacd12db56dd92286d09496997284800559b7e3",
   "hifi_local.h": "68cd84c911cfd1af021db1cad6efdba5df4a2905afec9b8a557a4927f75986ec"
  },
  "evidence_source_fingerprints": {

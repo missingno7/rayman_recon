@@ -269,15 +269,8 @@ void aff_luciole(s32 center_x, s32 center_y, s32 radius, u8 *draw_buf)
 void Display_and_free_luciole(u8 *draw_buf)
 {
     if (RayEvts.firefly) {
-        s32 dx;
-        s32 dy;
-        s32 distance;
-
-        /* COMPILER_STEERED: s16 differences cannot reach signed 32-bit minimum. */
-        dx = abs32_inline(old_x_luc - x_luc);
-        dy = ((old_y_luc - y_luc) >= 0 ? old_y_luc - y_luc : -(old_y_luc - y_luc));
-        distance = max32(dy, dx);
-        ADDLUCLIP = distance + 6;
+        /* s16 differences cannot reach the signed 32-bit minimum, so abs32_inline is exact. */
+        ADDLUCLIP = max32(abs32_inline(old_y_luc - y_luc), abs32_inline(old_x_luc - x_luc)) + 6;
 
         old_y_luc = y_luc;
         old_x_luc = x_luc;

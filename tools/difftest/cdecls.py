@@ -12,12 +12,36 @@ Nothing here decides a verdict: an unknown or conflicting declaration only makes
 from __future__ import annotations
 
 import dataclasses
+import os
 import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = next(p for p in HERE.parents if (p / 'config/units.json').exists())
-WATCOM_H = Path('C:/tools/watcom-10.6/H')
+WATCOM_H = Path(os.environ.get('RAYMAN_TOOLS', 'C:/tools')) / 'watcom-10.6' / 'H'
+
+
+def find_header(d, inc):
+    """d/inc, matched case-insensitively component by component (the Watcom H tree is upper-case)."""
+    p = d / inc
+    if p.exists() or os.name == 'nt':
+        return p if p.exists() else None
+    cur = d
+    for part in inc.replace('\\', '/').split('/'):
+        if part in ('', '.'):
+            continue
+        if part == '..':
+            cur = cur.parent
+            continue
+        try:
+            names = os.listdir(cur)
+        except OSError:
+            return None
+        hit = next((n for n in names if n.lower() == part.lower()), None)
+        if hit is None:
+            return None
+        cur = cur / hit
+    return cur
 
 TYPE_WORDS = {'signed', 'unsigned', 'char', 'short', 'int', 'long', 'void', 'float', 'double', 'const',
               'volatile', 'struct', 'union', 'enum', '_Packed', '__far', '__near', '__huge'}
@@ -228,8 +252,9 @@ def read_closure(src, cache):
         t = cache[p]
         for inc in re.findall(r'^\s*#\s*include\s*["<]([^">\n]+)[">]', t, re.M):
             for d in (p.parent, ROOT / 'src', ROOT / 'src/include', WATCOM_H):
-                if (d / inc).exists():
-                    visit(d / inc)
+                hdr = find_header(d, inc)
+                if hdr:
+                    visit(hdr)
                     break
         out.append(p)
     visit(src)
