@@ -236,6 +236,9 @@ static void speech_requests(const char *data)
     LoadTchatchPerdu();CHECK(TchachPerduPtr!=NULL);
     for(sound=1;sound<=9;sound++) {
         unsigned bank=banks[sound-1];
+        /* PlayTchatch has no case 5 (DOS jump table, src/hifi.c): bank stays unset. The game never asks for
+           sound 5 (PlayTchatchVignette passes 1-4 and 6-8). */
+        if(sound==5) continue;
         unsigned char *decoded=decode(data,"SNDVIG.DAT",&sndvig_infos[bank]);
         uint64_t now, duration=(uint64_t)(sndvig_infos[bank].size/2)*100000;
         PlayTchatch(sound,127);

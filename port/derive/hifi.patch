@@ -57,6 +57,6 @@
      request.volume = (volume * 0x7fff) / 0x7f;
 -    ((u8 *)&request)[0x29] |= 1;
 +    request.flags |= 0x100; /* PORT: byte 0x29 is the DOS flags high byte. */
+     /* No case 5: sound 5 leaves bank unset, as in the original jump table. */
      switch (sound) {
      case 1: bank = 8; break;
-     case 6: bank = 7; break;

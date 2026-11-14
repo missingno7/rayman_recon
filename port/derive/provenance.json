@@ -90,7 +90,7 @@
       "divergences": [
         "Allocate sizeof(effect_state_6c_t) (0x20 on i686); the displacement map and update/draw order are unchanged."
       ],
-      "base_sha256": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a"
+      "base_sha256": "855efb800f4a6a22f7987feef931d5746c196804f0cb4aa5b8efd0b2ba1c58d2"
     },
     "effect6ec80.c": {
       "patch": "effect6ec80.patch",
@@ -143,7 +143,7 @@
         "Native data/config/request pointers replace padded DOS far-pointer views; full config member order matches the unchanged data_6664.c definition.",
         "Speech request flags |= 0x100 replaces DOS byte-offset 0x29."
       ],
-      "base_sha256": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04"
+      "base_sha256": "85ad6f6c0d75f4c1e1e704295cacd12db56dd92286d09496997284800559b7e3"
     },
     "movie.c": {
       "patch": "movie.patch",
