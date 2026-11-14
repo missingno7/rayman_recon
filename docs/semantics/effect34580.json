@@ -983,7 +983,7 @@
    ],
    "oracle_address": "1:34760",
    "source_file": "src/effect34580.c",
-   "source_body_sha256": "6d2d02419b15e88862d2824b3e8a28d9d898e28bfab502b4d8d814578cac16c6",
+   "source_body_sha256": "7fbf8e641a537c325faf38181dd423038be97d7e31ad0e9562f093eac9076612",
    "baseline_parser_body_sha256": "6d2d02419b15e88862d2824b3e8a28d9d898e28bfab502b4d8d814578cac16c6",
    "name_provenance": "Existing RAYVERSE/INVENTED neutral/address spelling retained; no public symbol rename",
    "readers_writers": {
@@ -1447,7 +1447,7 @@
    "kind": "local",
    "current_name": "source",
    "proposed_name": null,
-   "c_type": "u8 * = (state->screen + (source_y * 320)) + source_x",
+   "c_type": "u8 * = state->screen + add_row320(source_x, source_y)",
    "meaning": "Local value in effect_helper_34760: u8 *source = (state->screen + (source_y * 320)) + source_x; copy(source, destination, width).",
    "unit": "see owning function computation / declared representation",
    "value_domain": {
@@ -1483,7 +1483,7 @@
    "function": "effect_helper_34760",
    "role": "local",
    "declaration_ordinal": 9,
-   "declarator": "u8 *$ = (state->screen + (source_y * 320)) + source_x",
+   "declarator": "u8 *$ = state->screen + add_row320(source_x, source_y)",
    "source_file": "src/effect34580.c",
    "signedness": "not applicable (pointer)",
    "name_provenance": "Existing source spelling retained"
@@ -1493,7 +1493,7 @@
    "kind": "local",
    "current_name": "destination",
    "proposed_name": null,
-   "c_type": "u8 * = (state->destination + (destination_y * 320)) + destination_x",
+   "c_type": "u8 * = state->destination + add_row320(destination_x, destination_y)",
    "meaning": "Local value in effect_helper_34760: u8 *destination = (state->destination + (destination_y * 320)) + destination_x; copy(source, destination, width).",
    "unit": "see owning function computation / declared representation",
    "value_domain": {
@@ -1529,7 +1529,7 @@
    "function": "effect_helper_34760",
    "role": "local",
    "declaration_ordinal": 10,
-   "declarator": "u8 *$ = (state->destination + (destination_y * 320)) + destination_x",
+   "declarator": "u8 *$ = state->destination + add_row320(destination_x, destination_y)",
    "source_file": "src/effect34580.c",
    "signedness": "not applicable (pointer)",
    "name_provenance": "Existing source spelling retained"
@@ -3576,11 +3576,11 @@
   }
  ],
  "source_fingerprints": {
-  "src/effect34580.c": "cbf6b3033a0baf2535a7e9c9c98c82c26dcf1ce3f5162421a288da8f09a1b45f",
+  "src/effect34580.c": "c3e6d72510b889629a3700d56582026f5b579427f79912c0673e7c94c213de13",
   "src/effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
  },
  "proposal_fingerprints": {
-  "effect34580.c": "cbf6b3033a0baf2535a7e9c9c98c82c26dcf1ce3f5162421a288da8f09a1b45f",
+  "effect34580.c": "c3e6d72510b889629a3700d56582026f5b579427f79912c0673e7c94c213de13",
   "effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f"
  },
  "evidence_source_fingerprints": {

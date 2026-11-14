@@ -46,6 +46,7 @@ static void test_inline_helpers(void)
     CHECK(ashl16(-2, 4) == -32);            /* cwde before the shift */
     CHECK(ashr32_inline(-5, 1) == -3);      /* arithmetic shift rounds down */
     CHECK(abs32_inline(-7) == 7);
+    CHECK(add_row320(5, 3) == 965 && add_row320(-4, -1) == -324 && add_row320(0, 199) == 63680);
     CHECK(abs32_inline((s32)0x80000000u) == (s32)0x80000000u);
     CHECK(sgn(-9) == -1 && sgn(0) == 0 && sgn(9) == 1);
     CHECK(inrange(5, 5, 6) && !inrange(7, 5, 6) && inrange(-3, -4, -3));

@@ -212,7 +212,7 @@ void effect_helper_6c9bc(void)
     copy_guarded(state->screen, state->output, 0xfa00);
     x = state->x - state->radius;
     y = state->y - state->radius;
-    x = x + y * 64 + y * 256;
+    x = add_row320(x, y);
     source = state->screen + x;
     destination = state->output + x;
     stride = 320 - state->width;
@@ -220,7 +220,7 @@ void effect_helper_6c9bc(void)
         for (x = 0; x < state->width; ++x) {
             s32 dy = (s8)map[1];
             s32 dx = (s8)map[0];
-            s32 offset = dx + dy * 320;
+            s32 offset = add_row320(dx, dy);
             *destination++ = source[offset];
             source++;
             map += 2;

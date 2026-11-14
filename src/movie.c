@@ -217,31 +217,14 @@ void sub_3A2CC(movie_surface_t *surface, s32 x, s32 y, u8 color)
 
 void sub_3A2D8(movie_surface_t *surface, s32 x, s32 y, const u8 *src, s32 width)
 {
-    u8 *dst;
-    s32 offset;
-    offset = y * 64;
-    x += offset;
-    offset *= 4;
-    /* SYNTHETIC: nonescaping address copy retained after permutation ablation.
-     * Local names sum and sum_ptr are INVENTED. */
-    {
-        s32 sum;
-        s32 *sum_ptr;
-        sum_ptr = &sum;
-        *sum_ptr = x + offset;
-        x = sum;
-    }
-    offset = x;
-    dst = offset + surface->pixels;
-    /* DOS 1:2a2f2..2a304: the existing shared guarded-copy sequence. */
-    copy_guarded(src, dst, width);
+    copy_guarded(src, surface->pixels + add_row320(x, y), width);
 }
 
 void sub_3A30C(movie_surface_t *surface, s32 x, s32 y, u8 color, u32 width)
 {
     u8 *dst;
     u32 i;
-    dst = surface->pixels + (x + y * 64 + y * 256);
+    dst = surface->pixels + add_row320(x, y);
     i = 0;
     while (i < width) {
         dst[i] = color;
@@ -877,7 +860,7 @@ void sub_3AFB4(movie_work_t *work, movie_surface_t *surface)
 {
     work->x_offset = (sub_3A2C4(surface) - work->width) / 2;
     work->y_offset = (sub_3A2C8(surface) - work->height) / 2;
-    work->surface_offset = work->x_offset + work->y_offset * 64 + work->y_offset * 256;
+    work->surface_offset = add_row320(work->x_offset, work->y_offset);
 }
 
 s32 sub_3B014(movie_work_t *work, movie_surface_t *surface)

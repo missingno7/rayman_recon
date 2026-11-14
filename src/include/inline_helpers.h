@@ -301,4 +301,22 @@ void fill_cld(void *destination);
  "rep stosd" \
  parm [edi] modify exact [eax ecx edi]
 
+/* ORIGINAL_INLINE, INVENTED add_row320 (x + y * 320 for a 320-pixel row).
+ * Exact bytes c1 e3 06 01 d8 c1 e3 02 01 d8 at all 8 sites, 4 functions, always EAX accumulator / EBX row, and no
+ * other register variant of the sequence anywhere in game code (oracle scan 2026-11-14):
+ * sub_3A2D8 1:2a2e4, sub_3A30C 1:2a315, sub_3A34C 1:2a35e, sub_3AFB4 1:2affe (movie),
+ * effect_helper_34760 1:34808, 1:34826 (effect34580), effect_helper_6c9bc 1:6ca08, 1:6ca3f (effect6c3b0).
+ * None of the four was STRICT through plain C; about 25 plain-C spellings never produce it (Watcom 10.6's own
+ * y*320 is lea [y*4] / add / shl 6, which DOS shows elsewhere, e.g. 1:1637e). Contract read at 1:6ca02, 1:34820 and
+ * 1:6ca38: EAX x, EBX y -> EAX; EBX ends as y << 8. First use: sub_3A2D8 and sub_3AFB4 STRICT.
+ * User decision 2026-11-14: accepted (wave 7, w7_render).
+ */
+s32 add_row320(s32 x, s32 y);
+#pragma aux add_row320 = \
+ "shl ebx,6" \
+ "add eax,ebx" \
+ "shl ebx,2" \
+ "add eax,ebx" \
+ parm [eax] [ebx] value [eax] modify exact [eax ebx]
+
 #endif

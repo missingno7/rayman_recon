@@ -90,7 +90,7 @@
       "divergences": [
         "Allocate sizeof(effect_state_6c_t) (0x20 on i686); the displacement map and update/draw order are unchanged."
       ],
-      "base_sha256": "855efb800f4a6a22f7987feef931d5746c196804f0cb4aa5b8efd0b2ba1c58d2"
+      "base_sha256": "0229dd32290083259f1e4d9922b603c3ffb7969b467ffd7ff4b9bc08e49ca65d"
     },
     "effect6ec80.c": {
       "patch": "effect6ec80.patch",
@@ -155,7 +155,7 @@
         "Optional RAYMAN_MOVIE_TRACE observations at entry/return, decoded frames and fade start; no calculations, call order between game/services or clock advances changed.",
         "sub_3ABE4 calls port_record_asset (port/render/record.c) after its chunk loop: the decoded frame, read from the movie surface before it is paced and copied to the display, becomes an image operation of the native renderer; no game or decoder state changes."
       ],
-      "base_sha256": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb"
+      "base_sha256": "3b95fc10fe903218b829e78e728df350e2f0149b594faf90cbd08375f97ea9e2"
     },
     "display.c": {
       "patch": "display.patch",

@@ -98,7 +98,7 @@ void effect_helper_34760(void)
     s32 width = span->width;
     s32 destination_y = span->destination_y;
     s32 source_y = span->source_y;
-    if (((((width >= 1) && (source_y >= 0)) && (source_y < 200)) && (destination_y >= 0)) && (destination_y < 200))
+    if (width > 0 && source_y >= 0 && source_y < 200 && destination_y >= 0 && destination_y < 200)
     {
       s32 source_x = span->source_x;
       if (source_x < 0)
@@ -110,12 +110,12 @@ void effect_helper_34760(void)
       {
         width = 320 - source_x;
       }
-      if ((width > 0) != 0)
+      if (width > 0)
       {
         s32 destination_x = span->destination_x;
         if (destination_x < 0)
         {
-          width = ((s32) ((s32) ((s32) width))) + destination_x;
+          width += destination_x;
           destination_x = 0;
         }
         if ((destination_x + width) > 320)
@@ -124,8 +124,8 @@ void effect_helper_34760(void)
         }
         if (width > 0)
         {
-          u8 *source = (state->screen + (source_y * 320)) + source_x;
-          u8 *destination = (state->destination + (destination_y * 320)) + destination_x;
+          u8 *source = state->screen + add_row320(source_x, source_y);
+          u8 *destination = state->destination + add_row320(destination_x, destination_y);
           copy(source, destination, width);
         }
       }

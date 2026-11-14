@@ -47,6 +47,9 @@ s32 max32(s32 a, s32 b) { return a > b ? a : b; }
 void fill(void *destination) { memset(destination, 0, 64000); }
 void fill_cld(void *destination) { memset(destination, 0, 64000); }
 
+/* shl ebx,6; add eax,ebx; shl ebx,2; add eax,ebx: x + y * 320 in 32-bit wrapping arithmetic */
+s32 add_row320(s32 x, s32 y) { return (s32)((u32)x + ((u32)y << 6) + ((u32)y << 8)); }
+
 /* cld; rep movsb (count & 3); rep movsd (count >> 2): forward, overlap-sensitive like the original. */
 static void forward_copy(const u8 *s, u8 *d, u32 count)
 {

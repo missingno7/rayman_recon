@@ -11600,8 +11600,7 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "SYNTHETIC"
+     ]
     },
     "effect_helper_348a4": {
      "status": "NEAR_MATCH",
@@ -11758,18 +11757,16 @@
      ]
     },
     "sub_3A2D8": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "SYNTHETIC"
+     ]
     },
     "sub_3A30C": {
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "COMPILER_STEERED"
+     ]
     },
     "sub_3A34C": {
      "status": "NEAR_MATCH",
@@ -11923,11 +11920,10 @@
      "quality": "SYNTHETIC"
     },
     "sub_3AFB4": {
-     "status": "NEAR_MATCH",
+     "status": "STRICT",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "COMPILER_STEERED"
+     ]
     },
     "sub_3B014": {
      "status": "STRICT",
@@ -13025,8 +13021,7 @@
      "status": "NEAR_MATCH",
      "provenance": [
       "DOS_BINARY_DERIVED"
-     ],
-     "quality": "COMPILER_STEERED"
+     ]
     }
    }
   },

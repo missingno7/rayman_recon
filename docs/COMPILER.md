@@ -96,6 +96,12 @@ First integration (2026-10-21): +13 STRICT in bat, moteur, meredenis, poisson, r
   the allocator pick other registers at some of 190 sites; the zero-tested shift (TEST/JZ/SAR/JMP/NEG/SAR/NEG) occurs 4
   times, always EAX/CL. Two-site gates and contracts in inline_helpers.h. First use closed 6 functions (+2,740 bytes;
   poing 11/11). The C ternary reproduces the instructions but not the fixed register (CAUSES H11 abs experiment).
+- **add_row320** (accepted 2026-11-14, wave 7 w7_render): `shl ebx,6; add eax,ebx; shl ebx,2; add eax,ebx`
+  (`c1 e3 06 01 d8 c1 e3 02 01 d8`) = x + y*320, 8 sites in 4 functions (movie sub_3A2D8/sub_3A30C/sub_3A34C/sub_3AFB4,
+  effect_helper_34760, effect_helper_6c9bc), always EAX/EBX, no other register variant in game code. Watcom 10.6 C
+  compiles y*320 as `lea [y*4]; add; shl 6` (also present in DOS, 1:1637e); ~25 spellings never gave the helper form.
+  First use: sub_3A2D8 and sub_3AFB4 STRICT (movie 36 -> 38/45), effect_helper_34760 0 code-byte differences (still
+  NEAR: it carries effect_helper_348a4's jump table), effect_helper_6c9bc 89 -> 57. Sites and contract in inline_helpers.h.
 - **fill_cld** (2026-10-23, idiom census): `CLD; XOR EAX,EAX; MOV ECX,16000; REP STOSD` is the complete body at
   sub_3A1C0 1:2a1ce, sub_3A238 1:2a291 and sub_3A9F4 1:2a9f8 (movie), distinct from `fill` (MOV EAX,0, no CLD).
   Ten plain-C spellings (memset decimal/hex, byte and dword for/while/do loops, `#pragma intrinsic(memset)`,
