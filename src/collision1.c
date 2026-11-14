@@ -914,19 +914,18 @@ s16 possible_sprite(obj_t* obj, s16 index) {
  * unk_1 -> support_right, unk_2 -> lateral_tolerance
  */
 s16 setToleranceDist(s16 x, s16 w, s16 y) {
-    /* 1D11C 8014191C -O2 -msoft-float */
-    s16 ray_x = ray.x + ray.offset_bx;
-    s16 ray_y = ray.y + ray.offset_by;
-    s16 support_right = x + w - 1;
-
-    s16 lateral_tolerance = 8;
+    s16 lateral_tolerance;
+    s16 support_right;
+    s16 ray_x;
+    s16 ray_y;
+    ray_x = ray.x + ray.offset_bx;
+    ray_y = ray.y + ray.offset_by;
+    support_right = x + w - 1;
+    lateral_tolerance = 8;
     if (RayEvts.tiny) lateral_tolerance = 4;
-    /* DOS 1:1ced4..1cf09: conditional absolute value. */
-    if (inrange(ray_x, x - lateral_tolerance, support_right + lateral_tolerance)) {
-        if (inrange(ray_x, x, support_right)) return ((ray_y - y < 0) ? -(ray_y - y) : ray_y - y);
-        else return -((ray_y - y < 0) ? -(ray_y - y) : ray_y - y) - 1;
-    }
-    return 10000;
+    if (!inrange(ray_x, x - lateral_tolerance, support_right + lateral_tolerance)) return 10000;
+    if (inrange(ray_x, x, support_right)) return abs32_inline(ray_y - y);
+    else return -abs32_inline(ray_y - y) - 1;
 }
 
 //2CF14
@@ -934,25 +933,20 @@ s16 cosinus(s16 angle);
 
 void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
     s16 limit;
-    s32 angle;
-    s16 spr_x;
     s16 spr_y;
-    s16 spr_w;
     s16 spr_h;
+    s16 spr_w;
+    s16 spr_x;
     s16 ray_x;
     s16 ray_y;
     s16 projected_w;
     s16 slope_x2;
     s16 diff_y;
-    s16 diff_x;
 
     limit = 8;
     if (RayEvts.tiny) limit = 4;
     GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);
-    /* DOS 1:1cf57 loads signed hit_points at +0x76 (dword at +0x73, SAR 24). */
-    angle = (s8)obj->hit_points;
-    if (angle < 0) angle = -angle;
-    projected_w = ((s32)cosinus(pente[angle]) * spr_w) >> 9;
+    projected_w = ((s32)cosinus(pente[abs32_inline((s8)obj->hit_points)]) * spr_w) >> 9;
     spr_x += (spr_w - projected_w) >> 1;
     spr_w = projected_w;
     slope_x2 = spr_x + spr_w - 1;
@@ -961,15 +955,13 @@ void SET_RAY_DIST_SLOPEY_PLAT(obj_t* obj) {
     ray_y = ray.y + ray.offset_by;
     if (inrange(ray_x, spr_x - limit, slope_x2 + limit)) {
         diff_y = spr_y - ray_y;
-        if (((s32)diff_y < 0 ? -(s32)diff_y : (s32)diff_y) < spr_w) {
-            diff_x = ray_x - (spr_x + (spr_w >> 1));
-            spr_h = diff_x * (s8)obj->hit_points;
-            /* DOS 1:1d058: negate at 16 bits before the arithmetic shift. */
+        if (abs32_inline(diff_y) < spr_w) {
+            spr_h = (s16)(ray_x - (spr_x + (spr_w >> 1))) * (s8)obj->hit_points;
             spr_h = ashr16(spr_h, 4);
             if (inrange(ray_x, spr_x, slope_x2)) {
-                obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
+                obj->ray_dist = abs32_inline(diff_y - spr_h);
             } else {
-                obj->ray_dist = (diff_y - spr_h < 0) ? -(diff_y - spr_h) : diff_y - spr_h;
+                obj->ray_dist = abs32_inline(diff_y - spr_h);
                 obj->ray_dist = -obj->ray_dist;
             }
             return;
@@ -1806,11 +1798,17 @@ void DoRaymanCollisionDefault(obj_t* obj) {
  */
 void DO_OBJ_COLLISIONS(obj_t* obj, s16 inset) {
     /* 218C0 801460C0 -O2 -msoft-float */
-    s16 in_x; s16 in_y; s16 in_w; s16 in_h;
-    u8 done;
+    s16 in_x;
+    s16 in_y;
+    s16 in_h;
+    s16 cur_w;
+    s16 cur_y;
     s16 i;
+    s16 cur_h;
     obj_t* cur_obj;
-    s16 cur_x; s16 cur_y; s16 cur_w; s16 cur_h;
+    s16 in_w;
+    u8 done;
+    s16 cur_x;
 
     done = false;
     GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);

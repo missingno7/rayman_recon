@@ -1,6 +1,6 @@
 --- a/src/jumelle.c
 +++ b/src/jumelle.c
-@@ -561,6 +561,8 @@
+@@ -529,6 +529,8 @@
      margin = (3 * (64 - RayonJumelle)) >> 2;
      left = JumelleZoomDef + 14400 + margin;
      right = JumelleZoomDef + 14272 + 223 - margin;
@@ -9,7 +9,7 @@
      if (JumelleEffetAutorise) {
          ParamZoomChange = 0;
          memset(JumelleZoomDef, 0, 29025 * sizeof(s32));
-@@ -572,21 +574,21 @@
+@@ -540,21 +542,21 @@
                      dx = (x * factor + 0x8000) >> 16;
                      dy = 320 * ((y * factor + 0x8000) >> 16);
                      if (x) {

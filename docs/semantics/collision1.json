@@ -8600,7 +8600,7 @@
     "Main x interval is inclusive[x,x+w-1]; margin8 normally,4 tiny. Inside returns abs(ray_bottom-y), margin only returns-abs(...)-1, outside returns10000. Negative is lateral-margin status, not below/above."
    ],
    "source_file": "src/collision1.c",
-   "source_body_sha256": "20d26d7d701b388b71a46b80befeee5a2926c0cbfef83d52c8648af5d9b21cb5",
+   "source_body_sha256": "4ba5354c51d7b9404cae0fe8d2077fef8bc2b46d4063cbd52e2a6e6f491e5aa3",
    "readers_writers": {
     "globals": [
      "RayEvts",
@@ -8615,13 +8615,119 @@
    ]
   },
   {
+   "id": "local:setToleranceDist:unk_2:1",
+   "kind": "local",
+   "function": "setToleranceDist",
+   "current_name": "lateral_tolerance",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 4,
+   "meaning": "Additional horizontal tolerance8 normal,4 tiny.",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 unk_2 = 8;",
+     "unk_2 = 4;",
+     "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ce34",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 unk_2 = 8",
+     "uses": [
+      "s16 unk_2 = 8;",
+      "unk_2 = 4;",
+      "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ],
+   "previous_name": "unk_2"
+  },
+  {
+   "id": "local:setToleranceDist:unk_1:1",
+   "kind": "local",
+   "function": "setToleranceDist",
+   "current_name": "support_right",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "meaning": "Inclusive last support pixel x+w-1.",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 unk_1 = (x + w) - 1;",
+     "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))",
+     "if (inrange(ray_x, x, unk_1))"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "PROVEN",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ce34",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 unk_1 = (x + w) - 1",
+     "uses": [
+      "s16 unk_1 = (x + w) - 1;",
+      "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))",
+      "if (inrange(ray_x, x, unk_1))"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ],
+   "previous_name": "unk_1"
+  },
+  {
    "id": "local:setToleranceDist:ray_x:1",
    "kind": "local",
    "function": "setToleranceDist",
    "current_name": "ray_x",
    "proposed_name": null,
-   "c_type": "s16 = ray.x + ray.offset_bx",
-   "declarator": "s16 $ = ray.x + ray.offset_bx",
+   "c_type": "s16",
+   "declarator": "s16 $",
    "role": "local",
    "declaration_ordinal": 1,
    "meaning": "Observed local dataflow: if (inrange(ray_x, x - unk_2, unk_1 + unk_2)); if (inrange(ray_x, x, unk_1))",
@@ -8672,8 +8778,8 @@
    "function": "setToleranceDist",
    "current_name": "ray_y",
    "proposed_name": null,
-   "c_type": "s16 = ray.y + ray.offset_by",
-   "declarator": "s16 $ = ray.y + ray.offset_by",
+   "c_type": "s16",
+   "declarator": "s16 $",
    "role": "local",
    "declaration_ordinal": 2,
    "meaning": "Observed local dataflow: return ((ray_y - y) < 0) ? (-(ray_y - y)) : (ray_y - y);; return (-(((ray_y - y) < 0) ? (-(ray_y - y)) : (ray_y - y))) - 1;",
@@ -8717,112 +8823,6 @@
    "evidence_units": [
     "collision1.c"
    ]
-  },
-  {
-   "id": "local:setToleranceDist:unk_1:1",
-   "kind": "local",
-   "function": "setToleranceDist",
-   "current_name": "support_right",
-   "proposed_name": null,
-   "c_type": "s16 = (x + w) - 1",
-   "declarator": "s16 $ = (x + w) - 1",
-   "role": "local",
-   "declaration_ordinal": 3,
-   "meaning": "Inclusive last support pixel x+w-1.",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 unk_1 = (x + w) - 1;",
-     "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))",
-     "if (inrange(ray_x, x, unk_1))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "PROVEN",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ce34",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 unk_1 = (x + w) - 1",
-     "uses": [
-      "s16 unk_1 = (x + w) - 1;",
-      "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))",
-      "if (inrange(ray_x, x, unk_1))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ],
-   "previous_name": "unk_1"
-  },
-  {
-   "id": "local:setToleranceDist:unk_2:1",
-   "kind": "local",
-   "function": "setToleranceDist",
-   "current_name": "lateral_tolerance",
-   "proposed_name": null,
-   "c_type": "s16 = 8",
-   "declarator": "s16 $ = 8",
-   "role": "local",
-   "declaration_ordinal": 4,
-   "meaning": "Additional horizontal tolerance8 normal,4 tiny.",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 unk_2 = 8;",
-     "unk_2 = 4;",
-     "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "PROVEN",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ce34",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 unk_2 = 8",
-     "uses": [
-      "s16 unk_2 = 8;",
-      "unk_2 = 4;",
-      "if (inrange(ray_x, x - unk_2, unk_1 + unk_2))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ],
-   "previous_name": "unk_2"
   },
   {
    "id": "local:setToleranceDist:x:1",
@@ -9038,7 +9038,7 @@
     "Projects width with cos(pente[abs((s8)hit_points)]) amplitude512 and slope delta>>4. Inside returns absolute vertical distance; lateral margin negates without the -1 used by setToleranceDist. Invalid distance10000."
    ],
    "source_file": "src/collision1.c",
-   "source_body_sha256": "d05ee077f7f513607547ec73551507c14bcb29bda8a1cdeeb7a863cc7ea2b07f",
+   "source_body_sha256": "88f9235a147eee21eff097c5de2555850b264491412b53f3e1bd9f2458f4f29e",
    "readers_writers": {
     "globals": [
      "RayEvts",
@@ -9111,122 +9111,6 @@
    ]
   },
   {
-   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:angle:1",
-   "kind": "local",
-   "function": "SET_RAY_DIST_SLOPEY_PLAT",
-   "current_name": "angle",
-   "proposed_name": null,
-   "c_type": "s32",
-   "declarator": "s32 $",
-   "role": "local",
-   "declaration_ordinal": 2,
-   "meaning": "Observed local dataflow: angle = (s8) obj->hit_points;; if (angle < 0); angle = -angle;",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s32 angle;",
-     "angle = (s8) obj->hit_points;",
-     "if (angle < 0)",
-     "angle = -angle;",
-     "projected_w = (((s32) cosinus(pente[angle])) * spr_w) >> 9;"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1cf14",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s32 angle",
-     "uses": [
-      "s32 angle;",
-      "angle = (s8) obj->hit_points;",
-      "if (angle < 0)",
-      "angle = -angle;",
-      "projected_w = (((s32) cosinus(pente[angle])) * spr_w) >> 9;"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
-   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:spr_x:1",
-   "kind": "local",
-   "function": "SET_RAY_DIST_SLOPEY_PLAT",
-   "current_name": "spr_x",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 3,
-   "meaning": "Observed local dataflow: GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);; spr_x += (spr_w - projected_w) >> 1;; slope_x2 = (spr_x + spr_w) - 1;",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 spr_x;",
-     "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
-     "spr_x += (spr_w - projected_w) >> 1;",
-     "slope_x2 = (spr_x + spr_w) - 1;",
-     "if (inrange(ray_x, spr_x - limit, slope_x2 + limit))",
-     "diff_x = ray_x - (spr_x + (spr_w >> 1));",
-     "if (inrange(ray_x, spr_x, slope_x2))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1cf14",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 spr_x",
-     "uses": [
-      "s16 spr_x;",
-      "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
-      "spr_x += (spr_w - projected_w) >> 1;",
-      "slope_x2 = (spr_x + spr_w) - 1;",
-      "if (inrange(ray_x, spr_x - limit, slope_x2 + limit))",
-      "diff_x = ray_x - (spr_x + (spr_w >> 1));",
-      "if (inrange(ray_x, spr_x, slope_x2))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
    "id": "local:SET_RAY_DIST_SLOPEY_PLAT:spr_y:1",
    "kind": "local",
    "function": "SET_RAY_DIST_SLOPEY_PLAT",
@@ -9264,6 +9148,64 @@
       "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
       "spr_y += obj->offset_hy;",
       "diff_y = spr_y - ray_y;"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:spr_h:1",
+   "kind": "local",
+   "function": "SET_RAY_DIST_SLOPEY_PLAT",
+   "current_name": "spr_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 6,
+   "meaning": "Observed local dataflow: GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);; spr_h = diff_x * ((s8) obj->hit_points);; spr_h = ashr16(spr_h, 4);",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 spr_h;",
+     "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
+     "spr_h = diff_x * ((s8) obj->hit_points);",
+     "spr_h = ashr16(spr_h, 4);",
+     "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);",
+     "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1cf14",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 spr_h",
+     "uses": [
+      "s16 spr_h;",
+      "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
+      "spr_h = diff_x * ((s8) obj->hit_points);",
+      "spr_h = ashr16(spr_h, 4);",
+      "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);",
+      "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);"
      ],
      "supplied_by": "collision1.c"
     },
@@ -9343,25 +9285,26 @@
    ]
   },
   {
-   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:spr_h:1",
+   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:spr_x:1",
    "kind": "local",
    "function": "SET_RAY_DIST_SLOPEY_PLAT",
-   "current_name": "spr_h",
+   "current_name": "spr_x",
    "proposed_name": null,
    "c_type": "s16",
    "declarator": "s16 $",
    "role": "local",
-   "declaration_ordinal": 6,
-   "meaning": "Observed local dataflow: GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);; spr_h = diff_x * ((s8) obj->hit_points);; spr_h = ashr16(spr_h, 4);",
+   "declaration_ordinal": 3,
+   "meaning": "Observed local dataflow: GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);; spr_x += (spr_w - projected_w) >> 1;; slope_x2 = (spr_x + spr_w) - 1;",
    "unit": "declared C storage; see exact computation and function contract",
    "value_domain": {
     "observed_code_uses": [
-     "s16 spr_h;",
+     "s16 spr_x;",
      "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
-     "spr_h = diff_x * ((s8) obj->hit_points);",
-     "spr_h = ashr16(spr_h, 4);",
-     "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);",
-     "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);"
+     "spr_x += (spr_w - projected_w) >> 1;",
+     "slope_x2 = (spr_x + spr_w) - 1;",
+     "if (inrange(ray_x, spr_x - limit, slope_x2 + limit))",
+     "diff_x = ray_x - (spr_x + (spr_w >> 1));",
+     "if (inrange(ray_x, spr_x, slope_x2))"
     ],
     "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
    },
@@ -9376,14 +9319,15 @@
     },
     {
      "kind": "source_dataflow",
-     "declaration": "s16 spr_h",
+     "declaration": "s16 spr_x",
      "uses": [
-      "s16 spr_h;",
+      "s16 spr_x;",
       "GET_SPRITE_POS(obj, obj->follow_sprite, &spr_x, &spr_y, &spr_w, &spr_h);",
-      "spr_h = diff_x * ((s8) obj->hit_points);",
-      "spr_h = ashr16(spr_h, 4);",
-      "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);",
-      "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);"
+      "spr_x += (spr_w - projected_w) >> 1;",
+      "slope_x2 = (spr_x + spr_w) - 1;",
+      "if (inrange(ray_x, spr_x - limit, slope_x2 + limit))",
+      "diff_x = ray_x - (spr_x + (spr_w >> 1));",
+      "if (inrange(ray_x, spr_x, slope_x2))"
      ],
      "supplied_by": "collision1.c"
     },
@@ -9656,58 +9600,6 @@
       "if (((((s32) diff_y) < 0) ? (-((s32) diff_y)) : ((s32) diff_y)) < spr_w)",
       "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);",
       "obj->ray_dist = ((diff_y - spr_h) < 0) ? (-(diff_y - spr_h)) : (diff_y - spr_h);"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
-   "id": "local:SET_RAY_DIST_SLOPEY_PLAT:diff_x:1",
-   "kind": "local",
-   "function": "SET_RAY_DIST_SLOPEY_PLAT",
-   "current_name": "diff_x",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 12,
-   "meaning": "Observed local dataflow: diff_x = ray_x - (spr_x + (spr_w >> 1));; spr_h = diff_x * ((s8) obj->hit_points);",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 diff_x;",
-     "diff_x = ray_x - (spr_x + (spr_w >> 1));",
-     "spr_h = diff_x * ((s8) obj->hit_points);"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1cf14",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 diff_x",
-     "uses": [
-      "s16 diff_x;",
-      "diff_x = ray_x - (spr_x + (spr_w >> 1));",
-      "spr_h = diff_x * ((s8) obj->hit_points);"
      ],
      "supplied_by": "collision1.c"
     },
@@ -16536,7 +16428,7 @@
     "Insets source animation rectangle (falling types use fixed10/20/-20/-25). Badguy contact creates support state0:4 and removes source; buoy contact changes scripts and horizontal speed by facing/sign."
    ],
    "source_file": "src/collision1.c",
-   "source_body_sha256": "e8a95c3917ea46306ab4e1a375749ea7a383f86534bddbd15e134ca0a3f949a5",
+   "source_body_sha256": "4a233ef48b5d3b131aa18078ff5a7ce017f7e4dd3f24e9cec8ad672864f63e5f",
    "readers_writers": {
     "globals": [
      "actobj",
@@ -16675,64 +16567,6 @@
    ]
   },
   {
-   "id": "local:DO_OBJ_COLLISIONS:in_w:1",
-   "kind": "local",
-   "function": "DO_OBJ_COLLISIONS",
-   "current_name": "in_w",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 3,
-   "meaning": "Observed local dataflow: GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);; in_w += -20;; in_w -= offs * 2;",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 in_w;",
-     "GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);",
-     "in_w += -20;",
-     "in_w -= offs * 2;",
-     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ee20",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 in_w",
-     "uses": [
-      "s16 in_w;",
-      "GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);",
-      "in_w += -20;",
-      "in_w -= offs * 2;",
-      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
    "id": "local:DO_OBJ_COLLISIONS:in_h:1",
    "kind": "local",
    "function": "DO_OBJ_COLLISIONS",
@@ -16791,23 +16625,22 @@
    ]
   },
   {
-   "id": "local:DO_OBJ_COLLISIONS:done:1",
+   "id": "local:DO_OBJ_COLLISIONS:cur_w:1",
    "kind": "local",
    "function": "DO_OBJ_COLLISIONS",
-   "current_name": "done",
+   "current_name": "cur_w",
    "proposed_name": null,
-   "c_type": "u8",
-   "declarator": "u8 $",
+   "c_type": "s16",
+   "declarator": "s16 $",
    "role": "local",
-   "declaration_ordinal": 5,
-   "meaning": "Observed local dataflow: done = false;; done = true;; if (done)",
+   "declaration_ordinal": 10,
+   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
    "unit": "declared C storage; see exact computation and function contract",
    "value_domain": {
     "observed_code_uses": [
-     "u8 done;",
-     "done = false;",
-     "done = true;",
-     "if (done)"
+     "s16 cur_w;",
+     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
     ],
     "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
    },
@@ -16822,12 +16655,63 @@
     },
     {
      "kind": "source_dataflow",
-     "declaration": "u8 done",
+     "declaration": "s16 cur_w",
      "uses": [
-      "u8 done;",
-      "done = false;",
-      "done = true;",
-      "if (done)"
+      "s16 cur_w;",
+      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "local:DO_OBJ_COLLISIONS:cur_y:1",
+   "kind": "local",
+   "function": "DO_OBJ_COLLISIONS",
+   "current_name": "cur_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 9,
+   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 cur_y;",
+     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ee20",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 cur_y",
+     "uses": [
+      "s16 cur_y;",
+      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
      ],
      "supplied_by": "collision1.c"
     },
@@ -16888,6 +16772,58 @@
       "i++;",
       "cur_obj = &level.objects[actobj.objects[i]];",
       "while (i < actobj.num_active_objects);"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "local:DO_OBJ_COLLISIONS:cur_h:1",
+   "kind": "local",
+   "function": "DO_OBJ_COLLISIONS",
+   "current_name": "cur_h",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 11,
+   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 cur_h;",
+     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ee20",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 cur_h",
+     "uses": [
+      "s16 cur_h;",
+      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
      ],
      "supplied_by": "collision1.c"
     },
@@ -16999,6 +16935,118 @@
    ]
   },
   {
+   "id": "local:DO_OBJ_COLLISIONS:in_w:1",
+   "kind": "local",
+   "function": "DO_OBJ_COLLISIONS",
+   "current_name": "in_w",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "role": "local",
+   "declaration_ordinal": 3,
+   "meaning": "Observed local dataflow: GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);; in_w += -20;; in_w -= offs * 2;",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 in_w;",
+     "GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);",
+     "in_w += -20;",
+     "in_w -= offs * 2;",
+     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ee20",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "s16 in_w",
+     "uses": [
+      "s16 in_w;",
+      "GET_ANIM_POS(obj, &in_x, &in_y, &in_w, &in_h);",
+      "in_w += -20;",
+      "in_w -= offs * 2;",
+      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
+      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
+   "id": "local:DO_OBJ_COLLISIONS:done:1",
+   "kind": "local",
+   "function": "DO_OBJ_COLLISIONS",
+   "current_name": "done",
+   "proposed_name": null,
+   "c_type": "u8",
+   "declarator": "u8 $",
+   "role": "local",
+   "declaration_ordinal": 5,
+   "meaning": "Observed local dataflow: done = false;; done = true;; if (done)",
+   "unit": "declared C storage; see exact computation and function contract",
+   "value_domain": {
+    "observed_code_uses": [
+     "u8 done;",
+     "done = false;",
+     "done = true;",
+     "if (done)"
+    ],
+    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
+   },
+   "evidence_level": "STRONG",
+   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
+   "evidence": [
+    {
+     "kind": "DOS_function",
+     "address": "1:1ee20",
+     "supplied_by": "collision1.c",
+     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
+    },
+    {
+     "kind": "source_dataflow",
+     "declaration": "u8 done",
+     "uses": [
+      "u8 done;",
+      "done = false;",
+      "done = true;",
+      "if (done)"
+     ],
+     "supplied_by": "collision1.c"
+    },
+    {
+     "kind": "name_provenance",
+     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
+     "detail": "Original dynamic symbols do not preserve local/parameter names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
+   ],
+   "evidence_units": [
+    "collision1.c"
+   ]
+  },
+  {
    "id": "local:DO_OBJ_COLLISIONS:cur_x:1",
    "kind": "local",
    "function": "DO_OBJ_COLLISIONS",
@@ -17032,162 +17080,6 @@
      "declaration": "s16 cur_x",
      "uses": [
       "s16 cur_x;",
-      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
-   "id": "local:DO_OBJ_COLLISIONS:cur_y:1",
-   "kind": "local",
-   "function": "DO_OBJ_COLLISIONS",
-   "current_name": "cur_y",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 9,
-   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 cur_y;",
-     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ee20",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 cur_y",
-     "uses": [
-      "s16 cur_y;",
-      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
-   "id": "local:DO_OBJ_COLLISIONS:cur_w:1",
-   "kind": "local",
-   "function": "DO_OBJ_COLLISIONS",
-   "current_name": "cur_w",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 10,
-   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 cur_w;",
-     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ee20",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 cur_w",
-     "uses": [
-      "s16 cur_w;",
-      "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-      "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-     ],
-     "supplied_by": "collision1.c"
-    },
-    {
-     "kind": "name_provenance",
-     "artifact": "build/workers/sem_ray/evidence/name_provenance_checks.json",
-     "detail": "Original dynamic symbols do not preserve local/parameter names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared width, signed operations, narrowing points and current declaration/statement order. No source expression is changed."
-   ],
-   "evidence_units": [
-    "collision1.c"
-   ]
-  },
-  {
-   "id": "local:DO_OBJ_COLLISIONS:cur_h:1",
-   "kind": "local",
-   "function": "DO_OBJ_COLLISIONS",
-   "current_name": "cur_h",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "role": "local",
-   "declaration_ordinal": 11,
-   "meaning": "Observed local dataflow: if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h))); if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))",
-   "unit": "declared C storage; see exact computation and function contract",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 cur_h;",
-     "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
-     "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
-    ],
-    "limitation": "Observed operations only; no runtime bounds inferred from the declared width or local spelling."
-   },
-   "evidence_level": "STRONG",
-   "name_provenance": "INVENTED (editorial local/parameter; historical spelling unavailable)",
-   "evidence": [
-    {
-     "kind": "DOS_function",
-     "address": "1:1ee20",
-     "supplied_by": "collision1.c",
-     "artifact": "build/workers/sem_ray/evidence/collision1.dos.txt"
-    },
-    {
-     "kind": "source_dataflow",
-     "declaration": "s16 cur_h",
-     "uses": [
-      "s16 cur_h;",
       "if (((cur_obj->main_etat != 2) && (((cur_obj->main_etat != 0) || (cur_obj->sub_etat != 3)) != 0)) && (((!(cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].flags & 0x40)) && GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)))",
       "if (((GET_SPRITE_POS(cur_obj, cur_obj->follow_sprite, &cur_x, &cur_y, &cur_w, &cur_h) && (obj->type == TYPE_POI2)) && inter_box(cur_x, cur_y, cur_w, cur_h, in_x, in_y, in_w, in_h)) && (!((cur_obj->main_etat == 2) && (cur_obj->sub_etat == 6))))"
      ],
@@ -17337,25 +17229,25 @@
   "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
   "src/include/map.h": "e6ecfc28c926ae4f18c71f1a2ccdf1199253c7bc0887e08715bc335456789f17",
   "src/collision1_local.h": "0e2c99caa179bc05588cb68c25df42f55c6746155f61852ede842ee396c826ab",
-  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173"
+  "src/collision1.c": "1e5d8957eae6cfcf50ef2a612fade22a9f687667edfcce74f56e9165862da240"
  },
  "artifact_root": "build/workers/sem_ray",
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
   "src/action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
-  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/araignee.c": "e5663be7d21d5f71faeab540705175aee41762c28214de8ee4cd6e53c0d821d4",
   "src/audiocd.c": "0db68f333d9002e5c8afe8e2b71d045eac46fee1caf38505563f19ebddc124a3",
   "src/basic.c": "bd3dd552dbcbdd284411808e25990d039ce49b467a099277c20de390f940a8b1",
   "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
   "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
   "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
   "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
-  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/blocs.c": "a4f5514000b471067f742719d241f9efbe697664b0bf270358972fd123f0ec6b",
   "src/blood.c": "14a140ac53330124d8993aa4868b7ad14f2867e8a6ae80e74de6c040a1c4baed",
   "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
   "src/box.c": "a648131328272e525e69b0e4d3f7a17b58c05b2c4f6aa64f02fa78507797f9bb",
-  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/breakout.c": "cb2cba539322356f727e180c32bc717c56028cafb2822fabe8d69b5ebbf7c093",
   "src/cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
   "src/cdaudio.c": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d",
   "src/cdsave.c": "7c75a2f5540b5b9282d33be54609577b9c139757b73a4162cc173bd9587e3384",
@@ -17363,12 +17255,12 @@
   "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
   "src/cheat_inline.h": "6198cbce92005a33d83f3e9cb63018acaade2ccd9d2fa6be08647cabdfe3c358",
   "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
-  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision1.c": "1e5d8957eae6cfcf50ef2a612fade22a9f687667edfcce74f56e9165862da240",
   "src/collision1_local.h": "0e2c99caa179bc05588cb68c25df42f55c6746155f61852ede842ee396c826ab",
   "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
   "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
-  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
-  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/cymbal.c": "8ce62fa2624dd2e741f9b1be23138ef46b6236736c751d9ebcc30c2d5785f30d",
+  "src/dark.c": "2c267a2da9c34c4ecfdd470790c8452b75233217f5a09316ad5eb982d12860d1",
   "src/data_6544.c": "d27bb8a6a9b975eb784994a89494e1c2ceef9a993a43fd76d2bb6cc6bc834710",
   "src/data_6664.c": "9347b6635b9c3c6f9d373fedbfd0882f1cd01dd21196646794e6bbd26f951ee5",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
@@ -17380,9 +17272,9 @@
   "src/effect34580.c": "cbf6b3033a0baf2535a7e9c9c98c82c26dcf1ce3f5162421a288da8f09a1b45f",
   "src/effect50350.c": "c0b8d28ac39ac6091cf3d295266fd8eef750fbeece2b2c0542523a1b5fd3ae45",
   "src/effect633e0.c": "2c994c9706fdccd9d59d14e07c11d5ca3cef4988b64fad9198183d02d3e666c6",
-  "src/effect6c3b0.c": "ccfb8c9c5ef0a255425830ac98d06a4eaa3b32514c08fd583b1f9962769e753a",
+  "src/effect6c3b0.c": "855efb800f4a6a22f7987feef931d5746c196804f0cb4aa5b8efd0b2ba1c58d2",
   "src/effect6e380.c": "8de97e777c7d3eb27e6d903a26d1ff5bcb8154f7735c6b5690f6bc44f96cda3c",
-  "src/effect6ec80.c": "52fa1968f314afd228baf162e72c9a0363f4b069c5d63f0e130d3d35de631154",
+  "src/effect6ec80.c": "829138d916fab3df9021bd3fe50096a13a12c23b1efb41a7c8232001ca413db9",
   "src/effecthelp.c": "53d4cc8cc5d25cfe97be4d299030c87849405a6621abd44058831149b8e77ae2",
   "src/effect_types.h": "48f6dfa6fdd05134181d79299ac9c317c144d089bf1f969d58550363b554413f",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
@@ -17390,28 +17282,28 @@
   "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
   "src/frame.c": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018",
   "src/frame_local.h": "a0ef805824bc8b5a52a5d8c3dc6735f1efb1a244e0f8948d30c8a9647125196f",
-  "src/hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
-  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/hifi.c": "85ad6f6c0d75f4c1e1e704295cacd12db56dd92286d09496997284800559b7e3",
+  "src/hybrid.c": "94916b3334989473799df4d3eff125dfed328b161309e69d517306e80a2cef1f",
   "src/input.c": "5c0c0b729e4043ac713f79ce0a68e750eed5063c14b761faea72934d0fa6d2cd",
-  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/jumelle.c": "0fa752ae61f6c054d0b04836b6ac6851cd9e3eb7d90217c782b49f67bc57db5e",
   "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
   "src/lowlevel_00010.asm": "165083072dcc7e373b2826d00efc2d56c6afcebbcad98e8d56837cb5b06a31d8",
   "src/lowlevel_02640.asm": "f4378b646f1aa46640623a6acb47bc78d756241b71bbbd0e66607fa03e0731f8",
   "src/lowlevel_04430.asm": "af37b2102b6c222f70339bfb31494dcba5859503d154596f495a64bec18b17af",
   "src/lowlevel_data.asm": "6acd7010d9846ddf4f4d71bf1c1e45065059a23ef9abfa633ed244901c1e1925",
-  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c",
   "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
   "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
   "src/mathutil.c": "c597394578c5b7642f6a3a532085faddbc727cc8c042c0d7c65daabb9346df75",
-  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/menu.c": "7ea4e7832aa7531f4fba261bea4614f6ff5c9619daface5fccaff0e98ad38518",
   "src/menu_inline.h": "69c059f454d951c97c524554332167a94005d55b58685a313732e461a691a56f",
   "src/menu_keys_local.h": "0e58dc6d67fada5077de5dda4279b863c8d2d07fec2cbc6132b66d580d8dd394",
   "src/menu_local.h": "c689ccb9f469353ade55119678539f1dbfffe4333bb6b7c9ef8819542ac57b24",
   "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
   "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
   "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
-  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
-  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/moskito.c": "384ac8a8c4e81d330a1c157a66d05a5277570468a26452ab370068710421e2de",
+  "src/moteur.c": "55c5fc1733da5e23ccae30cd7250bcb1fad0e21e527e3d3592371432d41097b9",
   "src/movie.c": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb",
   "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
   "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
@@ -17421,7 +17313,7 @@
   "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
   "src/original_inline.h": "1220e5385e2ce07476a73b85cbcd2c822f3d1acac54d1d3312d99e19698dbefb",
   "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
-  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/pmama.c": "f82e2b472050cef6dba41da94bc1eb3b0df64a406daa0a2c8e403f857f782702",
   "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
   "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
   "src/rand.c": "e0b57934471d7d330eac7870d64d0d542a463cbdddd62ba6b51cc1ba250d2aa3",
@@ -17429,13 +17321,13 @@
   "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/savecodec.c": "f5a1bbddace7847ea77d6326052f1fa6070385790409f685ea802b81c603e20a",
-  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/saxo.c": "f0f680d3d8e343dc6aed6caa058c5305955295b12e7f8e8635ae55249d58ab2d",
   "src/screen_types.h": "17c210dff11da882350ee2a77b7a9227874e12f69ebcc767dd0454d22314c6e9",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
   "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/sound_types.h": "66d6f11e90d29115e8e56939eac8d50b66e2c12c7600480d630601ff5b4b0fe6",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
-  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/stoneman.c": "32335b9ed969fdbc94a64c658087eaf1f05b36e581b09d851aee65335f759780",
   "src/sysutils.c": "0461c7a665d582b6ded473b520028133a92d51691536d407f90da773bac0317a",
   "src/sysutils_local.h": "295d003e6d7c639f1d2966115363dc45ce9b63c11a650486050a38e3e8276e58",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",

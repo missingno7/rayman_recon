@@ -1557,13 +1557,14 @@ void INIT_BUTTON_SCREEN(void) {
 void INIT_AFFICHE_BUTTON_SCREEN(void) {
     s32 i;
     u8 color[5] = {5, 5, 5, 5, 3};
+    /* COMPILER_STEERED: store order reproduces the word-register rover sequence (100 BX, 12 CX, 6 SI). */
     compteur = 0;
     button_released = 1;
+    max_compteur = 100;
+    delai_repetition = 12;
+    repetition = 6;
     position = 0;
     first_option = 0;
-    delai_repetition = 12;
-    max_compteur = 100;
-    repetition = 6;
     nbre_options = 4;
     option_exit = 4;
     for (i = 0; 4 >= i; ++i) {
@@ -2940,18 +2941,13 @@ s16 CalcSpeed(void) {
             if (options.ScrollDiffOn) {
                 speed += tRefTransFondNormal[options.Frequence][options.SizeScreen] * 2;
             } else {
-                {
-                    s32 index_value = options.SizeScreen;
-                    speed += tRefTransFondNormal[options.Frequence][index_value];
-                }
+                speed += tRefTransFondNormal[options.Frequence][options.SizeScreen];
             }
         }
     } else if (!P486) {
-        s16 mode_flag;
         sprite_speed = tRefSpriteX[options.Frequence];
-        speed = (s16)(sprite_speed >> 1) + (sprite_speed >> 1);
-        mode_flag = options.fixon;
-        if (mode_flag) {
+        speed = sprite_speed >> 1; speed = speed + (sprite_speed >> 1);
+        if (options.fixon) {
             speed += sprite_speed >> 3;
         }
         if (options.BackgroundOn) {

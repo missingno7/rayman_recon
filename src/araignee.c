@@ -590,11 +590,12 @@ void SPIDER_PLAFOND_REACT(obj_t* obj) {
 /* DOS 1:0c75c..0cac3. Narrow trajectory deltas, full-coordinate pursuit tests.
  * Nested shared min32/max32 calls reproduce the clamp-bound setup, notably
  * 1:0c91a..0c94c and 1:0c955..0c987. Extent is 872 bytes; body remains NEAR. */
-#define SPIDER_ABS(x) ((x) >= 0 ? (x) : -(x))
 void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
+    /* COMPILER_STEERED (w7_enemies): abs32_inline at both DOS TEST/JGE/NEG EAX sites (1:0c7dc, 1:0c7e7, 1:0ca24)
+     * together with this declaration order (dy before distance) reproduce the DOS allocation. */
     s16 dx;
-    s16 distance;
     s16 dy;
+    s16 distance;
     s16 abs_speed_x;
     if (obj->cmd != 1) {
         dx = (s16)ray.x + ray.offset_bx - ((s16)obj->x + obj->offset_bx);
@@ -604,7 +605,7 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
         }
         else
             dy = ray.y + (ray.offset_by >> 1) - (obj->y + obj->offset_by);
-        distance = SPIDER_ABS((s32)dx) + SPIDER_ABS((s32)dy);
+        distance = abs32_inline(dx) + abs32_inline(dy);
         if (ray.y + ray.offset_by > obj->y + (obj->offset_by - obj->offset_hy) &&
             ((ray.x + ray.offset_bx > obj->x + obj->offset_bx && !obj->flags.flip_x) ||
              (ray.x + ray.offset_bx < obj->x + obj->offset_bx && obj->flags.flip_x))) {
@@ -632,7 +633,7 @@ void DO_DARD_PLAFOND_ALWAYS(obj_t* obj) {
     }
     if (obj->speed_x == 0 && obj->speed_y == 0)
         obj->speed_x = obj->flags.flip_x ? -1 : 1;
-    abs_speed_x = SPIDER_ABS((s32)obj->speed_x);
+    abs_speed_x = abs32_inline(obj->speed_x);
     if (abs_speed_x * 3 < obj->speed_y)
         obj->anim_frame = 0;
     else if (abs_speed_x * 4 < obj->speed_y * 3)

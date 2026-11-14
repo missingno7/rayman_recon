@@ -117,7 +117,7 @@
     "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
    ],
    "source_file": "src/blocs.c",
-   "source_body_sha256": "6c6351d1e1bd0264d0f3521c355f75fb90d76ec50bca353082d1c41eab995596",
+   "source_body_sha256": "7032f402f8a4f2342cdf689838b54b0d688ac1f95920eaa4c4a974a09a00d166",
    "readers_writers": {
     "globals": [],
     "callees": [
@@ -582,7 +582,7 @@
     "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
    ],
    "source_file": "src/blocs.c",
-   "source_body_sha256": "47c5e2aecd3d1218ed8f50785df438d52b4a8ac619a9722802915c04e889b953",
+   "source_body_sha256": "c6ee38eec32837be9411af790fc1981a178f6aba86d17e769f648dc41b4b2879",
    "readers_writers": {
     "globals": [
      "RayEvts",
@@ -1984,7 +1984,7 @@
     "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
    ],
    "source_file": "src/blocs.c",
-   "source_body_sha256": "1812374f8e4ac60ce3faa495933014a86bd5b2031f5453a270b8312a7ab657ab",
+   "source_body_sha256": "27fc86837a40c4e49d8475bf613905a8ba498258c9cf84014089c8af476bfda5",
    "readers_writers": {
     "globals": [
      "block_flags",
@@ -2055,44 +2055,6 @@
    "source_file": "src/blocs.c"
   },
   {
-   "id": "local:CALC_MOV_ON_BLOC:delta:1",
-   "kind": "local",
-   "function": "CALC_MOV_ON_BLOC",
-   "role": "local",
-   "current_name": "delta",
-   "proposed_name": null,
-   "c_type": "s16",
-   "declarator": "s16 $",
-   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by delta = height - y",
-   "unit": "see observed operation",
-   "value_domain": {
-    "observed_computations": [
-     "delta = height - y",
-     "next_y = full_y + delta",
-     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
-     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
-     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
-     "next_y = (full_y + delta) + 16",
-     "obj->speed_y = (delta + height) - y"
-    ],
-    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
-   },
-   "evidence_level": "STRONG",
-   "evidence": [
-    {
-     "kind": "DOS_function_and_C_dataflow",
-     "address": "1:15820",
-     "artifact": "evidence/blocs.dos.txt",
-     "function": "CALC_MOV_ON_BLOC",
-     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
-    }
-   ],
-   "port_notes": [
-    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
-   ],
-   "source_file": "src/blocs.c"
-  },
-  {
    "id": "local:CALC_MOV_ON_BLOC:full_x:1",
    "kind": "local",
    "function": "CALC_MOV_ON_BLOC",
@@ -2112,6 +2074,44 @@
      "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
      "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
      "next_x = full_x + speed_x"
+    ],
+    "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "kind": "DOS_function_and_C_dataflow",
+     "address": "1:15820",
+     "artifact": "evidence/blocs.dos.txt",
+     "function": "CALC_MOV_ON_BLOC",
+     "detail": "Local/parameter role from exact expressions and query argument positions. Expressions are observations, not recovered historical variable names."
+    }
+   ],
+   "port_notes": [
+    "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
+   ],
+   "source_file": "src/blocs.c"
+  },
+  {
+   "id": "local:CALC_MOV_ON_BLOC:delta:1",
+   "kind": "local",
+   "function": "CALC_MOV_ON_BLOC",
+   "role": "local",
+   "current_name": "delta",
+   "proposed_name": null,
+   "c_type": "s16",
+   "declarator": "s16 $",
+   "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by delta = height - y",
+   "unit": "see observed operation",
+   "value_domain": {
+    "observed_computations": [
+     "delta = height - y",
+     "next_y = full_y + delta",
+     "dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
+     "BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)",
+     "next_y = (full_y + delta) + 16",
+     "obj->speed_y = (delta + height) - y"
     ],
     "representation": "Declared C type bounds only; observed constants/initial values do not bound all runtime inputs."
    },
@@ -2386,8 +2386,8 @@
    "role": "local",
    "current_name": "dist",
    "proposed_name": null,
-   "c_type": "s32",
-   "declarator": "s32 $",
+   "c_type": "s16",
+   "declarator": "s16 $",
    "meaning": "Local value in CALC_MOV_ON_BLOC computed/consumed by dist = calcbloc2[BTYP((full_x + speed_x) >> 4, ((full_y + delta) - 16) >> 4)](x, y)",
    "unit": "see observed operation",
    "value_domain": {
@@ -2707,7 +2707,7 @@
     "Preserve declared widths, signed division/shift behavior, narrowing points, sentinels and update order. State numbers describe this actor only; no universal object-state enum is implied."
    ],
    "source_file": "src/blocs.c",
-   "source_body_sha256": "2bb114bf4ee846a1cb700abead4c7682ad3c45dabeb19e605fcb08ba94df7a08",
+   "source_body_sha256": "14e44c47ed7cbd4dced92e3fe9bd54cb62952f0f0ff7f099aa5170797917b189",
    "readers_writers": {
     "globals": [
      "calcblocrecal"
@@ -2871,8 +2871,8 @@
    "role": "local",
    "current_name": "z",
    "proposed_name": null,
-   "c_type": "s16 = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
-   "declarator": "s16 $ = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+   "c_type": "s16 = calcblocrecal[(u8) BTYP(full_x >> 4, full_y >> 4)](x, 0)",
+   "declarator": "s16 $ = calcblocrecal[(u8) BTYP(full_x >> 4, full_y >> 4)](x, 0)",
    "meaning": "Local initialized as calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0); subsequent role is constrained by the recorded operations.",
    "unit": "see observed operation",
    "value_domain": {
@@ -4442,14 +4442,14 @@
   }
  ],
  "source_fingerprints": {
-  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad"
+  "src/blocs.c": "a4f5514000b471067f742719d241f9efbe697664b0bf270358972fd123f0ec6b"
  },
  "proposal_fingerprints": {
-  "blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "blocs.c": "a4f5514000b471067f742719d241f9efbe697664b0bf270358972fd123f0ec6b",
   "action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
   "bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
   "cage.c": "7db593689cb8fab45fca9eb4f21a93ea90b1fe711b84a5c65cb60633057a9fef",
-  "luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c",
   "map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
   "map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
   "neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
@@ -4473,14 +4473,14 @@
  "evidence_source_fingerprints": {
   "src/action.c": "bfc142af34bc6235876a382020ca931f325d03331b5589bf5069c70e07a290bd",
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
-  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/araignee.c": "e5663be7d21d5f71faeab540705175aee41762c28214de8ee4cd6e53c0d821d4",
   "src/basic.c": "bd3dd552dbcbdd284411808e25990d039ce49b467a099277c20de390f940a8b1",
   "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
   "src/bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
   "src/bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
   "src/blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
   "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
-  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/breakout.c": "cb2cba539322356f727e180c32bc717c56028cafb2822fabe8d69b5ebbf7c093",
   "src/bss/bss_32748.c": "3cc29ea5246113792632695e9d09814ab417c5d08fd936546d0df36b5d004d71",
   "src/bss/bss_3e650.c": "53d1ca54c754ef5e24df16637385ea778187b0a4dbdfab0e1787c625c488d55c",
   "src/bss/bss_3f818.c": "8da1eec0fdd2b1ea195988a3b0c88cdd8ee43789a0d5e027347849c7ec6cf256",
@@ -4494,17 +4494,17 @@
   "src/cdaudio.c": "7006fdbdba26df97183a832071e023f699e5ad6187e26ee0159b40c721892e0d",
   "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
   "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
-  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision1.c": "1e5d8957eae6cfcf50ef2a612fade22a9f687667edfcce74f56e9165862da240",
   "src/collision2.c": "eff0357972b4763429a1658cc87b9922760038f5f30ff04be5c5728e0e25f55a",
   "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
-  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
-  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "src/cymbal.c": "8ce62fa2624dd2e741f9b1be23138ef46b6236736c751d9ebcc30c2d5785f30d",
+  "src/dark.c": "2c267a2da9c34c4ecfdd470790c8452b75233217f5a09316ad5eb982d12860d1",
   "src/data/blk_215c.c": "cc1ee9b2f4f184f37d92d2e0bdea9a30272127151c90d4bf353f34729787e119",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
   "src/dosmem.c": "1c553ea8a79109b6e23e5f9a88a328f261f7254e72b696220d599cee087cca37",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "src/frame.c": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018",
-  "src/hifi.c": "edcf35379c1088a93769e3b5721b17a1a4af63ebcdc9750d85884073a0fe0e04",
+  "src/hifi.c": "85ad6f6c0d75f4c1e1e704295cacd12db56dd92286d09496997284800559b7e3",
   "src/hmi/hmi_active.c": "1af10ae4e44363f019241aacfcad7a8bc4674352bca487cf4721b3a2e64adc63",
   "src/hmi/hmi_dpmi_asm.asm": "3c0e5535dbc681e741280c0e65b1e9858c68e36c1e0ef1df9e3700436161302c",
   "src/hmi/hmi_local.h": "ce7378ce7505dfd7fa287f9060e97754f72d1ea2e7622278f499c01d309ff9de",
@@ -4512,20 +4512,20 @@
   "src/hmi/hmi_status.c": "4334b5c1c6b5eca746f8d7c9656237884a8be15149313776e194e19e9a0c1d37",
   "src/hmi/hmi_timer.c": "76fc9981403d5e2813d7c5ccc8e5b408140a7eceab390125111ea607ddbdc8c1",
   "src/hmi/hmi_voice_params.c": "b84948daf4cb9ba4c9937c9d0ee338d0a511e8e1968d84fd4c25d1f8c1901d51",
-  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/hybrid.c": "94916b3334989473799df4d3eff125dfed328b161309e69d517306e80a2cef1f",
   "src/include/dos_regs.h": "ccb9af2d98cce010389ea9877f33881a2f6308a8e603a6f3087730cd89394fc7",
   "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
-  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/jumelle.c": "0fa752ae61f6c054d0b04836b6ac6851cd9e3eb7d90217c782b49f67bc57db5e",
   "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
-  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c",
   "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
   "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
-  "src/menu.c": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb",
+  "src/menu.c": "7ea4e7832aa7531f4fba261bea4614f6ff5c9619daface5fccaff0e98ad38518",
   "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
   "src/meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
   "src/mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
-  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
-  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/moskito.c": "384ac8a8c4e81d330a1c157a66d05a5277570468a26452ab370068710421e2de",
+  "src/moteur.c": "55c5fc1733da5e23ccae30cd7250bcb1fad0e21e527e3d3592371432d41097b9",
   "src/movie.c": "379ebe18e0a32deb88b3e6cc2fa106c526982d9bdf002e9e0c5f242a43d4f9fb",
   "src/neige.c": "2d18d6ee4afd91685e09c4c5f75af74e1e6b50753ea3ba2fa8e2932fed54bb6b",
   "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
@@ -4534,16 +4534,16 @@
   "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
   "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
   "src/pcmain.c": "dfa0b739c4341aa979af1e9cb5fe39042c8987454650cffd789c71e8f60a477f",
-  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/pmama.c": "f82e2b472050cef6dba41da94bc1eb3b0df64a406daa0a2c8e403f857f782702",
   "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
   "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
   "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
-  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/saxo.c": "f0f680d3d8e343dc6aed6caa058c5305955295b12e7f8e8635ae55249d58ab2d",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
   "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
-  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/stoneman.c": "32335b9ed969fdbc94a64c658087eaf1f05b36e581b09d851aee65335f759780",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
   "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b",
   "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836"

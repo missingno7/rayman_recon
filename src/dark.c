@@ -218,7 +218,12 @@ void DARK_phase1(obj_t *mr_drk_obj)
             diff_x = ((s16)ray.x + ray.offset_bx) - (corde_x + crd_drk_obj->offset_bx);
             diff_y = ((s16)ray.y + ray.offset_by) - (corde_y_bas + crd_drk_obj->offset_by);
             dist = diff_x * diff_x + diff_y * diff_y;
-            unk_1 = abs32_inline(diff_x) < 40 || dist < 3000;
+            /* COMPILER_STEERED: DOS 1:22e40..22e44 materializes unk_1 in AH (if/else form;
+               the direct assignment of the predicate selects AL). */
+            if (abs32_inline(diff_x) < 40 || dist < 3000)
+                unk_1 = 1;
+            else
+                unk_1 = 0;
             switch (mr_drk_obj->sub_etat) {
             case 26:
                 if (unk_1 || (ray.main_etat == 2 && ray.sub_etat == 0) ||

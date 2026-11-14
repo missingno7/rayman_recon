@@ -63,7 +63,7 @@ extern u8 button_released;
 #define flags2_1_check_tile_type (1UL << 16)
 #define flags2_8_can_jump (1UL << 19)
 #define Abs(value) ((s32)(value) >= 0 ? (s32)(value) : -(s32)(value))
-u8 BTYP(s16 tile_x, s16 tile_y);
+s32 BTYP(s16 tile_x, s16 tile_y); /* true signature (basic.c) */
 u8 GET_SPRITE_POS(obj_t *obj, s16 index, s16 *x, s16 *y, s16 *w, s16 *h);
 void IS_RAY_ON_LIANE(void);
 void Reset_air_speed(u8 is_rolling_speed);
@@ -81,7 +81,7 @@ s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y);
  s16 bloc_floor(s16 btype, s16 x, s16 y);
 u16 MURDUR(s16 x, s16 y)
 {
-    return BTYP(x >> 4, y >> 4) == BTYP_SOLID;
+    return (u8)BTYP(x >> 4, y >> 4) == BTYP_SOLID;
 }
 
 s16 dist_to_bloc_floor(s16 btyp, s16 x, s32 y) {
@@ -117,7 +117,7 @@ u8 calc_typ_trav(obj_t* obj, u8 height) {
     }
     y = obj->offset_by + (u16) obj->y;
     x = obj->offset_bx + (u16) obj->x;
-    switch (BTYP((s32) x >> 4, (s32) y >> 4))
+    switch ((u8)BTYP((s32) x >> 4, (s32) y >> 4))
     {
         case BTYP_NONE:
         case BTYP_CHDIR:
@@ -174,7 +174,7 @@ u8 calc_typ_trav(obj_t* obj, u8 height) {
             btype = obj->btypes[0];
             if (btype >= 2 && (btype <= 3 || (btype >= 18 && btype <= 19)))
                 inset += 8;
-            switch (BTYP(x >> 4, (y - 0x10) >> 4))
+            switch ((u8)BTYP(x >> 4, (y - 0x10) >> 4))
             {
                 case BTYP_NONE:
                 case BTYP_CHDIR:
@@ -468,8 +468,8 @@ u8 IS_ON_RESSORT_BLOC(obj_t* obj) {
 
 void CALC_MOV_ON_BLOC(obj_t *obj) {
     /* COMPILER_STEERED: shared floor delta, scoped short copy, and inlined floor X. */
-    s16 speed_x, delta, full_x, full_y, x, y, height, next_y, next_x;
-    s32 dist;
+    s16 speed_x, full_x, delta, full_y, x, y, height, next_y, next_x;
+    s16 dist;
     u8 btyp, floor_type;
     s16 floor_x, floor_y;
     if ((flags[obj->type].raw & flags2_1_check_tile_type) || obj->type == TYPE_23_RAYMAN) {
@@ -494,7 +494,7 @@ void CALC_MOV_ON_BLOC(obj_t *obj) {
         y = next_y & 15;
         switch (btyp) {
         case 9: case 14: case 15: case 30:
-            dist = calcbloc2[BTYP((full_x + speed_x) >> 4, (full_y + delta - 16) >> 4)](x, y); height = y - 16; goto add_floor_delta;
+            dist = calcbloc2[BTYP((full_x + speed_x) >> 4, (full_y + delta - 16) >> 4) & 0xff](x, y); height = y - 16; goto add_floor_delta;
             break;
         case 2: case 18: height = 15 - x; break;
         case 3: case 19: height = x; break;
@@ -506,14 +506,18 @@ void CALC_MOV_ON_BLOC(obj_t *obj) {
         default:
             next_x = full_x + speed_x;
             next_y = full_y + delta + 16;
-            
+            floor_x = next_x & 15;
             floor_y = (next_y & 15) - 16;
             floor_type = BTYP(next_x >> 4, next_y >> 4);
-            dist = calcblocfloor[floor_type](next_x & 15, floor_y) - floor_y;
-            height=y; if ((s16)dist > 2) break; add_floor_delta: height +=dist;
-            break;
+            dist = calcblocfloor[floor_type](floor_x, floor_y) - floor_y;
+            if (dist > 2) {
         case 12:
+                height = y;
+                break;
+            }
             height = y;
+        add_floor_delta:
+            height += dist;
             break;
         }
         if (!IS_ON_RESSORT_BLOC(obj)) {
@@ -544,7 +548,7 @@ void recale_position(obj_t *obj) {
     s16 full_y = obj->offset_by + (u16)obj->y;
     s16 y = full_y & 0xfff0;
     s16 x = full_x & 15;
-    s16 z = calcblocrecal[BTYP(full_x >> 4, full_y >> 4)](x, 0);
+    s16 z = calcblocrecal[(u8)BTYP(full_x >> 4, full_y >> 4)](x, 0);
     if (obj->type != TYPE_23_RAYMAN)
         obj->y = y + z - obj->offset_by;
     else

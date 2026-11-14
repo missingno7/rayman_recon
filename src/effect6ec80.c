@@ -161,7 +161,7 @@ u8 effect_helper_6ee54(u16 columns, u16 rows, s16 speed, u16 step,
     return success;
 }
 
-#define EFFECT_ABS(value) ((value) < 0 ? -(value) : (value))
+/* DOS 1:6f09d and 1:6f0b1: original inline abs (abs32_inline) of the s16 speed; |speed| <= 32768, never INT_MIN. */
 
 s16 effect_helper_6ef5c(void)
 {
@@ -174,7 +174,7 @@ s16 effect_helper_6ef5c(void)
     u8 i;
 
     state = effect_state_6e;
-    for (iteration = 0; iteration < EFFECT_ABS((s32)state->speed); ++iteration) {
+    for (iteration = 0; iteration < abs32_inline(state->speed); ++iteration) {
         state->history_position += 2;
         for (row = 1; row < state->rows; ++row) {
             u16 vertex_index;
@@ -209,7 +209,9 @@ s16 effect_helper_6ef5c(void)
             state->history[i] = state->history[i - 1];
         state->history[0] = wave;
     }
-    current = state->current + EFFECT_ABS((s32)state->speed);
+    /* COMPILER_STEERED: current is loaded before the add (DOS 1:6f0b7 mov dx,[ebp+4]; add edx,eax). */
+    current = state->current;
+    current += abs32_inline(state->speed);
     state->current = current;
     if (current > state->speed_fraction)
         state->current = 0;

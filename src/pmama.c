@@ -216,8 +216,8 @@ s16 y_floor(s16 x, s16 y) {
 void init_move_couteau(obj_t* obj) {
     // NOTE(Falcury): PS1 and PC versions seem functionally identical at first glance.
     u8 cout_ind;
+    s16 y; /* COMPILER_STEERED: y declared before x gives DOS x=ESI, y=ECX (1:546a5..546b5). */
     s16 x;
-    s16 y;
     u8 test_1;
 
     cout_ind = (u8)find_couteau(obj);
@@ -241,9 +241,11 @@ void init_move_couteau(obj_t* obj) {
             case 3:
             case 4:
                 if (pma_type_attaque == 3) test_1 = 4; else test_1 = 0;
-                if (cout_ind != 1)
-                    test_1 = 4 - test_1;
-                CouteauxInfos[cout_ind].x_pos = x_pos(test_1, 6);
+                /* PS1 form; DOS 1:54730..5476d keeps x_pos's index separate from the y_pos stores. */
+                if (cout_ind == 1)
+                    CouteauxInfos[cout_ind].x_pos = x_pos(test_1, 6);
+                else
+                    CouteauxInfos[cout_ind].x_pos = x_pos(4 - test_1, 6);
 #ifdef PC
                 CouteauxInfos[cout_ind].y_pos = y_pos(9 - cout_ind, 1) + 8;
 #else
@@ -607,7 +609,7 @@ void retour_couteau(obj_t* obj) {
             diff_y = 0;
             if (CouteauxInfos[cout_ind].field9_0x12 != 2) {
                 diff_x = (xmap + CouteauxInfos[cout_ind].x_pos) - (obj->offset_bx + obj->x);
-                diff_y = (CouteauxInfos[cout_ind].y_pos + ymap) - (obj->offset_by + obj->y);
+                diff_y = (ymap + CouteauxInfos[cout_ind].y_pos) - (obj->offset_by + obj->y);
             }
 
             if (Abs(diff_x) >= 2 || Abs(diff_y) >= 2) {

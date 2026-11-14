@@ -512,15 +512,20 @@ void DO_STONE_EXPLOSION(obj_t* obj, s16 sprite) {
 //7D4E4
 void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
     /* 388C4 8015D0C4 -O2 -msoft-float */
+    /* COMPILER_STEERED (w7_enemies): declaration order, the negated type test and the speed/x spellings below
+     * reproduce the DOS homes and colours (remaining NEAR: param_3 byte register AH/BH, branch-2 count BX/DX). */
     s16 i;
     obj_t *cur_obj;
     s16 nb_objs;
-    s16 speed;
-    s32 speed_x;
+    s16 stmn_w;
+    s16 stmn_x;
     s16 stmn_spr;
-    s16 stmn_x; s16 stmn_h; s16 stmn_w; s16 stmn_y;
+    s32 speed_x;
+    s16 stmn_y;
+    s16 speed;
+    s16 stmn_h;
 
-    if (stmn_obj->type == TYPE_35_STONEMAN1) {
+    if (!(stmn_obj->type != TYPE_35_STONEMAN1)) {
         i = 0;
         cur_obj = &level.objects[i];
         nb_objs = level.nb_objects;
@@ -535,12 +540,10 @@ void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
                 cur_obj->speed_y = param_2;
                 speed = (s16)cur_obj->eta[cur_obj->main_etat][cur_obj->sub_etat].speed_x_right;
                 if (cur_obj->flags.flip_x)
-                    speed_x = (s32)speed;
-                else {
-                    speed_x = (s32)speed;
-                    speed_x = -speed_x;
-                }
-                cur_obj->speed_x = (s16)speed_x;
+                    speed_x = speed;
+                else
+                    speed_x = -speed;
+                cur_obj->speed_x = speed_x;
 
                 if (inrange((s32)stmn_obj->anim_frame, 53, 122))
                     stmn_spr = 3;
@@ -551,7 +554,7 @@ void allocateStonemanStone(obj_t* stmn_obj, s32 param_2, u8 param_3) {
 
                 if (stmn_spr != -1) {
                     GET_SPRITE_POS(stmn_obj, stmn_spr, &stmn_x, &stmn_y, &stmn_w, &stmn_h);
-                    cur_obj->x = stmn_x + ((stmn_w >> 1) - cur_obj->offset_bx);
+                    cur_obj->x = (stmn_x - cur_obj->offset_bx) + (stmn_w >> 1);
                     cur_obj->y = stmn_y - cur_obj->offset_hy;
                     cur_obj->init_x = cur_obj->x;
                     cur_obj->init_y = cur_obj->y;

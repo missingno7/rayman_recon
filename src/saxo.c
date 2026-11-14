@@ -550,7 +550,9 @@ void DO_SAXO_COUP(obj_t* obj) {
     if (Phase != 100) {
         obj->hit_points--;
         if (obj->hit_points > 0) {
-            if (obj->main_etat != 2) {
+            /* COMPILER_STEERED (w7_enemies): the negated equality (not !=) gives the DOS byte-register
+             * rover history (main_etat CL, constant 2 held in CH across the call, else-branch zero in AL). */
+            if (!(obj->main_etat == 2)) {
                 Sax.field8_0xe = obj->main_etat;
                 Sax.field9_0xf = obj->sub_etat;
                 set_main_and_sub_etat(obj, 0, 3);

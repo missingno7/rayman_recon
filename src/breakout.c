@@ -669,14 +669,15 @@ u8 collision_briques(obj_t *obj)
 
 void collision_rayman(obj_t *obj)
 {
-    /* COMPILER_STEERED: uninitialized declaration order selects the DOS allocation. */
-    s16 ball_x;
-    s16 ball_y;
+    /* COMPILER_STEERED: uninitialized declaration order selects the DOS allocation;
+       the launch offset is nested (DOS 1:1790a..17917 computes it without storing ball_x). */
     s16 ray_x;
-    s16 ray_h;
     s16 ray_y;
+    s16 ray_h;
     u8 state;
     s16 ray_w;
+    s16 ball_x;
+    s16 ball_y;
     state = 0;
     calc_obj_pos(obj);
     ball_x = obj->screen_x + obj->offset_bx - 8;
@@ -702,9 +703,8 @@ void collision_rayman(obj_t *obj)
     if (state != 0 && inter_box(ball_x, ball_y, 16, 16, ray_x, ray_y, ray_w, ray_h) && speed_ball_y >= 0) {
         if (NbClassicBrik <= 5 && NoCB != 3) speed_ball_level = 1;
         else speed_ball_level = 0;
-        ball_x = ball_x + 16 - ray_x;
         ray_w += 15;
-        speed_ball_angle = (s16)((-120 * ball_x / ray_w + 150.0) * 0.2);
+        speed_ball_angle = (s16)((-120 * (s16)(ball_x + 16 - ray_x) / ray_w + 150.0) * 0.2);
         get_speed_ball();
         AllocateCasseBriqueBoum(obj);
         PlaySnd_old(44);

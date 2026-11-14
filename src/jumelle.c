@@ -414,20 +414,16 @@ void ChangeDeltaPosYJumelleWithoutLimit(s32 delta_pos_y) {
     ChangeJumelleVariable();
 }
 
-/* DOS 1:333d0: cache the radius margin and position for both tests.
- * Initializing the result before the entry clamp reproduces ESI at entry.
- * Still NEAR: the inner clamp and final update allocation differ. */
+/* DOS 1:333d0: the radius margin and position are used directly in both tests (no locals).
+ * Initializing the result before the entry clamp reproduces ESI at entry. */
 s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
-    /* SYNTHETIC: two initialized, non-escaping local address copies of the true result. */
     bool changed = 0;
     delta_pos_x = max32(-16, min32(16, delta_pos_x));
 
     if ((xmap != scroll_start_x && xmap != scroll_end_x) ||
         (xmap == scroll_start_x && delta_pos_x > 0) ||
         (xmap == scroll_end_x && delta_pos_x < 0)) {
-        s32 margin = RayonJumelle / 3;
-        s32 position = JumellePosX;
-        if (margin < position && 320 - margin > position) {
+        if (RayonJumelle / 3 < JumellePosX && 320 - RayonJumelle / 3 > JumellePosX) {
             if (ModeAutoJumelle & 1) {
                 Xmap16 = (Xmap16 & ~0xF) | (PositionJumelleX16 & 0xF);
                 Xmap16 = max32(16 * scroll_start_x,
@@ -439,39 +435,23 @@ s32 ChangeDeltaPosXJumelleWithLimit(s32 delta_pos_x) {
             }
             PositionJumelleX16 += delta_pos_x;
             JumellePosX = PositionJumelleX16 >> 4;
-            {
-                bool result_value;
-                bool *result_address;
-                result_address = &result_value;
-                *result_address = 1;
-                {
-                    bool second_value;
-                    bool *second_address;
-                    second_address = &second_value;
-                    *second_address = result_value;
-                    changed = second_value;
-                }
-            }
+            changed = 1;
         }
     }
     ChangeJumelleVariable();
     return changed;
 }
 
-/* DOS 1:33520: cache the radius margin and position for both tests.
- * Initializing the result before the entry clamp reproduces ESI at entry.
- * Still NEAR: the inner clamp and final update allocation differ. */
+/* DOS 1:33520: the radius margin and position are used directly in both tests (no locals).
+ * Initializing the result before the entry clamp reproduces ESI at entry. */
 s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
-    /* SYNTHETIC: two initialized, non-escaping local address copies of the true result. */
     bool changed = 0;
     delta_pos_y = max32(-16, min32(16, delta_pos_y));
 
     if ((ymap != scroll_start_y && ymap != scroll_end_y) ||
         (ymap == scroll_start_y && delta_pos_y > 0) ||
         (ymap == scroll_end_y && delta_pos_y < 0)) {
-        s32 margin = RayonJumelle / 3;
-        s32 position = JumellePosY;
-        if (margin < position && 200 - margin > position) {
+        if (RayonJumelle / 3 < JumellePosY && 200 - RayonJumelle / 3 > JumellePosY) {
             if (ModeAutoJumelle & 1) {
                 Ymap16 = (Ymap16 & ~0xF) | (PositionJumelleY16 & 0xF);
                 Ymap16 = max32(16 * scroll_start_y,
@@ -483,19 +463,7 @@ s32 ChangeDeltaPosYJumelleWithLimit(s32 delta_pos_y) {
             }
             PositionJumelleY16 += delta_pos_y;
             JumellePosY = PositionJumelleY16 >> 4;
-            {
-                bool result_value;
-                bool *result_address;
-                result_address = &result_value;
-                *result_address = 1;
-                {
-                    bool second_value;
-                    bool *second_address;
-                    second_address = &second_value;
-                    *second_address = result_value;
-                    changed = second_value;
-                }
-            }
+            changed = 1;
         }
     }
     ChangeJumelleVariable();
@@ -609,11 +577,10 @@ void RecaleRayPosInJumelle(void) {
                     v_scroll_speed = min32(v_scroll_speed, v16);
                 } else if (v_scroll_speed < 0) {
                     v_scroll_speed = max32(v_scroll_speed, -v16);
-                } else if (v14 <= 0) {
-                    if (v14 < 0)
-                        v_scroll_speed = -1;
-                } else {
+                } else if (v14 > 0) {
                     v_scroll_speed = 1;
+                } else if (v14 < 0) {
+                    v_scroll_speed = -1;
                 }
             }
         } else if (ray.main_etat != 1) {
@@ -630,31 +597,31 @@ void RecaleRayPosInJumelle(void) {
 
         if (decalage_en_cours > 0 || ray.speed_x > 0) {
             s16 unk_x_3 = ashr16(ray.screen_x - min_x, 2);
-            if (unk_x_3 < dhspeed) {
+            if (dhspeed > unk_x_3) {
                 dhspeed--;
-            } else if (unk_x_3 > dhspeed) {
+            } else if (dhspeed < unk_x_3) {
                 dhspeed++;
             }
         } else if (decalage_en_cours < 0 || ray.speed_x < 0) {
             s16 unk_x_3 = ashr16(ray.screen_x - max_x, 2);
-            if (unk_x_3 > dhspeed) {
+            if (dhspeed < unk_x_3) {
                 dhspeed++;
-            } else if (unk_x_3 < dhspeed) {
+            } else if (dhspeed > unk_x_3) {
                 dhspeed--;
             }
         } else {
             if (ray.flags.flip_x) {
                 s16 unk_x_3 = ashr16(ray.screen_x - min_x, 2);
-                if (unk_x_3 < dhspeed) {
+                if (dhspeed > unk_x_3) {
                     dhspeed--;
-                } else if (unk_x_3 > dhspeed) {
+                } else if (dhspeed < unk_x_3) {
                     dhspeed++;
                 }
             } else if (!ray.flags.flip_x) {
                 s16 unk_x_3 = ashr16(ray.screen_x - max_x, 2);
-                if (unk_x_3 > dhspeed) {
+                if (dhspeed < unk_x_3) {
                     dhspeed++;
-                } else if (unk_x_3 < dhspeed) {
+                } else if (dhspeed > unk_x_3) {
                     dhspeed--;
                 }
             }

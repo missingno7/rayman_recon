@@ -2523,30 +2523,25 @@ void build_active_table(void)
     actobj.num_active_objects = 0;
     actobj.objects[0] = -1;
     min_x = xmap;
+    max_x = xmap + 1320;
     min_y = ymap;
-    max_x = min_x + 1320;
-    max_y = min_y + 1200;
+    max_y = ymap + 1200;
     half_x = (max_x - min_x) >> 1;
     half_y = (max_y - min_y) >> 1;
     min_x = min_x + half_x - 500;
     min_y = min_y + half_y - 500;
 
     added = 0;
-    i = 0;
-    obj = &level.objects[level_obj.obj_ids[i]];
-    while (i < level_obj.nb_objects) {
+    for (i = 0, obj = &level.objects[level_obj.obj_ids[i]]; i < level_obj.nb_objects; i++, obj = &level.objects[level_obj.obj_ids[i]])
         obj->field_1C = 0;
-        i++;
-        obj = &level.objects[level_obj.obj_ids[i]];
-    }
     out = &actobj.objects[actobj.num_active_objects];
     out_start = out;
     i = level_obj.nb_objects - 1;
     obj = &level.objects[level_obj.obj_ids[i]];
     while (i >= 0) {
         if (obj->field_1C == 0) {
-            if ((obj->x - min_x < 0 ? -(obj->x - min_x) : obj->x - min_x) < half_x &&
-                (obj->y - min_y < 0 ? -(obj->y - min_y) : obj->y - min_y) < half_y) {
+            if (abs32_inline(obj->x - min_x) < half_x &&
+                abs32_inline(obj->y - min_y) < half_y) {
                 SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
             } else if (flags[obj->type].flags0 & 0x10) {
                 SET_ACTIVE_FLAG(obj->x - xmap + 8, obj->y - ymap, obj);
@@ -2720,8 +2715,9 @@ void RECALE_ALL_OBJECTS(void)
             if (cur_obj->type == 254) {
                 s32 dx;
 
-                dx = (ray.x + ray.offset_bx) - (x + (w >> 1));
-                ray.y -= ashr16((s16)((s8)cur_obj->hit_points * dx), 4);
+                dx = (ray.offset_bx + ray.x) - ((w >> 1) + x);
+                dx *= (s8)cur_obj->hit_points;
+                ray.y -= ashr16(dx, 4);
             }
             calc_obj_pos(&ray);
         }

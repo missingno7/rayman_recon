@@ -160,6 +160,21 @@ Read-only synthesis of build/workers/w3_*/FINDINGS.md (25 closures, ~98k compile
   abs32_inline in the three closest NEAR functions with DOS TEST/JGE/NEG EAX sites made all worse
   (Display_and_free_luciole 2->58, DO_BBL_COMMAND 5->17, moskitoDropFruitOnRay 11->276): there the ternary already
   emits the DOS bytes. The helper is a coupled knob, not a standalone fix.
+  SCOPE CORRECTION (2026-11-14): the test applied the helper ALONE; it refutes only that. With the coupled edits
+  (temporaries removed and nested into one expression, every DOS TEST/JGE/NEG site converted, declaration order)
+  the helper closed Display_and_free_luciole and effect_helper_6c8d4 (PR #2) and, in wave 7, moskitoDropFruitOnRay,
+  DO_DARD_PLAFOND_ALWAYS and doMOSAMScommand, and reduced six more. A negative result measured on a few functions
+  is recorded with its scope and never prunes searches elsewhere.
+- Wave 7 (2026-11-14, five workers, 72 EXACT_LOCAL_EQUIVALENT targets): +13 STRICT (1,587 -> 1,600), 0 losses.
+  Levers that closed: the coupled helper + nesting above; declaration order as a primary lever (not only a
+  tie-break); `if (c) x = 1; else x = 0;` materialising a byte predicate in AH where `x = c;` gives AL
+  (DARK_phase1); `!(a == b)` vs `a != b` changing the byte-register rover (DO_SAXO_COUP); exhaustive order search over
+  independent constant stores (doMOSAMScommand, INIT_AFFICHE_BUTTON_SCREEN); PS1-decomp statement shapes
+  (init_move_couteau); and a case label placed where the DOS jump table points (CALC_MOV_ON_BLOC case 12 inside the
+  default arm's early exit, closing the carrier IS_ON_RESSORT_BLOC). Worker findings: build/workers/w7_*/.
+  Carrier rule: a carrier whose table has the DOS order and partition only drifts with its owner (DO_BBMONT_ATTER,
+  DO_BBMONT_TOUCHE, DO_DARK2_AFFICHE_TEXT, RAY_RESPOND_TO_UP, standard_frontZone); a reordered table is a source
+  defect (bonus_fall: collision_briques' COMPILER_STEERED case reorder; the natural order costs +7 bytes today).
 - HYPOTHESIS (inconsistent evidence): PS1-decomp-inherited snapshot locals are wrong for Watcom (3 removals closed
   PAR_REACT_TO_RAY_IN_ZONE, move_ball, set_rubis_list/Do_Effet_Chaleur; one addition closed DO_TOTEM_COMMAND).
 - PROVEN reusable mechanism: a reference is verified at our object's internal offset, so a function whose bytes are

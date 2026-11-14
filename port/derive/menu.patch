@@ -32,7 +32,7 @@
                  break;
              default:
                  break;
-@@ -1973,9 +1982,10 @@
+@@ -1974,9 +1983,10 @@
      if (options.sound_volume == 0 && ModeNormalAutorise) {
          if (OptionGame) {
              if ((num_world != 6 || num_level != 4) && !is_fee) {
@@ -45,7 +45,7 @@
                  option_exit = 5;
              } else {
                  position = 4;
-@@ -2192,7 +2202,8 @@
+@@ -2193,7 +2203,8 @@
          }
          switch (control_index) {
          case 0:
@@ -55,7 +55,7 @@
                           menu_to_display[option_index].color);
              break;
          case 1:
-@@ -3377,6 +3388,7 @@
+@@ -3373,6 +3384,7 @@
          SYNCHRO_LOOP_PALETTE(change_couleur_prg);
  
          row = DrawBufferNormal + xFondu + SCREEN_WIDTH * yFondu;
@@ -63,7 +63,7 @@
          for (j = 0; j < hFondu; ++j) {
              for (i = 0; i < wFondu; ++i) {
                  *row = (MenuPalette.colors[*row].r + MenuPalette.colors[*row].g + MenuPalette.colors[*row].b) / 3 + 128;
-@@ -3394,6 +3406,7 @@
+@@ -3390,6 +3402,7 @@
  
      if (mode == 1) {
          row = EffetBufferNormal + SCREEN_WIDTH * SCREEN_HEIGHT + xFondu + SCREEN_WIDTH * yFondu;

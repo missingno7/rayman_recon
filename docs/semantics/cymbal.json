@@ -1286,7 +1286,7 @@
    ],
    "oracle_address": "1:22280",
    "source_file": "src/cymbal.c",
-   "source_body_sha256": "dbde1a35d386fefb7c95bc70f2164721b43ab256f733fcad54b773ad3dd445bd",
+   "source_body_sha256": "5deda242884b12d4bfd27af44f65c9dc73f4c01067af022cfb51714f51889f8b",
    "name_provenance": "ANDROID original symbol",
    "evidence_units": [
     "cymbal.c"
@@ -1498,23 +1498,19 @@
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
-   "id": "local:DO_2_PARTS_CYMBAL:cym_offs_bx:1",
+   "id": "local:DO_2_PARTS_CYMBAL:diff_x_1:1",
    "kind": "local",
-   "current_name": "cym_offs_bx",
+   "current_name": "diff_x_1",
    "proposed_name": null,
    "c_type": "s16",
-   "meaning": "Observed local in DO_2_PARTS_CYMBAL: cym_offs_bx = cym_obj->offset_bx;; diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;; if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by))); cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);; cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
+   "meaning": "Observed local in DO_2_PARTS_CYMBAL: diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;; diff_x_2 = diff_x_1;; if ((diff_x_1 > 96) || (diff_x_2 < (-107)))",
    "unit": "declared representation; exact expressions below",
    "value_domain": {
     "observed_code_uses": [
-     "s16 cym_offs_bx;",
-     "cym_offs_bx = cym_obj->offset_bx;",
+     "s16 diff_x_1;",
      "diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;",
-     "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by)))",
-     "cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);",
-     "cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
-     "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) on_block_chdir(link_obj, link_offs_bx, link_offs_by)))",
-     "test_allowed(cym_obj, cym_offs_bx, cym_offs_by);"
+     "diff_x_2 = diff_x_1;",
+     "if ((diff_x_1 > 96) || (diff_x_2 < (-107)))"
     ],
     "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
    },
@@ -1527,16 +1523,12 @@
     },
     {
      "kind": "typed_source_dataflow",
-     "declaration": "s16 cym_offs_bx",
+     "declaration": "s16 diff_x_1",
      "uses": [
-      "s16 cym_offs_bx;",
-      "cym_offs_bx = cym_obj->offset_bx;",
+      "s16 diff_x_1;",
       "diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;",
-      "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by)))",
-      "cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);",
-      "cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
-      "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) on_block_chdir(link_obj, link_offs_bx, link_offs_by)))",
-      "test_allowed(cym_obj, cym_offs_bx, cym_offs_by);"
+      "diff_x_2 = diff_x_1;",
+      "if ((diff_x_1 > 96) || (diff_x_2 < (-107)))"
      ]
     }
    ],
@@ -1547,7 +1539,7 @@
    "signedness": "signed",
    "role": "local",
    "function": "DO_2_PARTS_CYMBAL",
-   "declaration_ordinal": 4,
+   "declaration_ordinal": 14,
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
@@ -1700,55 +1692,6 @@
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
-   "id": "local:DO_2_PARTS_CYMBAL:diff_y:1",
-   "kind": "local",
-   "current_name": "diff_y",
-   "proposed_name": null,
-   "c_type": "s16",
-   "meaning": "Observed local in DO_2_PARTS_CYMBAL: diff_y = link_obj->y - cym_obj->y;; if (diff_y < (-8)); if (diff_y > 8); if (diff_y > 0); if (diff_y >= 0)",
-   "unit": "declared representation; exact expressions below",
-   "value_domain": {
-    "observed_code_uses": [
-     "s16 diff_y;",
-     "diff_y = link_obj->y - cym_obj->y;",
-     "if (diff_y < (-8))",
-     "if (diff_y > 8)",
-     "if (diff_y > 0)",
-     "if (diff_y >= 0)"
-    ],
-    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
-   },
-   "evidence_level": "STRONG",
-   "evidence": [
-    {
-     "artifact": "build/workers/sem_boss/evidence/cymbal.dos.txt",
-     "kind": "DOS_function_dataflow",
-     "address": "1:22280"
-    },
-    {
-     "kind": "typed_source_dataflow",
-     "declaration": "s16 diff_y",
-     "uses": [
-      "s16 diff_y;",
-      "diff_y = link_obj->y - cym_obj->y;",
-      "if (diff_y < (-8))",
-      "if (diff_y > 8)",
-      "if (diff_y > 0)",
-      "if (diff_y >= 0)"
-     ]
-    }
-   ],
-   "port_notes": [
-    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/cymbal.json#function:DO_2_PARTS_CYMBAL"
-   ],
-   "declarator": "s16 $",
-   "signedness": "signed",
-   "role": "local",
-   "function": "DO_2_PARTS_CYMBAL",
-   "declaration_ordinal": 8,
-   "name_provenance": "Existing spelling retained; original local symbols unavailable"
-  },
-  {
    "id": "local:DO_2_PARTS_CYMBAL:cym_x:1",
    "kind": "local",
    "current_name": "cym_x",
@@ -1832,6 +1775,55 @@
    "role": "local",
    "function": "DO_2_PARTS_CYMBAL",
    "declaration_ordinal": 10,
+   "name_provenance": "Existing spelling retained; original local symbols unavailable"
+  },
+  {
+   "id": "local:DO_2_PARTS_CYMBAL:diff_y:1",
+   "kind": "local",
+   "current_name": "diff_y",
+   "proposed_name": null,
+   "c_type": "s16",
+   "meaning": "Observed local in DO_2_PARTS_CYMBAL: diff_y = link_obj->y - cym_obj->y;; if (diff_y < (-8)); if (diff_y > 8); if (diff_y > 0); if (diff_y >= 0)",
+   "unit": "declared representation; exact expressions below",
+   "value_domain": {
+    "observed_code_uses": [
+     "s16 diff_y;",
+     "diff_y = link_obj->y - cym_obj->y;",
+     "if (diff_y < (-8))",
+     "if (diff_y > 8)",
+     "if (diff_y > 0)",
+     "if (diff_y >= 0)"
+    ],
+    "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
+   },
+   "evidence_level": "STRONG",
+   "evidence": [
+    {
+     "artifact": "build/workers/sem_boss/evidence/cymbal.dos.txt",
+     "kind": "DOS_function_dataflow",
+     "address": "1:22280"
+    },
+    {
+     "kind": "typed_source_dataflow",
+     "declaration": "s16 diff_y",
+     "uses": [
+      "s16 diff_y;",
+      "diff_y = link_obj->y - cym_obj->y;",
+      "if (diff_y < (-8))",
+      "if (diff_y > 8)",
+      "if (diff_y > 0)",
+      "if (diff_y >= 0)"
+     ]
+    }
+   ],
+   "port_notes": [
+    "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/cymbal.json#function:DO_2_PARTS_CYMBAL"
+   ],
+   "declarator": "s16 $",
+   "signedness": "signed",
+   "role": "local",
+   "function": "DO_2_PARTS_CYMBAL",
+   "declaration_ordinal": 8,
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
@@ -1980,19 +1972,23 @@
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
-   "id": "local:DO_2_PARTS_CYMBAL:diff_x_1:1",
+   "id": "local:DO_2_PARTS_CYMBAL:cym_offs_bx:1",
    "kind": "local",
-   "current_name": "diff_x_1",
+   "current_name": "cym_offs_bx",
    "proposed_name": null,
    "c_type": "s16",
-   "meaning": "Observed local in DO_2_PARTS_CYMBAL: diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;; diff_x_2 = diff_x_1;; if ((diff_x_1 > 96) || (diff_x_2 < (-107)))",
+   "meaning": "Observed local in DO_2_PARTS_CYMBAL: cym_offs_bx = cym_obj->offset_bx;; diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;; if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by))); cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);; cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
    "unit": "declared representation; exact expressions below",
    "value_domain": {
     "observed_code_uses": [
-     "s16 diff_x_1;",
+     "s16 cym_offs_bx;",
+     "cym_offs_bx = cym_obj->offset_bx;",
      "diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;",
-     "diff_x_2 = diff_x_1;",
-     "if ((diff_x_1 > 96) || (diff_x_2 < (-107)))"
+     "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by)))",
+     "cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);",
+     "cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
+     "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) on_block_chdir(link_obj, link_offs_bx, link_offs_by)))",
+     "test_allowed(cym_obj, cym_offs_bx, cym_offs_by);"
     ],
     "limitation": "Static uses are not a complete runtime domain; identical spelling in nested scopes does not imply shared storage."
    },
@@ -2005,12 +2001,16 @@
     },
     {
      "kind": "typed_source_dataflow",
-     "declaration": "s16 diff_x_1",
+     "declaration": "s16 cym_offs_bx",
      "uses": [
-      "s16 diff_x_1;",
+      "s16 cym_offs_bx;",
+      "cym_offs_bx = cym_obj->offset_bx;",
       "diff_x_1 = ((ray.x + ray.offset_bx) - cym_obj->x) - cym_offs_bx;",
-      "diff_x_2 = diff_x_1;",
-      "if ((diff_x_1 > 96) || (diff_x_2 < (-107)))"
+      "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) test_allowed(cym_obj, cym_offs_bx, cym_offs_by)))",
+      "cym_x = on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by);",
+      "cym_w = test_allowed(cym_obj, cym_offs_bx, cym_offs_by);",
+      "if (((s16) on_block_chdir(cym_obj, cym_offs_bx, cym_offs_by)) && ((s16) on_block_chdir(link_obj, link_offs_bx, link_offs_by)))",
+      "test_allowed(cym_obj, cym_offs_bx, cym_offs_by);"
      ]
     }
    ],
@@ -2021,7 +2021,7 @@
    "signedness": "signed",
    "role": "local",
    "function": "DO_2_PARTS_CYMBAL",
-   "declaration_ordinal": 14,
+   "declaration_ordinal": 4,
    "name_provenance": "Existing spelling retained; original local symbols unavailable"
   },
   {
@@ -2286,7 +2286,7 @@
    ],
    "oracle_address": "1:22738",
    "source_file": "src/cymbal.c",
-   "source_body_sha256": "5bb5e2a44fb82f705aadc37d1c7ac4cbb1b9a26d45c65abc9d5d0c8fa6013132",
+   "source_body_sha256": "39d0c59c6b65efd65e4d3d22606e5cce4ca49ff2580fa1892438afe70114d452",
    "name_provenance": "ANDROID original symbol",
    "evidence_units": [
     "cymbal.c"
@@ -2528,7 +2528,7 @@
    "kind": "local",
    "current_name": "cym_link_id",
    "proposed_name": null,
-   "c_type": "s32",
+   "c_type": "s16",
    "meaning": "Observed local in DO_COLL_RAY_CYMBALE: cym_link_id = link_init[cym_obj->id];; if (cym_link_id != cym_obj->id); cym_link_obj = &level.objects[cym_link_id];",
    "unit": "declared representation; exact expressions below",
    "value_domain": {
@@ -2561,7 +2561,7 @@
    "port_notes": [
     "Keep declared signedness/width, narrowing, shift and division behavior. Function contract: docs/semantics/cymbal.json#function:DO_COLL_RAY_CYMBALE"
    ],
-   "declarator": "s32 $",
+   "declarator": "s16 $",
    "signedness": "signed",
    "role": "local",
    "function": "DO_COLL_RAY_CYMBALE",
@@ -2729,18 +2729,18 @@
   "src/include/map.h": "e6ecfc28c926ae4f18c71f1a2ccdf1199253c7bc0887e08715bc335456789f17",
   "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
   "src/include/type_island_abi.h": "08f0103a45b8cad235165e57cd03c312b13eb60dcbfaff3ab0908d1fe8e94094",
-  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280"
+  "src/cymbal.c": "8ce62fa2624dd2e741f9b1be23138ef46b6236736c751d9ebcc30c2d5785f30d"
  },
  "evidence_source_fingerprints": {
-  "src/blocs.c": "b67c536282d4bddf203eccf04363b07c21310661ac77f125300d8cfa323c61ad",
+  "src/blocs.c": "a4f5514000b471067f742719d241f9efbe697664b0bf270358972fd123f0ec6b",
   "src/ray.c": "ad8b76491bdf2f941f147179d511b4ccd56ea5389283f64a3a647fc2dca3c513",
-  "src/collision1.c": "a631e2f7606c51b7c6a9b6f0ec50c42c06632ed27907edc55e769c985598a173",
+  "src/collision1.c": "1e5d8957eae6cfcf50ef2a612fade22a9f687667edfcce74f56e9165862da240",
   "src/include/lowlevel.h": "a32157b711022f58a157b3cd8eae70d2ca89ade6622f270226ddfef3c060e7d8",
   "src/clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
   "src/collision2_local.h": "d58436176265a4eb03cf2ea1b4ef42db400d8760c2b32b4ab4b0ed8858b115a1",
   "src/sound.c": "f96322e317a299aa60e3b394330e0e4495c385bafab2f448f45d6efbb64cf960",
   "src/include/inline_helpers.h": "23933215bcc5f19c958245611e0e352bc3997f935ce2473dfa8f670a5dee08c8",
-  "src/stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "src/stoneman.c": "32335b9ed969fdbc94a64c658087eaf1f05b36e581b09d851aee65335f759780",
   "src/worldmap.c": "33528742d1d9a1187b451353443afbf02454ce1c7107be78da5b171cdae1b836",
   "src/save.c": "7e7527bc62a522a75205b875d67500e218089a5408805c2ba7bd5b3906324bbb",
   "src/meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
@@ -2757,12 +2757,12 @@
   "src/objupdate3.c": "5a1b85deac8548eb40018c9c33525c9bf4851acc3c015dbbb84abd3c2f8bb6f0",
   "src/bonus.c": "c0d5bb71a3e8c6a598ec56f168a117609ab9510def41ba5597ecdd819058dc49",
   "src/fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
-  "src/hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "src/hybrid.c": "94916b3334989473799df4d3eff125dfed328b161309e69d517306e80a2cef1f",
   "src/include/obj.h": "b6a57618d39c75ef5bb64856a194e600e9430ff20ad0b2823db98b36d0e0d00a",
-  "src/moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
+  "src/moskito.c": "384ac8a8c4e81d330a1c157a66d05a5277570468a26452ab370068710421e2de",
   "src/include/game.h": "b1391fd3db7acf3f1bf1c762ad9be844c5d8760c520ea62ace4699431efa7d2c",
   "src/lowlevel_data.asm": "6acd7010d9846ddf4f4d71bf1c1e45065059a23ef9abfa633ed244901c1e1925",
-  "src/araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "src/araignee.c": "e5663be7d21d5f71faeab540705175aee41762c28214de8ee4cd6e53c0d821d4",
   "src/display.c": "d733c608ce3e67b76bfa9c215d544935da8312af577ba48c41768d8b679b6a20",
   "src/ray_pc.c": "22d45ee0b062bb653a507ada74de2ed2ff5a1c0e87d9a7dc8ac3d118e88f4fdb",
   "src/poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
@@ -2772,7 +2772,7 @@
   "src/bss/bss_3f876.c": "1772dbe3a3561f34cca4d414fa4beec154b67064c7538461c05496a5a118f0e1",
   "src/frame.c": "b43e29423c9b0c9e633f164777f7d12236e74c2a43c6579e77612d1f6d18f018",
   "src/basic.c": "bd3dd552dbcbdd284411808e25990d039ce49b467a099277c20de390f940a8b1",
-  "src/breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "src/breakout.c": "cb2cba539322356f727e180c32bc717c56028cafb2822fabe8d69b5ebbf7c093",
   "src/load.c": "34f97b48dfb2faa934c4a975795044a5b3a8747f77937acbe001bd04f49baef4",
   "src/bss/bss_3f864.c": "50dd65633cbaaeb54005c5918f6a13f68a930c2aa9fb7e8d6753d0d64a0f9e38",
   "src/special.c": "63c87d33fffffdd8710694492e00a9f3c1764b7599b1a88437aef68cbf4e4b25",
@@ -2782,23 +2782,23 @@
   "src/fnd.c": "23daf7fa7a0e5f55f3f1d9cefa56bc61a54afee6948fda4744ada0e4ecfffcb7",
   "src/trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
   "src/objinit.c": "42840687636ab4f969663a0f5fc9c90d86846e0b6c773b639211a49eb86fef01",
-  "src/pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "src/pmama.c": "f82e2b472050cef6dba41da94bc1eb3b0df64a406daa0a2c8e403f857f782702",
   "src/skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
   "src/affiche.c": "868d4179ef930f3e7119fa6ff4dee23aa88f11388de5fe405d1b77eb98fee4e4",
-  "src/luciole.c": "29f76f63cdb88a36fd6604e580837ebcf901ef113d0fb6293f3767ed0ae2dc71",
+  "src/luciole.c": "4cf0478f70342af0e57fd6ecd44615ba314a7b833e2bf554936755d095732b9c",
   "src/objupdate4.c": "4065671de57f54f73de0d7125c977e6ced47ce7eabd41a4fe9f74c1032565408",
-  "src/moteur.c": "353ee3ea46f002c8be5771e9d0deb1a0a8ddc83722514e333df607507a61eb37",
+  "src/moteur.c": "55c5fc1733da5e23ccae30cd7250bcb1fad0e21e527e3d3592371432d41097b9",
   "src/lowlevel_04430.asm": "af37b2102b6c222f70339bfb31494dcba5859503d154596f495a64bec18b17af",
   "src/map_ngawe.c": "b11afb29e610160b19142f44ab3f4a690cb8eab9cd77cfec11194c87c7cdc52e",
   "src/bss/bss_3edc8.c": "9ec5e4777a9f6dcd2edd69ca8aa5420bde76eefd8b81bd814d3ff3517a647055",
   "src/map.c": "f5443422bceb466521b3130a85eaf4602ccea0e055892de3b3354ad17e3b8f28",
   "src/bss/bss_3f860.c": "e8c92425fc17a3757d493a2b24b9b20bb863c95ea66aab163abeebf7fd357bca",
   "src/basic_local.h": "99b6d36cedff55d54566c75185952412f7806f8b7f19e03810264af46be285ad",
-  "src/cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
-  "src/dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
-  "src/saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "src/cymbal.c": "8ce62fa2624dd2e741f9b1be23138ef46b6236736c751d9ebcc30c2d5785f30d",
+  "src/dark.c": "2c267a2da9c34c4ecfdd470790c8452b75233217f5a09316ad5eb982d12860d1",
+  "src/saxo.c": "f0f680d3d8e343dc6aed6caa058c5305955295b12e7f8e8635ae55249d58ab2d",
   "src/cheat.c": "ddd2ffcd2b92a355826d5f939070d4e53870cff2ab2e2fdbf9aba1c31e26ba31",
-  "src/jumelle.c": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1",
+  "src/jumelle.c": "0fa752ae61f6c054d0b04836b6ac6851cd9e3eb7d90217c782b49f67bc57db5e",
   "src/poing.c": "19f41e50c9dcf5feaffc6f05717a363ffde00af8d90d05702e70208be78bf1c0",
   "src/ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b"
  },
@@ -2984,27 +2984,27 @@
  "non_object_type_entities": [],
  "proposal_fingerprints": {
   "action_local.h": "a769d62cb7698daf157b9f1a424ea758394ea8031ed91bcb093bff7b2f2769b2",
-  "araignee.c": "e4296cfdd5d18f4ef35bbefd45077c1d024b3a77693946c0c6985a9eccd7d0f8",
+  "araignee.c": "e5663be7d21d5f71faeab540705175aee41762c28214de8ee4cd6e53c0d821d4",
   "bat.c": "89227794eac217b12e49b17290512ed1400d899af1bb7b06691709a73e18075c",
   "bbmont.c": "27bede516663a01965eda48670a3806874e71a1af9f66609482b8cbb61d8b4d0",
   "blacktoon.c": "48a6f77a122732d117720b0eb59454f3a84e70ff582480feb374b98adae11947",
-  "breakout.c": "40fac72f6feb3f8c307798bf47af3fcd4c2ee998b9d3ac16891e5f2090137aec",
+  "breakout.c": "cb2cba539322356f727e180c32bc717c56028cafb2822fabe8d69b5ebbf7c093",
   "clown.c": "5b271ab801e9c9c7ff395e63087d5b203bf0b24b928dd79ff0a618303b7c4b50",
-  "cymbal.c": "ef3c0283fff48a4c5042553a274c5667f326b0cd4ade2a33c4e4f3fe284b9280",
-  "dark.c": "d53547ef149a4b71b0835efbb7acaac0ef5d61d722e0dfc8180bda5d322c3f60",
+  "cymbal.c": "8ce62fa2624dd2e741f9b1be23138ef46b6236736c751d9ebcc30c2d5785f30d",
+  "dark.c": "2c267a2da9c34c4ecfdd470790c8452b75233217f5a09316ad5eb982d12860d1",
   "fee.c": "0042ad5d8c72bd42295c08a830c762312a369394ac85dad4ab837eef8a5fa387",
   "fee_types.h": "ce85a8b655b9b2a53c96381fe9df8aa599aa554b21f7061ccb07b478f3c9da8c",
-  "hybrid.c": "5b185094865e9ab9b1a9b6e6b73a7da0bbfb7f19803daef181e494aa07e8d41b",
+  "hybrid.c": "94916b3334989473799df4d3eff125dfed328b161309e69d517306e80a2cef1f",
   "meredenis.c": "0f92aa6990ed923036ec773c70760038854802f28923b830ac80243abf599f32",
   "meredenis_local.h": "b9b79fc825752ee83d2c14355a7e97411d2270cf5bd4848507125d2ca5a5c787",
   "mite.c": "44ede86af8a89bc2202df297009fa842f63289fd152ee79f9d3e0660f3133998",
-  "moskito.c": "c2190db321a17fd2981522ef63e214c1b19018066fea3ac0b9a0a6c4a6e812a5",
-  "pmama.c": "3cb00b726d22b64eeabc8df24f2e65891110124e3908c825879064e7145c18f3",
+  "moskito.c": "384ac8a8c4e81d330a1c157a66d05a5277570468a26452ab370068710421e2de",
+  "pmama.c": "f82e2b472050cef6dba41da94bc1eb3b0df64a406daa0a2c8e403f857f782702",
   "poisson.c": "94223cf2bc33d7ec904180c4b3c36b86e7ff1bac269f321ef34e181fb394c2ed",
-  "saxo.c": "139635087de8ab5f28134ea1cefe1b12f64c22ee3e881931524604db254053bd",
+  "saxo.c": "f0f680d3d8e343dc6aed6caa058c5305955295b12e7f8e8635ae55249d58ab2d",
   "screen_types.h": "17c210dff11da882350ee2a77b7a9227874e12f69ebcc767dd0454d22314c6e9",
   "skops.c": "c3bba7b2dc1f5a89d0e05dbdfa6a7159597f58b3e694cf186f1203e46685960f",
-  "stoneman.c": "33a4cc814efe7073434c0a4909c3e5d4ab70fa2396e5c2f760bb8ddc35945419",
+  "stoneman.c": "32335b9ed969fdbc94a64c658087eaf1f05b36e581b09d851aee65335f759780",
   "trumpet.c": "024f6070764954ec8801cd5635259e32a3baf48ba06661fee97cc0aa6e695840",
   "ufo.c": "c1f1547e772f235c5ec47da16093d2d94eede1971aa95d9ea57d0ff5c047d32b"
  },

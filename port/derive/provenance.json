@@ -58,7 +58,7 @@
       "divergences": [
         "The eight left[]/right[] index expressions are cast to s32: the same offsets the 32-bit program used. Found by the first native run (segmentation fault); this class is caught systematically by the i686 reference build (port/docs/ARCHITECTURE.md)."
       ],
-      "base_sha256": "a184459bde62503b7e3f01c373129e71fd8c0a53f5b0338fa937b991933304d1"
+      "base_sha256": "0fa752ae61f6c054d0b04836b6ac6851cd9e3eb7d90217c782b49f67bc57db5e"
     },
     "effect2.c": {
       "patch": "effect2.patch",
@@ -99,7 +99,7 @@
         "Allocate sizeof(effect_state_6e_t) (0xbc on i686).",
         "Use u8 * for both surface declarations and assign texture pointers without u32 narrowing; projected words and rectangle bytes follow the native pointer in the existing descriptor contract. Vertex allocation already uses sizeof. All wave calculations are unchanged."
       ],
-      "base_sha256": "52fa1968f314afd228baf162e72c9a0363f4b069c5d63f0e130d3d35de631154"
+      "base_sha256": "829138d916fab3df9021bd3fe50096a13a12c23b1efb41a7c8232001ca413db9"
     },
     "effecthelp.c": {
       "patch": "effecthelp.patch",
@@ -173,7 +173,7 @@
         "Graphics Details' \"video mode\" row shows the wider view's mode (port_display_value_text) instead of pci1/pci2/vesa, and opening it (menuEtape 10) starts port_INIT_DISPLAY_SCREEN (port/game/display_screen.c: widescreen, pixel shape, fullscreen) instead of INIT_VIDEOMODE_SCREEN, from the main options (DO_NEW_MENUS) and from the in-game options (DO_OPTIONS_IN_GAME gains case 10).",
         "In game (outside the fairy levels and world 6 level 4), InitParamGraphicsScreen shows rows 1..4 instead of 2..4 (first_option 1, nbre_options 5 before its decrement): the video-mode row is reachable in game. The fairy-level variant is unchanged."
       ],
-      "base_sha256": "54bbdb012e688aa4d9dc685a13bb45c0e59177036f884488dae78cf7b68074eb"
+      "base_sha256": "7ea4e7832aa7531f4fba261bea4614f6ff5c9619daface5fccaff0e98ad38518"
     },
     "savecodec.c": {
       "patch": "savecodec.patch",

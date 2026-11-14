@@ -194,20 +194,21 @@ speed_negative_done:
 
 //32280
 void DO_2_PARTS_CYMBAL(obj_t* cym_obj) {
+    /* COMPILER_STEERED (w7_enemies): declaration order selects the DOS colour/home assignment. */
     s16 link_sub_etat;
     obj_t *link_obj;
     s16 cym_w;
-    s16 cym_offs_bx;
+    s16 diff_x_1;
     s16 link_offs_by;
     s16 diff_x_2;
     s16 cym_y;
-    s16 diff_y;
     s16 cym_x;
     s16 cym_h;
+    s16 diff_y;
     s16 cym_sub_etat;
     s16 link_id;
     s16 link_offs_bx;
-    s16 diff_x_1;
+    s16 cym_offs_bx;
     s16 cym_offs_by;
 
     cym_offs_bx = cym_obj->offset_bx;
@@ -371,7 +372,7 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
 
     if (cym_obj->type == TYPE_CYMBAL2)
     {
-        s32 cym_link_id;
+        s16 cym_link_id;
         cym_sub_etat = 10;
         cym_link_id = link_init[cym_obj->id];
         if (cym_link_id != cym_obj->id)
@@ -396,9 +397,9 @@ void DO_COLL_RAY_CYMBALE(obj_t* cym_obj) {
     }
     else
     {
-        cym_sub_etat = 1;
         sprite = BOX_IN_COLL_ZONES(TYPE_RAYMAN, ray_zdc_x, ray_zdc_h, ray_zdc_w, ray_zdc_y, cym_obj);
         ray_speed_y = cym_obj->speed_y;
+        cym_sub_etat = 1;
     }
     if (sprite != -1)
     {

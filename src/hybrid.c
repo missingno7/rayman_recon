@@ -246,11 +246,12 @@ void doMOSAMScommand(obj_t *obj)
         bossSpeedFactor =
             (((bossXToReach - obj->x) << 18) / 55) / obj->eta[obj->main_etat][obj->sub_etat].speed_x_right
         ;
-        bossSpeedFactor = labs(bossSpeedFactor);
+        /* DOS 1:2f450..2f45b: fixed-EAX abs32_inline; stores below in DOS order (COMPILER_STEERED). */
+        bossSpeedFactor = abs32_inline(bossSpeedFactor);
         bossReachingAccuracyX = -1; /* not sure if best represented as -1 or 0xff */
+        bossReachingAccuracyY = 0;
         bossReachingTimer = 1;
         obj->gravity_value_1 = 0;
-        bossReachingAccuracyY = 0;
         obj->gravity_value_2 = 0;
         break;
     case GO_NOP:
@@ -1137,16 +1138,10 @@ void DO_DARK2_SORT_COMMAND(obj_t *ds2_obj)
             {
                 /* DOS 1:3107f: the center is accumulated at short width. */
                 s16 center_y = ds2_obj->offset_by;
-                s32 abs_x, abs_y;
                 center_y += ds2_obj->y;
                 unk_y_2 = firstFloorBelow(ds2_obj) - center_y;
-                abs_x = unk_x_2;
-                if (abs_x < 0)
-                    abs_x = -abs_x;
-                abs_y = unk_y_2;
-                if (abs_y < 0)
-                    abs_y = -abs_y;
-                unk_1 = abs_x + abs_y;
+                /* DOS 1:31093..310a5: both magnitudes through fixed-EAX abs32_inline. */
+                unk_1 = abs32_inline(unk_x_2) + abs32_inline(unk_y_2);
             }
 
             if (unk_1 < 10)
